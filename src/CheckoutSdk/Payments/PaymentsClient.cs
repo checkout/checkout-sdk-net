@@ -11,22 +11,22 @@ namespace Checkout.Payments
             _apiClient = apiClient;
         }
 
-        public Task<ApiResponse<CardPaymentResponse>> RequestAsync(CardPaymentRequest cardPaymentRequest)
+        public Task<PaymentResponse<PaymentSource>> GetPaymentAsync(string paymentToken)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<ApiResponse<CardPaymentResponse>> RequestAsync(TokenPaymentRequest tokenPaymentRequest)
+        public Task<CardPaymentResponse> RequestAsync(CardPaymentRequest cardPaymentRequest)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<ApiResponse<AlternativePaymentResponse>> RequestAsync(AlternativePaymentRequest alternativePaymentRequest)
+        public Task<CardPaymentResponse> RequestAsync(TokenPaymentRequest tokenPaymentRequest)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<ApiResponse<AlternativePaymentResponse>> RequestAsync<TRequest>(TRequest alternativePaymentRequest)
+        public Task<AlternativePaymentResponse> RequestAsync<TRequest>(TRequest alternativePaymentRequest)
         {
             throw new System.NotImplementedException();
         }

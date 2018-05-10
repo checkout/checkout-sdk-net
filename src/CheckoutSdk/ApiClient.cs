@@ -6,7 +6,7 @@ using Checkout.Webhooks;
 
 namespace Checkout
 {
-    public class ApiClient : IApiClient
+    public partial class ApiClient : IApiClient
     {
         public ApiClient(string secretKey)
             : this(new CheckoutConfiguration(secretKey))
@@ -30,9 +30,9 @@ namespace Checkout
 
         public IWebhookOperations Webhooks => throw new System.NotImplementedException();
 
-        public Task<ApiResponse<TResponse>> PostAsync<TRequest, TResponse>(string path, TRequest request)
+        public Task<ApiResponse> PostAsync<TRequest>(string path, TRequest request)
         {
-            return Task.FromResult(new ApiResponse<TResponse>());
+            return Task.FromResult(new ApiResponse());
         }
     }
 }

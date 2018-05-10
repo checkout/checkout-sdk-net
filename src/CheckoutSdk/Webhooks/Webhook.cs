@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Webhooks
 {
-    public class Webhook
+    public class WebhookResponse : ApiResponse
     {
         public string Id { get; set; }
         public string Url { get; set; }
