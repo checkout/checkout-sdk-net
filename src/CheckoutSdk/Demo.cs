@@ -18,21 +18,22 @@ namespace Checkout
                 new CardSource("4242424242424242", 1, 2012)
             );
 
-            ApiResponse<CardPaymentResponse> response = await api.Payments.RequestAsync(request);
-
+        var response = await api.Payments.RequestAsync(request);
+        
             if (response.RequiresRedirect())
             {
-                Redirect(response.Result.GetRedirectUrl()); // Doesn't require knowledge or rel types
+                Redirect(response.RequestedPayment.GetRedirectUrl());
             }
-            else if (response.Result.Approved)
+            else if (response.Approved)
             {
-                var cardId = response.Result.Source.Id;
+                var cardId = response.Source.Id;
                 PaymentApproved();
             }
             else
             {
                 PaymentDeclined();
             }
+            var test = await api.Payments.GetPaymentAsync("pay_xxxx");
         }
 
         public async Task TokenPayment()
@@ -40,10 +41,10 @@ namespace Checkout
             var token = "tok_xxx";
 
             var request = new TokenPaymentRequest(100, Currency.GBP, new TokenSource(token));
-            ApiResponse<CardPaymentResponse> response = await api.Payments.RequestAsync(request);
+            var response = await api.Payments.RequestAsync(request);
 
             // returns a card response
-            var cardId = response.Result.Source.Id;
+            var cardId = response.Source.Id;
         }
 
         public async Task AlternativePaymentRequest()
@@ -55,7 +56,7 @@ namespace Checkout
             };
 
             var request = new AlternativePaymentRequest(100, Currency.GBP, source);
-            ApiResponse<AlternativePaymentResponse> response = await api.Payments.RequestAsync(request);
+            var response = await api.Payments.RequestAsync(request);
         }
 
         public async Task AlternativePaymentRequestFromDictionary()
@@ -72,9 +73,9 @@ namespace Checkout
             var source = new AlternativePaymentSource("giropay", props);
 
             var request = new AlternativePaymentRequest(100, Currency.GBP, source);
-            ApiResponse<AlternativePaymentResponse> response = await api.Payments.RequestAsync(request);
+            var response = await api.Payments.RequestAsync(request);
 
-            var iban = response.Result.Source["iban"];
+            var iban = response.Source["iban"];
         }
 
 

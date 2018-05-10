@@ -9,6 +9,7 @@ namespace Checkout.Payments
             Type = type ?? throw new ArgumentNullException(nameof(type));
         }
         
+        public int Id { get; }
         public string Type { get; }
     }
 }

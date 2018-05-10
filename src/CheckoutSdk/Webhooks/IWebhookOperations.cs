@@ -5,8 +5,8 @@ namespace Checkout.Webhooks
 {
     public interface IWebhookOperations
     {
-        Task<ApiResponse<IEnumerable<Webhook>>> GetAllAsync();
-        Task<ApiResponse<Webhook>> GetAsync(string id);
-        Task<ApiResponse<Webhook>> RegisterAsync(WebhookRequest request);
+        Task<WebhookResponse> GetAllAsync();
+        Task<WebhookResponse> GetAsync(string id);
+        Task<WebhookResponse> RegisterAsync(WebhookRequest request);
     }
 }
