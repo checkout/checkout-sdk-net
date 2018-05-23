@@ -15,14 +15,7 @@ namespace Checkout.Payments
         public Task<ApiResponse<CardPaymentResponse>> RequestAsync(CardPaymentRequest cardPaymentRequest)
         {
             if (cardPaymentRequest == null) throw new ArgumentNullException(nameof(cardPaymentRequest));
-            return _apiClient.PostAsync<CardPaymentRequest, CardPaymentResponse>("/payments", cardPaymentRequest);
-        }
-
-        public static PaymentsClient Create(string secretKey, bool sandbox = true)
-        {
-            var configuration = new CheckoutConfiguration(secretKey, sandbox);
-            var apiClient = new ApiClient(configuration);
-            return new PaymentsClient(apiClient);
+            return _apiClient.PostAsync<CardPaymentRequest, CardPaymentResponse>("payments", cardPaymentRequest);
         }
     }
 }
