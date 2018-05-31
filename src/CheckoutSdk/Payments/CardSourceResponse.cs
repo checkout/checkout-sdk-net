@@ -1,6 +1,6 @@
-namespace Checkout.Payments.Response
+namespace Checkout.Payments
 {
-    public class CardSource
+    public class CardSourceResponse
     {
         public string Id { get; set; }
         public string Type { get; set; }

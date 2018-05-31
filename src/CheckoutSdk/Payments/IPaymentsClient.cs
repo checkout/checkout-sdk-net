@@ -1,12 +1,11 @@
 using System.Threading.Tasks;
-using Checkout.Payments.Request;
-using Checkout.Payments.Response;
 
 namespace Checkout.Payments
 {
     public interface IPaymentsClient
     {
-        Task<ApiResponse<PaymentResponse<Response.CardSource>>> RequestAsync(PaymentRequest<Request.CardSource> cardPaymentRequest);
-        Task<ApiResponse<PaymentResponse<Response.CardSource>>> RequestAsync(PaymentRequest<Request.TokenSource> tokenPaymentRequest);
+        Task<ApiResponse<PaymentResponse<CardSourceResponse>>> RequestAsync(PaymentRequest<CardSource> cardPaymentRequest);
+        Task<ApiResponse<PaymentResponse<CardSourceResponse>>> RequestAsync(PaymentRequest<TokenSource> tokenPaymentRequest);
+        Task<ApiResponse<CaptureResponse>> CaptureAsync(string paymentId, CaptureRequest captureRequest = null);
     }
 }

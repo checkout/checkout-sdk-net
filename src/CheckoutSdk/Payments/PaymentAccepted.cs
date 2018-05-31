@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Checkout.Payments.Response
+namespace Checkout.Payments
 {
     public class PaymentAccepted : Resource
     {

@@ -1,26 +1,31 @@
 using Checkout.Payments;
+using Checkout.Tokens;
 
 namespace Checkout
 {
     public class CheckoutApi : ICheckoutApi
-    {        
-        public CheckoutApi(IApiClient apiClient)
+    {
+        public CheckoutApi(IApiClient apiClient, CheckoutConfiguration configuration)
         {
             Payments = new PaymentsClient(apiClient);
+            Tokens = new TokensClient(apiClient, configuration);
         }
 
         public IPaymentsClient Payments { get; }
+        public ITokensClient Tokens { get; }
 
-        public static CheckoutApi Create(string secretKey, bool sandbox = true)
+        public static CheckoutApi Create(string secretKey, bool sandbox = true, string publicKey = null)
         {
-            var apiClient = new ApiClient(new CheckoutConfiguration(secretKey, sandbox));
-            return new CheckoutApi(apiClient);
+            var configuration = new CheckoutConfiguration(secretKey, sandbox, publicKey);
+            var apiClient = new ApiClient(configuration);
+            return new CheckoutApi(apiClient, configuration);
         }
 
-        public static CheckoutApi Create(string secretKey, string uri)
+        public static CheckoutApi Create(string secretKey, string uri, string publicKey = null)
         {
-            var apiClient = new ApiClient(new CheckoutConfiguration(secretKey, uri));
-            return new CheckoutApi(apiClient);
+            var configuration = new CheckoutConfiguration(secretKey, uri, publicKey);
+            var apiClient = new ApiClient(configuration);
+            return new CheckoutApi(apiClient, configuration);
         }
     }
 }

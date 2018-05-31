@@ -7,6 +7,6 @@ namespace Checkout
 {
     public interface IApiClient
     {
-        Task<ApiResponse<TResult>> PostAsync<TRequest, TResult>(string path, TRequest request);
+        Task<ApiResponse<TResult>> PostAsync<TRequest, TResult>(string path, TRequest request, bool usePublicKey = false);
     }
 }

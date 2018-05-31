@@ -2,7 +2,7 @@ using System;
 
 namespace Checkout.Tokens
 {
-    public class TokenResponse
+    public class TokenResponse : Resource
     {
         public string Type { get; set; }
         public string Token { get; set; }

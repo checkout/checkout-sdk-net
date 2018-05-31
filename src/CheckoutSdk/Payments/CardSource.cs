@@ -1,4 +1,4 @@
-namespace Checkout.Payments.Request
+namespace Checkout.Payments
 {
     public class CardSource : IPaymentSource
     {

@@ -32,12 +32,12 @@ namespace Checkout
             _httpClient = httpClientFactory.Create();
         }
 
-        public async Task<ApiResponse<TResult>> PostAsync<TRequest, TResult>(string path, TRequest request)
+        public async Task<ApiResponse<TResult>> PostAsync<TRequest, TResult>(string path, TRequest request, bool usePublicKey = false)
         {
             // handle absolute URI
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, GetRequestUri(path));
             httpRequest.Content = new StringContent(_serializer.Serialize(request), Encoding.UTF8, "application/json");
-            httpRequest.Headers.Authorization = new AuthenticationHeaderValue(_configuration.SecretKey);
+            httpRequest.Headers.Authorization = new AuthenticationHeaderValue(usePublicKey ? _configuration.PublicKey : _configuration.SecretKey);
             httpRequest.Headers.UserAgent.ParseAdd("checkout-sdk-net/1.0.0");
 
             Logger.Info("{HttpMethod} {Uri}", HttpMethod.Post, httpRequest.RequestUri.AbsoluteUri);

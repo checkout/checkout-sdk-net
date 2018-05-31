@@ -1,4 +1,4 @@
-namespace Checkout.Payments.Response
+namespace Checkout.Payments
 {
     public class PaymentResponse<TSource>
     {

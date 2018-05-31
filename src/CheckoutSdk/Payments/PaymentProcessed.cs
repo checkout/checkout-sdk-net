@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace Checkout.Payments.Response
+namespace Checkout.Payments
 {
     public class PaymentProcessed<TSource> : Resource
     {

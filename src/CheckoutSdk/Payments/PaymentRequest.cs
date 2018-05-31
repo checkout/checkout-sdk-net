@@ -2,17 +2,11 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Checkout.Payments.Request
+namespace Checkout.Payments
 {
     public class PaymentRequest<TSource> where TSource : IPaymentSource
     {
-        public PaymentRequest(TSource source, string currency)
-        {
-            Source = source;
-            Currency = currency;
-        }
-
-        public PaymentRequest(TSource source, string currency, int amount)
+        public PaymentRequest(TSource source, string currency, int? amount)
         {
             Source = source;
             Amount = amount;

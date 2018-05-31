@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Checkout.Payments.Request;
-using Checkout.Payments.Response;
 
 namespace Checkout.Payments
 {
@@ -16,12 +14,17 @@ namespace Checkout.Payments
             _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
         }
 
-        public Task<ApiResponse<PaymentResponse<Response.CardSource>>> RequestAsync(PaymentRequest<Request.CardSource> request)
+        public Task<ApiResponse<CaptureResponse>> CaptureAsync(string paymentId, CaptureRequest captureRequest = null)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ApiResponse<PaymentResponse<Response.CardSource>>> RequestAsync(PaymentRequest<TokenSource> tokenPaymentRequest)
+        public Task<ApiResponse<PaymentResponse<CardSourceResponse>>> RequestAsync(PaymentRequest<CardSource> request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ApiResponse<PaymentResponse<CardSourceResponse>>> RequestAsync(PaymentRequest<TokenSource> tokenPaymentRequest)
         {
             throw new NotImplementedException();
         }
