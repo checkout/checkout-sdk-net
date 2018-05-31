@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -10,8 +11,8 @@ namespace Checkout
 {
     public class ApiClient : IApiClient
     {
-        private static readonly ILog Logger = LogProvider.For<ApiClient>(); 
-        
+        private static readonly ILog Logger = LogProvider.For<ApiClient>();
+
         private readonly CheckoutConfiguration _configuration;
         private readonly HttpClient _httpClient;
         private readonly ISerializer _serializer;
@@ -68,6 +69,45 @@ namespace Checkout
             };
 
             return apiResponse;
+        }
+
+        public async Task<ApiResponse<TResult>> PostAsync<TRequest, TResult>(string path, TRequest request, Dictionary<HttpStatusCode, Type> responseTypeMappings)
+        {
+            // handle absolute URI
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, GetRequestUri(path));
+            httpRequest.Content = new StringContent(_serializer.Serialize(request), Encoding.UTF8, "application/json");
+            httpRequest.Headers.Authorization = new AuthenticationHeaderValue(_configuration.SecretKey);
+            httpRequest.Headers.UserAgent.ParseAdd("checkout-sdk-net/1.0.0");
+
+            Logger.Info("{HttpMethod} {Uri}", HttpMethod.Post, httpRequest.RequestUri.AbsoluteUri);
+            var httpResponse = await _httpClient.SendAsync(httpRequest);
+
+            if (httpResponse.StatusCode == (HttpStatusCode)422)
+            {
+                var errorJson = await httpResponse.Content.ReadAsStringAsync();
+                var error = _serializer.Deserialize<Error>(errorJson);
+
+                return new ApiResponse<TResult>
+                {
+                    StatusCode = httpResponse.StatusCode,
+                    Error = error
+                };
+            }
+
+            httpResponse.EnsureSuccessStatusCode();
+
+            var json = await httpResponse.Content.ReadAsStringAsync();
+
+            responseTypeMappings.TryGetValue(httpResponse.StatusCode, out var type);
+
+            var result = _serializer.Deserialize(json, type);
+
+            return new ApiResponse<TResult>
+            {
+                Result = (TResult)result,
+                StatusCode = httpResponse.StatusCode
+            };
+
         }
 
         private Uri GetRequestUri(string path)

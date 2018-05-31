@@ -1,4 +1,6 @@
+using System;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
 namespace Checkout
@@ -11,7 +13,7 @@ namespace Checkout
         {
             _serializerSettings = serializerSettings ?? CreateSerializerSettings();
         }
-        
+
         public string Serialize<T>(T input)
         {
             return JsonConvert.SerializeObject(input, _serializerSettings);
@@ -30,8 +32,14 @@ namespace Checkout
                 ContractResolver = new DefaultContractResolver()
                 {
                     NamingStrategy = new SnakeCaseNamingStrategy()
-                }
+                },
+                Converters = new[] { new StringEnumConverter() }
             };
+        }
+
+        public object Deserialize(string input, Type objectType)
+        {
+            return JsonConvert.DeserializeObject(input, objectType, _serializerSettings);
         }
     }
 }
