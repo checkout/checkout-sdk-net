@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace Checkout.Payments
 {
-    public class PaymentAccepted : Resource
+    public class PaymentPending : Resource
     {
         public string Id { get; set; }
         public string Status { get; set; }

@@ -14,14 +14,15 @@ namespace Checkout
             _serializerSettings = serializerSettings ?? CreateSerializerSettings();
         }
 
-        public string Serialize<T>(T input)
+        public string Serialize(object input)
         {
+            if (input == null) throw new ArgumentNullException(nameof(input));
             return JsonConvert.SerializeObject(input, _serializerSettings);
         }
 
-        public T Deserialize<T>(string input)
+        public object Deserialize(string input, Type objectType)
         {
-            return (T)JsonConvert.DeserializeObject(input, typeof(T), _serializerSettings);
+            return JsonConvert.DeserializeObject(input, objectType, _serializerSettings);
         }
 
         public static JsonSerializerSettings CreateSerializerSettings()
@@ -35,11 +36,6 @@ namespace Checkout
                 },
                 Converters = new[] { new StringEnumConverter() }
             };
-        }
-
-        public object Deserialize(string input, Type objectType)
-        {
-            return JsonConvert.DeserializeObject(input, objectType, _serializerSettings);
         }
     }
 }

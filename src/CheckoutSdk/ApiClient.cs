@@ -11,6 +11,7 @@ namespace Checkout
 {
     public class ApiClient : IApiClient
     {
+        private const HttpStatusCode Unprocessable = (HttpStatusCode)422;
         private static readonly ILog Logger = LogProvider.For<ApiClient>();
 
         private readonly CheckoutConfiguration _configuration;
@@ -20,7 +21,6 @@ namespace Checkout
         public ApiClient(CheckoutConfiguration configuration)
             : this(configuration, new DefaultHttpClientFactory(), new JsonSerializer())
         {
-
         }
 
         public ApiClient(CheckoutConfiguration configuration, IHttpClientFactory httpClientFactory, ISerializer serializer)
@@ -32,82 +32,75 @@ namespace Checkout
             _httpClient = httpClientFactory.Create();
         }
 
-        public async Task<ApiResponse<TResult>> PostAsync<TRequest, TResult>(string path, TRequest request, bool usePublicKey = false)
+
+        public async Task<ApiResponse<TResult>> PostAsync<TResult>(string path, object request = null)
         {
-            // handle absolute URI
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, GetRequestUri(path));
-            httpRequest.Content = new StringContent(_serializer.Serialize(request), Encoding.UTF8, "application/json");
-            httpRequest.Headers.Authorization = new AuthenticationHeaderValue(usePublicKey ? _configuration.PublicKey : _configuration.SecretKey);
-            httpRequest.Headers.UserAgent.ParseAdd("checkout-sdk-net/1.0.0");
-
-            Logger.Info("{HttpMethod} {Uri}", HttpMethod.Post, httpRequest.RequestUri.AbsoluteUri);
-            var httpResponse = await _httpClient.SendAsync(httpRequest);
-
-            if (httpResponse.StatusCode == (HttpStatusCode)422)
-            {
-                var errorJson = await httpResponse.Content.ReadAsStringAsync();
-                var error = _serializer.Deserialize<Error>(errorJson);
-
-                return new ApiResponse<TResult>
-                {
-                    StatusCode = httpResponse.StatusCode,
-                    Error = error
-                };
-            }
-
-            httpResponse.EnsureSuccessStatusCode();
-
-            var json = await httpResponse.Content.ReadAsStringAsync();
-            var result = _serializer.Deserialize<TResult>(json);
-
-            // TODO error handling
+            var httpResponse = await SendRequestAsync(HttpMethod.Post, path, request);
 
             var apiResponse = new ApiResponse<TResult>
             {
-                Result = result,
-                StatusCode = httpResponse.StatusCode
+                StatusCode = httpResponse.StatusCode // Pass in ctor
             };
+
+            if (httpResponse.StatusCode == Unprocessable)
+                apiResponse.Error = await DeserializeJsonAsync<Error>(httpResponse);
+
+            if (httpResponse.IsSuccessStatusCode)
+                apiResponse.Result = await DeserializeJsonAsync<TResult>(httpResponse);
 
             return apiResponse;
         }
 
-        public async Task<ApiResponse<TResult>> PostAsync<TRequest, TResult>(string path, TRequest request, Dictionary<HttpStatusCode, Type> responseTypeMappings)
+        public async Task<ApiResponse<dynamic>> PostAsync(string path, object request, Dictionary<HttpStatusCode, Type> resultTypeMappings)
         {
-            // handle absolute URI
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, GetRequestUri(path));
-            httpRequest.Content = new StringContent(_serializer.Serialize(request), Encoding.UTF8, "application/json");
+            var httpResponse = await SendRequestAsync(HttpMethod.Post, path, request);
+
+            var apiResponse = new ApiResponse<dynamic>
+            {
+                StatusCode = httpResponse.StatusCode // Pass in ctor
+            };
+
+            if (httpResponse.StatusCode == Unprocessable)
+                apiResponse.Error = await DeserializeJsonAsync<Error>(httpResponse);
+
+            if (resultTypeMappings.TryGetValue(httpResponse.StatusCode, out Type resultType))
+                apiResponse.Result = await DeserializeJsonAsync(httpResponse, resultType);
+
+            return apiResponse;
+        }
+
+        private async Task<TResult> DeserializeJsonAsync<TResult>(HttpResponseMessage httpResponse)
+        {
+            var result = await DeserializeJsonAsync(httpResponse, typeof(TResult));
+            return (TResult)result;
+        }
+
+        private async Task<dynamic> DeserializeJsonAsync(HttpResponseMessage httpResponse, Type resultType)
+        {
+            if (httpResponse.Content == null)
+                return null;
+
+            var json = await httpResponse.Content.ReadAsStringAsync();
+            return _serializer.Deserialize(json, resultType);
+        }
+
+        private Task<HttpResponseMessage> SendRequestAsync(HttpMethod httpMethod, string path, object request = null)
+        {
+            if (string.IsNullOrEmpty(path))
+                throw new ArgumentNullException(nameof(path));
+            
+            var httpRequest = new HttpRequestMessage(httpMethod, GetRequestUri(path));
             httpRequest.Headers.Authorization = new AuthenticationHeaderValue(_configuration.SecretKey);
             httpRequest.Headers.UserAgent.ParseAdd("checkout-sdk-net/1.0.0");
 
-            Logger.Info("{HttpMethod} {Uri}", HttpMethod.Post, httpRequest.RequestUri.AbsoluteUri);
-            var httpResponse = await _httpClient.SendAsync(httpRequest);
-
-            if (httpResponse.StatusCode == (HttpStatusCode)422)
+            if (request != null)
             {
-                var errorJson = await httpResponse.Content.ReadAsStringAsync();
-                var error = _serializer.Deserialize<Error>(errorJson);
-
-                return new ApiResponse<TResult>
-                {
-                    StatusCode = httpResponse.StatusCode,
-                    Error = error
-                };
+                httpRequest.Content = new StringContent(_serializer.Serialize(request), Encoding.UTF8, "application/json");
             }
 
-            httpResponse.EnsureSuccessStatusCode();
-
-            var json = await httpResponse.Content.ReadAsStringAsync();
-
-            responseTypeMappings.TryGetValue(httpResponse.StatusCode, out var type);
-
-            var result = _serializer.Deserialize(json, type);
-
-            return new ApiResponse<TResult>
-            {
-                Result = (TResult)result,
-                StatusCode = httpResponse.StatusCode
-            };
-
+            Logger.Info("{HttpMethod} {Uri}", HttpMethod.Post, httpRequest.RequestUri.AbsoluteUri);
+            
+            return _httpClient.SendAsync(httpRequest);
         }
 
         private Uri GetRequestUri(string path)

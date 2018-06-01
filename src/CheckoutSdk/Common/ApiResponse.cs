@@ -3,11 +3,12 @@ using System.Net;
 namespace Checkout
 {
     public class ApiResponse
-    {
+    {        
         public HttpStatusCode StatusCode { get; set; }
         public Error Error { get; set; }
+        public string RequestId { get; set; }
 
-        public bool HasError => Error != null;
+        public bool HasErrors => Error != null;
     }
 
     public class ApiResponse<TResult> : ApiResponse

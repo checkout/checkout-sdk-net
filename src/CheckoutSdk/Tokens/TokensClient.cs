@@ -17,13 +17,13 @@ namespace Checkout.Tokens
         public Task<ApiResponse<CardTokenResponse>> RequestAsync(CardTokenRequest cardTokenRequest)
         {
             ValidatePublicKey();
-            return _apiClient.PostAsync<CardTokenRequest, CardTokenResponse>("tokens", cardTokenRequest);
+            return _apiClient.PostAsync<CardTokenResponse>("tokens", cardTokenRequest);
         }
 
         public Task<ApiResponse<TokenResponse>> RequestAsync(WalletTokenRequest walletTokenRequest)
         {
             ValidatePublicKey();
-            return _apiClient.PostAsync<WalletTokenRequest, TokenResponse>("tokens", walletTokenRequest);
+            return _apiClient.PostAsync<TokenResponse>("tokens", walletTokenRequest);
         }
 
         private void ValidatePublicKey()
