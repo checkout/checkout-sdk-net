@@ -1,14 +1,14 @@
-using System;
-
 namespace Checkout.Payments
 {
-    public class TokenSource : PaymentSource
+    public class TokenSource : IPaymentSource
     {
-        public TokenSource(string token) : base("token")
+        public TokenSource(string token)
         {
-            Token = token ?? throw new ArgumentNullException(nameof(token));
+            Token = token;
         }
 
-        public string Token {get;}
+        public string Token { get; }
+
+        public string Type => "token";
     }
 }

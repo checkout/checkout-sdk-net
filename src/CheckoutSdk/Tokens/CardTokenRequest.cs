@@ -1,14 +1,14 @@
-namespace Checkout.Payments
+namespace Checkout.Tokens
 {
-    public class CardSource : IPaymentSource
+    public class CardTokenRequest : ITokenRequest
     {
-        public CardSource(string number, int expiryMonth, int expiryYear)
+        public CardTokenRequest(string number, int expiryMonth, int expiryYear)
         {
             Number = number;
             ExpiryMonth = expiryMonth;
             ExpiryYear = expiryYear;
         }
-
+        
         public string Number { get; }
         public int ExpiryMonth { get; }
         public int ExpiryYear { get; }

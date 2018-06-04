@@ -1,34 +1,72 @@
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Checkout.Payments
 {
-    public class PaymentsClient : IPaymentOperations
+    public class PaymentsClient : IPaymentsClient
     {
+        private static Dictionary<HttpStatusCode, Type> CardPaymentMappings = new Dictionary<HttpStatusCode, Type>
+        {
+            { HttpStatusCode.Accepted, typeof(PaymentPending)},
+            { HttpStatusCode.Created, typeof(PaymentProcessed<CardSourceResponse>)}
+        };
+
         private readonly IApiClient _apiClient;
+        private IApiCredentials _credentials;
 
-        public PaymentsClient(IApiClient apiClient)
+        public PaymentsClient(IApiClient apiClient, CheckoutConfiguration configuration)
         {
-            _apiClient = apiClient;
+            _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+
+            _credentials = new SecretKeyCredentials(configuration);
         }
 
-        public Task<ApiResponse<CardPaymentResponse>> RequestAsync(CardPaymentRequest cardPaymentRequest)
+        public Task<ApiResponse<PaymentResponse<CardSourceResponse>>> RequestAsync(PaymentRequest<CardSource> cardPaymentRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new System.NotImplementedException();
+            return RequestPaymentAsync<CardSource, CardSourceResponse>(cardPaymentRequest, CardPaymentMappings, cancellationToken);
         }
 
-        public Task<ApiResponse<CardPaymentResponse>> RequestAsync(TokenPaymentRequest tokenPaymentRequest)
+        public Task<ApiResponse<PaymentResponse<CardSourceResponse>>> RequestAsync(PaymentRequest<TokenSource> tokenPaymentRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new System.NotImplementedException();
+            return RequestPaymentAsync<TokenSource, CardSourceResponse>(tokenPaymentRequest, CardPaymentMappings, cancellationToken);
         }
 
-        public Task<ApiResponse<AlternativePaymentResponse>> RequestAsync(AlternativePaymentRequest alternativePaymentRequest)
+        public Task<ApiResponse<VoidResponse>> VoidAsync(string paymentId, VoidRequest voidRequest = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new System.NotImplementedException();
+            return _apiClient.PostAsync<VoidResponse>(GetPaymentUrl(paymentId) + "/voids", _credentials, cancellationToken, voidRequest);
         }
 
-        public Task<ApiResponse<AlternativePaymentResponse>> RequestAsync<TRequest>(TRequest alternativePaymentRequest)
+        public Task<ApiResponse<CaptureResponse>> CaptureAsync(string paymentId, CaptureRequest captureRequest = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new System.NotImplementedException();
+            return _apiClient.PostAsync<CaptureResponse>(GetPaymentUrl(paymentId) + "/captures", _credentials, cancellationToken, captureRequest);
+        }
+
+        public Task<ApiResponse<RefundResponse>> RefundAsync(string paymentId, RefundRequest refundRequest = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return _apiClient.PostAsync<RefundResponse>(GetPaymentUrl(paymentId) + "/refunds", _credentials, cancellationToken, refundRequest);
+        }
+
+        private async Task<ApiResponse<PaymentResponse<TResponseSource>>> RequestPaymentAsync<TRequestSource, TResponseSource>(
+            PaymentRequest<TRequestSource> paymentRequest,
+            Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken) where TRequestSource : IPaymentSource
+        {
+            var apiResponse = await _apiClient.PostAsync("payments", _credentials, paymentRequest, resultTypeMappings, cancellationToken);
+
+            return new ApiResponse<PaymentResponse<TResponseSource>>
+            {
+                StatusCode = apiResponse.StatusCode,
+                Error = apiResponse.Error,
+                Result = apiResponse.Result
+            };
+        }
+
+        private static string GetPaymentUrl(string paymentId)
+        {
+            return "payments/" + paymentId;
         }
     }
 }

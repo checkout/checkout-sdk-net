@@ -1,7 +1,10 @@
+using System;
+
 namespace Checkout
 {
-    public class ISerializer
+    public interface ISerializer
     {
-
+        string Serialize(object input);
+        object Deserialize(string input, Type objectType);
     }
 }

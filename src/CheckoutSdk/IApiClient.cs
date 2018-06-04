@@ -1,13 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
-using Checkout.Payments;
-using Checkout.Webhooks;
 
 namespace Checkout
 {
     public interface IApiClient
     {
-        Task<ApiResponse<TResponse>> PostAsync<TRequest, TResponse>(string path, TRequest request);        
-        IPaymentOperations Payments {get;}
-        IWebhookOperations Webhooks {get;}
+        Task<ApiResponse<TResult>> PostAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, object request = null);
+        Task<ApiResponse<dynamic>> PostAsync(string path, IApiCredentials credentials, object request, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken);
     }
 }

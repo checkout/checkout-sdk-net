@@ -1,8 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
+    <!-- https://docs.microsoft.com/en-us/dotnet/core/tools/csproj#nuget-metadata-properties -->
+    <PackageId>CheckoutSdk</PackageId>
+    <Title>Checkout.com SDK</Title>
+    <Description>Checkout.com SDK for .NET</Description>
+    <AssemblyTitle>CheckoutSdk</AssemblyTitle>
+    <NeutralLanguage>en-GB</NeutralLanguage>
+    <Authors>Checkout.com</Authors>
+    <Copyright>Checkout.com</Copyright>
+    <AssemblyName>CheckoutSdk</AssemblyName>
+    <PackageProjectUrl>https://github.com/checkout/checkout-sdk-net</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/checkout/checkout-sdk-net/raw/master/LICENSE.MD</PackageLicenseUrl>
+    <PackageTags>Checkout.com;payments;gateway</PackageTags>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>git://github.com/checkout/checkout-sdk-net</RepositoryUrl>
+    <!-- <TargetFramework>netstandard1.3</TargetFramework> -->
     <TargetFramework>netstandard2.0</TargetFramework>
-    
+    <RootNamespace>Checkout</RootNamespace>
+    <DefineConstants>LIBLOG_PORTABLE</DefineConstants>
   </PropertyGroup>
-
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2"/>
+    <PackageReference Include="Microsoft.CSharp" Version="4.4.1"/>
+  </ItemGroup>
 </Project>
