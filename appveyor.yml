@@ -1,0 +1,11 @@
+# common configuration for ALL branches
+
+test: off
+cache:
+- tools -> build.cake
+
+build_script:
+  - ps: .\build.ps1 -Target "Deploy"
+
+artifacts:
+  - path: 'artifacts\*.nupkg'

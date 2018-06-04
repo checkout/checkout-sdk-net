@@ -110,8 +110,8 @@ Task("__PublishNuget")
         {
             // Push the package.
             NuGetPush(package.ToString(), new NuGetPushSettings {
-                ApiKey = "7d69fce0-9156-4a2e-a55c-f0e9c481ff40",
-                Source = "https://www.myget.org/F/checkout/api/v2/package"
+                ApiKey = apiKey,
+                Source = apiUrl
             });
         }
     });
