@@ -15,17 +15,7 @@ namespace Checkout.Tests
 
         void describe_card_payments()
         {
-            before = () =>
-                paymentRequest = new PaymentRequest<CardSource>(
-                    new CardSource(TestCard.Visa.Number, TestCard.Visa.ExpiryMonth, TestCard.Visa.ExpiryYear),
-                    Currency.GBP,
-                    100
-                )
-                {
-                    Capture = false,
-                    Customer = new Customer { Email = TestHelper.GenerateRandomEmail() },
-                    Reference = Guid.NewGuid().ToString()
-                };
+            before = () => paymentRequest = CreateCardPaymentRequest();
 
             actAsync = async () => apiResponse = await Api.Payments.RequestAsync(paymentRequest);
 
@@ -78,6 +68,84 @@ namespace Checkout.Tests
                     pending.GetRedirectLink().ShouldNotBeNull();
                 };
             };
+        }
+        
+        async Task it_can_capture_payment()
+        {
+            // Auth
+            var paymentRequest = CreateCardPaymentRequest();
+            var paymentResponse = await Api.Payments.RequestAsync(paymentRequest);
+            paymentResponse.Result.Payment.CanCapture().ShouldBe(true);
+
+            CaptureRequest captureRequest = new CaptureRequest
+            {
+                Reference = Guid.NewGuid().ToString()
+            };
+
+            // Capture
+            var captureResponse = await Api.Payments.CaptureAsync(paymentResponse.Result.Payment.Id, captureRequest);
+
+            captureResponse.StatusCode.ShouldBe(HttpStatusCode.Accepted);
+            captureResponse.Result.ActionId.ShouldNotBeNullOrEmpty();
+            captureResponse.Result.Reference.ShouldBe(captureRequest.Reference);
+        }
+
+        async Task it_can_void_payment()
+        {
+            // Auth
+            var paymentRequest = CreateCardPaymentRequest();
+            var paymentResponse = await Api.Payments.RequestAsync(paymentRequest);
+            paymentResponse.Result.Payment.CanVoid().ShouldBe(true);
+
+            VoidRequest voidRequest = new VoidRequest
+            {
+                Reference = Guid.NewGuid().ToString()
+            };
+
+            // Void Auth
+            var voidResponse = await Api.Payments.VoidAsync(paymentResponse.Result.Payment.Id, voidRequest);
+
+            voidResponse.StatusCode.ShouldBe(HttpStatusCode.Accepted);
+            voidResponse.Result.ActionId.ShouldNotBeNullOrEmpty();
+            voidResponse.Result.Reference.ShouldBe(voidRequest.Reference);
+        }
+
+        async Task it_can_refund_payment()
+        {
+            // Auth
+            var paymentRequest = CreateCardPaymentRequest();
+            var paymentResponse = await Api.Payments.RequestAsync(paymentRequest);
+            paymentResponse.Result.Payment.CanCapture().ShouldBe(true);
+
+            // Capture
+            var captureResponse = await Api.Payments.CaptureAsync(paymentResponse.Result.Payment.Id);
+
+            var refundRequest = new RefundRequest
+            {
+                Reference = Guid.NewGuid().ToString()
+            };
+
+            // Refund
+
+            var refundResponse = await Api.Payments.RefundAsync(paymentResponse.Result.Payment.Id, refundRequest);
+
+            refundResponse.StatusCode.ShouldBe(HttpStatusCode.Accepted);
+            refundResponse.Result.ActionId.ShouldNotBeNullOrEmpty();
+            refundResponse.Result.Reference.ShouldBe(refundRequest.Reference);
+        }
+
+        PaymentRequest<CardSource> CreateCardPaymentRequest()
+        {
+            return new PaymentRequest<CardSource>(
+                    new CardSource(TestCard.Visa.Number, TestCard.Visa.ExpiryMonth, TestCard.Visa.ExpiryYear),
+                    Currency.GBP,
+                    100
+                )
+                {
+                    Capture = false,
+                    Customer = new Customer { Email = TestHelper.GenerateRandomEmail() },
+                    Reference = Guid.NewGuid().ToString()
+                };
         }
     }
 }

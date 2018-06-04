@@ -29,6 +29,7 @@ namespace Checkout.Tests
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile("appsettings.local.json", true)
+                .AddEnvironmentVariables()
                 .Build();
 
             var options = new CheckoutOptions();

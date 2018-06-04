@@ -37,17 +37,17 @@ namespace Checkout.Payments
 
         public Task<ApiResponse<VoidResponse>> VoidAsync(string paymentId, VoidRequest voidRequest = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new NotImplementedException();
+            return _apiClient.PostAsync<VoidResponse>(GetPaymentUrl(paymentId) + "/voids", _credentials, cancellationToken, voidRequest);
         }
 
         public Task<ApiResponse<CaptureResponse>> CaptureAsync(string paymentId, CaptureRequest captureRequest = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new NotImplementedException();
+            return _apiClient.PostAsync<CaptureResponse>(GetPaymentUrl(paymentId) + "/captures", _credentials, cancellationToken, captureRequest);
         }
 
         public Task<ApiResponse<RefundResponse>> RefundAsync(string paymentId, RefundRequest refundRequest = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new NotImplementedException();
+            return _apiClient.PostAsync<RefundResponse>(GetPaymentUrl(paymentId) + "/refunds", _credentials, cancellationToken, refundRequest);
         }
 
         private async Task<ApiResponse<PaymentResponse<TResponseSource>>> RequestPaymentAsync<TRequestSource, TResponseSource>(
@@ -62,6 +62,11 @@ namespace Checkout.Payments
                 Error = apiResponse.Error,
                 Result = apiResponse.Result
             };
+        }
+
+        private static string GetPaymentUrl(string paymentId)
+        {
+            return "payments/" + paymentId;
         }
     }
 }
