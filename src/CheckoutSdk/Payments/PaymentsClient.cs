@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Checkout.Payments
@@ -24,36 +25,36 @@ namespace Checkout.Payments
             _credentials = new SecretKeyCredentials(configuration);
         }
 
-        public Task<ApiResponse<PaymentResponse<CardSourceResponse>>> RequestAsync(PaymentRequest<CardSource> cardPaymentRequest)
+        public Task<ApiResponse<PaymentResponse<CardSourceResponse>>> RequestAsync(PaymentRequest<CardSource> cardPaymentRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return RequestPaymentAsync<CardSource, CardSourceResponse>(cardPaymentRequest, CardPaymentMappings);
+            return RequestPaymentAsync<CardSource, CardSourceResponse>(cardPaymentRequest, CardPaymentMappings, cancellationToken);
         }
 
-        public Task<ApiResponse<PaymentResponse<CardSourceResponse>>> RequestAsync(PaymentRequest<TokenSource> tokenPaymentRequest)
+        public Task<ApiResponse<PaymentResponse<CardSourceResponse>>> RequestAsync(PaymentRequest<TokenSource> tokenPaymentRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return RequestPaymentAsync<TokenSource, CardSourceResponse>(tokenPaymentRequest, CardPaymentMappings);
+            return RequestPaymentAsync<TokenSource, CardSourceResponse>(tokenPaymentRequest, CardPaymentMappings, cancellationToken);
         }
 
-        public Task<ApiResponse<VoidResponse>> VoidAsync(string paymentId, VoidRequest voidRequest = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ApiResponse<CaptureResponse>> CaptureAsync(string paymentId, CaptureRequest captureRequest = null)
+        public Task<ApiResponse<VoidResponse>> VoidAsync(string paymentId, VoidRequest voidRequest = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             throw new NotImplementedException();
         }
 
-        public Task<ApiResponse<RefundResponse>> RefundAsync(string paymentId, RefundRequest refundRequest = null)
+        public Task<ApiResponse<CaptureResponse>> CaptureAsync(string paymentId, CaptureRequest captureRequest = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ApiResponse<RefundResponse>> RefundAsync(string paymentId, RefundRequest refundRequest = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             throw new NotImplementedException();
         }
 
         private async Task<ApiResponse<PaymentResponse<TResponseSource>>> RequestPaymentAsync<TRequestSource, TResponseSource>(
             PaymentRequest<TRequestSource> paymentRequest,
-            Dictionary<HttpStatusCode, Type> resultTypeMappings) where TRequestSource : IPaymentSource
+            Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken) where TRequestSource : IPaymentSource
         {
-            var apiResponse = await _apiClient.PostAsync("payments", _credentials, paymentRequest, resultTypeMappings);
+            var apiResponse = await _apiClient.PostAsync("payments", _credentials, paymentRequest, resultTypeMappings, cancellationToken);
 
             return new ApiResponse<PaymentResponse<TResponseSource>>
             {
