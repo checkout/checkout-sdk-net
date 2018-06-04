@@ -17,7 +17,8 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.2"/>
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.0.2"/>
   </ItemGroup>
-  <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="2.0.0"/>
+  
+  <ItemGroup Label="Output Files">
+    <None Update="appsettings.*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 using Checkout.Microsoft.Extensions;
 using Microsoft.Extensions.Configuration;
 using NSpec;
@@ -26,7 +27,7 @@ namespace Checkout.Tests
         private static CheckoutConfiguration LoadConfiguration()
         {
             var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
+                .SetBasePath(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location))
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile("appsettings.local.json", true)
                 .AddEnvironmentVariables()
