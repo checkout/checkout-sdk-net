@@ -23,7 +23,10 @@ namespace Checkout
         {
         }
 
-        public ApiClient(CheckoutConfiguration configuration, IHttpClientFactory httpClientFactory, ISerializer serializer)
+        public ApiClient(
+            CheckoutConfiguration configuration, 
+            IHttpClientFactory httpClientFactory, 
+            ISerializer serializer)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             if (httpClientFactory == null) throw new ArgumentNullException(nameof(httpClientFactory));
@@ -32,10 +35,12 @@ namespace Checkout
             _httpClient = httpClientFactory.Create();
         }
 
-
-        public async Task<ApiResponse<TResult>> PostAsync<TResult>(string path, object request = null)
+        public async Task<ApiResponse<TResult>> PostAsync<TResult>(string path, IApiCredentials credentials, object request = null)
         {
-            var httpResponse = await SendRequestAsync(HttpMethod.Post, path, request);
+            if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
+            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
+            
+            var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, request);
 
             var apiResponse = new ApiResponse<TResult>
             {
@@ -51,9 +56,13 @@ namespace Checkout
             return apiResponse;
         }
 
-        public async Task<ApiResponse<dynamic>> PostAsync(string path, object request, Dictionary<HttpStatusCode, Type> resultTypeMappings)
+        public async Task<ApiResponse<dynamic>> PostAsync(string path, IApiCredentials credentials, object request, Dictionary<HttpStatusCode, Type> resultTypeMappings)
         {
-            var httpResponse = await SendRequestAsync(HttpMethod.Post, path, request);
+            if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
+            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
+            if (resultTypeMappings == null) throw new ArgumentNullException(nameof(resultTypeMappings));
+            
+            var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, request);
 
             var apiResponse = new ApiResponse<dynamic>
             {
@@ -84,14 +93,15 @@ namespace Checkout
             return _serializer.Deserialize(json, resultType);
         }
 
-        private Task<HttpResponseMessage> SendRequestAsync(HttpMethod httpMethod, string path, object request = null)
+        private async Task<HttpResponseMessage> SendRequestAsync(HttpMethod httpMethod, string path, IApiCredentials credentials, object request = null)
         {
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException(nameof(path));
             
             var httpRequest = new HttpRequestMessage(httpMethod, GetRequestUri(path));
-            httpRequest.Headers.Authorization = new AuthenticationHeaderValue(_configuration.SecretKey);
             httpRequest.Headers.UserAgent.ParseAdd("checkout-sdk-net/1.0.0");
+            
+            await credentials.AuthorizeAsync(httpRequest);
 
             if (request != null)
             {
@@ -100,7 +110,7 @@ namespace Checkout
 
             Logger.Info("{HttpMethod} {Uri}", HttpMethod.Post, httpRequest.RequestUri.AbsoluteUri);
             
-            return _httpClient.SendAsync(httpRequest);
+            return await _httpClient.SendAsync(httpRequest);
         }
 
         private Uri GetRequestUri(string path)

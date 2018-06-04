@@ -14,10 +14,14 @@ namespace Checkout.Payments
         };
 
         private readonly IApiClient _apiClient;
+        private IApiCredentials _credentials;
 
-        public PaymentsClient(IApiClient apiClient)
+        public PaymentsClient(IApiClient apiClient, CheckoutConfiguration configuration)
         {
             _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+
+            _credentials = new SecretKeyCredentials(configuration);
         }
 
         public Task<ApiResponse<PaymentResponse<CardSourceResponse>>> RequestAsync(PaymentRequest<CardSource> cardPaymentRequest)
@@ -49,7 +53,7 @@ namespace Checkout.Payments
             PaymentRequest<TRequestSource> paymentRequest,
             Dictionary<HttpStatusCode, Type> resultTypeMappings) where TRequestSource : IPaymentSource
         {
-            var apiResponse = await _apiClient.PostAsync("payments", paymentRequest, resultTypeMappings);
+            var apiResponse = await _apiClient.PostAsync("payments", _credentials, paymentRequest, resultTypeMappings);
 
             return new ApiResponse<PaymentResponse<TResponseSource>>
             {

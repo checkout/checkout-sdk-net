@@ -31,8 +31,10 @@ namespace Microsoft.Extensions.DependencyInjection
             var checkoutOptions = configuration.GetSection("Checkout").Get<CheckoutOptions>();
 
             var checkoutConfiguration = string.IsNullOrEmpty(checkoutOptions.Uri)
-                ? new CheckoutConfiguration(checkoutOptions.SecretKey, checkoutOptions.Sandbox, checkoutOptions.PublicKey)
-                : new CheckoutConfiguration(checkoutOptions.SecretKey, checkoutOptions.Uri, checkoutOptions.PublicKey);
+                ? new CheckoutConfiguration(checkoutOptions.SecretKey, checkoutOptions.Sandbox)
+                : new CheckoutConfiguration(checkoutOptions.SecretKey, checkoutOptions.Uri);
+
+            checkoutConfiguration.PublicKey = checkoutOptions.PublicKey;
 
             return services.AddCheckoutSdk(checkoutConfiguration);
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using Checkout.Payments;
 using NSpec;
@@ -16,7 +17,7 @@ namespace Checkout.Tests
         {
             before = () =>
                 paymentRequest = new PaymentRequest<CardSource>(
-                    new CardSource("4242424242424242", 6, 18),
+                    new CardSource(TestCard.Visa.Number, TestCard.Visa.ExpiryMonth, TestCard.Visa.ExpiryYear),
                     Currency.GBP,
                     100
                 )
@@ -34,6 +35,7 @@ namespace Checkout.Tests
 
                 it["returns processed payment details"] = () =>
                 {
+                    apiResponse.StatusCode.ShouldBe(HttpStatusCode.Created);
                     var payment = apiResponse.Result?.Payment;
 
                     payment.ShouldNotBeNull();
@@ -56,8 +58,9 @@ namespace Checkout.Tests
             {
                 before = () => paymentRequest.ThreeDs = true;
 
-                it["returns pending payment details"] = () => 
+                it["returns pending payment details"] = () =>
                 {
+                    apiResponse.StatusCode.ShouldBe(HttpStatusCode.Accepted);
                     var pending = apiResponse.Result?.Pending;
 
                     pending.ShouldNotBeNull();

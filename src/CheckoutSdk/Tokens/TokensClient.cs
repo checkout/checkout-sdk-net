@@ -6,30 +6,30 @@ namespace Checkout.Tokens
     public class TokensClient : ITokensClient
     {
         private readonly IApiClient _apiClient;
-        private readonly CheckoutConfiguration _configuration;
+        private readonly IApiCredentials _credentials;
 
         public TokensClient(IApiClient apiClient, CheckoutConfiguration configuration)
         {
             _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+
+            _credentials = new PublicKeyCredentials(configuration);
         }
-        
+
         public Task<ApiResponse<CardTokenResponse>> RequestAsync(CardTokenRequest cardTokenRequest)
         {
-            ValidatePublicKey();
-            return _apiClient.PostAsync<CardTokenResponse>("tokens", cardTokenRequest);
+            if (cardTokenRequest == null)
+                throw new ArgumentNullException(nameof(cardTokenRequest));
+
+            return _apiClient.PostAsync<CardTokenResponse>("tokens", _credentials, cardTokenRequest);
         }
 
         public Task<ApiResponse<TokenResponse>> RequestAsync(WalletTokenRequest walletTokenRequest)
         {
-            ValidatePublicKey();
-            return _apiClient.PostAsync<TokenResponse>("tokens", walletTokenRequest);
-        }
+            if (walletTokenRequest == null)
+                throw new ArgumentNullException(nameof(walletTokenRequest));
 
-        private void ValidatePublicKey()
-        {
-            if (string.IsNullOrEmpty(_configuration.PublicKey))
-                throw new InvalidOperationException("Public key required to request tokens");
+            return _apiClient.PostAsync<TokenResponse>("tokens", _credentials, walletTokenRequest);
         }
     }
 }

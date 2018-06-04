@@ -3,7 +3,7 @@ using Serilog;
 
 namespace Checkout.Tests
 {
-    class ApiTest : nspec
+    public class ApiTest : nspec
     {
         protected ICheckoutApi Api { get; private set; }
         
@@ -16,7 +16,8 @@ namespace Checkout.Tests
             
             Api = CheckoutApi.Create(
                 "sk_dfee3242-a70d-4903-918d-64395e7adff9",
-                "https://sandbox.checkout.com/api2/"
+                "https://sandbox.checkout.com/api2/",
+                "pk_73ca3f81-a3ef-4111-a2cf-0678a37c03b1"
             );
         }
     }
