@@ -1,3 +1,7 @@
+using System;
+using System.IO;
+using Checkout.Microsoft.Extensions;
+using Microsoft.Extensions.Configuration;
 using NSpec;
 using Serilog;
 
@@ -5,20 +9,32 @@ namespace Checkout.Tests
 {
     public class ApiTest : nspec
     {
+        private static Lazy<CheckoutConfiguration> _configuration = new Lazy<CheckoutConfiguration>(LoadConfiguration);
+        public static CheckoutConfiguration Configuration => _configuration.Value;
         protected ICheckoutApi Api { get; private set; }
-        
+
         void before_each()
         {
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.ColoredConsole()
                 .MinimumLevel.Debug()
                 .CreateLogger(); // TODO configure from settings
-            
-            Api = CheckoutApi.Create(
-                "sk_dfee3242-a70d-4903-918d-64395e7adff9",
-                "https://sandbox.checkout.com/api2/",
-                "pk_73ca3f81-a3ef-4111-a2cf-0678a37c03b1"
-            );
+
+            Api = new CheckoutApi(new ApiClient(Configuration), Configuration);
+        }
+
+        private static CheckoutConfiguration LoadConfiguration()
+        {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.local.json", true)
+                .Build();
+
+            var options = new CheckoutOptions();
+            configuration.Bind("Checkout", options);
+
+            return options.CreateConfiguration();
         }
     }
 }

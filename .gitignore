@@ -272,8 +272,5 @@ tools/*
 .DS_Store
 dump.rdb
 
-# Gateway API
+# App Specific
 appsettings.local.json
-
-# Consumers
-checkpoints/
