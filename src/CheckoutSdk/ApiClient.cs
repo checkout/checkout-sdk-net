@@ -100,7 +100,7 @@ namespace Checkout
                 throw new ArgumentNullException(nameof(path));
 
             var httpRequest = new HttpRequestMessage(httpMethod, GetRequestUri(path));
-            httpRequest.Headers.UserAgent.ParseAdd("checkout-sdk-net/1.0.0");
+            httpRequest.Headers.UserAgent.ParseAdd("checkout-sdk-net/" + ReflectionUtils.GetAssemblyVersion<ApiClient>());
 
             await credentials.AuthorizeAsync(httpRequest);
 
