@@ -23,7 +23,7 @@ namespace Checkout
                 throw new ArgumentException("Public Key must be configured", nameof(_configuration.PublicKey));
 
             httpRequest.Headers.Authorization = new AuthenticationHeaderValue(_configuration.PublicKey);
-            return Task.CompletedTask;
+            return Task.FromResult(0);
         }
     }
 }

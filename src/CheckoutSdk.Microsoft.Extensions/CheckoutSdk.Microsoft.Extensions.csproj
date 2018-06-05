@@ -1,6 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>CheckoutSDK.Microsoft.Extensions</PackageId>
+    <Title>Checkout.com SDK Extensions</Title>
+    <Description>Checkout.com Extensions for Microsoft Configuration and Dependency Injection</Description>
+    <AssemblyTitle>CheckoutSdk.Microsoft.Extensions</AssemblyTitle>
+    <NeutralLanguage>en-GB</NeutralLanguage>
+    <Authors>Checkout.com</Authors>
+    <Copyright>Checkout.com</Copyright>
+    <AssemblyName>CheckoutSdk.Microsoft.Extensions</AssemblyName>
+    <PackageProjectUrl>https://github.com/checkout/checkout-sdk-net</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/checkout/checkout-sdk-net/raw/master/LICENSE.MD</PackageLicenseUrl>
+    <PackageTags>Checkout.com;payments;gateway</PackageTags>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>git://github.com/checkout/checkout-sdk-net</RepositoryUrl>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <RootNamespace>Checkout</RootNamespace>
+    <DefineConstants>LIBLOG_PORTABLE</DefineConstants>
   </PropertyGroup>
   <ItemGroup Label="Project References">
     <ProjectReference Include="..\CheckoutSdk\CheckoutSdk.csproj"/>

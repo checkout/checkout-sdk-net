@@ -23,7 +23,7 @@ namespace Checkout
                 throw new ArgumentException("Secret Key must be configured", nameof(_configuration.SecretKey));
 
             httpRequest.Headers.Authorization = new AuthenticationHeaderValue(_configuration.SecretKey);
-            return Task.CompletedTask;
+            return Task.FromResult(0);
         }
     }
 }

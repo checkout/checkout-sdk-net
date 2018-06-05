@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <!-- https://docs.microsoft.com/en-us/dotnet/core/tools/csproj#nuget-metadata-properties -->
-    <PackageId>CheckoutSdk</PackageId>
+    <PackageId>CheckoutSDK</PackageId>
     <Title>Checkout.com SDK</Title>
     <Description>Checkout.com SDK for .NET</Description>
     <AssemblyTitle>CheckoutSdk</AssemblyTitle>
@@ -14,13 +14,25 @@
     <PackageTags>Checkout.com;payments;gateway</PackageTags>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>git://github.com/checkout/checkout-sdk-net</RepositoryUrl>
-    <!-- <TargetFramework>netstandard1.3</TargetFramework> -->
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>net45;netstandard1.4;netstandard2.0</TargetFrameworks>
     <RootNamespace>Checkout</RootNamespace>
     <DefineConstants>LIBLOG_PORTABLE</DefineConstants>
   </PropertyGroup>
-  <ItemGroup>
+  
+  <PropertyGroup Label="Unix Build Targets" Condition=" '$(OS)' == 'Unix' ">
+    <TargetFrameworks>netstandard1.4;netstandard2.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup Label="Package References">
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2"/>
+  </ItemGroup>
+
+  <ItemGroup Label=".NET Standard Packages" Condition="'$(TargetFramework)' == 'netstandard1.4' or '$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Microsoft.CSharp" Version="4.4.1"/>
+  </ItemGroup>
+  
+  <ItemGroup Label=".NET 4.5 References" Condition="'$(TargetFramework)' == 'net45'">
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
 </Project>
