@@ -25,7 +25,7 @@ var api = CheckoutApi.Create("sk_70d144d5-92bd-4040-83cf-faeb978b3d75", sandbox:
 var apiResponse = await Api.Payments.RequestAsync(paymentRequest);
 ```
 
-All API operations return an `ApiResponse<TResult>` where `TResult` contains the result of the API call, as per our [API reference](http://reboot.ckotech.co).
+All API operations return an `ApiResponse<TResult>` where `TResult` contains the result of the API call, as per our [API reference](https://docs.checkout.com/reference).
 
 For detailed examples, please see the WIKI.
 
@@ -107,4 +107,4 @@ Checkout SDK for .NET uses [Semantic Versioning](https://semver.org/). The lates
 ## More Resources
 
 - [Checkout.com Documentation](http://docs.checkout.com)
-- [Checkout.com API Reference](http://reboot.ckotech)
+- [Checkout.com API Reference](http://docs.checkout.com/reference)
