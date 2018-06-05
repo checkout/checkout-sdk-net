@@ -11,7 +11,7 @@ namespace Checkout
             _httpClient = httpClient ?? new HttpClient();
         }
         
-        public HttpClient Create()
+        public HttpClient CreateClient()
         {
             return _httpClient;
         }

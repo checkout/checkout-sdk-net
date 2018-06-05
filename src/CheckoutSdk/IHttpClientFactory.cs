@@ -4,6 +4,6 @@ namespace Checkout
 {
     public interface IHttpClientFactory
     {
-        HttpClient Create(); 
+        HttpClient CreateClient(); 
     }
 }

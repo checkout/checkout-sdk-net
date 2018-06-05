@@ -33,7 +33,7 @@ namespace Checkout
             if (httpClientFactory == null) throw new ArgumentNullException(nameof(httpClientFactory));
             _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
 
-            _httpClient = httpClientFactory.Create();
+            _httpClient = httpClientFactory.CreateClient();
         }
 
         public async Task<ApiResponse<TResult>> PostAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, object request = null)
