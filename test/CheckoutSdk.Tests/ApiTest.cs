@@ -33,9 +33,7 @@ namespace Checkout.Tests
                 .AddEnvironmentVariables()
                 .Build();
 
-            var options = new CheckoutOptions();
-            configuration.Bind("Checkout", options);
-
+            var options = configuration.GetCheckoutOptions();
             return options.CreateConfiguration();
         }
     }
