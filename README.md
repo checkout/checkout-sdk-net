@@ -22,6 +22,7 @@ Initialize a `CheckoutApi` to access the operations for each API:
 ```c#
 var api = CheckoutApi.Create("sk_70d144d5-92bd-4040-83cf-faeb978b3d75", sandbox: true);
 
+var paymentRequest = new PaymentRequest<TokenSource>(new TokenSource("tok_ubfj2q76miwundwlk72vxt2i7q"), Currency.USD, 999);
 var apiResponse = await Api.Payments.RequestAsync(paymentRequest);
 ```
 
