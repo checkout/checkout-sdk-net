@@ -9,9 +9,9 @@ namespace Checkout
     {
         private readonly JsonSerializerSettings _serializerSettings;
 
-        public JsonSerializer(JsonSerializerSettings serializerSettings = null)
+        public JsonSerializer(Action<JsonSerializerSettings> configureSettings = null)
         {
-            _serializerSettings = serializerSettings ?? CreateSerializerSettings();
+            _serializerSettings = CreateSerializerSettings(configureSettings);
         }
 
         public string Serialize(object input)
@@ -25,9 +25,9 @@ namespace Checkout
             return JsonConvert.DeserializeObject(input, objectType, _serializerSettings);
         }
 
-        public static JsonSerializerSettings CreateSerializerSettings()
+        public static JsonSerializerSettings CreateSerializerSettings(Action<JsonSerializerSettings> configureSettings)
         {
-            return new JsonSerializerSettings
+            var settings = new JsonSerializerSettings()
             {
                 NullValueHandling = NullValueHandling.Ignore,
                 ContractResolver = new DefaultContractResolver()
@@ -36,6 +36,11 @@ namespace Checkout
                 },
                 Converters = new[] { new StringEnumConverter() }
             };
+
+            if (configureSettings != null)
+                configureSettings(settings);
+
+            return settings;
         }
     }
 }

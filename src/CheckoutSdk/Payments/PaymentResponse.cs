@@ -5,7 +5,7 @@ namespace Checkout.Payments
         public PaymentPending Pending { get; set; }
         public PaymentProcessed<TSource> Payment { get; set; }
 
-        public bool IsAccepted => Pending != null;
+        public bool IsPending => Pending != null;
 
         public static implicit operator PaymentResponse<TSource>(PaymentPending pending)
         {

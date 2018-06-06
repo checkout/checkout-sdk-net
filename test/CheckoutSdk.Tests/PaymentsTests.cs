@@ -51,6 +51,7 @@ namespace Checkout.Tests
                 it["returns pending payment details"] = () =>
                 {
                     apiResponse.StatusCode.ShouldBe(HttpStatusCode.Accepted);
+                    apiResponse.Result.IsPending.ShouldBe(true);
                     var pending = apiResponse.Result?.Pending;
 
                     pending.ShouldNotBeNull();

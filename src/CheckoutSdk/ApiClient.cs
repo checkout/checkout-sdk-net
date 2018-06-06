@@ -25,6 +25,16 @@ namespace Checkout
         {
         }
 
+        public ApiClient(CheckoutConfiguration configuration, IHttpClientFactory httpClientFactory)
+            : this(configuration, httpClientFactory, new JsonSerializer())
+        {
+        }
+
+        public ApiClient(CheckoutConfiguration configuration, ISerializer serializer)
+            : this(configuration, new DefaultHttpClientFactory(), serializer)
+        {
+        }
+
         public ApiClient(
             CheckoutConfiguration configuration,
             IHttpClientFactory httpClientFactory,
