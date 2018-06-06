@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -42,14 +43,7 @@ namespace Checkout
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
             var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, request, cancellationToken);
-
-            var apiResponse = new ApiResponse<TResult>
-            {
-                StatusCode = httpResponse.StatusCode // Pass in ctor
-            };
-
-            if (httpResponse.StatusCode == Unprocessable)
-                apiResponse.Error = await DeserializeJsonAsync<Error>(httpResponse);
+            var apiResponse = await CreateApiResponseAsync<TResult>(httpResponse);
 
             if (httpResponse.IsSuccessStatusCode)
                 apiResponse.Result = await DeserializeJsonAsync<TResult>(httpResponse);
@@ -64,14 +58,7 @@ namespace Checkout
             if (resultTypeMappings == null) throw new ArgumentNullException(nameof(resultTypeMappings));
 
             var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, request, cancellationToken);
-
-            var apiResponse = new ApiResponse<dynamic>
-            {
-                StatusCode = httpResponse.StatusCode // Pass in ctor
-            };
-
-            if (httpResponse.StatusCode == Unprocessable)
-                apiResponse.Error = await DeserializeJsonAsync<Error>(httpResponse);
+            var apiResponse = await CreateApiResponseAsync<dynamic>(httpResponse);
 
             if (resultTypeMappings.TryGetValue(httpResponse.StatusCode, out Type resultType))
                 apiResponse.Result = await DeserializeJsonAsync(httpResponse, resultType);
@@ -120,6 +107,22 @@ namespace Checkout
             Uri.TryCreate(baseUri, path, out var uri);
 
             return uri;
+        }
+
+        private async Task<ApiResponse<TResult>> CreateApiResponseAsync<TResult>(HttpResponseMessage httpResponse)
+        {
+            httpResponse.Headers.TryGetValues("Cko-Request-Id", out var requestId);
+
+            var apiResponse = new ApiResponse<TResult>
+            {
+                StatusCode = httpResponse.StatusCode,
+                RequestId = requestId?.FirstOrDefault()
+            };
+
+            if (httpResponse.StatusCode == Unprocessable)
+                apiResponse.Error = await DeserializeJsonAsync<Error>(httpResponse);
+            
+            return apiResponse;   
         }
     }
 }
