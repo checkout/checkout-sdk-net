@@ -8,7 +8,7 @@ namespace Checkout
         public Error Error { get; set; }
         public string RequestId { get; set; }
 
-        public bool HasErrors => Error != null;
+        public bool HasError => Error != null;
     }
 
     public class ApiResponse<TResult> : ApiResponse
