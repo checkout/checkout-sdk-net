@@ -16,6 +16,7 @@
     <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1"/>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.2"/>
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.0.2"/>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0"/>
   </ItemGroup>
   
   <ItemGroup Label="Output Files">

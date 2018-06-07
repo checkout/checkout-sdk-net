@@ -17,8 +17,10 @@ namespace Microsoft.Extensions.DependencyInjection
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             services.AddSingleton<IHttpClientFactory>(new DefaultHttpClientFactory());
+            services.AddSingleton<ISerializer>(new JsonSerializer());
             services.AddSingleton<CheckoutConfiguration>(configuration);
             services.AddSingleton<IApiClient, ApiClient>();
+            services.AddSingleton<ICheckoutApi, CheckoutApi>();
 
             return services;
         }
