@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Checkout
 {
-    public class Error
+    public class ErrorResponse
     {
         public string RequestId { get; set; }
         public string ErrorType { get; set; }

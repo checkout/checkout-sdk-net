@@ -47,33 +47,30 @@ namespace Checkout
             _httpClient = httpClientFactory.CreateClient();
         }
 
-        public async Task<ApiResponse<TResult>> PostAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, object request = null)
+        public async Task<TResult> PostAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, object request = null)
         {
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
             var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, request, cancellationToken);
-            var apiResponse = await CreateApiResponseAsync<TResult>(httpResponse);
+            await ValidateResponseAsync(httpResponse);
 
-            if (httpResponse.IsSuccessStatusCode)
-                apiResponse.Result = await DeserializeJsonAsync<TResult>(httpResponse);
-
-            return apiResponse;
+            return await DeserializeJsonAsync<TResult>(httpResponse);
         }
 
-        public async Task<ApiResponse<dynamic>> PostAsync(string path, IApiCredentials credentials, object request, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken)
+        public async Task<dynamic> PostAsync(string path, IApiCredentials credentials, object request, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
             if (resultTypeMappings == null) throw new ArgumentNullException(nameof(resultTypeMappings));
 
             var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, request, cancellationToken);
-            var apiResponse = await CreateApiResponseAsync<dynamic>(httpResponse);
+            await ValidateResponseAsync(httpResponse);
 
-            if (resultTypeMappings.TryGetValue(httpResponse.StatusCode, out Type resultType))
-                apiResponse.Result = await DeserializeJsonAsync(httpResponse, resultType);
-
-            return apiResponse;
+            if (!resultTypeMappings.TryGetValue(httpResponse.StatusCode, out Type resultType))
+                throw new KeyNotFoundException($"The status code {httpResponse.StatusCode} is not mapped to a result type");
+                
+            return  await DeserializeJsonAsync(httpResponse, resultType);
         }
 
         private async Task<TResult> DeserializeJsonAsync<TResult>(HttpResponseMessage httpResponse)
@@ -111,28 +108,31 @@ namespace Checkout
             return await _httpClient.SendAsync(httpRequest, cancellationToken);
         }
 
+        private async Task ValidateResponseAsync(HttpResponseMessage httpResponse)
+        {
+
+            if (!httpResponse.IsSuccessStatusCode)
+            {
+                httpResponse.Headers.TryGetValues("Cko-Request-Id", out var requestIdHeader);
+                var requestId = requestIdHeader?.FirstOrDefault();
+
+
+                if (httpResponse.StatusCode == Unprocessable)
+                {
+                    var error = await DeserializeJsonAsync<ErrorResponse>(httpResponse);
+                    throw new CheckoutValidationException(error, httpResponse.StatusCode, requestId);
+                }
+
+                throw new CheckoutApiException(httpResponse.StatusCode, requestId);
+            }
+        }
+
         private Uri GetRequestUri(string path)
         {
             var baseUri = new Uri(_configuration.Uri);
             Uri.TryCreate(baseUri, path, out var uri);
 
             return uri;
-        }
-
-        private async Task<ApiResponse<TResult>> CreateApiResponseAsync<TResult>(HttpResponseMessage httpResponse)
-        {
-            httpResponse.Headers.TryGetValues("Cko-Request-Id", out var requestId);
-
-            var apiResponse = new ApiResponse<TResult>
-            {
-                StatusCode = httpResponse.StatusCode,
-                RequestId = requestId?.FirstOrDefault()
-            };
-
-            if (httpResponse.StatusCode == Unprocessable)
-                apiResponse.Error = await DeserializeJsonAsync<Error>(httpResponse);
-            
-            return apiResponse;   
         }
     }
 }

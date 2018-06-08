@@ -11,7 +11,7 @@ namespace Checkout.Tests
     class describe_payments : ApiTest
     {
         private PaymentRequest<CardSource> paymentRequest;
-        private ApiResponse<PaymentResponse<CardSourceResponse>> apiResponse;
+        private PaymentResponse<CardSourceResponse> apiResponse;
 
         void describe_card_payments()
         {
@@ -25,11 +25,9 @@ namespace Checkout.Tests
 
                 it["returns processed payment details"] = () =>
                 {
-                    apiResponse.StatusCode.ShouldBe(HttpStatusCode.Created);
-                    var payment = apiResponse.Result?.Payment;
+                    var payment = apiResponse.Payment;
 
                     payment.ShouldNotBeNull();
-                    apiResponse.Error.ShouldBeNull();
                     payment.Approved.ShouldBeTrue();
                     payment.Id.ShouldNotBeNullOrEmpty();
                     payment.ActionId.ShouldNotBeNullOrEmpty();
@@ -50,12 +48,10 @@ namespace Checkout.Tests
 
                 it["returns pending payment details"] = () =>
                 {
-                    apiResponse.StatusCode.ShouldBe(HttpStatusCode.Accepted);
-                    apiResponse.Result.IsPending.ShouldBe(true);
-                    var pending = apiResponse.Result?.Pending;
+                    apiResponse.IsPending.ShouldBe(true);
+                    var pending = apiResponse.Pending;
 
                     pending.ShouldNotBeNull();
-                    apiResponse.Error.ShouldBeNull();
 
                     pending.Id.ShouldNotBeNullOrEmpty();
                     pending.Reference.ShouldBe(paymentRequest.Reference);
@@ -76,7 +72,7 @@ namespace Checkout.Tests
             // Auth
             var paymentRequest = CreateCardPaymentRequest();
             var paymentResponse = await Api.Payments.RequestAsync(paymentRequest);
-            paymentResponse.Result.Payment.CanCapture().ShouldBe(true);
+            paymentResponse.Payment.CanCapture().ShouldBe(true);
 
             CaptureRequest captureRequest = new CaptureRequest
             {
@@ -84,11 +80,10 @@ namespace Checkout.Tests
             };
 
             // Capture
-            var captureResponse = await Api.Payments.CaptureAsync(paymentResponse.Result.Payment.Id, captureRequest);
+            var captureResponse = await Api.Payments.CaptureAsync(paymentResponse.Payment.Id, captureRequest);
 
-            captureResponse.StatusCode.ShouldBe(HttpStatusCode.Accepted);
-            captureResponse.Result.ActionId.ShouldNotBeNullOrEmpty();
-            captureResponse.Result.Reference.ShouldBe(captureRequest.Reference);
+            captureResponse.ActionId.ShouldNotBeNullOrEmpty();
+            captureResponse.Reference.ShouldBe(captureRequest.Reference);
         }
 
         async Task it_can_void_payment()
@@ -96,7 +91,7 @@ namespace Checkout.Tests
             // Auth
             var paymentRequest = CreateCardPaymentRequest();
             var paymentResponse = await Api.Payments.RequestAsync(paymentRequest);
-            paymentResponse.Result.Payment.CanVoid().ShouldBe(true);
+            paymentResponse.Payment.CanVoid().ShouldBe(true);
 
             VoidRequest voidRequest = new VoidRequest
             {
@@ -104,11 +99,10 @@ namespace Checkout.Tests
             };
 
             // Void Auth
-            var voidResponse = await Api.Payments.VoidAsync(paymentResponse.Result.Payment.Id, voidRequest);
+            var voidResponse = await Api.Payments.VoidAsync(paymentResponse.Payment.Id, voidRequest);
 
-            voidResponse.StatusCode.ShouldBe(HttpStatusCode.Accepted);
-            voidResponse.Result.ActionId.ShouldNotBeNullOrEmpty();
-            voidResponse.Result.Reference.ShouldBe(voidRequest.Reference);
+            voidResponse.ActionId.ShouldNotBeNullOrEmpty();
+            voidResponse.Reference.ShouldBe(voidRequest.Reference);
         }
 
         async Task it_can_refund_payment()
@@ -116,10 +110,10 @@ namespace Checkout.Tests
             // Auth
             var paymentRequest = CreateCardPaymentRequest();
             var paymentResponse = await Api.Payments.RequestAsync(paymentRequest);
-            paymentResponse.Result.Payment.CanCapture().ShouldBe(true);
+            paymentResponse.Payment.CanCapture().ShouldBe(true);
 
             // Capture
-            var captureResponse = await Api.Payments.CaptureAsync(paymentResponse.Result.Payment.Id);
+            var captureResponse = await Api.Payments.CaptureAsync(paymentResponse.Payment.Id);
 
             var refundRequest = new RefundRequest
             {
@@ -128,11 +122,10 @@ namespace Checkout.Tests
 
             // Refund
 
-            var refundResponse = await Api.Payments.RefundAsync(paymentResponse.Result.Payment.Id, refundRequest);
+            var refundResponse = await Api.Payments.RefundAsync(paymentResponse.Payment.Id, refundRequest);
 
-            refundResponse.StatusCode.ShouldBe(HttpStatusCode.Accepted);
-            refundResponse.Result.ActionId.ShouldNotBeNullOrEmpty();
-            refundResponse.Result.Reference.ShouldBe(refundRequest.Reference);
+            refundResponse.ActionId.ShouldNotBeNullOrEmpty();
+            refundResponse.Reference.ShouldBe(refundRequest.Reference);
         }
 
         PaymentRequest<CardSource> CreateCardPaymentRequest()
