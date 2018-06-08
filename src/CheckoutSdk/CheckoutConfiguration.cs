@@ -4,8 +4,8 @@ namespace Checkout
 {
     public class CheckoutConfiguration
     {
-        private const string ProductionUrl = "https://api.checkout.com";
-        private const string SandboxUrl = "https://sandbox.checkout.com";
+        private const string ProductionUrl = "https://api2.checkout.com/";
+        private const string SandboxUrl = "https://sandbox.checkout.com/api2/";
 
         public CheckoutConfiguration(string secretKey, bool sandbox)
             : this(secretKey, sandbox ? SandboxUrl : ProductionUrl)
