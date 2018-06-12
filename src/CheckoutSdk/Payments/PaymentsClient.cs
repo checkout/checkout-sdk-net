@@ -58,6 +58,11 @@ namespace Checkout.Payments
             return apiResponse;
         }
 
+        public Task<GetPaymentResponse> GetPaymentAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return _apiClient.GetAsync<GetPaymentResponse>(GetPaymentUrl(paymentId), _credentials, cancellationToken);
+        }
+
         private static string GetPaymentUrl(string paymentId)
         {
             return "payments/" + paymentId;

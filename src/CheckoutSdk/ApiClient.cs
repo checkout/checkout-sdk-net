@@ -47,14 +47,21 @@ namespace Checkout
             _httpClient = httpClientFactory.CreateClient();
         }
 
+        public async Task<TResult> GetAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
+            if (credentials == null) throw new ArgumentNullException(nameof(credentials));   
+
+            var httpResponse = await SendRequestAsync(HttpMethod.Get, path, credentials, null, cancellationToken);
+            return await DeserializeJsonAsync<TResult>(httpResponse);
+        }
+
         public async Task<TResult> PostAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, object request = null)
         {
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
             var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, request, cancellationToken);
-            await ValidateResponseAsync(httpResponse);
-
             return await DeserializeJsonAsync<TResult>(httpResponse);
         }
 
@@ -65,12 +72,11 @@ namespace Checkout
             if (resultTypeMappings == null) throw new ArgumentNullException(nameof(resultTypeMappings));
 
             var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, request, cancellationToken);
-            await ValidateResponseAsync(httpResponse);
 
             if (!resultTypeMappings.TryGetValue(httpResponse.StatusCode, out Type resultType))
                 throw new KeyNotFoundException($"The status code {httpResponse.StatusCode} is not mapped to a result type");
-                
-            return  await DeserializeJsonAsync(httpResponse, resultType);
+
+            return await DeserializeJsonAsync(httpResponse, resultType);
         }
 
         private async Task<TResult> DeserializeJsonAsync<TResult>(HttpResponseMessage httpResponse)
@@ -103,9 +109,12 @@ namespace Checkout
                 httpRequest.Content = new StringContent(_serializer.Serialize(request), Encoding.UTF8, "application/json");
             }
 
-            Logger.Info("{HttpMethod} {Uri}", HttpMethod.Post, httpRequest.RequestUri.AbsoluteUri);
+            Logger.Info("{HttpMethod} {Uri}", httpMethod, httpRequest.RequestUri.AbsoluteUri);
 
-            return await _httpClient.SendAsync(httpRequest, cancellationToken);
+            var httpResponse = await _httpClient.SendAsync(httpRequest, cancellationToken);
+            await ValidateResponseAsync(httpResponse);
+
+            return httpResponse;
         }
 
         private async Task ValidateResponseAsync(HttpResponseMessage httpResponse)
@@ -116,12 +125,14 @@ namespace Checkout
                 httpResponse.Headers.TryGetValues("Cko-Request-Id", out var requestIdHeader);
                 var requestId = requestIdHeader?.FirstOrDefault();
 
-
                 if (httpResponse.StatusCode == Unprocessable)
                 {
                     var error = await DeserializeJsonAsync<ErrorResponse>(httpResponse);
                     throw new CheckoutValidationException(error, httpResponse.StatusCode, requestId);
                 }
+
+                if (httpResponse.StatusCode == HttpStatusCode.NotFound)
+                    throw new CheckoutResourceNotFoundException(httpResponse.StatusCode, requestId);
 
                 throw new CheckoutApiException(httpResponse.StatusCode, requestId);
             }

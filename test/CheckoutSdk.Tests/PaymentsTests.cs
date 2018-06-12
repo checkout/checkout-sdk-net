@@ -128,6 +128,15 @@ namespace Checkout.Tests
             refundResponse.Reference.ShouldBe(refundRequest.Reference);
         }
 
+        async Task it_can_get_payment()
+        {
+            var paymentRequest = CreateCardPaymentRequest();
+            var paymentResponse = await Api.Payments.RequestAsync(paymentRequest);
+
+            var paymentDetails = await Api.Payments.GetPaymentAsync(paymentResponse.Payment.Id);
+            paymentDetails.ShouldNotBeNull();
+        }
+
         PaymentRequest<CardSource> CreateCardPaymentRequest()
         {
             return new PaymentRequest<CardSource>(
