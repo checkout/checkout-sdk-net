@@ -133,7 +133,7 @@ namespace Checkout.Tests
             var paymentRequest = CreateCardPaymentRequest();
             var paymentResponse = await Api.Payments.RequestAsync(paymentRequest);
 
-            var paymentDetails = await Api.Payments.GetPaymentAsync(paymentResponse.Payment.Id);
+        var paymentDetails = await Api.Payments.GetAsync(paymentResponse.Payment.Id);
             paymentDetails.ShouldNotBeNull();
         }
 
