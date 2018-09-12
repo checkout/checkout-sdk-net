@@ -1,4 +1,6 @@
-namespace Checkout.Payments
+using Checkout.Sdk.Common;
+
+namespace Checkout.Sdk.Payments
 {
     public class CardSource : IPaymentSource
     {

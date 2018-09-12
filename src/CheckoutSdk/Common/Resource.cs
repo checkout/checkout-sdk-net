@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Checkout
+namespace Checkout.Sdk.Common
 {
     public class Resource
     {

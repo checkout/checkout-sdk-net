@@ -1,4 +1,6 @@
-namespace Checkout.Tokens
+using Checkout.Sdk.Common;
+
+namespace Checkout.Sdk.Tokens
 {
     public class CardTokenRequest : ITokenRequest
     {

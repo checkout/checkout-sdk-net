@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace Checkout
+namespace Checkout.Sdk
 {
     public class CheckoutResourceNotFoundException : CheckoutApiException
     {

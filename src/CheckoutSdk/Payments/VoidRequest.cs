@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Checkout.Payments
+namespace Checkout.Sdk.Payments
 {
     public class VoidRequest
     {

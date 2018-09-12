@@ -1,6 +1,7 @@
+using Checkout.Sdk.Common;
 using Newtonsoft.Json;
 
-namespace Checkout.Payments
+namespace Checkout.Sdk.Payments
 {
     public class PaymentPending : Resource
     {

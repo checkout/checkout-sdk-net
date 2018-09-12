@@ -1,4 +1,4 @@
-namespace Checkout
+namespace Checkout.Sdk.Common
 {
     public class Currency
     {

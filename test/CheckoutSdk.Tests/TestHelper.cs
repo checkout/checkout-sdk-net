@@ -1,6 +1,6 @@
 using System;
 
-namespace Checkout.Tests
+namespace Checkout.Sdk.Tests
 {
     public class TestHelper
     {

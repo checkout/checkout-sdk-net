@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Checkout.Tokens
+namespace Checkout.Sdk.Tokens
 {
     public class TokensClient : ITokensClient
     {

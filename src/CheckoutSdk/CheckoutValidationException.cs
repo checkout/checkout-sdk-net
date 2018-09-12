@@ -1,6 +1,7 @@
 using System.Net;
+using Checkout.Sdk.Common;
 
-namespace Checkout
+namespace Checkout.Sdk
 {
     public class CheckoutValidationException : CheckoutApiException
     {

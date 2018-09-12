@@ -4,7 +4,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Checkout.Payments
+namespace Checkout.Sdk.Payments
 {
     public class PaymentsClient : IPaymentsClient
     {

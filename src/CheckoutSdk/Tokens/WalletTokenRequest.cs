@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Checkout.Tokens
+namespace Checkout.Sdk.Tokens
 {
     public class WalletTokenRequest : ITokenRequest
     {

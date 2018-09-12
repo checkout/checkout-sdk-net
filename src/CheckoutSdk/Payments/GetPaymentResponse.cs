@@ -1,6 +1,6 @@
 using System;
 
-namespace Checkout.Payments
+namespace Checkout.Sdk.Payments
 {
     public class GetPaymentResponse
     {

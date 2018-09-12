@@ -1,4 +1,4 @@
-namespace Checkout.Tokens
+namespace Checkout.Sdk.Tokens
 {
     public interface ITokenRequest
     {

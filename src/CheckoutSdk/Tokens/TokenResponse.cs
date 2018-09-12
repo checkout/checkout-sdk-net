@@ -1,6 +1,7 @@
 using System;
+using Checkout.Sdk.Common;
 
-namespace Checkout.Tokens
+namespace Checkout.Sdk.Tokens
 {
     public class TokenResponse : Resource
     {

@@ -1,4 +1,4 @@
-namespace Checkout.Microsoft.Extensions
+namespace Checkout.Sdk.Microsoft.Extensions
 {
     public class CheckoutOptions
     {

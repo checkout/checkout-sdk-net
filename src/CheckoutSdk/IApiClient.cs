@@ -4,7 +4,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Checkout
+namespace Checkout.Sdk
 {
     public interface IApiClient
     {

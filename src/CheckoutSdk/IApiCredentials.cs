@@ -1,7 +1,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Checkout
+namespace Checkout.Sdk
 {
     public interface IApiCredentials
     {

@@ -1,20 +1,18 @@
 using System;
 using System.IO;
 using System.Reflection;
-using Checkout.Microsoft.Extensions;
+using Checkout.Sdk.Microsoft.Extensions;
 using Microsoft.Extensions.Configuration;
-using NSpec;
 using Serilog;
 
-namespace Checkout.Tests
+namespace Checkout.Sdk.Tests
 {
-    public class ApiTest : nspec
+    public class ApiTestFixture
     {
-        private static Lazy<CheckoutConfiguration> _configuration = new Lazy<CheckoutConfiguration>(LoadConfiguration);
-        public static CheckoutConfiguration Configuration => _configuration.Value;
-        protected ICheckoutApi Api { get; private set; }
+        private static readonly Lazy<CheckoutConfiguration> LazyConfiguration = new Lazy<CheckoutConfiguration>(LoadConfiguration);
+        public static CheckoutConfiguration Configuration => LazyConfiguration.Value;
 
-        void before_each()
+        public ApiTestFixture()
         {
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.ColoredConsole()
@@ -24,10 +22,12 @@ namespace Checkout.Tests
             Api = new CheckoutApi(new ApiClient(Configuration), Configuration);
         }
 
+        public ICheckoutApi Api { get; private set; }
+
         private static CheckoutConfiguration LoadConfiguration()
         {
             var configuration = new ConfigurationBuilder()
-                .SetBasePath(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location))
+                .SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile("appsettings.local.json", true)
                 .AddEnvironmentVariables()
