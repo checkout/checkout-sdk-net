@@ -35,6 +35,11 @@ namespace Checkout.Sdk.Payments
             return RequestPaymentAsync<TokenSource, CardSourceResponse>(tokenPaymentRequest, CardPaymentMappings, cancellationToken);
         }
 
+        public Task<PaymentResponse<CardSourceResponse>> RequestAsync(PaymentRequest<CustomerSource> customerPaymentRequest, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return RequestPaymentAsync<CustomerSource, CardSourceResponse>(customerPaymentRequest, CardPaymentMappings, cancellationToken);
+        }
+
         public Task<VoidResponse> VoidAsync(string paymentId, VoidRequest voidRequest = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             return _apiClient.PostAsync<VoidResponse>(GetPaymentUrl(paymentId) + "/voids", _credentials, cancellationToken, voidRequest);

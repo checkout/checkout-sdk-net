@@ -19,6 +19,6 @@ namespace Checkout.Sdk.Tokens
         public Address BillingAddress { get; set; }
         public Phone Phone { get; set; }
 
-        public string Type => "card";
+        public string Type => Consts.Source.Type.Card;
     }
 }

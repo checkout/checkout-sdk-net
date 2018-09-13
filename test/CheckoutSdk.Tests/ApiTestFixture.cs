@@ -1,9 +1,10 @@
-using System;
-using System.IO;
-using System.Reflection;
 using Checkout.Sdk.Microsoft.Extensions;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using System;
+using System.IO;
+using System.Reflection;
+using Xunit.Abstractions;
 
 namespace Checkout.Sdk.Tests
 {
@@ -14,12 +15,15 @@ namespace Checkout.Sdk.Tests
 
         public ApiTestFixture()
         {
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.ColoredConsole()
-                .MinimumLevel.Debug()
-                .CreateLogger(); // TODO configure from settings
-
             Api = new CheckoutApi(new ApiClient(Configuration), Configuration);
+        }
+
+        public void CaptureLogsInTestOutput(ITestOutputHelper outputHelper)
+        {
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.TestOutput(outputHelper)
+                .MinimumLevel.Debug()
+                .CreateLogger();
         }
 
         public ICheckoutApi Api { get; private set; }

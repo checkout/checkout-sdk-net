@@ -20,7 +20,7 @@ namespace Checkout.Sdk.Payments
         public ThreeDsEnrollment ThreeDs { get; set; }
         public RiskResponse Risk { get; set; }
         public TSource Source { get; set; }
-        public Customer Customer { get; set; }
+        public CustomerSource Customer { get; set; }
         public DateTime ProcessedOn { get; set; }
 
         public Link GetActionsLink() => GetLink("actions");

@@ -21,7 +21,7 @@ namespace Checkout.Sdk.Payments
         public string Description { get; set; }
         public bool? Capture { get; set; }
         public DateTimeOffset? CaptureOn { get; set; }
-        public Customer Customer { get; set; }
+        public CustomerSource Customer { get; set; }
         public BillingDescriptor BillingDescriptor { get; set; }
 
         [JsonProperty(PropertyName = "3ds")]

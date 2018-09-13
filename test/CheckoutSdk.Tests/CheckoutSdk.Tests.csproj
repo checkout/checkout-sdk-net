@@ -10,6 +10,7 @@
   </ItemGroup>
   <ItemGroup Label="Package References">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="Serilog.Sinks.XUnit" Version="1.0.6" />
     <PackageReference Include="Shouldly" Version="2.8.2" />
     <PackageReference Include="Moq" Version="4.7.99" />
     <PackageReference Include="Oakton" Version="1.3.1" />
@@ -23,11 +24,5 @@
   
   <ItemGroup Label="Output Files">
     <None Update="appsettings.*" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <None Update="appsettings.local.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 </Project>

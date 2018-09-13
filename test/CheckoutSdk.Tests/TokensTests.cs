@@ -1,17 +1,19 @@
-using System;
-using System.Threading.Tasks;
 using Checkout.Sdk.Common;
 using Checkout.Sdk.Tests.Mocks;
 using Checkout.Sdk.Tokens;
 using Shouldly;
+using System;
+using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Checkout.Sdk.Tests
 {
     public class TokensTests : IClassFixture<ApiTestFixture>
     {
-        public TokensTests(ApiTestFixture fixture)
+        public TokensTests(ApiTestFixture fixture, ITestOutputHelper outputHelper)
         {
+            fixture.CaptureLogsInTestOutput(outputHelper);
             Api = fixture.Api;
         }
 
@@ -45,9 +47,9 @@ namespace Checkout.Sdk.Tests
 
         private CardTokenRequest CreateValidRequest()
         {
-            return new CardTokenRequest(TestCard.Visa.Number, TestCard.Visa.ExpiryMonth, TestCard.Visa.ExpiryYear)
+            return new CardTokenRequest(TestCardSource.Visa.Number, TestCardSource.Visa.ExpiryMonth, TestCardSource.Visa.ExpiryYear)
             {
-                Cvv = TestCard.Visa.Cvv,
+                Cvv = TestCardSource.Visa.Cvv,
                 BillingAddress = new Address
                 {
                     AddressLine1 = "Checkout.com",

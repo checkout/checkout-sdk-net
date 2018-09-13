@@ -9,6 +9,6 @@ namespace Checkout.Sdk.Payments
 
         public string Token { get; }
 
-        public string Type => "token";
+        public string Type => Consts.Source.Type.Token;
     }
 }
