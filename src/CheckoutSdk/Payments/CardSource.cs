@@ -4,6 +4,8 @@ namespace Checkout.Sdk.Payments
 {
     public class CardSource : IPaymentSource
     {
+        public const string TypeName = "card";
+
         public CardSource(string number, int expiryMonth, int expiryYear)
         {
             Number = number;
@@ -19,6 +21,6 @@ namespace Checkout.Sdk.Payments
         public Address BillingAddress { get; set; }
         public Phone Phone { get; set; }
 
-        public string Type => Consts.Source.Type.Card;
+        public string Type => TypeName;
     }
 }

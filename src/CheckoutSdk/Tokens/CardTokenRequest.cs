@@ -1,4 +1,5 @@
 using Checkout.Sdk.Common;
+using Checkout.Sdk.Payments;
 
 namespace Checkout.Sdk.Tokens
 {
@@ -19,6 +20,6 @@ namespace Checkout.Sdk.Tokens
         public Address BillingAddress { get; set; }
         public Phone Phone { get; set; }
 
-        public string Type => Consts.Source.Type.Card;
+        public string Type => CardSource.TypeName;
     }
 }

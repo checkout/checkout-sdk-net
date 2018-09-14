@@ -5,6 +5,8 @@ namespace Checkout.Sdk.Payments
 {
     public class CustomerSource : IPaymentSource
     {
+        public const string TypeName = "customer";
+
         public CustomerSource(string id, string email)
         {
             if (!string.IsNullOrWhiteSpace(email))
@@ -30,6 +32,6 @@ namespace Checkout.Sdk.Payments
         public string Id { get; }
         public string Email { get; }
         public string Name { get; set; }
-        public string Type => Consts.Source.Type.Customer;
+        public string Type => TypeName;
     }
 }

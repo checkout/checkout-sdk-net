@@ -2,7 +2,7 @@ using Checkout.Sdk.Common;
 
 namespace Checkout.Sdk.Payments
 {
-    public class CardSourceResponse
+    public class CardSourceResponse : IResponsePaymentSource
     {
         public string Id { get; set; }
         public string Type { get; set; }

@@ -1,8 +1,7 @@
-using System;
-using System.Threading.Tasks;
 using Checkout.Sdk.Common;
 using Checkout.Sdk.Payments;
 using Shouldly;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -22,7 +21,7 @@ namespace Checkout.Sdk.Tests.Payments
         public async Task CanRequestCardPayment()
         {
             PaymentRequest<CardSource> firstCardPayment = TestHelper.CreateCardPaymentRequest();
-            PaymentResponse<CardSourceResponse> firstCardPaymentResponse = await Api.Payments.RequestAsync(firstCardPayment);
+            PaymentResponse firstCardPaymentResponse = await Api.Payments.RequestAsync(firstCardPayment);
             CustomerSource customerSource = new CustomerSource(firstCardPayment.Customer.Id, firstCardPayment.Customer.Email);
             PaymentRequest<CustomerSource> customerPaymentRequest = new PaymentRequest<CustomerSource>(
                 customerSource,
@@ -33,7 +32,7 @@ namespace Checkout.Sdk.Tests.Payments
                 Capture = false,
             };
 
-            PaymentResponse<CardSourceResponse> apiResponseForCustomerSourcePayment = await Api.Payments.RequestAsync(customerPaymentRequest);
+            PaymentResponse apiResponseForCustomerSourcePayment = await Api.Payments.RequestAsync(customerPaymentRequest);
 
             apiResponseForCustomerSourcePayment.Payment.ShouldNotBeNull();
             apiResponseForCustomerSourcePayment.Payment.Approved.ShouldBeTrue();
@@ -47,7 +46,7 @@ namespace Checkout.Sdk.Tests.Payments
             apiResponseForCustomerSourcePayment.Payment.Customer.Id.ShouldNotBeNullOrEmpty();
             apiResponseForCustomerSourcePayment.Payment.Customer.Email.ShouldNotBeNullOrEmpty();
             apiResponseForCustomerSourcePayment.Payment.Customer.Id.ShouldBe(firstCardPaymentResponse.Payment?.Customer?.Id);
-            apiResponseForCustomerSourcePayment.Payment.Source.Id.ShouldBe(firstCardPaymentResponse.Payment?.Source?.Id);
+            apiResponseForCustomerSourcePayment.Payment.Source.AsCardSourceResponse().Id.ShouldBe(firstCardPaymentResponse.Payment?.Source?.AsCardSourceResponse().Id);
             apiResponseForCustomerSourcePayment.Payment.CanCapture().ShouldBeTrue();
             apiResponseForCustomerSourcePayment.Payment.CanVoid().ShouldBeTrue();
         }

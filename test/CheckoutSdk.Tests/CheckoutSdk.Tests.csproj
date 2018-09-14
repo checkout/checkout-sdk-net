@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <RootNamespace>Checkout.Sdk.Tests</RootNamespace>
+    <RootNamespace>Checkout.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup Label="Project References">
     <ProjectReference Include="..\..\src\CheckoutSdk\CheckoutSdk.csproj" />

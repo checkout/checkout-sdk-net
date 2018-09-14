@@ -15,7 +15,7 @@ namespace Checkout.Sdk.Tests.Payments
             Api = fixture.Api;
         }
 
-        public ICheckoutApi Api { get; private set; }
+        public ICheckoutApi Api { get; }
 
         [Fact]
         public async Task RequestNonThreeDsCardPayment()
@@ -23,7 +23,7 @@ namespace Checkout.Sdk.Tests.Payments
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             paymentRequest.ThreeDs = false;
 
-            PaymentResponse<CardSourceResponse> apiResponse = await Api.Payments.RequestAsync(paymentRequest);
+            PaymentResponse apiResponse = await Api.Payments.RequestAsync(paymentRequest);
             
             apiResponse.Payment.ShouldNotBeNull();
             apiResponse.Payment.Approved.ShouldBeTrue();
@@ -45,7 +45,7 @@ namespace Checkout.Sdk.Tests.Payments
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             paymentRequest.ThreeDs = true;
 
-            PaymentResponse<CardSourceResponse> apiResponse = await Api.Payments.RequestAsync(paymentRequest);
+            PaymentResponse apiResponse = await Api.Payments.RequestAsync(paymentRequest);
 
             apiResponse.IsPending.ShouldBe(true);
             var pending = apiResponse.Pending;
