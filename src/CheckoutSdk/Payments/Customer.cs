@@ -1,4 +1,4 @@
-namespace Checkout.Payments
+﻿namespace Checkout.Payments
 {
     public class Customer
     {

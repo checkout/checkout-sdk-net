@@ -1,4 +1,5 @@
 using System;
+using Checkout.Common;
 
 namespace Checkout.Tokens
 {

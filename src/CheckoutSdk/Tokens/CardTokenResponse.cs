@@ -1,3 +1,5 @@
+using Checkout.Common;
+
 namespace Checkout.Tokens
 {
     public class CardTokenResponse : TokenResponse
