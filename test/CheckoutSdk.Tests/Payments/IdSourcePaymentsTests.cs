@@ -30,6 +30,7 @@ namespace Checkout.Tests.Payments
             )
             {
                 Capture = false,
+                Customer = firstCardPaymentResponse.Payment.Customer
             };
 
             PaymentResponse apiResponseForCustomerSourcePayment = await Api.Payments.RequestAsync(cardIdPaymentRequest);
