@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace Checkout.Sdk
+namespace Checkout
 {
     internal class ReflectionUtils
     {

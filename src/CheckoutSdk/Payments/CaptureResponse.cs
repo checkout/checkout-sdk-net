@@ -1,6 +1,6 @@
-using Checkout.Sdk.Common;
+using Checkout.Common;
 
-namespace Checkout.Sdk.Payments
+namespace Checkout.Payments
 {
     public class CaptureResponse : Resource
     {

@@ -1,7 +1,7 @@
-using Checkout.Sdk.Payments;
-using Checkout.Sdk.Tokens;
+using Checkout.Payments;
+using Checkout.Tokens;
 
-namespace Checkout.Sdk
+namespace Checkout
 {
     public interface ICheckoutApi
     {

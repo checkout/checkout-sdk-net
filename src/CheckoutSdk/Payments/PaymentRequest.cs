@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Checkout.Sdk.Payments
+namespace Checkout.Payments
 {
     public class PaymentRequest<TSource> where TSource : IPaymentSource
     {

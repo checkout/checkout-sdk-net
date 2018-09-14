@@ -1,9 +1,9 @@
 ﻿using System;
-using Checkout.Sdk.Payments;
+using Checkout.Payments;
 using Shouldly;
 using Xunit;
 
-namespace Checkout.Sdk.Tests
+namespace Checkout.Tests
 {
     public class ValidationTests
     {

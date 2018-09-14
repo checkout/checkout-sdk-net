@@ -1,13 +1,13 @@
-using Checkout.Sdk.Common;
-using Checkout.Sdk.Tests.Mocks;
-using Checkout.Sdk.Tokens;
 using Shouldly;
 using System;
 using System.Threading.Tasks;
+using Checkout.Common;
+using Checkout.Tests.Mocks;
+using Checkout.Tokens;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Checkout.Sdk.Tests
+namespace Checkout.Tests
 {
     public class TokensTests : IClassFixture<ApiTestFixture>
     {

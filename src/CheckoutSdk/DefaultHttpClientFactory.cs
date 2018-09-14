@@ -1,6 +1,6 @@
 using System.Net.Http;
 
-namespace Checkout.Sdk
+namespace Checkout
 {
     public class DefaultHttpClientFactory : IHttpClientFactory
     {

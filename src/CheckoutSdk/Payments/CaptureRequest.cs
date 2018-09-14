@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Checkout.Sdk.Payments
+namespace Checkout.Payments
 {
     public class CaptureRequest
     {

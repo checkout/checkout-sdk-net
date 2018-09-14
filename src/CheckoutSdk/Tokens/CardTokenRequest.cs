@@ -1,7 +1,7 @@
-using Checkout.Sdk.Common;
-using Checkout.Sdk.Payments;
+using Checkout.Common;
+using Checkout.Payments;
 
-namespace Checkout.Sdk.Tokens
+namespace Checkout.Tokens
 {
     public class CardTokenRequest : ITokenRequest
     {

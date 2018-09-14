@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 
-namespace Checkout.Sdk.Payments
+namespace Checkout.Payments
 {
     using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 

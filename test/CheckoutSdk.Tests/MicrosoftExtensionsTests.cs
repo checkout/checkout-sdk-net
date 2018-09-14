@@ -1,9 +1,9 @@
-using Checkout.Sdk.Microsoft.Extensions;
+using Checkout.Microsoft.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
 
-namespace Checkout.Sdk.Tests
+namespace Checkout.Tests
 {
     public class MicrosoftExtensionsTests
     {

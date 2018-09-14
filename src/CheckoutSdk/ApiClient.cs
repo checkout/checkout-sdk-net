@@ -1,4 +1,4 @@
-using Checkout.Sdk.Common;
+using Checkout.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +7,9 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Checkout.Logging;
+using Checkout.Common;
 
-namespace Checkout.Sdk
+namespace Checkout
 {
     public class ApiClient : IApiClient
     {

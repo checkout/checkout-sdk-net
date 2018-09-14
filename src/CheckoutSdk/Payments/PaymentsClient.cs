@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Checkout.Sdk.Payments;
+using Checkout.Payments;
 
-namespace Checkout.Sdk.Payments
+namespace Checkout.Payments
 {
     public class PaymentsClient : IPaymentsClient
     {

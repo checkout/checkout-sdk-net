@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Checkout.Sdk.Tokens
+namespace Checkout.Tokens
 {
     public interface ITokensClient
     {

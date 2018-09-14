@@ -1,4 +1,4 @@
-namespace Checkout.Sdk.Common
+namespace Checkout.Common
 {
     public class Phone
     {

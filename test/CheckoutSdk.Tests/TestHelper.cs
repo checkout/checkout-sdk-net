@@ -1,9 +1,9 @@
 using System;
-using Checkout.Sdk.Common;
-using Checkout.Sdk.Payments;
-using Checkout.Sdk.Tests.Mocks;
+using Checkout.Common;
+using Checkout.Payments;
+using Checkout.Tests.Mocks;
 
-namespace Checkout.Sdk.Tests
+namespace Checkout.Tests
 {
     public static class TestHelper
     {

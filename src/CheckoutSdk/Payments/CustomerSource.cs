@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Checkout.Sdk.Payments
+namespace Checkout.Payments
 {
     public class CustomerSource : IPaymentSource
     {

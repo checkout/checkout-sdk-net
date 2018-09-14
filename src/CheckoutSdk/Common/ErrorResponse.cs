@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Checkout.Sdk.Common
+namespace Checkout.Common
 {
     public class ErrorResponse
     {

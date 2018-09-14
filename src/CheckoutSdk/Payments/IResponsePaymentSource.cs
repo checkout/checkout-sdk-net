@@ -1,4 +1,4 @@
-﻿namespace Checkout.Sdk.Payments
+﻿namespace Checkout.Payments
 {
     public interface IResponsePaymentSource
     {

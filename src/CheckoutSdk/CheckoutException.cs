@@ -1,6 +1,6 @@
 using System;
 
-namespace Checkout.Sdk
+namespace Checkout
 {
     public class CheckoutException : Exception
     {

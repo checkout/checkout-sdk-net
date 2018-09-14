@@ -1,4 +1,4 @@
-using Checkout.Sdk.Microsoft.Extensions;
+using Checkout.Microsoft.Extensions;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using System;
@@ -6,7 +6,7 @@ using System.IO;
 using System.Reflection;
 using Xunit.Abstractions;
 
-namespace Checkout.Sdk.Tests
+namespace Checkout.Tests
 {
     public class ApiTestFixture
     {

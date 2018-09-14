@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
-namespace Checkout.Sdk
+namespace Checkout
 {
     public class JsonSerializer : ISerializer
     {

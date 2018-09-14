@@ -1,4 +1,4 @@
-namespace Checkout.Sdk.Tests.Mocks
+namespace Checkout.Tests.Mocks
 {
     public class TestCardSource
     {

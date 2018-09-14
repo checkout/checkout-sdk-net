@@ -1,8 +1,8 @@
-using Checkout.Sdk.Common;
 using Newtonsoft.Json;
 using System;
+using Checkout.Common;
 
-namespace Checkout.Sdk.Payments
+namespace Checkout.Payments
 {
     public class PaymentProcessed : Resource
     {

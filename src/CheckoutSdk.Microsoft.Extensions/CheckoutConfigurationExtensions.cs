@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace Checkout.Sdk.Microsoft.Extensions
+namespace Checkout.Microsoft.Extensions
 {
     public static class CheckoutConfigurationExtensions
     {

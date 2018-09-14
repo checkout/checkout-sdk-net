@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Checkout.Sdk.Payments;
+using Checkout.Payments;
 
-namespace Checkout.Sdk.Payments
+namespace Checkout.Payments
 {
     public interface IPaymentsClient
     {

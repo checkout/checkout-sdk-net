@@ -1,11 +1,11 @@
-using Checkout.Sdk.Common;
-using Checkout.Sdk.Payments;
 using Shouldly;
 using System.Threading.Tasks;
+using Checkout.Common;
+using Checkout.Payments;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Checkout.Sdk.Tests.Payments
+namespace Checkout.Tests.Payments
 {
     public class CustomerSourceTests : IClassFixture<ApiTestFixture>
     {
