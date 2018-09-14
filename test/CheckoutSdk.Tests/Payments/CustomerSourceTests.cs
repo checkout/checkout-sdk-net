@@ -1,54 +1,34 @@
-using Shouldly;
-using System.Threading.Tasks;
-using Checkout.Common;
+﻿using System;
 using Checkout.Payments;
+using Shouldly;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Checkout.Tests.Payments
 {
-    public class CustomerSourceTests : IClassFixture<ApiTestFixture>
+    public class CustomerSourceTests
     {
-        public CustomerSourceTests(ApiTestFixture fixture, ITestOutputHelper outputHelper)
+        [Theory]
+        [InlineData("test@@")]
+        [InlineData("test@")]
+        [InlineData("test@@test")]
+        [InlineData("test")]
+        public void GivenEmailInvalidShouldThrowFormatException(string email)
         {
-            fixture.CaptureLogsInTestOutput(outputHelper);
-            Api = fixture.Api;
+            var validationException = Should.Throw<FormatException>(
+                () => { new CustomerSource(null, email: email); }
+                );
+
+            validationException.ShouldNotBeNull();            
         }
 
-        public ICheckoutApi Api { get; private set; }
-
         [Fact]
-        public async Task CanRequestCardPayment()
+        public void GivenIdAndEmailIsMissingShouldThrowArgumentException()
         {
-            PaymentRequest<CardSource> firstCardPayment = TestHelper.CreateCardPaymentRequest();
-            PaymentResponse firstCardPaymentResponse = await Api.Payments.RequestAsync(firstCardPayment);
-            CustomerSource customerSource = new CustomerSource(firstCardPayment.Customer.Id, firstCardPayment.Customer.Email);
-            PaymentRequest<CustomerSource> customerPaymentRequest = new PaymentRequest<CustomerSource>(
-                customerSource,
-                Currency.GBP,
-                100
-            )
-            {
-                Capture = false,
-            };
+            var validationException = Should.Throw<ArgumentException>(
+                () => { new CustomerSource(null, null); }
+            );
 
-            PaymentResponse apiResponseForCustomerSourcePayment = await Api.Payments.RequestAsync(customerPaymentRequest);
-
-            apiResponseForCustomerSourcePayment.Payment.ShouldNotBeNull();
-            apiResponseForCustomerSourcePayment.Payment.Approved.ShouldBeTrue();
-            apiResponseForCustomerSourcePayment.Payment.Id.ShouldNotBeNullOrEmpty();
-            apiResponseForCustomerSourcePayment.Payment.Id.ShouldNotBe(firstCardPaymentResponse.Payment.Id);
-            apiResponseForCustomerSourcePayment.Payment.ActionId.ShouldNotBeNullOrEmpty();
-            apiResponseForCustomerSourcePayment.Payment.Amount.ShouldBe(customerPaymentRequest.Amount.Value);
-            apiResponseForCustomerSourcePayment.Payment.Currency.ShouldBe(customerPaymentRequest.Currency);
-            apiResponseForCustomerSourcePayment.Payment.Reference.ShouldBe(customerPaymentRequest.Reference);
-            apiResponseForCustomerSourcePayment.Payment.Customer.ShouldNotBeNull();
-            apiResponseForCustomerSourcePayment.Payment.Customer.Id.ShouldNotBeNullOrEmpty();
-            apiResponseForCustomerSourcePayment.Payment.Customer.Email.ShouldNotBeNullOrEmpty();
-            apiResponseForCustomerSourcePayment.Payment.Customer.Id.ShouldBe(firstCardPaymentResponse.Payment?.Customer?.Id);
-            apiResponseForCustomerSourcePayment.Payment.Source.AsCardSourceResponse().Id.ShouldBe(firstCardPaymentResponse.Payment?.Source?.AsCardSourceResponse().Id);
-            apiResponseForCustomerSourcePayment.Payment.CanCapture().ShouldBeTrue();
-            apiResponseForCustomerSourcePayment.Payment.CanVoid().ShouldBeTrue();
+            validationException.ShouldNotBeNull();
         }
     }
 }

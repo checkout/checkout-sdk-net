@@ -7,9 +7,9 @@ using Xunit.Abstractions;
 
 namespace Checkout.Tests.Payments
 {
-    public class CardSourceTests : IClassFixture<ApiTestFixture>
+    public class CardSourcePaymentsTests : IClassFixture<ApiTestFixture>
     {
-        public CardSourceTests(ApiTestFixture fixture, ITestOutputHelper outputHelper)
+        public CardSourcePaymentsTests(ApiTestFixture fixture, ITestOutputHelper outputHelper)
         {
             fixture.CaptureLogsInTestOutput(outputHelper);
             Api = fixture.Api;
