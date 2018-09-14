@@ -61,7 +61,7 @@ Task("__Test")
     {
         foreach (var projectFile in GetFiles(testProjects))
         {
-            DotNetCoreRun(projectFile.ToString());
+            DotNetCoreTest(projectFile.ToString());
         }
     });
 
