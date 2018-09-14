@@ -19,12 +19,13 @@ namespace Checkout.Sdk.Tests.Payments
         public ICheckoutApi Api { get; private set; }
 
         [Fact]
-        public async Task RequestCardPayment()
+        public async Task CanRequestCardPayment()
         {
             PaymentRequest<CardSource> firstCardPayment = TestHelper.CreateCardPaymentRequest();
             PaymentResponse<CardSourceResponse> firstCardPaymentResponse = await Api.Payments.RequestAsync(firstCardPayment);
+            CustomerSource customerSource = new CustomerSource(firstCardPayment.Customer.Id, firstCardPayment.Customer.Email);
             PaymentRequest<CustomerSource> customerPaymentRequest = new PaymentRequest<CustomerSource>(
-                firstCardPaymentResponse.Payment.Customer,
+                customerSource,
                 Currency.GBP,
                 100
             )

@@ -8,7 +8,7 @@ namespace Checkout.Sdk.Payments
         public string Id { get; set; }
         public string Status { get; set; }
         public string Reference { get; set; }
-        public CustomerSource Customer { get; set; }
+        public Customer Customer { get; set; }
 
         [JsonProperty(PropertyName = "3ds")]
         public ThreeDsEnrollment ThreeDs { get; set; }

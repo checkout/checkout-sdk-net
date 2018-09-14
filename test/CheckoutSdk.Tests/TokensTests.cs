@@ -20,7 +20,7 @@ namespace Checkout.Sdk.Tests
         public ICheckoutApi Api { get; private set; }
 
         [Fact]
-        public async Task ValidCardRequest()
+        public async Task CanTokenizeCard()
         {
             CardTokenRequest request = CreateValidRequest();
 
@@ -68,7 +68,7 @@ namespace Checkout.Sdk.Tests
         }
 
         [Fact]
-        public async Task InvalidCardRequest()
+        public async Task CannotTokenizeInvalidRequest()
         {
             CardTokenRequest request = new CardTokenRequest("", 1, 2018);
 

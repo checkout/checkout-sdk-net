@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Checkout.Sdk.Payments
 {
@@ -6,26 +7,24 @@ namespace Checkout.Sdk.Payments
     {
         public CustomerSource(string id, string email)
         {
-            if (string.IsNullOrWhiteSpace(id)
-                && string.IsNullOrWhiteSpace(email))
-            {
-                throw new CheckoutException($"Either {id} or {email} must be provided.");
-            }
-
-            if (!string.IsNullOrWhiteSpace(id))
-            {
-                Id = id;
-            }
-
             if (!string.IsNullOrWhiteSpace(email))
             {
-                if(email?.Split('@').Length != 2)
+                string[] split = email?.Split('@');
+                if (split.Length != 2 || split.Any(string.IsNullOrWhiteSpace))
                 {
-                    throw new CheckoutException($"{email} contain one @");
+                    throw new FormatException($"{email} contain one @");
                 }
 
                 Email = email;
             }
+
+            if (string.IsNullOrWhiteSpace(id)
+                && string.IsNullOrWhiteSpace(email))
+            {
+                throw new ArgumentException($"Either {nameof(id)} or {nameof(email)} must be provided.");
+            }
+
+            Id = id;
         }
 
         public string Id { get; }

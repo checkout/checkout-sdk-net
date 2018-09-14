@@ -16,7 +16,7 @@ namespace Checkout.Sdk.Tests
             )
             {
                 Capture = false,
-                Customer = new CustomerSource(null, TestHelper.GenerateRandomEmail()),
+                Customer = new Customer() { Email = TestHelper.GenerateRandomEmail()},
                 Reference = Guid.NewGuid().ToString()
             };
         }

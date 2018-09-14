@@ -8,11 +8,13 @@ namespace Checkout.Sdk.Tests
     public class ValidationTests
     {
         [Theory]
-        [InlineData("")]
+        [InlineData("test@@")]
+        [InlineData("test@")]
+        [InlineData("test@@test")]
         [InlineData("test")]
-        public void CustomerSource_ThrowExceptionIfSourceEmailDoesNotHaveAtSign(string email)
+        public void CustomerSource_GivenEmailInvalidShouldThrowFormatException(string email)
         {
-            var validationException = Should.Throw<CheckoutException>(
+            var validationException = Should.Throw<FormatException>(
                 () => { new CustomerSource(null, email: email); }
                 );
 
@@ -20,9 +22,9 @@ namespace Checkout.Sdk.Tests
         }
 
         [Fact]
-        public void CustomerSource_ThrowExceptionIfNeitherIdNorEmailIsProvided()
+        public void CustomerSource_GivenIdAndEmailIsMissingShouldThrowArgumentException()
         {
-            var validationException = Should.Throw<CheckoutException>(
+            var validationException = Should.Throw<ArgumentException>(
                 () => { new CustomerSource(null, null); }
             );
 

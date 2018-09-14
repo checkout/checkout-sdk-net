@@ -20,7 +20,7 @@ namespace Checkout.Sdk.Tests.Payments
         [Fact]
         public async Task RequestNonThreeDsCardPayment()
         {
-            PaymentRequest<CardSource> paymentRequest = CreateCardPaymentRequest();
+            PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             paymentRequest.ThreeDs = false;
 
             PaymentResponse<CardSourceResponse> apiResponse = await Api.Payments.RequestAsync(paymentRequest);
@@ -39,15 +39,10 @@ namespace Checkout.Sdk.Tests.Payments
             apiResponse.Payment.CanVoid().ShouldBeTrue();
         }
 
-        private PaymentRequest<CardSource> CreateCardPaymentRequest()
-        {
-            return TestHelper.CreateCardPaymentRequest();
-        }
-
         [Fact]
         public async Task RequestThreeDsCardPayment()
         {
-            PaymentRequest<CardSource> paymentRequest = CreateCardPaymentRequest();
+            PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             paymentRequest.ThreeDs = true;
 
             PaymentResponse<CardSourceResponse> apiResponse = await Api.Payments.RequestAsync(paymentRequest);
@@ -73,7 +68,7 @@ namespace Checkout.Sdk.Tests.Payments
         public async Task ItCanCapturePayment()
         {
             // Auth
-            var paymentRequest = CreateCardPaymentRequest();
+            var paymentRequest = TestHelper.CreateCardPaymentRequest();
             var paymentResponse = await Api.Payments.RequestAsync(paymentRequest);
             paymentResponse.Payment.CanCapture().ShouldBe(true);
 
@@ -93,7 +88,7 @@ namespace Checkout.Sdk.Tests.Payments
         public async Task ItCanVoidPayment()
         {
             // Auth
-            var paymentRequest = CreateCardPaymentRequest();
+            var paymentRequest = TestHelper.CreateCardPaymentRequest();
             var paymentResponse = await Api.Payments.RequestAsync(paymentRequest);
             paymentResponse.Payment.CanVoid().ShouldBe(true);
 
@@ -113,7 +108,7 @@ namespace Checkout.Sdk.Tests.Payments
         public async Task ItCanRefundPayment()
         {
             // Auth
-            var paymentRequest = CreateCardPaymentRequest();
+            var paymentRequest = TestHelper.CreateCardPaymentRequest();
             var paymentResponse = await Api.Payments.RequestAsync(paymentRequest);
             paymentResponse.Payment.CanCapture().ShouldBe(true);
 
@@ -136,7 +131,7 @@ namespace Checkout.Sdk.Tests.Payments
         [Fact]
         public async Task ItCanGetPayment()
         {
-            var paymentRequest = CreateCardPaymentRequest();
+            var paymentRequest = TestHelper.CreateCardPaymentRequest();
             var paymentResponse = await Api.Payments.RequestAsync(paymentRequest);
 
             var paymentDetails = await Api.Payments.GetAsync(paymentResponse.Payment.Id);
