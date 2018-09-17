@@ -30,8 +30,10 @@ namespace Checkout.Payments
         public bool? SkipRiskCheck { get; set; }
         public string SuccessUrl { get; set; }
         public string FailureUrl { get; set; }
-        public string PaymentIP { get; set; }
-        public Dictionary<string, object> Metadata { get; set; }
+        public string PaymentIp { get; set; }
+        public Dictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
         public IEnumerable<PaymentDestination> Destinations { get; set; }
+        public PaymentRecipient Recipient { get; set; }
+        public ShippingDetails Shipping { get; set; }
     }
 }
