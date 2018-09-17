@@ -14,7 +14,7 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>git://github.com/checkout/checkout-sdk-net</RepositoryUrl>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <RootNamespace>Checkout.Sdk.Microsoft.Extensions</RootNamespace>
+    <RootNamespace>Microsoft.Extensions.Configuration</RootNamespace>
     <DefineConstants>LIBLOG_PORTABLE</DefineConstants>
   </PropertyGroup>
   <ItemGroup Label="Project References">

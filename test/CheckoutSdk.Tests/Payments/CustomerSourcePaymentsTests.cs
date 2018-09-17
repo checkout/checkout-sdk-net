@@ -9,21 +9,21 @@ namespace Checkout.Tests.Payments
 {
     public class CustomerSourcePaymentsTests : IClassFixture<ApiTestFixture>
     {
+        private readonly ICheckoutApi _api;
+
         public CustomerSourcePaymentsTests(ApiTestFixture fixture, ITestOutputHelper outputHelper)
         {
             fixture.CaptureLogsInTestOutput(outputHelper);
-            Api = fixture.Api;
+            _api = fixture.Api;
         }
-
-        public ICheckoutApi Api { get; private set; }
 
         [Fact]
         public async Task CanRequestCardPayment()
         {
-            PaymentRequest<CardSource> firstCardPayment = TestHelper.CreateCardPaymentRequest();
-            PaymentResponse firstCardPaymentResponse = await Api.Payments.RequestAsync(firstCardPayment);
-            CustomerSource customerSource = new CustomerSource(firstCardPayment.Customer.Id, firstCardPayment.Customer.Email);
-            PaymentRequest<CustomerSource> customerPaymentRequest = new PaymentRequest<CustomerSource>(
+            var firstCardPayment = TestHelper.CreateCardPaymentRequest();
+            var firstCardPaymentResponse = await _api.Payments.RequestAsync(firstCardPayment);
+            var customerSource = new CustomerSource(firstCardPayment.Customer.Id, firstCardPayment.Customer.Email);
+            var customerPaymentRequest = new PaymentRequest<CustomerSource>(
                 customerSource,
                 Currency.GBP,
                 100
@@ -32,7 +32,7 @@ namespace Checkout.Tests.Payments
                 Capture = false,
             };
 
-            PaymentResponse apiResponseForCustomerSourcePayment = await Api.Payments.RequestAsync(customerPaymentRequest);
+            PaymentResponse apiResponseForCustomerSourcePayment = await _api.Payments.RequestAsync(customerPaymentRequest);
 
             apiResponseForCustomerSourcePayment.Payment.ShouldNotBeNull();
             apiResponseForCustomerSourcePayment.Payment.Approved.ShouldBeTrue();
@@ -46,7 +46,7 @@ namespace Checkout.Tests.Payments
             apiResponseForCustomerSourcePayment.Payment.Customer.Id.ShouldNotBeNullOrEmpty();
             apiResponseForCustomerSourcePayment.Payment.Customer.Email.ShouldNotBeNullOrEmpty();
             apiResponseForCustomerSourcePayment.Payment.Customer.Id.ShouldBe(firstCardPaymentResponse.Payment?.Customer?.Id);
-            apiResponseForCustomerSourcePayment.Payment.Source.AsCardSourceResponse().Id.ShouldBe(firstCardPaymentResponse.Payment?.Source?.AsCardSourceResponse().Id);
+            apiResponseForCustomerSourcePayment.Payment.Source.AsCardSource().Id.ShouldBe(firstCardPaymentResponse.Payment?.Source?.AsCardSource().Id);
             apiResponseForCustomerSourcePayment.Payment.CanCapture().ShouldBeTrue();
             apiResponseForCustomerSourcePayment.Payment.CanVoid().ShouldBeTrue();
         }

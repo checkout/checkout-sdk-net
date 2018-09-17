@@ -2,6 +2,7 @@
 {
     public interface IResponsePaymentSource
     {
+        string Id { get; }
         string Type { get; }
     }
 }

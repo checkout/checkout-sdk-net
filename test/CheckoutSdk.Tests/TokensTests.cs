@@ -11,20 +11,20 @@ namespace Checkout.Tests
 {
     public class TokensTests : IClassFixture<ApiTestFixture>
     {
+        private readonly ICheckoutApi _api;
+
         public TokensTests(ApiTestFixture fixture, ITestOutputHelper outputHelper)
         {
             fixture.CaptureLogsInTestOutput(outputHelper);
-            Api = fixture.Api;
+            _api = fixture.Api;
         }
-
-        public ICheckoutApi Api { get; private set; }
 
         [Fact]
         public async Task CanTokenizeCard()
         {
             CardTokenRequest request = CreateValidRequest();
 
-            CardTokenResponse token = await Api.Tokens.RequestAsync(request);
+            CardTokenResponse token = await _api.Tokens.RequestAsync(request);
 
             token.ShouldNotBeNull();
             token.Token.ShouldNotBeNullOrEmpty();
@@ -73,7 +73,7 @@ namespace Checkout.Tests
             CardTokenRequest request = new CardTokenRequest("", 1, 2018);
 
             var validationException =
-                await Api.Tokens.RequestAsync(request)
+                await _api.Tokens.RequestAsync(request)
                     .ShouldThrowAsync<CheckoutValidationException>();
 
             validationException.ShouldNotBeNull();

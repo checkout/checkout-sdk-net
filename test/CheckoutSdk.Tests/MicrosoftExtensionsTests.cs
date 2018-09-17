@@ -1,4 +1,4 @@
-using Checkout.Microsoft.Extensions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;

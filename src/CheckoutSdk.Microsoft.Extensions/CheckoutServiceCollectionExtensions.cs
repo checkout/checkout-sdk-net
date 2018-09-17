@@ -1,8 +1,8 @@
-using System;
-using Microsoft.Extensions.Configuration;
+using Checkout;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
-namespace Checkout.Microsoft.Extensions
+namespace Microsoft.Extensions.Configuration
 {
     /// <summary>
     /// This class adds extension methods to IServiceCollection making it easier to add the Checkout client

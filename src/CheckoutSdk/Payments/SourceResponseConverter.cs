@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Reflection;
 
 namespace Checkout.Payments
 {
@@ -8,19 +9,6 @@ namespace Checkout.Payments
 
     public class SourceResponseConverter : JsonConverter
     {
-        public override bool CanWrite => false;
-        public override bool CanConvert(Type objectType) => true;
-
-        protected IResponsePaymentSource Create(JObject jObject)
-        {
-            if (jObject == null)
-                throw new ArgumentNullException(nameof(jObject));
-
-            var sourceType = GetSourceType(jObject);
-
-            return CreateRequest(sourceType);
-        }
-
         private IResponsePaymentSource CreateRequest(string sourceType)
         {
             switch (sourceType)
@@ -35,6 +23,22 @@ namespace Checkout.Payments
         private static string GetSourceType(JToken jObject)
         {
             return jObject.SelectToken("type")?.Value<string>().ToLowerInvariant();
+        }
+
+        protected IResponsePaymentSource Create(JObject jObject)
+        {
+            if (jObject == null)
+                throw new ArgumentNullException(nameof(jObject));
+
+            var sourceType = GetSourceType(jObject);
+
+            return CreateRequest(sourceType);
+        }
+
+        public override bool CanWrite => false;
+        public override bool CanConvert(Type objectType)
+        {
+            return typeof(IResponsePaymentSource).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo());
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -53,6 +57,5 @@ namespace Checkout.Payments
         {
             throw new NotImplementedException();
         }
-
     }
 }

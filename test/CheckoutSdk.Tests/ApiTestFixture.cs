@@ -1,4 +1,3 @@
-using Checkout.Microsoft.Extensions;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using System;

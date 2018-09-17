@@ -1,6 +1,4 @@
-using Microsoft.Extensions.Configuration;
-
-namespace Checkout.Microsoft.Extensions
+namespace Microsoft.Extensions.Configuration
 {
     public static class CheckoutConfigurationExtensions
     {
