@@ -133,7 +133,7 @@ namespace Checkout.Tests.Payments
         }
 
         [Fact]
-        public async Task ItCanGetPayment()
+        public async Task ItCanGetNonThreeDsPayment()
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
@@ -155,6 +155,39 @@ namespace Checkout.Tests.Payments
             paymentDetails.Links.ShouldNotBeNull();
             paymentDetails.Links.ShouldNotBeEmpty();
             paymentDetails.Status.ShouldBe("Authorized");
+            paymentDetails.Source.AsCardSource().ShouldNotBeNull();
+        }
+
+        [Fact]
+        public async Task ItCanGetThreeDsPaymentBeforeAuth()
+        {
+            PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
+            paymentRequest.ThreeDs = true;
+            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            paymentResponse.IsPending.ShouldBe(true);
+
+            GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Pending.Id);
+
+            paymentDetails.ShouldNotBeNull();
+            paymentDetails.Id.ShouldBe(paymentResponse.Pending.Id);
+            paymentDetails.Customer.ShouldNotBeNull();
+            paymentDetails.Customer.Id.ShouldBe(paymentResponse.Pending.Customer.Id);
+            paymentDetails.Customer.Email.ShouldBe(paymentRequest.Customer.Email);
+            //paymentDetails.Amount.ShouldBe(paymentResponse.Pending.Amount);  //todo verify if Pending.Amount should be returned
+            //paymentDetails.Currency.ShouldBe(paymentResponse.Pending.Currency);  //todo verify if Pending.Currency should be returned
+            //paymentDetails.BillingDescriptor.ShouldNotBeNull(); //todo verify if BillingDescriptor should be returned
+            paymentDetails.PaymentType.ShouldNotBeNullOrWhiteSpace();
+            paymentDetails.Reference.ShouldNotBeNullOrWhiteSpace();
+            paymentDetails.Risk.ShouldNotBeNull();
+            paymentDetails.RequestedOn.ShouldBeGreaterThan(DateTime.MinValue);
+            paymentDetails.ThreeDs.ShouldNotBeNull();
+            paymentDetails.ThreeDs.Downgraded.ShouldBe(false);
+            //paymentDetails.ThreeDs.Enrolled.ShouldNotBeNullOrEmpty(); //todo uncomment after 2018-09-20
+            paymentDetails.RequiresRedirect().ShouldBe(true);
+            paymentDetails.GetRedirectLink().ShouldNotBeNull();
+            paymentDetails.Links.ShouldNotBeNull();
+            paymentDetails.Links.ShouldNotBeEmpty();
+            paymentDetails.Status.ShouldBe("Pending");
             paymentDetails.Source.AsCardSource().ShouldNotBeNull();
         }
 

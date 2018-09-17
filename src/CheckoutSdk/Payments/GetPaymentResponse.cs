@@ -27,5 +27,8 @@ namespace Checkout.Payments
         public PaymentRecipient Recipient { get; set; }
         public IEnumerable<PaymentDestination> Destinations { get; set; }
         public Dictionary<string, object> Metadata { get; set; }
+
+        public bool RequiresRedirect() => HasLink("redirect");
+        public Link GetRedirectLink() => GetLink("redirect");
     }
 }
