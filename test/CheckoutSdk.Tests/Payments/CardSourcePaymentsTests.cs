@@ -293,5 +293,74 @@ namespace Checkout.Tests.Payments
 
             paymentDetails.Description.ShouldBe(paymentRequest.Description);
         }
+
+        [Fact]
+        public async Task ItCanGetPaymentAction()
+        {
+            PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
+            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+
+            ICollection<ActionProcessed> actionsResponse = await _api.Payments.GetActionsAsync(paymentResponse.Payment.Id);
+
+            actionsResponse.ShouldNotBeNull();
+            actionsResponse.ShouldHaveSingleItem();
+
+            ActionProcessed action = actionsResponse.FirstOrDefault();
+            action.ShouldNotBeNull();
+            action.Id.ShouldBe(paymentResponse.Payment.ActionId);
+            action.ProcessedOn.ShouldBeGreaterThanOrEqualTo(paymentResponse.Payment.ProcessedOn);
+            action.ResponseCode.ShouldBe(paymentResponse.Payment.ResponseCode);
+            action.ResponseSummary.ShouldBe(paymentResponse.Payment.ResponseSummary);
+            action.Reference.ShouldBe(paymentResponse.Payment.Reference);
+            action.AuthCode.ShouldBe(paymentResponse.Payment.AuthCode);
+            action.Type.ShouldBe("Authorization");
+            action.Links.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public async Task ItCanGetMultiplePaymentActions()
+        {
+            PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
+            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            var captureRequest = new CaptureRequest
+            {
+                Reference = Guid.NewGuid().ToString()
+            };
+            CaptureResponse captureResponse = await _api.Payments.CaptureAsync(paymentResponse.Payment.Id, captureRequest);
+
+            ICollection<ActionProcessed> actionsResponse = await _api.Payments.GetActionsAsync(paymentResponse.Payment.Id);
+
+            actionsResponse.ShouldNotBeNull();
+
+            ActionProcessed authorizationAction = actionsResponse.FirstOrDefault(a=>a.Type == "Authorization");
+            authorizationAction.ShouldNotBeNull();
+            authorizationAction.Id.ShouldBe(paymentResponse.Payment.ActionId);
+
+            ActionProcessed captureAction = actionsResponse.FirstOrDefault(a => a.Type == "Capture");
+            captureAction.ShouldNotBeNull();
+            captureAction.Id.ShouldBe(captureResponse.ActionId);
+            captureAction.Reference.ShouldBe(captureResponse.Reference);
+            captureAction.Links.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public async Task ItCanGetPaymentActionMetadata()
+        {
+            PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
+            var metadata = new KeyValuePair<string, object>("test", "1234");
+            paymentRequest.Metadata.Add(metadata.Key, metadata.Value);
+            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+
+            ICollection<ActionProcessed> actionsResponse = await _api.Payments.GetActionsAsync(paymentResponse.Payment.Id);
+
+            actionsResponse.ShouldNotBeNull();
+
+            ActionProcessed action = actionsResponse.FirstOrDefault();
+            action.ShouldNotBeNull();
+            action.Metadata.ShouldNotBeNull();
+            action.Metadata.ShouldNotBeEmpty();
+            action.Metadata.ShouldHaveSingleItem();
+            action.Metadata.ShouldContain(d => d.Key == metadata.Key && d.Value.Equals(metadata.Value));
+        }
     }
 }

@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Checkout.Payments;
 
 namespace Checkout.Payments
 {
@@ -12,5 +12,6 @@ namespace Checkout.Payments
         Task<CaptureResponse> CaptureAsync(string paymentId, CaptureRequest captureRequest = null, CancellationToken cancellationToken = default(CancellationToken));
         Task<RefundResponse> RefundAsync(string paymentId, RefundRequest refundRequest = null, CancellationToken cancellationToken = default(CancellationToken));
         Task<GetPaymentResponse> GetAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<ICollection<ActionProcessed>> GetActionsAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken));
     }
 }
