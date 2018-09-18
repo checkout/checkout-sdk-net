@@ -24,6 +24,7 @@ namespace Checkout.Tests.Payments
         [Theory]
         [InlineData("")]
         [InlineData(" ")]
+        [InlineData(null)]
         [InlineData("qwertyuiopasdf")]
         public void GivenCityInvalidShouldThrowArgumentException(string invalidCity)
         {

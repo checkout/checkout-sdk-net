@@ -236,13 +236,8 @@ namespace Checkout.Tests.Payments
         public async Task ItCanGetPaymentRecipient()
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
-            paymentRequest.Recipient = new PaymentRecipient()
-            {
-                AccountNumber = "5555554444",
-                Dob = new DateTime(1985, 05, 15),
-                LastName = "Wensleydale",
-                Zip = "W1T"
-            };
+            paymentRequest.Recipient =
+                new PaymentRecipient(new DateTime(1985, 05, 15), "5555554444", "W1T", "Wensleydale");
             PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
 
             GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Payment.Id);

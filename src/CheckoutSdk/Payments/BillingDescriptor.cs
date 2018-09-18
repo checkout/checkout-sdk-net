@@ -19,7 +19,7 @@ namespace Checkout.Payments
             City = city;
         }
 
-        public string Name { get; set; }
-        public string City { get; set; }
+        public string Name { get; }
+        public string City { get; }
     }
 }
