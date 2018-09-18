@@ -59,9 +59,9 @@ namespace Checkout.Payments
             return _apiClient.GetAsync<GetPaymentResponse>(GetPaymentUrl(paymentId), _credentials, cancellationToken);
         }
 
-        public Task<ICollection<ActionProcessed>> GetActionsAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<ICollection<Action>> GetActionsAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.GetAsync<ICollection<ActionProcessed>>(GetPaymentUrl(paymentId) + "/actions", _credentials, cancellationToken);
+            return _apiClient.GetAsync<ICollection<Action>>(GetPaymentUrl(paymentId) + "/actions", _credentials, cancellationToken);
         }
 
         private static string GetPaymentUrl(string paymentId)

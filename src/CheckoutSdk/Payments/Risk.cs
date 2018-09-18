@@ -1,6 +1,6 @@
 namespace Checkout.Payments
 {
-    public class RiskResponse
+    public class Risk
     {
         public bool Flagged { get; set; }
     }

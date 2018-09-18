@@ -16,13 +16,13 @@ namespace Checkout.Payments
         public string PaymentType { get; set; }
         public string Reference { get; set; }
         public string Description { get; set; }
-        public string Status { get; set; }
+        public PaymentStatus Status { get; set; }
         [JsonProperty(PropertyName = "3ds")]
         public ThreeDsEnrollment ThreeDs { get; set; }
-        public RiskResponse Risk { get; set; }
+        public Risk Risk { get; set; }
         public Customer Customer { get; set; }
         public BillingDescriptor BillingDescriptor { get; set; }
-        public ShippingDetails Shipping { get; set; }
+        public Shipping Shipping { get; set; }
         public string PaymentIp { get; set; }
         public PaymentRecipient Recipient { get; set; }
         public IEnumerable<PaymentDestination> Destinations { get; set; }
