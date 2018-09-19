@@ -9,12 +9,14 @@ namespace Checkout.Payments
         public IdSource(string id, string cvv = null)
         {
             if (string.IsNullOrWhiteSpace(id))
-                throw new ArgumentException($"{nameof(id)} has to be provided.");
+                throw new ArgumentException($"Source ID required", nameof(id));
+
             Id = id;
+            Cvv = cvv;
         }
 
         public string Id { get; }
-        public string Cvv { get; private set; }
+        public string Cvv { get; }
         public string Type => TypeName;
     }
 }
