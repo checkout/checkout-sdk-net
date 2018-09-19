@@ -4,19 +4,19 @@ namespace Checkout
 {
     public class CheckoutConfiguration
     {
-        private const string ProductionUrl = "https://api2.checkout.com/";
-        private const string SandboxUrl = "https://sandbox.checkout.com/api2/";
+        public const string ProductionUri = "https://api.checkout.com/";
+        public const string SandboxUri = "https://api.sandbox.checkout.com/";
 
         public CheckoutConfiguration(string secretKey, bool sandbox)
-            : this(secretKey, sandbox ? SandboxUrl : ProductionUrl)
+            : this(secretKey, sandbox ? SandboxUri : ProductionUri)
         {
 
         }
 
         public CheckoutConfiguration(string secretKey, string uri)
         {
-            if (string.IsNullOrEmpty(secretKey)) throw new ArgumentException($"{secretKey} null or empty", nameof(secretKey));
-            if (string.IsNullOrEmpty(uri)) throw new ArgumentException($"{nameof(uri)} null or empty", nameof(uri));
+            if (string.IsNullOrEmpty(secretKey)) throw new ArgumentException($"Your API secret key is required", nameof(secretKey));
+            if (string.IsNullOrEmpty(uri)) throw new ArgumentException($"The API URI is required", nameof(uri));
 
             SecretKey = secretKey;
             Uri = uri;
