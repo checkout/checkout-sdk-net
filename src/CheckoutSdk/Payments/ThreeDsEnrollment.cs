@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace Checkout.Payments
 {
     public class ThreeDsEnrollment
