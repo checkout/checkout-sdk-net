@@ -24,11 +24,11 @@
   </PropertyGroup>
 
   <ItemGroup Label="Package References">
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2"/>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
   <ItemGroup Label=".NET Standard Packages" Condition="'$(TargetFramework)' == 'netstandard1.4' or '$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.CSharp" Version="4.4.1"/>
+    <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
   </ItemGroup>
   
   <ItemGroup Label=".NET 4.5 References" Condition="'$(TargetFramework)' == 'net45'">

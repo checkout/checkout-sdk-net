@@ -1,20 +1,22 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NSpec;
 using Shouldly;
+using Xunit;
 
 namespace Checkout.Tests
 {
-    class describe_microsoft_extensions : nspec
+    public class MicrosoftExtensionsTests
     {
-        void it_can_resolve_checkout_api()
+        [Fact]
+        public void CanResolveCheckoutApi()
         {
             var services = new ServiceCollection();
             var configuration = new CheckoutConfiguration("sk_xxx", true);
-            
+
             services.AddCheckoutSdk(configuration);
 
             var serviceProvider = services.BuildServiceProvider();
-            
+
             var checkoutApi = serviceProvider.GetService<ICheckoutApi>();
             checkoutApi.ShouldNotBeNull();
 

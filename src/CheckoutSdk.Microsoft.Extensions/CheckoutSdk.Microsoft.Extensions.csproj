@@ -14,15 +14,15 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>git://github.com/checkout/checkout-sdk-net</RepositoryUrl>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <RootNamespace>Checkout</RootNamespace>
+    <RootNamespace>Microsoft.Extensions.Configuration</RootNamespace>
     <DefineConstants>LIBLOG_PORTABLE</DefineConstants>
   </PropertyGroup>
   <ItemGroup Label="Project References">
-    <ProjectReference Include="..\CheckoutSdk\CheckoutSdk.csproj"/>
+    <ProjectReference Include="..\CheckoutSdk\CheckoutSdk.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.0.2"/>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.0.2"/>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.0.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
   </ItemGroup>
 </Project>

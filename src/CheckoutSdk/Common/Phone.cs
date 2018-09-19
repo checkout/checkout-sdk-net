@@ -1,4 +1,4 @@
-namespace Checkout
+namespace Checkout.Common
 {
     public class Phone
     {

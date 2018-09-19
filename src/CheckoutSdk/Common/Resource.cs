@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Checkout
+namespace Checkout.Common
 {
     public class Resource
     {
@@ -10,6 +10,9 @@ namespace Checkout
             Links = new Dictionary<string, Link>();
         }
         
+        /// <summary>
+        /// The links related to the resource
+        /// </summary>
         [JsonProperty(PropertyName = "_links")]
         public Dictionary<string, Link> Links { get; set; }
 
