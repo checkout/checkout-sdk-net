@@ -1,6 +1,9 @@
 using Shouldly;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Checkout.Common;
 using Checkout.Payments;
 using Xunit;
 using Xunit.Abstractions;
@@ -129,13 +132,164 @@ namespace Checkout.Tests.Payments
         }
 
         [Fact]
-        public async Task ItCanGetPayment()
+        public async Task ItCanGetNonThreeDsPayment()
         {
-            var paymentRequest = TestHelper.CreateCardPaymentRequest();
-            var paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
+            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Payment.Id);
 
-            var paymentDetails = await _api.Payments.GetAsync(paymentResponse.Payment.Id);
             paymentDetails.ShouldNotBeNull();
+            paymentDetails.Id.ShouldBe(paymentResponse.Payment.Id);
+            paymentDetails.Customer.ShouldNotBeNull();
+            paymentDetails.Customer.Id.ShouldBe(paymentResponse.Payment.Customer.Id);
+            paymentDetails.Customer.Email.ShouldBe(paymentRequest.Customer.Email);
+            paymentDetails.Amount.ShouldBe(paymentResponse.Payment.Amount);
+            paymentDetails.Currency.ShouldBe(paymentResponse.Payment.Currency);
+            paymentDetails.BillingDescriptor.ShouldNotBeNull();
+            paymentDetails.PaymentType.ShouldNotBeNullOrWhiteSpace();
+            paymentDetails.Reference.ShouldNotBeNullOrWhiteSpace();
+            paymentDetails.Risk.ShouldNotBeNull();
+            paymentDetails.RequestedOn.ShouldBeGreaterThan(paymentResponse.Payment.ProcessedOn.AddMinutes(-1));
+            paymentDetails.ThreeDs.ShouldBeNull();
+            paymentDetails.Links.ShouldNotBeNull();
+            paymentDetails.Links.ShouldNotBeEmpty();
+            paymentDetails.Status.ShouldBe("Authorized");
+            paymentDetails.Source.AsCardSource().ShouldNotBeNull();
+        }
+
+        [Fact]
+        public async Task ItCanGetThreeDsPaymentBeforeAuth()
+        {
+            PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
+            paymentRequest.ThreeDs = true;
+            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            paymentResponse.IsPending.ShouldBe(true);
+
+            GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Pending.Id);
+
+            paymentDetails.ShouldNotBeNull();
+            paymentDetails.Id.ShouldBe(paymentResponse.Pending.Id);
+            paymentDetails.Customer.ShouldNotBeNull();
+            paymentDetails.Customer.Id.ShouldBe(paymentResponse.Pending.Customer.Id);
+            paymentDetails.Customer.Email.ShouldBe(paymentRequest.Customer.Email);
+            paymentDetails.Amount.ShouldBe(paymentRequest.Amount);
+            paymentDetails.Currency.ShouldBe(paymentRequest.Currency); 
+            paymentDetails.PaymentType.ShouldNotBeNullOrWhiteSpace();
+            paymentDetails.Reference.ShouldNotBeNullOrWhiteSpace();
+            paymentDetails.Risk.ShouldNotBeNull();
+            paymentDetails.RequestedOn.ShouldBeGreaterThan(DateTime.MinValue);
+            paymentDetails.ThreeDs.ShouldNotBeNull();
+            paymentDetails.ThreeDs.Downgraded.ShouldBe(false);
+            //paymentDetails.ThreeDs.Enrolled.ShouldNotBeNullOrEmpty(); //todo uncomment after 2018-09-20
+            paymentDetails.RequiresRedirect().ShouldBe(true);
+            paymentDetails.GetRedirectLink().ShouldNotBeNull();
+            paymentDetails.Links.ShouldNotBeNull();
+            paymentDetails.Links.ShouldNotBeEmpty();
+            paymentDetails.Status.ShouldBe("Pending");
+            paymentDetails.Source.AsCardSource().ShouldNotBeNull();
+        }
+
+        [Fact]
+        public async Task ItCanGetPaymentDestinations()
+        {
+            PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
+            var destination = new PaymentDestination("test", 1);
+            paymentRequest.Destinations = new[] { destination };
+            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+
+            GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Payment.Id);
+
+            paymentDetails.Destinations.ShouldNotBeNull();
+            paymentDetails.Destinations.ShouldNotBeEmpty();
+            paymentDetails.Destinations.ShouldHaveSingleItem();
+            paymentDetails.Destinations.ShouldContain(d => d.Id == destination.Id && d.Amount == destination.Amount);
+        }
+
+        [Fact]
+        public async Task ItCanGetPaymentMetadata()
+        {
+            PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
+            var metadata = new KeyValuePair<string, object>("test", "1234");
+            paymentRequest.Metadata.Add(metadata.Key, metadata.Value);
+            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+
+            GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Payment.Id);
+
+            paymentDetails.Metadata.ShouldNotBeNull();
+            paymentDetails.Metadata.ShouldNotBeEmpty();
+            paymentDetails.Metadata.ShouldHaveSingleItem();
+            paymentDetails.Metadata.ShouldContain(d => d.Key == metadata.Key && d.Value.Equals(metadata.Value));
+        }
+
+        [Fact]
+        public async Task ItCanGetPaymentIp()
+        {
+            PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
+            paymentRequest.PaymentIp = "10.1.2.3";
+            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+
+            GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Payment.Id);
+
+            paymentDetails.PaymentIp.ShouldBe(paymentRequest.PaymentIp);
+        }
+
+        [Fact]
+        public async Task ItCanGetPaymentRecipient()
+        {
+            PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
+            paymentRequest.Recipient = new PaymentRecipient()
+            {
+                AccountNumber = "5555554444",
+                Dob = new DateTime(1985, 05, 15),
+                LastName = "Wensleydale",
+                Zip = "W1T"
+            };
+            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+
+            GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Payment.Id);
+
+            paymentDetails.Recipient.ShouldNotBeNull();
+            paymentDetails.Recipient.AccountNumber.ShouldBe(paymentRequest.Recipient.AccountNumber);
+            paymentDetails.Recipient.Dob.ShouldBe(paymentRequest.Recipient.Dob);
+            paymentDetails.Recipient.LastName.ShouldBe(paymentRequest.Recipient.LastName.Take(6));
+            paymentDetails.Recipient.Zip.ShouldBe(paymentRequest.Recipient.Zip);
+        }
+
+        [Fact]
+        public async Task ItCanGetPaymentShipping()
+        {
+            PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
+            paymentRequest.Shipping = new ShippingDetails()
+            {
+                Address = new Address() { AddressLine1 = "221B Baker Street", AddressLine2 = null, City = "London", Country = "UK", State = "n/a", Zip = "NW1 6XE" },
+                Phone = new Phone() { CountryCode = "44", Number = "124312431243" }
+            };
+            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+
+            GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Payment.Id);
+
+            paymentDetails.Shipping.ShouldNotBeNull();
+            paymentDetails.Shipping.Address.ShouldNotBeNull();
+            paymentDetails.Shipping.Address.AddressLine1.ShouldBe(paymentRequest.Shipping.Address.AddressLine1);
+            paymentDetails.Shipping.Address.AddressLine2.ShouldBe(paymentRequest.Shipping.Address.AddressLine2);
+            paymentDetails.Shipping.Address.City.ShouldBe(paymentRequest.Shipping.Address.City);
+            paymentDetails.Shipping.Address.Country.ShouldBe(paymentRequest.Shipping.Address.Country);
+            paymentDetails.Shipping.Address.State.ShouldBe(paymentRequest.Shipping.Address.State);
+            paymentDetails.Shipping.Address.Zip.ShouldBe(paymentRequest.Shipping.Address.Zip);
+            paymentDetails.Shipping.Phone.CountryCode.ShouldBe(paymentRequest.Shipping.Phone.CountryCode);
+            paymentDetails.Shipping.Phone.Number.ShouldBe(paymentRequest.Shipping.Phone.Number);
+        }
+
+        [Fact]
+        public async Task ItCanGetPaymentDescription()
+        {
+            PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
+            paymentRequest.Description = "Too descriptive";
+            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+
+            GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Payment.Id);
+
+            paymentDetails.Description.ShouldBe(paymentRequest.Description);
         }
     }
 }
