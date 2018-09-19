@@ -24,6 +24,7 @@ namespace Checkout.Payments
         public Customer Customer { get; set; }
         public BillingDescriptor BillingDescriptor { get; set; }
         public Shipping Shipping { get; set; }
+        
         [JsonProperty(PropertyName = "3ds")]
         public bool? ThreeDs { get; set; }
         public bool? AttemptN3d { get; set; }
@@ -33,7 +34,7 @@ namespace Checkout.Payments
         public string FailureUrl { get; set; }
         public string PaymentIp { get; set; }
         public PaymentRecipient Recipient { get; set; }
-        public IEnumerable<PaymentDestination> Destinations { get; set; }
         public Dictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
+        public IEnumerable<PaymentDestination> Destinations { get; set; }
     }
 }

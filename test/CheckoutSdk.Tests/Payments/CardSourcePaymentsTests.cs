@@ -27,7 +27,6 @@ namespace Checkout.Tests.Payments
             paymentRequest.ThreeDs = false;
 
             PaymentResponse apiResponse = await _api.Payments.RequestAsync(paymentRequest);
-
             apiResponse.Payment.ShouldNotBeNull();
             apiResponse.Payment.Approved.ShouldBeTrue();
             apiResponse.Payment.Id.ShouldNotBeNullOrEmpty();
@@ -324,11 +323,11 @@ namespace Checkout.Tests.Payments
 
             actionsResponse.ShouldNotBeNull();
 
-            Checkout.Payments.Action authorizationAction = actionsResponse.SingleOrDefault(a => a.Type == ActionType.Authorization);
+            var authorizationAction = actionsResponse.FirstOrDefault(a=>a.Type == ActionType.Authorization);
             authorizationAction.ShouldNotBeNull();
             authorizationAction.Id.ShouldBe(paymentResponse.Payment.ActionId);
 
-            Checkout.Payments.Action captureAction = actionsResponse.SingleOrDefault(a => a.Type == ActionType.Capture);
+            var captureAction = actionsResponse.FirstOrDefault(a => a.Type == ActionType.Capture);
             captureAction.ShouldNotBeNull();
             captureAction.Id.ShouldBe(captureResponse.ActionId);
             captureAction.Reference.ShouldBe(captureResponse.Reference);
