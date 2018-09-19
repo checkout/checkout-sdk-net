@@ -27,7 +27,7 @@ namespace Checkout.Tests.Payments
             paymentRequest.ThreeDs = false;
 
             PaymentResponse apiResponse = await _api.Payments.RequestAsync(paymentRequest);
-
+            
             apiResponse.Payment.ShouldNotBeNull();
             apiResponse.Payment.Approved.ShouldBeTrue();
             apiResponse.Payment.Id.ShouldNotBeNullOrEmpty();
@@ -40,7 +40,6 @@ namespace Checkout.Tests.Payments
             apiResponse.Payment.Customer.Email.ShouldNotBeNullOrEmpty();
             apiResponse.Payment.CanCapture().ShouldBeTrue();
             apiResponse.Payment.CanVoid().ShouldBeTrue();
-            apiResponse.Payment.ThreeDs.ShouldBeNull();
         }
 
         [Fact]

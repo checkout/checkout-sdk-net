@@ -96,7 +96,7 @@ For more details on configuring the SDK, see the WIKI.
 
 ## Building and running tests
 
-To build the project and run the integration tests, run `build.sh` (Mac/Unix) or `build.ps1` (Windows). The integration tests require your Sandbox keys to be configured. You can do this by updating `test/CheckoutSdk.Tests/appsettings.json` or setting the following environment variables:
+To build the project and run the integration tests, run `build.sh` (Mac/Unix) or `build.ps1` (Windows). The integration tests require your Sandbox keys to be configured. You can do this by adding `test/CheckoutSdk.Tests/appsettings.local.json` with your keys or setting the following environment variables:
 
 - `Checkout__SecretKey`
 - `Checkout__PublicKey`
