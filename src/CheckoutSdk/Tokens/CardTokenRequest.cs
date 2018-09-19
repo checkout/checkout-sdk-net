@@ -1,3 +1,6 @@
+using Checkout.Common;
+using Checkout.Payments;
+
 namespace Checkout.Tokens
 {
     public class CardTokenRequest : ITokenRequest
@@ -17,6 +20,6 @@ namespace Checkout.Tokens
         public Address BillingAddress { get; set; }
         public Phone Phone { get; set; }
 
-        public string Type => "card";
+        public string Type => CardSource.TypeName;
     }
 }

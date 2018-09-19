@@ -1,4 +1,6 @@
-namespace Checkout.Microsoft.Extensions
+using Checkout;
+
+namespace Microsoft.Extensions.Configuration
 {
     public class CheckoutOptions
     {

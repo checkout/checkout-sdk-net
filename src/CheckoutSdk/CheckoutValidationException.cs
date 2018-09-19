@@ -1,4 +1,5 @@
 using System.Net;
+using Checkout.Common;
 
 namespace Checkout
 {

@@ -1,22 +1,55 @@
-using System;
-using System.Net;
-using Checkout.Tokens;
 using Shouldly;
+using System;
+using System.Threading.Tasks;
+using Checkout.Common;
+using Checkout.Tests.Mocks;
+using Checkout.Tokens;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Checkout.Tests
 {
-    class describe_tokens : ApiTest
+    public class TokensTests : IClassFixture<ApiTestFixture>
     {
-        void describe_card_tokens()
+        private readonly ICheckoutApi _api;
+
+        public TokensTests(ApiTestFixture fixture, ITestOutputHelper outputHelper)
         {
-            CardTokenRequest request = null;
-            CardTokenResponse token = null;
+            fixture.CaptureLogsInTestOutput(outputHelper);
+            _api = fixture.Api;
+        }
 
-            Exception ex = null;
+        [Fact]
+        public async Task CanTokenizeCard()
+        {
+            CardTokenRequest request = CreateValidRequest();
 
-            before = () => request = new CardTokenRequest(TestCard.Visa.Number, TestCard.Visa.ExpiryMonth, TestCard.Visa.ExpiryYear)
+            CardTokenResponse token = await _api.Tokens.RequestAsync(request);
+
+            token.ShouldNotBeNull();
+            token.Token.ShouldNotBeNullOrEmpty();
+            token.ExpiresOn.ShouldBeGreaterThan(DateTime.UtcNow);
+            token.BillingAddress.ShouldNotBeNull();
+            token.BillingAddress.AddressLine1.ShouldBe(request.BillingAddress.AddressLine1);
+            token.BillingAddress.AddressLine2.ShouldBe(request.BillingAddress.AddressLine2);
+            token.BillingAddress.City.ShouldBe(request.BillingAddress.City);
+            token.BillingAddress.State.ShouldBe(request.BillingAddress.State);
+            token.BillingAddress.Zip.ShouldBe(request.BillingAddress.Zip);
+            token.BillingAddress.Country.ShouldBe(request.BillingAddress.Country);
+            token.Phone.ShouldNotBeNull();
+            token.Phone.CountryCode.ShouldBe(request.Phone.CountryCode);
+            token.Phone.Number.ShouldBe(request.Phone.Number);
+            token.Type.ShouldBe("card");
+            token.ExpiryMonth.ShouldBe(request.ExpiryMonth);
+            token.ExpiryYear.ShouldBe(request.ExpiryYear);
+        }
+
+
+        private CardTokenRequest CreateValidRequest()
+        {
+            return new CardTokenRequest(TestCardSource.Visa.Number, TestCardSource.Visa.ExpiryMonth, TestCardSource.Visa.ExpiryYear)
             {
-                Cvv = TestCard.Visa.Cvv,
+                Cvv = TestCardSource.Visa.Cvv,
                 BillingAddress = new Address
                 {
                     AddressLine1 = "Checkout.com",
@@ -32,55 +65,20 @@ namespace Checkout.Tests
                     Number = "020 222333"
                 }
             };
+        }
 
-            actAsync = async () =>
-            {
-                try
-                {
-                    token = await Api.Tokens.RequestAsync(request);
-                }
-                catch (Exception _)
-                {
-                    ex = _;
-                }
-            };
+        [Fact]
+        public async Task CannotTokenizeInvalidRequest()
+        {
+            CardTokenRequest request = new CardTokenRequest("", 1, 2018);
 
-            context["given a valid request"] = () =>
-            {
-                it["returns card token"] = () =>
-                {
-                    token.ShouldNotBeNull();
-                    token.Token.ShouldNotBeNullOrEmpty();
-                    token.ExpiresOn.ShouldBeGreaterThan(DateTime.UtcNow);
-                    token.BillingAddress.ShouldNotBeNull();
-                    token.BillingAddress.AddressLine1.ShouldBe(request.BillingAddress.AddressLine1);
-                    token.BillingAddress.AddressLine2.ShouldBe(request.BillingAddress.AddressLine2);
-                    token.BillingAddress.City.ShouldBe(request.BillingAddress.City);
-                    token.BillingAddress.State.ShouldBe(request.BillingAddress.State);
-                    token.BillingAddress.Zip.ShouldBe(request.BillingAddress.Zip);
-                    token.BillingAddress.Country.ShouldBe(request.BillingAddress.Country);
-                    token.Phone.ShouldNotBeNull();
-                    token.Phone.CountryCode.ShouldBe(request.Phone.CountryCode);
-                    token.Phone.Number.ShouldBe(request.Phone.Number);
-                    token.Type.ShouldBe("card");
-                    token.ExpiryMonth.ShouldBe(request.ExpiryMonth);
-                    token.ExpiryYear.ShouldBe(request.ExpiryYear);
-                };
-            };
+            var validationException =
+                await _api.Tokens.RequestAsync(request)
+                    .ShouldThrowAsync<CheckoutValidationException>();
 
-            context["an invalid request"] = () =>
-            {
-                before = () => request = new CardTokenRequest("", 1, 2018);
-
-                it[$"throws {nameof(CheckoutValidationException)}"] = () => 
-                {
-                    var validationException = ex as CheckoutValidationException;
-                    validationException.ShouldNotBeNull();
-                    validationException.Error.ShouldNotBeNull();
-                    validationException.Error.ErrorCodes.ShouldNotBeEmpty();
-                };
-            };
-
+            validationException.ShouldNotBeNull();
+            validationException.Error.ShouldNotBeNull();
+            validationException.Error.ErrorCodes.ShouldNotBeEmpty();
         }
     }
 }

@@ -1,3 +1,5 @@
+using Checkout.Common;
+
 namespace Checkout.Payments
 {
     public class RefundResponse : Resource

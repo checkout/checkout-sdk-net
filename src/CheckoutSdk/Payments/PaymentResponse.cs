@@ -1,20 +1,20 @@
 namespace Checkout.Payments
 {
-    public class PaymentResponse<TSource>
+    public class PaymentResponse
     {
         public PaymentPending Pending { get; set; }
-        public PaymentProcessed<TSource> Payment { get; set; }
+        public PaymentProcessed Payment { get; set; }
 
         public bool IsPending => Pending != null;
 
-        public static implicit operator PaymentResponse<TSource>(PaymentPending pending)
+        public static implicit operator PaymentResponse(PaymentPending pending)
         {
-            return new PaymentResponse<TSource> { Pending = pending };
+            return new PaymentResponse { Pending = pending };
         }
 
-        public static implicit operator PaymentResponse<TSource>(PaymentProcessed<TSource> payment)
+        public static implicit operator PaymentResponse(PaymentProcessed payment)
         {
-            return new PaymentResponse<TSource> { Payment = payment };
+            return new PaymentResponse { Payment = payment };
         }
     }
 }
