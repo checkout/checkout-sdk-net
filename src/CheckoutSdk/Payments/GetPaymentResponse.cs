@@ -11,7 +11,7 @@ namespace Checkout.Payments
         public DateTime RequestedOn { get; set; }
         [JsonConverter(typeof(SourceResponseConverter))]
         public IResponsePaymentSource Source { get; set; }
-        public int Amount { get; set; }
+        public int? Amount { get; set; }
         public string Currency { get; set; }
         public string PaymentType { get; set; }
         public string Reference { get; set; }
