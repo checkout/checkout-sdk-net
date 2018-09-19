@@ -23,17 +23,18 @@ namespace Checkout.Payments
         public DateTimeOffset? CaptureOn { get; set; }
         public Customer Customer { get; set; }
         public BillingDescriptor BillingDescriptor { get; set; }
-
+        public Shipping Shipping { get; set; }
+        
         [JsonProperty(PropertyName = "3ds")]
         public bool? ThreeDs { get; set; }
         public bool? AttemptN3d { get; set; }
+        public string PreviousPaymentId { get; set; }
         public bool? SkipRiskCheck { get; set; }
         public string SuccessUrl { get; set; }
         public string FailureUrl { get; set; }
         public string PaymentIp { get; set; }
+        public PaymentRecipient Recipient { get; set; }
         public Dictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
         public IEnumerable<PaymentDestination> Destinations { get; set; }
-        public PaymentRecipient Recipient { get; set; }
-        public ShippingDetails Shipping { get; set; }
     }
 }

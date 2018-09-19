@@ -6,7 +6,7 @@ namespace Checkout.Payments
     public class PaymentPending : Resource
     {
         public string Id { get; set; }
-        public string Status { get; set; }
+        public PaymentStatus Status { get; set; }
         public string Reference { get; set; }
         public Customer Customer { get; set; }
         public int? Amount { get; set; }
