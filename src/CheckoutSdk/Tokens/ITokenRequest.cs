@@ -2,6 +2,9 @@ namespace Checkout.Tokens
 {
     public interface ITokenRequest
     {
-        string Type {get;}
+        /// <summary>
+        /// The type of details to be tokenized
+        /// </summary>
+        string Type { get; }
     }
 }

@@ -147,7 +147,7 @@ namespace Checkout.Tests.Payments
             paymentDetails.Amount.ShouldBe(paymentResponse.Payment.Amount);
             paymentDetails.Currency.ShouldBe(paymentResponse.Payment.Currency);
             paymentDetails.BillingDescriptor.ShouldNotBeNull();
-            paymentDetails.PaymentType.ShouldNotBeNullOrWhiteSpace();
+            paymentDetails.PaymentType.ShouldNotBeNull();
             paymentDetails.Reference.ShouldNotBeNullOrWhiteSpace();
             paymentDetails.Risk.ShouldNotBeNull();
             paymentDetails.RequestedOn.ShouldBeGreaterThan(paymentResponse.Payment.ProcessedOn.AddMinutes(-1));
@@ -173,7 +173,7 @@ namespace Checkout.Tests.Payments
             paymentDetails.Customer.ShouldNotBeNull();
             paymentDetails.Customer.Id.ShouldBe(paymentResponse.Pending.Customer.Id);
             paymentDetails.Customer.Email.ShouldBe(paymentRequest.Customer.Email);
-            paymentDetails.PaymentType.ShouldNotBeNullOrWhiteSpace();
+            paymentDetails.PaymentType.ShouldNotBeNull();
             paymentDetails.Reference.ShouldNotBeNullOrWhiteSpace();
             paymentDetails.Risk.ShouldNotBeNull();
             paymentDetails.RequestedOn.ShouldBeGreaterThan(DateTime.MinValue);

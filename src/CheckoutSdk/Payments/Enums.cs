@@ -31,4 +31,17 @@
         CardVerified,
         Chargeback
     }
+
+    public enum CardType
+    {
+        Credit,
+        Debit,
+        Prepaid
+    }
+
+    public enum CardCategory
+    {
+        Consumer,
+        Commercial
+    }
 }
