@@ -172,9 +172,8 @@ namespace Checkout.Tests.Payments
             paymentDetails.Customer.ShouldNotBeNull();
             paymentDetails.Customer.Id.ShouldBe(paymentResponse.Pending.Customer.Id);
             paymentDetails.Customer.Email.ShouldBe(paymentRequest.Customer.Email);
-            //paymentDetails.Amount.ShouldBe(paymentResponse.Pending.Amount);  //todo verify if Pending.Amount should be returned
-            //paymentDetails.Currency.ShouldBe(paymentResponse.Pending.Currency);  //todo verify if Pending.Currency should be returned
-            //paymentDetails.BillingDescriptor.ShouldNotBeNull(); //todo verify if BillingDescriptor should be returned
+            paymentDetails.Amount.ShouldBe(paymentRequest.Amount);
+            paymentDetails.Currency.ShouldBe(paymentRequest.Currency); 
             paymentDetails.PaymentType.ShouldNotBeNullOrWhiteSpace();
             paymentDetails.Reference.ShouldNotBeNullOrWhiteSpace();
             paymentDetails.Risk.ShouldNotBeNull();
