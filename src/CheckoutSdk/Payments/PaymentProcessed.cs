@@ -1,9 +1,10 @@
-using System;
 using Newtonsoft.Json;
+using System;
+using Checkout.Common;
 
 namespace Checkout.Payments
 {
-    public class PaymentProcessed<TSource> : Resource
+    public class PaymentProcessed : Resource
     {
         public string Id { get; set; }
         public string ActionId { get; set; }
@@ -18,7 +19,8 @@ namespace Checkout.Payments
         [JsonProperty(PropertyName = "3ds")]
         public ThreeDsEnrollment ThreeDs { get; set; }
         public RiskResponse Risk { get; set; }
-        public TSource Source { get; set; }
+        [JsonConverter(typeof(SourceResponseConverter))]
+        public IResponsePaymentSource Source { get; set; }
         public Customer Customer { get; set; }
         public DateTime ProcessedOn { get; set; }
 

@@ -1,7 +1,11 @@
+using Checkout.Common;
+
 namespace Checkout.Payments
 {
     public class CardSource : IPaymentSource
     {
+        public const string TypeName = "card";
+
         public CardSource(string number, int expiryMonth, int expiryYear)
         {
             Number = number;
@@ -17,6 +21,6 @@ namespace Checkout.Payments
         public Address BillingAddress { get; set; }
         public Phone Phone { get; set; }
 
-        public string Type => "card";
+        public string Type => TypeName;
     }
 }

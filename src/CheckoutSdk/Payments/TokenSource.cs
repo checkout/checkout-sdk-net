@@ -2,6 +2,8 @@ namespace Checkout.Payments
 {
     public class TokenSource : IPaymentSource
     {
+        public const string TypeName = "token";
+
         public TokenSource(string token)
         {
             Token = token;
@@ -9,6 +11,6 @@ namespace Checkout.Payments
 
         public string Token { get; }
 
-        public string Type => "token";
+        public string Type => TypeName;
     }
 }

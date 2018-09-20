@@ -1,6 +1,8 @@
+using Checkout.Common;
+
 namespace Checkout.Payments
 {
-    public class CardSourceResponse
+    public class CardSourceResponse : IResponsePaymentSource
     {
         public string Id { get; set; }
         public string Type { get; set; }
