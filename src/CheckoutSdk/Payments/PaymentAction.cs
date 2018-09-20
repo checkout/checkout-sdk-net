@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Payments
 {
-    public class Action : Resource
+    public class PaymentAction : Resource
     {
         /// <summary>
         /// The unique identifier of the payment action

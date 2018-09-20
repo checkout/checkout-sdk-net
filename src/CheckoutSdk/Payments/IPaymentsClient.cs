@@ -30,7 +30,7 @@ namespace Checkout.Payments
         /// <param name="paymentId">The payment identifier</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<ICollection<Action>> GetActionsAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<IEnumerable<PaymentAction>> GetActionsAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Captures a payment if supported by the payment method.
         /// For card payments, capture requests are processed asynchronously.You can use webhooks to be notified if the capture is successful.
