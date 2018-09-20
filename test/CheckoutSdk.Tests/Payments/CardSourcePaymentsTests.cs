@@ -27,7 +27,7 @@ namespace Checkout.Tests.Payments
             paymentRequest.ThreeDs = false;
 
             PaymentResponse apiResponse = await _api.Payments.RequestAsync(paymentRequest);
-
+            
             apiResponse.Payment.ShouldNotBeNull();
             apiResponse.Payment.Approved.ShouldBeTrue();
             apiResponse.Payment.Id.ShouldNotBeNullOrEmpty();
@@ -40,7 +40,6 @@ namespace Checkout.Tests.Payments
             apiResponse.Payment.Customer.Email.ShouldNotBeNullOrEmpty();
             apiResponse.Payment.CanCapture().ShouldBeTrue();
             apiResponse.Payment.CanVoid().ShouldBeTrue();
-            apiResponse.Payment.ThreeDs.ShouldBeNull();
         }
 
         [Fact]
@@ -173,6 +172,8 @@ namespace Checkout.Tests.Payments
             paymentDetails.Customer.ShouldNotBeNull();
             paymentDetails.Customer.Id.ShouldBe(paymentResponse.Pending.Customer.Id);
             paymentDetails.Customer.Email.ShouldBe(paymentRequest.Customer.Email);
+            paymentDetails.Amount.ShouldBe(paymentRequest.Amount);
+            paymentDetails.Currency.ShouldBe(paymentRequest.Currency); 
             paymentDetails.PaymentType.ShouldNotBeNull();
             paymentDetails.Reference.ShouldNotBeNullOrWhiteSpace();
             paymentDetails.Risk.ShouldNotBeNull();
@@ -320,7 +321,7 @@ namespace Checkout.Tests.Payments
             };
             CaptureResponse captureResponse = await _api.Payments.CaptureAsync(paymentResponse.Payment.Id, captureRequest);
 
-            ICollection<PaymentAction> actionsResponse = await _api.Payments.GetActionsAsync(paymentResponse.Payment.Id);
+            IEnumerable<PaymentAction> actionsResponse = await _api.Payments.GetActionsAsync(paymentResponse.Payment.Id);
 
             actionsResponse.ShouldNotBeNull();
 
@@ -343,7 +344,7 @@ namespace Checkout.Tests.Payments
             paymentRequest.Metadata.Add(metadata.Key, metadata.Value);
             PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
 
-            ICollection<PaymentAction> actionsResponse = await _api.Payments.GetActionsAsync(paymentResponse.Payment.Id);
+            IEnumerable<PaymentAction> actionsResponse = await _api.Payments.GetActionsAsync(paymentResponse.Payment.Id);
 
             actionsResponse.ShouldNotBeNull();
 

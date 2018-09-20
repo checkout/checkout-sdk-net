@@ -23,7 +23,7 @@ namespace Checkout.Payments
         /// <summary>
         /// The original payment amount
         /// </summary>
-        public int Amount { get; set; }
+        public int? Amount { get; set; }
         /// <summary>
         /// The three-letter ISO currency code of the payment
         /// </summary>

@@ -1,5 +1,3 @@
-using Newtonsoft.Json;
-
 namespace Checkout.Payments
 {
     public class ThreeDsEnrollment
@@ -18,7 +16,6 @@ namespace Checkout.Payments
         /// <summary>
         /// Verification to ensure the integrity of the response.
         /// </summary>
-        [JsonProperty(PropertyName = "signature_valid")]
         public string SignatureValid { get; set; }
         /// <summary>
         /// Indicates whether or not the cardholder was authenticated
