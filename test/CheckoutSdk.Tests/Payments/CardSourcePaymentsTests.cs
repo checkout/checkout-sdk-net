@@ -40,7 +40,6 @@ namespace Checkout.Tests.Payments
             apiResponse.Payment.Customer.Email.ShouldNotBeNullOrEmpty();
             apiResponse.Payment.CanCapture().ShouldBeTrue();
             apiResponse.Payment.CanVoid().ShouldBeTrue();
-            apiResponse.Payment.ThreeDs.ShouldBeNull();
         }
 
         [Fact]
@@ -147,14 +146,14 @@ namespace Checkout.Tests.Payments
             paymentDetails.Amount.ShouldBe(paymentResponse.Payment.Amount);
             paymentDetails.Currency.ShouldBe(paymentResponse.Payment.Currency);
             paymentDetails.BillingDescriptor.ShouldNotBeNull();
-            paymentDetails.PaymentType.ShouldNotBeNullOrWhiteSpace();
+            paymentDetails.PaymentType.ShouldNotBeNull();
             paymentDetails.Reference.ShouldNotBeNullOrWhiteSpace();
             paymentDetails.Risk.ShouldNotBeNull();
             paymentDetails.RequestedOn.ShouldBeGreaterThan(paymentResponse.Payment.ProcessedOn.AddMinutes(-1));
             paymentDetails.ThreeDs.ShouldBeNull();
             paymentDetails.Links.ShouldNotBeNull();
             paymentDetails.Links.ShouldNotBeEmpty();
-            paymentDetails.Status.ShouldBe("Authorized");
+            paymentDetails.Status.ShouldBe(PaymentStatus.Authorized);
             paymentDetails.Source.AsCardSource().ShouldNotBeNull();
         }
 
@@ -175,7 +174,7 @@ namespace Checkout.Tests.Payments
             paymentDetails.Customer.Email.ShouldBe(paymentRequest.Customer.Email);
             paymentDetails.Amount.ShouldBe(paymentRequest.Amount);
             paymentDetails.Currency.ShouldBe(paymentRequest.Currency); 
-            paymentDetails.PaymentType.ShouldNotBeNullOrWhiteSpace();
+            paymentDetails.PaymentType.ShouldNotBeNull();
             paymentDetails.Reference.ShouldNotBeNullOrWhiteSpace();
             paymentDetails.Risk.ShouldNotBeNull();
             paymentDetails.RequestedOn.ShouldBeGreaterThan(DateTime.MinValue);
@@ -186,7 +185,7 @@ namespace Checkout.Tests.Payments
             paymentDetails.GetRedirectLink().ShouldNotBeNull();
             paymentDetails.Links.ShouldNotBeNull();
             paymentDetails.Links.ShouldNotBeEmpty();
-            paymentDetails.Status.ShouldBe("Pending");
+            paymentDetails.Status.ShouldBe(PaymentStatus.Pending);
             paymentDetails.Source.AsCardSource().ShouldNotBeNull();
         }
 
@@ -238,13 +237,8 @@ namespace Checkout.Tests.Payments
         public async Task ItCanGetPaymentRecipient()
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
-            paymentRequest.Recipient = new PaymentRecipient()
-            {
-                AccountNumber = "5555554444",
-                Dob = new DateTime(1985, 05, 15),
-                LastName = "Wensleydale",
-                Zip = "W1T"
-            };
+            paymentRequest.Recipient =
+                new PaymentRecipient(new DateTime(1985, 05, 15), "5555554444", "W1T", "Wensleydale");
             PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
 
             GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Payment.Id);
@@ -260,7 +254,7 @@ namespace Checkout.Tests.Payments
         public async Task ItCanGetPaymentShipping()
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
-            paymentRequest.Shipping = new ShippingDetails()
+            paymentRequest.Shipping = new Shipping()
             {
                 Address = new Address() { AddressLine1 = "221B Baker Street", AddressLine2 = null, City = "London", Country = "UK", State = "n/a", Zip = "NW1 6XE" },
                 Phone = new Phone() { CountryCode = "44", Number = "124312431243" }
@@ -299,21 +293,21 @@ namespace Checkout.Tests.Payments
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
 
-            ICollection<ActionProcessed> actionsResponse = await _api.Payments.GetActionsAsync(paymentResponse.Payment.Id);
+            IEnumerable<PaymentAction> actionsResponse = await _api.Payments.GetActionsAsync(paymentResponse.Payment.Id);
 
             actionsResponse.ShouldNotBeNull();
             actionsResponse.ShouldHaveSingleItem();
 
-            ActionProcessed action = actionsResponse.FirstOrDefault();
-            action.ShouldNotBeNull();
-            action.Id.ShouldBe(paymentResponse.Payment.ActionId);
-            action.ProcessedOn.ShouldBeGreaterThanOrEqualTo(paymentResponse.Payment.ProcessedOn);
-            action.ResponseCode.ShouldBe(paymentResponse.Payment.ResponseCode);
-            action.ResponseSummary.ShouldBe(paymentResponse.Payment.ResponseSummary);
-            action.Reference.ShouldBe(paymentResponse.Payment.Reference);
-            action.AuthCode.ShouldBe(paymentResponse.Payment.AuthCode);
-            action.Type.ShouldBe("Authorization");
-            action.Links.ShouldNotBeNull();
+            PaymentAction paymentAction = actionsResponse.SingleOrDefault();
+            paymentAction.ShouldNotBeNull();
+            paymentAction.Id.ShouldBe(paymentResponse.Payment.ActionId);
+            paymentAction.ProcessedOn.ShouldBeGreaterThanOrEqualTo(paymentResponse.Payment.ProcessedOn);
+            paymentAction.ResponseCode.ShouldBe(paymentResponse.Payment.ResponseCode);
+            paymentAction.ResponseSummary.ShouldBe(paymentResponse.Payment.ResponseSummary);
+            paymentAction.Reference.ShouldBe(paymentResponse.Payment.Reference);
+            paymentAction.AuthCode.ShouldBe(paymentResponse.Payment.AuthCode);
+            paymentAction.Type.ShouldBe(ActionType.Authorization);
+            paymentAction.Links.ShouldNotBeNull();
         }
 
         [Fact]
@@ -327,19 +321,19 @@ namespace Checkout.Tests.Payments
             };
             CaptureResponse captureResponse = await _api.Payments.CaptureAsync(paymentResponse.Payment.Id, captureRequest);
 
-            ICollection<ActionProcessed> actionsResponse = await _api.Payments.GetActionsAsync(paymentResponse.Payment.Id);
+            IEnumerable<PaymentAction> actionsResponse = await _api.Payments.GetActionsAsync(paymentResponse.Payment.Id);
 
             actionsResponse.ShouldNotBeNull();
 
-            ActionProcessed authorizationAction = actionsResponse.FirstOrDefault(a=>a.Type == "Authorization");
-            authorizationAction.ShouldNotBeNull();
-            authorizationAction.Id.ShouldBe(paymentResponse.Payment.ActionId);
+            PaymentAction authorizationPaymentAction = actionsResponse.SingleOrDefault(a => a.Type == ActionType.Authorization);
+            authorizationPaymentAction.ShouldNotBeNull();
+            authorizationPaymentAction.Id.ShouldBe(paymentResponse.Payment.ActionId);
 
-            ActionProcessed captureAction = actionsResponse.FirstOrDefault(a => a.Type == "Capture");
-            captureAction.ShouldNotBeNull();
-            captureAction.Id.ShouldBe(captureResponse.ActionId);
-            captureAction.Reference.ShouldBe(captureResponse.Reference);
-            captureAction.Links.ShouldNotBeNull();
+            PaymentAction capturePaymentAction = actionsResponse.SingleOrDefault(a => a.Type == ActionType.Capture);
+            capturePaymentAction.ShouldNotBeNull();
+            capturePaymentAction.Id.ShouldBe(captureResponse.ActionId);
+            capturePaymentAction.Reference.ShouldBe(captureResponse.Reference);
+            capturePaymentAction.Links.ShouldNotBeNull();
         }
 
         [Fact]
@@ -350,16 +344,16 @@ namespace Checkout.Tests.Payments
             paymentRequest.Metadata.Add(metadata.Key, metadata.Value);
             PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
 
-            ICollection<ActionProcessed> actionsResponse = await _api.Payments.GetActionsAsync(paymentResponse.Payment.Id);
+            IEnumerable<PaymentAction> actionsResponse = await _api.Payments.GetActionsAsync(paymentResponse.Payment.Id);
 
             actionsResponse.ShouldNotBeNull();
 
-            ActionProcessed action = actionsResponse.FirstOrDefault();
-            action.ShouldNotBeNull();
-            action.Metadata.ShouldNotBeNull();
-            action.Metadata.ShouldNotBeEmpty();
-            action.Metadata.ShouldHaveSingleItem();
-            action.Metadata.ShouldContain(d => d.Key == metadata.Key && d.Value.Equals(metadata.Value));
+            PaymentAction paymentAction = actionsResponse.FirstOrDefault();
+            paymentAction.ShouldNotBeNull();
+            paymentAction.Metadata.ShouldNotBeNull();
+            paymentAction.Metadata.ShouldNotBeEmpty();
+            paymentAction.Metadata.ShouldHaveSingleItem();
+            paymentAction.Metadata.ShouldContain(d => d.Key == metadata.Key && d.Value.Equals(metadata.Value));
         }
     }
 }

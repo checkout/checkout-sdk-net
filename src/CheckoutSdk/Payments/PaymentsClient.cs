@@ -31,9 +31,14 @@ namespace Checkout.Payments
             return RequestPaymentAsync(paymentRequest, CardPaymentMappings, cancellationToken);
         }
 
-        public Task<VoidResponse> VoidAsync(string paymentId, VoidRequest voidRequest = null, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<GetPaymentResponse> GetAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.PostAsync<VoidResponse>(GetPaymentUrl(paymentId) + "/voids", _credentials, cancellationToken, voidRequest);
+            return _apiClient.GetAsync<GetPaymentResponse>(GetPaymentUrl(paymentId), _credentials, cancellationToken);
+        }
+
+        public Task<IEnumerable<PaymentAction>> GetActionsAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return _apiClient.GetAsync<IEnumerable<PaymentAction>>(GetPaymentUrl(paymentId) + "/actions", _credentials, cancellationToken);
         }
 
         public Task<CaptureResponse> CaptureAsync(string paymentId, CaptureRequest captureRequest = null, CancellationToken cancellationToken = default(CancellationToken))
@@ -46,22 +51,17 @@ namespace Checkout.Payments
             return _apiClient.PostAsync<RefundResponse>(GetPaymentUrl(paymentId) + "/refunds", _credentials, cancellationToken, refundRequest);
         }
 
+        public Task<VoidResponse> VoidAsync(string paymentId, VoidRequest voidRequest = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return _apiClient.PostAsync<VoidResponse>(GetPaymentUrl(paymentId) + "/voids", _credentials, cancellationToken, voidRequest);
+        }
+
         private async Task<PaymentResponse> RequestPaymentAsync<TRequestSource>(
             PaymentRequest<TRequestSource> paymentRequest,
             Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken) where TRequestSource : IPaymentSource
         {
             var apiResponse = await _apiClient.PostAsync("payments", _credentials, paymentRequest, resultTypeMappings, cancellationToken);
             return apiResponse;
-        }
-
-        public Task<GetPaymentResponse> GetAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return _apiClient.GetAsync<GetPaymentResponse>(GetPaymentUrl(paymentId), _credentials, cancellationToken);
-        }
-
-        public Task<ICollection<ActionProcessed>> GetActionsAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return _apiClient.GetAsync<ICollection<ActionProcessed>>(GetPaymentUrl(paymentId) + "/actions", _credentials, cancellationToken);
         }
 
         private static string GetPaymentUrl(string paymentId)
