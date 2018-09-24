@@ -7,6 +7,11 @@ namespace Checkout.Payments
     {
         public const string TypeName = "customer";
 
+        /// <summary>
+        /// Customer source of the payment
+        /// </summary>
+        /// <param name="id">The customer identifier, required if email is not provided</param>
+        /// <param name="email">The customer email address, required if id is not provided</param>
         public CustomerSource(string id, string email)
         {
             if (!string.IsNullOrWhiteSpace(email))
@@ -29,9 +34,14 @@ namespace Checkout.Payments
             Id = id;
         }
 
+        /// <summary>
+        /// The customer identifier, required if email is not provided
+        /// </summary>
         public string Id { get; }
+        /// <summary>
+        /// The customer email address, required if id is not provided
+        /// </summary>
         public string Email { get; }
-        public string Name { get; set; }
         public string Type => TypeName;
     }
 }

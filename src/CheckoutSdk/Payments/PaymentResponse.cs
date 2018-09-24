@@ -2,8 +2,14 @@ namespace Checkout.Payments
 {
     public class PaymentResponse
     {
-        public PaymentPending Pending { get; set; }
+        /// <summary>
+        /// HTTP Status Code (201): Payment processed successfully
+        /// </summary>
         public PaymentProcessed Payment { get; set; }
+        /// <summary>
+        /// HTTP Status Code (202): Payment asynchronous or further action required
+        /// </summary>
+        public PaymentPending Pending { get; set; }
 
         public bool IsPending => Pending != null;
 
