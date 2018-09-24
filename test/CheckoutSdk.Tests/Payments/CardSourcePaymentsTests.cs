@@ -238,15 +238,15 @@ namespace Checkout.Tests.Payments
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             paymentRequest.Recipient =
-                new PaymentRecipient(new DateTime(1985, 05, 15), "5555554444", "W1T", "Wensleydale");
+                new PaymentRecipient(new DateTime(1985, 05, 15), "4242424242424242", "W1T", "Wensle");
             PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
 
             GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Payment.Id);
 
             paymentDetails.Recipient.ShouldNotBeNull();
             paymentDetails.Recipient.AccountNumber.ShouldBe(paymentRequest.Recipient.AccountNumber);
-            paymentDetails.Recipient.Dob.ShouldBe(paymentRequest.Recipient.Dob);
-            paymentDetails.Recipient.LastName.ShouldBe(paymentRequest.Recipient.LastName.Take(6));
+            paymentDetails.Recipient.DateOfBirth.ShouldBe(paymentRequest.Recipient.DateOfBirth);
+            paymentDetails.Recipient.LastName.ShouldBe(paymentRequest.Recipient.LastName);
             paymentDetails.Recipient.Zip.ShouldBe(paymentRequest.Recipient.Zip);
         }
 
