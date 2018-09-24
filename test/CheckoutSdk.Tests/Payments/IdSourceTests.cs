@@ -16,5 +16,13 @@ namespace Checkout.Tests.Payments
 
             validationException.ShouldNotBeNull();
         }
+
+        [Fact]
+        public void CanCreateIdSource()
+        {
+            var source = new IdSource("src_xxx", "0757");
+            source.Id.ShouldBe("src_xxx");
+            source.Cvv.ShouldBe("0757");
+        }
     }
 }
