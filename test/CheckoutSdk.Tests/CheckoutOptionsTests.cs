@@ -13,7 +13,7 @@ namespace Checkout.Tests
             {
                 SecretKey = "sk_xxx",
                 PublicKey = "pk_xxx",
-                Sandbox = true
+                UseSandbox = true
             };
             
             var configuration = options.CreateConfiguration();
@@ -28,7 +28,7 @@ namespace Checkout.Tests
             var options = new CheckoutOptions
             {
                 SecretKey = "sk_xxx",
-                Sandbox = false
+                UseSandbox = false
             };
             
             var configuration = options.CreateConfiguration();
@@ -41,7 +41,7 @@ namespace Checkout.Tests
             var options = new CheckoutOptions
             {
                 SecretKey = "sk_xxx",
-                Sandbox = true,
+                UseSandbox = true,
                 Uri = "https://api.com"
             };        
 
