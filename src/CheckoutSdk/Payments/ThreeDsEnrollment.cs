@@ -1,6 +1,6 @@
 namespace Checkout.Payments
 {
-    public class ThreeDsEnrollment
+    public class ThreeDSEnrollment
     {
         /// <summary>
         /// Indicates whether this was a 3D-Secure payment downgraded to Non-3D-Secure (when attempt_n3d is specified)

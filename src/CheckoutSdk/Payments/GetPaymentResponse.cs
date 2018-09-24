@@ -48,7 +48,7 @@ namespace Checkout.Payments
         /// Provides information relating to the processing of 3D-Secure payments
         /// </summary>
         [JsonProperty(PropertyName = "3ds")]
-        public ThreeDsEnrollment ThreeDs { get; set; }
+        public ThreeDSEnrollment ThreeDS { get; set; }
         /// <summary>
         /// Returns the payments risk assessment results
         /// </summary>

@@ -25,7 +25,7 @@ namespace Checkout.Payments
         /// Provides 3D-Secure enrollment status
         /// </summary>
         [JsonProperty(PropertyName = "3ds")]
-        public ThreeDsEnrollment ThreeDs { get; set; }
+        public ThreeDSEnrollment ThreeDS { get; set; }
         public bool RequiresRedirect() => HasLink("redirect");
         public Link GetRedirectLink() => GetLink("redirect");
     }

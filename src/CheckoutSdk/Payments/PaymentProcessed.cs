@@ -46,7 +46,7 @@ namespace Checkout.Payments
         /// Provides 3D-Secure enrollment status if the payment was downgraded to Non-3DS
         /// </summary>
         [JsonProperty(PropertyName = "3ds")]
-        public ThreeDsEnrollment ThreeDs { get; set; }
+        public ThreeDSEnrollment ThreeDS { get; set; }
         /// <summary>
         /// Returns the payments risk assessment results
         /// </summary>

@@ -24,7 +24,7 @@ namespace Checkout.Tests.Payments
         public async Task RequestNonThreeDsCardPayment()
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
-            paymentRequest.ThreeDs = false;
+            paymentRequest.ThreeDS = false;
 
             PaymentResponse apiResponse = await _api.Payments.RequestAsync(paymentRequest);
             
@@ -46,7 +46,7 @@ namespace Checkout.Tests.Payments
         public async Task RequestThreeDsCardPayment()
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
-            paymentRequest.ThreeDs = true;
+            paymentRequest.ThreeDS = true;
 
             PaymentResponse apiResponse = await _api.Payments.RequestAsync(paymentRequest);
 
@@ -60,8 +60,8 @@ namespace Checkout.Tests.Payments
             pending.Customer.ShouldNotBeNull();
             pending.Customer.Id.ShouldNotBeNullOrEmpty();
             pending.Customer.Email.ShouldBe(paymentRequest.Customer.Email);
-            pending.ThreeDs.ShouldNotBeNull();
-            pending.ThreeDs.Downgraded.ShouldBe(false);
+            pending.ThreeDS.ShouldNotBeNull();
+            pending.ThreeDS.Downgraded.ShouldBe(false);
             //pending.ThreeDs.Enrolled.ShouldNotBeNullOrEmpty(); //todo uncomment after 2018-09-20
             pending.RequiresRedirect().ShouldBe(true);
             pending.GetRedirectLink().ShouldNotBeNull();
@@ -150,7 +150,7 @@ namespace Checkout.Tests.Payments
             paymentDetails.Reference.ShouldNotBeNullOrWhiteSpace();
             paymentDetails.Risk.ShouldNotBeNull();
             paymentDetails.RequestedOn.ShouldBeGreaterThan(paymentResponse.Payment.ProcessedOn.AddMinutes(-1));
-            paymentDetails.ThreeDs.ShouldBeNull();
+            paymentDetails.ThreeDS.ShouldBeNull();
             paymentDetails.Links.ShouldNotBeNull();
             paymentDetails.Links.ShouldNotBeEmpty();
             paymentDetails.Status.ShouldBe(PaymentStatus.Authorized);
@@ -161,7 +161,7 @@ namespace Checkout.Tests.Payments
         public async Task ItCanGetThreeDsPaymentBeforeAuth()
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
-            paymentRequest.ThreeDs = true;
+            paymentRequest.ThreeDS = true;
             PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
             paymentResponse.IsPending.ShouldBe(true);
 
@@ -178,8 +178,8 @@ namespace Checkout.Tests.Payments
             paymentDetails.Reference.ShouldNotBeNullOrWhiteSpace();
             paymentDetails.Risk.ShouldNotBeNull();
             paymentDetails.RequestedOn.ShouldBeGreaterThan(DateTime.MinValue);
-            paymentDetails.ThreeDs.ShouldNotBeNull();
-            paymentDetails.ThreeDs.Downgraded.ShouldBe(false);
+            paymentDetails.ThreeDS.ShouldNotBeNull();
+            paymentDetails.ThreeDS.Downgraded.ShouldBe(false);
             //paymentDetails.ThreeDs.Enrolled.ShouldNotBeNullOrEmpty(); //todo uncomment after 2018-09-20
             paymentDetails.RequiresRedirect().ShouldBe(true);
             paymentDetails.GetRedirectLink().ShouldNotBeNull();

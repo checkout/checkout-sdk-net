@@ -66,7 +66,7 @@ namespace Checkout.Payments
         /// Whether to process this payment as a 3D-Secure
         /// </summary>
         [JsonProperty(PropertyName = "3ds")]
-        public bool? ThreeDs { get; set; }
+        public bool? ThreeDS { get; set; }
         /// <summary>
         /// Determines whether to attempt a 3D-Secure payment as non-3DS should the card issuer not be enrolled.
         /// </summary>
