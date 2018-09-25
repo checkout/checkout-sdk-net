@@ -31,7 +31,7 @@ namespace Checkout.Payments
         /// <summary>
         /// Must be specified for card payments where the cardholder is not present (recurring or Merchant Offline Telephone Order)
         /// </summary>
-        public PaymentType? PaymentType { get; set; }
+        public PaymentType PaymentType { get; set; }
         /// <summary>
         /// Your reference for the payment
         /// </summary>

@@ -146,7 +146,6 @@ namespace Checkout.Tests.Payments
             paymentDetails.Amount.ShouldBe(paymentResponse.Payment.Amount);
             paymentDetails.Currency.ShouldBe(paymentResponse.Payment.Currency);
             paymentDetails.BillingDescriptor.ShouldNotBeNull();
-            paymentDetails.PaymentType.ShouldNotBeNull();
             paymentDetails.Reference.ShouldNotBeNullOrWhiteSpace();
             paymentDetails.Risk.ShouldNotBeNull();
             paymentDetails.RequestedOn.ShouldBeGreaterThan(paymentResponse.Payment.ProcessedOn.AddMinutes(-1));
@@ -174,13 +173,12 @@ namespace Checkout.Tests.Payments
             paymentDetails.Customer.Email.ShouldBe(paymentRequest.Customer.Email);
             paymentDetails.Amount.ShouldBe(paymentRequest.Amount);
             paymentDetails.Currency.ShouldBe(paymentRequest.Currency); 
-            paymentDetails.PaymentType.ShouldNotBeNull();
             paymentDetails.Reference.ShouldNotBeNullOrWhiteSpace();
             paymentDetails.Risk.ShouldNotBeNull();
             paymentDetails.RequestedOn.ShouldBeGreaterThan(DateTime.MinValue);
             paymentDetails.ThreeDS.ShouldNotBeNull();
             paymentDetails.ThreeDS.Downgraded.ShouldBe(false);
-            //paymentDetails.ThreeDs.Enrolled.ShouldNotBeNullOrEmpty(); //todo uncomment after 2018-09-20
+            paymentDetails.ThreeDS.Enrolled.ShouldNotBeNullOrEmpty(); //todo uncomment after 2018-09-20
             paymentDetails.RequiresRedirect().ShouldBe(true);
             paymentDetails.GetRedirectLink().ShouldNotBeNull();
             paymentDetails.Links.ShouldNotBeNull();
