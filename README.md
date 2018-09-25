@@ -20,7 +20,7 @@ To get started install the [`CheckoutSDK`](https://www.nuget.org/packages/Checko
 Initialize a `CheckoutApi` to access the operations for each API:
 
 ```c#
-var api = CheckoutApi.Create("sk_70d144d5-92bd-4040-83cf-faeb978b3d75", sandbox: true);
+var api = CheckoutApi.Create("sk_70d144d5-92bd-4040-83cf-faeb978b3d75", useSandbox: true);
 
 var paymentRequest = new PaymentRequest<TokenSource>(new TokenSource("tok_ubfj2q76miwundwlk72vxt2i7q"), Currency.USD, 999);
 var apiResponse = await api.Payments.RequestAsync(paymentRequest);
@@ -40,7 +40,7 @@ Once installed register the SDK with the built-in DI container in `Startup.cs`:
 public void ConfigureServices(IServiceCollection services)
 {
     // ...
-    var configuration = new CheckoutConfiguration("sk_70d144d5-92bd-4040-83cf-faeb978b3d75", sandbox: true);
+    var configuration = new CheckoutConfiguration("sk_70d144d5-92bd-4040-83cf-faeb978b3d75", useSandbox: true);
     services.AddCheckoutSdk(configuration);    
 }
 ```
@@ -86,7 +86,7 @@ You can then configure `appsettings.json` file with your Checkout details:
 ```json
 {
   "Checkout": {
-    "Sandbox": true,
+    "UseSandbox": true,
     "SecretKey" : "sk_70d144d5-92bd-4040-83cf-faeb978b3d75"
   }
 }

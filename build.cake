@@ -32,15 +32,6 @@ Task("__Clean")
         CleanDirectories(buildArtifacts);
     });
 
-Task("__Restore")
-    .Does(() =>
-    {      
-        foreach (var projectFile in allProjectFiles)
-        {
-            DotNetCoreRestore(projectFile.ToString());
-        }
-    });
-
 Task("__Build")
     .Does(() =>
     {
@@ -124,7 +115,6 @@ private void PublishPackages(string source, string apiKey)
 
 Task("Build")
     .IsDependentOn("__Clean")
-    .IsDependentOn("__Restore")
     .IsDependentOn("__Build")
     .IsDependentOn("__Test")
     .IsDependentOn("__Pack");
