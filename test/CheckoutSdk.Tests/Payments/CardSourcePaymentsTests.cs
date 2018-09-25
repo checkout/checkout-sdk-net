@@ -62,7 +62,7 @@ namespace Checkout.Tests.Payments
             pending.Customer.Email.ShouldBe(paymentRequest.Customer.Email);
             pending.ThreeDS.ShouldNotBeNull();
             pending.ThreeDS.Downgraded.ShouldBe(false);
-            //pending.ThreeDs.Enrolled.ShouldNotBeNullOrEmpty(); //todo uncomment after 2018-09-20
+            pending.ThreeDS.Enrolled.ShouldNotBeNullOrEmpty(); //todo uncomment after 2018-09-20
             pending.RequiresRedirect().ShouldBe(true);
             pending.GetRedirectLink().ShouldNotBeNull();
         }
@@ -135,6 +135,7 @@ namespace Checkout.Tests.Payments
         public async Task ItCanGetNonThreeDsPayment()
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
+            paymentRequest.PaymentType = PaymentType.Recurring;
             PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
             GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Payment.Id);
 
@@ -145,6 +146,7 @@ namespace Checkout.Tests.Payments
             paymentDetails.Customer.Email.ShouldBe(paymentRequest.Customer.Email);
             paymentDetails.Amount.ShouldBe(paymentResponse.Payment.Amount);
             paymentDetails.Currency.ShouldBe(paymentResponse.Payment.Currency);
+            paymentDetails.PaymentType.ShouldBe(paymentRequest.PaymentType.Value);
             paymentDetails.BillingDescriptor.ShouldNotBeNull();
             paymentDetails.Reference.ShouldNotBeNullOrWhiteSpace();
             paymentDetails.Risk.ShouldNotBeNull();
@@ -174,6 +176,7 @@ namespace Checkout.Tests.Payments
             paymentDetails.Amount.ShouldBe(paymentRequest.Amount);
             paymentDetails.Currency.ShouldBe(paymentRequest.Currency); 
             paymentDetails.Reference.ShouldNotBeNullOrWhiteSpace();
+            paymentDetails.PaymentType.ShouldBe(PaymentType.Regular);
             paymentDetails.Risk.ShouldNotBeNull();
             paymentDetails.RequestedOn.ShouldBeGreaterThan(DateTime.MinValue);
             paymentDetails.ThreeDS.ShouldNotBeNull();
