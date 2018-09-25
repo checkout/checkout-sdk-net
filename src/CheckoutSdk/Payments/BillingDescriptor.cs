@@ -2,10 +2,13 @@ using System;
 
 namespace Checkout.Payments
 {
+    /// <summary>
+    /// Defines the billing descriptor to be displayed on the account owner's statement.
+    /// </summary>
     public class BillingDescriptor
     {
-        private const int MaxNameLength = 25;
-        private const int MaxCityLength = 13;
+        private const int NameMaxLength = 25;
+        private const int CityMaxLength = 13;
 
         /// <summary>
         /// An optional dynamic billing descriptor displayed on the account owner's statement.
@@ -14,21 +17,29 @@ namespace Checkout.Payments
         /// <param name="city">City where the charge originated</param>
         public BillingDescriptor(string name, string city)
         {
-            if (string.IsNullOrWhiteSpace(name) || name.Length > MaxNameLength)
-                throw new ArgumentException($"{nameof(name)} cannot be null or whitespace and its length cannot exceed {MaxNameLength}.");
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentNullException("The billing descriptor name is required.", nameof(name));
+
+            if (name.Length > NameMaxLength)
+                throw new ArgumentNullException($"The billing descriptor name cannot exceed {NameMaxLength} characters.", nameof(name));
+
+            if (string.IsNullOrWhiteSpace(city))
+                throw new ArgumentNullException("The billing descriptor city is required.", nameof(city));
+
+            if (city.Length > NameMaxLength)
+                throw new ArgumentNullException($"The billing descriptor city cannot exceed {CityMaxLength} characters.", nameof(city));
 
             Name = name;
-
-            if (string.IsNullOrWhiteSpace(city) || city.Length > MaxCityLength)
-                throw new ArgumentException($"{nameof(city)} cannot be null or whitespace and its length cannot exceed {MaxCityLength}.");
             City = city;
         }
+
         /// <summary>
-        /// Dynamic description of the charge
+        /// Dynamic description of the payment
         /// </summary>
         public string Name { get; }
+
         /// <summary>
-        /// City where the charge originated
+        /// City where the payment originated
         /// </summary>
         public string City { get; }
     }
