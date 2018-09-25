@@ -8,7 +8,7 @@ namespace Checkout.Payments
     /// For more information see https://docs.checkout.com/docs/requirements-for-financial-institutions.
     /// </summary>
     public class PaymentRecipient
-    {
+    {       
         /// <summary>
         /// Creates a new <see cref="PaymentRecipient"/> instance. 
         /// </summary>
@@ -19,7 +19,7 @@ namespace Checkout.Payments
         /// </param>
         /// <param name="zip">The first part of the UK postcode for example W1T 4TJ would be W1T.</param>
         /// <param name="lastName">The first six characters of the primary recipient’s surname. Only alphabetic characters are allowed.</param>
-        public PaymentRecipient(DateTime dateOfBirth, string accountNumber, string zip, string lastName)
+        public PaymentRecipient([JsonProperty("dob")]DateTime dateOfBirth, string accountNumber, string zip, string lastName)
         {
             if (string.IsNullOrWhiteSpace(accountNumber) || accountNumber.Length < 10)
                 throw new ArgumentException("The recipient's account number must be provided. See https://docs.checkout.com/docs/requirements-for-financial-institutions for scheme specific rules.", nameof(accountNumber));
