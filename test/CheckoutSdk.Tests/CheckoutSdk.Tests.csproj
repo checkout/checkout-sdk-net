@@ -4,14 +4,19 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <RootNamespace>Checkout.Tests</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="Payments\TokenSourcePaymentsTests.cs" />
+  </ItemGroup>
   <ItemGroup Label="Project References">
+    <ProjectReference Include="..\..\src\CheckoutSdk.SampleApp\CheckoutSdk.SampleApp.csproj" />
     <ProjectReference Include="..\..\src\CheckoutSdk\CheckoutSdk.csproj" />
     <ProjectReference Include="..\..\src\CheckoutSdk.Microsoft.Extensions\CheckoutSdk.Microsoft.Extensions.csproj" />
   </ItemGroup>
   <ItemGroup Label="Package References">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="Moq" Version="4.10.0" />
     <PackageReference Include="Serilog.Sinks.XUnit" Version="1.0.6" />
-    <PackageReference Include="Shouldly" Version="3.0.0" />
+    <PackageReference Include="Shouldly" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.0.2" />

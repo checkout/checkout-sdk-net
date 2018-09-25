@@ -9,10 +9,12 @@ namespace Checkout
         {
             Payments = new PaymentsClient(apiClient, configuration);
             Tokens = new TokensClient(apiClient, configuration);
+            PublicKey = configuration.PublicKey;
         }
 
         public IPaymentsClient Payments { get; }
         public ITokensClient Tokens { get; }
+        public string PublicKey { get; }
 
         public static CheckoutApi Create(string secretKey, bool sandbox = true, string publicKey = null)
         {

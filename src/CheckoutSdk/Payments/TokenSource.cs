@@ -1,3 +1,4 @@
+using System;
 using Checkout.Common;
 
 namespace Checkout.Payments
@@ -12,6 +13,8 @@ namespace Checkout.Payments
         /// <param name="token">The Checkout token for example a card, wallet or alternative payment token</param>
         public TokenSource(string token)
         {
+            if(string.IsNullOrWhiteSpace(token))
+                throw new ArgumentException("Token must be provided.", nameof(token));
             Token = token;
         }
 

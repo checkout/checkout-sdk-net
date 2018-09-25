@@ -1,0 +1,84 @@
+﻿@model Checkout.Payments.PaymentProcessed
+
+@{
+    ViewData["Title"] = Model.ResponseSummary;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Failure</h2>
+
+<div>
+    <h4>PaymentProcessed</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ActionId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ActionId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Currency)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Currency)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Approved)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Approved)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AuthCode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AuthCode)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ResponseCode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ResponseCode)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ResponseSummary)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ResponseSummary)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ProcessedOn)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ProcessedOn)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Reference)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Reference)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">New payment</a>
+</div>

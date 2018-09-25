@@ -7,5 +7,6 @@ namespace Checkout
     {
         IPaymentsClient Payments { get; }
         ITokensClient Tokens { get; }
+        string PublicKey { get; }
     }
 }

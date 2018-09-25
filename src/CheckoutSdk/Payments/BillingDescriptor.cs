@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace Checkout.Payments
 {
@@ -6,6 +7,9 @@ namespace Checkout.Payments
     {
         private const int MaxNameLength = 25;
         private const int MaxCityLength = 13;
+
+        [JsonConstructor]
+        private BillingDescriptor() { }
 
         /// <summary>
         /// An optional dynamic billing descriptor displayed on the account owner's statement.

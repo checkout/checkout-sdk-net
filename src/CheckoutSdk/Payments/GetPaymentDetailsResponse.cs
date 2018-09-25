@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Checkout.Payments
 {
-    public class GetPaymentResponse : Resource
+    public class GetPaymentDetailsResponse : Resource
     {
         /// <summary>
         /// Payment unique identifier
