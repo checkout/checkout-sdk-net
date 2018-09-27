@@ -7,9 +7,6 @@ namespace Checkout.Payments
     /// </summary>
     public class BillingDescriptor
     {
-        private const int NameMaxLength = 25;
-        private const int CityMaxLength = 13;
-
         /// <summary>
         /// An optional dynamic billing descriptor displayed on the account owner's statement.
         /// </summary>
@@ -23,8 +20,8 @@ namespace Checkout.Payments
             if (string.IsNullOrWhiteSpace(city))
                 throw new ArgumentNullException("The billing descriptor city is required.", nameof(city));
 
-            Name = name.Trim(NameMaxLength);
-            City = city.Trim(CityMaxLength);
+            Name = name;
+            City = city;
         }
 
         /// <summary>

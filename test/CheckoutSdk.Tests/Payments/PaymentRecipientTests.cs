@@ -46,12 +46,5 @@ namespace Checkout.Tests.Payments
 
             validationException.ShouldNotBeNull();
         }
-
-        [Fact]
-        public void GivenLastNameExceedsMaxLengthShouldTrim()
-        {
-            var recipient = new PaymentRecipient(new DateTime(), "1234567890", "NW1", "1234567890");
-            recipient.LastName.ShouldBe("123456");
-        }
     }
 }

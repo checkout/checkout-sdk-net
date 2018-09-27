@@ -36,7 +36,7 @@ namespace Checkout.Payments
             DateOfBirth = dateOfBirth;
             AccountNumber = accountNumber;
             Zip = zip;
-            LastName = lastName.Trim(6);
+            LastName = lastName;
         }
 
         /// <summary>
