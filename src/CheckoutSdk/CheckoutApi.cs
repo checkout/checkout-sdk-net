@@ -9,7 +9,7 @@ namespace Checkout
     public class CheckoutApi : ICheckoutApi
     {
         /// <summary>
-        /// Creates a new <see cref="CheckoutApi"/> instance and initialises each underlying API client.
+        /// Creates a new <see cref="CheckoutApi"/> instance and initializes each underlying API client.
         /// </summary>
         /// <param name="apiClient">The API client used to send API requests and handle responses.</param>
         /// <param name="configuration">A configuration object containing authentication and API specific information.</param>
