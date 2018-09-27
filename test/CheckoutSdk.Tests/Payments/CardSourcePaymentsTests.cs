@@ -69,26 +69,6 @@ namespace Checkout.Tests.Payments
         }
 
         [Fact]
-        public async Task ItCanCapturePayment()
-        {
-            // Auth
-            var paymentRequest = TestHelper.CreateCardPaymentRequest();
-            var paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
-            paymentResponse.Payment.CanCapture().ShouldBe(true);
-
-            CaptureRequest captureRequest = new CaptureRequest
-            {
-                Reference = Guid.NewGuid().ToString()
-            };
-
-            // Capture
-            var captureResponse = await _api.Payments.CaptureAsync(paymentResponse.Payment.Id, captureRequest);
-
-            captureResponse.ActionId.ShouldNotBeNullOrEmpty();
-            captureResponse.Reference.ShouldBe(captureRequest.Reference);
-        }
-
-        [Fact]
         public async Task ItCanVoidPayment()
         {
             // Auth
