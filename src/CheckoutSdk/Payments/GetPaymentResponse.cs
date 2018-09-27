@@ -5,84 +5,108 @@ using Newtonsoft.Json;
 
 namespace Checkout.Payments
 {
+    /// <summary>
+    /// Represents the details of a payment
+    /// </summary>
     public class GetPaymentResponse : Resource
     {
         /// <summary>
-        /// Payment unique identifier
+        /// Gets the unqiue identifier of the payment
         /// </summary>
         public string Id { get; set; }
+        
         /// <summary>
-        /// The date/time the payment was requested
+        /// Gets the date/time the payment was requested
         /// </summary>
         public DateTime RequestedOn { get; set; }
+        
         /// <summary>
-        /// The source of the payment
+        /// Gets the source of the payment
         /// </summary>
-        [JsonConverter(typeof(SourceResponseConverter))]
-        public IResponsePaymentSource Source { get; set; }
+        [JsonConverter(typeof(ResponseSourceConverter))]
+        public IResponseSource Source { get; set; }
+        
         /// <summary>
-        /// The original payment amount
+        /// Gets the original payment amount
         /// </summary>
         public int? Amount { get; set; }
+        
         /// <summary>
-        /// The three-letter ISO currency code of the payment
+        /// Gets the three-letter ISO currency code of the payment
         /// </summary>
         public string Currency { get; set; }
+        
         /// <summary>
-        /// Must be specified for card payments where the cardholder is not present (recurring or Merchant Offline Telephone Order)
+        /// Gets the payment type
         /// </summary>
         public PaymentType PaymentType { get; set; }
+        
         /// <summary>
-        /// Your reference for the payment
+        /// Gets your reference for the payment
         /// </summary>
         public string Reference { get; set; }
+        
         /// <summary>
-        /// A description of the payment
+        /// Gets your description of the payment
         /// </summary>
         public string Description { get; set; }
+        
         /// <summary>
-        /// The status of the payment
+        /// Gets the status of the payment
         /// </summary>
-        public PaymentStatus? Status { get; set; }
+        public PaymentStatus Status { get; set; }
+        
         /// <summary>
-        /// Provides information relating to the processing of 3D-Secure payments
+        /// Gets 3D-Secure information relating to the payment
         /// </summary>
         [JsonProperty(PropertyName = "3ds")]
         public ThreeDSEnrollment ThreeDS { get; set; }
+        
         /// <summary>
-        /// Returns the payments risk assessment results
+        /// Gets the payment's risk response
         /// </summary>
-        public Risk Risk { get; set; }
+        public RiskAssessment Risk { get; set; }
+        
         /// <summary>
-        /// The customer to which this payment is linked
+        /// Gest the customer to which this payment is linked
         /// </summary>
         public Customer Customer { get; set; }
+        
         /// <summary>
-        /// An optional dynamic billing descriptor displayed on the account owner's statement.
+        /// Gets the billing descriptor displayed on the account owner's statement
         /// </summary>
         public BillingDescriptor BillingDescriptor { get; set; }
+        
         /// <summary>
-        /// The payment shipping details
+        /// Gets the payment's shipping details
         /// </summary>
-        public Shipping Shipping { get; set; }
+        public ShippingDetails Shipping { get; set; }
+        
         /// <summary>
-        /// The IP address used to make the payment
+        /// Gets the customer IP address used to make the payment
         /// </summary>
         public string PaymentIp { get; set; }
+        
         /// <summary>
-        /// Required by VISA and MasterCard for domestic UK transactions processed by Financial Institutions. 
+        /// Gets the payment recipient details (Required by VISA and MasterCard for domestic UK transactions processed by Financial Institutions). 
         /// </summary>
         public PaymentRecipient Recipient { get; set; }
+        
         /// <summary>
-        /// For OpenPay payments, destinations determine the proportion of the payment amount credited to other OpenPay accounts
-        /// </summary>
-        public IEnumerable<PaymentDestination> Destinations { get; set; }
-        /// <summary>
-        /// Set of key/value pairs that you can attach to a payment. It can be useful for storing additional information in a structured format
+        /// Gets the metadata you attached to the original payment request
         /// </summary>
         public Dictionary<string, object> Metadata { get; set; }
 
+        /// <summary>
+        /// Determines whether the payment requires a redirect
+        /// </summary>
+        /// <returns>True if a redirect is required, otherwise False</returns>
         public bool RequiresRedirect() => HasLink("redirect");
+        
+        /// <summary>
+        /// Gets the redirect link
+        /// </summary>
+        /// <returns>The link if present, otherwise null</returns>
         public Link GetRedirectLink() => GetLink("redirect");
     }
 }

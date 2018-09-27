@@ -1,6 +1,9 @@
 namespace Checkout.Payments
 {
-    public class Risk
+    /// <summary>
+    /// Risk assessment results
+    /// </summary>
+    public class RiskAssessment
     {
         /// <summary>
         /// Whether the payment was flagged by a risk check

@@ -2,76 +2,106 @@ using Checkout.Common;
 
 namespace Checkout.Payments
 {
-    public class CardSourceResponse : IResponsePaymentSource
+    /// <summary>
+    /// The card used to complete a payment request. 
+    /// </summary>
+    public class CardSourceResponse : IResponseSource
     {
-        public string Id { get; set; }
-        public string Type { get; set; }
         /// <summary>
-        /// The payment source owner's billing address
+        /// Gets the card source ID that can be used for subsequent payments via an <see cref="IdSource"/>.
+        /// For new cards, this will only be provided if the payment was successful.
+        /// </summary>
+        public string Id { get; set; }
+        
+        /// <summary>
+        /// Gets the type of source.
+        /// </summary>
+        public string Type { get; set; }
+        
+        /// <summary>
+        /// Gets the cardholder's billing address
         /// </summary>
         public Address BillingAddress { get; set; }
+        
         /// <summary>
-        /// The payment source owner's phone number
+        /// Gets the cardholder's phone number
         /// </summary>
         public Phone Phone { get; set; }
+        
         /// <summary>
-        /// The two-digit expiry month
+        /// Gets the card's two-digit expiry month
         /// </summary>
         public int ExpiryMonth { get; set; }
+        
         /// <summary>
-        /// The four-digit expiry year
+        /// Gets the card's four-digit expiry year
         /// </summary>
         public int ExpiryYear { get; set; }
+        
         /// <summary>
-        /// The card-holder name
+        /// Gets the cardholder's name
         /// </summary>
         public string Name { get; set; }
+        
         /// <summary>
-        /// The card scheme
+        /// Gets the card scheme
         /// </summary>
+        /// <example>Visa</example>
         public string Scheme { get; set; }
+        
         /// <summary>
-        /// The last four digits of the card number
+        /// Gets the last four digits of the card number
         /// </summary>
         public string Last4 { get; set; }
+        
         /// <summary>
-        /// Uniquely identifies this particular card number. You can use this to compare cards across customers
+        /// Gets a value that uniquely identifies this particular card number. 
+        /// You can use this to compare cards across customers.
         /// </summary>
         public string Fingerprint { get; set; }
+        
         /// <summary>
-        /// The card issuer BIN
+        /// Gets the card issuer BIN
         /// </summary>
         public string Bin { get; set; }
+        
         /// <summary>
-        /// The card type
+        /// Gets the card type
         /// </summary>
         public CardType? CardType { get; set; }
+        
         /// <summary>
-        /// The card category
+        /// Gets the card category
         /// </summary>
         public CardCategory? CardCategory { get; set; }
+        
         /// <summary>
-        /// The name of the card issuer
+        /// Gets the name of the card issuer
         /// </summary>
         public string Issuer { get; set; }
+
         /// <summary>
-        /// The card issuer country ISO-2 code
+        /// Gets the card issuer country ISO-2 code
         /// </summary>
         public string IssuerCountry { get; set; }
+        
         /// <summary>
-        /// The issuer/card scheme product identifier
+        /// Gets the issuer/card scheme product identifier
         /// </summary>
         public string ProductId { get; set; }
+        
         /// <summary>
-        /// The issuer/card scheme product type
+        /// Gets the issuer/card scheme product type
         /// </summary>
         public string ProductType { get; set; }
+        
         /// <summary>
-        /// The Address Verification System check result
+        /// Gets the Address Verification System check result
         /// </summary>
         public string AvsCheck { get; set; }
+        
         /// <summary>
-        /// The CVV check result
+        /// Gets the CVV check result
         /// </summary>
         public string CvvCheck { get; set; }
     }

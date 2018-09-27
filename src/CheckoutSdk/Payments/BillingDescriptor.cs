@@ -26,7 +26,7 @@ namespace Checkout.Payments
             if (string.IsNullOrWhiteSpace(city))
                 throw new ArgumentNullException("The billing descriptor city is required.", nameof(city));
 
-            if (city.Length > NameMaxLength)
+            if (city.Length > CityMaxLength)
                 throw new ArgumentNullException($"The billing descriptor city cannot exceed {CityMaxLength} characters.", nameof(city));
 
             Name = name;

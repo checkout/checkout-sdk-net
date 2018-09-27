@@ -6,7 +6,7 @@ namespace Checkout
     internal class ReflectionUtils
     {
         /// <summary>
-        /// Informational Version of the assembly containing the specified type.
+        /// Returns the informtational version of the assembly containing the specified type.
         /// </summary>
         public static string GetAssemblyVersion<T>()
         {

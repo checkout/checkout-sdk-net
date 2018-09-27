@@ -11,6 +11,9 @@ using Checkout.Common;
 
 namespace Checkout
 {
+    /// <summary>
+    /// Handles the authentication, serialization and sending of HTTP requests to Checkout APIs
+    /// </summary>
     public class ApiClient : IApiClient
     {
         private const HttpStatusCode Unprocessable = (HttpStatusCode)422;
@@ -20,21 +23,42 @@ namespace Checkout
         private readonly HttpClient _httpClient;
         private readonly ISerializer _serializer;
 
+        /// <summary>
+        /// Creates a new <see cref="ApiClient"/> instance with the provided configuration.
+        /// </summary>
+        /// <param name="configuration">The Checkout configuration required to configure the client</param>
         public ApiClient(CheckoutConfiguration configuration)
             : this(configuration, new DefaultHttpClientFactory(), new JsonSerializer())
         {
         }
 
+        /// <summary>
+        /// Creates a new <see cref="ApiClient"/> instance with the provided configuration and HTTP client factory.
+        /// </summary>
+        /// <param name="configuration">The Checkout configuration required to configure the client</param>
+        /// <param name="httpClientFactory">A factory for creating HTTP client instances</param>
         public ApiClient(CheckoutConfiguration configuration, IHttpClientFactory httpClientFactory)
             : this(configuration, httpClientFactory, new JsonSerializer())
         {
         }
+
+        /// <summary>
+        /// Creates a new <see cref="ApiClient"/> instance with the provided configuration and serializer.
+        /// </summary>
+        /// <param name="configuration">The Checkout configuration required to configure the client</param>
+        /// <param name="serializer">A serializer used to serialize and deserialize HTTP payloads</param>
 
         public ApiClient(CheckoutConfiguration configuration, ISerializer serializer)
             : this(configuration, new DefaultHttpClientFactory(), serializer)
         {
         }
 
+        /// <summary>
+        /// Creates a new <see cref="ApiClient"/> instance with the provided configuration, HTTP client factory and serializer.
+        /// </summary>
+        /// <param name="configuration">The Checkout configuration required to configure the client</param>
+        /// <param name="httpClientFactory">A factory for creating HTTP client instances</param>
+        /// <param name="serializer">A serializer used to serialize and deserialize HTTP payloads</param>
         public ApiClient(
             CheckoutConfiguration configuration,
             IHttpClientFactory httpClientFactory,
@@ -50,7 +74,7 @@ namespace Checkout
         public async Task<TResult> GetAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
-            if (credentials == null) throw new ArgumentNullException(nameof(credentials));   
+            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
             var httpResponse = await SendRequestAsync(HttpMethod.Get, path, credentials, null, cancellationToken);
             return await DeserializeJsonAsync<TResult>(httpResponse);
@@ -65,7 +89,7 @@ namespace Checkout
             return await DeserializeJsonAsync<TResult>(httpResponse);
         }
 
-        public async Task<dynamic> PostAsync(string path, IApiCredentials credentials, object request, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken)
+        public async Task<dynamic> PostAsync(string path, IApiCredentials credentials, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken,  object request = null)
         {
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
@@ -132,7 +156,7 @@ namespace Checkout
                 }
 
                 if (httpResponse.StatusCode == HttpStatusCode.NotFound)
-                    throw new CheckoutResourceNotFoundException(httpResponse.StatusCode, requestId);
+                    throw new CheckoutResourceNotFoundException(requestId);
 
                 throw new CheckoutApiException(httpResponse.StatusCode, requestId);
             }

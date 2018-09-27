@@ -3,30 +3,47 @@ using Newtonsoft.Json;
 
 namespace Checkout.Payments
 {
+    /// <summary>
+    /// Indicates the payment is pending, either for deferred processing or awaiting redirect
+    /// </summary>
     public class PaymentPending : Resource
     {
         /// <summary>
-        /// Payment unique identifier
+        /// Gets the unique identifier of the payment
         /// </summary>
         public string Id { get; set; }
+        
         /// <summary>
-        /// The status of the payment
+        /// Gets the status of the payment
         /// </summary>
-        public PaymentStatus? Status { get; set; }
+        public PaymentStatus Status { get; set; }
+        
         /// <summary>
-        /// Your reference for the payment request
+        /// Gets your reference for the payment request
         /// </summary>
         public string Reference { get; set; }
+
         /// <summary>
-        /// The customer to which this payment is linked
+        /// Gets the customer to which this payment is linked
         /// </summary>
         public Customer Customer { get; set; }
+        
         /// <summary>
-        /// Provides 3D-Secure enrollment status
+        /// Gets the 3D-Secure enrollment status
         /// </summary>
         [JsonProperty(PropertyName = "3ds")]
         public ThreeDSEnrollment ThreeDS { get; set; }
+
+        /// <summary>
+        /// Determines whether the payment requires a redirect
+        /// </summary>
+        /// <returns>True if a redirect is required, otherwise False</returns>
         public bool RequiresRedirect() => HasLink("redirect");
+        
+        /// <summary>
+        /// Gets the redirect link
+        /// </summary>
+        /// <returns>The link if present, otherwise null</returns>
         public Link GetRedirectLink() => GetLink("redirect");
     }
 }

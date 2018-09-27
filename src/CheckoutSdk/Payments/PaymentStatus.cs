@@ -1,5 +1,8 @@
 ﻿namespace Checkout.Payments
 {
+    /// <summary>
+    /// Defines the status of a payment
+    /// </summary>
     public enum PaymentStatus
     {
         Authorized,

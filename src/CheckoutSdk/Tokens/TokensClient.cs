@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace Checkout.Tokens
 {
+    /// <summary>
+    /// Default implementation of <see cref="ITokensClient"/>.
+    /// </summary>
     public class TokensClient : ITokensClient
     {
         private readonly IApiClient _apiClient;

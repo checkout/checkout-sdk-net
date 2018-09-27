@@ -7,6 +7,7 @@ using Checkout.Common;
 using Checkout.Payments;
 using Xunit;
 using Xunit.Abstractions;
+using Newtonsoft.Json;
 
 namespace Checkout.Tests.Payments
 {
@@ -155,7 +156,7 @@ namespace Checkout.Tests.Payments
             paymentDetails.Links.ShouldNotBeNull();
             paymentDetails.Links.ShouldNotBeEmpty();
             paymentDetails.Status.ShouldBe(PaymentStatus.Authorized);
-            paymentDetails.Source.AsCardSource().ShouldNotBeNull();
+            paymentDetails.Source.AsCard().ShouldNotBeNull();
         }
 
         [Fact]
@@ -187,23 +188,7 @@ namespace Checkout.Tests.Payments
             paymentDetails.Links.ShouldNotBeNull();
             paymentDetails.Links.ShouldNotBeEmpty();
             paymentDetails.Status.ShouldBe(PaymentStatus.Pending);
-            paymentDetails.Source.AsCardSource().ShouldNotBeNull();
-        }
-
-        [Fact]
-        public async Task ItCanGetPaymentDestinations()
-        {
-            PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
-            var destination = new PaymentDestination("test", 1);
-            paymentRequest.Destinations = new[] { destination };
-            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
-
-            GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Payment.Id);
-
-            paymentDetails.Destinations.ShouldNotBeNull();
-            paymentDetails.Destinations.ShouldNotBeEmpty();
-            paymentDetails.Destinations.ShouldHaveSingleItem();
-            paymentDetails.Destinations.ShouldContain(d => d.Id == destination.Id && d.Amount == destination.Amount);
+            paymentDetails.Source.AsCard().ShouldNotBeNull();
         }
 
         [Fact]
@@ -255,7 +240,7 @@ namespace Checkout.Tests.Payments
         public async Task ItCanGetPaymentShipping()
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
-            paymentRequest.Shipping = new Shipping()
+            paymentRequest.Shipping = new ShippingDetails()
             {
                 Address = new Address() { AddressLine1 = "221B Baker Street", AddressLine2 = null, City = "London", Country = "UK", State = "n/a", Zip = "NW1 6XE" },
                 Phone = new Phone() { CountryCode = "44", Number = "124312431243" }
