@@ -3,7 +3,7 @@ using System;
 namespace Checkout
 {
     /// <summary>
-    /// Base class for exceptions thrown by the Checkout.com SDK for .NET
+    /// Base class for exceptions thrown by the Checkout.com SDK for .NET.
     /// </summary>
     public class CheckoutException : Exception
     {

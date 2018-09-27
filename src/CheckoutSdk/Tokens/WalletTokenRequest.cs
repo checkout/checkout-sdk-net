@@ -10,8 +10,8 @@ namespace Checkout.Tokens
         /// <summary>
         /// Creates a new <see cref="WalletTokenRequest"/> instance.
         /// </summary>
-        /// <param name="walletType">The wallet type </param>
-        /// <param name="tokenData">The wallet token data</param>
+        /// <param name="walletType">The wallet type.</param>
+        /// <param name="tokenData">The wallet token data.</param>
         public WalletTokenRequest(WalletType walletType, Dictionary<string, object> tokenData)
         {
             Type = walletType.ToString();
@@ -24,7 +24,7 @@ namespace Checkout.Tokens
         public string Type { get; }
 
         /// <summary>
-        /// Gets the wallet (Google Pay, Apple Pay etc) payment token data
+        /// Gets the wallet (Google Pay, Apple Pay etc) payment token data.
         /// </summary>
         public Dictionary<string, object> TokenData { get; }
     }

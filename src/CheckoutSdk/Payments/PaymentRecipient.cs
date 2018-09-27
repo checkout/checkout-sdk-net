@@ -12,7 +12,7 @@ namespace Checkout.Payments
         /// <summary>
         /// Creates a new <see cref="PaymentRecipient"/> instance. 
         /// </summary>
-        /// <param name="dateOfBirth">The recipient's date of birth</param>
+        /// <param name="dateOfBirth">The recipient's date of birth.</param>
         /// <param name="accountNumber">
         /// If the payment is being made with a VISA card, then provide the first six digits and the last four digits of the primary recipient’s card, without any spaces. Or, the first 10 digits of the primary recipient’s account number.
         /// If the payment is being made with a Mastercard card, then provide the primary recipient's full card number.
@@ -37,7 +37,7 @@ namespace Checkout.Payments
         }
 
         /// <summary>
-        /// The recipient's date of birth
+        /// Gets the recipient's date of birth.
         /// </summary>
         [JsonConverter(typeof(DateTimeFormatConverter), "yyyy-MM-dd")]
         [JsonProperty("dob")]

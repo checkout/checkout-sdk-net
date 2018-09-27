@@ -5,16 +5,16 @@ using Newtonsoft.Json;
 namespace Checkout.Payments
 {
     /// <summary>
-    /// Defines a request for a payment
+    /// Defines a request for a payment.
     /// </summary>
-    /// <typeparam name="TPaymentSource">The source of paymnt</typeparam>
+    /// <typeparam name="TPaymentSource">The source of paymnt.</typeparam>
     public class PaymentRequest<TPaymentSource> where TPaymentSource : IRequestSource
     {
         /// <summary>
-        /// Creates a new payment request
+        /// Creates a new payment request.
         /// </summary>
-        /// <param name="source">The source of the payment</param>
-        /// <param name="currency">The three-letter ISO currency code</param>
+        /// <param name="source">The source of the payment.</param>
+        /// <param name="currency">The three-letter ISO currency code.</param>
         /// <param name="amount">The payment amount in the major currency. Omitting the amount or providing 0 will perform a card verification.</param>
         public PaymentRequest(TPaymentSource source, string currency, int? amount)
         {
@@ -33,17 +33,17 @@ namespace Checkout.Payments
         }
 
         /// <summary>
-        /// Gets the source of payment
+        /// Gets the source of payment.
         /// </summary>
         public TPaymentSource Source { get; }
 
         /// <summary>
-        /// Gets the payment amount in the major currency
+        /// Gets the payment amount in the major currency.
         /// </summary>
         public int? Amount { get; }
 
         /// <summary>
-        /// Gets the three-letter ISO currency code
+        /// Gets the three-letter ISO currency code.
         /// </summary>
         public string Currency { get; }
 
@@ -54,17 +54,17 @@ namespace Checkout.Payments
         public PaymentType? PaymentType { get; set; }
 
         /// <summary>
-        /// Gets or sets a reference you can later use to identify this payment such as an order number
+        /// Gets or sets a reference you can later use to identify this payment such as an order number.
         /// </summary>
         public string Reference { get; set; }
 
         /// <summary>
-        /// Gets or sets a description of the payment
+        /// Gets or sets a description of the payment.
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to capture the payment automatically (default)
+        /// Gets or sets a value indicating whether to capture the payment automatically (default).
         /// </summary>
         public bool? Capture { get; set; }
 
@@ -75,7 +75,7 @@ namespace Checkout.Payments
         public DateTimeOffset? CaptureOn { get; set; }
 
         /// <summary>
-        /// Gets or sets details of the customer associated with the payment
+        /// Gets or sets details of the customer associated with the payment.
         /// </summary>
         public Customer Customer { get; set; }
 
@@ -85,12 +85,12 @@ namespace Checkout.Payments
         public BillingDescriptor BillingDescriptor { get; set; }
 
         /// <summary>
-        /// Gets or sets the payment shipping details
+        /// Gets or sets the payment shipping details.
         /// </summary>
         public ShippingDetails Shipping { get; set; }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether to process this payment as a 3D-Secure
+        /// Gets or sets a value that indicates whether to process this payment as a 3D-Secure.
         /// </summary>
         [JsonProperty(PropertyName = "3ds")]
         public bool ThreeDS { get; set; }
@@ -111,12 +111,12 @@ namespace Checkout.Payments
         public bool? SkipRiskCheck { get; set; }
 
         /// <summary>
-        /// Gets or sets the success redirect URL overridding the default URL configured in the Checkout Hub
+        /// Gets or sets the success redirect URL overridding the default URL configured in the Checkout Hub.
         /// </summary>
         public string SuccessUrl { get; set; }
 
         /// <summary>
-        /// Gets or sets the failure redirect URL overridding the default URL configured in the Checkout Hub
+        /// Gets or sets the failure redirect URL overridding the default URL configured in the Checkout Hub.
         /// </summary>
         public string FailureUrl { get; set; }
 

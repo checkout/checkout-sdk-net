@@ -1,7 +1,7 @@
 ﻿namespace Checkout.Payments
 {
     /// <summary>
-    /// Defines the type of payment
+    /// Defines the type of payment.
     /// </summary>
     public enum PaymentType
     {

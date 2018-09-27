@@ -13,9 +13,9 @@ namespace Checkout.Payments
         /// <summary>
         /// Creates a new <see cref="CardSource"/> instance with the specified card details.
         /// </summary>
-        /// <param name="number">The card number</param>
-        /// <param name="expiryMonth">The two-digit expiry month of the card</param>
-        /// <param name="expiryYear">The four-digit expiry year of the card</param>
+        /// <param name="number">The card number.</param>
+        /// <param name="expiryMonth">The two-digit expiry month of the card.</param>
+        /// <param name="expiryYear">The four-digit expiry year of the card.</param>
         public CardSource(string number, int expiryMonth, int expiryYear)
         {
             if (string.IsNullOrWhiteSpace(number))
@@ -30,22 +30,22 @@ namespace Checkout.Payments
         }
 
         /// <summary>
-        /// Gets the full card number
+        /// Gets the full card number.
         /// </summary>
         public string Number { get; }
         
         /// <summary>
-        /// Gets the expiry month of the card
+        /// Gets the expiry month of the card.
         /// </summary>
         public int ExpiryMonth { get; }
         
         /// <summary>
-        /// Gets the four-digit expiry year of the card
+        /// Gets the four-digit expiry year of the card.
         /// </summary>
         public int ExpiryYear { get; }
         
         /// <summary>
-        /// Gets the cardholder name
+        /// Gets the cardholder name.
         /// </summary>
         public string Name { get; set; }
 
@@ -55,17 +55,17 @@ namespace Checkout.Payments
         public string Cvv { get; set; }
         
         /// <summary>
-        /// Gets or sets the cardholder's billing address
+        /// Gets or sets the cardholder's billing address.
         /// </summary>
         public Address BillingAddress { get; set; }
         
         /// <summary>
-        /// Gets or sets the cardholder's phone number
+        /// Gets or sets the cardholder's phone number.
         /// </summary>
         public Phone Phone { get; set; }
 
         /// <summary>
-        /// Gets the type of source
+        /// Gets the type of source.
         /// </summary>
         public string Type => TypeName;
     }

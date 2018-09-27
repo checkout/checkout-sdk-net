@@ -12,9 +12,9 @@ namespace Checkout.Tokens
         /// <summary>
         /// Creates a new <see cref="CardTokenRequest"/> instance.
         /// </summary>
-        /// <param name="number">The full card number</param>
-        /// <param name="expiryMonth">The two-digit expiry month of the card</param>
-        /// <param name="expiryYear">The four-digit expiry year of the card</param>
+        /// <param name="number">The full card number.</param>
+        /// <param name="expiryMonth">The two-digit expiry month of the card.</param>
+        /// <param name="expiryYear">The four-digit expiry year of the card.</param>
         public CardTokenRequest(string number, int expiryMonth, int expiryYear)
         {
             if (string.IsNullOrWhiteSpace(number))
@@ -34,17 +34,17 @@ namespace Checkout.Tokens
         public string Number { get; }
         
         /// <summary>
-        /// Gets the two-digit expiry month of the card
+        /// Gets the two-digit expiry month of the card.
         /// </summary>
         public int ExpiryMonth { get; }
         
         /// <summary>
-        /// Gets the four-digit expiry year of the card
+        /// Gets the four-digit expiry year of the card.
         /// </summary>
         public int ExpiryYear { get; }
         
         /// <summary>
-        /// Gets or sets the cardholder name
+        /// Gets or sets the cardholder name.
         /// </summary>
         public string Name { get; set; }
         
@@ -54,12 +54,12 @@ namespace Checkout.Tokens
         public string Cvv { get; set; }
         
         /// <summary>
-        /// Gets or sets the cardholder's billing address
+        /// Gets or sets the cardholder's billing address.
         /// </summary>
         public Address BillingAddress { get; set; }
         
         /// <summary>
-        /// Gets or sets the cardholder's phone number
+        /// Gets or sets the cardholder's phone number.
         /// </summary>
         public Phone Phone { get; set; }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Checkout
 {
     /// <summary>
-    /// Credentials class that authorizes HTTP requests using your Checkout.com Public Key
+    /// Credentials class that authorizes HTTP requests using your Checkout.com Public Key.
     /// </summary>
     public class PublicKeyCredentials : IApiCredentials
     {
@@ -22,10 +22,10 @@ namespace Checkout
         }
 
         /// <summary>
-        /// Authorizes the request using your Checkout.com Public Key
+        /// Authorizes the request using your Checkout.com Public Key.
         /// </summary>
-        /// <param name="httpRequest">The HTTP request to authorize</param>
-        /// <returns>A task that completes when the provided <paramref="httpRequest"/> has been authorized.></returns>
+        /// <param name="httpRequest">The HTTP request to authorize.</param>
+        /// <returns>A task that completes when the provided <paramref="httpRequest"/> has been authorized.</returns>
         public Task AuthorizeAsync(HttpRequestMessage httpRequest)
         {
             if (httpRequest == null)

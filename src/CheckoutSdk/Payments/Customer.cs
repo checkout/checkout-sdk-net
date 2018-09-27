@@ -1,7 +1,7 @@
 ﻿namespace Checkout.Payments
 {
     /// <summary>
-    /// Represents a customer in a payment request or response
+    /// Represents a customer in a payment request or response.
     /// </summary>
     public class Customer
     {
@@ -12,12 +12,12 @@
         public string Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the customer email address
+        /// Gets or sets the customer email address.
         /// </summary>
         public string Email { get; set; }
 
         /// <summary>
-        /// Gets or sets the customer full name
+        /// Gets or sets the customer full name.
         /// </summary>
         public string Name { get; set; }
     }

@@ -3,7 +3,7 @@ using Checkout;
 namespace Microsoft.Extensions.Configuration
 {
     /// <summary>
-    /// Defines the options needed to configure the Checkout.com SDK for .NET that can be initialized using the Microsoft configuration framework
+    /// Defines the options needed to configure the Checkout.com SDK for .NET that can be initialized using the Microsoft configuration framework.
     /// </summary>
     public class CheckoutOptions
     {

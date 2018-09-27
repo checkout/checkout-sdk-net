@@ -9,12 +9,12 @@ namespace Checkout
     public interface ICheckoutApi
     {
         /// <summary>
-        /// Gets the Payments API
+        /// Gets the Payments API.
         /// </summary>
         IPaymentsClient Payments { get; }
 
         /// <summary>
-        /// Gets the Tokenization API
+        /// Gets the Tokenization API.
         /// </summary>
         ITokensClient Tokens { get; }
     }

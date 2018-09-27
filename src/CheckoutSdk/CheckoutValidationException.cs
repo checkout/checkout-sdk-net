@@ -11,9 +11,9 @@ namespace Checkout
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="error">The validation error details</param>
-        /// <param name="httpStatusCode">The HTTP status code of the API response</param>
-        /// <param name="requestId">The unique identifier of the API request</param>
+        /// <param name="error">The validation error details.</param>
+        /// <param name="httpStatusCode">The HTTP status code of the API response.</param>
+        /// <param name="requestId">The unique identifier of the API request.</param>
         public CheckoutValidationException(ErrorResponse error, HttpStatusCode httpStatusCode, string requestId)
          : base(httpStatusCode, requestId, GenerateDetailsMessage(error))
         {
@@ -21,7 +21,7 @@ namespace Checkout
         }
 
         /// <summary>
-        /// Gets the error response
+        /// Gets the error response.
         /// </summary>
         public ErrorResponse Error { get; }
 

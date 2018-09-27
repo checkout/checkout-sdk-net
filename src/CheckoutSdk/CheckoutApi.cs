@@ -11,8 +11,8 @@ namespace Checkout
         /// <summary>
         /// Creates a new <see cref="CheckoutApi"/> instance and initialises each underlying API client.
         /// </summary>
-        /// <param name="apiClient">The API client used to send API requests and handle responses</param>
-        /// <param name="configuration">A configuration object containing authentication and API specific information</param>
+        /// <param name="apiClient">The API client used to send API requests and handle responses.</param>
+        /// <param name="configuration">A configuration object containing authentication and API specific information.</param>
         public CheckoutApi(IApiClient apiClient, CheckoutConfiguration configuration)
         {
             Payments = new PaymentsClient(apiClient, configuration);
@@ -20,12 +20,12 @@ namespace Checkout
         }
 
         /// <summary>
-        /// Gets the Payments API
+        /// Gets the Payments API.
         /// </summary>
         public IPaymentsClient Payments { get; }
 
         /// <summary>
-        /// Gets the Tokenization API 
+        /// Gets the Tokenization API. 
         /// </summary>
         public ITokensClient Tokens { get; }
 

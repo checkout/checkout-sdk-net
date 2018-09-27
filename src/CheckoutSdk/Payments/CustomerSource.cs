@@ -13,8 +13,8 @@ namespace Checkout.Payments
         /// <summary>
         /// Creates a new <see cref="CustomerSource"/> instance with the provided id, email or both.
         /// </summary>
-        /// <param name="id">The customer identifier, required if email is not provided</param>
-        /// <param name="email">The customer email address, required if id is not provided</param>
+        /// <param name="id">The customer identifier, required if email is not provided.</param>
+        /// <param name="email">The customer email address, required if id is not provided.</param>
         public CustomerSource(string id, string email)
         {
             if (!string.IsNullOrWhiteSpace(email))
@@ -38,12 +38,12 @@ namespace Checkout.Payments
         }
 
         /// <summary>
-        /// Gets the customer identifier, required if email is not provided
+        /// Gets the customer identifier, required if email is not provided.
         /// </summary>
         public string Id { get; }
 
         /// <summary>
-        /// Gets the customer email address, required if id is not provided
+        /// Gets the customer email address, required if id is not provided.
         /// </summary>
         public string Email { get; }
 

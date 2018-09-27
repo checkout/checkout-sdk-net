@@ -22,7 +22,7 @@ namespace Checkout
         /// <summary>
         /// Creates a <see cref="System.Net.Http.HttpClient"/> instance.
         /// </summary>
-        /// <returns>An initialized instance</returns>
+        /// <returns>An initialized instance.</returns>
         public HttpClient CreateClient()
         {
             return _httpClient;

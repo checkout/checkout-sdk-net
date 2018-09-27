@@ -10,7 +10,7 @@ namespace Checkout
         /// <summary>
         /// Createa a new <see cref="CheckoutResourceNotFoundException"/> instance.
         /// </summary>
-        /// <param name="requestId">The unique identifier of the API request</param>
+        /// <param name="requestId">The unique identifier of the API request.</param>
         public CheckoutResourceNotFoundException(string requestId) 
             : base(HttpStatusCode.NotFound, requestId)
         {

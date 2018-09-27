@@ -12,7 +12,7 @@ using Checkout.Common;
 namespace Checkout
 {
     /// <summary>
-    /// Handles the authentication, serialization and sending of HTTP requests to Checkout APIs
+    /// Handles the authentication, serialization and sending of HTTP requests to Checkout APIs.
     /// </summary>
     public class ApiClient : IApiClient
     {
@@ -26,7 +26,7 @@ namespace Checkout
         /// <summary>
         /// Creates a new <see cref="ApiClient"/> instance with the provided configuration.
         /// </summary>
-        /// <param name="configuration">The Checkout configuration required to configure the client</param>
+        /// <param name="configuration">The Checkout configuration required to configure the client.</param>
         public ApiClient(CheckoutConfiguration configuration)
             : this(configuration, new DefaultHttpClientFactory(), new JsonSerializer())
         {
@@ -35,8 +35,8 @@ namespace Checkout
         /// <summary>
         /// Creates a new <see cref="ApiClient"/> instance with the provided configuration and HTTP client factory.
         /// </summary>
-        /// <param name="configuration">The Checkout configuration required to configure the client</param>
-        /// <param name="httpClientFactory">A factory for creating HTTP client instances</param>
+        /// <param name="configuration">The Checkout configuration required to configure the client.</param>
+        /// <param name="httpClientFactory">A factory for creating HTTP client instances.</param>
         public ApiClient(CheckoutConfiguration configuration, IHttpClientFactory httpClientFactory)
             : this(configuration, httpClientFactory, new JsonSerializer())
         {
@@ -45,8 +45,8 @@ namespace Checkout
         /// <summary>
         /// Creates a new <see cref="ApiClient"/> instance with the provided configuration and serializer.
         /// </summary>
-        /// <param name="configuration">The Checkout configuration required to configure the client</param>
-        /// <param name="serializer">A serializer used to serialize and deserialize HTTP payloads</param>
+        /// <param name="configuration">The Checkout configuration required to configure the client.</param>
+        /// <param name="serializer">A serializer used to serialize and deserialize HTTP payloads.</param>
 
         public ApiClient(CheckoutConfiguration configuration, ISerializer serializer)
             : this(configuration, new DefaultHttpClientFactory(), serializer)
@@ -56,9 +56,9 @@ namespace Checkout
         /// <summary>
         /// Creates a new <see cref="ApiClient"/> instance with the provided configuration, HTTP client factory and serializer.
         /// </summary>
-        /// <param name="configuration">The Checkout configuration required to configure the client</param>
-        /// <param name="httpClientFactory">A factory for creating HTTP client instances</param>
-        /// <param name="serializer">A serializer used to serialize and deserialize HTTP payloads</param>
+        /// <param name="configuration">The Checkout configuration required to configure the client.</param>
+        /// <param name="httpClientFactory">A factory for creating HTTP client instances.</param>
+        /// <param name="serializer">A serializer used to serialize and deserialize HTTP payloads.</param>
         public ApiClient(
             CheckoutConfiguration configuration,
             IHttpClientFactory httpClientFactory,

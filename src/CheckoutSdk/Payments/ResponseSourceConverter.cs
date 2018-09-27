@@ -8,7 +8,7 @@ namespace Checkout.Payments
     using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
     /// <summary>
-    /// JSON converter for handling different payment respons source types
+    /// JSON converter for handling different payment respons source types.
     /// </summary>
     public class ResponseSourceConverter : JsonConverter
     {

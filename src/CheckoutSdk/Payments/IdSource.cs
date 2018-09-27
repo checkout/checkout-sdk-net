@@ -3,7 +3,7 @@
 namespace Checkout.Payments
 {
     /// <summary>
-    /// Defines a payment source that references an existing payment source ID
+    /// Defines a payment source that references an existing payment source ID.
     /// </summary>
     public class IdSource : IRequestSource
     {
@@ -12,7 +12,7 @@ namespace Checkout.Payments
         /// <summary>
         /// Creates a new instance of <see cref="IdSource"/>.
         /// </summary>
-        /// <param name="id">The payment source identifier for example, a card source identifier</param>
+        /// <param name="id">The payment source identifier for example, a card source identifier.</param>
         public IdSource(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -22,17 +22,17 @@ namespace Checkout.Payments
         }
 
         /// <summary>
-        /// Gets the payment source identifer for example, a card source identifier
+        /// Gets the payment source identifer for example, a card source identifier.
         /// </summary>
         public string Id { get; }
 
         /// <summary>
-        /// Gets or sets card verification value/code for card sources
+        /// Gets or sets card verification value/code for card sources.
         /// </summary>
         public string Cvv { get; set; }
         
         /// <summary>
-        /// Gets the type of source
+        /// Gets the type of source.
         /// </summary>
         public string Type => TypeName;
     }

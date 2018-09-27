@@ -1,7 +1,7 @@
 ﻿namespace Checkout.Common
 {
     /// <summary>
-    /// The type of card
+    /// Defines the type of card.
     /// </summary>
     public enum CardType
     {

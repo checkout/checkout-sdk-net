@@ -13,8 +13,8 @@ namespace Checkout.Payments
         /// <summary>
         /// An optional dynamic billing descriptor displayed on the account owner's statement.
         /// </summary>
-        /// <param name="name">Dynamic descriptor name</param>
-        /// <param name="city">Dynamic descriptor city</param>
+        /// <param name="name">Dynamic descriptor name.</param>
+        /// <param name="city">Dynamic descriptor city.</param>
         public BillingDescriptor(string name, string city)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -34,12 +34,12 @@ namespace Checkout.Payments
         }
 
         /// <summary>
-        /// Gets the dynamic descriptor name
+        /// Gets the dynamic descriptor name.
         /// </summary>
         public string Name { get; }
 
         /// <summary>
-        /// Gets the dynamic descriptor city
+        /// Gets the dynamic descriptor city.
         /// </summary>
         public string City { get; }
     }

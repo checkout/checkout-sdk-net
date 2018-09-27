@@ -14,7 +14,7 @@ namespace Microsoft.Extensions.Configuration
         /// Registers the default Checkout SDK services to the provided <paramref="serviceCollection"/>.
         /// </summary>
         /// <param name="serviceCollection">The service collection to add to.</param>
-        /// <param name="configuration">The Checkout configuration</param>
+        /// <param name="configuration">The Checkout configuration.</param>
         /// <returns>The service collection with registered Checkout SDK services.</returns>
         public static IServiceCollection AddCheckoutSdk(this IServiceCollection serviceCollection, CheckoutConfiguration configuration)
         {
@@ -34,7 +34,7 @@ namespace Microsoft.Extensions.Configuration
         /// Registers the default Checkout SDK services to the provided <paramref="serviceCollection"/>.
         /// </summary>
         /// <param name="serviceCollection">The service collection to add to.</param>
-        /// <param name="configuration">The Microsoft configuration used to obtain the Checkout SDK configuration</param>
+        /// <param name="configuration">The Microsoft configuration used to obtain the Checkout SDK configuration.</param>
         /// <returns>The service collection with registered Checkout SDK services.</returns>
         public static IServiceCollection AddCheckoutSdk(this IServiceCollection services, IConfiguration configuration)
         {
