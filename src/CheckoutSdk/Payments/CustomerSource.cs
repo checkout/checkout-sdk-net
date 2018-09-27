@@ -17,23 +17,13 @@ namespace Checkout.Payments
         /// <param name="email">The customer email address, required if id is not provided.</param>
         public CustomerSource(string id, string email)
         {
-            if (!string.IsNullOrWhiteSpace(email))
-            {
-                string[] split = email?.Split('@');
-                if (split.Length != 2 || split.Any(string.IsNullOrWhiteSpace))
-                {
-                    throw new FormatException($"{email} contain one @");
-                }
+            if (string.IsNullOrWhiteSpace(id) && string.IsNullOrWhiteSpace(email))
+                throw new ArgumentException("Either the customer id or email is required.");
+            
+            if (!string.IsNullOrWhiteSpace(email) && !IsValidEmail(email))
+                throw new FormatException($"The provided customer email {email} is invalid.");
 
-                Email = email;
-            }
-
-            if (string.IsNullOrWhiteSpace(id)
-                && string.IsNullOrWhiteSpace(email))
-            {
-                throw new ArgumentException($"Either {nameof(id)} or {nameof(email)} must be provided.");
-            }
-
+            Email = email;
             Id = id;
         }
 
@@ -51,5 +41,17 @@ namespace Checkout.Payments
         /// Gets the type of source
         /// </summary>
         public string Type => TypeName;
+
+        /// <summary>
+        /// Primitive email validation as geography-specific validation performed by API
+        /// (Japanese email addresses do not always follow ISO rules)
+        /// </summary>
+        /// <param name="email">The email to validate</param>
+        /// <returns>True if the email is valid, otherwise False.</returns>
+        private static bool IsValidEmail(string email)
+        {
+            string[] parts = email?.Split('@');
+            return parts.Length == 2 && !parts.Any(s => string.IsNullOrWhiteSpace(s));   
+        }
     }
 }
