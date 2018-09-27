@@ -9,6 +9,8 @@ namespace Checkout.Payments
     /// </summary>
     public class PaymentRecipient
     {       
+        private const int MaxLastNameLength = 6;
+        
         /// <summary>
         /// Creates a new <see cref="PaymentRecipient"/> instance. 
         /// </summary>
@@ -18,7 +20,10 @@ namespace Checkout.Payments
         /// If the payment is being made with a Mastercard card, then provide the primary recipient's full card number.
         /// </param>
         /// <param name="zip">The first part of the UK postcode for example W1T 4TJ would be W1T.</param>
-        /// <param name="lastName">The first six characters of the primary recipient’s surname. Only alphabetic characters are allowed.</param>
+        /// <param name="lastName">
+        /// The first six characters of the primary recipient’s surname. Only alphabetic characters are allowed.
+        /// If the value exceeds the allowed length it will be trimmed automatically.
+        /// </param>
         public PaymentRecipient([JsonProperty("dob")]DateTime dateOfBirth, string accountNumber, string zip, string lastName)
         {
             if (string.IsNullOrWhiteSpace(accountNumber) || accountNumber.Length < 10)
@@ -27,13 +32,13 @@ namespace Checkout.Payments
             if (string.IsNullOrWhiteSpace(zip))
                 throw new ArgumentException("The recipient's zip must be provided.", nameof(zip));
 
-            if (string.IsNullOrWhiteSpace(lastName) || lastName.Length > 6)
-                throw new ArgumentException("The recipient's last name must be provided and cannot exceed six characters.", nameof(lastName));
+            if (string.IsNullOrWhiteSpace(lastName))
+                throw new ArgumentException("The recipient's last name must be provided.", nameof(lastName));
 
             DateOfBirth = dateOfBirth;
             AccountNumber = accountNumber;
             Zip = zip;
-            LastName = lastName;
+            LastName = lastName.Length > MaxLastNameLength ? lastName.Substring(0, MaxLastNameLength) : lastName;
         }
 
         /// <summary>
