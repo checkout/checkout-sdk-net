@@ -13,24 +13,18 @@ namespace Checkout.Payments
         /// <summary>
         /// An optional dynamic billing descriptor displayed on the account owner's statement.
         /// </summary>
-        /// <param name="name">Dynamic descriptor name.</param>
-        /// <param name="city">Dynamic descriptor city.</param>
+        /// <param name="name">The dynamic descriptor name. If the provided value exceeds 25 characters it will be trimmed automatically.</param>
+        /// <param name="city">The dynamic descriptor city. If the provided value exceeds 13 characters it will be trimmed automatically.</param>
         public BillingDescriptor(string name, string city)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentNullException("The billing descriptor name is required.", nameof(name));
 
-            if (name.Length > NameMaxLength)
-                throw new ArgumentNullException($"The billing descriptor name cannot exceed {NameMaxLength} characters.", nameof(name));
-
             if (string.IsNullOrWhiteSpace(city))
                 throw new ArgumentNullException("The billing descriptor city is required.", nameof(city));
 
-            if (city.Length > CityMaxLength)
-                throw new ArgumentNullException($"The billing descriptor city cannot exceed {CityMaxLength} characters.", nameof(city));
-
-            Name = name;
-            City = city;
+            Name = name.Trim(NameMaxLength);
+            City = city.Trim(CityMaxLength);
         }
 
         /// <summary>

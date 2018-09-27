@@ -8,9 +8,7 @@ namespace Checkout.Payments
     /// For more information see https://docs.checkout.com/docs/requirements-for-financial-institutions.
     /// </summary>
     public class PaymentRecipient
-    {       
-        private const int MaxLastNameLength = 6;
-        
+    {              
         /// <summary>
         /// Creates a new <see cref="PaymentRecipient"/> instance. 
         /// </summary>
@@ -38,7 +36,7 @@ namespace Checkout.Payments
             DateOfBirth = dateOfBirth;
             AccountNumber = accountNumber;
             Zip = zip;
-            LastName = lastName.Length > MaxLastNameLength ? lastName.Substring(0, MaxLastNameLength) : lastName;
+            LastName = lastName.Trim(6);
         }
 
         /// <summary>
