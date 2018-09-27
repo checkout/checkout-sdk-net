@@ -6,7 +6,7 @@ namespace Checkout.Payments
     public class ThreeDSEnrollment
     {
         /// <summary>
-        /// Gets a value that indicates whether this was a 3D-Secure payment downgraded to Non-3D-Secure (when <see cref="PaymentRequest.AttemptN3d"/> is specified).
+        /// Gets a value that indicates whether this was a 3D-Secure payment downgraded to Non-3D-Secure (when <see cref="PaymentRequest.AttemptN3D"/> is specified).
         /// </summary>
         public bool Downgraded { get; set; }
         

@@ -98,7 +98,8 @@ namespace Checkout.Payments
         /// <summary>
         /// Gets or sets a value that indicates whether to attempt a 3D-Secure payment as non-3DS should the card issuer not be enrolled.
         /// </summary>
-        public bool? AttemptN3d { get; set; }
+        [JsonProperty("attempt_n3d")]
+        public bool? AttemptN3D { get; set; }
 
         /// <summary>
         /// Gets or sets the an existing payment identifier for payments that use stored card details such as recurring payments.
