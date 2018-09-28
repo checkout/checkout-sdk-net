@@ -39,7 +39,10 @@ namespace Checkout.Tests
         {
             return new PaymentRequest<TokenSource>(new TokenSource(token),
                     Currency.GBP,
-                    100);
+                    100)
+                    {
+                        Capture = false
+                    };
         }
     }
 }
