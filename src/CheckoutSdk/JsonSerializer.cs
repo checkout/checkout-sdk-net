@@ -13,7 +13,7 @@ namespace Checkout
         private readonly JsonSerializerSettings _serializerSettings;
 
         /// <summary>
-        /// Creates a new <see cref="JsonSerializer"/> that allows customisation of the underlying
+        /// Creates a new <see cref="JsonSerializer"/> that allows customization of the underlying
         /// JSON.NET serializer settings.
         /// </summary>
         /// <param name="configureSettings">An action to be run against the JSON.NET serializer settings.</param>

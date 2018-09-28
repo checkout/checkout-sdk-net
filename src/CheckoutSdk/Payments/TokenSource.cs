@@ -24,7 +24,7 @@ namespace Checkout.Payments
         public string Token { get; }
 
         /// <summary>
-        /// Gets or sets payment source owner's billing address. This will override the billing address specified during tokenisation.
+        /// Gets or sets payment source owner's billing address. This will override the billing address specified during tokenization.
         /// </summary>
         public Address BillingAddress { get; set; }
 

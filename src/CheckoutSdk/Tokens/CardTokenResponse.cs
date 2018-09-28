@@ -4,7 +4,7 @@ using Checkout.Payments;
 namespace Checkout.Tokens
 {
     /// <summary>
-    /// Defines the response following the successful tokenisation of a card.
+    /// Defines the response following the successful tokenization of a card.
     /// </summary>
     public class CardTokenResponse : TokenResponse
     {
