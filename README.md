@@ -1,5 +1,3 @@
-[![Checkout.com SDK for .NET](assets/checkout-logo.png)]
-
 # Checkout SDK for .NET
 
 [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/6ox0xlfjv11avkdf?svg=true)](https://ci.appveyor.com/project/checkout/checkout-sdk-net-74764)
