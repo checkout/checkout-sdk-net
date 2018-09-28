@@ -1,10 +1,10 @@
-﻿using CheckoutSdk.SampleApp.Models;
-using Shouldly;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using CheckoutSdk.SampleApp.Models;
+using Shouldly;
 using Xunit;
 
-namespace Checkout.Tests.SampleApp
+namespace CheckoutSdk.SampleApp.Tests
 {
     public class PaymentModelValidationTests
     {

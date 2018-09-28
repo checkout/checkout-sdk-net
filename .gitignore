@@ -274,3 +274,4 @@ dump.rdb
 
 # App Specific
 appsettings.local.json
+samples/*/wwwroot/lib/

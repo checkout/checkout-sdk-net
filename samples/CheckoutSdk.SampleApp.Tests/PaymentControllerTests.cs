@@ -1,16 +1,17 @@
-﻿using Checkout.Common;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Checkout;
+using Checkout.Common;
 using Checkout.Payments;
 using CheckoutSdk.SampleApp.Controllers;
 using CheckoutSdk.SampleApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Shouldly;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Xunit;
 
-namespace Checkout.Tests.SampleApp
+namespace CheckoutSdk.SampleApp.Tests
 {
     public class PaymentControllerTests
     {

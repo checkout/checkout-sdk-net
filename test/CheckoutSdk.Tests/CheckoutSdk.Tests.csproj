@@ -8,13 +8,11 @@
     <None Include="Payments\TokenSourcePaymentsTests.cs" />
   </ItemGroup>
   <ItemGroup Label="Project References">
-    <ProjectReference Include="..\..\src\CheckoutSdk.SampleApp\CheckoutSdk.SampleApp.csproj" />
     <ProjectReference Include="..\..\src\CheckoutSdk\CheckoutSdk.csproj" />
     <ProjectReference Include="..\..\src\CheckoutSdk.Extensions.Microsoft\CheckoutSdk.Extensions.Microsoft.csproj" />
   </ItemGroup>
   <ItemGroup Label="Package References">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
-    <PackageReference Include="Moq" Version="4.10.0" />
     <PackageReference Include="Serilog.Sinks.XUnit" Version="1.0.6" />
     <PackageReference Include="Shouldly" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1" />
