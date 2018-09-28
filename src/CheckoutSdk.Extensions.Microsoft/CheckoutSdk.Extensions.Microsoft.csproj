@@ -9,7 +9,7 @@
     <Copyright>Checkout.com</Copyright>
     <AssemblyName>CheckoutSDK.Extensions.Microsoft</AssemblyName>
     <PackageProjectUrl>https://github.com/checkout/checkout-sdk-net</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/checkout/checkout-sdk-net/raw/master/LICENSE.MD</PackageLicenseUrl>
+    <PackageLicenseUrl>https://github.com/checkout/checkout-sdk-net/raw/master/LICENSE</PackageLicenseUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/checkout/checkout-sdk-net/develop/assets/checkout-icon.png</PackageIconUrl>
     <PackageTags>Checkout.com;payments;gateway;sdk</PackageTags>
     <RepositoryType>git</RepositoryType>
