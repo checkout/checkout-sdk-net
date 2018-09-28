@@ -4,42 +4,53 @@ using System.Collections.Generic;
 
 namespace Checkout.Payments
 {
+    /// <summary>
+    /// Defines a payment action.
+    /// </summary>
     public class PaymentAction : Resource
     {
         /// <summary>
-        /// The unique identifier of the payment action
+        /// Gets the unique identifier of the payment action.
         /// </summary>
         public string Id { get; set; }
+        
         /// <summary>
-        /// The type of action
+        /// Gets the type of action.
         /// </summary>
-        public ActionType? Type { get; set; }
+        public ActionType Type { get; set; }
+        
         /// <summary>
-        /// The date/time the action was processed
+        /// Gets the date/time the action was processed.
         /// </summary>
         public DateTime ProcessedOn { get; set; }
+        
         /// <summary>
-        /// The action amount
+        /// Gets the action amount.
         /// </summary>
         public int Amount { get; set; }
+        
         /// <summary>
-        /// The acquirer authorization code for cards
+        /// Gets the acquirer authorization code where applicable.
         /// </summary>
         public string AuthCode { get; set; }
+        
         /// <summary>
-        /// Gateway response code
+        /// Gets the Checkout.com Gateway response code.
         /// </summary>
         public string ResponseCode { get; set; }
+        
         /// <summary>
-        /// The Gateway response summary
+        /// Gets the response summary.
         /// </summary>
         public string ResponseSummary { get; set; }
+        
         /// <summary>
-        /// Your reference for the action
+        /// Gets your reference for the action.
         /// </summary>
         public string Reference { get; set; }
+        
         /// <summary>
-        /// Set of key/value pairs that you can attach to an action
+        /// Gets the key/value pairs that were attached to the action.
         /// </summary>
         public Dictionary<string, object> Metadata { get; set; }
     }

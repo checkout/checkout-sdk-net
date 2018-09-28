@@ -4,74 +4,117 @@ using Checkout.Common;
 
 namespace Checkout.Payments
 {
+    /// <summary>
+    /// Indicates the payment has been successfully processed. 
+    /// Check the <see cref="PaymentProcessed.Approved"/> to determine if the payment was approved or declined.
+    /// </summary>
     public class PaymentProcessed : Resource
     {
         /// <summary>
-        /// Payment unique identifier
+        /// Gets the the unique identifier of the payment.
         /// </summary>
         public string Id { get; set; }
+        
         /// <summary>
-        /// The unique identifier for the action performed against this payment
+        /// Gets the unique identifier for the action performed against this payment.
         /// </summary>
         public string ActionId { get; set; }
+        
         /// <summary>
-        /// The payment amount
+        /// Gets the payment amount.
         /// </summary>
         public int Amount { get; set; }
+        
         /// <summary>
-        /// The three-letter ISO currency code of the payment
+        /// Gets the three-letter ISO currency code of the payment.
         /// </summary>
         public string Currency { get; set; }
+        
         /// <summary>
-        /// Whether the payment request was approved
+        /// Gets whether the payment request was approved or declined.
         /// </summary>
         public bool Approved { get; set; }
+        
         /// <summary>
-        /// The status of the payment
+        /// Gets the status of the payment.
         /// </summary>
         public PaymentStatus? Status { get; set; }
+        
         /// <summary>
-        /// The acquirer authorization code if the payment was Authorized
+        /// Gets the acquirer authorization code if the payment was Authorized.
         /// </summary>
         public string AuthCode { get; set; }
+        
         /// <summary>
-        /// Gateway response code
+        /// Gets the Gateway response code.
         /// </summary>
         public string ResponseCode { get; set; }
+        
         /// <summary>
-        /// The Gateway response summary
+        /// Gets the Gateway response summary.
         /// </summary>
         public string ResponseSummary { get; set; }
+        
         /// <summary>
-        /// Provides 3D-Secure enrollment status if the payment was downgraded to Non-3DS
+        /// Gets the 3D-Secure enrollment status if the payment was downgraded to Non-3DS.
         /// </summary>
         [JsonProperty(PropertyName = "3ds")]
-        public ThreeDsEnrollment ThreeDs { get; set; }
+        public ThreeDSEnrollment ThreeDS { get; set; }
+        
         /// <summary>
-        /// Returns the payments risk assessment results
+        /// Gets the payment's risk response.
         /// </summary>
-        public Risk Risk { get; set; }
+        public RiskAssessment Risk { get; set; }
+        
         /// <summary>
-        /// The source of the payment
+        /// Gets the source of the payment.
         /// </summary>
-        [JsonConverter(typeof(SourceResponseConverter))]
-        public IResponsePaymentSource Source { get; set; }
+        [JsonConverter(typeof(ResponseSourceConverter))]
+        public IResponseSource Source { get; set; }
+        
         /// <summary>
-        /// The customer to which this payment is linked
+        /// Gets the customer to which this payment is linked.
         /// </summary>
         public Customer Customer { get; set; }
+        
         /// <summary>
-        /// The date/time the payment was processed
+        /// Gets the date/time the payment was processed.
         /// </summary>
         public DateTime ProcessedOn { get; set; }
+        
         /// <summary>
-        /// Your reference for the payment
+        /// Gets your reference for the payment.
         /// </summary>
         public string Reference { get; set; }
+
+        /// <summary>
+        /// Gets the payment's actions link.
+        /// </summary>
+        /// <returns>The link if present, otherwise null.</returns>
         public Link GetActionsLink() => GetLink("actions");
+        
+        /// <summary>
+        /// Determines whether the payment can be captured. 
+        /// </summary>
+        /// <returns>True if the payment can be captured, otherwise False.</returns>
         public bool CanCapture() => HasLink("capture");
+        
+        /// <summary>
+        /// Gets the payment's capture link.
+        /// </summary>
+        /// <returns>The link if present, otherwise null.</returns>
         public Link GetCaptureLink() => GetLink("capture");
+        
+         /// <summary>
+        /// Determines whether the payment can be voided.
+        /// </summary>
+        /// <returns>True if the payment can be voided, otherwise False.</returns>       
         public bool CanVoid() => HasLink("void");
+        
+        /// <summary>
+        /// Gets the payment's void link.
+        /// </summary>
+        /// <returns>The link if present, otherwise null.</returns>
         public Link GetVoidLink() => GetLink("void");
     }
 }

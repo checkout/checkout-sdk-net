@@ -22,7 +22,7 @@ namespace Checkout.Tests.Payments
         {
             var firstCardPayment = TestHelper.CreateCardPaymentRequest();
             var firstCardPaymentResponse = await _api.Payments.RequestAsync(firstCardPayment);
-            var idSource = new IdSource(firstCardPaymentResponse.Payment.Source.AsCardSource().Id);
+            var idSource = new IdSource(firstCardPaymentResponse.Payment.Source.AsCard().Id);
             var cardIdPaymentRequest = new PaymentRequest<IdSource>(
                 idSource,
                 Currency.GBP,
@@ -47,7 +47,7 @@ namespace Checkout.Tests.Payments
             apiResponseForCustomerSourcePayment.Payment.Customer.Id.ShouldNotBeNullOrEmpty();
             apiResponseForCustomerSourcePayment.Payment.Customer.Email.ShouldNotBeNullOrEmpty();
             apiResponseForCustomerSourcePayment.Payment.Customer.Id.ShouldBe(firstCardPaymentResponse.Payment?.Customer?.Id);
-            apiResponseForCustomerSourcePayment.Payment.Source.AsCardSource().Id.ShouldBe(firstCardPaymentResponse.Payment?.Source?.AsCardSource().Id);
+            apiResponseForCustomerSourcePayment.Payment.Source.AsCard().Id.ShouldBe(firstCardPaymentResponse.Payment?.Source?.AsCard().Id);
             apiResponseForCustomerSourcePayment.Payment.CanCapture().ShouldBeTrue();
             apiResponseForCustomerSourcePayment.Payment.CanVoid().ShouldBeTrue();
         }

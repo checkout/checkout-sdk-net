@@ -3,7 +3,7 @@ using System;
 namespace Checkout
 {
     /// <summary>
-    /// Defines the configuration used to connect and authenticate to Checkout APIs
+    /// Defines the configuration used to connect and authenticate to Checkout APIs.
     /// </summary>
     public class CheckoutConfiguration
     {

@@ -3,15 +3,30 @@ using Checkout.Tokens;
 
 namespace Checkout
 {
+    /// <summary>
+    /// Default implementation of <see cref="ICheckoutApi"/> that defines the available Checkout.com APIs.
+    /// </summary>
     public class CheckoutApi : ICheckoutApi
     {
+        /// <summary>
+        /// Creates a new <see cref="CheckoutApi"/> instance and initializes each underlying API client.
+        /// </summary>
+        /// <param name="apiClient">The API client used to send API requests and handle responses.</param>
+        /// <param name="configuration">A configuration object containing authentication and API specific information.</param>
         public CheckoutApi(IApiClient apiClient, CheckoutConfiguration configuration)
         {
             Payments = new PaymentsClient(apiClient, configuration);
             Tokens = new TokensClient(apiClient, configuration);
         }
 
+        /// <summary>
+        /// Gets the Payments API.
+        /// </summary>
         public IPaymentsClient Payments { get; }
+
+        /// <summary>
+        /// Gets the Tokenization API. 
+        /// </summary>
         public ITokensClient Tokens { get; }
 
 

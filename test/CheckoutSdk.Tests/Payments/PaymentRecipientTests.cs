@@ -11,7 +11,7 @@ namespace Checkout.Tests.Payments
         [InlineData("")]
         [InlineData(" ")]
         [InlineData(null)]
-        [InlineData("12345678901")]
+        [InlineData("12345")]
         public void GivenAccountNumberInvalidShouldThrowArgumentException(string invalidAccountNumber)
         {
             var validationException = Should.Throw<ArgumentException>(

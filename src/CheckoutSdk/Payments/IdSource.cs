@@ -2,34 +2,38 @@
 
 namespace Checkout.Payments
 {
-    public class IdSource : IPaymentSource
+    /// <summary>
+    /// Defines a payment source that references an existing payment source ID.
+    /// </summary>
+    public class IdSource : IRequestSource
     {
         public const string TypeName = "id";
 
         /// <summary>
-        /// ID source payment type
+        /// Creates a new instance of <see cref="IdSource"/>.
         /// </summary>
-        /// <param name="id">The payment source identifier for example, a card source identifier</param>
-        /// <param name="cvv">The card verification value/code (for card sources). 3 digits, except for Amex (4 digits).</param>
-        public IdSource(string id, string cvv = null)
+        /// <param name="id">The payment source identifier for example, a card source identifier.</param>
+        public IdSource(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
-                throw new ArgumentException($"Source ID required", nameof(id));
+                throw new ArgumentException("The source ID is required", nameof(id));
 
             Id = id;
-            Cvv = cvv;
         }
 
         /// <summary>
-        /// The payment source identifer for example, a card source identifier
+        /// Gets the payment source identifer for example, a card source identifier.
         /// </summary>
         public string Id { get; }
 
         /// <summary>
-        /// The card verification value/code (for card sources). 3 digits, except for Amex (4 digits).
+        /// Gets or sets card verification value/code for card sources.
         /// </summary>
-        public string Cvv { get; }
+        public string Cvv { get; set; }
         
+        /// <summary>
+        /// Gets the type of source.
+        /// </summary>
         public string Type => TypeName;
     }
 }

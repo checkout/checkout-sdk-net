@@ -1,40 +1,49 @@
 namespace Checkout.Payments
 {
-    public class ThreeDsEnrollment
+    /// <summary>
+    /// 3D-Secure Enrollment Data.
+    /// </summary>
+    public class ThreeDSEnrollment
     {
         /// <summary>
-        /// Indicates whether this was a 3D-Secure payment downgraded to Non-3D-Secure (when attempt_n3d is specified)
+        /// Gets a value that indicates whether this was a 3D-Secure payment downgraded to Non-3D-Secure (when <see cref="PaymentRequest.AttemptN3D"/> is specified).
         /// </summary>
         public bool Downgraded { get; set; }
+        
         /// <summary>
-        /// Indicates the 3D-Secure enrollment status of the issuer
+        /// Gets the 3D-Secure enrollment status of the issuer:
         /// Y - Issuer enrolled
         /// N - Customer not enrolled
         /// U - Unknown
         /// </summary>
         public string Enrolled { get; set; }
+
         /// <summary>
-        /// Verification to ensure the integrity of the response.
+        /// Gets a value that indicates the validity of the signature.
         /// </summary>
         public string SignatureValid { get; set; }
+
         /// <summary>
-        /// Indicates whether or not the cardholder was authenticated
+        /// Gets a value that indicates whether or not the cardholder was authenticated:
         /// Y - Customer authenticated
         /// N - Customer not authenticated
         /// A - An authentication attempt occurred but could not be completed
         /// U - Unable to perform authentication
         /// </summary>
         public string AuthenticationResponse { get; set; }
+        
         /// <summary>
-        /// Defines the E-Commerce Indicator security level associated with the payment
+        /// Gets the E-Commerce Indicator security level associated with the payment.
         /// </summary>
         public string Eci { get; set; }
+        
         /// <summary>
-        /// Cryptographic identifier used by the card schemes to validate the integrity of the 3D secure payment data
+        /// Gets the cryptographic identifier used by the card schemes to validate the integrity of the 3D secure payment data.
         /// </summary>
         public string Cavv { get; set; }
+        
         /// <summary>
-        /// Unique identifier for the transaction assigned by the MPI
+        /// Gets the unique identifier for the transaction assigned by the MPI.
         /// </summary>
         public string Xid { get; set; }
     }
