@@ -23,7 +23,7 @@ BuildParameters.Initialize(Context, BuildSystem);
 
 Setup(context =>
 {   
-    Information($"Building {BuildParameters.Title} v{BuildParameters.Version} with configuration {BuildParameters.Configuration}");
+    Information($"Building {BuildParameters.Title} v{BuildParameters.Version} from branch {BuildParameters.BranchName} with configuration {BuildParameters.Configuration}");
 });
 
 Task("__Clean")
@@ -143,6 +143,7 @@ public static class BuildParameters
     public static bool IsMasterBranch { get; private set; }
     public static bool IsPullRequest { get; private set; }
     public static bool IsTagged { get; private set; }
+    public static string BranchName { get; private set; }
     
     public static void Initialize(ICakeContext context, BuildSystem buildSystem)
     {
@@ -157,7 +158,8 @@ public static class BuildParameters
 
         Version = gitVersion.NuGetVersion;
 
-        IsMasterBranch = StringComparer.OrdinalIgnoreCase.Equals("master", buildSystem.AppVeyor.Environment.Repository.Branch);
+        BranchName = gitVersion.BranchName;
+        IsMasterBranch = StringComparer.OrdinalIgnoreCase.Equals("master", gitVersion.BranchName);
         IsPullRequest = buildSystem.AppVeyor.Environment.PullRequest.IsPullRequest;
         IsTagged = (
             buildSystem.AppVeyor.Environment.Repository.Tag.IsTag &&
