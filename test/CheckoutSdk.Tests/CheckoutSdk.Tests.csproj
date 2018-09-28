@@ -10,7 +10,7 @@
   <ItemGroup Label="Project References">
     <ProjectReference Include="..\..\src\CheckoutSdk.SampleApp\CheckoutSdk.SampleApp.csproj" />
     <ProjectReference Include="..\..\src\CheckoutSdk\CheckoutSdk.csproj" />
-    <ProjectReference Include="..\..\src\CheckoutSdk.Microsoft.Extensions\CheckoutSdk.Microsoft.Extensions.csproj" />
+    <ProjectReference Include="..\..\src\CheckoutSdk.Extensions.Microsoft\CheckoutSdk.Extensions.Microsoft.csproj" />
   </ItemGroup>
   <ItemGroup Label="Package References">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />

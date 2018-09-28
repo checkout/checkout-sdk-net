@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CheckoutSdk.Microsoft.Extensions\CheckoutSdk.Microsoft.Extensions.csproj" />
+    <ProjectReference Include="..\CheckoutSdk.Extensions.Microsoft\CheckoutSdk.Extensions.Microsoft.csproj" />
     <ProjectReference Include="..\CheckoutSdk\CheckoutSdk.csproj" />
   </ItemGroup>
 
