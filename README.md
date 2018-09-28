@@ -32,7 +32,7 @@ For detailed examples, please see the WIKI.
 
 ### .NET Core Applications
 
-The [`CheckoutSDK.Microsoft.Extensions`](https://www.nuget.org/packages/CheckoutSDK.Microsoft.Extensions) package makes it easy to add the Checkout SDK to your .NET Core applications.
+The [`CheckoutSDK.Extensions.Microsoft`](https://www.nuget.org/packages/CheckoutSDK.Extensions.Microsoft) package makes it easy to add the Checkout SDK to your .NET Core applications.
 
 Once installed register the SDK with the built-in DI container in `Startup.cs`:
 
