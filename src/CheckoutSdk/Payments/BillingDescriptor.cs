@@ -14,12 +14,6 @@ namespace Checkout.Payments
         /// <param name="city">The dynamic descriptor city. If the provided value exceeds 13 characters it will be trimmed automatically.</param>
         public BillingDescriptor(string name, string city)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentNullException("The billing descriptor name is required.", nameof(name));
-
-            if (string.IsNullOrWhiteSpace(city))
-                throw new ArgumentNullException("The billing descriptor city is required.", nameof(city));
-
             Name = name;
             City = city;
         }
