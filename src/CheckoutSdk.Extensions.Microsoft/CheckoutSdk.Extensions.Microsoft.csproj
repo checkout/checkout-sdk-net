@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <PackageId>CheckoutSDK.Microsoft.Extensions</PackageId>
+    <PackageId>CheckoutSDK.Extensions.Microsoft</PackageId>
     <Title>Checkout.com SDK Extensions</Title>
     <Description>Checkout.com Extensions for Microsoft Configuration and Dependency Injection</Description>
-    <AssemblyTitle>CheckoutSdk.Microsoft.Extensions</AssemblyTitle>
+    <AssemblyTitle>CheckoutSDK.Extensions.Microsoft</AssemblyTitle>
     <NeutralLanguage>en-GB</NeutralLanguage>
     <Authors>Checkout.com</Authors>
     <Copyright>Checkout.com</Copyright>
-    <AssemblyName>CheckoutSdk.Microsoft.Extensions</AssemblyName>
+    <AssemblyName>CheckoutSDK.Extensions.Microsoft</AssemblyName>
     <PackageProjectUrl>https://github.com/checkout/checkout-sdk-net</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/checkout/checkout-sdk-net/raw/master/LICENSE.MD</PackageLicenseUrl>
     <PackageTags>Checkout.com;payments;gateway</PackageTags>
