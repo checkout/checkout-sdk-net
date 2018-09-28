@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace Checkout.Tokens
 {
+    /// <summary>
+    /// Default implementation of <see cref="ITokensClient"/>.
+    /// </summary>
     public class TokensClient : ITokensClient
     {
         private readonly IApiClient _apiClient;
@@ -17,7 +20,7 @@ namespace Checkout.Tokens
             _credentials = new PublicKeyCredentials(configuration);
         }
 
-        public Task<ApiResponse<CardTokenResponse>> RequestAsync(CardTokenRequest cardTokenRequest, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<CardTokenResponse> RequestAsync(CardTokenRequest cardTokenRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (cardTokenRequest == null)
                 throw new ArgumentNullException(nameof(cardTokenRequest));
@@ -25,7 +28,7 @@ namespace Checkout.Tokens
             return _apiClient.PostAsync<CardTokenResponse>("tokens", _credentials, cancellationToken, cardTokenRequest);
         }
 
-        public Task<ApiResponse<TokenResponse>> RequestAsync(WalletTokenRequest walletTokenRequest, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<TokenResponse> RequestAsync(WalletTokenRequest walletTokenRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (walletTokenRequest == null)
                 throw new ArgumentNullException(nameof(walletTokenRequest));

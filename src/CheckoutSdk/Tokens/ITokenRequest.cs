@@ -1,7 +1,14 @@
 namespace Checkout.Tokens
 {
+    
+    /// <summary>
+    /// Defines a token request.
+    /// </summary>
     public interface ITokenRequest
     {
-        string Type {get;}
+        /// <summary>
+        /// Gets the type of details to be tokenized.
+        /// </summary>
+        string Type { get; }
     }
 }

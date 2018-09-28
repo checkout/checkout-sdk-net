@@ -1,5 +1,8 @@
-namespace Checkout
+namespace Checkout.Common
 {
+    /// <summary>
+    /// Helper class providing three-letter ISO currency codes.
+    /// </summary>
     public class Currency
     {
         /// <summary>Lek</summary>

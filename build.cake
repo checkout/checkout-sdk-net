@@ -5,33 +5,25 @@
 #tool "nuget:?package=GitVersion.CommandLine"
 
 //////////////////////////////////////////////////////////////////////
+// ADDINS
+//////////////////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
 
-var target = Argument("target", "Default");
-var configuration = Argument("configuration", "Release");
-var isCIBuild = !BuildSystem.IsLocalBuild;
-
 var projects = "./src/**/*.csproj";
 var testProjects = "./test/**/*.csproj";
-
 var allProjectFiles = GetFiles(projects) + GetFiles(testProjects);
-
 var packFiles = "./src/*/*.csproj";
 var buildArtifacts = "./artifacts";
 
-GitVersion gitVersionInfo;
-string nugetVersion;
+BuildParameters.Initialize(Context, BuildSystem);
 
 Setup(context =>
-{
-    gitVersionInfo = GitVersion(new GitVersionSettings {
-        OutputType = GitVersionOutput.Json
-    });
-
-    nugetVersion = gitVersionInfo.NuGetVersion;
-    
-    Information("Building Checkout SDK v{0} with configuration {1}", nugetVersion, configuration);
+{   
+    Information($"Building {BuildParameters.Title} v{BuildParameters.Version} with configuration {BuildParameters.Configuration}");
 });
 
 Task("__Clean")
@@ -40,22 +32,13 @@ Task("__Clean")
         CleanDirectories(buildArtifacts);
     });
 
-Task("__Restore")
-    .Does(() =>
-    {      
-        foreach (var projectFile in allProjectFiles)
-        {
-            DotNetCoreRestore(projectFile.ToString());
-        }
-    });
-
 Task("__Build")
     .Does(() =>
     {
         var settings = new DotNetCoreBuildSettings
         {
-            Configuration = configuration,
-            ArgumentCustomization = args => args.Append($"/p:Version={nugetVersion}")
+            Configuration = BuildParameters.Configuration,
+            ArgumentCustomization = args => args.Append($"/p:Version={BuildParameters.Version}")
         };
         
         foreach (var projectFile in allProjectFiles)
@@ -69,7 +52,7 @@ Task("__Test")
     {
         foreach (var projectFile in GetFiles(testProjects))
         {
-            DotNetCoreRun(projectFile.ToString());
+            DotNetCoreTest(projectFile.ToString());
         }
     });
 
@@ -78,10 +61,10 @@ Task("__Pack")
     {
         var settings = new DotNetCorePackSettings 
         {
-            Configuration = configuration,
+            Configuration = BuildParameters.Configuration,
             OutputDirectory = buildArtifacts,
             NoBuild = true,
-            ArgumentCustomization = args => args.Append($"/p:Version={nugetVersion}")
+            ArgumentCustomization = args => args.Append($"/p:Version={BuildParameters.Version}")
         };
         
         foreach (var projectFile in GetFiles(packFiles))
@@ -90,44 +73,48 @@ Task("__Pack")
         }
     });
 
-Task("__PublishNuget")
-    //.WithCriteria(() => ShouldPublish(Context))
+Task("__PublishMyGet")
+    .WithCriteria(() => BuildParameters.ShouldPublishMyGet)
     .Does(() => 
     {
-        // // Resolve the API key.
-        var apiKey = EnvironmentVariable("NUGET_API_KEY");
-        if(string.IsNullOrEmpty(apiKey)) {
-            throw new InvalidOperationException("Could not resolve NuGet API key.");
-        }
-
-        // Resolve the API url.
-        var apiUrl = EnvironmentVariable("NUGET_API_URL");
-        if(string.IsNullOrEmpty(apiUrl)) {
-            throw new InvalidOperationException("Could not resolve NuGet API url.");
-        }
-
-        foreach(var package in GetFiles("./artifacts/*.nupkg"))
+        if (BuildParameters.CanPublishMyGet) 
         {
-            // Push the package.
-            NuGetPush(package.ToString(), new NuGetPushSettings {
-                ApiKey = apiKey,
-                Source = apiUrl
-            });
+            PublishPackages(BuildParameters.MyGetSource, BuildParameters.MyGetApiKey);
+        }
+        else 
+        {
+            Warning("Unable to publish to MyGet, as necessary credentials are not available");
         }
     });
 
-private static bool ShouldPublish(ICakeContext context)
-{
-    var buildSystem = context.BuildSystem();
+Task("__PublishNuGet")
+    .WithCriteria(() => BuildParameters.ShouldPublishNuGet)
+    .Does(() => 
+    {
+        if (BuildParameters.CanPublishNuget)
+        {
+            PublishPackages(BuildParameters.NuGetSource, BuildParameters.NuGetApiKey);
+        }
+        else 
+        {
+            Warning("Unable to publish to NuGet, as necessary credentials are not available");
+        }
+    });
 
-    return buildSystem.AppVeyor.IsRunningOnAppVeyor
-        && buildSystem.AppVeyor.Environment.Repository.Tag.IsTag
-        && !string.IsNullOrWhiteSpace(buildSystem.AppVeyor.Environment.Repository.Tag.Name);
+private void PublishPackages(string source, string apiKey)
+{
+    foreach(var package in GetFiles("./artifacts/*.nupkg"))
+    {
+        // Push the package.
+        NuGetPush(package.ToString(), new NuGetPushSettings {
+            Source = source,
+            ApiKey = apiKey
+        });
+    }
 }
 
 Task("Build")
     .IsDependentOn("__Clean")
-    .IsDependentOn("__Restore")
     .IsDependentOn("__Build")
     .IsDependentOn("__Test")
     .IsDependentOn("__Pack");
@@ -137,6 +124,61 @@ Task("Default")
 
 Task("Deploy")
     .IsDependentOn("Build")
+    .IsDependentOn("__PublishMyGet")
     .IsDependentOn("__PublishNuget");
 
-RunTarget(target);
+RunTarget(BuildParameters.Target);
+
+
+public static class BuildParameters
+{
+    public static string Title => "Checkout SDK";
+    public static string Target { get; private set; }
+    public static string Version { get; private set; }
+    public static string Configuration { get; private set; }
+    public static string MyGetSource { get; private set; }
+    public static string MyGetApiKey {get; private set; }
+    public static string NuGetSource { get; private set; }
+    public static string NuGetApiKey { get; private set; }
+    public static bool IsMasterBranch { get; private set; }
+    public static bool IsPullRequest { get; private set; }
+    public static bool IsTagged { get; private set; }
+    
+    public static void Initialize(ICakeContext context, BuildSystem buildSystem)
+    {
+        context.Information("running");
+        Target = context.Argument("target", "Default");
+
+        Configuration = context.Argument("configuration", "Release");
+
+        var gitVersion = context.GitVersion(new GitVersionSettings {
+            OutputType = GitVersionOutput.Json
+        });
+
+        Version = gitVersion.NuGetVersion;
+
+        IsMasterBranch = StringComparer.OrdinalIgnoreCase.Equals("master", buildSystem.AppVeyor.Environment.Repository.Branch);
+        IsPullRequest = buildSystem.AppVeyor.Environment.PullRequest.IsPullRequest;
+        IsTagged = (
+            buildSystem.AppVeyor.Environment.Repository.Tag.IsTag &&
+            !string.IsNullOrWhiteSpace(buildSystem.AppVeyor.Environment.Repository.Tag.Name)
+        );
+
+        MyGetApiKey = context.EnvironmentVariable("MYGET_API_KEY");
+        MyGetSource = context.EnvironmentVariable("MYGET_SOURCE");
+        NuGetApiKey = context.EnvironmentVariable("NUGET_API_KEY");
+        NuGetSource = context.EnvironmentVariable("NUGET_SOURCE");
+    }
+
+    public static bool ShouldPublishMyGet 
+        => !IsMasterBranch && !IsPullRequest;
+
+    public static bool CanPublishMyGet 
+        => !string.IsNullOrEmpty(BuildParameters.MyGetApiKey) && !string.IsNullOrEmpty(BuildParameters.MyGetSource);
+
+    public static bool ShouldPublishNuGet 
+        => IsMasterBranch && IsTagged;
+
+    public static bool CanPublishNuget 
+        => !string.IsNullOrEmpty(BuildParameters.NuGetApiKey) && !string.IsNullOrEmpty(BuildParameters.NuGetSource);
+}
