@@ -4,8 +4,12 @@ test: off
 cache:
 - tools -> build.cake
 
+before_build:
+- nuget restore
+- choco install codecov
+
 build_script:
   - ps: .\build.ps1 -Target "Deploy"
-
+  - codecov -f "artifacts\CheckoutSdk.Tests.Coverage.xml"
 artifacts:
-  - path: 'artifacts\*.nupkg'
+  - path: 'artifacts\*'

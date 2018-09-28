@@ -8,6 +8,7 @@
 // ADDINS
 //////////////////////////////////////////////////////////////////////
 
+#addin nuget:?package=Cake.Coverlet
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -50,9 +51,18 @@ Task("__Build")
 Task("__Test")
     .Does(() =>
     {
+        var testSettings = new DotNetCoreTestSettings();
+        
         foreach (var projectFile in GetFiles(testProjects))
-        {
-            DotNetCoreTest(projectFile.ToString());
+        {                      
+            var coveletSettings = new CoverletSettings {
+                CollectCoverage = true,
+                CoverletOutputFormat = CoverletOutputFormat.opencover,
+                CoverletOutputDirectory = Directory(buildArtifacts),
+                CoverletOutputName = projectFile.GetFilenameWithoutExtension() + ".Coverage.xml"
+            };
+            
+            DotNetCoreTest(projectFile.ToString(), testSettings, coveletSettings);
         }
     });
 
