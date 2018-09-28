@@ -1,10 +1,10 @@
-[![Checkout.com SDK for .NET](assets/checkout-logo.png)]
-
 # Checkout SDK for .NET
 
 [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/6ox0xlfjv11avkdf?svg=true)](https://ci.appveyor.com/project/checkout/checkout-sdk-net-74764)
 [![NuGet](https://img.shields.io/nuget/v/CheckoutSDK.svg)](https://www.nuget.org/packages/CheckoutSDK)
 [![MyGet Pre Release](https://img.shields.io/myget/checkout/vpre/CheckoutSDK.svg)](https://www.myget.org/feed/checkout/package/nuget/CheckoutSDK)
+
+![Checkout.com SDK for .NET](assets/checkout-logo.png)
 
 The **Checkout SDK for .NET** enables .NET developers to easily work with [Checkout.com APIs](https://docs.checkout.com). 
 It supports .NET Framework 4.5+ and .NET Core.
