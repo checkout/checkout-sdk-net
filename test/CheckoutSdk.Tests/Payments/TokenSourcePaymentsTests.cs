@@ -23,7 +23,7 @@ namespace Checkout.Tests.Payments
             var cardTokenRequest = TestHelper.CreateCardTokenRequest();
             var cardTokenResponse = await _api.Tokens.RequestAsync(cardTokenRequest);
             var paymentRequest = TestHelper.CreateTokenPaymentRequest(cardTokenResponse.Token);
-            paymentRequest.ThreeDs = false;
+            paymentRequest.ThreeDS = false;
 
             var paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
 
@@ -36,7 +36,7 @@ namespace Checkout.Tests.Payments
             paymentResponse.Payment.Reference.ShouldBe(paymentRequest.Reference);
             paymentResponse.Payment.CanCapture().ShouldBeTrue();
             paymentResponse.Payment.CanVoid().ShouldBeTrue();
-            paymentResponse.Payment.Source.AsCardSource().ShouldNotBeNull();
+            paymentResponse.Payment.Source.AsCard().ShouldNotBeNull();
         }
 
         [Fact]
@@ -45,8 +45,7 @@ namespace Checkout.Tests.Payments
             var cardTokenRequest = TestHelper.CreateCardTokenRequest();
             var cardTokenResponse = await _api.Tokens.RequestAsync(cardTokenRequest);
             var paymentRequest = TestHelper.CreateTokenPaymentRequest(cardTokenResponse.Token);
-            paymentRequest.ThreeDs = true;
-
+            paymentRequest.ThreeDS = true;
             var apiResponse = await _api.Payments.RequestAsync(paymentRequest);
 
             apiResponse.IsPending.ShouldBe(true);
@@ -56,9 +55,9 @@ namespace Checkout.Tests.Payments
 
             pending.Id.ShouldNotBeNullOrEmpty();
             pending.Reference.ShouldBe(paymentRequest.Reference);
-            pending.ThreeDs.ShouldNotBeNull();
-            pending.ThreeDs.Downgraded.ShouldBe(false);
-            pending.ThreeDs.Enrolled.ShouldNotBeNullOrEmpty();
+            pending.ThreeDS.ShouldNotBeNull();
+            pending.ThreeDS.Downgraded.ShouldBe(false);
+            pending.ThreeDS.Enrolled.ShouldNotBeNullOrEmpty();
             pending.RequiresRedirect().ShouldBe(true);
             pending.GetRedirectLink().ShouldNotBeNull();
         }
@@ -121,6 +120,6 @@ namespace Checkout.Tests.Payments
 
             refundResponse.ActionId.ShouldNotBeNullOrEmpty();
             refundResponse.Reference.ShouldBe(refundRequest.Reference);
-        }        
+        }
     }
 }

@@ -43,7 +43,6 @@ namespace Checkout.Tests
             token.ExpiryYear.ShouldBe(request.ExpiryYear);
         }
 
-
         private CardTokenRequest CreateValidRequest()
         {
             return new CardTokenRequest(TestCardSource.Visa.Number, TestCardSource.Visa.ExpiryMonth, TestCardSource.Visa.ExpiryYear)
@@ -64,20 +63,6 @@ namespace Checkout.Tests
                     Number = "020 222333"
                 }
             };
-        }
-
-        [Fact]
-        public async Task CannotTokenizeInvalidRequest()
-        {
-            CardTokenRequest request = new CardTokenRequest("", 1, 2018);
-
-            var validationException =
-                await _api.Tokens.RequestAsync(request)
-                    .ShouldThrowAsync<CheckoutValidationException>();
-
-            validationException.ShouldNotBeNull();
-            validationException.Error.ShouldNotBeNull();
-            validationException.Error.ErrorCodes.ShouldNotBeEmpty();
         }
     }
 }

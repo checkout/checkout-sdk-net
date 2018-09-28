@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Checkout.Payments
 {
+    /// <summary>
+    /// Default implementation of <see cref="IPaymentsClient"/>.
+    /// </summary>
     public class PaymentsClient : IPaymentsClient
     {
         private static readonly Dictionary<HttpStatusCode, Type> CardPaymentMappings = new Dictionary<HttpStatusCode, Type>
@@ -26,7 +29,7 @@ namespace Checkout.Payments
         }
 
         public Task<PaymentResponse> RequestAsync<TRequestSource>(PaymentRequest<TRequestSource> paymentRequest, CancellationToken cancellationToken = default(CancellationToken)) 
-            where TRequestSource : IPaymentSource
+            where TRequestSource : IRequestSource
         {
             return RequestPaymentAsync(paymentRequest, CardPaymentMappings, cancellationToken);
         }
@@ -58,9 +61,9 @@ namespace Checkout.Payments
 
         private async Task<PaymentResponse> RequestPaymentAsync<TRequestSource>(
             PaymentRequest<TRequestSource> paymentRequest,
-            Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken) where TRequestSource : IPaymentSource
+            Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken) where TRequestSource : IRequestSource
         {
-            var apiResponse = await _apiClient.PostAsync("payments", _credentials, paymentRequest, resultTypeMappings, cancellationToken);
+            var apiResponse = await _apiClient.PostAsync("payments", _credentials, resultTypeMappings, cancellationToken, paymentRequest);
             return apiResponse;
         }
 

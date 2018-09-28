@@ -7,12 +7,12 @@ namespace Checkout.Tests
 {
     public static class TestHelper
     {
-        public static PaymentRequest<CardSource> CreateCardPaymentRequest()
+        public static PaymentRequest<CardSource> CreateCardPaymentRequest(int? amount = 100)
         {
             return new PaymentRequest<CardSource>(
                 new CardSource(TestCardSource.Visa.Number, TestCardSource.Visa.ExpiryMonth, TestCardSource.Visa.ExpiryYear),
                 Currency.GBP,
-                100
+                amount
             )
             {
                 Capture = false,

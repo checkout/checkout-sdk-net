@@ -46,8 +46,8 @@ namespace Checkout.Tests.Payments
             paymentResponse.Payment.Customer.Id.ShouldNotBeNullOrEmpty();
             paymentResponse.Payment.Customer.Email.ShouldNotBeNullOrEmpty();
             paymentResponse.Payment.Customer.Id.ShouldBe(firstCardPaymentResponse.Payment?.Customer?.Id);
-            paymentResponse.Payment.Source.AsCardSource().ShouldNotBeNull();
-            paymentResponse.Payment.Source.AsCardSource().Id.ShouldBe(firstCardPaymentResponse.Payment?.Source?.AsCardSource().Id);
+            paymentResponse.Payment.Source.AsCard().ShouldNotBeNull();
+            paymentResponse.Payment.Source.AsCard().Id.ShouldBe(firstCardPaymentResponse.Payment?.Source?.AsCard().Id);
             paymentResponse.Payment.CanCapture().ShouldBeTrue();
             paymentResponse.Payment.CanVoid().ShouldBeTrue();
         }

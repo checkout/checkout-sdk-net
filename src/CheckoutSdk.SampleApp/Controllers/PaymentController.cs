@@ -58,7 +58,7 @@ namespace CheckoutSdk.SampleApp.Controllers
                 var source = new TokenSource(model.CardToken);
                 var paymentRequest = new PaymentRequest<TokenSource>(source, model.Currency, model.Amount)
                 {
-                    ThreeDs = model.DoThreeDs,
+                    ThreeDS = model.DoThreeDs,
                     SuccessUrl = BuildUrl(nameof(ThreeDsSuccess)),
                     FailureUrl = BuildUrl(nameof(ThreeDsFailure))
                 };

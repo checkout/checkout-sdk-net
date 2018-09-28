@@ -1,17 +1,23 @@
 ﻿namespace Checkout.Payments
 {
+    /// <summary>
+    /// Represents a customer in a payment request or response.
+    /// </summary>
     public class Customer
     {
         /// <summary>
-        /// The unique identifier of the customer. This can be passed as a source when making a payment
+        /// Gets or sets the unique identifier of the customer. This can be specified in a <see cref="CustomerSource"/> 
+        /// in subsequent payment requests to use the customer's default payment method.
         /// </summary>
         public string Id { get; set; }
+
         /// <summary>
-        /// The customer email address
+        /// Gets or sets the customer email address.
         /// </summary>
         public string Email { get; set; }
+
         /// <summary>
-        /// The customer name
+        /// Gets or sets the customer full name.
         /// </summary>
         public string Name { get; set; }
     }

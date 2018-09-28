@@ -11,7 +11,7 @@ namespace Checkout.Tests.Payments
         public void GivenIdMissingShouldThrowArgumentException()
         {
             var validationException = Should.Throw<ArgumentException>(
-                () => { new IdSource(null, null); }
+                () => { new IdSource(null); }
             );
 
             validationException.ShouldNotBeNull();
@@ -20,7 +20,7 @@ namespace Checkout.Tests.Payments
         [Fact]
         public void CanCreateIdSource()
         {
-            var source = new IdSource("src_xxx", "0757");
+            var source = new IdSource("src_xxx") { Cvv = "0757" };
             source.Id.ShouldBe("src_xxx");
             source.Cvv.ShouldBe("0757");
         }
