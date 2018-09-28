@@ -1,0 +1,22 @@
+language: csharp
+
+# .NET CLI require Ubuntu 14.04
+sudo: required
+dist: trusty
+
+mono:
+  - 4.4.2
+
+dotnet: 2.0.0
+
+# Ignore tagged commits
+if: tag IS blank
+
+script:
+  - ./build.sh
+
+cache:
+  directories:
+    - .packages
+    - tools/Addins
+    - tools/GitVersion.CommandLine
