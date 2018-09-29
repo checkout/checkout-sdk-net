@@ -209,7 +209,7 @@ public static class BuildParameters
         NuGetApiKey = context.EnvironmentVariable("NUGET_API_KEY");
         NuGetSource = context.EnvironmentVariable("NUGET_SOURCE");
         SonarKey = context.EnvironmentVariable("SONAR_KEY");
-        SonarKey = context.EnvironmentVariable("SONAR_URL");
+        SonarUrl = context.EnvironmentVariable("SONAR_URL");
     }
 
     public static bool ShouldPublishMyGet 
