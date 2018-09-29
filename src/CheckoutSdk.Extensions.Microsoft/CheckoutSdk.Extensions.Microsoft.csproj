@@ -17,6 +17,7 @@
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <RootNamespace>Microsoft.Extensions.Configuration</RootNamespace>
     <DefineConstants>LIBLOG_PORTABLE</DefineConstants>
+    <ProjectGuid>{B5D96039-5EF8-4245-A827-BF8FC84F034A}</ProjectGuid>
   </PropertyGroup>
   <ItemGroup Label="Project References">
     <ProjectReference Include="..\CheckoutSdk\CheckoutSdk.csproj" />

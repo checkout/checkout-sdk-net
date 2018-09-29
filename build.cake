@@ -3,12 +3,14 @@
 //////////////////////////////////////////////////////////////////////
 
 #tool "nuget:?package=GitVersion.CommandLine"
+#tool "nuget:?package=MSBuild.SonarQube.Runner.Tool"
 
 //////////////////////////////////////////////////////////////////////
 // ADDINS
 //////////////////////////////////////////////////////////////////////
 
 #addin nuget:?package=Cake.Coverlet
+#addin "nuget:?package=Cake.Sonar"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -32,6 +34,20 @@ Task("__Clean")
     {
         CleanDirectories(buildArtifacts);
     });
+
+Task("__SonarBegin")
+  .WithCriteria(() => BuildParameters.ShouldAnalyze)
+  .Does(() => {
+     SonarBegin(new SonarBeginSettings{
+        Branch = BuildParameters.BranchName,
+        Url = BuildParameters.SonarUrl,
+        Login = BuildParameters.SonarKey,
+        Organization = "checkout",
+        Key = "checkout-sdk-net",
+        OpenCoverReportsPath = "./artifacts/CheckoutSDK.Tests.Coverage.xml",
+        Silent = true
+     });
+  });
 
 Task("__Build")
     .Does(() =>
@@ -65,6 +81,14 @@ Task("__Test")
             DotNetCoreTest(projectFile.ToString(), testSettings, coveletSettings);
         }
     });
+
+Task("__SonarEnd")
+  .WithCriteria(() => BuildParameters.ShouldAnalyze)
+  .Does(() => {
+     SonarEnd(new SonarEndSettings{
+        Login = BuildParameters.SonarKey
+     });
+  });
 
 Task("__Pack")
     .Does(() => 
@@ -125,8 +149,10 @@ private void PublishPackages(string source, string apiKey)
 
 Task("Build")
     .IsDependentOn("__Clean")
+    .IsDependentOn("__SonarBegin")
     .IsDependentOn("__Build")
     .IsDependentOn("__Test")
+    .IsDependentOn("__SonarEnd")
     .IsDependentOn("__Pack");
 
 Task("Default")
@@ -154,6 +180,8 @@ public static class BuildParameters
     public static bool IsPullRequest { get; private set; }
     public static bool IsTagged { get; private set; }
     public static string BranchName { get; private set; }
+    public static string SonarKey { get; private set; }
+    public static string SonarUrl { get; private set; }
     
     public static void Initialize(ICakeContext context, BuildSystem buildSystem)
     {
@@ -180,6 +208,8 @@ public static class BuildParameters
         MyGetSource = context.EnvironmentVariable("MYGET_SOURCE");
         NuGetApiKey = context.EnvironmentVariable("NUGET_API_KEY");
         NuGetSource = context.EnvironmentVariable("NUGET_SOURCE");
+        SonarKey = context.EnvironmentVariable("SONAR_KEY");
+        SonarKey = context.EnvironmentVariable("SONAR_URL");
     }
 
     public static bool ShouldPublishMyGet 
@@ -193,4 +223,7 @@ public static class BuildParameters
 
     public static bool CanPublishNuget 
         => !string.IsNullOrEmpty(BuildParameters.NuGetApiKey) && !string.IsNullOrEmpty(BuildParameters.NuGetSource);
+
+    public static bool ShouldAnalyze 
+        => !string.IsNullOrEmpty(BuildParameters.SonarUrl) && !string.IsNullOrEmpty(BuildParameters.SonarKey);
 }

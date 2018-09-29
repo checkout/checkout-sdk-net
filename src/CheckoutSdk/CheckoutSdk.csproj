@@ -18,6 +18,7 @@
     <TargetFrameworks>net45;netstandard1.4;netstandard2.0</TargetFrameworks>
     <RootNamespace>Checkout</RootNamespace>
     <DefineConstants>LIBLOG_PORTABLE</DefineConstants>
+    <ProjectGuid>{A197F164-EFB8-4AF6-AE04-350EBBB777A8}</ProjectGuid>
   </PropertyGroup>
   
   <PropertyGroup Label="Unix Build Targets" Condition=" '$(OS)' == 'Unix' ">
