@@ -44,7 +44,7 @@ Task("__SonarBegin")
         Login = BuildParameters.SonarKey,
         Organization = "checkout",
         Key = "checkout-sdk-net",
-        OpenCoverReportsPath = "./artifacts/CheckoutSDK.Tests.Coverage.xml",
+        OpenCoverReportsPath = "artifacts/CheckoutSDK.Tests.Coverage.xml",
         Silent = true
      });
   });
