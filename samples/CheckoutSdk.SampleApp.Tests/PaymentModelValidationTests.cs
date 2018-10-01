@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using CheckoutSdk.SampleApp.Models;
+using Checkout.SampleApp.Models;
 using Shouldly;
 using Xunit;
 
-namespace CheckoutSdk.SampleApp.Tests
+namespace Checkout.SampleApp.Tests
 {
     public class PaymentModelValidationTests
     {
@@ -17,7 +17,7 @@ namespace CheckoutSdk.SampleApp.Tests
             {
                 Amount = 4,
                 Currency = "USD",
-                DoThreeDs = doThreeDs,
+                DoThreeDS = doThreeDs,
                 CardToken = "test"
             };
 
@@ -38,7 +38,7 @@ namespace CheckoutSdk.SampleApp.Tests
             {
                 Amount = null,
                 Currency = "USD",
-                DoThreeDs = doThreeDs,
+                DoThreeDS = doThreeDs,
                 CardToken = "test"
             };
             var context = new ValidationContext(model, null, null);
@@ -58,7 +58,7 @@ namespace CheckoutSdk.SampleApp.Tests
             {
                 Amount = 3,
                 Currency = null,
-                DoThreeDs = doThreeDs,
+                DoThreeDS = doThreeDs,
                 CardToken = "test"
             };
 

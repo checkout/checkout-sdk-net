@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "Payment Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using Checkout.SampleApp.Controllers
+@model Checkout.SampleApp.Models.PaymentModel
+
+<script src="https://cdn.checkout.com/js/frames.js"></script>
+<h2>Sample application</h2>
+
+<h4>New payment</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-controller="@ViewContext.RouteData.Values["controller"].ToString()" asp-action="@nameof(PaymentsController.Post)"
+              method="post" id="payment-form" asp-antiforgery="true">
+            <div asp-validation-summary="@ValidationSummary.ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Amount"></label>
+                <input asp-for="Amount" /><br />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Currency"></label>
+                <select asp-for="Currency" asp-items="@Model.Currencies" )></select><br />
+                <span asp-validation-for="Currency" class="text-danger"></span>
+            </div>
+            <div class=" form-group">
+                <label asp-for="DoThreeDS"></label>
+                <input asp-for="DoThreeDS">
+            </div>
+            <div class="frames-container"></div>
+            <input asp-for="CardToken" type="hidden" />
+            <div class="form-group">
+                <button id="pay-now-button" type="submit" disabled>Pay</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    var paymentForm = document.getElementById('payment-form');
+    var payNowButton = document.getElementById('pay-now-button');
+
+    Frames.init({
+        publicKey: '@Model.PublicKey',
+        containerSelector: '.frames-container',
+        debugMode: true,
+        cardValidationChanged: function () {
+            payNowButton.disabled = !Frames.isCardValid();
+        },
+        cardSubmitted: function () {
+            payNowButton.disabled = true;
+        },
+        cardTokenised: function (event) {
+            var cardToken = event.data.cardToken;
+            $('#CardToken').val(cardToken);
+            Frames.addCardToken(paymentForm, cardToken);
+            paymentForm.submit();
+        },
+        cardTokenisationFailed: function (event) {
+        }
+    });
+    paymentForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        Frames.submitCard();
+    });
+</script>

@@ -1,6 +1,4 @@
-using System;
-
-namespace CheckoutSdk.SampleApp.Models
+namespace Checkout.SampleApp.Models
 {
     public class ErrorViewModel
     {

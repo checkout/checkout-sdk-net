@@ -17,6 +17,5 @@ namespace Checkout
         /// Gets the Tokenization API.
         /// </summary>
         ITokensClient Tokens { get; }
-        string PublicKey { get; }
     }
 }

@@ -1,33 +1,42 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Checkout;
+﻿using Checkout;
 using Checkout.Common;
 using Checkout.Payments;
-using CheckoutSdk.SampleApp.Controllers;
-using CheckoutSdk.SampleApp.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using Moq;
 using Shouldly;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Checkout.SampleApp.Controllers;
+using Checkout.SampleApp.Models;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Newtonsoft.Json;
 using Xunit;
 
-namespace CheckoutSdk.SampleApp.Tests
+namespace Checkout.SampleApp.Tests
 {
-    public class PaymentControllerTests
+    public class PaymentsControllerTests
     {
         private readonly Mock<ICheckoutApi> _checkoutApi;
         private readonly Mock<IPaymentsClient> _paymentsClient;
-        private readonly PaymentController _controller;
+        private readonly PaymentsController _controller;
         private readonly PaymentResponse _paymentsResponse;
+        private readonly JsonSerializer _jsonSerializer = new JsonSerializer();
 
-        public PaymentControllerTests()
+        public PaymentsControllerTests()
         {
             _checkoutApi = new Mock<ICheckoutApi>();
-            _checkoutApi.SetupGet(a => a.PublicKey).Returns("");
 
             _paymentsResponse = new PaymentResponse()
             {
                 Payment = new PaymentProcessed()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Source = new CardSourceResponse() { Type = CardSource.TypeName }
+                }
             };
             _paymentsClient = new Mock<IPaymentsClient>();
             _paymentsClient.Setup(p =>
@@ -37,11 +46,25 @@ namespace CheckoutSdk.SampleApp.Tests
                 p.GetAsync(It.IsAny<string>(), default(CancellationToken)))
                     .ReturnsAsync(() => new GetPaymentDetailsResponse());
 
-            var urlBuilder = new Mock<IControllerUrlBuilder>();
-            urlBuilder.Setup(b => b.Build(It.IsAny<ControllerBase>(), It.IsAny<string>()))
-                .Returns("test");
-            
-            _controller = new PaymentController(_checkoutApi.Object, urlBuilder.Object);
+            _controller = new PaymentsController(_checkoutApi.Object, new CheckoutConfiguration("test", "test"), new JsonSerializer());
+
+            var mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Strict);
+            mockUrlHelper
+                .Setup(m => m.Action(It.IsAny<UrlActionContext>()))
+                .Returns("test_route")
+                .Verifiable();
+            _controller.Url = mockUrlHelper.Object;
+            var context = new Mock<HttpContext>();
+            var request = new Mock<HttpRequest>();
+            request.SetupGet(r => r.Path).Returns(() => new PathString("/Payments/Post"));
+            request.SetupGet(r => r.Host).Returns(() => new HostString("localhost"));
+            request.SetupGet(r => r.Scheme).Returns(() => "http");
+            context.Setup(x => x.Request).Returns(request.Object);
+            _controller.ControllerContext.HttpContext = context.Object;
+            var routeData = new RouteData();
+            routeData.Values.Add("controller", "Payments");
+            _controller.ControllerContext.RouteData = routeData;
+            _controller.TempData = new TempDataDictionary(context.Object, Mock.Of<ITempDataProvider>());
         }
 
         [Fact]
@@ -64,7 +87,7 @@ namespace CheckoutSdk.SampleApp.Tests
 
             var viewResult = result.ShouldBeAssignableTo<ViewResult>();
             viewResult.ViewData.ModelState.IsValid.ShouldBeFalse();
-            viewResult.ViewName.ShouldBe(nameof(PaymentController.Index));
+            viewResult.ViewName.ShouldBe(nameof(PaymentsController.Index));
         }
 
         [Theory]
@@ -79,7 +102,7 @@ namespace CheckoutSdk.SampleApp.Tests
             var result = await _controller.Post(model);
 
             var viewResult = result.ShouldBeAssignableTo<ViewResult>();
-            viewResult.ViewName.ShouldBe(nameof(PaymentController.Error));
+            viewResult.ViewName.ShouldBe(nameof(PaymentsController.Error));
             viewResult.Model.ShouldNotBeNull();
             var errorModel = viewResult.Model.ShouldBeAssignableTo<ErrorViewModel>();
             errorModel.Message.ShouldNotBeNullOrWhiteSpace();
@@ -91,7 +114,7 @@ namespace CheckoutSdk.SampleApp.Tests
             {
                 Amount = 3,
                 Currency = "USD",
-                DoThreeDs = false,
+                DoThreeDS = false,
                 CardToken = "test"
             };
         }
@@ -104,7 +127,7 @@ namespace CheckoutSdk.SampleApp.Tests
             var result = await _controller.Post(new PaymentModel());
 
             var viewResult = result.ShouldBeAssignableTo<ViewResult>();
-            viewResult.ViewName.ShouldBe(nameof(PaymentController.Error));
+            viewResult.ViewName.ShouldBe(nameof(PaymentsController.Error));
             viewResult.Model.ShouldNotBeNull();
             var errorModel = viewResult.Model.ShouldBeAssignableTo<ErrorViewModel>();
             errorModel.Message.ShouldNotBeNullOrWhiteSpace();
@@ -116,14 +139,18 @@ namespace CheckoutSdk.SampleApp.Tests
             _checkoutApi.Setup(a => a.Payments).Returns(_paymentsClient.Object);
             _paymentsResponse.Payment.Approved = true;
             var model = CreateValidModel();
-            model.DoThreeDs = false;
+            model.DoThreeDS = false;
 
             var result = await _controller.Post(model);
 
-            var viewResult = result.ShouldBeAssignableTo<ViewResult>();
-            viewResult.ViewName.ShouldBe("NonThreeDsSuccess");
-            var modelResult = viewResult.Model.ShouldBeAssignableTo<PaymentProcessed>();
-            modelResult.Approved.ShouldBeTrue();
+            var viewResult = result.ShouldBeAssignableTo<RedirectToActionResult>();
+            viewResult.ActionName.ShouldBe(nameof(PaymentsController.NonThreeDSSuccess));
+            viewResult.RouteValues.ShouldContainKey("paymentId");
+            var paymentId = viewResult.RouteValues["paymentId"] as string;
+            _controller.TempData.ShouldContainKey(paymentId);
+            var serialized = _controller.TempData[paymentId].ShouldBeAssignableTo<string>();
+            var payment = (PaymentProcessed)_jsonSerializer.Deserialize(serialized, typeof(PaymentProcessed));
+            payment.Approved.ShouldBeTrue();
         }
 
         [Fact]
@@ -132,14 +159,18 @@ namespace CheckoutSdk.SampleApp.Tests
             _checkoutApi.Setup(a => a.Payments).Returns(_paymentsClient.Object);
             _paymentsResponse.Payment.Approved = false;
             var model = CreateValidModel();
-            model.DoThreeDs = false;
+            model.DoThreeDS = false;
 
             var result = await _controller.Post(model);
 
-            var viewResult = result.ShouldBeAssignableTo<ViewResult>();
-            viewResult.ViewName.ShouldBe("NonThreeDsFailure");
-            var modelResult = viewResult.Model.ShouldBeAssignableTo<PaymentProcessed>();
-            modelResult.Approved.ShouldBeFalse();
+            var viewResult = result.ShouldBeAssignableTo<RedirectToActionResult>();
+            viewResult.ActionName.ShouldBe(nameof(PaymentsController.NonThreeDSFailure));
+            viewResult.RouteValues.ShouldContainKey("paymentId");
+            var paymentId = viewResult.RouteValues["paymentId"] as string;
+            _controller.TempData.ShouldContainKey(paymentId);
+            var serialized = _controller.TempData[paymentId].ShouldBeAssignableTo<string>();
+            var payment = (PaymentProcessed)_jsonSerializer.Deserialize(serialized, typeof(PaymentProcessed));
+            payment.Approved.ShouldBeFalse();
         }
 
         [Fact]
@@ -150,7 +181,7 @@ namespace CheckoutSdk.SampleApp.Tests
             var redirectLink = new Link() { Href = "test" };
             _paymentsResponse.Pending.Links.Add("redirect", redirectLink);
             var model = CreateValidModel();
-            model.DoThreeDs = true;
+            model.DoThreeDS = true;
 
             var result = await _controller.Post(model);
 
@@ -162,7 +193,7 @@ namespace CheckoutSdk.SampleApp.Tests
         public async Task CanRenderThreeDsSuccessView()
         {
             _checkoutApi.Setup(a => a.Payments).Returns(_paymentsClient.Object);
-            var result = await _controller.ThreeDsSuccess("test");
+            var result = await _controller.ThreeDSSuccess("test");
 
             var viewResult = result.ShouldBeAssignableTo<ViewResult>();
             viewResult.ViewName.ShouldBeNull();
@@ -173,7 +204,7 @@ namespace CheckoutSdk.SampleApp.Tests
         public async Task CanRenderThreeDsFailureView()
         {
             _checkoutApi.Setup(a => a.Payments).Returns(_paymentsClient.Object);
-            var result = await _controller.ThreeDsFailure("test");
+            var result = await _controller.ThreeDSFailure("test");
 
             var viewResult = result.ShouldBeAssignableTo<ViewResult>();
             viewResult.ViewName.ShouldBeNull();

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 
-namespace CheckoutSdk.SampleApp
+namespace Checkout.SampleApp
 {
     public class Program
     {

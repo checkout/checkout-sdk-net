@@ -1,10 +1,9 @@
-﻿using CheckoutSdk.SampleApp.Controllers;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CheckoutSdk.SampleApp
+namespace Checkout.SampleApp
 {
     public class Startup
     {
@@ -20,8 +19,6 @@ namespace CheckoutSdk.SampleApp
             services.AddMvc();
 
             services.AddCheckoutSdk(Configuration);
-
-            services.AddTransient<IControllerUrlBuilder, ControllerControllerUrlBuilder>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -33,7 +30,7 @@ namespace CheckoutSdk.SampleApp
             }
             else
             {
-                app.UseExceptionHandler("/Payment/Error");
+                app.UseExceptionHandler("/Payments/Error");
             }
             
             app.UseStaticFiles();
@@ -42,7 +39,7 @@ namespace CheckoutSdk.SampleApp
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Payment}/{action=Index}/{id?}");
+                    template: "{controller=Payments}/{action=Index}/{id?}");
             });
         }
     }
