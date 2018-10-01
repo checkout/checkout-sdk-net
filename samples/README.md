@@ -1,7 +1,5 @@
 # Sample application
 
-## How to set up
-
 To set up the included sample application all you need to do is update `appsettings.json` file in `samples\CheckoutSdk.SampleApp` folder with your credentials:
 
 ```json
