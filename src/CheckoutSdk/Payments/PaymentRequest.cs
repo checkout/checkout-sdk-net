@@ -92,14 +92,40 @@ namespace Checkout.Payments
         /// <summary>
         /// Gets or sets a value that indicates whether to process this payment as a 3D-Secure.
         /// </summary>
+        [JsonIgnore]
+        public bool ThreeDS
+        {
+            get => ThreeDSRequest != null && ThreeDSRequest.Enabled;
+            set
+            {
+                if(ThreeDSRequest == null)
+                    ThreeDSRequest = new ThreeDSRequest();
+
+                ThreeDSRequest.Enabled = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets information required for 3D-Secure payments.
+        /// </summary>
         [JsonProperty(PropertyName = "3ds")]
-        public bool ThreeDS { get; set; }
+        public ThreeDSRequest ThreeDSRequest { get; set; }
 
         /// <summary>
         /// Gets or sets a value that indicates whether to attempt a 3D-Secure payment as non-3DS should the card issuer not be enrolled.
         /// </summary>
-        [JsonProperty("attempt_n3d")]
-        public bool? AttemptN3D { get; set; }
+        [JsonIgnore]
+        public bool? AttemptN3D
+        {
+            get => ThreeDSRequest?.AttemptN3D;
+            set
+            {
+                if (ThreeDSRequest == null)
+                    ThreeDSRequest = new ThreeDSRequest();
+
+                ThreeDSRequest.AttemptN3D = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the an existing payment identifier for payments that use stored card details such as recurring payments.
