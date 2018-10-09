@@ -29,5 +29,10 @@ namespace Checkout.Payments
         /// The 3D-Secure transaction identifier. Required if using an external MPI.
         /// </summary>
         public string Xid { get; set; }
+
+        public static implicit operator ThreeDSRequest(bool enabled)
+        {
+            return new ThreeDSRequest { Enabled = enabled };
+        }
     }
 }
