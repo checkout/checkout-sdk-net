@@ -4,7 +4,7 @@ ignore:
 branches:
   develop:
     increment: Patch
-  release[/-]:
+  release:
     mode: ContinuousDelivery
     tag: rc
     increment: Patch

@@ -101,9 +101,10 @@ namespace Checkout.Payments
         public string PreviousPaymentId { get; set; }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether risk checks for the requested payment should be skipped.
+        /// Gets or sets the configuration of the risk assessment performed during the processing of the payment.
+        /// If not specified, a risk assessment using Checkout.com's risk engine will be performed.
         /// </summary>
-        public bool? SkipRiskCheck { get; set; }
+        public RiskRequest Risk { get; set; }
 
         /// <summary>
         /// Gets or sets the success redirect URL overridding the default URL configured in the Checkout Hub.
