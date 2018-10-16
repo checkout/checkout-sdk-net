@@ -93,13 +93,7 @@ namespace Checkout.Payments
         /// Gets or sets a value that indicates whether to process this payment as a 3D-Secure.
         /// </summary>
         [JsonProperty(PropertyName = "3ds")]
-        public bool ThreeDS { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value that indicates whether to attempt a 3D-Secure payment as non-3DS should the card issuer not be enrolled.
-        /// </summary>
-        [JsonProperty("attempt_n3d")]
-        public bool? AttemptN3D { get; set; }
+        public ThreeDSRequest ThreeDS { get; set; }
 
         /// <summary>
         /// Gets or sets the an existing payment identifier for payments that use stored card details such as recurring payments.
@@ -107,9 +101,10 @@ namespace Checkout.Payments
         public string PreviousPaymentId { get; set; }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether risk checks for the requested payment should be skipped.
+        /// Gets or sets the configuration of the risk assessment performed during the processing of the payment.
+        /// If not specified, a risk assessment using Checkout.com's risk engine will be performed.
         /// </summary>
-        public bool? SkipRiskCheck { get; set; }
+        public RiskRequest Risk { get; set; }
 
         /// <summary>
         /// Gets or sets the success redirect URL overridding the default URL configured in the Checkout Hub.

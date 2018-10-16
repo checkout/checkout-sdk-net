@@ -10,7 +10,10 @@ namespace Checkout.Tests
         public static PaymentRequest<CardSource> CreateCardPaymentRequest(int? amount = 100)
         {
             return new PaymentRequest<CardSource>(
-                new CardSource(TestCardSource.Visa.Number, TestCardSource.Visa.ExpiryMonth, TestCardSource.Visa.ExpiryYear),
+                new CardSource(TestCardSource.Visa.Number, TestCardSource.Visa.ExpiryMonth, TestCardSource.Visa.ExpiryYear)
+                {
+                    Cvv = TestCardSource.Visa.Cvv
+                },
                 Currency.GBP,
                 amount
             )
