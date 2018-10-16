@@ -40,7 +40,7 @@ namespace Checkout.Payments
         /// <summary>
         /// Gets the cryptographic identifier used by the card schemes to validate the integrity of the 3D secure payment data.
         /// </summary>
-        public string Cavv { get; set; }
+        public string Cryptogram { get; set; }
         
         /// <summary>
         /// Gets the unique identifier for the transaction assigned by the MPI.

@@ -14,6 +14,8 @@ If you encounter a bug with Checkout SDK for .NET plase search the existing issu
 
 The GitHub issues are intended for bug reports and feature requests. For help and questions with using Checkout SDK for .NET please contact our integration support team.
 
+For full usage details, see the [Wiki](https://github.com/checkout/checkout-sdk-net/wiki).
+
 ## Quickstart
 
 To get started install the [`CheckoutSDK`](https://www.nuget.org/packages/CheckoutSDK) package from NuGet. 
@@ -93,7 +95,7 @@ You can then configure `appsettings.json` file with your Checkout details:
 }
 ```
 
-For more details on configuring the SDK, see the WIKI.
+For more details on configuring the SDK, see the [Wiki](https://github.com/checkout/checkout-sdk-net/wiki).
 
 ## Building and running tests
 
