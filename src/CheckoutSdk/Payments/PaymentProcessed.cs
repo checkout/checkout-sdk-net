@@ -88,6 +88,11 @@ namespace Checkout.Payments
         public string Reference { get; set; }
 
         /// <summary>
+        /// The final Electronic Commerce Indicator security level used to authorize the payment. Applicable for 3D-Secure, digital wallets and network token payments.
+        /// </summary>
+        public string Eci { get; set; }
+
+        /// <summary>
         /// Gets the payment's actions link.
         /// </summary>
         /// <returns>The link if present, otherwise null.</returns>
