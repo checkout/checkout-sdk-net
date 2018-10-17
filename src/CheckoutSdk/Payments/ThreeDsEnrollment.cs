@@ -31,12 +31,7 @@ namespace Checkout.Payments
         /// U - Unable to perform authentication
         /// </summary>
         public string AuthenticationResponse { get; set; }
-        
-        /// <summary>
-        /// Gets the E-Commerce Indicator security level associated with the payment.
-        /// </summary>
-        public string Eci { get; set; }
-        
+               
         /// <summary>
         /// Gets the cryptographic identifier used by the card schemes to validate the integrity of the 3D secure payment data.
         /// </summary>
