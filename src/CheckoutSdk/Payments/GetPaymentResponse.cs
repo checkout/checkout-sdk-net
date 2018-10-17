@@ -98,6 +98,11 @@ namespace Checkout.Payments
         public Dictionary<string, object> Metadata { get; set; }
 
         /// <summary>
+        /// The final Electronic Commerce Indicator security level used to authorize the payment. Applicable for 3D-Secure, digital wallets and network token payments.
+        /// </summary>
+        public string Eci { get; set; }
+
+        /// <summary>
         /// Determines whether the payment requires a redirect.
         /// </summary>
         /// <returns>True if a redirect is required, otherwise False.</returns>
