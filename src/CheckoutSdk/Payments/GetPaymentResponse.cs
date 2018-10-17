@@ -70,7 +70,7 @@ namespace Checkout.Payments
         /// <summary>
         /// Gest the customer to which this payment is linked.
         /// </summary>
-        public Customer Customer { get; set; }
+        public CustomerResponse Customer { get; set; }
         
         /// <summary>
         /// Gets the billing descriptor displayed on the account owner's statement.
