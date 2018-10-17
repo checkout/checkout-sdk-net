@@ -20,10 +20,5 @@
         /// Gets or sets the customer full name.
         /// </summary>
         public string Name { get; set; }
-
-        public CustomerRequest ToRequest()
-        {
-            return new CustomerRequest() { Id = Id, Email = Email, Name = Name };
-        }
     }
 }

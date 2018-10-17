@@ -30,7 +30,7 @@ namespace Checkout.Tests.Payments
             )
             {
                 Capture = false,
-                Customer = firstCardPaymentResponse.Payment.Customer.ToRequest()
+                Customer = ToRequest(firstCardPaymentResponse.Payment.Customer)
             };
 
             PaymentResponse apiResponseForCustomerSourcePayment = await _api.Payments.RequestAsync(cardIdPaymentRequest);
@@ -50,6 +50,11 @@ namespace Checkout.Tests.Payments
             apiResponseForCustomerSourcePayment.Payment.Source.AsCard().Id.ShouldBe(firstCardPaymentResponse.Payment?.Source?.AsCard().Id);
             apiResponseForCustomerSourcePayment.Payment.CanCapture().ShouldBeTrue();
             apiResponseForCustomerSourcePayment.Payment.CanVoid().ShouldBeTrue();
+        }
+
+        private CustomerRequest ToRequest(CustomerResponse customer)
+        {
+            return new CustomerRequest() { Id = customer.Id, Email = customer.Email, Name = customer.Name };
         }
     }
 }
