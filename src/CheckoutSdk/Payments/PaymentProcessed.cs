@@ -75,7 +75,7 @@ namespace Checkout.Payments
         /// <summary>
         /// Gets the customer to which this payment is linked.
         /// </summary>
-        public Customer Customer { get; set; }
+        public CustomerResponse Customer { get; set; }
         
         /// <summary>
         /// Gets the date/time the payment was processed.

@@ -77,7 +77,7 @@ namespace Checkout.Payments
         /// <summary>
         /// Gets or sets details of the customer associated with the payment.
         /// </summary>
-        public Customer Customer { get; set; }
+        public CustomerRequest Customer { get; set; }
 
         /// <summary>
         /// Gets or sets an optional dynamic billing descriptor displayed on the account owner's statement.
