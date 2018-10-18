@@ -112,3 +112,11 @@ Checkout SDK for .NET uses [Semantic Versioning](https://semver.org/). The lates
 
 - [Checkout.com Documentation](http://docs.checkout.com)
 - [Checkout.com API Reference](http://docs.checkout.com/reference)
+
+
+## Release Process
+
+- Create a PR from `develop` to `master` "Version {Version}" (do not squash merge)
+- Pull the latest from `master` and tag `git tag -a {Version} -m "Version {Version}"`
+- Push the tag: `git push origin master --tags` (this will deploy the package to NuGet)
+- Create a PR from `master` to `develop` to bump the next version (do not squash merge)

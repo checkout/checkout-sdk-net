@@ -70,7 +70,7 @@ namespace Checkout.Payments
         /// <summary>
         /// Gest the customer to which this payment is linked.
         /// </summary>
-        public Customer Customer { get; set; }
+        public CustomerResponse Customer { get; set; }
         
         /// <summary>
         /// Gets the billing descriptor displayed on the account owner's statement.
@@ -96,6 +96,11 @@ namespace Checkout.Payments
         /// Gets the metadata you attached to the original payment request.
         /// </summary>
         public Dictionary<string, object> Metadata { get; set; }
+
+        /// <summary>
+        /// The final Electronic Commerce Indicator security level used to authorize the payment. Applicable for 3D-Secure, digital wallets and network token payments.
+        /// </summary>
+        public string Eci { get; set; }
 
         /// <summary>
         /// Determines whether the payment requires a redirect.
