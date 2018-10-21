@@ -6,12 +6,12 @@ namespace Checkout.Payments
     public class PaymentResponse
     {
         /// <summary>
-        /// Gets the processed response returned following a successfully processed payment (HTTP Status Code 201).
+        /// Gets or sets the processed response returned following a successfully processed payment (HTTP Status Code 201).
         /// </summary>
         public PaymentProcessed Payment { get; set; }
 
         /// <summary>
-        /// Gets the pending response returned for asynchronous payments or when further action such as a redirect is required (HTTP Status Code 201).
+        /// Gets or sets the pending response returned for asynchronous payments or when further action such as a redirect is required (HTTP Status Code 202).
         /// </summary>
         public PaymentPending Pending { get; set; }
 
