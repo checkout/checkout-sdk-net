@@ -21,16 +21,16 @@ namespace Checkout.Tests.Payments
         public static IEnumerable<object[]> PaymentMethodsTestData =>
             new List<object[]>
             {
-                new object[] { new AlternativePaymentSource() {Type = "giropay", Bic = "TESTDETT421", Purpose = "CKO BaseSource Test" } },
-                new object[] { new GiropayRequestSource(bic: "TESTDETT421", purpose: "CKO GiropaySource Test") },
-                new object[] { new IdealRequestSource(issuer_id: "INGBNL2A") }
+                new object[] { new AlternativePaymentSource() {Type = "giropay", Bic = "TESTDETT421", Purpose = "CKO BaseSource Test" }, Currency.EUR },
+                new object[] { new GiropayRequestSource(bic: "TESTDETT421", purpose: "CKO GiropaySource Test"), Currency.EUR },
+                new object[] { new IdealRequestSource(issuer_id: "INGBNL2A"), Currency.EUR }
             };
 
         [Theory]
         [MemberData(nameof(PaymentMethodsTestData))]
-        public async Task RequestAlternativePaymentMethodPayment(IAlternativePaymentRequestSource alternativePaymentMethodRequestSource)
+        public async Task RequestAlternativePaymentMethodPayment(IAlternativePaymentRequestSource alternativePaymentMethodRequestSource, string currency)
         {
-            PaymentRequest<IAlternativePaymentRequestSource> paymentRequest = TestHelper.CreateAlternativePaymentMethodRequest(alternativePaymentMethodRequestSource, currency: Currency.EUR);
+            PaymentRequest<IAlternativePaymentRequestSource> paymentRequest = TestHelper.CreateAlternativePaymentMethodRequest(alternativePaymentMethodRequestSource, currency: currency);
             paymentRequest.ThreeDS = false;
             
             PaymentResponse apiResponse = await _api.Payments.RequestAsync(paymentRequest);
