@@ -8,11 +8,11 @@ using Xunit.Abstractions;
 
 namespace Checkout.Tests.Payments
 {
-    public class AlternativePaymentsSourcePaymentsTests : IClassFixture<ApiTestFixture>
+    public class AlternativePaymentSourcePaymentsTests : IClassFixture<ApiTestFixture>
     {
         private readonly ICheckoutApi _api;
 
-        public AlternativePaymentsSourcePaymentsTests(ApiTestFixture fixture, ITestOutputHelper outputHelper)
+        public AlternativePaymentSourcePaymentsTests(ApiTestFixture fixture, ITestOutputHelper outputHelper)
         {
             fixture.CaptureLogsInTestOutput(outputHelper);
             _api = fixture.Api;
