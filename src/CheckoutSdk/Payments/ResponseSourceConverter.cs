@@ -54,6 +54,10 @@ namespace Checkout.Payments
             {
                 case CardSource.TypeName:
                     return new CardSourceResponse();
+                case IdealRequestSource.TypeName:
+                    return new IdealSourceResponse();
+                case GiropayRequestSource.TypeName:
+                    return new GiropaySourceResponse();
                 default:
                     throw new NotImplementedException();
             }

@@ -5,7 +5,7 @@ namespace Checkout.Payments
     /// </summary>
     public class IdealRequestSource : AlternativePaymentSource
     {
-        private const string TypeName = "ideal";
+        public const string TypeName = "ideal";
 
         /// <summary>
         /// Creates a new <see cref="IdealRequestSource"/> instance with payment method specific request details.

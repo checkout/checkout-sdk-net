@@ -5,7 +5,7 @@ namespace Checkout.Payments
     /// </summary>
     public class GiropayRequestSource : AlternativePaymentSource
     {
-        private const string TypeName = "giropay";
+        public const string TypeName = "giropay";
 
         /// <summary>
         /// Creates a new <see cref="GiropayRequestSource"/> instance with payment method specific request details.
