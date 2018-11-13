@@ -1,11 +1,11 @@
-using Checkout.Common;
+using System.Collections.Generic;
 
 namespace Checkout.Payments
 {
     /// <summary>
-    /// The card used to complete a payment request. 
+    /// The alternative payment used to complete a payment request. 
     /// </summary>
-    public class IdealSourceResponse : IResponseSource
+    public class AlternativePaymentSourceResponse : Dictionary<string, string>, IResponseSource
     {        
         /// <summary>
         /// Gets or sets the type of source.

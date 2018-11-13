@@ -23,9 +23,9 @@ namespace Checkout.Tests
                 Reference = Guid.NewGuid().ToString()
             };
         }
-        public static PaymentRequest<IAlternativePaymentRequestSource> CreateAlternativePaymentMethodRequest(IAlternativePaymentRequestSource alternativePaymentMethodRequestSource, string currency, int? amount = 100)
+        public static PaymentRequest<IRequestSource> CreateAlternativePaymentMethodRequest(IRequestSource alternativePaymentMethodRequestSource, string currency, int? amount = 100)
         {
-            return new PaymentRequest<IAlternativePaymentRequestSource>(
+            return new PaymentRequest<IRequestSource>(
                 alternativePaymentMethodRequestSource,
                 currency,
                 amount

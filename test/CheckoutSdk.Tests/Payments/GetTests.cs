@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Checkout.Common;
@@ -25,13 +24,13 @@ namespace Checkout.Tests.Payments
         public static IEnumerable<object[]> AlternativePaymentMethodsTestData =>
             new List<object[]>
             {
-                new object[] { new GiropayRequestSource(bic: "TESTDETT421", purpose: "CKO GiropaySource Test"), Currency.EUR },
-                new object[] { new IdealRequestSource(issuer_id: "INGBNL2A"), Currency.EUR }
+                new object[] { new AlternativePaymentSource("giropay") { { "bic", "TESTDETT421" }, { "purpose", "CKO giropay test" } }, Currency.EUR },
+                new object[] { new AlternativePaymentSource("ideal") { { "issuer_id", "INGBNL2A" } }, Currency.EUR }
             };
 
         [Theory]
         [MemberData(nameof(AlternativePaymentMethodsTestData))]
-        public async Task CanGetAlternativePayment(IAlternativePaymentRequestSource alternativePaymentMethodRequestSource, string currency)
+        public async Task CanGetAlternativePayment(IRequestSource alternativePaymentMethodRequestSource, string currency)
         {
             PaymentPending payment = await MakeAlternativePaymentAsync(alternativePaymentMethodRequestSource, currency);
 
@@ -39,9 +38,9 @@ namespace Checkout.Tests.Payments
 
             verifiedPayment.ShouldNotBeNull();
             verifiedPayment.Id.ShouldBe(payment.Id);
-            if(verifiedPayment.Source.Type == GiropayRequestSource.TypeName)
+            if(verifiedPayment.Source.Type == "giropay")
             {
-                verifiedPayment.Source.AsGiropay().Bic.ShouldBe(alternativePaymentMethodRequestSource.Bic);
+                (verifiedPayment.Source as Dictionary<string, string>)["bic"].ShouldBe((alternativePaymentMethodRequestSource as Dictionary<string, string>)["bic"]);
             }
         }
 
@@ -55,9 +54,9 @@ namespace Checkout.Tests.Payments
             return paymentResponse.Payment;
         }
 
-        async Task<PaymentPending> MakeAlternativePaymentAsync(IAlternativePaymentRequestSource alternativePaymentMethodRequestSource, string currency)
+        async Task<PaymentPending> MakeAlternativePaymentAsync(IRequestSource alternativePaymentMethodRequestSource, string currency)
         {
-            PaymentRequest<IAlternativePaymentRequestSource> paymentRequest = TestHelper.CreateAlternativePaymentMethodRequest(alternativePaymentMethodRequestSource, currency: currency);
+            PaymentRequest<IRequestSource> paymentRequest = TestHelper.CreateAlternativePaymentMethodRequest(alternativePaymentMethodRequestSource, currency: currency);
 
             PaymentResponse paymentResponse = await Api.Payments.RequestAsync(paymentRequest);
             paymentResponse.IsPending.ShouldBeTrue();

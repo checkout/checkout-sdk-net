@@ -17,16 +17,5 @@ namespace Checkout.Payments
             if (source == null) throw new ArgumentNullException(nameof(source));
             return source as CardSourceResponse;
         }
-
-        /// <summary>
-        /// Casts the provided <paramref="source"/> as a giropay source.
-        /// </summary>
-        /// <param name="source">The source to cast.</param>
-        /// <returns>The giropay source if available, otherwise null.</returns>
-        public static GiropaySourceResponse AsGiropay(this IResponseSource source)
-        {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            return source as GiropaySourceResponse;
-        }
     }
 }
