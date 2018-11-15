@@ -1,16 +1,17 @@
 using Shouldly;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Checkout.Common;
 using Checkout.Payments;
 using Xunit;
 using Xunit.Abstractions;
+using System.Collections.Generic;
 
 namespace Checkout.Tests.Payments
 {
     public class AlternativePaymentSourcePaymentsTests : IClassFixture<ApiTestFixture>
     {
         private readonly ICheckoutApi _api;
+        private AlternativePaymentSource alternativePaymentSource;
 
         public AlternativePaymentSourcePaymentsTests(ApiTestFixture fixture, ITestOutputHelper outputHelper)
         {
@@ -18,31 +19,55 @@ namespace Checkout.Tests.Payments
             _api = fixture.Api;
         }
 
-        public static IEnumerable<object[]> PaymentMethodsTestData =>
-            new List<object[]>
-            {
-                new object[] { new AlternativePaymentSource("giropay") { { "bic", "TESTDETT421" }, { "purpose", "CKO giropay test" } }, Currency.EUR },
-                new object[] { new AlternativePaymentSource("ideal") { { "issuer_id", "INGBNL2A" } }, Currency.EUR }
-            };
-
-        [Theory]
-        [MemberData(nameof(PaymentMethodsTestData))]
-        public async Task RequestAlternativePaymentMethodPayment(IRequestSource alternativePaymentMethodRequestSource, string currency)
+        [Fact]
+        public async Task CanRequestGiropayPayment()
         {
-            PaymentRequest<IRequestSource> paymentRequest = TestHelper.CreateAlternativePaymentMethodRequest(alternativePaymentMethodRequestSource, currency: currency);
-            paymentRequest.ThreeDS = false;
-            
-            PaymentResponse apiResponse = await _api.Payments.RequestAsync(paymentRequest);
+            alternativePaymentSource = new AlternativePaymentSource("giropay") { { "bic", "TESTDETT421" }, { "purpose", "CKO giropay test" } };
+            await RequestAlternativePaymentAsync(alternativePaymentSource);
+        }
 
+        [Fact]
+        public async Task CanRequestIdealPayment()
+        {
+            alternativePaymentSource = new AlternativePaymentSource("ideal") { { "issuer_id", "INGBNL2A" } };
+            await RequestAlternativePaymentAsync(alternativePaymentSource);
+        }
+
+        [Fact]
+        public async Task CanGetAlternativePayment()
+        {
+            alternativePaymentSource = new AlternativePaymentSource("giropay") { { "bic", "TESTDETT421" }, { "purpose", "CKO giropay test" } };
+            PaymentPending payment = await RequestAlternativePaymentAsync(alternativePaymentSource);
+
+            GetPaymentResponse verifiedPayment = await _api.Payments.GetAsync(payment.Id);
+
+            verifiedPayment.ShouldNotBeNull();
+            verifiedPayment.Id.ShouldBe(payment.Id);
+            foreach(string key in (verifiedPayment.Source as Dictionary<string, string>).Keys)
+            {
+                (verifiedPayment.Source as Dictionary<string, string>)[key].ShouldBe((alternativePaymentSource as Dictionary<string, string>)[key]);
+            }
+        }
+
+        private async Task<PaymentPending> RequestAlternativePaymentAsync(AlternativePaymentSource alternativePaymentSource)
+        {
+            PaymentRequest<IRequestSource> paymentRequest = TestHelper.CreateAlternativePaymentMethodRequest(alternativePaymentSource, currency: Currency.EUR);
+            paymentRequest.ThreeDS = false;
+
+            PaymentResponse apiResponse = await _api.Payments.RequestAsync(paymentRequest);
             apiResponse.IsPending.ShouldBeTrue();
             apiResponse.Pending.ShouldNotBeNull();
-            apiResponse.Pending.Id.ShouldNotBeNullOrEmpty();
-            apiResponse.Pending.Status.ShouldBe(PaymentStatus.Pending);
-            apiResponse.Pending.Reference.ShouldBe(paymentRequest.Reference);
-            apiResponse.Pending.Customer.ShouldNotBeNull();
-            apiResponse.Pending.Customer.Id.ShouldNotBeNullOrEmpty();
-            apiResponse.Pending.Customer.Email.ShouldNotBeNullOrEmpty();
-            apiResponse.Pending.HasLink("redirect").ShouldBeTrue();
+
+            PaymentPending pendingPayment = apiResponse.Pending;
+            pendingPayment.Id.ShouldNotBeNullOrEmpty();
+            pendingPayment.Status.ShouldBe(PaymentStatus.Pending);
+            pendingPayment.Reference.ShouldBe(paymentRequest.Reference);
+            pendingPayment.Customer.ShouldNotBeNull();
+            pendingPayment.Customer.Id.ShouldNotBeNullOrEmpty();
+            pendingPayment.Customer.Email.ShouldNotBeNullOrEmpty();
+            pendingPayment.GetRedirectLink().ShouldNotBeNull();
+
+            return pendingPayment;
         }
     }
 }
