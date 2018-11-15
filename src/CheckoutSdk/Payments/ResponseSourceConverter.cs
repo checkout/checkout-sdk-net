@@ -8,7 +8,7 @@ namespace Checkout.Payments
     using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
     /// <summary>
-    /// JSON converter for handling different payment respons source types.
+    /// JSON converter for handling different payment response source types.
     /// </summary>
     public class ResponseSourceConverter : JsonConverter
     {
@@ -54,12 +54,8 @@ namespace Checkout.Payments
             {
                 case CardSource.TypeName:
                     return new CardSourceResponse();
-                case "ideal":
-                    return new AlternativePaymentSourceResponse();
-                case "giropay":
-                    return new AlternativePaymentSourceResponse();
                 default:
-                    throw new NotImplementedException();
+                    return new AlternativePaymentSourceResponse();
             }
         }
 
