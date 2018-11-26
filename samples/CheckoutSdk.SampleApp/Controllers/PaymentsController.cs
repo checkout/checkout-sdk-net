@@ -13,13 +13,11 @@ namespace Checkout.SampleApp.Controllers
     public class PaymentsController : Controller
     {
         private readonly ICheckoutApi _checkoutApi;
-        private readonly CheckoutConfiguration _configuration;
         private readonly ISerializer _serializer;
 
-        public PaymentsController(ICheckoutApi checkoutApi, CheckoutConfiguration configuration, ISerializer serializer)
+        public PaymentsController(ICheckoutApi checkoutApi, ISerializer serializer)
         {
             _checkoutApi = checkoutApi ?? throw new ArgumentNullException(nameof(checkoutApi));
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
         }
 
@@ -130,7 +128,6 @@ namespace Checkout.SampleApp.Controllers
                 new SelectListItem() {Value = Currency.EUR, Text = Currency.EUR},
                 new SelectListItem() {Value = Currency.GBP, Text = Currency.GBP}
             };
-            model.PublicKey = _configuration.PublicKey;
             return model;
         }
 

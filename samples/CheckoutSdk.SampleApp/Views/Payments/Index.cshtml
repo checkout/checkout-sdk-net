@@ -1,5 +1,6 @@
 ﻿@using Checkout.SampleApp.Controllers
 @model Checkout.SampleApp.Models.PaymentModel
+@inject Checkout.CheckoutConfiguration Configuration;
 @{
     ViewData["Title"] = "New Payment";
 }
@@ -48,7 +49,7 @@
     var payNowButton = document.getElementById('pay-now-button');
 
     Frames.init({
-        publicKey: '@Model.PublicKey',
+        publicKey: '@Configuration.PublicKey',
         containerSelector: '.frames-container',
         debugMode: true,
         cardValidationChanged: function () {

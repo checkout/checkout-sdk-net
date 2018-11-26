@@ -46,7 +46,7 @@ namespace Checkout.SampleApp.Tests
                 p.GetAsync(It.IsAny<string>(), default(CancellationToken)))
                     .ReturnsAsync(() => new GetPaymentResponse());
 
-            _controller = new PaymentsController(_checkoutApi.Object, new CheckoutConfiguration("test", "test"), new JsonSerializer());
+            _controller = new PaymentsController(_checkoutApi.Object, new JsonSerializer());
 
             var mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Strict);
             mockUrlHelper

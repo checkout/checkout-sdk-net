@@ -23,6 +23,5 @@ namespace Checkout.SampleApp.Models
         public SelectListItem[] Currencies { get; set; }
         public bool Capture { get; set; }
         public string Reference { get; set; }
-        public string PublicKey { get; set; }
     }
 }
