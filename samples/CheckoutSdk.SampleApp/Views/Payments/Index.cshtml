@@ -21,12 +21,20 @@
             </div>
             <div class="form-group">
                 <label asp-for="Currency"></label>
-                <select class="form-control" asp-for="Currency" asp-items="@Model.Currencies"></select><br />
+                <select class="form-control" asp-for="Currency" asp-items="@Model.Currencies"></select>
                 <span asp-validation-for="Currency" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Reference"></label>
+                <input class="form-control" asp-for="Reference"/>
             </div>
             <div class="form-group form-check">
                 <input class="form-check-input" asp-for="DoThreeDS">
                 <label class="form-check-label" asp-for="DoThreeDS"></label>
+            </div>
+            <div class="form-group form-check">
+                <input class="form-check-input" asp-for="Capture">
+                <label class="form-check-label" asp-for="Capture"></label>
             </div>
             <div class="frames-container form-group"></div>
             <div class="form-group">

@@ -5,6 +5,11 @@ namespace Checkout.SampleApp.Models
 {
     public class PaymentModel
     {
+        public PaymentModel()
+        {
+            Capture = true;
+        }
+        
         [Required]
         [Display(Name = "Amount (in minor currency unit)")]
         public int? Amount { get; set; }
@@ -16,6 +21,8 @@ namespace Checkout.SampleApp.Models
         public bool DoThreeDS { get; set; }
         public string CardToken { get; set; }
         public SelectListItem[] Currencies { get; set; }
+        public bool Capture { get; set; }
+        public string Reference { get; set; }
         public string PublicKey { get; set; }
     }
 }
