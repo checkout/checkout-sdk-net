@@ -1,8 +1,10 @@
-# Sample application
+# Checkout.com Sample Application
 
-To set up the included sample application all you need to do is update `appsettings.json` file in `samples\CheckoutSdk.SampleApp` folder with your credentials:
+## Running the sample
 
-```json
+First update `appsettings.json` to include your Checkout.com API keys or add an `appsettings.local.json` file with your settings:
+
+ ```json
   "Checkout": {
     "UseSandbox": true,
     "SecretKey": "your_secret_key",
@@ -10,8 +12,16 @@ To set up the included sample application all you need to do is update `appsetti
   }
 ```
 
-*You may also create your own `appsettings.local.json` file to be used locally.*
+Install CSS/JS dependencies using Bower (should be done automatically is using Visual Studio 2017):
 
-The project can now be started from `checkout-sdk-net` solution. 
+```
+bower install
+```
 
-Bower dependencies should be downloaded automatically to `wwwroot\lib` as you open the solution for the first time in Visual Studio 2017.
+Run the application from the editor of your choice or via command line:
+
+```
+dotnet run
+```
+
+The sample application will be running on http://localhost:5000.
