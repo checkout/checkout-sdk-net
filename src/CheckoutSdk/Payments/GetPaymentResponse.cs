@@ -8,7 +8,7 @@ namespace Checkout.Payments
     /// <summary>
     /// Represents the details of a payment.
     /// </summary>
-    public class GetPaymentDetailsResponse : Resource
+    public class GetPaymentResponse : Resource
     {
         /// <summary>
         /// Gets the unique identifier of the payment.

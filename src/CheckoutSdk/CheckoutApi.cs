@@ -17,7 +17,6 @@ namespace Checkout
         {
             Payments = new PaymentsClient(apiClient, configuration);
             Tokens = new TokensClient(apiClient, configuration);
-            PublicKey = configuration.PublicKey;
         }
 
         /// <summary>
@@ -29,8 +28,6 @@ namespace Checkout
         /// Gets the Tokenization API. 
         /// </summary>
         public ITokensClient Tokens { get; }
-        public string PublicKey { get; }
-
 
         /// <summary>
         /// Creates a new <see cref="CheckoutApi"/> instance with default dependencies.

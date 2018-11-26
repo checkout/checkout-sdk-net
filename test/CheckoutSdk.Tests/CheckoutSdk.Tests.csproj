@@ -4,9 +4,6 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <RootNamespace>Checkout.Tests</RootNamespace>
   </PropertyGroup>
-  <ItemGroup>
-    <None Include="Payments\TokenSourcePaymentsTests.cs" />
-  </ItemGroup>
   <ItemGroup Label="Project References">
     <ProjectReference Include="..\..\src\CheckoutSdk\CheckoutSdk.csproj" />
     <ProjectReference Include="..\..\src\CheckoutSdk.Extensions.Microsoft\CheckoutSdk.Extensions.Microsoft.csproj" />

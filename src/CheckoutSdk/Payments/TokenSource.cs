@@ -17,7 +17,8 @@ namespace Checkout.Payments
         public TokenSource(string token)
         {
             if(string.IsNullOrWhiteSpace(token))
-                throw new ArgumentException("Token must be provided.", nameof(token));
+                throw new ArgumentException("The token must be provided.", nameof(token));
+                
             Token = token;
         }
 

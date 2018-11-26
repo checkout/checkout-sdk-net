@@ -28,7 +28,7 @@ namespace Checkout.Payments
         /// <param name="paymentId">The payment or payment session identifier.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A task that upon completion contains the payment details.</returns>
-        Task<GetPaymentDetailsResponse> GetAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<GetPaymentResponse> GetAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken));
         
         /// <summary>
         /// Returns all the actions associated with a payment ordered by processing date in descending order (latest first).

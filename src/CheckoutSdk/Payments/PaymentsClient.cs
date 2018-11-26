@@ -34,9 +34,9 @@ namespace Checkout.Payments
             return RequestPaymentAsync(paymentRequest, CardPaymentMappings, cancellationToken);
         }
 
-        public Task<GetPaymentDetailsResponse> GetAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<GetPaymentResponse> GetAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.GetAsync<GetPaymentDetailsResponse>(GetPaymentUrl(paymentId), _credentials, cancellationToken);
+            return _apiClient.GetAsync<GetPaymentResponse>(GetPaymentUrl(paymentId), _credentials, cancellationToken);
         }
 
         public Task<IEnumerable<PaymentAction>> GetActionsAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
