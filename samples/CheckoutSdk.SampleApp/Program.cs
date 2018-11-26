@@ -16,7 +16,7 @@ namespace Checkout.SampleApp
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     config.AddJsonFile("appsettings.json");
-                    config.AddJsonFile("appsettings.local.json", true);
+                    config.AddJsonFile("appsettings.local.json", false);
                 })
                 .UseStartup<Startup>()
                 .Build();
