@@ -1,25 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-
     <IsPackable>false</IsPackable>
-
     <RootNamespace>Checkout.SampleApp.Tests</RootNamespace>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
-    <PackageReference Include="Moq" Version="4.10.0" />
-    <PackageReference Include="Shouldly" Version="3.0.1" />
-    <PackageReference Include="xunit" Version="2.3.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0"/>
+    <PackageReference Include="Moq" Version="4.10.0"/>
+    <PackageReference Include="Shouldly" Version="3.0.1"/>
+    <PackageReference Include="xunit" Version="2.3.1"/>
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1"/>
+    <PackageReference Include="CheckoutSDK.Extensions.Microsoft" Version="0.2.3"/>
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\..\src\CheckoutSdk.Extensions.Microsoft\CheckoutSdk.Extensions.Microsoft.csproj" />
-    <ProjectReference Include="..\..\src\CheckoutSdk\CheckoutSdk.csproj" />
-    <ProjectReference Include="..\CheckoutSdk.SampleApp\CheckoutSdk.SampleApp.csproj" />
+    <ProjectReference Include="..\CheckoutSdk.SampleApp\CheckoutSdk.SampleApp.csproj"/>
   </ItemGroup>
-
 </Project>

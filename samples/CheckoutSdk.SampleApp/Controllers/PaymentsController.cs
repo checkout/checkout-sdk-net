@@ -23,10 +23,9 @@ namespace Checkout.SampleApp.Controllers
             _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
         }
 
-        [HttpGet]
         public IActionResult Index()
         {
-            PaymentModel model = PrepareModel(null);
+            PaymentModel model = PrepareModel();
             return View(model);
         }
 
@@ -60,14 +59,14 @@ namespace Checkout.SampleApp.Controllers
                     return Redirect(response.Pending.GetRedirectLink().Href);
                 }
 
-                TempData[response.Payment.Id] = _serializer.Serialize(response.Payment);
+                StorePaymentInTempData(response.Payment);
 
                 if (response.Payment.Approved)
                 {
-                    return RedirectToAction(nameof(NonThreeDSSuccess), new { paymentId = response.Payment.Id });
+                    return RedirectToAction(nameof(NonThreeDSSuccess));
                 }
 
-                return RedirectToAction(nameof(NonThreeDSFailure), new { paymentId = response.Payment.Id });
+                return RedirectToAction(nameof(NonThreeDSFailure));
             }
             catch (Exception ex)
             {
@@ -75,38 +74,52 @@ namespace Checkout.SampleApp.Controllers
             }
         }
 
-        public async Task<IActionResult> ThreeDSSuccess([FromQuery(Name = "cko-session-id")] string ckoSessionId)
-        {
-            GetPaymentDetailsResponse details = await _checkoutApi.Payments.GetAsync(ckoSessionId);
-            return View(details);
-        }
+        [HttpGet]
+        public IActionResult NonThreeDSSuccess() => GetPaymentFromTempData();
 
-        public async Task<IActionResult> ThreeDSFailure([FromQuery(Name = "cko-session-id")] string ckoSessionId)
-        {
-            GetPaymentDetailsResponse details = await _checkoutApi.Payments.GetAsync(ckoSessionId);
-            return View(details);
-        }
+        [HttpGet]
+        public IActionResult NonThreeDSFailure() => GetPaymentFromTempData();
 
-        public IActionResult NonThreeDSSuccess(string paymentId)
-        {
-            var serialized = (string)TempData[paymentId];
-            var payment = (PaymentProcessed)_serializer.Deserialize(serialized, typeof(PaymentProcessed));
-            return View(payment);
-        }
-
-        public IActionResult NonThreeDSFailure(string paymentId)
-        {
-            var serialized = (string)TempData[paymentId];
-            var payment = (PaymentProcessed)_serializer.Deserialize(serialized, typeof(PaymentProcessed));
-            return View(payment);
-        }
+        [HttpGet]
+        public Task<IActionResult> ThreeDSSuccess([FromQuery(Name = "cko-session-id")] string ckoSessionId) 
+            => GetThreeDsPaymentAsync(ckoSessionId);
+        
+        [HttpGet]
+        public Task<IActionResult> ThreeDSFailure([FromQuery(Name = "cko-session-id")] string ckoSessionId) 
+            => GetThreeDsPaymentAsync(ckoSessionId);
 
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private PaymentModel PrepareModel(PaymentModel existingModel)
+        private void StorePaymentInTempData(PaymentProcessed payment)
+        {
+            TempData[nameof(PaymentProcessed)] = _serializer.Serialize(payment);
+        }
+
+        private async Task<IActionResult> GetThreeDsPaymentAsync(string sessionId)
+        {
+            GetPaymentResponse payment = await _checkoutApi.Payments.GetAsync(sessionId);
+            
+            if (payment == null)
+                return RedirectToAction(nameof(Index));
+
+            return View(payment);
+        }
+
+        private ActionResult GetPaymentFromTempData()
+        {
+            if (TempData.TryGetValue(nameof(PaymentProcessed), out var serializedPayment))
+            {
+                var payment = _serializer.Deserialize(serializedPayment.ToString(), typeof(PaymentProcessed)) as PaymentProcessed;
+                return View(payment);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        private PaymentModel PrepareModel(PaymentModel existingModel = null)
         {
             var model = existingModel ?? new PaymentModel();
             model.Currencies = new[]
@@ -119,13 +132,7 @@ namespace Checkout.SampleApp.Controllers
             return model;
         }
 
-        private string BuildUrl(string actionName)
-        {
-            var uriBuilder = new UriBuilder(Request.GetUri())
-            {
-                Path = Url.Action(actionName, ControllerContext.RouteData.Values["controller"].ToString())
-            };
-            return uriBuilder.Uri.ToString();
-        }
+        private string BuildUrl(string actionName) 
+            => Url.Action(actionName, "payments", null, Request.Scheme);
     }
 }

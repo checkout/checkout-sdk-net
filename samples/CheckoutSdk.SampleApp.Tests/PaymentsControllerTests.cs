@@ -44,7 +44,7 @@ namespace Checkout.SampleApp.Tests
                 .ReturnsAsync(() => _paymentsResponse);
             _paymentsClient.Setup(p =>
                 p.GetAsync(It.IsAny<string>(), default(CancellationToken)))
-                    .ReturnsAsync(() => new GetPaymentDetailsResponse());
+                    .ReturnsAsync(() => new GetPaymentResponse());
 
             _controller = new PaymentsController(_checkoutApi.Object, new CheckoutConfiguration("test", "test"), new JsonSerializer());
 
@@ -145,10 +145,8 @@ namespace Checkout.SampleApp.Tests
 
             var viewResult = result.ShouldBeAssignableTo<RedirectToActionResult>();
             viewResult.ActionName.ShouldBe(nameof(PaymentsController.NonThreeDSSuccess));
-            viewResult.RouteValues.ShouldContainKey("paymentId");
-            var paymentId = viewResult.RouteValues["paymentId"] as string;
-            _controller.TempData.ShouldContainKey(paymentId);
-            var serialized = _controller.TempData[paymentId].ShouldBeAssignableTo<string>();
+            _controller.TempData.ShouldContainKey(nameof(PaymentProcessed));
+            var serialized = _controller.TempData[nameof(PaymentProcessed)].ShouldBeAssignableTo<string>();
             var payment = (PaymentProcessed)_jsonSerializer.Deserialize(serialized, typeof(PaymentProcessed));
             payment.Approved.ShouldBeTrue();
         }
@@ -165,10 +163,8 @@ namespace Checkout.SampleApp.Tests
 
             var viewResult = result.ShouldBeAssignableTo<RedirectToActionResult>();
             viewResult.ActionName.ShouldBe(nameof(PaymentsController.NonThreeDSFailure));
-            viewResult.RouteValues.ShouldContainKey("paymentId");
-            var paymentId = viewResult.RouteValues["paymentId"] as string;
-            _controller.TempData.ShouldContainKey(paymentId);
-            var serialized = _controller.TempData[paymentId].ShouldBeAssignableTo<string>();
+            _controller.TempData.ShouldContainKey(nameof(PaymentProcessed));
+            var serialized = _controller.TempData[nameof(PaymentProcessed)].ShouldBeAssignableTo<string>();
             var payment = (PaymentProcessed)_jsonSerializer.Deserialize(serialized, typeof(PaymentProcessed));
             payment.Approved.ShouldBeFalse();
         }
@@ -197,7 +193,7 @@ namespace Checkout.SampleApp.Tests
 
             var viewResult = result.ShouldBeAssignableTo<ViewResult>();
             viewResult.ViewName.ShouldBeNull();
-            viewResult.Model.ShouldBeAssignableTo<GetPaymentDetailsResponse>();
+            viewResult.Model.ShouldBeAssignableTo<GetPaymentResponse>();
         }
 
         [Fact]
@@ -208,7 +204,7 @@ namespace Checkout.SampleApp.Tests
 
             var viewResult = result.ShouldBeAssignableTo<ViewResult>();
             viewResult.ViewName.ShouldBeNull();
-            viewResult.Model.ShouldBeAssignableTo<GetPaymentDetailsResponse>();
+            viewResult.Model.ShouldBeAssignableTo<GetPaymentResponse>();
         }
     }
 }

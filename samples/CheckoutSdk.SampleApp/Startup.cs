@@ -36,10 +36,10 @@ namespace Checkout.SampleApp
             app.UseStaticFiles();
 
             app.UseMvc(routes =>
-            {
+            {                
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Payments}/{action=Index}/{id?}");
+                    template: "{controller=payments}/{action=index}/{id?}");
             });
         }
     }
