@@ -15,12 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="appsettings.local.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\src\CheckoutSdk.Extensions.Microsoft\CheckoutSdk.Extensions.Microsoft.csproj" />
     <ProjectReference Include="..\..\src\CheckoutSdk\CheckoutSdk.csproj" />
   </ItemGroup>
