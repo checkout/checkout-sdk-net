@@ -30,19 +30,6 @@ namespace Checkout.SampleApp.Controllers
             return View(model);
         }
 
-        private PaymentModel PrepareModel(PaymentModel existingModel)
-        {
-            var model = existingModel ?? new PaymentModel();
-            model.Currencies = new[]
-            {
-                new SelectListItem() {Value = Currency.USD, Text = Currency.USD},
-                new SelectListItem() {Value = Currency.EUR, Text = Currency.EUR},
-                new SelectListItem() {Value = Currency.GBP, Text = Currency.GBP}
-            };
-            model.PublicKey = _configuration.PublicKey;
-            return model;
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Post(PaymentModel model)
@@ -88,15 +75,6 @@ namespace Checkout.SampleApp.Controllers
             }
         }
 
-        private string BuildUrl(string actionName)
-        {
-            var uriBuilder = new UriBuilder(Request.GetUri())
-            {
-                Path = Url.Action(actionName, ControllerContext.RouteData.Values["controller"].ToString())
-            };
-            return uriBuilder.Uri.ToString();
-        }
-
         public async Task<IActionResult> ThreeDSSuccess([FromQuery(Name = "cko-session-id")] string ckoSessionId)
         {
             GetPaymentDetailsResponse details = await _checkoutApi.Payments.GetAsync(ckoSessionId);
@@ -126,6 +104,28 @@ namespace Checkout.SampleApp.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private PaymentModel PrepareModel(PaymentModel existingModel)
+        {
+            var model = existingModel ?? new PaymentModel();
+            model.Currencies = new[]
+            {
+                new SelectListItem() {Value = Currency.USD, Text = Currency.USD},
+                new SelectListItem() {Value = Currency.EUR, Text = Currency.EUR},
+                new SelectListItem() {Value = Currency.GBP, Text = Currency.GBP}
+            };
+            model.PublicKey = _configuration.PublicKey;
+            return model;
+        }
+
+        private string BuildUrl(string actionName)
+        {
+            var uriBuilder = new UriBuilder(Request.GetUri())
+            {
+                Path = Url.Action(actionName, ControllerContext.RouteData.Values["controller"].ToString())
+            };
+            return uriBuilder.Uri.ToString();
         }
     }
 }
