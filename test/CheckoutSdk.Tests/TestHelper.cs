@@ -19,7 +19,7 @@ namespace Checkout.Tests
             )
             {
                 Capture = false,
-                Customer = new Customer() { Email = TestHelper.GenerateRandomEmail() },
+                Customer = new CustomerRequest() { Email = TestHelper.GenerateRandomEmail()},
                 Reference = Guid.NewGuid().ToString()
             };
         }

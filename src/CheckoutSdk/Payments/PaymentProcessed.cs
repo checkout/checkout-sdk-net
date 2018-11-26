@@ -75,7 +75,7 @@ namespace Checkout.Payments
         /// <summary>
         /// Gets the customer to which this payment is linked.
         /// </summary>
-        public Customer Customer { get; set; }
+        public CustomerResponse Customer { get; set; }
         
         /// <summary>
         /// Gets the date/time the payment was processed.
@@ -86,6 +86,11 @@ namespace Checkout.Payments
         /// Gets your reference for the payment.
         /// </summary>
         public string Reference { get; set; }
+
+        /// <summary>
+        /// The final Electronic Commerce Indicator security level used to authorize the payment. Applicable for 3D-Secure, digital wallets and network token payments.
+        /// </summary>
+        public string Eci { get; set; }
 
         /// <summary>
         /// Gets the payment's actions link.
