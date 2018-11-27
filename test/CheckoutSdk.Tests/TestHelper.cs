@@ -23,6 +23,19 @@ namespace Checkout.Tests
                 Reference = Guid.NewGuid().ToString()
             };
         }
+        public static PaymentRequest<IRequestSource> CreateAlternativePaymentMethodRequest(IRequestSource alternativePaymentMethodRequestSource, string currency, int? amount = 100)
+        {
+            return new PaymentRequest<IRequestSource>(
+                alternativePaymentMethodRequestSource,
+                currency,
+                amount
+            )
+            {
+                Capture = false,
+                Customer = new CustomerRequest() { Email = TestHelper.GenerateRandomEmail() },
+                Reference = Guid.NewGuid().ToString()
+            };
+        }
 
         public static CardTokenRequest CreateCardTokenRequest()
         {

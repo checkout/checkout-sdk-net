@@ -6,7 +6,7 @@ namespace Checkout.Payments
     public interface IRequestSource
     {
         /// <summary>
-        /// Gets or sets the payment source type. 
+        /// Gets the payment source type. 
         /// </summary>
         string Type { get; }
     }
