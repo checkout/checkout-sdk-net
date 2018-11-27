@@ -1,4 +1,5 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 15.0.26124.0
@@ -10,7 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{A567F61A-8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckoutSdk.Tests", "test\CheckoutSdk.Tests\CheckoutSdk.Tests.csproj", "{1701C6B4-D419-4C3D-9561-BB6BD3875BBC}"
 EndProject
-Project("FAE04EC0-301F-11D3-BF4B-00C04F79EFBC") = "CheckoutSdk.Extensions.Microsoft", "src\CheckoutSdk.Extensions.Microsoft\CheckoutSdk.Extensions.Microsoft.csproj", "{14232096-4D96-46DC-A684-7981FDC9F9B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckoutSdk.Extensions.Microsoft", "src\CheckoutSdk.Extensions.Microsoft\CheckoutSdk.Extensions.Microsoft.csproj", "{14232096-4D96-46DC-A684-7981FDC9F9B5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{307401BA-8744-4333-8CF1-F7EF777529F0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckoutSdk.SampleApp", "samples\CheckoutSdk.SampleApp\CheckoutSdk.SampleApp.csproj", "{548AE1BD-6651-49DD-B37E-787C86940F55}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckoutSdk.SampleApp.Tests", "samples\CheckoutSdk.SampleApp.Tests\CheckoutSdk.SampleApp.Tests.csproj", "{3B5B4E27-F8F9-45BC-B50D-494132409DD7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,6 +65,30 @@ Global
 		{14232096-4D96-46DC-A684-7981FDC9F9B5}.Release|x64.Build.0 = Release|Any CPU
 		{14232096-4D96-46DC-A684-7981FDC9F9B5}.Release|x86.ActiveCfg = Release|Any CPU
 		{14232096-4D96-46DC-A684-7981FDC9F9B5}.Release|x86.Build.0 = Release|Any CPU
+		{548AE1BD-6651-49DD-B37E-787C86940F55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{548AE1BD-6651-49DD-B37E-787C86940F55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{548AE1BD-6651-49DD-B37E-787C86940F55}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{548AE1BD-6651-49DD-B37E-787C86940F55}.Debug|x64.Build.0 = Debug|Any CPU
+		{548AE1BD-6651-49DD-B37E-787C86940F55}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{548AE1BD-6651-49DD-B37E-787C86940F55}.Debug|x86.Build.0 = Debug|Any CPU
+		{548AE1BD-6651-49DD-B37E-787C86940F55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{548AE1BD-6651-49DD-B37E-787C86940F55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{548AE1BD-6651-49DD-B37E-787C86940F55}.Release|x64.ActiveCfg = Release|Any CPU
+		{548AE1BD-6651-49DD-B37E-787C86940F55}.Release|x64.Build.0 = Release|Any CPU
+		{548AE1BD-6651-49DD-B37E-787C86940F55}.Release|x86.ActiveCfg = Release|Any CPU
+		{548AE1BD-6651-49DD-B37E-787C86940F55}.Release|x86.Build.0 = Release|Any CPU
+		{3B5B4E27-F8F9-45BC-B50D-494132409DD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B5B4E27-F8F9-45BC-B50D-494132409DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B5B4E27-F8F9-45BC-B50D-494132409DD7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3B5B4E27-F8F9-45BC-B50D-494132409DD7}.Debug|x64.Build.0 = Debug|Any CPU
+		{3B5B4E27-F8F9-45BC-B50D-494132409DD7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3B5B4E27-F8F9-45BC-B50D-494132409DD7}.Debug|x86.Build.0 = Debug|Any CPU
+		{3B5B4E27-F8F9-45BC-B50D-494132409DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B5B4E27-F8F9-45BC-B50D-494132409DD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B5B4E27-F8F9-45BC-B50D-494132409DD7}.Release|x64.ActiveCfg = Release|Any CPU
+		{3B5B4E27-F8F9-45BC-B50D-494132409DD7}.Release|x64.Build.0 = Release|Any CPU
+		{3B5B4E27-F8F9-45BC-B50D-494132409DD7}.Release|x86.ActiveCfg = Release|Any CPU
+		{3B5B4E27-F8F9-45BC-B50D-494132409DD7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +97,8 @@ Global
 		{F764CFA6-F202-4708-BA3C-7637B70B1FCB} = {D91BBC7C-AA13-4734-930A-F47E04D80708}
 		{1701C6B4-D419-4C3D-9561-BB6BD3875BBC} = {A567F61A-88B8-4FB6-9822-3247D7B8A843}
 		{14232096-4D96-46DC-A684-7981FDC9F9B5} = {D91BBC7C-AA13-4734-930A-F47E04D80708}
+		{548AE1BD-6651-49DD-B37E-787C86940F55} = {307401BA-8744-4333-8CF1-F7EF777529F0}
+		{3B5B4E27-F8F9-45BC-B50D-494132409DD7} = {307401BA-8744-4333-8CF1-F7EF777529F0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC3B6847-614E-4486-88AF-FF0285BA3987}

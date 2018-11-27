@@ -27,20 +27,21 @@ namespace Checkout.Tests.Payments
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             paymentRequest.ThreeDS = false;
 
-            PaymentResponse apiResponse = await _api.Payments.RequestAsync(paymentRequest);
+            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
             
-            apiResponse.Payment.ShouldNotBeNull();
-            apiResponse.Payment.Approved.ShouldBeTrue();
-            apiResponse.Payment.Id.ShouldNotBeNullOrEmpty();
-            apiResponse.Payment.ActionId.ShouldNotBeNullOrEmpty();
-            apiResponse.Payment.Amount.ShouldBe(paymentRequest.Amount.Value);
-            apiResponse.Payment.Currency.ShouldBe(paymentRequest.Currency);
-            apiResponse.Payment.Reference.ShouldBe(paymentRequest.Reference);
-            apiResponse.Payment.Customer.ShouldNotBeNull();
-            apiResponse.Payment.Customer.Id.ShouldNotBeNullOrEmpty();
-            apiResponse.Payment.Customer.Email.ShouldNotBeNullOrEmpty();
-            apiResponse.Payment.CanCapture().ShouldBeTrue();
-            apiResponse.Payment.CanVoid().ShouldBeTrue();
+            paymentResponse.Payment.ShouldNotBeNull();
+            paymentResponse.Payment.Approved.ShouldBeTrue();
+            paymentResponse.Payment.Id.ShouldNotBeNullOrEmpty();
+            paymentResponse.Payment.ActionId.ShouldNotBeNullOrEmpty();
+            paymentResponse.Payment.Amount.ShouldBe(paymentRequest.Amount.Value);
+            paymentResponse.Payment.Currency.ShouldBe(paymentRequest.Currency);
+            paymentResponse.Payment.Reference.ShouldBe(paymentRequest.Reference);
+            paymentResponse.Payment.Customer.ShouldNotBeNull();
+            paymentResponse.Payment.Customer.Id.ShouldNotBeNullOrEmpty();
+            paymentResponse.Payment.Customer.Email.ShouldNotBeNullOrEmpty();
+            paymentResponse.Payment.CanCapture().ShouldBeTrue();
+            paymentResponse.Payment.CanVoid().ShouldBeTrue();
+            paymentResponse.Payment.Source.AsCard().ShouldNotBeNull();
         }
 
         [Fact]
@@ -49,10 +50,10 @@ namespace Checkout.Tests.Payments
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             paymentRequest.ThreeDS = true;
 
-            PaymentResponse apiResponse = await _api.Payments.RequestAsync(paymentRequest);
+            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
 
-            apiResponse.IsPending.ShouldBe(true);
-            var pending = apiResponse.Pending;
+            paymentResponse.IsPending.ShouldBe(true);
+            var pending = paymentResponse.Pending;
 
             pending.ShouldNotBeNull();
 
