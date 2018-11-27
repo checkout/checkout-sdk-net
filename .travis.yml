@@ -7,7 +7,7 @@ dist: trusty
 mono:
   - 4.4.2
 
-dotnet: 2.0.0
+dotnet: 2.1
 
 # Ignore tagged commits
 if: tag IS blank
