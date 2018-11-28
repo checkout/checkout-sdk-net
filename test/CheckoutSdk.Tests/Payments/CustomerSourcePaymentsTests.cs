@@ -18,7 +18,7 @@ namespace Checkout.Tests.Payments
         }
 
         [Fact]
-        public async Task ItCanRequestCardPayment()
+        public async Task CanRequestCardPayment()
         {
             var firstCardPayment = TestHelper.CreateCardPaymentRequest();
             var firstCardPaymentResponse = await _api.Payments.RequestAsync(firstCardPayment);
