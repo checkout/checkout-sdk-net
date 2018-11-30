@@ -1,4 +1,4 @@
-namespace Checkout.Tests.Mocks
+namespace Checkout.Tests
 {
     public class TestCardSource
     {

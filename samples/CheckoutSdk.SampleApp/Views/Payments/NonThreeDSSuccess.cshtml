@@ -1,0 +1,55 @@
+﻿@model Checkout.Payments.PaymentProcessed
+
+@{
+    ViewData["Title"] = Model.ResponseSummary;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Your payment was successful</h2>
+
+<table class="table table-striped">
+    <tr>
+        <td>@Html.DisplayNameFor(model => model.Id)</td>
+        <td>@Html.DisplayFor(model => model.Id)</td>
+    </tr>
+    <tr>
+        <td>@Html.DisplayNameFor(model => model.ProcessedOn)</td>
+        <td>@Html.DisplayFor(model => model.ProcessedOn)</td>
+    </tr>
+    <tr>
+        <td>@Html.DisplayNameFor(model => model.Amount)</td>
+        <td>@Html.DisplayFor(model => model.Amount) @Html.DisplayFor(model => model.Currency)</td>
+    </tr>
+    <tr>
+        <td>@Html.DisplayNameFor(model => model.Reference)</td>
+        <td>@Html.DisplayFor(model => model.Reference)</td>
+    </tr>
+    <tr>
+        <td>@Html.DisplayNameFor(model => model.Approved)</td>
+        <td>@Html.DisplayFor(model => model.Approved)</td>
+    </tr>
+    <tr>
+        <td>@Html.DisplayNameFor(model => model.ResponseCode)</td>
+        <td>@Html.DisplayFor(model => model.ResponseCode)</td>
+    </tr>
+    <tr>
+        <td>@Html.DisplayNameFor(model => model.ResponseSummary)</td>
+        <td>@Html.DisplayFor(model => model.ResponseSummary)</td>
+    </tr>
+    <tr>
+        <td>@Html.DisplayNameFor(model => model.AuthCode)</td>
+        <td>@Html.DisplayFor(model => model.AuthCode)</td>
+    </tr>
+    <tr>
+        <td>@Html.DisplayNameFor(model => model.Status)</td>
+        <td>@Html.DisplayFor(model => model.Status)</td>
+    </tr>
+    <tr>
+        <td>Card Source Id</td>
+        <td>@Html.DisplayFor(model => model.Source.AsCard().Id)</td>
+    </tr>
+</table>
+
+<div>
+    <a asp-action="Index">New payment</a>
+</div>

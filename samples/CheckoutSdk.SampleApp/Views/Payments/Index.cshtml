@@ -1,0 +1,74 @@
+﻿@using Checkout.SampleApp.Controllers
+@model Checkout.SampleApp.Models.PaymentModel
+@inject Checkout.CheckoutConfiguration Configuration;
+@{
+    ViewData["Title"] = "New Payment";
+}
+
+<script src="https://cdn.checkout.com/js/frames.js"></script>
+<h2>Sample Application</h2>
+
+<h4>New payment</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-controller="payments" asp-action="post" method="post" id="payment-form" asp-antiforgery="true">
+            <div asp-validation-summary="@ValidationSummary.ModelOnly" class="text-danger"></div>
+            <input asp-for="CardToken" type="hidden" />
+            <div class="form-group">
+                <label asp-for="Amount"></label>
+                <input class="form-control" asp-for="Amount"/>
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Currency"></label>
+                <select class="form-control" asp-for="Currency" asp-items="@Model.Currencies"></select>
+                <span asp-validation-for="Currency" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Reference"></label>
+                <input class="form-control" asp-for="Reference"/>
+            </div>
+            <div class="form-group form-check">
+                <input class="form-check-input" asp-for="DoThreeDS">
+                <label class="form-check-label" asp-for="DoThreeDS"></label>
+            </div>
+            <div class="form-group form-check">
+                <input class="form-check-input" asp-for="Capture">
+                <label class="form-check-label" asp-for="Capture"></label>
+            </div>
+            <div class="frames-container form-group"></div>
+            <div class="form-group">
+                <button id="pay-now-button" type="submit" class="btn btn-primary" disabled>Pay now</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    var paymentForm = document.getElementById('payment-form');
+    var payNowButton = document.getElementById('pay-now-button');
+
+    Frames.init({
+        publicKey: '@Configuration.PublicKey',
+        containerSelector: '.frames-container',
+        debugMode: true,
+        cardValidationChanged: function () {
+            payNowButton.disabled = !Frames.isCardValid();
+        },
+        cardSubmitted: function () {
+            payNowButton.disabled = true;
+        },
+        cardTokenised: function (event) {
+            var cardToken = event.data.cardToken;
+            $('#CardToken').val(cardToken);
+            Frames.addCardToken(paymentForm, cardToken);
+            paymentForm.submit();
+        },
+        cardTokenisationFailed: function (event) {
+        }
+    });
+    paymentForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        Frames.submitCard();
+    });
+</script>

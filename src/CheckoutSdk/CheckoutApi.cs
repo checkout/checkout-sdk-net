@@ -29,7 +29,6 @@ namespace Checkout
         /// </summary>
         public ITokensClient Tokens { get; }
 
-
         /// <summary>
         /// Creates a new <see cref="CheckoutApi"/> instance with default dependencies.
         /// </summary>
