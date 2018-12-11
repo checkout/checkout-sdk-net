@@ -1,4 +1,5 @@
 using Checkout.Payments;
+using Checkout.Sources;
 using Checkout.Tokens;
 
 namespace Checkout
@@ -16,6 +17,7 @@ namespace Checkout
         public CheckoutApi(IApiClient apiClient, CheckoutConfiguration configuration)
         {
             Payments = new PaymentsClient(apiClient, configuration);
+            Sources = new SourcesClient(apiClient, configuration);
             Tokens = new TokensClient(apiClient, configuration);
         }
 
@@ -23,6 +25,11 @@ namespace Checkout
         /// Gets the Payments API.
         /// </summary>
         public IPaymentsClient Payments { get; }
+
+        /// <summary>
+        /// Gets the Sources API.
+        /// </summary>
+        public ISourcesClient Sources { get; }
 
         /// <summary>
         /// Gets the Tokenization API. 

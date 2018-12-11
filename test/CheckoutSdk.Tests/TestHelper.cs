@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Checkout.Common;
 using Checkout.Payments;
+using Checkout.Sources;
 using Checkout.Tokens;
 
 namespace Checkout.Tests
@@ -59,6 +61,38 @@ namespace Checkout.Tests
                     {
                         Capture = false
                     };
+        }
+
+        public static SourceRequest CreateSourceRequest()
+        {
+            return new SourceRequest()
+            {
+                Type = "sepa",
+                Reference = ".NET SDK test",
+                BillingAddress = new Address()
+                {
+                    AddressLine1 = "Checkout.com",
+                    AddressLine2 = "90 Tottenham Court Road",
+                    City = "London",
+                    State = "London",
+                    Zip = "W1T 4TJ",
+                    Country = "GB"
+                },
+                Phone = new Phone()
+                {
+                    CountryCode = "+1",
+                    Number = "415 555 2671"
+                },
+                SourceData = new SourceData()
+                {
+                    FirstName = "Marcus",
+                    LastName = "Barrilius Maximus",
+                    Iban = "DE68100100101234567895",
+                    Bic = "PBNKDEFFXXX",
+                    BillingDescriptor = ".NET SDK test",
+                    MandateType = "single"
+                }
+            };
         }
     }
 }
