@@ -5,22 +5,19 @@ namespace Checkout.Payments
     /// <summary>
     /// Defines the status of a payment.
     /// </summary>
-    public enum PaymentStatus
+    public class PaymentStatus
     {
-        Authorized,
-        Cancelled,
-        Captured,
-        Declined,
-        Expired,
-        [EnumMember(Value = "Partially Captured")]
-        PartiallyCaptured,
-        [EnumMember(Value = "Partially Refunded")]
-        PartiallyRefunded,
-        Pending,
-        Refunded,
-        Voided,
-        [EnumMember(Value = "Card Verified")]
-        CardVerified,
-        Chargeback
+        public const string Authorized = "Authorized";
+        public const string Canceled = "Canceled";
+        public const string Captured = "Captured";
+        public const string Declined = "Declined";
+        public const string Expired = "Expired";
+        public const string PartiallyCaptured = "Partially Captured";
+        public const string PartiallyRefunded = "Partially Refunded";
+        public const string Pending = "Pending";
+        public const string Refunded = "Refunded";
+        public const string Voided = "Voided";
+        public const string CardVerified = "Card Verified";
+        public const string Chargeback = "Chargeback";
     }
 }

@@ -3,10 +3,10 @@
     /// <summary>
     /// Defines the type of payment.
     /// </summary>
-    public enum PaymentType
+    public class PaymentType
     {
-        Regular,
-        Recurring,
-        Moto
+        public const string Regular = "Regular";
+        public const string Recurring = "Recurring";
+        public const string Moto = "Moto";
     }
 }

@@ -128,7 +128,7 @@ namespace Checkout.Tests.Payments
             paymentDetails.Customer.Email.ShouldBe(paymentRequest.Customer.Email);
             paymentDetails.Amount.ShouldBe(paymentResponse.Payment.Amount);
             paymentDetails.Currency.ShouldBe(paymentResponse.Payment.Currency);
-            paymentDetails.PaymentType.ShouldBe(paymentRequest.PaymentType.Value);
+            paymentDetails.PaymentType.ShouldBe(paymentRequest.PaymentType);
             paymentDetails.BillingDescriptor.ShouldNotBeNull();
             paymentDetails.Reference.ShouldNotBeNullOrWhiteSpace();
             paymentDetails.Risk.ShouldNotBeNull();

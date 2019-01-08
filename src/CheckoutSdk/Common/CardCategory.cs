@@ -3,9 +3,9 @@
     /// <summary>
     /// Defines the category of a card.
     /// </summary>
-    public enum CardCategory
+    public class CardCategory
     {
-        Consumer,
-        Commercial
+        public const string Consumer = "Consumer";
+        public const string Commercial = "Commercial";
     }
 }
