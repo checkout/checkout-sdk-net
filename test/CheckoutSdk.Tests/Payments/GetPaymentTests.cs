@@ -78,6 +78,7 @@ namespace Checkout.Tests.Payments
             paymentDetails.Links.ShouldNotBeEmpty();
             paymentDetails.Status.ShouldBe(PaymentStatus.Pending);
             paymentDetails.Source.AsCard().ShouldNotBeNull();
+            paymentDetails.Approved.ShouldBeFalse();
         }
 
         [Fact]
