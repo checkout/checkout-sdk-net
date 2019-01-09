@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Checkout.Common;
 using Newtonsoft.Json;
 
 namespace Checkout.Payments
