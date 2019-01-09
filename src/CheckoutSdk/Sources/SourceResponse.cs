@@ -7,7 +7,7 @@ namespace Checkout.Sources
     /// <summary>
     /// Defines a source response.
     /// </summary>
-    public class SourceResponse
+    public class SourceResponse : Resource
     {
         /// <summary>
         /// Gets or sets the id of the source.
@@ -28,7 +28,7 @@ namespace Checkout.Sources
         /// <summary>
         /// Gets or sets the customer of the source.
         /// </summary>
-        public Dictionary<string, string> Customer { get; set; }
+        public CustomerResponse Customer { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="ResponseData"/> of the source.

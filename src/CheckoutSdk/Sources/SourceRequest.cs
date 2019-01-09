@@ -37,7 +37,7 @@ namespace Checkout.Sources
         /// <summary>
         /// Gets or sets the customer of the source.
         /// </summary>
-        public object Customer { get; set; }
+        public CustomerRequest Customer { get; set; }
 
         /// <summary>
         /// Gets or sets the specific source data of the source.
