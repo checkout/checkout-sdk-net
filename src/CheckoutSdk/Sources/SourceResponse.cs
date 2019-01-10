@@ -10,37 +10,38 @@ namespace Checkout.Sources
     public class SourceResponse : Resource
     {
         /// <summary>
-        /// Gets or sets the id of the source.
+        /// Gets or sets the processed response returned following a successfully processed source (HTTP Status Code 201).
         /// </summary>
-        public string Id { get; set; }
+        public SourceProcessed Source { get; set; }
 
         /// <summary>
-        /// Gets or sets the type of the source.
+        /// Gets or sets the pending response returned for asynchronous source or when further action such as a redirect is required (HTTP Status Code 202).
         /// </summary>
-        public string Type { get; set; }
+        public SourcePending Pending { get; set; }
 
         /// <summary>
-        /// Gets or sets the response code of the source.
+        /// Gets a value that indicates whether the source is in a pending state.
         /// </summary>
-        [JsonProperty(PropertyName = "response_code")]
-        public string ResponseCode { get; set; }
+        public bool IsPending => Pending != null;
 
         /// <summary>
-        /// Gets or sets the customer of the source.
+        /// Enables the implicit conversion of <see cref="SourcePending"/> to <see cref="SourceResponse"/>.
+        /// This is required for dynamic dispatch during the deserialization of source responses.
         /// </summary>
-        public CustomerResponse Customer { get; set; }
+        /// <param name="pendingResponse">The pending response.</param>
+        public static implicit operator SourceResponse(SourcePending pendingResponse)
+        {
+            return new SourceResponse { Pending = pendingResponse };
+        }
 
         /// <summary>
-        /// Gets or sets the <see cref="ResponseData"/> of the source.
+        /// Enables the implicit conversion of <see cref="SourceProcessed"/> to <see cref="SourceResponse"/>.
+        /// This is required for dynamic dispatch during the deserialization of source responses.
         /// </summary>
-        [JsonProperty(PropertyName = "response_data")]
-        public ResponseData ResponseData { get; set; }
-
-        /// <summary>
-        /// Gets or sets the links of the source.
-        /// </summary>
-        [JsonProperty(PropertyName = "_links")]
-        public Dictionary<string, Link> Links { get; set; }
-
+        /// <param name="processedResponse">The processed response.</param>
+        public static implicit operator SourceResponse(SourceProcessed processedResponse)
+        {
+            return new SourceResponse { Source = processedResponse };
+        }
     }
 }

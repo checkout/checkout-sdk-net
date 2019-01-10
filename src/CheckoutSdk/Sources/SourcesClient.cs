@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,6 +11,12 @@ namespace Checkout.Sources
     /// </summary>
     public class SourcesClient : ISourcesClient
     {
+        private static readonly Dictionary<HttpStatusCode, Type> SourceTypeMappings = new Dictionary<HttpStatusCode, Type>
+        {
+            { HttpStatusCode.Accepted, typeof(SourcePending)},
+            { HttpStatusCode.Created, typeof(SourceProcessed)}
+        };
+
         private readonly IApiClient _apiClient;
         private readonly IApiCredentials _credentials;
 
@@ -22,12 +30,12 @@ namespace Checkout.Sources
 
         public Task<SourceResponse> RequestAsync(SourceRequest sourceRequest)
         {
-            return RequestSourceAsync(sourceRequest);
+            return RequestSourceAsync(sourceRequest, SourceTypeMappings);
         }
 
-        private async Task<SourceResponse> RequestSourceAsync(SourceRequest sourceRequest, CancellationToken cancellationToken = default(CancellationToken))
+        private async Task<SourceResponse> RequestSourceAsync(SourceRequest sourceRequest, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var apiResponse = await _apiClient.PostAsync<SourceResponse>("sources", _credentials, cancellationToken, sourceRequest);
+            var apiResponse = await _apiClient.PostAsync("sources", _credentials, resultTypeMappings, cancellationToken, sourceRequest);
             return apiResponse;
         }
     }
