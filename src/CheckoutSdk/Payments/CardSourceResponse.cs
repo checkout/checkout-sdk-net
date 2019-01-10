@@ -68,12 +68,12 @@ namespace Checkout.Payments
         /// <summary>
         /// Gets the card type.
         /// </summary>
-        public CardType? CardType { get; set; }
+        public string CardType { get; set; }
         
         /// <summary>
         /// Gets the card category.
         /// </summary>
-        public CardCategory? CardCategory { get; set; }
+        public string CardCategory { get; set; }
         
         /// <summary>
         /// Gets the name of the card issuer.
