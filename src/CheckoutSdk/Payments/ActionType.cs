@@ -5,7 +5,7 @@ namespace Checkout.Payments
     /// <summary>
     /// Defines the type of payment action.
     /// </summary>
-    public class ActionType
+    public static class ActionType
     {
         public const string Authorization = "Authorization";
         public const string CardVerification = "Card Verification";

@@ -5,7 +5,7 @@ namespace Checkout.Payments
     /// <summary>
     /// Defines the status of a payment.
     /// </summary>
-    public class PaymentStatus
+    public static class PaymentStatus
     {
         public const string Authorized = "Authorized";
         public const string Canceled = "Canceled";
