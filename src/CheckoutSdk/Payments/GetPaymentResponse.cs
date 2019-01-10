@@ -39,8 +39,8 @@ namespace Checkout.Payments
         /// <summary>
         /// Gets the payment type.
         /// </summary>
-        public PaymentType PaymentType { get; set; }
-
+        public string PaymentType { get; set; }
+        
         /// <summary>
         /// Gets your reference for the payment.
         /// </summary>
@@ -59,7 +59,7 @@ namespace Checkout.Payments
         /// <summary>
         /// Gets the status of the payment.
         /// </summary>
-        public PaymentStatus Status { get; set; }
+        public string Status { get; set; }
 
         /// <summary>
         /// Gets 3D-Secure information relating to the payment.
