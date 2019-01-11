@@ -24,16 +24,13 @@ namespace Checkout.Tests.Sources
             var sourceResponse = await _api.Sources.RequestAsync(sourceRequest);
 
             sourceResponse.ShouldNotBeNull();
-            if (sourceResponse.IsPending)
-            {
-                var source = sourceResponse.Source;
-                source.Customer.ShouldBeOfType<CustomerResponse>();
-                source.Id.ShouldNotBeNullOrEmpty();
-                source.Links.ShouldBeOfType<Dictionary<string, Link>>();
-                source.ResponseCode.ShouldBe("10000");
-                source.ResponseData.ShouldNotBeNull();
-                source.Type.ToLower().ShouldBe(sourceRequest.Type.ToLower());
-            }            
+            var source = sourceResponse.Source;
+            source.Customer.ShouldBeOfType<CustomerResponse>();
+            source.Id.ShouldNotBeNullOrEmpty();
+            source.Links.ShouldBeOfType<Dictionary<string, Link>>();
+            source.ResponseCode.ShouldBe("10000");
+            source.ResponseData.ShouldNotBeNull();
+            source.Type.ToLower().ShouldBe(sourceRequest.Type.ToLower());
         }
     }
 }
