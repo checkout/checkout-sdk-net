@@ -22,7 +22,7 @@ namespace Checkout.Sources
         public SourceRequest(string type, Address billingAddress)
         {
             if (string.IsNullOrWhiteSpace(type))
-                throw new ArgumentException("The pament source type is required.", nameof(type));
+                throw new ArgumentException("The payment source type is required.", nameof(type));
 
             Type = type;
             BillingAddress = billingAddress ?? throw new ArgumentNullException("The payment source owner's billing address is required.", nameof(billingAddress));
