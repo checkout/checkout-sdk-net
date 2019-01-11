@@ -1,5 +1,6 @@
 using Checkout.Common;
 using Newtonsoft.Json;
+using System;
 
 namespace Checkout.Sources
 {
@@ -9,9 +10,23 @@ namespace Checkout.Sources
     public class SourceRequest
     {
         /// <summary>
-        /// Creates a new default source request.
+        /// Creates a new default <see cref="SourceRequest"/> instance.
         /// </summary>
         public SourceRequest() { }
+
+        /// <summary>
+        /// Creates a new <see cref="SourceRequest"/> instance.
+        /// </summary>
+        /// <param name="type">The payment source type.</param>
+        /// <param name="billingAddress">The payment source owner's billing address.</param>
+        public SourceRequest(string type, Address billingAddress)
+        {
+            if (string.IsNullOrWhiteSpace(type))
+                throw new ArgumentException("The pament source type is required.", nameof(type));
+
+            Type = type;
+            BillingAddress = billingAddress ?? throw new ArgumentNullException("The payment source owner's billing address is required.", nameof(billingAddress));
+        }
 
         /// <summary>
         /// Gets or sets the type of the source.

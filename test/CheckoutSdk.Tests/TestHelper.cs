@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Checkout.Common;
 using Checkout.Payments;
 using Checkout.Sources;
@@ -65,11 +64,9 @@ namespace Checkout.Tests
 
         public static SourceRequest CreateSourceRequest()
         {
-            return new SourceRequest()
-            {
-                Type = "sepa",
-                Reference = ".NET SDK test",
-                BillingAddress = new Address()
+            return new SourceRequest(
+                type: "sepa",
+                billingAddress: new Address()
                 {
                     AddressLine1 = "Checkout.com",
                     AddressLine2 = "90 Tottenham Court Road",
@@ -77,7 +74,9 @@ namespace Checkout.Tests
                     State = "London",
                     Zip = "W1T 4TJ",
                     Country = "GB"
-                },
+                })
+            {
+                Reference = ".NET SDK test",
                 Phone = new Phone()
                 {
                     CountryCode = "+1",
