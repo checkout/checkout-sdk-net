@@ -1,5 +1,4 @@
 using Checkout.Common;
-using Newtonsoft.Json;
 using System;
 
 namespace Checkout.Sources
@@ -41,7 +40,6 @@ namespace Checkout.Sources
         /// <summary>
         /// Gets or sets the billing address of the source.
         /// </summary>
-        [JsonProperty(PropertyName = "billing_address")]
         public Address BillingAddress { get; set; }
 
         /// <summary>
@@ -57,7 +55,6 @@ namespace Checkout.Sources
         /// <summary>
         /// Gets or sets the specific source data of the source.
         /// </summary>
-        [JsonProperty(PropertyName = "source_data")]
         public SourceData SourceData { get; set; }
     }
 }
