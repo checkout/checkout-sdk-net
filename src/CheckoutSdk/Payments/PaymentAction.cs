@@ -17,7 +17,7 @@ namespace Checkout.Payments
         /// <summary>
         /// Gets the type of action.
         /// </summary>
-        public ActionType Type { get; set; }
+        public string Type { get; set; }
         
         /// <summary>
         /// Gets the date/time the action was processed.

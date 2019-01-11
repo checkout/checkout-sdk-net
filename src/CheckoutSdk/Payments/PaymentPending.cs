@@ -16,7 +16,7 @@ namespace Checkout.Payments
         /// <summary>
         /// Gets the status of the payment.
         /// </summary>
-        public PaymentStatus Status { get; set; }
+        public string Status { get; set; }
         
         /// <summary>
         /// Gets your reference for the payment request.

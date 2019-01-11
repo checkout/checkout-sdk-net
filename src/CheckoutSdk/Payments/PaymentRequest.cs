@@ -52,7 +52,7 @@ namespace Checkout.Payments
         /// Gets or sets the payment type. 
         /// This must be specified for card payments where the cardholder is not present.
         /// </summary>
-        public PaymentType? PaymentType { get; set; }
+        public string PaymentType { get; set; }
 
         /// <summary>
         /// Gets or sets a reference you can later use to identify this payment such as an order number.

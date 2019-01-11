@@ -5,13 +5,12 @@ namespace Checkout.Payments
     /// <summary>
     /// Defines the type of payment action.
     /// </summary>
-    public enum ActionType
+    public static class ActionType
     {
-        Authorization,
-        [EnumMember(Value = "Card Verification")]
-        CardVerification,
-        Void,
-        Capture,
-        Refund
+        public const string Authorization = "Authorization";
+        public const string CardVerification = "Card Verification";
+        public const string Void = "Void";
+        public const string Capture = "Capture";
+        public const string Refund = "Refund";
     }
 }
