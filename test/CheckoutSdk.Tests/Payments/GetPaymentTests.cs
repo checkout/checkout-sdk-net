@@ -184,6 +184,7 @@ namespace Checkout.Tests.Payments
             paymentAction.AuthCode.ShouldBe(paymentResponse.Payment.AuthCode);
             paymentAction.Type.ShouldBe(ActionType.Authorization);
             paymentAction.Links.ShouldNotBeNull();
+            paymentAction.Approved.ShouldNotBeNull();
         }
 
         [Fact]
