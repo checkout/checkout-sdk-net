@@ -179,6 +179,7 @@ namespace Checkout.Tests.Payments
             paymentAction.ShouldNotBeNull();
             paymentAction.Id.ShouldBe(payment.ActionId);
             paymentAction.ProcessedOn.ShouldBeGreaterThanOrEqualTo(payment.ProcessedOn);
+            paymentAction.Approved.ShouldBeTrue();
             paymentAction.Approved.ShouldBe(payment.Approved);
             paymentAction.ResponseCode.ShouldBe(payment.ResponseCode);
             paymentAction.ResponseSummary.ShouldBe(payment.ResponseSummary);
