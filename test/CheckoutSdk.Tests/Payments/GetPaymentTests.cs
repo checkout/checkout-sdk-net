@@ -174,17 +174,18 @@ namespace Checkout.Tests.Payments
             actionsResponse.ShouldNotBeNull();
             actionsResponse.ShouldHaveSingleItem();
 
+            PaymentProcessed payment = paymentResponse.Payment;
             PaymentAction paymentAction = actionsResponse.SingleOrDefault();
             paymentAction.ShouldNotBeNull();
-            paymentAction.Id.ShouldBe(paymentResponse.Payment.ActionId);
-            paymentAction.ProcessedOn.ShouldBeGreaterThanOrEqualTo(paymentResponse.Payment.ProcessedOn);
-            paymentAction.ResponseCode.ShouldBe(paymentResponse.Payment.ResponseCode);
-            paymentAction.ResponseSummary.ShouldBe(paymentResponse.Payment.ResponseSummary);
-            paymentAction.Reference.ShouldBe(paymentResponse.Payment.Reference);
-            paymentAction.AuthCode.ShouldBe(paymentResponse.Payment.AuthCode);
+            paymentAction.Id.ShouldBe(payment.ActionId);
+            paymentAction.ProcessedOn.ShouldBeGreaterThanOrEqualTo(payment.ProcessedOn);
+            paymentAction.Approved.ShouldBe(payment.Approved);
+            paymentAction.ResponseCode.ShouldBe(payment.ResponseCode);
+            paymentAction.ResponseSummary.ShouldBe(payment.ResponseSummary);
+            paymentAction.Reference.ShouldBe(payment.Reference);
+            paymentAction.AuthCode.ShouldBe(payment.AuthCode);
             paymentAction.Type.ShouldBe(ActionType.Authorization);
             paymentAction.Links.ShouldNotBeNull();
-            paymentAction.Approved.ShouldNotBeNull();
         }
 
         [Fact]
