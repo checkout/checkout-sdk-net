@@ -1,6 +1,4 @@
-using Newtonsoft.Json;
 using Checkout.Common;
-using System.Collections.Generic;
 
 namespace Checkout.Sources
 {
@@ -22,7 +20,6 @@ namespace Checkout.Sources
         /// <summary>
         /// Gets or sets the response code of the source.
         /// </summary>
-        [JsonProperty(PropertyName = "response_code")]
         public string ResponseCode { get; set; }
 
         /// <summary>
@@ -33,14 +30,6 @@ namespace Checkout.Sources
         /// <summary>
         /// Gets or sets the <see cref="ResponseData"/> of the source.
         /// </summary>
-        [JsonProperty(PropertyName = "response_data")]
         public ResponseData ResponseData { get; set; }
-
-        /// <summary>
-        /// Gets or sets the links of the source.
-        /// </summary>
-        [JsonProperty(PropertyName = "_links")]
-        public Dictionary<string, Link> Links { get; set; }
-
     }
 }
