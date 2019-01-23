@@ -9,11 +9,6 @@ namespace Checkout.Sources
     public class SourceRequest
     {
         /// <summary>
-        /// Creates a new default <see cref="SourceRequest"/> instance.
-        /// </summary>
-        public SourceRequest() { }
-
-        /// <summary>
         /// Creates a new <see cref="SourceRequest"/> instance.
         /// </summary>
         /// <param name="type">The payment source type.</param>
