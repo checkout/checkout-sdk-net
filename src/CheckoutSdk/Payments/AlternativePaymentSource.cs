@@ -10,11 +10,6 @@ namespace Checkout.Payments
         private const string TypeField = "type";
 
         /// <summary>
-        /// Creates a new default <see cref="AlternativePaymentSource"/> instance.
-        /// </summary>
-        public AlternativePaymentSource() { }
-
-        /// <summary>
         /// Creates a new <see cref="AlternativePaymentSource"/> instance.
         /// </summary>
         /// <param name="type">The type of the Alternative Payment source.</param>
