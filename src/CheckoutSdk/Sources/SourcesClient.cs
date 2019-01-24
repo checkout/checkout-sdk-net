@@ -13,7 +13,6 @@ namespace Checkout.Sources
     {
         private static readonly Dictionary<HttpStatusCode, Type> SourceTypeMappings = new Dictionary<HttpStatusCode, Type>
         {
-            { HttpStatusCode.Accepted, typeof(SourcePending)},
             { HttpStatusCode.Created, typeof(SourceProcessed)}
         };
 
