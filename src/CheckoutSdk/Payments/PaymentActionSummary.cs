@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Checkout.Payments
 {
     /// <summary>
-    /// Defines a payment action.
+    /// Summary of a payment action.
     /// </summary>
     public class PaymentActionSummary
     {
