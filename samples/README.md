@@ -12,7 +12,7 @@ First update `appsettings.json` to include your Checkout.com API keys or add an 
   }
 ```
 
-Install CSS/JS dependencies using Bower (should be done automatically is using Visual Studio 2017):
+Install CSS/JS dependencies using Bower (should be done automatically if using Visual Studio 2017):
 
 ```
 bower install

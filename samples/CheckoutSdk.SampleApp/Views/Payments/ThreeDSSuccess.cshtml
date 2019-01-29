@@ -32,6 +32,14 @@
         <td>Card Source Id</td>
         <td>@Html.DisplayFor(model => model.Source.AsCard().Id)</td>
     </tr>
+    <tr>
+        <td>Response Code</td>
+        <td>@Html.DisplayFor(model => model.GetAuthorizationAction().ResponseCode)</td>
+    </tr>
+    <tr>
+        <td>Response Summary</td>
+        <td>@Html.DisplayFor(model => model.GetAuthorizationAction().ResponseSummary)</td>
+    </tr>
 </table>
 
 <div>
