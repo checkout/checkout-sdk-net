@@ -59,7 +59,7 @@ namespace Checkout.Tests.Payments
 
             foreach (string key in verifiedPayment.Source.AsAlternativePayment().Keys)
             {
-                (verifiedPayment.Source as Dictionary<string, string>)[key].ShouldBe((alternativePaymentSource as Dictionary<string, string>)[key]);
+                (verifiedPayment.Source as AlternativePaymentSourceResponse)[key].ShouldBe((alternativePaymentSource as AlternativePaymentSource)[key]);
             }
         }
 

@@ -5,7 +5,7 @@ namespace Checkout.Payments
     /// <summary>
     /// Represents an Alternative Payment source for a payment request.
     /// </summary>
-    public class AlternativePaymentSource : Dictionary<string, string>, IRequestSource
+    public class AlternativePaymentSource : Dictionary<string, object>, IRequestSource
     {
         private const string TypeField = "type";
 
