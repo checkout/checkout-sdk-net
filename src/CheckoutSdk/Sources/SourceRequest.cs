@@ -25,17 +25,17 @@ namespace Checkout.Sources
         /// <summary>
         /// Gets or sets the type of the source.
         /// </summary>
-        public string Type { get; set; }
+        public string Type { get; }
+
+        /// <summary>
+        /// Gets or sets the billing address of the source.
+        /// </summary>
+        public Address BillingAddress { get; }
 
         /// <summary>
         /// Gets or sets the reference of the source.
         /// </summary>
         public string Reference { get; set; }
-
-        /// <summary>
-        /// Gets or sets the billing address of the source.
-        /// </summary>
-        public Address BillingAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the phone number of the source.
