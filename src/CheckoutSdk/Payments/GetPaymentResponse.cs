@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Checkout.Common;
 using Newtonsoft.Json;
 
@@ -40,7 +41,7 @@ namespace Checkout.Payments
         /// Gets the payment type.
         /// </summary>
         public string PaymentType { get; set; }
-        
+
         /// <summary>
         /// Gets your reference for the payment.
         /// </summary>
@@ -108,6 +109,11 @@ namespace Checkout.Payments
         public string Eci { get; set; }
 
         /// <summary>
+        /// A summary of the payment's actions, returned when a session ID is used to get the payment details
+        /// </summary>
+        public IEnumerable<PaymentActionSummary> Actions { get; set; }
+
+        /// <summary>
         /// Determines whether the payment requires a redirect.
         /// </summary>
         /// <returns>True if a redirect is required, otherwise False.</returns>
@@ -118,5 +124,13 @@ namespace Checkout.Payments
         /// </summary>
         /// <returns>The link if present, otherwise null.</returns>
         public Link GetRedirectLink() => GetLink("redirect");
+
+        /// <summary>
+        /// Gets the payment's authorization action, returned when a session ID is used to get the payment details.
+        /// This can be used to obtain the decline reason in the case of a 3DS decline.
+        /// </summary>
+        /// <returns></returns>
+        public PaymentActionSummary GetAuthorizationAction() 
+            => Actions?.FirstOrDefault(act => ActionType.Authorization.Equals(act.Type, StringComparison.OrdinalIgnoreCase));
     }
 }
