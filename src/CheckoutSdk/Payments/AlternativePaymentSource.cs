@@ -13,6 +13,7 @@ namespace Checkout.Payments
         /// <summary>
         /// Creates a new <see cref="AlternativePaymentSource"/> instance.
         /// </summary>
+        /// <param name="type">The type of the Alternative Payment source.</param>
         public AlternativePaymentSource(string type)
         {
             if (string.IsNullOrWhiteSpace(type))

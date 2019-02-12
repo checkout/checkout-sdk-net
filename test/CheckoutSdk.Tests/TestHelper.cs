@@ -1,6 +1,7 @@
 using System;
 using Checkout.Common;
 using Checkout.Payments;
+using Checkout.Sources;
 using Checkout.Tokens;
 
 namespace Checkout.Tests
@@ -19,7 +20,7 @@ namespace Checkout.Tests
             )
             {
                 Capture = false,
-                Customer = new CustomerRequest() { Email = TestHelper.GenerateRandomEmail()},
+                Customer = new Checkout.Payments.CustomerRequest() { Email = TestHelper.GenerateRandomEmail()},
                 Reference = Guid.NewGuid().ToString()
             };
         }
@@ -32,7 +33,7 @@ namespace Checkout.Tests
             )
             {
                 Capture = false,
-                Customer = new CustomerRequest() { Email = TestHelper.GenerateRandomEmail() },
+                Customer = new Checkout.Payments.CustomerRequest() { Email = TestHelper.GenerateRandomEmail() },
                 Reference = Guid.NewGuid().ToString()
             };
         }

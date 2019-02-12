@@ -19,7 +19,7 @@ namespace Checkout.Tokens
         }
 
         /// <summary>
-        /// Gest the type of token.
+        /// Gets the type of token.
         /// </summary>
         public string Type { get; }
 
