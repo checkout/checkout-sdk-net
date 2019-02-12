@@ -57,9 +57,10 @@ namespace Checkout.Tests.Payments
             verifiedPayment.ShouldNotBeNull();
             verifiedPayment.Id.ShouldBe(payment.Id);
 
-            foreach (string key in verifiedPayment.Source.AsAlternativePayment().Keys)
+            var verifiedSource = verifiedPayment.Source.AsAlternativePayment();
+            foreach (string key in verifiedSource.Keys)
             {
-                (verifiedPayment.Source as AlternativePaymentSourceResponse)[key].ShouldBe((alternativePaymentSource as AlternativePaymentSource)[key]);
+               verifiedSource[key].ShouldBe(alternativePaymentSource[key]);
             }
         }
 
