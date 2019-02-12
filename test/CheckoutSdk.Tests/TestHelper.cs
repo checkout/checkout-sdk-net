@@ -20,7 +20,7 @@ namespace Checkout.Tests
             )
             {
                 Capture = false,
-                Customer = new CustomerRequest() { Email = TestHelper.GenerateRandomEmail()},
+                Customer = new Checkout.Payments.CustomerRequest() { Email = TestHelper.GenerateRandomEmail()},
                 Reference = Guid.NewGuid().ToString()
             };
         }
@@ -33,7 +33,7 @@ namespace Checkout.Tests
             )
             {
                 Capture = false,
-                Customer = new CustomerRequest() { Email = TestHelper.GenerateRandomEmail() },
+                Customer = new Checkout.Payments.CustomerRequest() { Email = TestHelper.GenerateRandomEmail() },
                 Reference = Guid.NewGuid().ToString()
             };
         }
@@ -84,12 +84,12 @@ namespace Checkout.Tests
                 },
                 SourceData = new SourceData()
                 {
-                    FirstName = "Marcus",
-                    LastName = "Barrilius Maximus",
-                    Iban = "DE68100100101234567895",
-                    Bic = "PBNKDEFFXXX",
-                    BillingDescriptor = ".NET SDK test",
-                    MandateType = "single"
+                    { "first_name", "Marcus" },
+                    { "last_name", "Barrilius Maximus" },
+                    { "account_iban", "DE68100100101234567895" },
+                    { "bic", "PBNKDEFFXXX" },
+                    { "billing_descriptor", ".NET SDK test" },
+                    { "mandate_type", "single" }
                 }
             };
         }

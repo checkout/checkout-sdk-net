@@ -1,9 +1,9 @@
-﻿namespace Checkout.Common
+﻿namespace Checkout.Sources
 {
     /// <summary>
-    /// Represents a customer in a payment response.
+    /// Represents a customer in a payment request.
     /// </summary>
-    public class CustomerResponse
+    public class CustomerRequest
     {
         /// <summary>
         /// Gets or sets the unique identifier of the customer. This can be specified in a <see cref="CustomerSource"/> 

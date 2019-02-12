@@ -1,4 +1,4 @@
-﻿namespace Checkout.Common
+﻿namespace Checkout.Payments
 {
     /// <summary>
     /// Represents a customer in a payment request.
