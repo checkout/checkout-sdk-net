@@ -6,7 +6,7 @@
     public class CustomerRequest
     {
         /// <summary>
-        /// Gets or sets the unique identifier of the customer. This can be specified in a <see cref="CustomerSource"/> 
+        /// Gets or sets the unique identifier of the customer. This can be specified in a <see cref="Payments.CustomerSource"/> 
         /// in subsequent payment requests to use the customer's default payment method.
         /// </summary>
         public string Id { get; set; }
