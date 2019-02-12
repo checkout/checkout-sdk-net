@@ -19,9 +19,9 @@ namespace Checkout.Tests.Sources
         }
 
         [Fact]
-        public async Task CanRequestSource()
+        public async Task CanRequestSepaSource()
         {
-            var sourceRequest = TestHelper.CreateSourceRequest();
+            var sourceRequest = CreateSepaSourceRequest();
             var sourceResponse = await _api.Sources.RequestAsync(sourceRequest);
 
             sourceResponse.ShouldNotBeNull();
@@ -31,7 +31,40 @@ namespace Checkout.Tests.Sources
             source.Links.ShouldBeOfType<Dictionary<string, Link>>();
             source.ResponseCode.ShouldBe("10000");
             source.ResponseData.ShouldNotBeNull();
-            source.Type.ToLower().ShouldBe(sourceRequest.Type.ToLower());
+            source.Type.ShouldBe(sourceRequest.Type, StringCompareShould.IgnoreCase);
+            source.ResponseData.ShouldContainKey("mandate_reference");
+        }
+
+        private static SourceRequest CreateSepaSourceRequest()
+        {
+            return new SourceRequest(
+                type: "sepa",
+                billingAddress: new Address()
+                {
+                    AddressLine1 = "Checkout.com",
+                    AddressLine2 = "90 Tottenham Court Road",
+                    City = "London",
+                    State = "London",
+                    Zip = "W1T 4TJ",
+                    Country = "GB"
+                })
+            {
+                Reference = ".NET SDK test",
+                Phone = new Phone()
+                {
+                    CountryCode = "+1",
+                    Number = "415 555 2671"
+                },
+                SourceData = new SourceData()
+                {
+                    { "first_name", "Marcus" },
+                    { "last_name", "Barrilius Maximus" },
+                    { "account_iban", "DE68100100101234567895" },
+                    { "bic", "PBNKDEFFXXX" },
+                    { "billing_descriptor", ".NET SDK test" },
+                    { "mandate_type", "single" }
+                }
+            };
         }
     }
 }

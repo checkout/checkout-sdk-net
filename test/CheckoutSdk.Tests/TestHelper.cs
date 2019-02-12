@@ -61,37 +61,5 @@ namespace Checkout.Tests
                         Capture = false
                     };
         }
-
-        public static SourceRequest CreateSourceRequest()
-        {
-            return new SourceRequest(
-                type: "sepa",
-                billingAddress: new Address()
-                {
-                    AddressLine1 = "Checkout.com",
-                    AddressLine2 = "90 Tottenham Court Road",
-                    City = "London",
-                    State = "London",
-                    Zip = "W1T 4TJ",
-                    Country = "GB"
-                })
-            {
-                Reference = ".NET SDK test",
-                Phone = new Phone()
-                {
-                    CountryCode = "+1",
-                    Number = "415 555 2671"
-                },
-                SourceData = new SourceData()
-                {
-                    { "first_name", "Marcus" },
-                    { "last_name", "Barrilius Maximus" },
-                    { "account_iban", "DE68100100101234567895" },
-                    { "bic", "PBNKDEFFXXX" },
-                    { "billing_descriptor", ".NET SDK test" },
-                    { "mandate_type", "single" }
-                }
-            };
-        }
     }
 }
