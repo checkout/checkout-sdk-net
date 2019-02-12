@@ -22,7 +22,7 @@ namespace Checkout.Payments
                 throw new ArgumentException("The card number is required.", nameof(number));
 
             if (expiryMonth < 1 || expiryMonth > 12)
-                throw new ArgumentOutOfRangeException("The exiry month must be between 1 and 12", nameof(expiryMonth));
+                throw new ArgumentOutOfRangeException("The expiry month must be between 1 and 12", nameof(expiryMonth));
             
             Number = number;
             ExpiryMonth = expiryMonth;
