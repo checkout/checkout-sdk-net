@@ -11,7 +11,7 @@ namespace Checkout.Sources
     /// </summary>
     public class SourcesClient : ISourcesClient
     {
-        private static readonly Dictionary<HttpStatusCode, Type> SourceTypeMappings = new Dictionary<HttpStatusCode, Type>
+        private static readonly Dictionary<HttpStatusCode, Type> SourceResponseMappings = new Dictionary<HttpStatusCode, Type>
         {
             { HttpStatusCode.Created, typeof(SourceProcessed)}
         };
@@ -29,12 +29,13 @@ namespace Checkout.Sources
 
         public Task<SourceResponse> RequestAsync(SourceRequest sourceRequest)
         {
-            return RequestSourceAsync(sourceRequest, SourceTypeMappings);
+            return RequestSourceAsync(sourceRequest, SourceResponseMappings);
         }
 
         private async Task<SourceResponse> RequestSourceAsync(SourceRequest sourceRequest, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var apiResponse = await _apiClient.PostAsync("sources", _credentials, resultTypeMappings, cancellationToken, sourceRequest);
+            const string path = "sources";
+            var apiResponse = await _apiClient.PostAsync(path, _credentials, resultTypeMappings, cancellationToken, sourceRequest);
             return apiResponse;
         }
     }
