@@ -5,7 +5,7 @@
 [![NuGet](https://img.shields.io/nuget/v/CheckoutSDK.svg)](https://www.nuget.org/packages/CheckoutSDK)
 [![MyGet Pre Release](https://img.shields.io/myget/checkout/vpre/CheckoutSDK.svg)](https://www.myget.org/feed/checkout/package/nuget/CheckoutSDK)
 
-The **Checkout SDK for .NET** enables .NET developers to easily work with [Checkout.com APIs](https://docs.checkout.com/v2). 
+The **Checkout SDK for .NET** enables .NET developers to easily work with [Checkout.com APIs](https://docs.checkout.com/). 
 It supports .NET Framework 4.5+ and .NET Core.
 
 ## Getting Help
