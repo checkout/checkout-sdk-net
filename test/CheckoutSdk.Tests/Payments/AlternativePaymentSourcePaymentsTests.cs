@@ -36,7 +36,7 @@ namespace Checkout.Tests.Payments
             var alternativePaymentSource = new AlternativePaymentSource("ideal") 
             {
                 { "bic", "INGBNL2A" },
-                { "description", "SDK Test" }
+                { "description", "NET SDK Test" }
             };
             
             await RequestAlternativePaymentAsync(alternativePaymentSource);
