@@ -34,8 +34,9 @@ namespace Checkout.Tests.Payments
         public async Task CanRequestIdealPayment()
         {
             var alternativePaymentSource = new AlternativePaymentSource("ideal") 
-            { 
-                { "issuer_id", "INGBNL2A" } 
+            {
+                { "bic", "INGBNL2A" },
+                { "description", "NET SDK Test" }
             };
             
             await RequestAlternativePaymentAsync(alternativePaymentSource);
