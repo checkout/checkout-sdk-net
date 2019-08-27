@@ -76,8 +76,8 @@ namespace Checkout
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
-            var httpResponse = await SendRequestAsync(HttpMethod.Get, path, credentials, null, cancellationToken);
-            return await DeserializeJsonAsync<TResult>(httpResponse);
+            using(var httpResponse = await SendRequestAsync(HttpMethod.Get, path, credentials, null, cancellationToken))
+                return await DeserializeJsonAsync<TResult>(httpResponse);
         }
 
         public async Task<TResult> PostAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, object request = null)
@@ -85,8 +85,8 @@ namespace Checkout
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
-            var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, request, cancellationToken);
-            return await DeserializeJsonAsync<TResult>(httpResponse);
+            using(var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, request, cancellationToken))
+                return await DeserializeJsonAsync<TResult>(httpResponse);
         }
 
         public async Task<dynamic> PostAsync(string path, IApiCredentials credentials, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken,  object request = null)
@@ -95,12 +95,13 @@ namespace Checkout
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
             if (resultTypeMappings == null) throw new ArgumentNullException(nameof(resultTypeMappings));
 
-            var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, request, cancellationToken);
+            using(var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, request, cancellationToken))
+            {
+                if (!resultTypeMappings.TryGetValue(httpResponse.StatusCode, out Type resultType))
+                    throw new KeyNotFoundException($"The status code {httpResponse.StatusCode} is not mapped to a result type");
 
-            if (!resultTypeMappings.TryGetValue(httpResponse.StatusCode, out Type resultType))
-                throw new KeyNotFoundException($"The status code {httpResponse.StatusCode} is not mapped to a result type");
-
-            return await DeserializeJsonAsync(httpResponse, resultType);
+                return await DeserializeJsonAsync(httpResponse, resultType);
+            }
         }
 
         private async Task<TResult> DeserializeJsonAsync<TResult>(HttpResponseMessage httpResponse)
