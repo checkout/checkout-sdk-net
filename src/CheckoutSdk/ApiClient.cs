@@ -77,7 +77,10 @@ namespace Checkout
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
             using(var httpResponse = await SendRequestAsync(HttpMethod.Get, path, credentials, null, cancellationToken))
+            {
                 return await DeserializeJsonAsync<TResult>(httpResponse);
+            }
+                
         }
 
         public async Task<TResult> PostAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, object request = null)
@@ -86,7 +89,9 @@ namespace Checkout
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
             using(var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, request, cancellationToken))
+            {
                 return await DeserializeJsonAsync<TResult>(httpResponse);
+            }                
         }
 
         public async Task<dynamic> PostAsync(string path, IApiCredentials credentials, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken,  object request = null)
