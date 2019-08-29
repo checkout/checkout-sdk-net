@@ -19,7 +19,7 @@ dotnet: 2.1.500
 if: tag IS blank
 
 script:
-  - ./build.sh
+  - ./build.sh --verbosity $BUILD_VERBOSITY
 
 cache:
   directories:
