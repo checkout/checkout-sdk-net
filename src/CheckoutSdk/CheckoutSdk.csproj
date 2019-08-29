@@ -1,9 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <!-- https://docs.microsoft.com/en-us/dotnet/core/tools/csproj#nuget-metadata-properties -->
     <PackageId>CheckoutSDK</PackageId>
     <Title>Checkout.com SDK</Title>
-    <Description>Checkout.com SDK for .NET</Description>
+    <Description>
+      Checkout.com SDK for .NET v2
+      - Docs: https://docs.checkout.com/
+    </Description>
     <AssemblyTitle>CheckoutSdk</AssemblyTitle>
     <NeutralLanguage>en-GB</NeutralLanguage>
     <Authors>Checkout.com</Authors>
