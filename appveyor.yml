@@ -12,3 +12,12 @@ build_script:
 
 artifacts:
   - path: 'artifacts\*.nupkg'
+
+for:
+-
+  matrix:
+    only:
+      - image: Ubuntu
+
+  build_script:
+  - ./build.sh --target Deploy
