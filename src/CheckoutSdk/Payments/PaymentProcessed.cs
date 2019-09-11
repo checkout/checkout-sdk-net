@@ -86,6 +86,11 @@ namespace Checkout.Payments
         /// Gets your reference for the payment.
         /// </summary>
         public string Reference { get; set; }
+        
+        /// <summary>
+        /// Gets the acquirer information related to the processing of the payment
+        /// </summary>
+        public ProcessingResponse Processing { get; set; }
 
         /// <summary>
         /// The final Electronic Commerce Indicator security level used to authorize the payment. Applicable for 3D-Secure, digital wallets and network token payments.

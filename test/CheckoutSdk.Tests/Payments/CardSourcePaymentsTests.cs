@@ -42,6 +42,9 @@ namespace Checkout.Tests.Payments
             paymentResponse.Payment.CanCapture().ShouldBeTrue();
             paymentResponse.Payment.CanVoid().ShouldBeTrue();
             paymentResponse.Payment.Source.AsCard().ShouldNotBeNull();
+            paymentResponse.Payment.Processing.ShouldNotBeNull();
+            paymentResponse.Payment.Processing.AcquirerTransactionId.ShouldNotBeNullOrWhiteSpace();
+            paymentResponse.Payment.Processing.RetrievalReferenceNumber.ShouldNotBeNullOrWhiteSpace();
         }
 
         [Fact]

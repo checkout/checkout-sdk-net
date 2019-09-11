@@ -187,6 +187,9 @@ namespace Checkout.Tests.Payments
             paymentAction.AuthCode.ShouldBe(payment.AuthCode);
             paymentAction.Type.ShouldBe(ActionType.Authorization);
             paymentAction.Links.ShouldNotBeNull();
+            paymentAction.Processing.ShouldNotBeNull();
+            paymentAction.Processing.AcquirerTransactionId.ShouldNotBeNullOrWhiteSpace();
+            paymentAction.Processing.RetrievalReferenceNumber.ShouldNotBeNullOrWhiteSpace();
         }
 
         [Fact]
@@ -213,6 +216,7 @@ namespace Checkout.Tests.Payments
             capturePaymentAction.Id.ShouldBe(captureResponse.ActionId);
             capturePaymentAction.Reference.ShouldBe(captureResponse.Reference);
             capturePaymentAction.Links.ShouldNotBeNull();
+            capturePaymentAction.Processing.AcquirerReferenceNumber.ShouldNotBeNullOrWhiteSpace();
         }
 
         [Fact]
