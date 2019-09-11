@@ -1,7 +1,6 @@
 ﻿using Checkout.Common;
 using Checkout.Payments;
 using Checkout.SampleApp.Models;
-using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;

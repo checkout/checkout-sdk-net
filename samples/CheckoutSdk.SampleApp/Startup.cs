@@ -17,8 +17,9 @@ namespace Checkout.SampleApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-
             services.AddCheckoutSdk(Configuration);
+            services.AddHttpClient();
+            services.AddTransient<IHttpClientFactory, CustomCkoHttpClientFactory>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
