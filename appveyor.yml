@@ -20,4 +20,4 @@ for:
       - image: Ubuntu
 
   build_script:
-  - ./build.sh --target Deploy
+  - ./build.sh --verbosity $BUILD_VERBOSITY
