@@ -11,7 +11,7 @@ namespace Checkout.Payments
         /// Gets or sets the amount to refund in the major currency. 
         /// If not specified, the full payment amount will be refunded.
         /// </summary>
-        public int? Amount { get; set; }
+        public long? Amount { get; set; }
         
         
         /// <summary>
