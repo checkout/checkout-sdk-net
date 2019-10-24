@@ -17,7 +17,7 @@ namespace Checkout.Payments
         /// <param name="source">The source of the payment.</param>
         /// <param name="currency">The three-letter ISO currency code.</param>
         /// <param name="amount">The payment amount in the major currency. Omitting the amount or providing 0 will perform a card verification.</param>
-        public PaymentRequest(TPaymentSource source, string currency, int? amount)
+        public PaymentRequest(TPaymentSource source, string currency, long? amount)
         {
             if (source == null)
                 throw new ArgumentNullException("The payment source is required.", nameof(source));
@@ -41,7 +41,7 @@ namespace Checkout.Payments
         /// <summary>
         /// Gets the payment amount in the major currency.
         /// </summary>
-        public int? Amount { get; }
+        public long? Amount { get; }
 
         /// <summary>
         /// Gets the three-letter ISO currency code.

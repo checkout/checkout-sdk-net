@@ -11,7 +11,7 @@ namespace Checkout.Payments
         /// Gets or sets the amount to capture in the major currency. 
         /// If not specified, the full payment amount will be captured.
         /// </summary>
-        public int? Amount { get; set; }
+        public long? Amount { get; set; }
 
         /// <summary>
         /// Gets or sets the action reference you can later use to identify this capture request.

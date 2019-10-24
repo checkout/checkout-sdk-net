@@ -21,6 +21,8 @@
     <TargetFrameworks>net45;netstandard1.4;netstandard2.0</TargetFrameworks>
     <RootNamespace>Checkout</RootNamespace>
     <DefineConstants>LIBLOG_PORTABLE</DefineConstants>
+    <Version>2.0.0</Version>
+    <PackageReleaseNotes>.NET SDK 2.0.0 now accepts the amount property to be of type long, instead of type int; this is a breaking change</PackageReleaseNotes>
   </PropertyGroup>
   
   <PropertyGroup Label="Unix Build Targets" Condition=" '$(OS)' == 'Unix' ">
