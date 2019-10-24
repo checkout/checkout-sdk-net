@@ -27,7 +27,7 @@ namespace Checkout.Payments
         /// <summary>
         /// Gets or sets the action amount.
         /// </summary>
-        public int Amount { get; set; }
+        public long Amount { get; set; }
 
         /// <summary>
         /// Gets or sets the acquirer authorization code where applicable.

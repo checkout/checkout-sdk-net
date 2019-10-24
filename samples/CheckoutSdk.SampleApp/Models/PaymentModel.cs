@@ -12,7 +12,7 @@ namespace Checkout.SampleApp.Models
         
         [Required]
         [Display(Name = "Amount (in minor currency unit)")]
-        public int? Amount { get; set; }
+        public long? Amount { get; set; }
 
         [Required]
         public string Currency { get; set; }

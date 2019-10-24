@@ -8,7 +8,7 @@ namespace Checkout.Tests
 {
     public static class TestHelper
     {
-        public static PaymentRequest<CardSource> CreateCardPaymentRequest(int? amount = 100)
+        public static PaymentRequest<CardSource> CreateCardPaymentRequest(long? amount = 100)
         {
             return new PaymentRequest<CardSource>(
                 new CardSource(TestCardSource.Visa.Number, TestCardSource.Visa.ExpiryMonth, TestCardSource.Visa.ExpiryYear)
@@ -24,7 +24,7 @@ namespace Checkout.Tests
                 Reference = Guid.NewGuid().ToString()
             };
         }
-        public static PaymentRequest<IRequestSource> CreateAlternativePaymentMethodRequest(IRequestSource alternativePaymentMethodRequestSource, string currency, int? amount = 100)
+        public static PaymentRequest<IRequestSource> CreateAlternativePaymentMethodRequest(IRequestSource alternativePaymentMethodRequestSource, string currency, long? amount = 100)
         {
             return new PaymentRequest<IRequestSource>(
                 alternativePaymentMethodRequestSource,
