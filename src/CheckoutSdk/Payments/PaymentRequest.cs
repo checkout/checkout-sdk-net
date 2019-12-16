@@ -132,5 +132,11 @@ namespace Checkout.Payments
         /// Gets or sets the metadata for the payment.
         /// </summary>
         public Dictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
+
+        /// <summary>
+        /// Gets or sets the processing for the payment.
+        /// Use the processing object to influence or override the data sent during card processing
+        /// </summary>
+        public Dictionary<string, object> Processing { get; set; } = new Dictionary<string, object>();
     }
 }
