@@ -8,7 +8,7 @@ namespace Checkout.Payments
     /// For more information see https://docs.checkout.com/docs/requirements-for-financial-institutions.
     /// </summary>
     public class PaymentRecipient
-    {              
+    {
         /// <summary>
         /// Creates a new <see cref="PaymentRecipient"/> instance. 
         /// </summary>
@@ -18,24 +18,20 @@ namespace Checkout.Payments
         /// If the payment is being made with a Mastercard card, then provide the primary recipient's full card number.
         /// </param>
         /// <param name="zip">The first part of the UK postcode for example W1T 4TJ would be W1T.</param>
+        /// <param name="firstName">
+        /// The first six characters of the primary recipient’s first name. Only alphabetic characters are allowed.
+        /// If the value exceeds the allowed length it will be trimmed automatically.
+        /// </param>
         /// <param name="lastName">
         /// The first six characters of the primary recipient’s surname. Only alphabetic characters are allowed.
         /// If the value exceeds the allowed length it will be trimmed automatically.
         /// </param>
-        public PaymentRecipient([JsonProperty("dob")]DateTime dateOfBirth, string accountNumber, string zip, string lastName)
+        public PaymentRecipient([JsonProperty("dob")]DateTime? dateOfBirth = null, string accountNumber = null, string zip = null, string firstName = null, string lastName = null)
         {
-            if (string.IsNullOrWhiteSpace(accountNumber) || accountNumber.Length < 10)
-                throw new ArgumentException("The recipient's account number must be provided. See https://docs.checkout.com/docs/requirements-for-financial-institutions for scheme specific rules.", nameof(accountNumber));
-
-            if (string.IsNullOrWhiteSpace(zip))
-                throw new ArgumentException("The recipient's zip must be provided.", nameof(zip));
-
-            if (string.IsNullOrWhiteSpace(lastName))
-                throw new ArgumentException("The recipient's last name must be provided.", nameof(lastName));
-
             DateOfBirth = dateOfBirth;
             AccountNumber = accountNumber;
             Zip = zip;
+            FirstName = firstName;
             LastName = lastName;
         }
 
@@ -44,7 +40,7 @@ namespace Checkout.Payments
         /// </summary>
         [JsonConverter(typeof(DateTimeFormatConverter), "yyyy-MM-dd")]
         [JsonProperty("dob")]
-        public DateTime DateOfBirth { get; }
+        public DateTime? DateOfBirth { get; }
         
         /// <summary>
         /// Gets the primary recipient's account number according to the source card scheme rules.
@@ -55,7 +51,12 @@ namespace Checkout.Payments
         /// Gets the first part of the primary recipient's Zip or postal code.
         /// </summary>
         public string Zip { get; }
-        
+
+        /// <summary>
+        /// Gets the first 6 characters of the primary recipient's first name.
+        /// </summary>
+        public string FirstName { get; }
+
         /// <summary>
         /// Gets the first 6 characters of the primary recipient's last name.
         /// </summary>

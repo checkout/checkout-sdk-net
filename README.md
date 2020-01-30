@@ -1,7 +1,6 @@
 # Checkout SDK for .NET
 
 [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/6ox0xlfjv11avkdf?svg=true)](https://ci.appveyor.com/project/checkout/checkout-sdk-net-74764)
-[![Travis Build Status](https://travis-ci.org/checkout/checkout-sdk-net.svg?branch=develop)](https://travis-ci.org/checkout/checkout-sdk-net)
 [![NuGet](https://img.shields.io/nuget/v/CheckoutSDK.svg)](https://www.nuget.org/packages/CheckoutSDK)
 [![MyGet Pre Release](https://img.shields.io/myget/checkout/vpre/CheckoutSDK.svg)](https://www.myget.org/feed/checkout/package/nuget/CheckoutSDK)
 
