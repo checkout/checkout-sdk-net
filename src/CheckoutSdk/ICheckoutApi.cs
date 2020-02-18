@@ -1,6 +1,7 @@
 using Checkout.Payments;
 using Checkout.Sources;
 using Checkout.Tokens;
+using Checkout.Disputes;
 
 namespace Checkout
 {
@@ -23,5 +24,10 @@ namespace Checkout
         /// Gets the Tokenization API.
         /// </summary>
         ITokensClient Tokens { get; }
+
+        /// <summary>
+        /// Gets the Disputes API.
+        /// </summary>
+        IDisputesClient Disputes { get; }
     }
 }
