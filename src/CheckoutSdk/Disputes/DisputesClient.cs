@@ -20,31 +20,12 @@ namespace Checkout.Disputes
             _credentials = new SecretKeyCredentials(configuration);
         }
 
-        public Task<GetDisputesResponse> GetDisputesAsync(
-            int? limit = null,
-            int? skip = null,
-            string from = "",
-            string to = "",
-            string id = "",
-            string statuses = "",
-            string paymentId = "",
-            string paymentReference = "",
-            string paymentArn = "",
-            bool? thisChannelOnly = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+        public Task<GetDisputesResponse> GetDisputesAsync(GetDisputesRequest getDisputesRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
-            string path = "disputes?";
-            if (limit.HasValue) path += $"limit={limit}";
-            if (skip.HasValue) path += $"&skip={skip}";
-            if (!string.IsNullOrEmpty(from)) path += $"&from={from}";
-            if (!string.IsNullOrEmpty(to)) path += $"&to={to}";
-            if (!string.IsNullOrEmpty(id)) path += $"&id={id}";
-            if (!string.IsNullOrEmpty(statuses)) path += $"&statuses={statuses.Replace(" ", string.Empty)}";
-            if (!string.IsNullOrEmpty(paymentId)) path += $"&payment_id={paymentId}";
-            if (!string.IsNullOrEmpty(paymentReference)) path += $"&payment_reference={paymentReference}";
-            if (!string.IsNullOrEmpty(paymentArn)) path += $"&payment_arn={paymentArn}";
-            if (thisChannelOnly.HasValue) path += $"&this_channel_only={thisChannelOnly.ToString()}";
-            return _apiClient.GetAsync<GetDisputesResponse>(path, _credentials, cancellationToken);
+            const string path = "disputes";
+            string pathWithQuery = getDisputesRequest.PathWithQuery(path);
+            
+            return _apiClient.GetAsync<GetDisputesResponse>(pathWithQuery, _credentials, cancellationToken);
         }
     }
 }

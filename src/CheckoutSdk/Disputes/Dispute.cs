@@ -22,7 +22,7 @@ namespace Checkout.Disputes
         /// <summary>
         /// Gets or sets the amount that is being disputed, in the processing currency.
         /// </summary>
-        public float Amount { get; set; }
+        public long Amount { get; set; }
 
         /// <summary>
         /// Gets or sets the currency the payment was made in.

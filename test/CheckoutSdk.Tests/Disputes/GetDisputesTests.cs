@@ -20,7 +20,8 @@ namespace Checkout.Tests.Disputes
         [Fact]
         public async Task CanGetDisputes()
         {
-            GetDisputesResponse getDisputesResponse = await _api.Disputes.GetDisputesAsync();
+            var getDisputesRequest = new GetDisputesRequest();
+            var getDisputesResponse = await _api.Disputes.GetDisputesAsync(getDisputesRequest);
 
             getDisputesResponse.ShouldNotBeNull();
             getDisputesResponse.Limit.ShouldBe(50);
@@ -31,7 +32,8 @@ namespace Checkout.Tests.Disputes
         [Fact]
         public async Task GivenInvalidDisputeIdShouldReturnZeroDisputes()
         {
-            GetDisputesResponse getDisputesResponse = await _api.Disputes.GetDisputesAsync(id: "invalid");
+            var getDisputesRequest = new GetDisputesRequest(id: "invalid");
+            var getDisputesResponse = await _api.Disputes.GetDisputesAsync(getDisputesRequest);
 
             getDisputesResponse.ShouldNotBeNull();
             getDisputesResponse.Limit.ShouldBe(50);
@@ -44,7 +46,11 @@ namespace Checkout.Tests.Disputes
         [Fact]
         public void GivenLimitOutOfBoundShouldThrowCheckoutApiException()
         {
-            Should.Throw<CheckoutApiException>(async () => await _api.Disputes.GetDisputesAsync(limit: 251));
+            var getDisputesRequest = new GetDisputesRequest(limit: 251);
+            var checkoutApiException = Should.Throw<CheckoutApiException>(async () => await _api.Disputes.GetDisputesAsync(getDisputesRequest));
+            
+            checkoutApiException.ShouldNotBeNull();
+            checkoutApiException.HttpStatusCode.ShouldBe((System.Net.HttpStatusCode)422);
         }
     }
 }
