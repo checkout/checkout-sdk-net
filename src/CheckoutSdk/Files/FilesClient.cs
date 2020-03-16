@@ -11,6 +11,7 @@ namespace Checkout.Files
     {
         private readonly IApiClient _apiClient;
         private readonly IApiCredentials _credentials;
+        private const string path = "files";
 
         public FilesClient(IApiClient apiClient, CheckoutConfiguration configuration)
         {
@@ -22,7 +23,6 @@ namespace Checkout.Files
 
         public Task<UploadFileResponse> UploadFileAsync(string pathToFile, string purpose, CancellationToken cancellationToken = default(CancellationToken))
         {
-            const string path = "files";
             var fileUploadMultipartFormDataContentRequest = new FileUploadMultipartFormDataContentRequest(pathToFile, purpose);
 
             return _apiClient.PostAsync<UploadFileResponse>(path, _credentials, cancellationToken, fileUploadMultipartFormDataContentRequest);
@@ -30,8 +30,6 @@ namespace Checkout.Files
 
         public Task<File> GetFileAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
         {
-            const string path = "files";
-
             return _apiClient.GetAsync<File>($"{path}/{id}", _credentials, cancellationToken);
         }
     }

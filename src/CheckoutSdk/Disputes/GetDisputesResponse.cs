@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Checkout.Common;
 
 namespace Checkout.Disputes
 {
     /// <summary>
-    /// Is the response containing all disputes.
+    /// Is the <see cref="GetDisputesResponse"/> containing all disputes.
     /// </summary>
     public class GetDisputesResponse : Resource
     {
@@ -21,12 +22,12 @@ namespace Checkout.Disputes
         /// <summary>
         /// Gets or sets the requested ISO-8601 date and time from which to filter disputes, based on the dispute's last_update field.
         /// </summary>
-        public string From { get; set; }
+        public DateTime From { get; set; }
 
         /// <summary>
         /// Gets or sets the requested ISO-8601 date and time until which to filter disputes, based on the dispute's last_update field.
         /// </summary>
-        public string To { get; set; }
+        public DateTime To { get; set; }
 
         /// <summary>
         /// Gets or sets one or more requested comma-separated statuses.
@@ -66,6 +67,6 @@ namespace Checkout.Disputes
         /// <summary>
         /// Gets or sets the list of disputes found via the request.
         /// </summary>
-        public IEnumerable<Dispute> Data { get; set; }
+        public List<DisputeSummary> Data { get; set; }
     }
 }

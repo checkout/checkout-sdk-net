@@ -11,6 +11,7 @@ namespace Checkout.Disputes
     {
         private readonly IApiClient _apiClient;
         private readonly IApiCredentials _credentials;
+        private const string path = "disputes";
 
         public DisputesClient(IApiClient apiClient, CheckoutConfiguration configuration)
         {
@@ -22,8 +23,8 @@ namespace Checkout.Disputes
 
         public Task<GetDisputesResponse> GetDisputesAsync(GetDisputesRequest getDisputesRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
-            const string path = "disputes";
-            string pathWithQuery = getDisputesRequest.PathWithQuery(path);
+            if (getDisputesRequest == null) throw new ArgumentNullException(nameof(getDisputesRequest));
+            var pathWithQuery = getDisputesRequest.PathWithQuery(path);
             
             return _apiClient.GetAsync<GetDisputesResponse>(pathWithQuery, _credentials, cancellationToken);
         }

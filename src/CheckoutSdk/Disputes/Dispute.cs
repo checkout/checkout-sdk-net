@@ -1,7 +1,12 @@
 ﻿using Checkout.Common;
+using System;
+using System.Collections.Generic;
 
 namespace Checkout.Disputes
 {
+    /// <summary>
+    /// Represents a <see cref="Dispute"/>.
+    /// </summary>
     public class Dispute : Resource
     {
         /// <summary>
@@ -15,9 +20,19 @@ namespace Checkout.Disputes
         public string Category { get; set; }
 
         /// <summary>
+        /// Gets or sets the The reason code provided by the card scheme.
+        /// </summary>
+        public string ReasonCode { get; set; }
+
+        /// <summary>
         /// Gets or sets the current status of the dispute.
         /// </summary>
         public string Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets the list of relevant evidence.
+        /// </summary>
+        public IList<string> RelevantEvidence { get; set; }
 
         /// <summary>
         /// Gets or sets the amount that is being disputed, in the processing currency.
@@ -30,39 +45,24 @@ namespace Checkout.Disputes
         public string Currency { get; set; }
 
         /// <summary>
-        /// Gets or sets the unique payment identifier.
+        /// Gets or sets the payment to which the dispute relates.
         /// </summary>
-        public string PaymentId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the optional reference (such as an order ID) that you can use later to identify the payment.
-        /// </summary>
-        public string PaymentReference { get; set; }
-
-        /// <summary>
-        /// Gets or sets the acquirer reference number that can be used to query the issuing bank.
-        /// </summary>
-        public string PaymentArn { get; set; }
-
-        /// <summary>
-        /// Gets or sets the payment method / card scheme.
-        /// </summary>
-        public string PaymentMethod { get; set; }
+        public DisputedPayment Payment { get; set; }
 
         /// <summary>
         /// Gets or sets the deadline by which to respond to the dispute.
         /// This corresponds to received_on + n, where n is a number of calendar days set by the scheme / acquirer.
         /// </summary>
-        public string EvidenceRequiredBy { get; set; }
+        public DateTime EvidenceRequiredBy { get; set; }
 
         /// <summary>
         /// Gets or sets the ISO-8601 date and time at which the dispute was issued.
         /// </summary>
-        public string ReceivedOn { get; set; }
+        public DateTime ReceivedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the ISO-8601 date and time at which the dispute was last updated.
         /// </summary>
-        public string LastUpdate { get; set; }
+        public DateTime LastUpdate { get; set; }
     }
 }

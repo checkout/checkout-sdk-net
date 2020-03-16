@@ -1,4 +1,5 @@
 ﻿using Checkout.Common;
+using System;
 
 namespace Checkout.Files
 {
@@ -30,6 +31,6 @@ namespace Checkout.Files
         /// <summary>
         /// Gets or sets the ISO-8601 date and time the file was uploaded on.
         /// </summary>
-        public string UploadedOn { get; set; }
+        public DateTime UploadedOn { get; set; }
     }
 }

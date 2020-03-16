@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using System.Net;
+using System;
 
 namespace Checkout.Disputes
 {
     /// <summary>
-    /// Defines a request for a get disputes request.
+    /// Defines a <see cref="GetDisputesRequest"/> for getting a list of all disputed payments.
     /// </summary>
     public class GetDisputesRequest
     {
@@ -24,13 +24,13 @@ namespace Checkout.Disputes
         public GetDisputesRequest(
             int? limit = null,
             int? skip = null,
-            string from = "",
-            string to = "",
-            string id = "",
-            string statuses = "",
-            string paymentId = "",
-            string paymentReference = "",
-            string paymentArn = "",
+            DateTimeOffset? from = null,
+            DateTimeOffset? to = null,
+            string id = null,
+            string statuses = null,
+            string paymentId = null,
+            string paymentReference = null,
+            string paymentArn = null,
             bool? thisChannelOnly = null
             )
         {
@@ -59,12 +59,12 @@ namespace Checkout.Disputes
         /// <summary>
         /// Gets or sets the ISO-8601 date and time from which to filter disputes, based on the dispute's last_update field.
         /// </summary>
-        public string From { get; set; }
+        public DateTimeOffset? From { get; set; }
 
         /// <summary>
         /// Gets or sets the ISO-8601 date and time until which to filter disputes, based on the dispute's last_update field.
         /// </summary>
-        public string To { get; set; }
+        public DateTimeOffset? To { get; set; }
 
         /// <summary>
         /// Gets or sets the unique identifier of the dispute.
@@ -107,8 +107,8 @@ namespace Checkout.Disputes
             var queryParameters = new Dictionary<string, string>();
             if (Limit.HasValue) queryParameters.Add("limit", Limit.ToString());
             if (Skip.HasValue) queryParameters.Add("skip", Skip.ToString());
-            if (!string.IsNullOrEmpty(From)) queryParameters.Add("from", From);
-            if (!string.IsNullOrEmpty(To)) queryParameters.Add("to", To);
+            if (From.HasValue) queryParameters.Add("from", From.ToString());
+            if (To.HasValue) queryParameters.Add("to", To.ToString());
             if (!string.IsNullOrEmpty(Id)) queryParameters.Add("id", Id);
             if (!string.IsNullOrEmpty(Statuses)) queryParameters.Add("statuses", Statuses.Trim(' '));
             if (!string.IsNullOrEmpty(PaymentId)) queryParameters.Add("payment_id", PaymentId);
@@ -116,15 +116,7 @@ namespace Checkout.Disputes
             if (!string.IsNullOrEmpty(PaymentArn)) queryParameters.Add("payment_arn", PaymentArn);
             if (ThisChannelOnly.HasValue) queryParameters.Add("this_channel_only", ThisChannelOnly.ToString());
 
-            foreach(KeyValuePair<string, string> keyValuePair in queryParameters)
-            {
-                if (!query.Length.Equals(0)) query.Append("&");
-                query.Append(string.Format("{0}={1}", keyValuePair.Key, WebUtility.UrlEncode(keyValuePair.Value)));
-            }
-
-            if (!query.Length.Equals(0)) query.Insert(0, "?");
-
-            return string.Format("{0}{1}", path.Trim('/'), query);
+            return QueryHelpers.AddQueryString(path.Trim('/'), queryParameters);
         }
     }
 }
