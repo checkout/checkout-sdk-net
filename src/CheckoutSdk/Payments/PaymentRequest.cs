@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Checkout.Common;
 using Newtonsoft.Json;
 
 namespace Checkout.Payments
@@ -8,7 +7,7 @@ namespace Checkout.Payments
     /// <summary>
     /// Defines a request for a payment.
     /// </summary>
-    /// <typeparam name="TPaymentSource">The source of paymnt.</typeparam>
+    /// <typeparam name="TPaymentSource">The source of payment.</typeparam>
     public class PaymentRequest<TPaymentSource> where TPaymentSource : IRequestSource
     {
         /// <summary>

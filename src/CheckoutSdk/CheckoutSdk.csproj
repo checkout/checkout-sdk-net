@@ -21,8 +21,8 @@
     <TargetFrameworks>net45;netstandard1.4;netstandard2.0</TargetFrameworks>
     <RootNamespace>Checkout</RootNamespace>
     <DefineConstants>LIBLOG_PORTABLE</DefineConstants>
-    <Version>2.2.0</Version>
-    <PackageReleaseNotes>.NET SDK 2.2.0 updates the PaymentRecipient object for compatibility with Account Funding Transactions https://docs.checkout.com/docs/account-funding-transactions</PackageReleaseNotes>
+    <Version>2.3.0</Version>
+    <PackageReleaseNotes>.NET SDK 2.3.0 adds support for the Disputes API, starting with the GET disputes endpoint https://api-reference.checkout.com/#tag/Disputes/paths/~1disputes/get</PackageReleaseNotes>
   </PropertyGroup>
   
   <PropertyGroup Label="Unix Build Targets" Condition=" '$(OS)' == 'Unix' ">
