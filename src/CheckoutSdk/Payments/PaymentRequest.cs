@@ -17,7 +17,7 @@ namespace Checkout.Payments
         /// <param name="source">The source of the payment.</param>
         /// <param name="currency">The three-letter ISO currency code.</param>
         /// <param name="amount">The payment amount in the major currency. Omitting the amount or providing 0 will perform a card verification.</param>
-        public PaymentRequest(TPaymentSource source, string currency, int? amount)
+        public PaymentRequest(TPaymentSource source, string currency, long? amount)
         {
             if (source == null)
                 throw new ArgumentNullException("The payment source is required.", nameof(source));
@@ -41,7 +41,7 @@ namespace Checkout.Payments
         /// <summary>
         /// Gets the payment amount in the major currency.
         /// </summary>
-        public int? Amount { get; }
+        public long? Amount { get; }
 
         /// <summary>
         /// Gets the three-letter ISO currency code.
@@ -132,5 +132,11 @@ namespace Checkout.Payments
         /// Gets or sets the metadata for the payment.
         /// </summary>
         public Dictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
+
+        /// <summary>
+        /// Gets or sets the processing for the payment.
+        /// Use the processing object to influence or override the data sent during card processing
+        /// </summary>
+        public Dictionary<string, object> Processing { get; set; } = new Dictionary<string, object>();
     }
 }
