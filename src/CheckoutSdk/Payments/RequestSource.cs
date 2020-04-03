@@ -8,7 +8,6 @@ namespace Checkout.Payments
     /// </summary>
     public class RequestSource : IRequestSource
     {
-        public const string TypeName = "card";
 
         /// <summary>
         /// Creates a new <see cref="RequestSource"/> instance with the specified card details.
@@ -68,6 +67,7 @@ namespace Checkout.Payments
         ///// Gets the type of source.
         ///// </summary>
         //public string Type => TypeName;
-        public string Type => TypeName;
-    }
+        public string Type { get; }
+    };
+    
 }

@@ -8,10 +8,10 @@ namespace Checkout.Payments
     /// </summary>
     public class CardSource : RequestSource
     {
-        public new const string TypeName = "card";
+        public const string TypeName = "card";
 
         /// <summary>
-        /// Creates a new <see cref="DlocalCardSource"/> instance with the specified card details.
+        /// Creates a new <see cref="CardSource"/> instance with the specified card details.
         /// </summary>
         /// <param name="number">The card number.</param>
         /// <param name="expiryMonth">The two-digit expiry month of the card.</param>
