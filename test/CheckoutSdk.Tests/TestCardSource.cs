@@ -23,9 +23,9 @@ namespace Checkout.Tests
             // Number = "606282678627663",
             
             Number = "4242424242424242",
-            ExpiryMonth = 9,
-            ExpiryYear = 2035,
-            Cvv = "123",
+            ExpiryMonth = 6,
+            ExpiryYear = 2025,
+            Cvv = "100",
             Name = "Bill Gates"
         };
     }
