@@ -18,7 +18,11 @@ namespace Checkout.Tests
 
         public static TestCardSource HiperCard => new TestCardSource
         {
-            Number = "606282678627663",
+            // This HiperCard number can only be used for CI testing once the Sandbox environment contains
+            // a dLocal TPA and merchant with the relevant processor setup
+            // Number = "606282678627663",
+            
+            Number = "4242424242424242",
             ExpiryMonth = 9,
             ExpiryYear = 2035,
             Cvv = "123",
