@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using Checkout.Common;
 using Checkout.Payments;
-using Checkout.Sources;
 using Checkout.Tokens;
 
 namespace Checkout.Tests
@@ -28,12 +26,12 @@ namespace Checkout.Tests
 
         public static PaymentRequest<DlocalCardSource> CreateDlocalCardPaymentRequest(long? amount = 100)
         {
-            var dlocalCardSource = new DlocalCardSource(TestCardSource.Visa.Number, TestCardSource.Visa.ExpiryMonth, TestCardSource.Visa.ExpiryYear)
+            var dlocalCardSource = new DlocalCardSource(TestCardSource.HiperCard.Number, TestCardSource.HiperCard.ExpiryMonth, TestCardSource.HiperCard.ExpiryYear, TestCardSource.HiperCard.Name)
             {
-                Cvv = TestCardSource.Visa.Cvv
+                Cvv = TestCardSource.HiperCard.Cvv
             };
 
-            dlocalCardSource.Name = "Some Random Name";
+            
             
             var dlocalCardPaymentRequest = new PaymentRequest<DlocalCardSource>(
                 dlocalCardSource,
@@ -43,7 +41,8 @@ namespace Checkout.Tests
             {
                 Capture = false,
                 Customer = new Checkout.Payments.CustomerRequest() { Email = TestHelper.GenerateRandomEmail() },
-                Reference = Guid.NewGuid().ToString()
+                Reference = Guid.NewGuid().ToString(),
+                BillingDescriptor = new BillingDescriptor("billdescriptor", "gotham")
             };
 
             var dLocalProcessing = new
@@ -58,10 +57,9 @@ namespace Checkout.Tests
                 installments = new { count = 4 }
             };
 
-            
-            dlocalCardPaymentRequest.Reference = "random";
-            dlocalCardPaymentRequest.BillingDescriptor = new BillingDescriptor("billdescriptor", "gotham");
+
             dlocalCardPaymentRequest.Processing.Add("dlocal", dLocalProcessing);
+
             return dlocalCardPaymentRequest;
         }
         public static PaymentRequest<IRequestSource> CreateAlternativePaymentMethodRequest(IRequestSource alternativePaymentMethodRequestSource, string currency, long? amount = 100)
