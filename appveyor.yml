@@ -1,4 +1,7 @@
 # common configuration for ALL branches
+image:
+- Visual Studio 2017
+- Ubuntu
 
 test: off
 cache:
@@ -9,3 +12,12 @@ build_script:
 
 artifacts:
   - path: 'artifacts\*.nupkg'
+
+for:
+-
+  matrix:
+    only:
+      - image: Ubuntu
+
+  build_script:
+  - ./build.sh --verbosity $BUILD_VERBOSITY
