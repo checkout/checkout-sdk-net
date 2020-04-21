@@ -16,12 +16,7 @@ namespace Checkout.Payments
         /// <param name="number">The card number.</param>
         /// <param name="expiryMonth">The two-digit expiry month of the card.</param>
         /// <param name="expiryYear">The four-digit expiry year of the card.</param>
-        public CardSource(string number, int expiryMonth, int expiryYear) : base(number, expiryMonth, expiryYear) {}
-
-        /// <summary>
-        /// Gets the type of source.
-        /// </summary>
-        public new string Type => TypeName;
-
+        public CardSource(string number, int expiryMonth, int expiryYear) : base(number, expiryMonth, expiryYear, TypeName) {}
+        
     }
 }
