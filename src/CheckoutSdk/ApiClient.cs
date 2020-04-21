@@ -110,6 +110,7 @@ namespace Checkout
 
         private async Task<TResult> DeserializeJsonAsync<TResult>(HttpResponseMessage httpResponse)
         {
+            Console.WriteLine(httpResponse.ToString());
             var result = await DeserializeJsonAsync(httpResponse, typeof(TResult));
             return (TResult)result;
         }
