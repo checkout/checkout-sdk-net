@@ -15,17 +15,22 @@ namespace Checkout.Payments
         /// <param name="number">The card number.</param>
         /// <param name="expiryMonth">The two-digit expiry month of the card.</param>
         /// <param name="expiryYear">The four-digit expiry year of the card.</param>
-        public RequestSource(string number, int expiryMonth, int expiryYear)
+        /// <param name="type">The payment source type</param>
+        public RequestSource(string number, int expiryMonth, int expiryYear, string type)
         {
             if (string.IsNullOrWhiteSpace(number))
                 throw new ArgumentException("The card number is required.", nameof(number));
 
             if (expiryMonth < 1 || expiryMonth > 12)
                 throw new ArgumentOutOfRangeException("The expiry month must be between 1 and 12", nameof(expiryMonth));
+
+            if (string.IsNullOrWhiteSpace(type))
+                throw new ArgumentException("The source type is required", nameof(type));
             
             Number = number;
             ExpiryMonth = expiryMonth;
             ExpiryYear = expiryYear;
+            Type = type;
         }
 
         /// <summary>
