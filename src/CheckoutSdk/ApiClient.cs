@@ -113,7 +113,9 @@ namespace Checkout
         private async Task<TResult> DeserializeJsonAsync<TResult>(HttpResponseMessage httpResponse)
         {
 
-            Console.WriteLine(httpResponse.Content?.ToString());
+            Console.WriteLine(">>> Logging from DeserializeJsonAsync(HttpResponseMessage httpResponse) for type : " + typeof(TResult));
+            Console.WriteLine(httpResponse.Content);
+
             var result = await DeserializeJsonAsync(httpResponse, typeof(TResult));
             return (TResult)result;
         }
@@ -124,6 +126,12 @@ namespace Checkout
                 return null;
 
             var json = await httpResponse.Content.ReadAsStringAsync();
+
+
+            Console.WriteLine(">>> Logging from DeserializeJsonAsync(HttpResponseMessage httpResponse, Type resultType)  ");
+
+            Console.WriteLine(json);
+
             return _serializer.Deserialize(json, resultType);
         }
 
