@@ -1,6 +1,7 @@
 using Checkout.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Checkout.Common;
+
 
 namespace Checkout
 {
@@ -110,7 +112,8 @@ namespace Checkout
 
         private async Task<TResult> DeserializeJsonAsync<TResult>(HttpResponseMessage httpResponse)
         {
-            Console.WriteLine(httpResponse.ToString());
+
+            Console.WriteLine(httpResponse.Content?.ToString());
             var result = await DeserializeJsonAsync(httpResponse, typeof(TResult));
             return (TResult)result;
         }
