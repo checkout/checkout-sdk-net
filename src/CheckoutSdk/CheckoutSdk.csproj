@@ -22,7 +22,7 @@
     <RootNamespace>Checkout</RootNamespace>
     <DefineConstants>LIBLOG_PORTABLE</DefineConstants>
     <Version>2.2.0</Version>
-    <PackageReleaseNotes>.NET SDK 2.2.0 updates the PaymentRecipient object for compatibility with Account Funding Transactions https://docs.checkout.com/docs/account-funding-transactions</PackageReleaseNotes>
+    <PackageReleaseNotes>.NET SDK 2.3.0 Introduces the dLocal card source for use in LATAM https://docs.checkout.com/docs/request-a-payment-using-dlocal</PackageReleaseNotes>
   </PropertyGroup>
   
   <PropertyGroup Label="Unix Build Targets" Condition=" '$(OS)' == 'Unix' ">
