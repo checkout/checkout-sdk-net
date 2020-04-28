@@ -5,9 +5,9 @@ using System.Collections.Generic;
 namespace Checkout.Disputes
 {
     /// <summary>
-    /// Represents a <see cref="Dispute"/>.
+    /// Represents a <see cref="DisputeSummary"/> as returned in <see cref="GetDisputesResponse.Data"/>.
     /// </summary>
-    public class Dispute : Resource
+    public class DisputeSummary : Resource
     {
         /// <summary>
         /// Gets or sets the unique identifier of the dispute.
@@ -20,19 +20,9 @@ namespace Checkout.Disputes
         public string Category { get; set; }
 
         /// <summary>
-        /// Gets or sets the The reason code provided by the card scheme.
-        /// </summary>
-        public string ReasonCode { get; set; }
-
-        /// <summary>
         /// Gets or sets the current status of the dispute.
         /// </summary>
         public string Status { get; set; }
-
-        /// <summary>
-        /// Gets or sets the list of relevant evidence.
-        /// </summary>
-        public IList<string> RelevantEvidence { get; set; }
 
         /// <summary>
         /// Gets or sets the amount that is being disputed, in the processing currency.
@@ -45,15 +35,24 @@ namespace Checkout.Disputes
         public string Currency { get; set; }
 
         /// <summary>
-        /// Gets or sets the payment to which the dispute relates.
+        /// Gets or sets the identifier of the payment to which the dispute relates.
         /// </summary>
-        public DisputedPayment Payment { get; set; }
+        public string PaymentId { get; set; }
 
         /// <summary>
-        /// Gets or sets the deadline by which to respond to the dispute.
-        /// This corresponds to received_on + n, where n is a number of calendar days set by the scheme / acquirer.
+        /// Gets or sets the reference of the payment to which the dispute relates.
         /// </summary>
-        public DateTime EvidenceRequiredBy { get; set; }
+        public string PaymentReference { get; set; }
+
+        /// <summary>
+        /// Gets or sets the method of the payment to which the dispute relates.
+        /// </summary>
+        public string PaymentMethod { get; set; }
+
+        /// <summary>
+        /// Gets or sets the acquirer reference number (ARN) of the payment to which the dispute relates.
+        /// </summary>
+        public string PaymentArn { get; set; }
 
         /// <summary>
         /// Gets or sets the ISO-8601 date and time at which the dispute was issued.
@@ -64,5 +63,11 @@ namespace Checkout.Disputes
         /// Gets or sets the ISO-8601 date and time at which the dispute was last updated.
         /// </summary>
         public DateTime LastUpdate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the deadline by which to respond to the dispute.
+        /// This corresponds to received_on + n, where n is a number of calendar days set by the scheme / acquirer.
+        /// </summary>
+        public DateTime EvidenceRequiredBy { get; set; }
     }
 }

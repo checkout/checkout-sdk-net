@@ -23,7 +23,8 @@ namespace Checkout.Disputes
 
         public Task<GetDisputesResponse> GetDisputesAsync(GetDisputesRequest getDisputesRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
-            string pathWithQuery = getDisputesRequest.PathWithQuery(path);
+            if (getDisputesRequest == null) throw new ArgumentNullException(nameof(getDisputesRequest));
+            var pathWithQuery = getDisputesRequest.PathWithQuery(path);
             
             return _apiClient.GetAsync<GetDisputesResponse>(pathWithQuery, _credentials, cancellationToken);
         }

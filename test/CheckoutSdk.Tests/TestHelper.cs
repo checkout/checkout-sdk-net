@@ -23,6 +23,44 @@ namespace Checkout.Tests
                 Reference = Guid.NewGuid().ToString()
             };
         }
+        public static PaymentRequest<DlocalCardSource> CreateDlocalCardPaymentRequest(long? amount = 100)
+        {
+            var dlocalCardSource = new DlocalCardSource(TestCardSource.HiperCard.Number, TestCardSource.HiperCard.ExpiryMonth, TestCardSource.HiperCard.ExpiryYear, TestCardSource.HiperCard.Name)
+            {
+                Cvv = TestCardSource.HiperCard.Cvv
+            };
+
+            
+            
+            var dlocalCardPaymentRequest = new PaymentRequest<DlocalCardSource>(
+                dlocalCardSource,
+                Currency.BRL,
+                amount
+            )
+            {
+                Capture = false,
+                Customer = new Checkout.Payments.CustomerRequest() { Email = TestHelper.GenerateRandomEmail() },
+                Reference = Guid.NewGuid().ToString(),
+                BillingDescriptor = new BillingDescriptor("billdescriptor", "gotham")
+            };
+
+            var dLocalProcessing = new
+            {
+                country = "BR", 
+                payer = new
+                {
+                    document = "53033315550",
+                    name = "Bill Gates",
+                    email = "test@checkout.com"
+                },
+                installments = new { count = 4 }
+            };
+
+
+            dlocalCardPaymentRequest.Processing.Add("dlocal", dLocalProcessing);
+
+            return dlocalCardPaymentRequest;
+        }
 
         public static PaymentRequest<IRequestSource> CreateAlternativePaymentMethodRequest(IRequestSource alternativePaymentMethodRequestSource, string currency, long? amount = 100)
         {
