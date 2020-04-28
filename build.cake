@@ -1,8 +1,9 @@
+#module nuget:?package=Cake.DotNetTool.Module&version=0.3.0
+
 //////////////////////////////////////////////////////////////////////
 // TOOLS
 //////////////////////////////////////////////////////////////////////
-
-#tool "nuget:?package=GitVersion.CommandLine"
+#tool "dotnet:https://api.nuget.org/v3/index.json?package=GitVersion.Tool&version=5.0.1"
 
 //////////////////////////////////////////////////////////////////////
 // ADDINS
@@ -106,7 +107,7 @@ private void PublishPackages(string source, string apiKey)
     foreach(var package in GetFiles("./artifacts/*.nupkg"))
     {
         // Push the package.
-        NuGetPush(package.ToString(), new NuGetPushSettings {
+        DotNetCoreNuGetPush(package.ToString(), new DotNetCoreNuGetPushSettings {
             Source = source,
             ApiKey = apiKey
         });
