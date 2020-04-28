@@ -11,6 +11,7 @@ namespace Checkout.Disputes
     {
         private readonly IApiClient _apiClient;
         private readonly IApiCredentials _credentials;
+        private const string path = "disputes";
 
         public DisputesClient(IApiClient apiClient, CheckoutConfiguration configuration)
         {
@@ -22,10 +23,34 @@ namespace Checkout.Disputes
 
         public Task<GetDisputesResponse> GetDisputesAsync(GetDisputesRequest getDisputesRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
-            const string path = "disputes";
             string pathWithQuery = getDisputesRequest.PathWithQuery(path);
             
             return _apiClient.GetAsync<GetDisputesResponse>(pathWithQuery, _credentials, cancellationToken);
+        }
+
+        public Task<Dispute> GetDisputeAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return _apiClient.GetAsync<Dispute>($"{path}/{id}", _credentials, cancellationToken);
+        }
+
+        public Task<Type> AcceptDisputeAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return _apiClient.PostAsync<Type>($"{path}/{id}/accept", _credentials, cancellationToken, null);
+        }
+
+        public Task<Type> ProvideDisputeEvidenceAsync(string id, DisputeEvidence disputeEvidence, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return _apiClient.PutAsync<Type>($"{path}/{id}/evidence", _credentials, cancellationToken, disputeEvidence);
+        }
+
+        public Task<Type> SubmitDisputeEvidenceAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return _apiClient.PostAsync<Type>($"{path}/{id}/evidence", _credentials, cancellationToken, null);
+        }
+
+        public Task<DisputeEvidenceResponse> GetDisputeEvidenceAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return _apiClient.GetAsync<DisputeEvidenceResponse>($"{path}/{id}/evidence", _credentials, cancellationToken);
         }
     }
 }
