@@ -171,6 +171,8 @@ namespace Checkout
 
             Logger.Info("{HttpMethod} {Uri}", httpMethod, httpRequest.RequestUri.AbsoluteUri);
 
+            //TODO remove after testing
+            Console.WriteLine(httpRequest.RequestUri);
             var httpResponse = await _httpClient.SendAsync(httpRequest, cancellationToken);
             await ValidateResponseAsync(httpResponse);
 
