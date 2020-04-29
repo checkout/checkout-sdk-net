@@ -3,6 +3,8 @@ using Checkout.Sources;
 using Checkout.Tokens;
 using Checkout.Disputes;
 using Checkout.Files;
+using System;
+using System.Collections;
 
 namespace Checkout
 {
@@ -23,6 +25,12 @@ namespace Checkout
             Tokens = new TokensClient(apiClient, configuration);
             Disputes = new DisputesClient(apiClient, configuration);
             Files = new FilesClient(apiClient, configuration);
+
+            //TODO remove after testing
+            Console.WriteLine();
+            Console.WriteLine("GetEnvironmentVariables: ");
+            foreach (DictionaryEntry de in Environment.GetEnvironmentVariables())
+                Console.WriteLine("  {0} = {1}", de.Key, de.Value);
         }
 
         /// <summary>
