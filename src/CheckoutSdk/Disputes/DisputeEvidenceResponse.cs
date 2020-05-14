@@ -1,5 +1,4 @@
-﻿
-using Checkout.Common;
+﻿using Checkout.Common;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
