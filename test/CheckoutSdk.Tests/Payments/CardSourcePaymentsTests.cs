@@ -1,13 +1,9 @@
 using Shouldly;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Checkout.Common;
 using Checkout.Payments;
 using Xunit;
 using Xunit.Abstractions;
-using Newtonsoft.Json;
 
 namespace Checkout.Tests.Payments
 {
