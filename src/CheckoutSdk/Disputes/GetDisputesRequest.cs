@@ -21,6 +21,7 @@ namespace Checkout.Disputes
         /// <param name="paymentId">The unique identifier of the payment.</param>
         /// <param name="paymentReference">An optional reference (such as an order ID) that you can use later to identify the payment.</param>
         /// <param name="paymentArn">The acquirer reference number (ARN) that you can use to query the issuing bank.</param>
+        /// <param name="thisChannelOnly">If true, only returns disputes of the specific channel that the secret key is associated with. Otherwise, returns all disputes for that business</param>
         public GetDisputesRequest(
             int? limit = null,
             int? skip = null,
@@ -103,7 +104,6 @@ namespace Checkout.Disputes
         /// </summary>
         public string PathWithQuery(string path) {
 
-            var query = new StringBuilder("");
             var queryParameters = new Dictionary<string, string>();
             if (Limit.HasValue) queryParameters.Add("limit", Limit.ToString());
             if (Skip.HasValue) queryParameters.Add("skip", Skip.ToString());
