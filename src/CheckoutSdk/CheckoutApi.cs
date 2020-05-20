@@ -1,6 +1,8 @@
 using Checkout.Payments;
 using Checkout.Sources;
 using Checkout.Tokens;
+using Checkout.Disputes;
+using Checkout.Files;
 
 namespace Checkout
 {
@@ -19,6 +21,8 @@ namespace Checkout
             Payments = new PaymentsClient(apiClient, configuration);
             Sources = new SourcesClient(apiClient, configuration);
             Tokens = new TokensClient(apiClient, configuration);
+            Disputes = new DisputesClient(apiClient, configuration);
+            Files = new FilesClient(apiClient, configuration);
         }
 
         /// <summary>
@@ -35,6 +39,16 @@ namespace Checkout
         /// Gets the Tokenization API. 
         /// </summary>
         public ITokensClient Tokens { get; }
+
+        /// <summary>
+        /// Gets the Disutes API. 
+        /// </summary>
+        public IDisputesClient Disputes { get; }
+
+        /// <summary>
+        /// Gets the Files API. 
+        /// </summary>
+        public IFilesClient Files { get; }
 
         /// <summary>
         /// Creates a new <see cref="CheckoutApi"/> instance with default dependencies.

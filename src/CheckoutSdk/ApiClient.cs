@@ -87,7 +87,18 @@ namespace Checkout
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
-            using (var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, request, cancellationToken))
+            using (var httpResponse = await SendJsonRequestAsync(HttpMethod.Post, path, credentials, request, cancellationToken))
+            {
+                return await DeserializeJsonAsync<TResult>(httpResponse);
+            }
+        }
+
+        public async Task<TResult> PostAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, HttpContent httpContent = null)
+        {
+            if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
+            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
+
+            using (var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, httpContent, cancellationToken))
             {
                 return await DeserializeJsonAsync<TResult>(httpResponse);
             }
@@ -99,12 +110,23 @@ namespace Checkout
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
             if (resultTypeMappings == null) throw new ArgumentNullException(nameof(resultTypeMappings));
 
-            using (var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, request, cancellationToken))
+            using (var httpResponse = await SendJsonRequestAsync(HttpMethod.Post, path, credentials, request, cancellationToken))
             {
                 if (!resultTypeMappings.TryGetValue(httpResponse.StatusCode, out Type resultType))
                     throw new KeyNotFoundException($"The status code {httpResponse.StatusCode} is not mapped to a result type");
 
                 return await DeserializeJsonAsync(httpResponse, resultType);
+            }
+        }
+
+        public async Task<TResult> PutAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, object request = null)
+        {
+            if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
+            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
+
+            using (var httpResponse = await SendJsonRequestAsync(HttpMethod.Put, path, credentials, request, cancellationToken))
+            {
+                return await DeserializeJsonAsync<TResult>(httpResponse);
             }
         }
 
@@ -123,20 +145,17 @@ namespace Checkout
             return _serializer.Deserialize(json, resultType);
         }
 
-        private async Task<HttpResponseMessage> SendRequestAsync(HttpMethod httpMethod, string path, IApiCredentials credentials, object request, CancellationToken cancellationToken)
+        private async Task<HttpResponseMessage> SendRequestAsync(HttpMethod httpMethod, string path, IApiCredentials credentials, HttpContent httpContent, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(path))
-                throw new ArgumentNullException(nameof(path));
+            if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
 
-            var httpRequest = new HttpRequestMessage(httpMethod, GetRequestUri(path));
+            var httpRequest = new HttpRequestMessage(httpMethod, GetRequestUri(path))
+            {
+                Content = httpContent
+            };
             httpRequest.Headers.UserAgent.ParseAdd("checkout-sdk-net/" + ReflectionUtils.GetAssemblyVersion<ApiClient>());
 
             await credentials.AuthorizeAsync(httpRequest);
-
-            if (request != null)
-            {
-                httpRequest.Content = new StringContent(_serializer.Serialize(request), Encoding.UTF8, "application/json");
-            }
 
             Logger.Info("{HttpMethod} {Uri}", httpMethod, httpRequest.RequestUri.AbsoluteUri);
 
@@ -144,6 +163,16 @@ namespace Checkout
             await ValidateResponseAsync(httpResponse);
 
             return httpResponse;
+        }
+
+        private Task<HttpResponseMessage> SendJsonRequestAsync(HttpMethod httpMethod, string path, IApiCredentials credentials, object request, CancellationToken cancellationToken)
+        {
+            HttpContent httpContent = null;
+            if (request != null)
+            {
+                httpContent = new StringContent(_serializer.Serialize(request), Encoding.UTF8, "application/json");
+            }
+            return SendRequestAsync(httpMethod, path, credentials, httpContent, cancellationToken);
         }
 
         private async Task ValidateResponseAsync(HttpResponseMessage httpResponse)
