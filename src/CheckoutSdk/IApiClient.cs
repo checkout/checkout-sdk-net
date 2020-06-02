@@ -65,5 +65,26 @@ namespace Checkout
         /// <typeparam name="TResult">The expected response type to be deserialized.</typeparam>
         /// <returns>A task that upon completion contains the specified API response data.</returns>
         Task<TResult> PutAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, object request = null);
+
+        /// <summary>
+        /// Executes a PATCH request to the specified <paramref="path"/>. 
+        /// </summary>
+        /// <param name="path">The API resource path.</param>
+        /// <param name="credentials">The credentials used to authenticate the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
+        /// <param name="request">Optional data that should be sent in the request body.</param>
+        /// <typeparam name="TResult">The expected response type to be deserialized.</typeparam>
+        /// <returns>A task that upon completion contains the specified API response data.</returns>
+        Task<TResult> PatchAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, object request = null);
+
+        /// <summary>
+        /// Executes a DELETE request to the specified <paramref="path"/>. 
+        /// </summary>
+        /// <param name="path">The API resource path.</param>
+        /// <param name="credentials">The credentials used to authenticate the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
+        /// <typeparam name="TResult">The expected response type to be deserialized.</typeparam>
+        /// <returns>A task that upon completion contains the specified API response data.</returns>
+        Task<TResult> DeleteAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken);
     }
 }
