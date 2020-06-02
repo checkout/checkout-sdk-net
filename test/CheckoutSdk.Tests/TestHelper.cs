@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Checkout.Common;
 using Checkout.Payments;
 using Checkout.Tokens;
+using Checkout.Webhooks;
 
 namespace Checkout.Tests
 {
@@ -120,6 +122,23 @@ namespace Checkout.Tests
                     {
                         Capture = false
                     };
+        }
+
+        public static IWebhook CreateWebhook()
+        {
+            return new Webhook()
+            {
+                Url = "https://www.checkout.com/net/sdk/tests",
+                EventTypes = new List<string>
+                {
+                    "payment_pending",
+                    "payment_captured"
+                },
+                Headers = new Dictionary<string, string>
+                {
+                    { "User-Agent", ".NET SDK Tests" }
+                }
+            };           
         }
     }
 }
