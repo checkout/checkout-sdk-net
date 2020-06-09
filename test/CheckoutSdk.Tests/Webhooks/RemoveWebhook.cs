@@ -12,9 +12,8 @@ namespace Checkout.Tests.Webhooks
         public async Task CanRemoveWebhook()
         {
             var webhook = TestHelper.CreateWebhook();
-            var webhookRegistrationRequest = new WebhookRequest<RegistrationWebhook>(webhook.toRegistrationWebhook());
 
-            var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhookAsync(webhookRegistrationRequest);
+            var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhookAsync(new WebhookSubscription(webhook));
 
             webhookRegistrationResponse.ShouldNotBeNull();
 

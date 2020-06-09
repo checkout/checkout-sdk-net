@@ -11,19 +11,16 @@ namespace Checkout.Tests.Webhooks
         public async Task CanPartiallyUpdateWebhook()
         {
             var webhook = TestHelper.CreateWebhook();
-            var webhookRegistrationRequest = new WebhookRequest<RegistrationWebhook>(webhook.toRegistrationWebhook());
 
-            var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhookAsync(webhookRegistrationRequest);
+            var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhookAsync(new WebhookSubscription(webhook));
 
             webhookRegistrationResponse.ShouldNotBeNull();
 
             webhook.Url += "/partially/updated";
             webhook.Headers = null;
             webhook.EventTypes = null;
-            var webhookPartialUpdateRequest = new WebhookRequest<PartialUpdateWebhook>(webhook.toPartialUpdateWebhook());
 
-
-            var webhookPartialUpdateResponse = await Api.Webhooks.PartiallyUpdateWebhookAsync(webhookRegistrationResponse.Id, (webhookPartialUpdateRequest));
+            var webhookPartialUpdateResponse = await Api.Webhooks.PartiallyUpdateWebhookAsync(webhookRegistrationResponse.Id, new PartialUpdateWebhookSubscription(webhook));
 
             webhookPartialUpdateResponse.ShouldNotBeNull();
             webhookPartialUpdateResponse.Id.ShouldBe(webhookRegistrationResponse.Id);

@@ -12,9 +12,8 @@ namespace Checkout.Tests.Webhooks
         public async Task CanRegisterWebhook()
         {
             var webhook = TestHelper.CreateWebhook();
-            var webhookRegistrationRequest = new WebhookRequest<RegistrationWebhook>(webhook.toRegistrationWebhook());
 
-            var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhookAsync(webhookRegistrationRequest);
+            var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhookAsync(new WebhookSubscription(webhook));
 
             webhookRegistrationResponse.ShouldNotBeNull();
             webhookRegistrationResponse.Id.ShouldStartWith("wh_");
@@ -29,9 +28,8 @@ namespace Checkout.Tests.Webhooks
         {
             var webhook = TestHelper.CreateWebhook();
             webhook.Url = "invalid";
-            var webhookRegistrationRequest = new WebhookRequest<RegistrationWebhook>(webhook.toRegistrationWebhook());
 
-            var checkoutValidationException = Should.Throw<CheckoutValidationException>(async () => await Api.Webhooks.RegisterWebhookAsync(webhookRegistrationRequest));
+            var checkoutValidationException = Should.Throw<CheckoutValidationException>(async () => await Api.Webhooks.RegisterWebhookAsync(new WebhookSubscription(webhook)));
 
             checkoutValidationException.ShouldNotBeNull();
             checkoutValidationException.HttpStatusCode.ShouldBe((HttpStatusCode)422);

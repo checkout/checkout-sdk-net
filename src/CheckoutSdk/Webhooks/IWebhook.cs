@@ -9,21 +9,6 @@ namespace Checkout.Webhooks
     public interface IWebhook
     {
         /// <summary>
-        /// Returns the <see cref="IWebhook"/> as <see cref="RegistrationWebhook"/>.
-        /// </summary>
-        RegistrationWebhook toRegistrationWebhook();
-
-        /// <summary>
-        /// Returns the <see cref="IWebhook"/> as <see cref="UpdateWebhook"/>.
-        /// </summary>
-        UpdateWebhook toUpdateWebhook();
-
-        /// <summary>
-        /// Returns the <see cref="IWebhook"/> as <see cref="PartialUpdateWebhook"/>.
-        /// </summary>
-        PartialUpdateWebhook toPartialUpdateWebhook();
-
-        /// <summary>
         /// Gets or sets the webhook receiver endpoint.
         /// </summary>
         string Url { get; set; }

@@ -1,5 +1,4 @@
 using System;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,9 +18,9 @@ namespace Checkout.Webhooks
         /// <summary>
         /// Register a new webhook endpoint that Checkout.com will post all or selected events to
         /// </summary>
-        /// <param name="webhookRequest">The webhook configuration details such as url and event types.</param>
+        /// <param name="webhookSubscription">The webhook configuration details such as url and event types.</param>
         /// <returns>A task that upon completion contains the registered webhook.</returns>
-        Task<WebhookResponse> RegisterWebhookAsync(WebhookRequest<RegistrationWebhook> webhookRequest, CancellationToken cancellationToken = default(CancellationToken));
+        Task<WebhookResponse> RegisterWebhookAsync(WebhookSubscription webhookSubscription, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Retrieves the webhook with the specified identifier string
@@ -34,17 +33,17 @@ namespace Checkout.Webhooks
         /// Updates an existing webhook
         /// </summary>
         /// <param name="id">The webhook identifier.</param>
-        /// <param name="webhookRequest">The webhook configuration details such as url and event types.</param>
+        /// <param name="updateWebhookSubscription">The webhook configuration details such as url and event types.</param>
         /// <returns>A task that upon completion contains the updated webhook with the specified identifier string.</returns>
-        Task<WebhookResponse> UpdateWebhookAsync(string id, WebhookRequest<UpdateWebhook> webhookRequest, CancellationToken cancellationToken = default(CancellationToken));
+        Task<WebhookResponse> UpdateWebhookAsync(string id, UpdateWebhookSubscription updateWebhookSubscription, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Updates all or some of the registered webhook details
         /// </summary>
         /// <param name="id">The webhook identifier.</param>
-        /// <param name="webhookRequest">The webhook configuration details such as url and event types.</param>
+        /// <param name="partialUpdateWebhookSubscription">The webhook configuration details such as url and event types.</param>
         /// <returns>A task that upon completion contains the (partially) updated webhook with the specified identifier string.</returns>
-        Task<WebhookResponse> PartiallyUpdateWebhookAsync(string id, WebhookRequest<PartialUpdateWebhook> webhookRequest, CancellationToken cancellationToken = default(CancellationToken));
+        Task<WebhookResponse> PartiallyUpdateWebhookAsync(string id, PartialUpdateWebhookSubscription partialUpdateWebhookSubscription, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Removes an existing webhook

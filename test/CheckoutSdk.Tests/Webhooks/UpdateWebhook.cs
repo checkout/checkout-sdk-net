@@ -12,9 +12,8 @@ namespace Checkout.Tests.Webhooks
         public async Task CanUpdateWebhook()
         {
             var webhook = TestHelper.CreateWebhook();
-            var webhookRegistrationRequest = new WebhookRequest<RegistrationWebhook>(webhook.toRegistrationWebhook());
 
-            var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhookAsync(webhookRegistrationRequest);
+            var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhookAsync(new WebhookSubscription(webhook));
 
             webhookRegistrationResponse.ShouldNotBeNull();
 
@@ -26,16 +25,14 @@ namespace Checkout.Tests.Webhooks
                 "payment_refunded"
             };
             webhook.Headers.Add("Authorization", authorization);
-            var webhookUpdateRequest = new WebhookRequest<UpdateWebhook>(webhook.toUpdateWebhook());
 
-
-            var webhookUpdateResponse = await Api.Webhooks.UpdateWebhookAsync(webhookRegistrationResponse.Id, (webhookUpdateRequest));
+            var webhookUpdateResponse = await Api.Webhooks.UpdateWebhookAsync(webhookRegistrationResponse.Id, new UpdateWebhookSubscription(webhook));
 
             webhookUpdateResponse.ShouldNotBeNull();
             webhookUpdateResponse.Id.ShouldBe(webhookRegistrationResponse.Id);
             webhookUpdateResponse.Url.ShouldEndWith("/updated");
             webhookUpdateResponse.Active.ShouldNotBe(webhookRegistrationResponse.Active);
-            webhookUpdateResponse.EventTypes.ShouldBe(webhookUpdateRequest.EventTypes);
+            webhookUpdateResponse.EventTypes.ShouldBe(webhook.EventTypes);
 
             await Api.Webhooks.RemoveWebhookAsync(webhookUpdateResponse.Id);
         }

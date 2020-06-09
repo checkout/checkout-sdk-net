@@ -8,21 +8,6 @@ namespace Checkout.Webhooks
     /// </summary>
     public class Webhook : IWebhook
     {
-        public RegistrationWebhook toRegistrationWebhook()
-        {
-            return new RegistrationWebhook(url: Url, active: Active, headers: Headers, eventTypes: EventTypes);
-        }
-
-        public UpdateWebhook toUpdateWebhook()
-        {
-            return new UpdateWebhook(url: Url, active: Active, headers: Headers, eventTypes: EventTypes);
-        }
-
-        public PartialUpdateWebhook toPartialUpdateWebhook()
-        {
-            return new PartialUpdateWebhook(url: Url, active: Active, headers: Headers, eventTypes: EventTypes);
-        }
-
         /// <summary>
         /// Gets or sets the webhook receiver endpoint.
         /// </summary>
