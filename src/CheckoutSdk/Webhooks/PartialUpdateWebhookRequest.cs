@@ -16,8 +16,8 @@ namespace Checkout.Webhooks
         {
             if (!string.IsNullOrEmpty(webhook.Url)) Url = webhook.Url;
             Active = webhook.Active;
-            if (!(webhook.Headers == null)) Headers = webhook.Headers;
-            if (!(webhook.EventTypes == null)) EventTypes = webhook.EventTypes;
+            if (webhook.Headers != null) Headers = webhook.Headers;
+            if (webhook.EventTypes != null) EventTypes = webhook.EventTypes;
         }
 
         /// <summary>
@@ -26,14 +26,14 @@ namespace Checkout.Webhooks
         /// </summary>
         /// <param name="url">The webhook receiver endpoint.</param>
         /// <param name="eventTypes">The event types for which the webhook should send notifications.</param>
-        /// <param name="active">Sets the webhook to active if 'true' and deactive if 'false'. The default is 'true'.</param>
+        /// <param name="active">Sets the webhook to active if 'true' and inactive if 'false'. The default is 'true'.</param>
         /// <param name="headers">The headers that should be sent with every webhook notification.</param>
         public PartialUpdateWebhookRequest(string url = null, bool active = true, Dictionary<string, string> headers = null, List<string> eventTypes = null)
         {
             if (!string.IsNullOrEmpty(url)) Url = url;
             Active = active;
-            if (!(headers == null)) Headers = headers;
-            if (!(eventTypes == null)) EventTypes = eventTypes;
+            if (headers != null) Headers = headers;
+            if (eventTypes != null) EventTypes = eventTypes;
         }
     }
 }

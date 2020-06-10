@@ -19,7 +19,7 @@ namespace Checkout.Sources
                 throw new ArgumentException("The payment source type is required.", nameof(type));
 
             Type = type;
-            BillingAddress = billingAddress ?? throw new ArgumentNullException("The payment source owner's billing address is required.", nameof(billingAddress));
+            BillingAddress = billingAddress ?? throw new ArgumentNullException(nameof(billingAddress), "The payment source owner's billing address is required.");
         }
 
         /// <summary>

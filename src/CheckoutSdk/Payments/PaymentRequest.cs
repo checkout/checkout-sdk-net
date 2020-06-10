@@ -19,13 +19,13 @@ namespace Checkout.Payments
         public PaymentRequest(TPaymentSource source, string currency, long? amount)
         {
             if (source == null)
-                throw new ArgumentNullException("The payment source is required.", nameof(source));
+                throw new ArgumentNullException(nameof(source), "The payment source is required.");
 
             if (string.IsNullOrWhiteSpace(currency))
                 throw new ArgumentException("The currency is required.", nameof(currency));
 
             if (amount < 0)
-                throw new ArgumentOutOfRangeException("The amount cannot be negative", nameof(amount));
+                throw new ArgumentOutOfRangeException(nameof(amount), "The amount cannot be negative");
 
             Source = source;
             Amount = amount;

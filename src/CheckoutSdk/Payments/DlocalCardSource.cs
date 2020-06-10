@@ -19,7 +19,7 @@ namespace Checkout.Payments
         /// <param name="expiryYear">The four-digit expiry year of the card.</param>
         public DlocalCardSource(string number, int expiryMonth, int expiryYear, string name) : base(number, expiryMonth, expiryYear, TypeName)
         {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name on card is required for dLocal payments");
+            if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name on card is required for dLocal payments", nameof(name));
             Name = name;
         }
     }
