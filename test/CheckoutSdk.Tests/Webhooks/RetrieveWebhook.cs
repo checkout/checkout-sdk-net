@@ -12,7 +12,7 @@ namespace Checkout.Tests.Webhooks
         {
             var webhook = TestHelper.CreateWebhook();
 
-            var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhookAsync(new WebhookSubscription(webhook));
+            var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhookAsync(new RegisterWebhookRequest(webhook));
 
             webhookRegistrationResponse.ShouldNotBeNull();
 

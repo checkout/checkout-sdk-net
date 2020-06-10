@@ -26,9 +26,9 @@ namespace Checkout.Webhooks
             return _apiClient.GetAsync<WebhooksResponse>(path, _credentials, cancellationToken);
         }
 
-        public Task<WebhookResponse> RegisterWebhookAsync(WebhookSubscription webhookSubscription, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<WebhookResponse> RegisterWebhookAsync(RegisterWebhookRequest webhookRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.PostAsync<WebhookResponse>(path, _credentials, cancellationToken, webhookSubscription);
+            return _apiClient.PostAsync<WebhookResponse>(path, _credentials, cancellationToken, webhookRequest);
         }
 
         public Task<WebhookResponse> RetrieveWebhookAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
@@ -36,14 +36,14 @@ namespace Checkout.Webhooks
             return _apiClient.GetAsync<WebhookResponse>($"{path}/{id}", _credentials, cancellationToken);
         }
 
-        public Task<WebhookResponse> UpdateWebhookAsync (string id, UpdateWebhookSubscription updateWebhookSubscription, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<WebhookResponse> UpdateWebhookAsync (string id, UpdateWebhookRequest webhookRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.PutAsync<WebhookResponse>($"{path}/{id}", _credentials, cancellationToken, updateWebhookSubscription);
+            return _apiClient.PutAsync<WebhookResponse>($"{path}/{id}", _credentials, cancellationToken, webhookRequest);
         }
 
-        public Task<WebhookResponse> PartiallyUpdateWebhookAsync(string id, PartialUpdateWebhookSubscription partialUpdateWebhookSubscription, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<WebhookResponse> PartiallyUpdateWebhookAsync(string id, PartialUpdateWebhookRequest webhookRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.PatchAsync<WebhookResponse>($"{path}/{id}", _credentials, cancellationToken, partialUpdateWebhookSubscription);
+            return _apiClient.PatchAsync<WebhookResponse>($"{path}/{id}", _credentials, cancellationToken, webhookRequest);
         }
 
         public Task<Type> RemoveWebhookAsync(string id, CancellationToken cancellationToken = default(CancellationToken))

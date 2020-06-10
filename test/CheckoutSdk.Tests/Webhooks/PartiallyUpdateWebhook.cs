@@ -12,7 +12,7 @@ namespace Checkout.Tests.Webhooks
         {
             var webhook = TestHelper.CreateWebhook();
 
-            var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhookAsync(new WebhookSubscription(webhook));
+            var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhookAsync(new RegisterWebhookRequest(webhook));
 
             webhookRegistrationResponse.ShouldNotBeNull();
 
@@ -20,7 +20,7 @@ namespace Checkout.Tests.Webhooks
             webhook.Headers = null;
             webhook.EventTypes = null;
 
-            var webhookPartialUpdateResponse = await Api.Webhooks.PartiallyUpdateWebhookAsync(webhookRegistrationResponse.Id, new PartialUpdateWebhookSubscription(webhook));
+            var webhookPartialUpdateResponse = await Api.Webhooks.PartiallyUpdateWebhookAsync(webhookRegistrationResponse.Id, new PartialUpdateWebhookRequest(webhook));
 
             webhookPartialUpdateResponse.ShouldNotBeNull();
             webhookPartialUpdateResponse.Id.ShouldBe(webhookRegistrationResponse.Id);
