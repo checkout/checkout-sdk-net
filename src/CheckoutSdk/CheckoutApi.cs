@@ -3,6 +3,7 @@ using Checkout.Sources;
 using Checkout.Tokens;
 using Checkout.Disputes;
 using Checkout.Files;
+using Checkout.Webhooks;
 
 namespace Checkout
 {
@@ -23,6 +24,7 @@ namespace Checkout
             Tokens = new TokensClient(apiClient, configuration);
             Disputes = new DisputesClient(apiClient, configuration);
             Files = new FilesClient(apiClient, configuration);
+            Webhooks = new WebhooksClient(apiClient, configuration);
         }
 
         /// <summary>
@@ -49,6 +51,11 @@ namespace Checkout
         /// Gets the Files API. 
         /// </summary>
         public IFilesClient Files { get; }
+
+        /// <summary>
+        /// Gets the Webhooks API. 
+        /// </summary>
+        public IWebhooksClient Webhooks { get; }
 
         /// <summary>
         /// Creates a new <see cref="CheckoutApi"/> instance with default dependencies.

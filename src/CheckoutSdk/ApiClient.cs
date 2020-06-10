@@ -130,6 +130,28 @@ namespace Checkout
             }
         }
 
+        public async Task<TResult> PatchAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, object request = null)
+        {
+            if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
+            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
+
+            using (var httpResponse = await SendJsonRequestAsync(new HttpMethod("PATCH"), path, credentials, request, cancellationToken))
+            {
+                return await DeserializeJsonAsync<TResult>(httpResponse);
+            }
+        }
+
+        public async Task<TResult> DeleteAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
+            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
+
+            using (var httpResponse = await SendRequestAsync(HttpMethod.Delete, path, credentials, null ,cancellationToken))
+            {
+                return await DeserializeJsonAsync<TResult>(httpResponse);
+            }
+        }
+
         private async Task<TResult> DeserializeJsonAsync<TResult>(HttpResponseMessage httpResponse)
         {
             var result = await DeserializeJsonAsync(httpResponse, typeof(TResult));

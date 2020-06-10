@@ -39,7 +39,7 @@ namespace Checkout.SampleApp.Controllers
                 }
 
                 if (string.IsNullOrWhiteSpace(model.CardToken))
-                    throw new ArgumentException("Model", $"{nameof(model.CardToken)} is missing.");
+                    throw new ArgumentException($"{nameof(model.CardToken)} is missing.", nameof(model));
 
                 var source = new TokenSource(model.CardToken);
                 var paymentRequest = new PaymentRequest<TokenSource>(source, model.Currency, model.Amount)
