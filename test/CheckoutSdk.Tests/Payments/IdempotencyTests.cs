@@ -69,7 +69,12 @@ namespace Checkout.Tests.Payments
         [Fact]
         public async Task CanIdempotentlyRefundPayment()
         {
-            var payment = await MakePaymentAsync();
+            var payment = await MakePaymentAsync(capture: false);
+
+            await Api.Payments.CaptureAsync(payment.Id);
+
+            var paymentResponse = await Api.Payments.GetAsync(payment.Id);
+            paymentResponse.Status.ShouldBe("Captured");
 
             var refundRequest = new RefundRequest
             {
