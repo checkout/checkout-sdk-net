@@ -76,7 +76,14 @@ namespace Checkout
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
-            using (var httpResponse = await SendRequestAsync(HttpMethod.Get, path, credentials, null, null, cancellationToken))
+            using (var httpResponse = await SendRequestAsync(
+                httpMethod: HttpMethod.Get,
+                path: path,
+                credentials: credentials,
+                httpContent: null,
+                cancellationToken: cancellationToken,
+                idempotencyKey: null
+                ))
             {
                 return await DeserializeJsonAsync<TResult>(httpResponse);
             }
@@ -87,7 +94,14 @@ namespace Checkout
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
-            using (var httpResponse = await SendJsonRequestAsync(HttpMethod.Post, path, credentials, request, idempotencyKey, cancellationToken))
+            using (var httpResponse = await SendJsonRequestAsync(
+                httpMethod: HttpMethod.Post,
+                path: path,
+                credentials: credentials,
+                request: request,
+                cancellationToken: cancellationToken,
+                idempotencyKey: idempotencyKey
+                ))
             {
                 return await DeserializeJsonAsync<TResult>(httpResponse);
             }
@@ -98,7 +112,14 @@ namespace Checkout
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
-            using (var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, httpContent, idempotencyKey, cancellationToken))
+            using (var httpResponse = await SendRequestAsync(
+                httpMethod: HttpMethod.Post,
+                path: path,
+                credentials: credentials,
+                httpContent: httpContent,
+                cancellationToken: cancellationToken,
+                idempotencyKey: idempotencyKey
+                ))
             {
                 return await DeserializeJsonAsync<TResult>(httpResponse);
             }
@@ -110,7 +131,14 @@ namespace Checkout
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
             if (resultTypeMappings == null) throw new ArgumentNullException(nameof(resultTypeMappings));
 
-            using (var httpResponse = await SendJsonRequestAsync(HttpMethod.Post, path, credentials, request, idempotencyKey, cancellationToken))
+            using (var httpResponse = await SendJsonRequestAsync(
+                httpMethod: HttpMethod.Post,
+                path: path,
+                credentials: credentials,
+                request: request,
+                cancellationToken: cancellationToken,
+                idempotencyKey: idempotencyKey
+                ))
             {
                 if (!resultTypeMappings.TryGetValue(httpResponse.StatusCode, out Type resultType))
                     throw new KeyNotFoundException($"The status code {httpResponse.StatusCode} is not mapped to a result type");
@@ -124,7 +152,14 @@ namespace Checkout
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
-            using (var httpResponse = await SendJsonRequestAsync(HttpMethod.Put, path, credentials, request, null, cancellationToken))
+            using (var httpResponse = await SendJsonRequestAsync(
+                httpMethod: HttpMethod.Put,
+                path: path,
+                credentials: credentials,
+                request: request,
+                cancellationToken: cancellationToken,
+                idempotencyKey: null
+                ))
             {
                 return await DeserializeJsonAsync<TResult>(httpResponse);
             }
@@ -135,7 +170,14 @@ namespace Checkout
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
-            using (var httpResponse = await SendJsonRequestAsync(new HttpMethod("PATCH"), path, credentials, request, null, cancellationToken))
+            using (var httpResponse = await SendJsonRequestAsync(
+                httpMethod: new HttpMethod("PATCH"),
+                path: path,
+                credentials: credentials,
+                request: request,
+                cancellationToken: cancellationToken,
+                idempotencyKey: null
+                ))
             {
                 return await DeserializeJsonAsync<TResult>(httpResponse);
             }
@@ -146,7 +188,14 @@ namespace Checkout
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
-            using (var httpResponse = await SendRequestAsync(HttpMethod.Delete, path, credentials, null, null, cancellationToken))
+            using (var httpResponse = await SendRequestAsync(
+                httpMethod: HttpMethod.Delete,
+                path: path,
+                credentials: credentials,
+                httpContent: null,
+                cancellationToken: cancellationToken,
+                idempotencyKey: null
+                ))
             {
                 return await DeserializeJsonAsync<TResult>(httpResponse);
             }
@@ -167,7 +216,7 @@ namespace Checkout
             return _serializer.Deserialize(json, resultType);
         }
 
-        private async Task<HttpResponseMessage> SendRequestAsync(HttpMethod httpMethod, string path, IApiCredentials credentials, HttpContent httpContent, string idempotencyKey, CancellationToken cancellationToken)
+        private async Task<HttpResponseMessage> SendRequestAsync(HttpMethod httpMethod, string path, IApiCredentials credentials, HttpContent httpContent, CancellationToken cancellationToken, string idempotencyKey)
         {
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
 
@@ -188,14 +237,14 @@ namespace Checkout
             return httpResponse;
         }
 
-        private Task<HttpResponseMessage> SendJsonRequestAsync(HttpMethod httpMethod, string path, IApiCredentials credentials, object request, string idempotencyKey, CancellationToken cancellationToken)
+        private Task<HttpResponseMessage> SendJsonRequestAsync(HttpMethod httpMethod, string path, IApiCredentials credentials, object request, CancellationToken cancellationToken, string idempotencyKey)
         {
             HttpContent httpContent = null;
             if (request != null)
             {
                 httpContent = new StringContent(_serializer.Serialize(request), Encoding.UTF8, "application/json");
             }
-            return SendRequestAsync(httpMethod, path, credentials, httpContent, idempotencyKey, cancellationToken);
+            return SendRequestAsync(httpMethod, path, credentials, httpContent, cancellationToken, idempotencyKey);
         }
 
         private async Task ValidateResponseAsync(HttpResponseMessage httpResponse)
