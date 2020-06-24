@@ -1,5 +1,4 @@
 ﻿using Checkout.Instruments;
-using Checkout.Payments;
 using Shouldly;
 using System.Threading.Tasks;
 using Xunit;
