@@ -213,7 +213,37 @@ namespace Checkout
                 return null;
 
             var json = await httpResponse.Content.ReadAsStringAsync();
-            return _serializer.Deserialize(json, resultType);
+            if(!string.IsNullOrWhiteSpace(json))
+                return _serializer.Deserialize(json, resultType);
+            switch(httpResponse.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    return new CheckoutOkApiResponse(httpResponse.Headers);
+                case HttpStatusCode.Accepted:
+                    return new CheckoutAcceptedApiResponse(httpResponse.Headers);
+                case HttpStatusCode.NoContent:
+                    return new CheckoutNoContentApiResponse(httpResponse.Headers);
+                case HttpStatusCode.BadRequest:
+                    return new CheckoutBadRequestApiResponse(httpResponse.Headers);
+                case HttpStatusCode.Unauthorized:
+                    return new CheckoutUnauthorizedApiResponse(httpResponse.Headers);
+                case HttpStatusCode.Forbidden:
+                    return new CheckoutForbiddenApiResponse(httpResponse.Headers);
+                case HttpStatusCode.NotFound:
+                    return new CheckoutNotFoundApiResponse(httpResponse.Headers);                
+                case HttpStatusCode.Conflict:
+                    return new CheckoutConflictApiResponse(httpResponse.Headers);
+                case (HttpStatusCode)422:
+                    return new CheckoutUnprocessableEntityApiResponse(httpResponse.Headers);
+                case (HttpStatusCode)429:
+                    return new CheckoutTooManyRequestsApiResponse(httpResponse.Headers);
+                case HttpStatusCode.InternalServerError:
+                    return new CheckoutInternalServerErrorApiResponse(httpResponse.Headers);
+                case HttpStatusCode.BadGateway:
+                    return new CheckoutBadGatewayApiResponse(httpResponse.Headers);
+                default:
+                    throw new NotImplementedException($"Handling a contentless API response with status code {httpResponse.StatusCode} is not implemented.");
+            }
         }
 
         private async Task<HttpResponseMessage> SendRequestAsync(HttpMethod httpMethod, string path, IApiCredentials credentials, HttpContent httpContent, CancellationToken cancellationToken, string idempotencyKey)
