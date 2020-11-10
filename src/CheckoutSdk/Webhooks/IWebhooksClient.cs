@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -55,6 +56,6 @@ namespace Checkout.Webhooks
         /// </summary>
         /// <param name="id">The webhook identifier.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
-        Task<Type> RemoveWebhookAsync(string id, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpResponseMessage> RemoveWebhookAsync(string id, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

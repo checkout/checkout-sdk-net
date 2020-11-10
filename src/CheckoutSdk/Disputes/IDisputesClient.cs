@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -36,7 +37,7 @@ namespace Checkout.Disputes
         /// <param name="id">The dispute identifier string.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A void task.</returns>
-        Task<Type> AcceptDisputeAsync(string id, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpResponseMessage> AcceptDisputeAsync(string id, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Adds supporting evidence to a dispute. Before using this endpoint, you first need to upload your files using the file uploader.
@@ -47,7 +48,7 @@ namespace Checkout.Disputes
         /// <param name="disputeEvidence">The dictionary that maps dispute evidence files and their description to evidence types.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A void task.</returns>
-        Task<Type> ProvideDisputeEvidenceAsync(string id, DisputeEvidence disputeEvidence, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpResponseMessage> ProvideDisputeEvidenceAsync(string id, DisputeEvidence disputeEvidence, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// With this final request, you can submit the evidence that you have previously provided.
@@ -57,7 +58,7 @@ namespace Checkout.Disputes
         /// <param name="id">The dispute identifier string.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A void task.</returns>
-        Task<Type> SubmitDisputeEvidenceAsync(string id, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpResponseMessage> SubmitDisputeEvidenceAsync(string id, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Retrieves a list of the evidence submitted in response to a specific dispute.
