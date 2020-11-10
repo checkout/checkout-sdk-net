@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Checkout.Common;
+using System.Reflection;
 
 namespace Checkout
 {
@@ -248,13 +249,17 @@ namespace Checkout
 
         private async Task<HttpResponseMessage> SendRequestAsync(HttpMethod httpMethod, string path, IApiCredentials credentials, HttpContent httpContent, CancellationToken cancellationToken, string idempotencyKey)
         {
+            const string product = "checkout-sdk-net";
+            var productVersion = "undefined" ?? ReflectionUtils.GetAssemblyVersion<ApiClient>();
+
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
 
             var httpRequest = new HttpRequestMessage(httpMethod, GetRequestUri(path))
             {
                 Content = httpContent
             };
-            httpRequest.Headers.UserAgent.ParseAdd("checkout-sdk-net/" + ReflectionUtils.GetAssemblyVersion<ApiClient>());
+
+            httpRequest.Headers.UserAgent.ParseAdd($"{product}/{productVersion}");
             if(!string.IsNullOrWhiteSpace(idempotencyKey)) httpRequest.Headers.Add("Cko-Idempotency-Key", idempotencyKey);
 
             await credentials.AuthorizeAsync(httpRequest);
