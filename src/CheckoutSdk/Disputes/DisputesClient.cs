@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,19 +35,19 @@ namespace Checkout.Disputes
             return _apiClient.GetAsync<Dispute>($"{path}/{id}", _credentials, cancellationToken);
         }
 
-        public Task<Type> AcceptDisputeAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<HttpResponseMessage> AcceptDisputeAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.PostAsync<Type>($"{path}/{id}/accept", _credentials, cancellationToken, null);
+            return _apiClient.PostAsync<HttpResponseMessage>($"{path}/{id}/accept", _credentials, cancellationToken, null);
         }
 
-        public Task<Type> ProvideDisputeEvidenceAsync(string id, DisputeEvidence disputeEvidence, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<HttpResponseMessage> ProvideDisputeEvidenceAsync(string id, DisputeEvidence disputeEvidence, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.PutAsync<Type>($"{path}/{id}/evidence", _credentials, cancellationToken, disputeEvidence);
+            return _apiClient.PutAsync<HttpResponseMessage>($"{path}/{id}/evidence", _credentials, cancellationToken, disputeEvidence);
         }
 
-        public Task<Type> SubmitDisputeEvidenceAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<HttpResponseMessage> SubmitDisputeEvidenceAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.PostAsync<Type>($"{path}/{id}/evidence", _credentials, cancellationToken, null);
+            return _apiClient.PostAsync<HttpResponseMessage>($"{path}/{id}/evidence", _credentials, cancellationToken, null);
         }
 
         public Task<DisputeEvidenceResponse> GetDisputeEvidenceAsync(string id, CancellationToken cancellationToken = default(CancellationToken))

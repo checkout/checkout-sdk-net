@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,9 +47,9 @@ namespace Checkout.Webhooks
             return _apiClient.PatchAsync<WebhookResponse>($"{path}/{id}", _credentials, cancellationToken, webhookRequest);
         }
 
-        public Task<Type> RemoveWebhookAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<HttpResponseMessage> RemoveWebhookAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.DeleteAsync<Type>($"{path}/{id}", _credentials, cancellationToken);
+            return _apiClient.DeleteAsync<HttpResponseMessage>($"{path}/{id}", _credentials, cancellationToken);
         }
     }
 }
