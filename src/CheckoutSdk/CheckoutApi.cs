@@ -5,6 +5,7 @@ using Checkout.Disputes;
 using Checkout.Files;
 using Checkout.Webhooks;
 using Checkout.Instruments;
+using Checkout.Events;
 
 namespace Checkout
 {
@@ -27,6 +28,7 @@ namespace Checkout
             Files = new FilesClient(apiClient, configuration);
             Webhooks = new WebhooksClient(apiClient, configuration);
             Instruments = new InstrumentsClient(apiClient, configuration);
+            Events = new EventsClient(apiClient, configuration);
         }
 
         /// <summary>
@@ -63,6 +65,11 @@ namespace Checkout
         /// Gets the Instruments API. 
         /// </summary>
         public IInstrumentsClient Instruments { get; }
+
+        /// <summary>
+        /// Gets the Events API. 
+        /// </summary>
+        public IEventsClient Events { get; }
 
         /// <summary>
         /// Creates a new <see cref="CheckoutApi"/> instance with default dependencies.
