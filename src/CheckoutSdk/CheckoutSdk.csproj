@@ -24,21 +24,29 @@
     <Version>3.0.0</Version>
     <PackageReleaseNotes>
       .NET SDK 3.0.0 has breaking changes!
-      
+
       It adds support for the following APIs:
+      (on develop branch)
       - Webhooks
       - Events
       - Instruments
+
+      (selected for development)
       - Reconciliation
       - Customer
       - Hosted Payments
       - Sessions
-      
+
       It adds:
+      (on develop branch)
+      - the option to send the idempotency header wherever available
+
+      (selected for development)
       - the SchemeId to a processed payment response
       - the merchantInitiated parameter to a payment request
-      
+
       It changes:
+      (on develop branch)
       - the way that contentless API responses are handled; for example: instead of throwing an exception on a 404 response, the new "CheckoutNotFoundApiResponse" object is returned
     </PackageReleaseNotes>
   </PropertyGroup>
