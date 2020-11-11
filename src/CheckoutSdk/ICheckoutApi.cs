@@ -5,6 +5,7 @@ using Checkout.Disputes;
 using Checkout.Files;
 using Checkout.Webhooks;
 using Checkout.Instruments;
+using Checkout.Events;
 
 namespace Checkout
 {
@@ -47,5 +48,10 @@ namespace Checkout
         /// Gets the Instruments API.
         /// </summary>
         IInstrumentsClient Instruments { get; }
+
+        /// <summary>
+        /// Gets the Events API.
+        /// </summary>
+        IEventsClient Events { get; }
     }
 }
