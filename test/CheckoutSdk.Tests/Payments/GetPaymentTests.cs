@@ -25,8 +25,8 @@ namespace Checkout.Tests.Payments
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             paymentRequest.PaymentType = PaymentType.Recurring;
-            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
-            GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Payment.Id);
+            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
+            GetPaymentResponse paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Payment.Id);
 
             paymentDetails.ShouldNotBeNull();
             paymentDetails.Id.ShouldBe(paymentResponse.Payment.Id);
@@ -53,10 +53,10 @@ namespace Checkout.Tests.Payments
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             paymentRequest.ThreeDS = true;
-            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
             paymentResponse.IsPending.ShouldBe(true);
 
-            GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Pending.Id);
+            GetPaymentResponse paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Pending.Id);
 
             paymentDetails.ShouldNotBeNull();
             paymentDetails.Id.ShouldBe(paymentResponse.Pending.Id);
@@ -87,9 +87,9 @@ namespace Checkout.Tests.Payments
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             var metadata = new KeyValuePair<string, object>("test", "1234");
             paymentRequest.Metadata.Add(metadata.Key, metadata.Value);
-            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
 
-            GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Payment.Id);
+            GetPaymentResponse paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Payment.Id);
 
             paymentDetails.Metadata.ShouldNotBeNull();
             paymentDetails.Metadata.ShouldNotBeEmpty();
@@ -102,9 +102,9 @@ namespace Checkout.Tests.Payments
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             paymentRequest.PaymentIp = "10.1.2.3";
-            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
 
-            GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Payment.Id);
+            GetPaymentResponse paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Payment.Id);
 
             paymentDetails.PaymentIp.ShouldBe(paymentRequest.PaymentIp);
         }
@@ -115,9 +115,9 @@ namespace Checkout.Tests.Payments
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             paymentRequest.Recipient =
                 new PaymentRecipient(new DateTime(1985, 05, 15), "4242424242", "W1T", lastName: "Wensle");
-            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
 
-            GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Payment.Id);
+            GetPaymentResponse paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Payment.Id);
 
             paymentDetails.Recipient.ShouldNotBeNull();
             paymentDetails.Recipient.AccountNumber.ShouldBe(paymentRequest.Recipient.AccountNumber);
@@ -135,9 +135,9 @@ namespace Checkout.Tests.Payments
                 Address = new Address() { AddressLine1 = "221B Baker Street", AddressLine2 = null, City = "London", Country = "UK", State = "n/a", Zip = "NW1 6XE" },
                 Phone = new Phone() { CountryCode = "44", Number = "124312431243" }
             };
-            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
 
-            GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Payment.Id);
+            GetPaymentResponse paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Payment.Id);
 
             paymentDetails.Shipping.ShouldNotBeNull();
             paymentDetails.Shipping.Address.ShouldNotBeNull();
@@ -156,9 +156,9 @@ namespace Checkout.Tests.Payments
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             paymentRequest.Description = "Too descriptive";
-            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
 
-            GetPaymentResponse paymentDetails = await _api.Payments.GetAsync(paymentResponse.Payment.Id);
+            GetPaymentResponse paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Payment.Id);
 
             paymentDetails.Description.ShouldBe(paymentRequest.Description);
         }
@@ -167,9 +167,9 @@ namespace Checkout.Tests.Payments
         public async Task CanGetPaymentAction()
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
-            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
 
-            IEnumerable<PaymentAction> actionsResponse = await _api.Payments.GetActionsAsync(paymentResponse.Payment.Id);
+            IEnumerable<PaymentAction> actionsResponse = await _api.Payments.GetPaymentActions(paymentResponse.Payment.Id);
 
             actionsResponse.ShouldNotBeNull();
             actionsResponse.ShouldHaveSingleItem();
@@ -196,14 +196,14 @@ namespace Checkout.Tests.Payments
         public async Task CanGetMultiplePaymentActions()
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
-            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
             var captureRequest = new CaptureRequest
             {
                 Reference = Guid.NewGuid().ToString()
             };
-            CaptureResponse captureResponse = await _api.Payments.CaptureAsync(paymentResponse.Payment.Id, captureRequest);
+            CaptureResponse captureResponse = await _api.Payments.CaptureAPayment(paymentResponse.Payment.Id, captureRequest);
 
-            IEnumerable<PaymentAction> actionsResponse = await _api.Payments.GetActionsAsync(paymentResponse.Payment.Id);
+            IEnumerable<PaymentAction> actionsResponse = await _api.Payments.GetPaymentActions(paymentResponse.Payment.Id);
 
             actionsResponse.ShouldNotBeNull();
 
@@ -225,9 +225,9 @@ namespace Checkout.Tests.Payments
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             var metadata = new KeyValuePair<string, object>("test", "1234");
             paymentRequest.Metadata.Add(metadata.Key, metadata.Value);
-            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
 
-            IEnumerable<PaymentAction> actionsResponse = await _api.Payments.GetActionsAsync(paymentResponse.Payment.Id);
+            IEnumerable<PaymentAction> actionsResponse = await _api.Payments.GetPaymentActions(paymentResponse.Payment.Id);
 
             actionsResponse.ShouldNotBeNull();
 

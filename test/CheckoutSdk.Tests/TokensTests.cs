@@ -23,7 +23,7 @@ namespace Checkout.Tests
         {
             CardTokenRequest request = CreateValidRequest();
 
-            CardTokenResponse token = await _api.Tokens.RequestAsync(request);
+            CardTokenResponse token = await _api.Tokens.RequestAToken(request);
 
             token.ShouldNotBeNull();
             token.Token.ShouldNotBeNullOrEmpty();

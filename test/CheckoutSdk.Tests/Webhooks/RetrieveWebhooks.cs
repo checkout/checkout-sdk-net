@@ -9,7 +9,7 @@ namespace Checkout.Tests.Webhooks
         [Fact]
         public async Task CanRetrieveWebhooks()
         {
-            var webhooksRetrievalResponse = await Api.Webhooks.RetrieveWebhooksAsync();
+            var webhooksRetrievalResponse = await Api.Webhooks.RetrieveWebhooks();
 
             webhooksRetrievalResponse.ShouldNotBeNull();
             webhooksRetrievalResponse.Count.ShouldBeGreaterThan(0);

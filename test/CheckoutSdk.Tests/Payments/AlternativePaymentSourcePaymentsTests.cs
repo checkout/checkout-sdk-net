@@ -53,7 +53,7 @@ namespace Checkout.Tests.Payments
             
             PaymentPending payment = await RequestAlternativePaymentAsync(alternativePaymentSource);
 
-            GetPaymentResponse verifiedPayment = await _api.Payments.GetAsync(payment.Id);
+            GetPaymentResponse verifiedPayment = await _api.Payments.GetPaymentDetails(payment.Id);
 
             verifiedPayment.ShouldNotBeNull();
             verifiedPayment.Id.ShouldBe(payment.Id);
@@ -69,7 +69,7 @@ namespace Checkout.Tests.Payments
         {
             PaymentRequest<IRequestSource> paymentRequest = TestHelper.CreateAlternativePaymentMethodRequest(alternativePaymentSource, currency: Currency.EUR);
 
-            PaymentResponse apiResponse = await _api.Payments.RequestAsync(paymentRequest);
+            PaymentResponse apiResponse = await _api.Payments.RequestAPayment(paymentRequest);
             apiResponse.IsPending.ShouldBeTrue();
             apiResponse.Pending.ShouldNotBeNull();
 

@@ -21,11 +21,11 @@ namespace Checkout.Tests.Payments
         public async Task CanRequestNonThreeDsCardPayment()
         {
             var cardTokenRequest = TestHelper.CreateCardTokenRequest();
-            var cardTokenResponse = await _api.Tokens.RequestAsync(cardTokenRequest);
+            var cardTokenResponse = await _api.Tokens.RequestAToken(cardTokenRequest);
             var paymentRequest = TestHelper.CreateTokenPaymentRequest(cardTokenResponse.Token);
             paymentRequest.ThreeDS = false;
 
-            var paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
 
             paymentResponse.Payment.ShouldNotBeNull();
             paymentResponse.Payment.Approved.ShouldBeTrue();
@@ -43,10 +43,10 @@ namespace Checkout.Tests.Payments
         public async Task CanRequestThreeDsCardPayment()
         {
             var cardTokenRequest = TestHelper.CreateCardTokenRequest();
-            var cardTokenResponse = await _api.Tokens.RequestAsync(cardTokenRequest);
+            var cardTokenResponse = await _api.Tokens.RequestAToken(cardTokenRequest);
             var paymentRequest = TestHelper.CreateTokenPaymentRequest(cardTokenResponse.Token);
             paymentRequest.ThreeDS = true;
-            var apiResponse = await _api.Payments.RequestAsync(paymentRequest);
+            var apiResponse = await _api.Payments.RequestAPayment(paymentRequest);
 
             apiResponse.IsPending.ShouldBe(true);
             var pending = apiResponse.Pending;
@@ -66,9 +66,9 @@ namespace Checkout.Tests.Payments
         public async Task CanCapturePayment()
         {
             var cardTokenRequest = TestHelper.CreateCardTokenRequest();
-            var cardTokenResponse = await _api.Tokens.RequestAsync(cardTokenRequest);
+            var cardTokenResponse = await _api.Tokens.RequestAToken(cardTokenRequest);
             var paymentRequest = TestHelper.CreateTokenPaymentRequest(cardTokenResponse.Token);
-            var paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
             paymentResponse.Payment.CanCapture().ShouldBe(true);
 
             var captureRequest = new CaptureRequest
@@ -76,7 +76,7 @@ namespace Checkout.Tests.Payments
                 Reference = Guid.NewGuid().ToString()
             };
 
-            var captureResponse = await _api.Payments.CaptureAsync(paymentResponse.Payment.Id, captureRequest);
+            var captureResponse = await _api.Payments.CaptureAPayment(paymentResponse.Payment.Id, captureRequest);
 
             captureResponse.ActionId.ShouldNotBeNullOrEmpty();
             captureResponse.Reference.ShouldBe(captureRequest.Reference);
@@ -86,7 +86,7 @@ namespace Checkout.Tests.Payments
         public async Task CanVoidPayment()
         {
             var paymentRequest = TestHelper.CreateCardPaymentRequest();
-            var paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
             paymentResponse.Payment.CanVoid().ShouldBe(true);
 
             var voidRequest = new VoidRequest
@@ -94,7 +94,7 @@ namespace Checkout.Tests.Payments
                 Reference = Guid.NewGuid().ToString()
             };
 
-            var voidResponse = await _api.Payments.VoidAsync(paymentResponse.Payment.Id, voidRequest);
+            var voidResponse = await _api.Payments.VoidAPayment(paymentResponse.Payment.Id, voidRequest);
 
             voidResponse.ActionId.ShouldNotBeNullOrEmpty();
             voidResponse.Reference.ShouldBe(voidRequest.Reference);
@@ -104,19 +104,19 @@ namespace Checkout.Tests.Payments
         public async Task CanRefundPayment()
         {
             var cardTokenRequest = TestHelper.CreateCardTokenRequest();
-            var cardTokenResponse = await _api.Tokens.RequestAsync(cardTokenRequest);
+            var cardTokenResponse = await _api.Tokens.RequestAToken(cardTokenRequest);
             var paymentRequest = TestHelper.CreateTokenPaymentRequest(cardTokenResponse.Token);
-            var paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
             paymentResponse.Payment.CanCapture().ShouldBe(true);
 
-            await _api.Payments.CaptureAsync(paymentResponse.Payment.Id);
+            await _api.Payments.CaptureAPayment(paymentResponse.Payment.Id);
 
             var refundRequest = new RefundRequest
             {
                 Reference = Guid.NewGuid().ToString()
             };
 
-            var refundResponse = await _api.Payments.RefundAsync(paymentResponse.Payment.Id, refundRequest);
+            var refundResponse = await _api.Payments.RefundAPayment(paymentResponse.Payment.Id, refundRequest);
 
             refundResponse.ActionId.ShouldNotBeNullOrEmpty();
             refundResponse.Reference.ShouldBe(refundRequest.Reference);

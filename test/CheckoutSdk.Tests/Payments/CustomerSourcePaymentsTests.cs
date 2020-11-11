@@ -21,7 +21,7 @@ namespace Checkout.Tests.Payments
         public async Task CanRequestCardPayment()
         {
             var firstCardPayment = TestHelper.CreateCardPaymentRequest();
-            var firstCardPaymentResponse = await _api.Payments.RequestAsync(firstCardPayment);
+            var firstCardPaymentResponse = await _api.Payments.RequestAPayment(firstCardPayment);
             var customerSource = new CustomerSource(firstCardPayment.Customer.Id, firstCardPayment.Customer.Email);
             var customerPaymentRequest = new PaymentRequest<CustomerSource>(
                 customerSource,
@@ -32,7 +32,7 @@ namespace Checkout.Tests.Payments
                 Capture = false,
             };
 
-            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(customerPaymentRequest);
+            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(customerPaymentRequest);
 
             paymentResponse.Payment.ShouldNotBeNull();
             paymentResponse.Payment.Approved.ShouldBeTrue();

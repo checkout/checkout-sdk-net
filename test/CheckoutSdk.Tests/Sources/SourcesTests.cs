@@ -22,7 +22,7 @@ namespace Checkout.Tests.Sources
         public async Task CanRequestSepaSource()
         {
             var sourceRequest = CreateSepaSourceRequest();
-            var sourceResponse = await _api.Sources.RequestAsync(sourceRequest);
+            var sourceResponse = await _api.Sources.AddAPaymentSource(sourceRequest);
 
             sourceResponse.ShouldNotBeNull();
             var source = sourceResponse.Source;

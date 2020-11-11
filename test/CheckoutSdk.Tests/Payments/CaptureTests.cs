@@ -19,7 +19,7 @@ namespace Checkout.Tests.Payments
                 Metadata = new Dictionary<string, object> { { nameof(CaptureTests), nameof(CanFullyCapturePayment) } }
             };
 
-            var captureResponse = await Api.Payments.CaptureAsync(payment.Id, captureRequest);
+            var captureResponse = await Api.Payments.CaptureAPayment(payment.Id, captureRequest);
             captureResponse.ShouldNotBeNull();
             captureResponse.ActionId.ShouldNotBeNullOrEmpty();
             captureResponse.Reference.ShouldBe(captureRequest.Reference);
@@ -37,7 +37,7 @@ namespace Checkout.Tests.Payments
                 Metadata = new Dictionary<string, object> { { nameof(CaptureTests), nameof(CanPartiallyCapturePayment) } }
             };
 
-            var captureResponse = await Api.Payments.CaptureAsync(payment.Id, captureRequest);
+            var captureResponse = await Api.Payments.CaptureAPayment(payment.Id, captureRequest);
             captureResponse.ShouldNotBeNull();
             captureResponse.ActionId.ShouldNotBeNullOrEmpty();
             captureResponse.Reference.ShouldBe(captureRequest.Reference);
@@ -48,7 +48,7 @@ namespace Checkout.Tests.Payments
             var paymentRequest = TestHelper.CreateCardPaymentRequest(amount: 1000);
             paymentRequest.Capture = false;
 
-            var paymentResponse = await Api.Payments.RequestAsync(paymentRequest);
+            var paymentResponse = await Api.Payments.RequestAPayment(paymentRequest);
             paymentResponse.Payment.CanCapture().ShouldBeTrue();
 
             return paymentResponse.Payment;

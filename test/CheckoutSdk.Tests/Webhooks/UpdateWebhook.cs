@@ -13,7 +13,7 @@ namespace Checkout.Tests.Webhooks
         {
             var webhook = TestHelper.CreateWebhook();
 
-            var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhookAsync(new RegisterWebhookRequest(webhook));
+            var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhook(new RegisterWebhookRequest(webhook));
 
             webhookRegistrationResponse.ShouldNotBeNull();
 
@@ -26,7 +26,7 @@ namespace Checkout.Tests.Webhooks
             };
             webhook.Headers.Add("Authorization", authorization);
 
-            var webhookUpdateResponse = await Api.Webhooks.UpdateWebhookAsync(webhookRegistrationResponse.Id, new UpdateWebhookRequest(webhook));
+            var webhookUpdateResponse = await Api.Webhooks.UpdateWebhook(webhookRegistrationResponse.Id, new UpdateWebhookRequest(webhook));
 
             webhookUpdateResponse.ShouldNotBeNull();
             webhookUpdateResponse.Id.ShouldBe(webhookRegistrationResponse.Id);
@@ -34,7 +34,7 @@ namespace Checkout.Tests.Webhooks
             webhookUpdateResponse.Active.ShouldNotBe(webhookRegistrationResponse.Active);
             webhookUpdateResponse.EventTypes.ShouldBe(webhook.EventTypes);
 
-            await Api.Webhooks.RemoveWebhookAsync(webhookUpdateResponse.Id);
+            await Api.Webhooks.RemoveWebhook(webhookUpdateResponse.Id);
         }
     }
 }

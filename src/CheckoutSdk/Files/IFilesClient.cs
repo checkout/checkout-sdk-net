@@ -15,14 +15,14 @@ namespace Checkout.Files
         /// <param name="pathToFile">The path of the file to upload.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A task that upon completion returns the file upload response.</returns>
-        Task<UploadFileResponse> UploadFileAsync(string pathToFile, string purpose, CancellationToken cancellationToken = default(CancellationToken));
+        Task<UploadFileResponse> UploadFile(string pathToFile, string purpose, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Returns all the details of a file using the file identifier.
         /// </summary>
-        /// <param name="id">The file identifier string.</param>
+        /// <param name="fileId">The file identifier string.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A task that upon completion contains the matching file.</returns>
-        Task<File> GetFileAsync(string id, CancellationToken cancellationToken = default(CancellationToken));
+        Task<File> GetFileInformation(string fileId, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

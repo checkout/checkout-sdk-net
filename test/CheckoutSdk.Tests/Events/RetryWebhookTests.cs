@@ -20,14 +20,14 @@ namespace Checkout.Tests.Events
             _acceptedResponse.Headers.Add("Cko-Version", "2.12.0");
 
             _eventsClient = new Mock<IEventsClient>();
-            _eventsClient.Setup(eventsClient => eventsClient.RetryWebhookAsync("evt_4ddvw5cfb4xurn3mfedxhdtvqa", "wh_fulbukihgg4ehjl7ew25ppyylq", default(CancellationToken))).ReturnsAsync(() => _acceptedResponse);
-            _eventsClient.Setup(eventsClient => eventsClient.RetryWebhookAsync(It.IsAny<string>(), It.IsNotIn(new string[] { "wh_fulbukihgg4ehjl7ew25ppyylq" }), default(CancellationToken))).ThrowsAsync(new CheckoutResourceNotFoundException("12345"));
+            _eventsClient.Setup(eventsClient => eventsClient.RetryWebhook("evt_4ddvw5cfb4xurn3mfedxhdtvqa", "wh_fulbukihgg4ehjl7ew25ppyylq", default(CancellationToken))).ReturnsAsync(() => _acceptedResponse);
+            _eventsClient.Setup(eventsClient => eventsClient.RetryWebhook(It.IsAny<string>(), It.IsNotIn(new string[] { "wh_fulbukihgg4ehjl7ew25ppyylq" }), default(CancellationToken))).ThrowsAsync(new CheckoutResourceNotFoundException("12345"));
         }
 
         [Fact]
         public async Task CanRetryWebhook()
         {
-            var retryAllWebhooksResponse = await _eventsClient.Object.RetryWebhookAsync("evt_4ddvw5cfb4xurn3mfedxhdtvqa", "wh_fulbukihgg4ehjl7ew25ppyylq");
+            var retryAllWebhooksResponse = await _eventsClient.Object.RetryWebhook("evt_4ddvw5cfb4xurn3mfedxhdtvqa", "wh_fulbukihgg4ehjl7ew25ppyylq");
 
             retryAllWebhooksResponse.ShouldNotBeNull();
             retryAllWebhooksResponse.ShouldBeOfType<CheckoutAcceptedApiResponse>();
@@ -38,7 +38,7 @@ namespace Checkout.Tests.Events
         [Fact]
         public async Task Returns404ifEventDoesNotExist()
         {
-           await Assert.ThrowsAsync<CheckoutResourceNotFoundException>(async () => await _eventsClient.Object.RetryWebhookAsync("evt_isAny", "wh_doesNotExist"));
+           await Assert.ThrowsAsync<CheckoutResourceNotFoundException>(async () => await _eventsClient.Object.RetryWebhook("evt_isAny", "wh_doesNotExist"));
         }
     }
 }

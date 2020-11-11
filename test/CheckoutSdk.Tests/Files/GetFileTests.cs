@@ -22,12 +22,12 @@ namespace Checkout.Tests.Files
             // upload a file first
             var pathToFile = @"test_file.png";
             var fileInfo = new FileInfo(fileName: pathToFile);
-            var uploadFileResponse = await _api.Files.UploadFileAsync(pathToFile: fileInfo.FullName, purpose: "dispute_evidence");
+            var uploadFileResponse = await _api.Files.UploadFile(pathToFile: fileInfo.FullName, purpose: "dispute_evidence");
 
             uploadFileResponse.ShouldNotBeNull();
 
             // use returned fileID to try and get file details
-            var getFileResponse = await _api.Files.GetFileAsync(id: uploadFileResponse.Id);
+            var getFileResponse = await _api.Files.GetFileInformation(fileId: uploadFileResponse.Id);
 
             getFileResponse.ShouldNotBeNull();
             getFileResponse.Id.ShouldBe(uploadFileResponse.Id);

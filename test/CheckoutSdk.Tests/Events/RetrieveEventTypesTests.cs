@@ -10,7 +10,7 @@ namespace Checkout.Tests.Events
         [Fact]
         public async Task CanRetrieveEventTypes()
         {
-            var eventTypesRetrievalResponse = await Api.Events.RetrieveEventTypesAsync();
+            var eventTypesRetrievalResponse = await Api.Events.RetrieveEventTypes();
 
             eventTypesRetrievalResponse.ShouldNotBeNull();
             eventTypesRetrievalResponse.ShouldBeOfType<AvailableEventTypesResponse>();
