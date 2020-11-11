@@ -21,12 +21,25 @@
     <TargetFrameworks>net45;netstandard1.4;netstandard2.0</TargetFrameworks>
     <RootNamespace>Checkout</RootNamespace>
     <DefineConstants>LIBLOG_PORTABLE</DefineConstants>
-    <Version>2.3.0</Version>
+    <Version>3.0.0</Version>
     <PackageReleaseNotes>
-      .NET SDK 2.3.0 introduces three features:
-      - the dLocal card source for use in LATAM https://docs.checkout.com/docs/request-a-payment-using-dlocal
-      - the Files client https://docs.checkout.com/docs/disputes
-      - the Disputes client https://docs.checkout.com/docs/disputes
+      .NET SDK 3.0.0 has breaking changes!
+      
+      It adds support for the following APIs:
+      - Webhooks
+      - Events
+      - Instruments
+      - Reconciliation
+      - Customer
+      - Hosted Payments
+      - Sessions
+      
+      It adds:
+      - the SchemeId to a processed payment response
+      - the merchantInitiated parameter to a payment request
+      
+      It changes:
+      - the way that contentless API responses are handled; for example: instead of throwing an exception on a 404 response, the new "CheckoutNotFoundApiResponse" object is returned
     </PackageReleaseNotes>
   </PropertyGroup>
   
