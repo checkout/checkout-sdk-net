@@ -20,15 +20,15 @@ namespace Checkout.Tests.Instruments
         public async Task CanCreateInstrument()
         {
             var cardTokenRequest = TestHelper.CreateCardTokenRequest();
-            var cardTokenResponse = await _api.Tokens.RequestAsync(cardTokenRequest);
+            var cardTokenResponse = await _api.Tokens.RequestAToken(cardTokenRequest);
             var instrumentRequest = new InstrumentRequest("token", cardTokenResponse.Token);
 
-            var instrumentResponse = await _api.Instruments.CreateAsync(instrumentRequest);
+            var createInstrumentResponse = await _api.Instruments.CreateAnInstrument(instrumentRequest);
 
-            instrumentResponse.ShouldNotBeNull();
-            instrumentResponse.ExpiryMonth.ShouldBe(cardTokenRequest.ExpiryMonth);
-            instrumentResponse.ExpiryYear.ShouldBe(cardTokenRequest.ExpiryYear);
-            instrumentResponse.Last4.ShouldBe(cardTokenResponse.Last4);
+            createInstrumentResponse.ShouldNotBeNull();
+            createInstrumentResponse.ExpiryMonth.ShouldBe(cardTokenRequest.ExpiryMonth);
+            createInstrumentResponse.ExpiryYear.ShouldBe(cardTokenRequest.ExpiryYear);
+            createInstrumentResponse.Last4.ShouldBe(cardTokenResponse.Last4);
         }
     }
 }
