@@ -39,14 +39,14 @@ namespace Checkout.Tests.Events
                     }
             };
             _eventsClient = new Mock<IEventsClient>();
-            _eventsClient.Setup(eventsClient => eventsClient.RetrieveEventNotificationAsync("evt_g7danjfojdse5hclmq2pk6csve", "ntf_cuzguxmkcncu5g2tmzghsnbkm4", default(CancellationToken))).ReturnsAsync(() => _notificationResponse);
-            _eventsClient.Setup(eventsClient => eventsClient.RetrieveEventNotificationAsync(It.IsAny<string>(), It.IsNotIn(new string[] { "ntf_cuzguxmkcncu5g2tmzghsnbkm4" }), default(CancellationToken))).ThrowsAsync(new CheckoutResourceNotFoundException("12345"));
+            _eventsClient.Setup(eventsClient => eventsClient.RetrieveEventNotification("evt_g7danjfojdse5hclmq2pk6csve", "ntf_cuzguxmkcncu5g2tmzghsnbkm4", default(CancellationToken))).ReturnsAsync(() => _notificationResponse);
+            _eventsClient.Setup(eventsClient => eventsClient.RetrieveEventNotification(It.IsAny<string>(), It.IsNotIn(new string[] { "ntf_cuzguxmkcncu5g2tmzghsnbkm4" }), default(CancellationToken))).ThrowsAsync(new CheckoutResourceNotFoundException("12345"));
         }
 
         [Fact]
         public async Task CanRetrieveEventNotification()
         {
-            var eventNotificationRetrievalResponse = await _eventsClient.Object.RetrieveEventNotificationAsync(eventId: "evt_g7danjfojdse5hclmq2pk6csve", notificationId: "ntf_cuzguxmkcncu5g2tmzghsnbkm4");
+            var eventNotificationRetrievalResponse = await _eventsClient.Object.RetrieveEventNotification(eventId: "evt_g7danjfojdse5hclmq2pk6csve", notificationId: "ntf_cuzguxmkcncu5g2tmzghsnbkm4");
 
             eventNotificationRetrievalResponse.ShouldNotBeNull();
             eventNotificationRetrievalResponse.ShouldBeOfType<EventNotificationResponse>();
@@ -56,7 +56,7 @@ namespace Checkout.Tests.Events
         [Fact]
         public async Task Returns404ifEventNotificationDoesNotExist()
         {
-            await Assert.ThrowsAsync<CheckoutResourceNotFoundException>(async () => await _eventsClient.Object.RetrieveEventNotificationAsync("evt_isAny", "ntf_doesNotExist"));
+            await Assert.ThrowsAsync<CheckoutResourceNotFoundException>(async () => await _eventsClient.Object.RetrieveEventNotification("evt_isAny", "ntf_doesNotExist"));
         }
     }
 }

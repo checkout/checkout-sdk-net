@@ -22,27 +22,27 @@ namespace Checkout.Events
             _credentials = new SecretKeyCredentials(configuration);
         }
 
-        public Task<AvailableEventTypesResponse> RetrieveEventTypesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public Task<AvailableEventTypesResponse> RetrieveEventTypes(CancellationToken cancellationToken = default(CancellationToken))
         {            
             return _apiClient.GetAsync<AvailableEventTypesResponse>("event-types", _credentials, cancellationToken);
         }
 
-        public Task<EventResponse> RetrieveEventAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<EventResponse> RetrieveEvent(string eventId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.GetAsync<EventResponse>($"{path}/{id}", _credentials, cancellationToken);
+            return _apiClient.GetAsync<EventResponse>($"{path}/{eventId}", _credentials, cancellationToken);
         }
 
-        public Task<EventNotificationResponse> RetrieveEventNotificationAsync(string eventId, string notificationId, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<EventNotificationResponse> RetrieveEventNotification(string eventId, string notificationId, CancellationToken cancellationToken = default(CancellationToken))
         {
             return _apiClient.GetAsync<EventNotificationResponse>($"{path}/{eventId}/notifications/{notificationId}", _credentials, cancellationToken);
         }
 
-        public Task<HttpResponseMessage> RetryAllWebhooksAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<HttpResponseMessage> RetryAllWebhooks(string eventId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.PostAsync<HttpResponseMessage>($"{path}/{id}/webhooks/retry", _credentials, cancellationToken, null);
+            return _apiClient.PostAsync<HttpResponseMessage>($"{path}/{eventId}/webhooks/retry", _credentials, cancellationToken, null);
         }
 
-        public Task<HttpResponseMessage> RetryWebhookAsync(string eventId, string webhookId, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<HttpResponseMessage> RetryWebhook(string eventId, string webhookId, CancellationToken cancellationToken = default(CancellationToken))
         {
             return _apiClient.PostAsync<HttpResponseMessage>($"{path}/{eventId}/webhooks/{webhookId}/retry", _credentials, cancellationToken, null);
         }

@@ -13,14 +13,14 @@ namespace Checkout.Tests.Webhooks
         {
             var webhook = TestHelper.CreateWebhook();
 
-            var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhookAsync(new RegisterWebhookRequest(webhook));
+            var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhook(new RegisterWebhookRequest(webhook));
 
             webhookRegistrationResponse.ShouldNotBeNull();
             webhookRegistrationResponse.Id.ShouldStartWith("wh_");
             webhookRegistrationResponse.Url.ShouldBe(webhook.Url);
             webhookRegistrationResponse.EventTypes.ShouldBe(webhook.EventTypes);
 
-            await Api.Webhooks.RemoveWebhookAsync(webhookRegistrationResponse.Id);
+            await Api.Webhooks.RemoveWebhook(webhookRegistrationResponse.Id);
         }
 
         [Fact]
@@ -29,7 +29,7 @@ namespace Checkout.Tests.Webhooks
             var webhook = TestHelper.CreateWebhook();
             webhook.Url = "invalid";
 
-            var checkoutValidationException = Should.Throw<CheckoutValidationException>(async () => await Api.Webhooks.RegisterWebhookAsync(new RegisterWebhookRequest(webhook)));
+            var checkoutValidationException = Should.Throw<CheckoutValidationException>(async () => await Api.Webhooks.RegisterWebhook(new RegisterWebhookRequest(webhook)));
 
             checkoutValidationException.ShouldNotBeNull();
             checkoutValidationException.HttpStatusCode.ShouldBe((HttpStatusCode)422);

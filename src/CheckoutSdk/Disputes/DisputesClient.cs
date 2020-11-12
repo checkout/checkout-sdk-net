@@ -22,7 +22,7 @@ namespace Checkout.Disputes
             _credentials = new SecretKeyCredentials(configuration);
         }
 
-        public Task<GetDisputesResponse> GetDisputesAsync(GetDisputesRequest getDisputesRequest, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<GetDisputesResponse> GetDisputes(GetDisputesRequest getDisputesRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (getDisputesRequest == null) throw new ArgumentNullException(nameof(getDisputesRequest));
             var pathWithQuery = getDisputesRequest.PathWithQuery(path);
@@ -30,29 +30,29 @@ namespace Checkout.Disputes
             return _apiClient.GetAsync<GetDisputesResponse>(pathWithQuery, _credentials, cancellationToken);
         }
 
-        public Task<Dispute> GetDisputeAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<Dispute> GetDisputeDetails(string disputeId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.GetAsync<Dispute>($"{path}/{id}", _credentials, cancellationToken);
+            return _apiClient.GetAsync<Dispute>($"{path}/{disputeId}", _credentials, cancellationToken);
         }
 
-        public Task<HttpResponseMessage> AcceptDisputeAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<HttpResponseMessage> AcceptDispute(string disputeId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.PostAsync<HttpResponseMessage>($"{path}/{id}/accept", _credentials, cancellationToken, null);
+            return _apiClient.PostAsync<HttpResponseMessage>($"{path}/{disputeId}/accept", _credentials, cancellationToken, null);
         }
 
-        public Task<HttpResponseMessage> ProvideDisputeEvidenceAsync(string id, DisputeEvidence disputeEvidence, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<HttpResponseMessage> ProvideDisputeEvidence(string disputeId, DisputeEvidence disputeEvidence, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.PutAsync<HttpResponseMessage>($"{path}/{id}/evidence", _credentials, cancellationToken, disputeEvidence);
+            return _apiClient.PutAsync<HttpResponseMessage>($"{path}/{disputeId}/evidence", _credentials, cancellationToken, disputeEvidence);
         }
 
-        public Task<HttpResponseMessage> SubmitDisputeEvidenceAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<HttpResponseMessage> SubmitDisputeEvidence(string disputeId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.PostAsync<HttpResponseMessage>($"{path}/{id}/evidence", _credentials, cancellationToken, null);
+            return _apiClient.PostAsync<HttpResponseMessage>($"{path}/{disputeId}/evidence", _credentials, cancellationToken, null);
         }
 
-        public Task<DisputeEvidenceResponse> GetDisputeEvidenceAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<DisputeEvidenceResponse> GetDisputeEvidence(string disputeId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.GetAsync<DisputeEvidenceResponse>($"{path}/{id}/evidence", _credentials, cancellationToken);
+            return _apiClient.GetAsync<DisputeEvidenceResponse>($"{path}/{disputeId}/evidence", _credentials, cancellationToken);
         }
     }
 }

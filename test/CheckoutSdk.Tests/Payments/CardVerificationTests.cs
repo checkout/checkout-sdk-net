@@ -11,7 +11,7 @@ namespace Checkout.Tests.Payments
         public async Task CanVerifyCard()
         {
             var paymentRequest = TestHelper.CreateCardPaymentRequest(amount: null);
-            var paymentResponse = await Api.Payments.RequestAsync(paymentRequest);
+            var paymentResponse = await Api.Payments.RequestAPayment(paymentRequest);
 
             paymentResponse.Payment.Status.ShouldBe(PaymentStatus.CardVerified);
         }

@@ -27,7 +27,7 @@ namespace Checkout.Sources
             _credentials = new SecretKeyCredentials(configuration);
         }
 
-        public Task<SourceResponse> RequestAsync(SourceRequest sourceRequest)
+        public Task<SourceResponse> AddAPaymentSource(SourceRequest sourceRequest)
         {
             return RequestSourceAsync(sourceRequest, SourceResponseMappings);
         }

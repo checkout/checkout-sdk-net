@@ -21,16 +21,16 @@ namespace Checkout.Files
             _credentials = new SecretKeyCredentials(configuration);
         }
 
-        public Task<UploadFileResponse> UploadFileAsync(string pathToFile, string purpose, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<UploadFileResponse> UploadFile(string pathToFile, string purpose, CancellationToken cancellationToken = default(CancellationToken))
         {
             var fileUploadMultipartFormDataContentRequest = new FileUploadMultipartFormDataContentRequest(pathToFile, purpose);
 
             return _apiClient.PostAsync<UploadFileResponse>(path, _credentials, cancellationToken, fileUploadMultipartFormDataContentRequest);
         }
 
-        public Task<File> GetFileAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<File> GetFileInformation(string fileId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.GetAsync<File>($"{path}/{id}", _credentials, cancellationToken);
+            return _apiClient.GetAsync<File>($"{path}/{fileId}", _credentials, cancellationToken);
         }
     }
 }

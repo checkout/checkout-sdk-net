@@ -13,13 +13,13 @@ namespace Checkout.Tests.Webhooks
         {
             var webhook = TestHelper.CreateWebhook();
 
-            var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhookAsync(new RegisterWebhookRequest(webhook));
+            var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhook(new RegisterWebhookRequest(webhook));
 
             webhookRegistrationResponse.ShouldNotBeNull();
 
-            await Api.Webhooks.RemoveWebhookAsync(webhookRegistrationResponse.Id);
+            await Api.Webhooks.RemoveWebhook(webhookRegistrationResponse.Id);
 
-            var webhookRetrievalResponse = Should.Throw<CheckoutResourceNotFoundException>(async () => await Api.Webhooks.RetrieveWebhookAsync(webhookRegistrationResponse.Id));
+            var webhookRetrievalResponse = Should.Throw<CheckoutResourceNotFoundException>(async () => await Api.Webhooks.RetrieveWebhook(webhookRegistrationResponse.Id));
 
             webhookRetrievalResponse.ShouldNotBeNull();
             webhookRetrievalResponse.HttpStatusCode.ShouldBe(HttpStatusCode.NotFound);

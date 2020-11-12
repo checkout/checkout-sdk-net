@@ -51,7 +51,7 @@ namespace Checkout.SampleApp.Controllers
                     FailureUrl = BuildUrl(nameof(ThreeDSFailure))
                 };
 
-                var response = await _checkoutApi.Payments.RequestAsync(paymentRequest);
+                var response = await _checkoutApi.Payments.RequestAPayment(paymentRequest);
 
                 if (response.IsPending && response.Pending.RequiresRedirect())
                 {
@@ -99,7 +99,7 @@ namespace Checkout.SampleApp.Controllers
 
         private async Task<IActionResult> GetThreeDsPaymentAsync(string sessionId)
         {
-            GetPaymentResponse payment = await _checkoutApi.Payments.GetAsync(sessionId);
+            GetPaymentResponse payment = await _checkoutApi.Payments.GetPaymentDetails(sessionId);
             
             if (payment == null)
                 return RedirectToAction(nameof(Index));

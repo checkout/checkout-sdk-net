@@ -23,7 +23,7 @@ namespace Checkout.Tests.Payments
             var paymentRequest = TestHelper.CreateDlocalCardPaymentRequest();
             paymentRequest.ThreeDS = false;
 
-            PaymentResponse paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
             
             paymentResponse.Payment.ShouldNotBeNull();
             paymentResponse.Payment.Approved.ShouldBeTrue();
@@ -51,7 +51,7 @@ namespace Checkout.Tests.Payments
         {
             // Auth
             var paymentRequest = TestHelper.CreateDlocalCardPaymentRequest();
-            var paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
             paymentResponse.Payment.CanVoid().ShouldBe(true);
 
             VoidRequest voidRequest = new VoidRequest
@@ -60,7 +60,7 @@ namespace Checkout.Tests.Payments
             };
 
             // Void Auth
-            var voidResponse = await _api.Payments.VoidAsync(paymentResponse.Payment.Id, voidRequest);
+            var voidResponse = await _api.Payments.VoidAPayment(paymentResponse.Payment.Id, voidRequest);
 
             voidResponse.ActionId.ShouldNotBeNullOrEmpty();
             voidResponse.Reference.ShouldBe(voidRequest.Reference);
@@ -71,11 +71,11 @@ namespace Checkout.Tests.Payments
         {
             // Auth
             var paymentRequest = TestHelper.CreateDlocalCardPaymentRequest();
-            var paymentResponse = await _api.Payments.RequestAsync(paymentRequest);
+            var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
             paymentResponse.Payment.CanCapture().ShouldBe(true);
 
             // Capture
-            await _api.Payments.CaptureAsync(paymentResponse.Payment.Id);
+            await _api.Payments.CaptureAPayment(paymentResponse.Payment.Id);
 
             var refundRequest = new RefundRequest
             {
@@ -84,7 +84,7 @@ namespace Checkout.Tests.Payments
 
             // Refund
 
-            var refundResponse = await _api.Payments.RefundAsync(paymentResponse.Payment.Id, refundRequest);
+            var refundResponse = await _api.Payments.RefundAPayment(paymentResponse.Payment.Id, refundRequest);
 
             refundResponse.ActionId.ShouldNotBeNullOrEmpty();
             refundResponse.Reference.ShouldBe(refundRequest.Reference);

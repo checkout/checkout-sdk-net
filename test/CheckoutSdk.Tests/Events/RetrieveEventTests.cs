@@ -49,14 +49,14 @@ namespace Checkout.Tests.Events
                     }
             };
             _eventsClient = new Mock<IEventsClient>();
-            _eventsClient.Setup(eventsClient => eventsClient.RetrieveEventAsync("evt_c2qelfixai2u3es3ksovngkx3e", default(CancellationToken))).ReturnsAsync(() => _eventResponse);
-            _eventsClient.Setup(eventsClient => eventsClient.RetrieveEventAsync(It.IsNotIn(new string[] { "evt_c2qelfixai2u3es3ksovngkx3e" }), default(CancellationToken))).ThrowsAsync(new CheckoutResourceNotFoundException("12345"));
+            _eventsClient.Setup(eventsClient => eventsClient.RetrieveEvent("evt_c2qelfixai2u3es3ksovngkx3e", default(CancellationToken))).ReturnsAsync(() => _eventResponse);
+            _eventsClient.Setup(eventsClient => eventsClient.RetrieveEvent(It.IsNotIn(new string[] { "evt_c2qelfixai2u3es3ksovngkx3e" }), default(CancellationToken))).ThrowsAsync(new CheckoutResourceNotFoundException("12345"));
         }
 
         [Fact]
         public async Task CanRetrieveEvent()
         {
-            var eventRetrievalResponse = await _eventsClient.Object.RetrieveEventAsync("evt_c2qelfixai2u3es3ksovngkx3e");
+            var eventRetrievalResponse = await _eventsClient.Object.RetrieveEvent("evt_c2qelfixai2u3es3ksovngkx3e");
 
             eventRetrievalResponse.ShouldNotBeNull();
             eventRetrievalResponse.ShouldBeOfType<EventResponse>();
@@ -65,7 +65,7 @@ namespace Checkout.Tests.Events
         [Fact]
         public async Task Returns404ifEventDoesNotExist()
         {
-            await Assert.ThrowsAsync<CheckoutResourceNotFoundException>(async () => await _eventsClient.Object.RetrieveEventAsync("evt_doesNotExist"));
+            await Assert.ThrowsAsync<CheckoutResourceNotFoundException>(async () => await _eventsClient.Object.RetrieveEvent("evt_doesNotExist"));
         }
     }
 }

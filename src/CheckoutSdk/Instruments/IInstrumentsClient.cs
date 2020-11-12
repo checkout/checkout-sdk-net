@@ -13,7 +13,26 @@ namespace Checkout.Instruments
         /// </summary>
         /// <param name="instrumentRequest">The payment instrument details such as type and token.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
-        /// <returns>A task that upon completion contains the <see cref="InstrumentResponse"/>.</returns>
-        Task<InstrumentResponse> CreateAsync(InstrumentRequest instrumentRequest, CancellationToken cancellationToken = default(CancellationToken));
+        /// <returns>A task that upon completion contains the <see cref="CreateInstrumentResponse"/>.</returns>
+        Task<CreateInstrumentResponse> CreateAnInstrument(InstrumentRequest instrumentRequest, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Returns details of a payment instrument.
+        /// </summary>
+        /// <param name="instrumentId">The unique identifier of the payment instrument.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
+        /// <returns>A task that upon completion contains the <see cref="GetInstrumentResponse"/>.</returns>
+        Task<GetInstrumentResponse> GetInstrumentDetails(string instrumentId, CancellationToken cancellationToken = default(CancellationToken));
+
+
+        /// <summary>
+        /// Update details of a payment instrument.
+        /// </summary>
+        /// <param name="instrumentId">>The unique identifier of the payment instrument.</param>
+        /// <param name="updateInstrumentRequest">The payment instrument details such as type and token.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
+        /// <returns>A task that upon completion contains the <see cref="UpdateInstrumentResponse"/>.</returns>
+        Task<UpdateInstrumentResponse> UpdateInstrumentDetails(string instrumentId, UpdateInstrumentRequest updateIstrumentRequest, CancellationToken cancellationToken = default(CancellationToken));
+
     }
 }

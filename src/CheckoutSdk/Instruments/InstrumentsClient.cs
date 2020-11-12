@@ -21,9 +21,19 @@ namespace Checkout.Instruments
             _credentials = new SecretKeyCredentials(configuration);
         }
 
-        public Task<InstrumentResponse> CreateAsync(InstrumentRequest instrumentRequest, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<CreateInstrumentResponse> CreateAnInstrument(InstrumentRequest instrumentRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.PostAsync<InstrumentResponse>(path, _credentials, cancellationToken, instrumentRequest);
+            return _apiClient.PostAsync<CreateInstrumentResponse>(path, _credentials, cancellationToken, instrumentRequest);
+        }
+
+        public Task<GetInstrumentResponse> GetInstrumentDetails(string instrumentId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return _apiClient.GetAsync<GetInstrumentResponse>($"{path}/{instrumentId}", _credentials, cancellationToken);
+        }
+
+        public Task<UpdateInstrumentResponse> UpdateInstrumentDetails(string instrumentId, UpdateInstrumentRequest updateInstrumentRequest, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return _apiClient.PatchAsync<UpdateInstrumentResponse>($"{path}/{instrumentId}", _credentials, cancellationToken, updateInstrumentRequest);
         }
     }
 }

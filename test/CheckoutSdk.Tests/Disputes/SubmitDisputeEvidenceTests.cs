@@ -22,7 +22,7 @@ namespace Checkout.Tests.Disputes
         {
             // simulate a chargeback payment
             var chargebackPaymentRequest = TestHelper.CreateChargebackCardPaymentRequest();
-            var paymentResponse = await _api.Payments.RequestAsync(chargebackPaymentRequest);
+            var paymentResponse = await _api.Payments.RequestAPayment(chargebackPaymentRequest);
 
             paymentResponse.ShouldNotBeNull();
             paymentResponse.IsPending.ShouldBeFalse();
@@ -33,7 +33,7 @@ namespace Checkout.Tests.Disputes
             while (dispute == null)
             {
                 await Task.Delay(TestHelper.PaymentDisputedVerificationInterval());
-                var getDisputesResponse = await _api.Disputes.GetDisputesAsync(getDisputesRequest: getDisputesRequest);
+                var getDisputesResponse = await _api.Disputes.GetDisputes(getDisputesRequest: getDisputesRequest);
                 var disputes = getDisputesResponse.Data;
                 if (disputes.Count == 1) dispute = disputes[0];
             }
@@ -44,7 +44,7 @@ namespace Checkout.Tests.Disputes
             // upload a file first
             var pathToFile = @"test_file.png";
             var fileInfo = new FileInfo(fileName: pathToFile);
-            var uploadFileResponse = await _api.Files.UploadFileAsync(pathToFile: fileInfo.FullName, purpose: "dispute_evidence");
+            var uploadFileResponse = await _api.Files.UploadFile(pathToFile: fileInfo.FullName, purpose: "dispute_evidence");
 
             uploadFileResponse.ShouldNotBeNull();
             uploadFileResponse.Id.ShouldStartWith("file_");
@@ -55,13 +55,13 @@ namespace Checkout.Tests.Disputes
                 {"additional_evidence_file", uploadFileResponse.Id },
                 {"additional_evidence_text", "provide dispute evidence test" }
             };
-            await _api.Disputes.ProvideDisputeEvidenceAsync(id: dispute.Id, disputeEvidence: disputeEvidence);
+            await _api.Disputes.ProvideDisputeEvidence(disputeId: dispute.Id, disputeEvidence: disputeEvidence);
 
             // submit dispute evidence
-            await _api.Disputes.SubmitDisputeEvidenceAsync(id: dispute.Id);
+            await _api.Disputes.SubmitDisputeEvidence(disputeId: dispute.Id);
 
             // check if dispute status changed to "evidence_under_review"
-            var getDisputeResponse = await _api.Disputes.GetDisputeAsync(id: dispute.Id);
+            var getDisputeResponse = await _api.Disputes.GetDisputeDetails(disputeId: dispute.Id);
 
             getDisputeResponse.ShouldNotBeNull();
             getDisputeResponse.Status.ShouldBe("evidence_under_review");

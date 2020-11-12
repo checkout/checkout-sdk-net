@@ -28,36 +28,36 @@ namespace Checkout.Payments
             _credentials = new SecretKeyCredentials(configuration);
         }
 
-        public Task<PaymentResponse> RequestAsync<TRequestSource>(PaymentRequest<TRequestSource> paymentRequest, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null) 
+        public Task<PaymentResponse> RequestAPayment<TRequestSource>(PaymentRequest<TRequestSource> paymentRequest, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null) 
             where TRequestSource : IRequestSource
         {
             return RequestPaymentAsync(paymentRequest, PaymentResponseMappings, cancellationToken, idempotencyKey);
         }
 
-        public Task<GetPaymentResponse> GetAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<GetPaymentResponse> GetPaymentDetails(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
         {
             return _apiClient.GetAsync<GetPaymentResponse>(GetPaymentUrl(paymentId), _credentials, cancellationToken);
         }
 
-        public Task<IEnumerable<PaymentAction>> GetActionsAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<IEnumerable<PaymentAction>> GetPaymentActions(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
         {
             const string path = "/actions";
             return _apiClient.GetAsync<IEnumerable<PaymentAction>>(GetPaymentUrl(paymentId) + path, _credentials, cancellationToken);
         }
 
-        public Task<CaptureResponse> CaptureAsync(string paymentId, CaptureRequest captureRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null)
+        public Task<CaptureResponse> CaptureAPayment(string paymentId, CaptureRequest captureRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null)
         {
             const string path = "/captures";
             return _apiClient.PostAsync<CaptureResponse>(GetPaymentUrl(paymentId) + path, _credentials, cancellationToken, captureRequest, idempotencyKey);
         }
 
-        public Task<RefundResponse> RefundAsync(string paymentId, RefundRequest refundRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null)
+        public Task<RefundResponse> RefundAPayment(string paymentId, RefundRequest refundRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null)
         {
             const string path = "/refunds";
             return _apiClient.PostAsync<RefundResponse>(GetPaymentUrl(paymentId) + path, _credentials, cancellationToken, refundRequest, idempotencyKey);
         }
 
-        public Task<VoidResponse> VoidAsync(string paymentId, VoidRequest voidRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null)
+        public Task<VoidResponse> VoidAPayment(string paymentId, VoidRequest voidRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null)
         {
             const string path = "/voids";
             return _apiClient.PostAsync<VoidResponse>(GetPaymentUrl(paymentId) + path, _credentials, cancellationToken, voidRequest, idempotencyKey);

@@ -1,20 +1,26 @@
+using Checkout.Common;
+
 namespace Checkout.Instruments
 {
     /// <summary>
-    /// Indicates the instrument has been successfully created.
+    /// The instrument details.
     /// </summary>
-    public class InstrumentResponse
+    public class GetInstrumentResponse
     {
         /// <summary>
-        /// The unique identifier of the payment instrument that can be used later for payments.
+        /// The instrument id for the retrieved instrument.
         /// </summary>
         public string Id { get; set; }
 
         /// <summary>
-        /// The underlying payment instrument type.
-        /// For payment instruments created from Checkout.com tokens, this will reflect the type of payment instrument that was tokenized.
+        /// The instrument type.
         /// </summary>
         public string Type { get; set; }
+
+        /// <summary>
+        /// A token that can uniquely identify this card across all customers.
+        /// </summary>
+        public string Fingerprint { get; set; }
 
         /// <summary>
         /// Gets or sets the expiry month.
@@ -25,6 +31,11 @@ namespace Checkout.Instruments
         /// Gets or sets the expiry year.
         /// </summary>
         public int ExpiryYear { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the cardholder.
+        /// </summary>
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the card scheme.
@@ -70,5 +81,15 @@ namespace Checkout.Instruments
         /// Gets or sets the issuer/card scheme product type.
         /// </summary>
         public string ProductType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the account holder details.
+        /// </summary>
+        public AccountHolder AccountHolder { get; set; }
+
+        /// <summary>
+        /// Gets or sets the customer details.
+        /// </summary>
+        public Customer Customer { get; set; }
     }
 }
