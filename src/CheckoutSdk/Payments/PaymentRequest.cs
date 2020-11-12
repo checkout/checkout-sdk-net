@@ -137,5 +137,11 @@ namespace Checkout.Payments
         /// Use the processing object to influence or override the data sent during card processing
         /// </summary>
         public Dictionary<string, object> Processing { get; set; } = new Dictionary<string, object>();
+
+        /// <summary>
+        /// Flags the payment as a merchant-initiated transaction (MIT).
+        /// Must be set to true for all MITs.
+        /// </summary>
+        public bool MerchantInitiated { get; set; }
     }
 }
