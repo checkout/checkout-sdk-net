@@ -23,17 +23,17 @@ namespace Checkout.Instruments
             _credentials = new SecretKeyCredentials(configuration);
         }
 
-        public Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, CreateInstrumentResponse Content)> CreateAnInstrument(InstrumentRequest instrumentRequest, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<CheckoutHttpResponseMessage<CreateInstrumentResponse>> CreateAnInstrument(InstrumentRequest instrumentRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
             return _apiClient.PostAsync<CreateInstrumentResponse>(path, _credentials, cancellationToken, instrumentRequest);
         }
 
-        public Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, GetInstrumentResponse Content)> GetInstrumentDetails(string instrumentId, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<CheckoutHttpResponseMessage<GetInstrumentResponse>> GetInstrumentDetails(string instrumentId, CancellationToken cancellationToken = default(CancellationToken))
         {
             return _apiClient.GetAsync<GetInstrumentResponse>($"{path}/{instrumentId}", _credentials, cancellationToken);
         }
 
-        public Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, UpdateInstrumentResponse Content)> UpdateInstrumentDetails(string instrumentId, UpdateInstrumentRequest updateInstrumentRequest, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<CheckoutHttpResponseMessage<UpdateInstrumentResponse>> UpdateInstrumentDetails(string instrumentId, UpdateInstrumentRequest updateInstrumentRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
             return _apiClient.PatchAsync<UpdateInstrumentResponse>($"{path}/{instrumentId}", _credentials, cancellationToken, updateInstrumentRequest);
         }

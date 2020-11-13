@@ -51,16 +51,16 @@ namespace Checkout.SampleApp.Controllers
                     FailureUrl = BuildUrl(nameof(ThreeDSFailure))
                 };
 
-                var (_, _, response) = await _checkoutApi.Payments.RequestAPayment(paymentRequest);
+                var response = await _checkoutApi.Payments.RequestAPayment(paymentRequest);
 
-                if (response.IsPending && response.Pending.RequiresRedirect())
+                if (response.Content.IsPending && response.Content.Pending.RequiresRedirect())
                 {
-                    return Redirect(response.Pending.GetRedirectLink().Href);
+                    return Redirect(response.Content.Pending.GetRedirectLink().Href);
                 }
 
-                StorePaymentInTempData(response.Payment);
+                StorePaymentInTempData(response.Content.Payment);
 
-                if (response.Payment.Approved)
+                if (response.Content.Payment.Approved)
                 {
                     return RedirectToAction(nameof(NonThreeDSSuccess));
                 }
@@ -99,12 +99,12 @@ namespace Checkout.SampleApp.Controllers
 
         private async Task<IActionResult> GetThreeDsPaymentAsync(string sessionId)
         {
-            var (_, _, payment) = await _checkoutApi.Payments.GetPaymentDetails(sessionId);
+            var response = await _checkoutApi.Payments.GetPaymentDetails(sessionId);
             
-            if (payment == null)
+            if (response.Content == null)
                 return RedirectToAction(nameof(Index));
 
-            return View(payment);
+            return View(response.Content);
         }
 
         private ActionResult GetPaymentFromTempData()

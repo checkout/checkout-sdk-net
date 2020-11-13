@@ -1,19 +1,19 @@
 ﻿using Checkout.Common;
 using Checkout.Payments;
+using Checkout.SampleApp.Controllers;
+using Checkout.SampleApp.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 using Moq;
 using Shouldly;
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Checkout.SampleApp.Controllers;
-using Checkout.SampleApp.Models;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Xunit;
-using System.Net;
 
 namespace Checkout.SampleApp.Tests
 {
@@ -22,7 +22,8 @@ namespace Checkout.SampleApp.Tests
         private readonly Mock<ICheckoutApi> _checkoutApi;
         private readonly Mock<IPaymentsClient> _paymentsClient;
         private readonly PaymentsController _controller;
-        private readonly CheckoutHttpResponseMessage<PaymentResponse> _acceptedResponse;
+        private readonly CheckoutHttpResponseMessage<PaymentResponse> _requestAPaymentResponse;
+        private readonly CheckoutHttpResponseMessage<GetPaymentResponse> _getPaymentDetailsResponse;
         private readonly JsonSerializer _jsonSerializer = new JsonSerializer();
 
         public PaymentsControllerTests()
@@ -38,10 +39,11 @@ namespace Checkout.SampleApp.Tests
                     Source = new CardSourceResponse() { Type = CardSource.TypeName }
                 }
             };
-            _acceptedResponse = new CheckoutHttpResponseMessage<PaymentResponse>(HttpStatusCode.Accepted, paymentResponse).MockHeaders();
+            _requestAPaymentResponse = new CheckoutHttpResponseMessage<PaymentResponse>(HttpStatusCode.Accepted, paymentResponse).MockHeaders();
+            _getPaymentDetailsResponse = new CheckoutHttpResponseMessage<GetPaymentResponse>(HttpStatusCode.Accepted, new GetPaymentResponse()).MockHeaders();
 
-            _paymentsClient.Setup(paymentsClient => paymentsClient.RequestAPayment(It.IsAny<PaymentRequest<TokenSource>>(), default(CancellationToken), null)).ReturnsAsync(() => (_acceptedResponse.StatusCode, _acceptedResponse.Headers, _acceptedResponse.Content));
-            _paymentsClient.Setup(paymentsClient => paymentsClient.GetPaymentDetails(It.IsAny<string>(), default(CancellationToken))).ReturnsAsync(() => (_acceptedResponse.StatusCode, _acceptedResponse.Headers, new GetPaymentResponse()));
+            _paymentsClient.Setup(paymentsClient => paymentsClient.RequestAPayment(It.IsAny<PaymentRequest<TokenSource>>(), default(CancellationToken), null)).ReturnsAsync(() => _requestAPaymentResponse);
+            _paymentsClient.Setup(paymentsClient => paymentsClient.GetPaymentDetails(It.IsAny<string>(), default(CancellationToken))).ReturnsAsync(() => _getPaymentDetailsResponse);
 
             _controller = new PaymentsController(_checkoutApi.Object, new JsonSerializer());
 
@@ -134,7 +136,7 @@ namespace Checkout.SampleApp.Tests
         public async Task CanRenderNonThreeDsSuccessView()
         {
             _checkoutApi.Setup(a => a.Payments).Returns(_paymentsClient.Object);
-            _acceptedResponse.Content.Payment.Approved = true;
+            _requestAPaymentResponse.Content.Payment.Approved = true;
             var model = CreateValidModel();
             model.DoThreeDS = false;
 
@@ -152,7 +154,7 @@ namespace Checkout.SampleApp.Tests
         public async Task CanRenderNonThreeDsFailureView()
         {
             _checkoutApi.Setup(a => a.Payments).Returns(_paymentsClient.Object);
-            _acceptedResponse.Content.Payment.Approved = false;
+            _requestAPaymentResponse.Content.Payment.Approved = false;
             var model = CreateValidModel();
             model.DoThreeDS = false;
 
@@ -170,9 +172,9 @@ namespace Checkout.SampleApp.Tests
         public async Task CanRedirectThreeDs()
         {
             _checkoutApi.Setup(a => a.Payments).Returns(_paymentsClient.Object);
-            _acceptedResponse.Content.Pending = new PaymentPending();
+            _requestAPaymentResponse.Content.Pending = new PaymentPending();
             var redirectLink = new Link() { Href = "test" };
-            _acceptedResponse.Content.Pending.Links.Add("redirect", redirectLink);
+            _requestAPaymentResponse.Content.Pending.Links.Add("redirect", redirectLink);
             var model = CreateValidModel();
             model.DoThreeDS = true;
 

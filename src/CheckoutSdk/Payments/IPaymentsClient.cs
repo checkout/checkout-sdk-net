@@ -19,7 +19,7 @@ namespace Checkout.Payments
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <param name="idempotencyKey">Optional idempotency key to safely retry payment requests.</param>
         /// <returns>A task that upon completion contains the payment response.</returns>
-        Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, PaymentResponse Content)> RequestAPayment<TPaymentSource>(PaymentRequest<TPaymentSource> paymentRequest, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null) 
+        Task<CheckoutHttpResponseMessage<PaymentResponse>> RequestAPayment<TPaymentSource>(PaymentRequest<TPaymentSource> paymentRequest, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null) 
             where TPaymentSource : IRequestSource;
         
         /// <summary>
@@ -31,7 +31,7 @@ namespace Checkout.Payments
         /// <param name="paymentId">The payment or payment session identifier.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A task that upon completion contains the payment details.</returns>
-        Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, GetPaymentResponse Content)> GetPaymentDetails(string paymentId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<CheckoutHttpResponseMessage<GetPaymentResponse>> GetPaymentDetails(string paymentId, CancellationToken cancellationToken = default(CancellationToken));
         
         /// <summary>
         /// Returns all the actions associated with a payment ordered by processing date in descending order (latest first).
@@ -39,7 +39,7 @@ namespace Checkout.Payments
         /// <param name="paymentId">The payment identifier.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A task that upon completion contains the payment actions.</returns>
-        Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, IEnumerable<PaymentAction> Content)> GetPaymentActions(string paymentId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<CheckoutHttpResponseMessage<IEnumerable<PaymentAction>>> GetPaymentActions(string paymentId, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Captures a payment if supported by the payment method.
@@ -50,7 +50,7 @@ namespace Checkout.Payments
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <param name="idempotencyKey">Optional idempotency key to safely retry payment requests.</param>
         /// <returns>A task that upon completion contains the capture response.</returns>
-        Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, CaptureResponse Content)> CaptureAPayment(string paymentId, CaptureRequest captureRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null);
+        Task<CheckoutHttpResponseMessage<CaptureResponse>> CaptureAPayment(string paymentId, CaptureRequest captureRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null);
 
         /// <summary>
         /// Refunds a payment if supported by the payment method.
@@ -61,7 +61,7 @@ namespace Checkout.Payments
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <param name="idempotencyKey">Optional idempotency key to safely retry payment requests.</param>
         /// <returns>A task that upon completion contains the refund response.</returns>
-        Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, RefundResponse Content)> RefundAPayment(string paymentId, RefundRequest refundRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null);
+        Task<CheckoutHttpResponseMessage<RefundResponse>> RefundAPayment(string paymentId, RefundRequest refundRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null);
 
         /// <summary>
         /// Voids a payment if supported by the payment method.
@@ -72,6 +72,6 @@ namespace Checkout.Payments
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <param name="idempotencyKey">Optional idempotency key to safely retry payment requests.</param>
         /// <returns>A task that upon completion contains the void response.</returns>
-        Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, VoidResponse Content)> VoidAPayment(string paymentId, VoidRequest voidRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null);
+        Task<CheckoutHttpResponseMessage<VoidResponse>> VoidAPayment(string paymentId, VoidRequest voidRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null);
     }
 }

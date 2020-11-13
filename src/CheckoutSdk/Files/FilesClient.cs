@@ -23,14 +23,14 @@ namespace Checkout.Files
             _credentials = new SecretKeyCredentials(configuration);
         }
 
-        public Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, UploadFileResponse Content)> UploadFile(string pathToFile, string purpose, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<CheckoutHttpResponseMessage<UploadFileResponse>> UploadFile(string pathToFile, string purpose, CancellationToken cancellationToken = default(CancellationToken))
         {
             var fileUploadMultipartFormDataContentRequest = new FileUploadMultipartFormDataContentRequest(pathToFile, purpose);
 
             return _apiClient.PostAsync<UploadFileResponse>(path, _credentials, cancellationToken, fileUploadMultipartFormDataContentRequest);
         }
 
-        public Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, File Content)> GetFileInformation(string fileId, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<CheckoutHttpResponseMessage<File>> GetFileInformation(string fileId, CancellationToken cancellationToken = default(CancellationToken))
         {
             return _apiClient.GetAsync<File>($"{path}/{fileId}", _credentials, cancellationToken);
         }

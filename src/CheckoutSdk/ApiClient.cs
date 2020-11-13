@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Checkout.Common;
-using System.Reflection;
 using System.Net.Http.Headers;
 
 namespace Checkout
@@ -73,7 +72,7 @@ namespace Checkout
             _httpClient = httpClientFactory.CreateClient();
         }
 
-        public async Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, TResult Content)> GetAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken)
+        public async Task<CheckoutHttpResponseMessage<TResult>> GetAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
@@ -91,7 +90,7 @@ namespace Checkout
             }
         }
 
-        public async Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, TResult Content)> PostAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, object request = null, string idempotencyKey = null)
+        public async Task<CheckoutHttpResponseMessage<TResult>> PostAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, object request = null, string idempotencyKey = null)
         {
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
@@ -109,7 +108,7 @@ namespace Checkout
             }
         }
 
-        public async Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, TResult Content)> PostAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, HttpContent httpContent = null, string idempotencyKey = null)
+        public async Task<CheckoutHttpResponseMessage<TResult>> PostAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, HttpContent httpContent = null, string idempotencyKey = null)
         {
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
@@ -127,7 +126,7 @@ namespace Checkout
             }
         }
 
-        public async Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, dynamic Content)> PostAsync(string path, IApiCredentials credentials, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken, object request = null, string idempotencyKey = null)
+        public async Task<CheckoutHttpResponseMessage<dynamic>> PostAsync(string path, IApiCredentials credentials, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken, object request = null, string idempotencyKey = null)
         {
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
@@ -149,7 +148,7 @@ namespace Checkout
             }
         }
 
-        public async Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, TResult Content)> PutAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, object request = null)
+        public async Task<CheckoutHttpResponseMessage<TResult>> PutAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, object request = null)
         {
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
@@ -167,7 +166,7 @@ namespace Checkout
             }
         }
 
-        public async Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, TResult Content)> PatchAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, object request = null)
+        public async Task<CheckoutHttpResponseMessage<TResult>> PatchAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken, object request = null)
         {
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
@@ -185,7 +184,7 @@ namespace Checkout
             }
         }
 
-        public async Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, TResult Content)> DeleteAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken)
+        public async Task<CheckoutHttpResponseMessage<TResult>> DeleteAsync<TResult>(string path, IApiCredentials credentials, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
@@ -203,23 +202,23 @@ namespace Checkout
             }
         }
 
-        private async Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, TResult Content)> DeserializeJsonAsync<TResult>(HttpResponseMessage httpResponse)
+        private async Task<CheckoutHttpResponseMessage<TResult>> DeserializeJsonAsync<TResult>(HttpResponseMessage httpResponse)
         {
-            var (StatusCode, Headers, Content) = await DeserializeJsonAsync(httpResponse, typeof(TResult));
-            return (StatusCode, Headers, (TResult)Content);
+            var result = await DeserializeJsonAsync(httpResponse, typeof(TResult));
+            return new CheckoutHttpResponseMessage<TResult>(result.StatusCode, result.Headers, result.Content);
         }
 
-        private async Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, dynamic Content)> DeserializeJsonAsync(HttpResponseMessage httpResponse, Type resultType)
+        private async Task<CheckoutHttpResponseMessage<dynamic>> DeserializeJsonAsync(HttpResponseMessage httpResponse, Type resultType)
         {
 
             if (httpResponse.Content == null)
-                return (httpResponse.StatusCode, httpResponse.Headers, httpResponse.Content);
+                return new CheckoutHttpResponseMessage<dynamic>(httpResponse.StatusCode, httpResponse.Headers, httpResponse.Content);
 
             var json = await httpResponse.Content.ReadAsStringAsync();
             if(!string.IsNullOrWhiteSpace(json))
-                return (httpResponse.StatusCode, httpResponse.Headers, _serializer.Deserialize(json, resultType));
+                return new CheckoutHttpResponseMessage<dynamic>(httpResponse.StatusCode, httpResponse.Headers, _serializer.Deserialize(json, resultType));
 
-            return (httpResponse.StatusCode, httpResponse.Headers, json);
+            return new CheckoutHttpResponseMessage<dynamic>(httpResponse.StatusCode, httpResponse.Headers, json);
         }
 
         private async Task<HttpResponseMessage> SendRequestAsync(HttpMethod httpMethod, string path, IApiCredentials credentials, HttpContent httpContent, CancellationToken cancellationToken, string idempotencyKey)
@@ -267,8 +266,8 @@ namespace Checkout
 
                 if (httpResponse.StatusCode == Unprocessable)
                 {
-                    var (_, _, Content) = await DeserializeJsonAsync<ErrorResponse>(httpResponse);
-                    throw new CheckoutValidationException(Content, httpResponse.StatusCode, requestId);
+                    var result = await DeserializeJsonAsync<ErrorResponse>(httpResponse);
+                    throw new CheckoutValidationException(result.Content, httpResponse.StatusCode, requestId);
                 }
 
                 if (httpResponse.StatusCode == HttpStatusCode.NotFound)

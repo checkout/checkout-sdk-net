@@ -1,5 +1,3 @@
-using System.Net;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace Checkout.Sources
@@ -15,6 +13,6 @@ namespace Checkout.Sources
         /// </summary>
         /// <param name="sourceRequest">The source details such as type and billing address.</param>
         /// <returns>A task that upon completion contains the source response.</returns>
-        Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, SourceResponse Content)> AddAPaymentSource(SourceRequest sourceRequest);
+        Task<CheckoutHttpResponseMessage<SourceResponse>> AddAPaymentSource(SourceRequest sourceRequest);
     }
 }

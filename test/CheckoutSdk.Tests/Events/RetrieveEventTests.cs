@@ -51,7 +51,7 @@ namespace Checkout.Tests.Events
             var canRetrieveEventResponse = new CheckoutHttpResponseMessage<EventResponse>(HttpStatusCode.OK, eventResponse).MockHeaders();
 
             _eventsClient = new Mock<IEventsClient>();
-            _eventsClient.Setup(eventsClient => eventsClient.RetrieveEvent("evt_c2qelfixai2u3es3ksovngkx3e", default(CancellationToken))).ReturnsAsync(() => (canRetrieveEventResponse.StatusCode, canRetrieveEventResponse.Headers, canRetrieveEventResponse.Content));
+            _eventsClient.Setup(eventsClient => eventsClient.RetrieveEvent("evt_c2qelfixai2u3es3ksovngkx3e", default(CancellationToken))).ReturnsAsync(() => canRetrieveEventResponse);
             _eventsClient.Setup(eventsClient => eventsClient.RetrieveEvent(It.IsNotIn(new string[] { "evt_c2qelfixai2u3es3ksovngkx3e" }), default(CancellationToken))).ThrowsAsync(new CheckoutResourceNotFoundException("12345"));
         }
 

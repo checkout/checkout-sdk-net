@@ -38,46 +38,46 @@ namespace Checkout.Payments
             _serializer = serializer;
         }
 
-        public Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, PaymentResponse Content)> RequestAPayment<TRequestSource>(PaymentRequest<TRequestSource> paymentRequest, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null) 
+        public Task<CheckoutHttpResponseMessage<PaymentResponse>> RequestAPayment<TRequestSource>(PaymentRequest<TRequestSource> paymentRequest, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null) 
             where TRequestSource : IRequestSource
         {
             return RequestPaymentAsync(paymentRequest, PaymentResponseMappings, cancellationToken, idempotencyKey);
         }
 
-        public Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, GetPaymentResponse Content)> GetPaymentDetails(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<CheckoutHttpResponseMessage<GetPaymentResponse>> GetPaymentDetails(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
         {
             return _apiClient.GetAsync<GetPaymentResponse>(GetPaymentUrl(paymentId), _credentials, cancellationToken);
         }
 
-        public Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, IEnumerable<PaymentAction> Content)> GetPaymentActions(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<CheckoutHttpResponseMessage<IEnumerable<PaymentAction>>> GetPaymentActions(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
         {
             const string path = "/actions";
             return _apiClient.GetAsync<IEnumerable<PaymentAction>>(GetPaymentUrl(paymentId) + path, _credentials, cancellationToken);
         }
 
-        public Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, CaptureResponse Content)> CaptureAPayment(string paymentId, CaptureRequest captureRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null)
+        public Task<CheckoutHttpResponseMessage<CaptureResponse>> CaptureAPayment(string paymentId, CaptureRequest captureRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null)
         {
             const string path = "/captures";
             return _apiClient.PostAsync<CaptureResponse>(GetPaymentUrl(paymentId) + path, _credentials, cancellationToken, captureRequest, idempotencyKey);
         }
 
-        public Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, RefundResponse Content)> RefundAPayment(string paymentId, RefundRequest refundRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null)
+        public Task<CheckoutHttpResponseMessage<RefundResponse>> RefundAPayment(string paymentId, RefundRequest refundRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null)
         {
             const string path = "/refunds";
             return _apiClient.PostAsync<RefundResponse>(GetPaymentUrl(paymentId) + path, _credentials, cancellationToken, refundRequest, idempotencyKey);
         }
 
-        public Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, VoidResponse Content)> VoidAPayment(string paymentId, VoidRequest voidRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null)
+        public Task<CheckoutHttpResponseMessage<VoidResponse>> VoidAPayment(string paymentId, VoidRequest voidRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null)
         {
             const string path = "/voids";
             return _apiClient.PostAsync<VoidResponse>(GetPaymentUrl(paymentId) + path, _credentials, cancellationToken, voidRequest, idempotencyKey);
         }
 
-        private async Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, PaymentResponse Content)> RequestPaymentAsync<TRequestSource>(PaymentRequest<TRequestSource> paymentRequest, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken, string idempotencyKey) where TRequestSource : IRequestSource
+        private async Task<CheckoutHttpResponseMessage<PaymentResponse>> RequestPaymentAsync<TRequestSource>(PaymentRequest<TRequestSource> paymentRequest, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken, string idempotencyKey) where TRequestSource : IRequestSource
         {
             const string path = "payments";
-            var (StatusCode, Headers, Content) = await _apiClient.PostAsync(path, _credentials, resultTypeMappings, cancellationToken, paymentRequest, idempotencyKey);
-            return (StatusCode, Headers, _serializer.Deserialize(_serializer.Serialize(Content), (Content as object).GetType()));
+            var result = await _apiClient.PostAsync(path, _credentials, resultTypeMappings, cancellationToken, paymentRequest, idempotencyKey);
+            return new CheckoutHttpResponseMessage<PaymentResponse>(result.StatusCode, result.Headers, _serializer.Deserialize(_serializer.Serialize(result.Content), (result.Content as object).GetType()));
         }
 
         private static string GetPaymentUrl(string paymentId)

@@ -18,7 +18,7 @@ namespace Checkout.Tests.Events
             var canRetryAllWebhooksResponse = new CheckoutHttpResponseMessage<object>(HttpStatusCode.Accepted).MockHeaders();
 
             _eventsClient = new Mock<IEventsClient>();
-            _eventsClient.Setup(eventsClient => eventsClient.RetryWebhook("evt_4ddvw5cfb4xurn3mfedxhdtvqa", "wh_fulbukihgg4ehjl7ew25ppyylq", default(CancellationToken))).ReturnsAsync(() => (canRetryAllWebhooksResponse.StatusCode, canRetryAllWebhooksResponse.Headers, canRetryAllWebhooksResponse.Content));
+            _eventsClient.Setup(eventsClient => eventsClient.RetryWebhook("evt_4ddvw5cfb4xurn3mfedxhdtvqa", "wh_fulbukihgg4ehjl7ew25ppyylq", default(CancellationToken))).ReturnsAsync(() => canRetryAllWebhooksResponse);
             _eventsClient.Setup(eventsClient => eventsClient.RetryWebhook(It.IsAny<string>(), It.IsNotIn(new string[] { "wh_fulbukihgg4ehjl7ew25ppyylq" }), default(CancellationToken))).ThrowsAsync(new CheckoutResourceNotFoundException("12345"));
         }
 

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -37,16 +36,16 @@ namespace Checkout.Sources
             _serializer = serializer;
         }
 
-        public Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, SourceResponse Content)> AddAPaymentSource(SourceRequest sourceRequest)
+        public Task<CheckoutHttpResponseMessage<SourceResponse>> AddAPaymentSource(SourceRequest sourceRequest)
         {
             return RequestSourceAsync(sourceRequest, SourceResponseMappings);
         }
 
-        private async Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, SourceResponse Content)> RequestSourceAsync(SourceRequest sourceRequest, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken = default(CancellationToken))
+        private async Task<CheckoutHttpResponseMessage<SourceResponse>> RequestSourceAsync(SourceRequest sourceRequest, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken = default(CancellationToken))
         {
             const string path = "sources";
-            var (StatusCode, Headers, Content) = await _apiClient.PostAsync(path, _credentials, resultTypeMappings, cancellationToken, sourceRequest);
-            return (StatusCode, Headers, _serializer.Deserialize(_serializer.Serialize(Content), (Content as object).GetType()));
+            var response = await _apiClient.PostAsync(path, _credentials, resultTypeMappings, cancellationToken, sourceRequest);
+            return new CheckoutHttpResponseMessage<SourceResponse>(response.StatusCode, response.Headers, _serializer.Deserialize(_serializer.Serialize(response.Content), (response.Content as object).GetType()));
         }
     }
 }

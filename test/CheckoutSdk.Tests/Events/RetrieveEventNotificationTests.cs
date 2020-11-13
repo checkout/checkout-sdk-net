@@ -41,7 +41,7 @@ namespace Checkout.Tests.Events
             var canRetrieveEventNotificationResponse = new CheckoutHttpResponseMessage<EventNotificationResponse>(HttpStatusCode.OK, eventNotificationResponse).MockHeaders();
 
             _eventsClient = new Mock<IEventsClient>();
-            _eventsClient.Setup(eventsClient => eventsClient.RetrieveEventNotification("evt_g7danjfojdse5hclmq2pk6csve", "ntf_cuzguxmkcncu5g2tmzghsnbkm4", default(CancellationToken))).ReturnsAsync(() => (canRetrieveEventNotificationResponse.StatusCode, canRetrieveEventNotificationResponse.Headers, canRetrieveEventNotificationResponse.Content));
+            _eventsClient.Setup(eventsClient => eventsClient.RetrieveEventNotification("evt_g7danjfojdse5hclmq2pk6csve", "ntf_cuzguxmkcncu5g2tmzghsnbkm4", default(CancellationToken))).ReturnsAsync(() => canRetrieveEventNotificationResponse);
             _eventsClient.Setup(eventsClient => eventsClient.RetrieveEventNotification(It.IsAny<string>(), It.IsNotIn(new string[] { "ntf_cuzguxmkcncu5g2tmzghsnbkm4" }), default(CancellationToken))).ThrowsAsync(new CheckoutResourceNotFoundException("12345"));
         }
 

@@ -1,6 +1,4 @@
-using System;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +15,7 @@ namespace Checkout.Webhooks
         /// </summary>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A task that upon completion contains the configured webhooks.</returns>
-        Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, WebhooksResponse Content)> RetrieveWebhooks(CancellationToken cancellationToken = default(CancellationToken));
+        Task<CheckoutHttpResponseMessage<WebhooksResponse>> RetrieveWebhooks(CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Register a new webhook endpoint that Checkout.com will post all or selected events to
@@ -25,7 +23,7 @@ namespace Checkout.Webhooks
         /// <param name="webhookRequest">The webhook configuration details such as url and event types.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A task that upon completion contains the registered webhook.</returns>
-        Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, WebhookResponse Content)> RegisterWebhook(RegisterWebhookRequest webhookRequest, CancellationToken cancellationToken = default(CancellationToken));
+        Task<CheckoutHttpResponseMessage<WebhookResponse>> RegisterWebhook(RegisterWebhookRequest webhookRequest, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Retrieves the webhook with the specified identifier string
@@ -33,7 +31,7 @@ namespace Checkout.Webhooks
         /// <param name="webhookId">The unique webhook identifier.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A task that upon completion contains the webhook with the specified identifier string.</returns>
-        Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, WebhookResponse Content)> RetrieveWebhook(string webhookId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<CheckoutHttpResponseMessage<WebhookResponse>> RetrieveWebhook(string webhookId, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Updates an existing webhook
@@ -42,7 +40,7 @@ namespace Checkout.Webhooks
         /// <param name="webhookRequest">The webhook configuration details such as url and event types.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A task that upon completion contains the updated webhook with the specified identifier string.</returns>
-        Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, WebhookResponse Content)> UpdateWebhook(string webhookId, UpdateWebhookRequest webhookRequest, CancellationToken cancellationToken = default(CancellationToken));
+        Task<CheckoutHttpResponseMessage<WebhookResponse>> UpdateWebhook(string webhookId, UpdateWebhookRequest webhookRequest, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Updates all or some of the registered webhook details
@@ -51,13 +49,13 @@ namespace Checkout.Webhooks
         /// <param name="webhookRequest">The webhook configuration details such as url and event types.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A task that upon completion contains the (partially) updated webhook with the specified identifier string.</returns>
-        Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, WebhookResponse Content)> PartiallyUpdateWebhook(string webhookId, PartialUpdateWebhookRequest webhookRequest, CancellationToken cancellationToken = default(CancellationToken));
+        Task<CheckoutHttpResponseMessage<WebhookResponse>> PartiallyUpdateWebhook(string webhookId, PartialUpdateWebhookRequest webhookRequest, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Removes an existing webhook
         /// </summary>
         /// <param name="webhookId">The unique webhook identifier.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
-        Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, dynamic Content)> RemoveWebhook(string webhookId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<CheckoutHttpResponseMessage<dynamic>> RemoveWebhook(string webhookId, CancellationToken cancellationToken = default(CancellationToken));
     }
 }
