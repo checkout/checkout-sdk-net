@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,7 +16,7 @@ namespace Checkout.Tokens
         /// <param name="cardTokenRequest">The card details.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A task that upon completion contains the card token response</returns>
-        Task<CardTokenResponse> RequestAToken(CardTokenRequest cardTokenRequest, CancellationToken cancellationToken = default(CancellationToken));
+        Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, CardTokenResponse Content)> RequestAToken(CardTokenRequest cardTokenRequest, CancellationToken cancellationToken = default(CancellationToken));
         
         /// <summary>
         /// Exchange a digital wallet payment token for a reference token that can be later used to request a card payment.
@@ -22,6 +24,6 @@ namespace Checkout.Tokens
         /// <param name="walletTokenRequest">The wallet token.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A task that upon completion contains the wallet token response</returns>
-        Task<TokenResponse> RequestAToken(WalletTokenRequest walletTokenRequest, CancellationToken cancellationToken = default(CancellationToken));
+        Task<(HttpStatusCode StatusCode, HttpResponseHeaders Headers, TokenResponse Content)> RequestAToken(WalletTokenRequest walletTokenRequest, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

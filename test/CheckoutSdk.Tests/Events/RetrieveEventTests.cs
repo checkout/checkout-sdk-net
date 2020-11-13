@@ -8,17 +8,17 @@ using System.Collections.Generic;
 using Checkout.Payments;
 using Checkout.Common;
 using System.Threading;
+using System.Net;
 
 namespace Checkout.Tests.Events
 {
     public class RetrieveEventTests : ApiTestFixture
     {
         private readonly Mock<IEventsClient> _eventsClient;
-        private readonly EventResponse _eventResponse;
 
         public RetrieveEventTests()
         {
-            _eventResponse = new EventResponse()
+            var eventResponse = new EventResponse()
             {
                 Id = "evt_c2qelfixai2u3es3ksovngkx3e",
                 Type = "payment_captured",
@@ -48,8 +48,10 @@ namespace Checkout.Tests.Events
                         { "webhooks-retry", new Link(){ Href = "https://api.sandbox.checkout.com/events/evt_c2qelfixai2u3es3ksovngkx3e/webhooks/retry" } }
                     }
             };
+            var canRetrieveEventResponse = new CheckoutHttpResponseMessage<EventResponse>(HttpStatusCode.OK, eventResponse).MockHeaders();
+
             _eventsClient = new Mock<IEventsClient>();
-            _eventsClient.Setup(eventsClient => eventsClient.RetrieveEvent("evt_c2qelfixai2u3es3ksovngkx3e", default(CancellationToken))).ReturnsAsync(() => _eventResponse);
+            _eventsClient.Setup(eventsClient => eventsClient.RetrieveEvent("evt_c2qelfixai2u3es3ksovngkx3e", default(CancellationToken))).ReturnsAsync(() => (canRetrieveEventResponse.StatusCode, canRetrieveEventResponse.Headers, canRetrieveEventResponse.Content));
             _eventsClient.Setup(eventsClient => eventsClient.RetrieveEvent(It.IsNotIn(new string[] { "evt_c2qelfixai2u3es3ksovngkx3e" }), default(CancellationToken))).ThrowsAsync(new CheckoutResourceNotFoundException("12345"));
         }
 
@@ -58,8 +60,8 @@ namespace Checkout.Tests.Events
         {
             var eventRetrievalResponse = await _eventsClient.Object.RetrieveEvent("evt_c2qelfixai2u3es3ksovngkx3e");
 
-            eventRetrievalResponse.ShouldNotBeNull();
-            eventRetrievalResponse.ShouldBeOfType<EventResponse>();
+            eventRetrievalResponse.Content.ShouldNotBeNull();
+            eventRetrievalResponse.Content.ShouldBeOfType<EventResponse>();
         }
 
         [Fact]

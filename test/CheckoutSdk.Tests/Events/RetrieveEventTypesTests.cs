@@ -12,9 +12,9 @@ namespace Checkout.Tests.Events
         {
             var eventTypesRetrievalResponse = await Api.Events.RetrieveEventTypes();
 
-            eventTypesRetrievalResponse.ShouldNotBeNull();
-            eventTypesRetrievalResponse.ShouldBeOfType<AvailableEventTypesResponse>();
-            eventTypesRetrievalResponse.Count.ShouldBeGreaterThan(0);
+            eventTypesRetrievalResponse.Content.ShouldNotBeNull();
+            eventTypesRetrievalResponse.Content.ShouldBeOfType<AvailableEventTypesResponse>();
+            eventTypesRetrievalResponse.Content.Count.ShouldBeGreaterThan(0);
         }
     }
 }

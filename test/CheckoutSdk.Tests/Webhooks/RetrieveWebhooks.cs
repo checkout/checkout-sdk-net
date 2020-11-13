@@ -11,8 +11,8 @@ namespace Checkout.Tests.Webhooks
         {
             var webhooksRetrievalResponse = await Api.Webhooks.RetrieveWebhooks();
 
-            webhooksRetrievalResponse.ShouldNotBeNull();
-            webhooksRetrievalResponse.Count.ShouldBeGreaterThan(0);
+            webhooksRetrievalResponse.Content.ShouldNotBeNull();
+            webhooksRetrievalResponse.Content.Count.ShouldBeGreaterThan(0);
         }
     }
 }

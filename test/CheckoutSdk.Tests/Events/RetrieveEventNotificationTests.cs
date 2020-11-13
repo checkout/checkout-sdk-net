@@ -7,17 +7,17 @@ using System;
 using System.Collections.Generic;
 using Checkout.Common;
 using System.Threading;
+using System.Net;
 
 namespace Checkout.Tests.Events
 {
     public class RetrieveEventNotificationTests : ApiTestFixture
     {
         private readonly Mock<IEventsClient> _eventsClient;
-        private readonly EventNotificationResponse _notificationResponse;
 
         public RetrieveEventNotificationTests()
         {
-            _notificationResponse = new EventNotificationResponse()
+            var eventNotificationResponse = new EventNotificationResponse()
             {
                 Id = "ntf_cuzguxmkcncu5g2tmzghsnbkm4",
                 Url = "https://www.example.com/webhooks/incoming/checkout",
@@ -37,9 +37,11 @@ namespace Checkout.Tests.Events
                         { "self", new Link(){ Href = "https://api.sandbox.checkout.com/events/evt_g7danjfojdse5hclmq2pk6csve/notifications/ntf_cuzguxmkcncu5g2tmzghsnbkm4" } },
                         { "webhook-retry", new Link(){ Href = "https://api.sandbox.checkout.com/events/evt_g7danjfojdse5hclmq2pk6csve/webhooks/wh_xttkznlbnf4ehezf4exbszlql4/retry" } }
                     }
-            };
+            }; ;
+            var canRetrieveEventNotificationResponse = new CheckoutHttpResponseMessage<EventNotificationResponse>(HttpStatusCode.OK, eventNotificationResponse).MockHeaders();
+
             _eventsClient = new Mock<IEventsClient>();
-            _eventsClient.Setup(eventsClient => eventsClient.RetrieveEventNotification("evt_g7danjfojdse5hclmq2pk6csve", "ntf_cuzguxmkcncu5g2tmzghsnbkm4", default(CancellationToken))).ReturnsAsync(() => _notificationResponse);
+            _eventsClient.Setup(eventsClient => eventsClient.RetrieveEventNotification("evt_g7danjfojdse5hclmq2pk6csve", "ntf_cuzguxmkcncu5g2tmzghsnbkm4", default(CancellationToken))).ReturnsAsync(() => (canRetrieveEventNotificationResponse.StatusCode, canRetrieveEventNotificationResponse.Headers, canRetrieveEventNotificationResponse.Content));
             _eventsClient.Setup(eventsClient => eventsClient.RetrieveEventNotification(It.IsAny<string>(), It.IsNotIn(new string[] { "ntf_cuzguxmkcncu5g2tmzghsnbkm4" }), default(CancellationToken))).ThrowsAsync(new CheckoutResourceNotFoundException("12345"));
         }
 
@@ -48,9 +50,9 @@ namespace Checkout.Tests.Events
         {
             var eventNotificationRetrievalResponse = await _eventsClient.Object.RetrieveEventNotification(eventId: "evt_g7danjfojdse5hclmq2pk6csve", notificationId: "ntf_cuzguxmkcncu5g2tmzghsnbkm4");
 
-            eventNotificationRetrievalResponse.ShouldNotBeNull();
-            eventNotificationRetrievalResponse.ShouldBeOfType<EventNotificationResponse>();
-            eventNotificationRetrievalResponse.Attempts.Count.ShouldBeGreaterThan(0);
+            eventNotificationRetrievalResponse.Content.ShouldNotBeNull();
+            eventNotificationRetrievalResponse.Content.ShouldBeOfType<EventNotificationResponse>();
+            eventNotificationRetrievalResponse.Content.Attempts.Count.ShouldBeGreaterThan(0);
         }
 
         [Fact]

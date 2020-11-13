@@ -16,11 +16,11 @@ namespace Checkout.Tests.Webhooks
             var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhook(new RegisterWebhookRequest(webhook));
 
             webhookRegistrationResponse.ShouldNotBeNull();
-            webhookRegistrationResponse.Id.ShouldStartWith("wh_");
-            webhookRegistrationResponse.Url.ShouldBe(webhook.Url);
-            webhookRegistrationResponse.EventTypes.ShouldBe(webhook.EventTypes);
+            webhookRegistrationResponse.Content.Id.ShouldStartWith("wh_");
+            webhookRegistrationResponse.Content.Url.ShouldBe(webhook.Url);
+            webhookRegistrationResponse.Content.EventTypes.ShouldBe(webhook.EventTypes);
 
-            await Api.Webhooks.RemoveWebhook(webhookRegistrationResponse.Id);
+            await Api.Webhooks.RemoveWebhook(webhookRegistrationResponse.Content.Id);
         }
 
         [Fact]

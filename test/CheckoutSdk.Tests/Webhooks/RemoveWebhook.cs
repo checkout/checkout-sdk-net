@@ -17,9 +17,9 @@ namespace Checkout.Tests.Webhooks
 
             webhookRegistrationResponse.ShouldNotBeNull();
 
-            await Api.Webhooks.RemoveWebhook(webhookRegistrationResponse.Id);
+            await Api.Webhooks.RemoveWebhook(webhookRegistrationResponse.Content.Id);
 
-            var webhookRetrievalResponse = Should.Throw<CheckoutResourceNotFoundException>(async () => await Api.Webhooks.RetrieveWebhook(webhookRegistrationResponse.Id));
+            var webhookRetrievalResponse = Should.Throw<CheckoutResourceNotFoundException>(async () => await Api.Webhooks.RetrieveWebhook(webhookRegistrationResponse.Content.Id));
 
             webhookRetrievalResponse.ShouldNotBeNull();
             webhookRetrievalResponse.HttpStatusCode.ShouldBe(HttpStatusCode.NotFound);

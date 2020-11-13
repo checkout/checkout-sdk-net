@@ -23,10 +23,10 @@ namespace Checkout.Tests.Disputes
             var getDisputesRequest = new GetDisputesRequest();
             var getDisputesResponse = await _api.Disputes.GetDisputes(getDisputesRequest: getDisputesRequest);
 
-            getDisputesResponse.ShouldNotBeNull();
-            getDisputesResponse.Limit.ShouldBe(50);
-            getDisputesResponse.Skip.ShouldBe(0);
-            getDisputesResponse.ThisChannelOnly.ShouldBeFalse();
+            getDisputesResponse.Content.ShouldNotBeNull();
+            getDisputesResponse.Content.Limit.ShouldBe(50);
+            getDisputesResponse.Content.Skip.ShouldBe(0);
+            getDisputesResponse.Content.ThisChannelOnly.ShouldBeFalse();
         }
 
         [Fact]
@@ -35,12 +35,12 @@ namespace Checkout.Tests.Disputes
             var getDisputesRequest = new GetDisputesRequest(id: "invalid");
             var getDisputesResponse = await _api.Disputes.GetDisputes(getDisputesRequest: getDisputesRequest);
 
-            getDisputesResponse.ShouldNotBeNull();
-            getDisputesResponse.Limit.ShouldBe(50);
-            getDisputesResponse.Skip.ShouldBe(0);
-            getDisputesResponse.ThisChannelOnly.ShouldBeFalse();
-            getDisputesResponse.TotalCount.ShouldBe(0);
-            (getDisputesResponse.Data as IList).Count.ShouldBe(0);
+            getDisputesResponse.Content.ShouldNotBeNull();
+            getDisputesResponse.Content.Limit.ShouldBe(50);
+            getDisputesResponse.Content.Skip.ShouldBe(0);
+            getDisputesResponse.Content.ThisChannelOnly.ShouldBeFalse();
+            getDisputesResponse.Content.TotalCount.ShouldBe(0);
+            (getDisputesResponse.Content.Data as IList).Count.ShouldBe(0);
         }
 
         [Fact]
