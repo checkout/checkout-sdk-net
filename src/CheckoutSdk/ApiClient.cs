@@ -205,20 +205,12 @@ namespace Checkout
         private async Task<CheckoutHttpResponseMessage<TResult>> DeserializeJsonAsync<TResult>(HttpResponseMessage httpResponse)
         {
             var result = await DeserializeJsonAsync(httpResponse, typeof(TResult));
-            return new CheckoutHttpResponseMessage<TResult>(result.StatusCode, result.Headers, result.Content);
+            return result.CastToType<TResult>();
         }
 
         private async Task<CheckoutHttpResponseMessage<dynamic>> DeserializeJsonAsync(HttpResponseMessage httpResponse, Type resultType)
         {
-
-            if (httpResponse.Content == null)
-                return new CheckoutHttpResponseMessage<dynamic>(httpResponse.StatusCode, httpResponse.Headers, httpResponse.Content);
-
-            var json = await httpResponse.Content.ReadAsStringAsync();
-            if(!string.IsNullOrWhiteSpace(json))
-                return new CheckoutHttpResponseMessage<dynamic>(httpResponse.StatusCode, httpResponse.Headers, _serializer.Deserialize(json, resultType));
-
-            return new CheckoutHttpResponseMessage<dynamic>(httpResponse.StatusCode, httpResponse.Headers, json);
+            return await httpResponse.ConvertToChekoutHttpResponseMessage(resultType);
         }
 
         private async Task<HttpResponseMessage> SendRequestAsync(HttpMethod httpMethod, string path, IApiCredentials credentials, HttpContent httpContent, CancellationToken cancellationToken, string idempotencyKey)
