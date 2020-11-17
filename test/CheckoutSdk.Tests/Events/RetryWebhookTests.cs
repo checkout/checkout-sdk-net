@@ -4,8 +4,8 @@ using Xunit;
 using Moq;
 using Checkout.Events;
 using System.Threading;
-using System.Net.Http;
 using System.Net;
+using Checkout.Exceptions;
 
 namespace Checkout.Tests.Events
 {
@@ -19,7 +19,7 @@ namespace Checkout.Tests.Events
 
             _eventsClient = new Mock<IEventsClient>();
             _eventsClient.Setup(eventsClient => eventsClient.RetryWebhook("evt_4ddvw5cfb4xurn3mfedxhdtvqa", "wh_fulbukihgg4ehjl7ew25ppyylq", default(CancellationToken))).ReturnsAsync(() => canRetryAllWebhooksResponse);
-            _eventsClient.Setup(eventsClient => eventsClient.RetryWebhook(It.IsAny<string>(), It.IsNotIn(new string[] { "wh_fulbukihgg4ehjl7ew25ppyylq" }), default(CancellationToken))).ThrowsAsync(new CheckoutResourceNotFoundException("12345"));
+            _eventsClient.Setup(eventsClient => eventsClient.RetryWebhook(It.IsAny<string>(), It.IsNotIn(new string[] { "wh_fulbukihgg4ehjl7ew25ppyylq" }), default(CancellationToken))).ThrowsAsync(new Checkout404NotFoundException(TestHelper.CkoRequestId, TestHelper.CkoVersion));
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace Checkout.Tests.Events
         [Fact]
         public async Task Returns404ifEventDoesNotExist()
         {
-           await Assert.ThrowsAsync<CheckoutResourceNotFoundException>(async () => await _eventsClient.Object.RetryWebhook("evt_isAny", "wh_doesNotExist"));
+           await Assert.ThrowsAsync<Checkout404NotFoundException>(async () => await _eventsClient.Object.RetryWebhook("evt_isAny", "wh_doesNotExist"));
         }
     }
 }

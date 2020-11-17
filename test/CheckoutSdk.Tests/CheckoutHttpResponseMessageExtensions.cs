@@ -12,8 +12,8 @@
         /// <returns>The <see cref="CheckoutHttpResponseMessage{TContent}"/> with added headers for mocking.</returns>
         public static CheckoutHttpResponseMessage<TContent> MockHeaders<TContent>(this CheckoutHttpResponseMessage<TContent> checkoutHttpResponseMessage)
         {
-            checkoutHttpResponseMessage.Headers.Add("Cko-Request-Id", "bcfe03bd-2a8a-4340-8ce5-214761fae065");
-            checkoutHttpResponseMessage.Headers.Add("Cko-Version", "3.46.1");
+            checkoutHttpResponseMessage.SetHeader("Cko-Request-Id", TestHelper.CkoRequestId);
+            checkoutHttpResponseMessage.SetHeader("Cko-Version", TestHelper.CkoVersion);
 
             return checkoutHttpResponseMessage;
         }

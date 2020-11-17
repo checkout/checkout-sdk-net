@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Threading.Tasks;
 using Checkout.Disputes;
+using Checkout.Exceptions;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -50,7 +51,7 @@ namespace Checkout.Tests.Disputes
             var checkoutApiException = Should.Throw<CheckoutApiException>(async () => await _api.Disputes.GetDisputes(getDisputesRequest: getDisputesRequest));
             
             checkoutApiException.ShouldNotBeNull();
-            checkoutApiException.HttpStatusCode.ShouldBe((System.Net.HttpStatusCode)422);
+            checkoutApiException.StatusCode.ShouldBe((System.Net.HttpStatusCode)422);
         }
     }
 }

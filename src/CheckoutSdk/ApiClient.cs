@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Checkout.Common;
-using System.Net.Http.Headers;
+using Checkout.Exceptions;
 
 namespace Checkout
 {
@@ -18,6 +18,7 @@ namespace Checkout
     public class ApiClient : IApiClient
     {
         private const HttpStatusCode Unprocessable = (HttpStatusCode)422;
+        private const HttpStatusCode TooManyRequests = (HttpStatusCode)429;
         private static readonly ILog Logger = LogProvider.For<ApiClient>();
 
         private readonly CheckoutConfiguration _configuration;
@@ -86,7 +87,7 @@ namespace Checkout
                 idempotencyKey: null
                 ))
             {
-                return await DeserializeJsonAsync<TResult>(httpResponse);
+                return await httpResponse.ConvertToChekoutHttpResponseMessage<TResult>();
             }
         }
 
@@ -104,7 +105,7 @@ namespace Checkout
                 idempotencyKey: idempotencyKey
                 ))
             {
-                return await DeserializeJsonAsync<TResult>(httpResponse);
+                return await httpResponse.ConvertToChekoutHttpResponseMessage<TResult>();
             }
         }
 
@@ -122,7 +123,7 @@ namespace Checkout
                 idempotencyKey: idempotencyKey
                 ))
             {
-                return await DeserializeJsonAsync<TResult>(httpResponse);
+                return await httpResponse.ConvertToChekoutHttpResponseMessage<TResult>();
             }
         }
 
@@ -143,8 +144,7 @@ namespace Checkout
             {
                 if (!resultTypeMappings.TryGetValue(httpResponse.StatusCode, out Type resultType))
                     throw new KeyNotFoundException($"The status code {httpResponse.StatusCode} is not mapped to a result type");
-
-                return await DeserializeJsonAsync(httpResponse, resultType);
+                return await httpResponse.ConvertToChekoutHttpResponseMessage(resultType);
             }
         }
 
@@ -162,7 +162,7 @@ namespace Checkout
                 idempotencyKey: null
                 ))
             {
-                return await DeserializeJsonAsync<TResult>(httpResponse);
+                return await httpResponse.ConvertToChekoutHttpResponseMessage<TResult>();
             }
         }
 
@@ -180,7 +180,7 @@ namespace Checkout
                 idempotencyKey: null
                 ))
             {
-                return await DeserializeJsonAsync<TResult>(httpResponse);
+                return await httpResponse.ConvertToChekoutHttpResponseMessage<TResult>();
             }
         }
 
@@ -198,19 +198,8 @@ namespace Checkout
                 idempotencyKey: null
                 ))
             {
-                return await DeserializeJsonAsync<TResult>(httpResponse);
+                return await httpResponse.ConvertToChekoutHttpResponseMessage<TResult>();
             }
-        }
-
-        private async Task<CheckoutHttpResponseMessage<TResult>> DeserializeJsonAsync<TResult>(HttpResponseMessage httpResponse)
-        {
-            var result = await DeserializeJsonAsync(httpResponse, typeof(TResult));
-            return result.CastToType<TResult>();
-        }
-
-        private async Task<CheckoutHttpResponseMessage<dynamic>> DeserializeJsonAsync(HttpResponseMessage httpResponse, Type resultType)
-        {
-            return await httpResponse.ConvertToChekoutHttpResponseMessage(resultType);
         }
 
         private async Task<HttpResponseMessage> SendRequestAsync(HttpMethod httpMethod, string path, IApiCredentials credentials, HttpContent httpContent, CancellationToken cancellationToken, string idempotencyKey)
@@ -250,22 +239,47 @@ namespace Checkout
 
         private async Task ValidateResponseAsync(HttpResponseMessage httpResponse)
         {
+            if (!httpResponse.Headers.TryGetValues("Cko-Request-Id", out var ckoRequestIdHeader)) throw new KeyNotFoundException("Key \"Cko-Request-Id\" was not present in the HTTP response header.");
+            if (!httpResponse.Headers.TryGetValues("Cko-Version", out var ckoVersionHeader)) throw new KeyNotFoundException("Key \"Cko-Version\" was not present in the HTTP response header.");
 
             if (!httpResponse.IsSuccessStatusCode)
             {
-                httpResponse.Headers.TryGetValues("Cko-Request-Id", out var requestIdHeader);
-                var requestId = requestIdHeader?.FirstOrDefault();
+                var ckoRequestId = ckoRequestIdHeader?.FirstOrDefault();
+                var ckoVersion = ckoVersionHeader?.FirstOrDefault();
 
-                if (httpResponse.StatusCode == Unprocessable)
+                try
                 {
-                    var result = await DeserializeJsonAsync<ErrorResponse>(httpResponse);
-                    throw new CheckoutValidationException(result.Content, httpResponse.StatusCode, requestId);
+                    switch (httpResponse.StatusCode)
+                    {
+                        case HttpStatusCode.BadRequest:
+                            throw new Checkout400BadRequestException(ckoRequestId, ckoVersion);
+                        case HttpStatusCode.Unauthorized:
+                            throw new Checkout401UnauthorizedException(ckoRequestId, ckoVersion);
+                        case HttpStatusCode.Forbidden:
+                            throw new Checkout403ForbiddenException(ckoRequestId, ckoVersion);
+                        case HttpStatusCode.NotFound:
+                            throw new Checkout404NotFoundException(ckoRequestId, ckoVersion);
+                        case HttpStatusCode.Conflict:
+                            throw new Checkout409ConflictException(ckoRequestId, ckoVersion);
+                        case Unprocessable:
+                            throw new Checkout422UnprocessableException(ckoRequestId, ckoVersion, await httpResponse.Content.DeserializeToCheckoutContent<ErrorResponse>());
+                        case TooManyRequests:
+                            throw new Checkout429TooManyRequestsException(ckoRequestId, ckoVersion, await httpResponse.Content.DeserializeToCheckoutContent<ErrorResponse>());
+                        case HttpStatusCode.InternalServerError:
+                            throw new Checkout500InternalServerErrorException(ckoRequestId, ckoVersion);
+                        case HttpStatusCode.NotImplemented:
+                            throw new Checkout501NotImplementedException(ckoRequestId, ckoVersion);
+                        case HttpStatusCode.BadGateway:
+                            throw new Checkout502BadGatewayException(ckoRequestId, ckoVersion);
+                        default:
+                            throw new NotImplementedException($"The HTTP status code {httpResponse.StatusCode} is not defined by the Checkout.com API specification.");
+                    }
                 }
-
-                if (httpResponse.StatusCode == HttpStatusCode.NotFound)
-                    throw new CheckoutResourceNotFoundException(requestId);
-
-                throw new CheckoutApiException(httpResponse.StatusCode, requestId);
+                catch (Exception exception)
+                {
+                    Logger.DebugException(exception.Message, exception);
+                    throw exception;
+                }
             }
         }
 

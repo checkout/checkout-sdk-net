@@ -1,5 +1,6 @@
 using System.Net;
 using System.Threading.Tasks;
+using Checkout.Exceptions;
 using Checkout.Webhooks;
 using Shouldly;
 using Xunit;
@@ -19,10 +20,10 @@ namespace Checkout.Tests.Webhooks
 
             await Api.Webhooks.RemoveWebhook(webhookRegistrationResponse.Content.Id);
 
-            var webhookRetrievalResponse = Should.Throw<CheckoutResourceNotFoundException>(async () => await Api.Webhooks.RetrieveWebhook(webhookRegistrationResponse.Content.Id));
+            var webhookRetrievalResponse = Should.Throw<Checkout404NotFoundException>(async () => await Api.Webhooks.RetrieveWebhook(webhookRegistrationResponse.Content.Id));
 
             webhookRetrievalResponse.ShouldNotBeNull();
-            webhookRetrievalResponse.HttpStatusCode.ShouldBe(HttpStatusCode.NotFound);
+            webhookRetrievalResponse.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         }
     }
 }
