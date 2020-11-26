@@ -87,7 +87,7 @@ namespace Checkout
                 idempotencyKey: null
                 ))
             {
-                return await httpResponse.ConvertToChekoutHttpResponseMessage<TResult>();
+                return await httpResponse.ConvertToCheckoutHttpResponseMessage<TResult>();
             }
         }
 
@@ -105,7 +105,7 @@ namespace Checkout
                 idempotencyKey: idempotencyKey
                 ))
             {
-                return await httpResponse.ConvertToChekoutHttpResponseMessage<TResult>();
+                return await httpResponse.ConvertToCheckoutHttpResponseMessage<TResult>();
             }
         }
 
@@ -123,7 +123,7 @@ namespace Checkout
                 idempotencyKey: idempotencyKey
                 ))
             {
-                return await httpResponse.ConvertToChekoutHttpResponseMessage<TResult>();
+                return await httpResponse.ConvertToCheckoutHttpResponseMessage<TResult>();
             }
         }
 
@@ -162,7 +162,7 @@ namespace Checkout
                 idempotencyKey: null
                 ))
             {
-                return await httpResponse.ConvertToChekoutHttpResponseMessage<TResult>();
+                return await httpResponse.ConvertToCheckoutHttpResponseMessage<TResult>();
             }
         }
 
@@ -180,7 +180,7 @@ namespace Checkout
                 idempotencyKey: null
                 ))
             {
-                return await httpResponse.ConvertToChekoutHttpResponseMessage<TResult>();
+                return await httpResponse.ConvertToCheckoutHttpResponseMessage<TResult>();
             }
         }
 
@@ -198,7 +198,7 @@ namespace Checkout
                 idempotencyKey: null
                 ))
             {
-                return await httpResponse.ConvertToChekoutHttpResponseMessage<TResult>();
+                return await httpResponse.ConvertToCheckoutHttpResponseMessage<TResult>();
             }
         }
 

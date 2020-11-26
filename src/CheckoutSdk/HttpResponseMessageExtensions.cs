@@ -23,7 +23,7 @@ namespace Checkout
         /// </summary>
         /// <param name="httpResponseMessage">The <see cref="HttpResponseMessage"/> to be transformed.</param>
         /// <returns>The <see cref="CheckoutHttpResponseMessage{TContent}"/> representation of the <see cref="HttpResponseMessage"/>.</returns>
-        public static async Task<CheckoutHttpResponseMessage<TContent>> ConvertToChekoutHttpResponseMessage<TContent>(this HttpResponseMessage httpResponseMessage)
+        public static async Task<CheckoutHttpResponseMessage<TContent>> ConvertToCheckoutHttpResponseMessage<TContent>(this HttpResponseMessage httpResponseMessage)
         {
             return await ComposeCheckoutHttpResponseMessage<TContent>(httpResponseMessage, typeof(TContent));
         }
