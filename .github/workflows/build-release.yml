@@ -1,0 +1,47 @@
+name: build-release
+on:
+  push:
+    paths:
+      - Directory.Build.props
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/disabled'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core 2.1, 3.1, 5.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: |
+            2.1.x
+            3.1.x
+            5.0.x
+      - name: Installed runtimes
+        run: dotnet --list-runtimes
+      - name: Build project
+        run: dotnet build
+      - name: Run tests
+        env:
+          CHECKOUT_SECRET_KEY: ${{ secrets.IT_CHECKOUT_SECRET_KEY }}
+          CHECKOUT_PUBLIC_KEY: ${{ secrets.IT_CHECKOUT_PUBLIC_KEY }}
+          CHECKOUT_FOUR_SECRET_KEY: ${{ secrets.IT_CHECKOUT_FOUR_SECRET_KEY }}
+          CHECKOUT_FOUR_PUBLIC_KEY: ${{ secrets.IT_CHECKOUT_FOUR_PUBLIC_KEY }}
+        run: dotnet test 
+      - name: Package project
+        run: dotnet pack -o:package
+      - name: Publish project
+        run: dotnet nuget push ./package/*.nupkg --source 'https://api.nuget.org/v3/index.json' --api-key ${{secrets.NUGET_API_KEY}}
+      - name: Get version
+        run: echo "CURRENT_VERSION=$(find package -name '*.nupkg' | grep -Eo '[0-9].[0-9].[0-9]' | tail -1)" >> $GITHUB_ENV
+      - name: Print version
+        run: echo ${{ env.CURRENT_VERSION}}
+      - name: Create release tag
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.CURRENT_VERSION }}
+          release_name: ${{ env.CURRENT_VERSION }}
+          body: ${{ github.event.head_commit.message }}
+          draft: false
+          prerelease: false

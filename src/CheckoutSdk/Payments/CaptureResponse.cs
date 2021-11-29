@@ -1,20 +1,29 @@
+using System;
 using Checkout.Common;
 
 namespace Checkout.Payments
 {
-    /// <summary>
-    /// The capture response indicates the capture has been accepted for deferred processing.
-    /// </summary>
-    public class CaptureResponse : Resource
+    public sealed class CaptureResponse : Resource, IEquatable<CaptureResponse>
     {
-        /// <summary>
-        /// Gets the unique identifier for the capture action.
-        /// </summary>
         public string ActionId { get; set; }
-        
-        /// <summary>
-        /// Gets your reference for the capture request.
-        /// </summary>
+
         public string Reference { get; set; }
+
+        public bool Equals(CaptureResponse other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return ActionId == other.ActionId && Reference == other.Reference;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || obj is CaptureResponse other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(ActionId, Reference);
+        }
     }
 }

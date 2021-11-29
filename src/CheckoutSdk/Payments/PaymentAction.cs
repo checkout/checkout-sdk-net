@@ -1,68 +1,64 @@
-using Checkout.Common;
 using System;
 using System.Collections.Generic;
+using Checkout.Common;
 
 namespace Checkout.Payments
 {
-    /// <summary>
-    /// Defines a payment action.
-    /// </summary>
-    public class PaymentAction : Resource
+    public sealed class PaymentAction : Resource, IEquatable<PaymentAction>
     {
-        /// <summary>
-        /// Gets or sets the unique identifier of the payment action.
-        /// </summary>
         public string Id { get; set; }
 
-        /// <summary>
-        /// Gets or sets the type of action.
-        /// </summary>
-        public string Type { get; set; }
+        public ActionType? Type { get; set; }
 
-        /// <summary>
-        /// Gets or sets the date/time the action was processed.
-        /// </summary>
-        public DateTime ProcessedOn { get; set; }
+        public DateTime? ProcessedOn { get; set; }
 
-        /// <summary>
-        /// Gets or sets the action amount.
-        /// </summary>
-        public long Amount { get; set; }
+        public long? Amount { get; set; }
 
-        /// <summary>
-        /// Gets or sets the acquirer authorization code where applicable.
-        /// </summary>
+        public bool? Approved { get; set; }
+
         public string AuthCode { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Checkout.com Gateway response code.
-        /// </summary>
         public string ResponseCode { get; set; }
 
-        /// <summary>
-        /// Gets or sets the response summary.
-        /// </summary>
         public string ResponseSummary { get; set; }
 
-        /// <summary>
-        /// Gets or sets your reference for the action.
-        /// </summary>
         public string Reference { get; set; }
 
-        /// <summary>
-        /// Gets or sets the key/value pairs that were attached to the action.
-        /// </summary>
-        public Dictionary<string, object> Metadata { get; set; }
+        public Processing Processing { get; set; }
 
-        /// <summary>
-        /// Gets or sets the approved flag for the action.
-        /// </summary>
-        public bool Approved { get; set; }
+        public IDictionary<string, object> Metadata { get; set; }
 
-        /// <summary>
-        /// Gets or sets information related to the processing of a payment action
-        /// </summary>
-        /// <value></value>
-        public ActionProcessingResponse Processing { get; set; }
+        public bool Equals(PaymentAction other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Id == other.Id && Type == other.Type && ProcessedOn.Equals(other.ProcessedOn) &&
+                   Amount == other.Amount && Approved == other.Approved && AuthCode == other.AuthCode &&
+                   ResponseCode == other.ResponseCode && ResponseSummary == other.ResponseSummary &&
+                   Reference == other.Reference && Equals(Processing, other.Processing) &&
+                   Equals(Metadata, other.Metadata);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || obj is PaymentAction other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = new HashCode();
+            hashCode.Add(Id);
+            hashCode.Add((int) Type);
+            hashCode.Add(ProcessedOn);
+            hashCode.Add(Amount);
+            hashCode.Add(Approved);
+            hashCode.Add(AuthCode);
+            hashCode.Add(ResponseCode);
+            hashCode.Add(ResponseSummary);
+            hashCode.Add(Reference);
+            hashCode.Add(Processing);
+            hashCode.Add(Metadata);
+            return hashCode.ToHashCode();
+        }
     }
 }

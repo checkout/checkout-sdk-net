@@ -1,79 +1,107 @@
-using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Checkout.Payments.Request;
+using Checkout.Payments.Response;
 
 namespace Checkout.Payments
 {
-    /// <summary>
-    /// Default implementation of <see cref="IPaymentsClient"/>.
-    /// </summary>
-    public class PaymentsClient : IPaymentsClient
+    public class PaymentsClient : AbstractClient, IPaymentsClient
     {
-        private static readonly Dictionary<HttpStatusCode, Type> PaymentResponseMappings = new Dictionary<HttpStatusCode, Type>
+        private const string PaymentsPath = "payments";
+
+        public PaymentsClient(
+            IApiClient apiClient,
+            CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKey)
         {
-            { HttpStatusCode.Accepted, typeof(PaymentPending)},
-            { HttpStatusCode.Created, typeof(PaymentProcessed)}
-        };
-
-        private readonly IApiClient _apiClient;
-        private readonly IApiCredentials _credentials;
-
-        public PaymentsClient(IApiClient apiClient, CheckoutConfiguration configuration)
-        {
-            _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
-            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-
-            _credentials = new SecretKeyCredentials(configuration);
         }
 
-        public Task<PaymentResponse> RequestAsync<TRequestSource>(PaymentRequest<TRequestSource> paymentRequest, CancellationToken cancellationToken = default(CancellationToken)) 
-            where TRequestSource : IRequestSource
+        public Task<PaymentResponse> RequestPayment(PaymentRequest paymentRequest,
+            string idempotencyKey = null,
+            CancellationToken cancellationToken = default)
         {
-            return RequestPaymentAsync(paymentRequest, PaymentResponseMappings, cancellationToken);
+            CheckoutUtils.ValidateParams("paymentRequest", paymentRequest);
+            return ApiClient.Post<PaymentResponse>(
+                PaymentsPath,
+                SdkAuthorization(),
+                paymentRequest,
+                cancellationToken,
+                idempotencyKey);
         }
 
-        public Task<GetPaymentResponse> GetAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<PaymentResponse> RequestPayout(PayoutRequest payoutRequest,
+            string idempotencyKey = null,
+            CancellationToken cancellationToken = default)
         {
-            return _apiClient.GetAsync<GetPaymentResponse>(GetPaymentUrl(paymentId), _credentials, cancellationToken);
+            CheckoutUtils.ValidateParams("payoutRequest", payoutRequest);
+            return ApiClient.Post<PaymentResponse>(
+                PaymentsPath,
+                SdkAuthorization(),
+                payoutRequest,
+                cancellationToken,
+                idempotencyKey);
         }
 
-        public Task<IEnumerable<PaymentAction>> GetActionsAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<GetPaymentResponse> GetPaymentDetails(
+            string paymentId,
+            CancellationToken cancellationToken = default)
         {
-            const string path = "/actions";
-            return _apiClient.GetAsync<IEnumerable<PaymentAction>>(GetPaymentUrl(paymentId) + path, _credentials, cancellationToken);
+            CheckoutUtils.ValidateParams("paymentId", paymentId);
+            return ApiClient.Get<GetPaymentResponse>(BuildPath(PaymentsPath, paymentId),
+                SdkAuthorization(),
+                cancellationToken);
         }
 
-        public Task<CaptureResponse> CaptureAsync(string paymentId, CaptureRequest captureRequest = null, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<List<PaymentAction>> GetPaymentActions(
+            string paymentId,
+            CancellationToken cancellationToken = default)
         {
-            const string path = "/captures";
-            return _apiClient.PostAsync<CaptureResponse>(GetPaymentUrl(paymentId) + path, _credentials, cancellationToken, captureRequest);
+            CheckoutUtils.ValidateParams("paymentId", paymentId);
+            return ApiClient.Get<List<PaymentAction>>(BuildPath(PaymentsPath, paymentId, "actions"),
+                SdkAuthorization(),
+                cancellationToken);
         }
 
-        public Task<RefundResponse> RefundAsync(string paymentId, RefundRequest refundRequest = null, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<CaptureResponse> CapturePayment(
+            string paymentId,
+            CaptureRequest captureRequest,
+            string idempotencyKey = null,
+            CancellationToken cancellationToken = default)
         {
-            const string path = "/refunds";
-            return _apiClient.PostAsync<RefundResponse>(GetPaymentUrl(paymentId) + path, _credentials, cancellationToken, refundRequest);
+            CheckoutUtils.ValidateParams("paymentId", paymentId);
+            return ApiClient.Post<CaptureResponse>(BuildPath(PaymentsPath, paymentId, "captures"),
+                SdkAuthorization(),
+                captureRequest,
+                cancellationToken,
+                idempotencyKey);
         }
 
-        public Task<VoidResponse> VoidAsync(string paymentId, VoidRequest voidRequest = null, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<RefundResponse> RefundPayment(
+            string paymentId,
+            RefundRequest refundRequest = null,
+            string idempotencyKey = null,
+            CancellationToken cancellationToken = default)
         {
-            const string path = "/voids";
-            return _apiClient.PostAsync<VoidResponse>(GetPaymentUrl(paymentId) + path, _credentials, cancellationToken, voidRequest);
+            CheckoutUtils.ValidateParams("paymentId", paymentId);
+            return ApiClient.Post<RefundResponse>(BuildPath(PaymentsPath, paymentId, "refunds"),
+                SdkAuthorization(),
+                refundRequest,
+                cancellationToken,
+                idempotencyKey);
         }
 
-        private async Task<PaymentResponse> RequestPaymentAsync<TRequestSource>(PaymentRequest<TRequestSource> paymentRequest, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken) where TRequestSource : IRequestSource
+        public Task<VoidResponse> VoidPayment(
+            string paymentId,
+            VoidRequest voidRequest = null,
+            string idempotencyKey = null,
+            CancellationToken cancellationToken = default)
         {
-            const string path = "payments";
-            var apiResponse = await _apiClient.PostAsync(path, _credentials, resultTypeMappings, cancellationToken, paymentRequest);
-            return apiResponse;
-        }
-
-        private static string GetPaymentUrl(string paymentId)
-        {
-            const string path = "payments/";
-            return path + paymentId;
+            CheckoutUtils.ValidateParams("paymentId", paymentId);
+            return ApiClient.Post<VoidResponse>(BuildPath(PaymentsPath, paymentId, "voids"),
+                SdkAuthorization(),
+                voidRequest,
+                cancellationToken,
+                idempotencyKey);
         }
     }
 }

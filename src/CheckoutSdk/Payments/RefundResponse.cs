@@ -1,21 +1,29 @@
+using System;
 using Checkout.Common;
 
 namespace Checkout.Payments
 {
-    /// <summary>
-    /// The refund response indicates the refund has been accepted for deferred processing.
-    /// </summary>
-    public class RefundResponse : Resource
+    public sealed class RefundResponse : Resource, IEquatable<RefundResponse>
     {
-        /// <summary>
-        /// Gets the unique identifier for the refund action.
-        /// </summary>
         public string ActionId { get; set; }
 
-        
-        /// <summary>
-        /// Gets your reference for the refund request.
-        /// </summary>       
         public string Reference { get; set; }
+
+        public bool Equals(RefundResponse other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return ActionId == other.ActionId && Reference == other.Reference;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || obj is RefundResponse other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(ActionId, Reference);
+        }
     }
 }

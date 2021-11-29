@@ -1,22 +1,26 @@
+using System;
+
 namespace Checkout.Payments
 {
-    /// <summary>
-    /// Configures the risk assessment performed during the processing of the payment
-    /// </summary>
-    public class RiskRequest
+    public sealed class RiskRequest : IEquatable<RiskRequest>
     {
-        /// <summary>
-        /// Creates a new <see cref="RiskRequest"/> instance.
-        /// </summary>
-        /// <param name="enabled">Whether a risk assessment should be performed.</param>
-        public RiskRequest(bool enabled)
+        public bool? Enabled { get; set; }
+
+        public bool Equals(RiskRequest other)
         {
-            Enabled = enabled;
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Enabled == other.Enabled;
         }
 
-        /// <summary>
-        /// Gets whether the risk assessment should be performed.
-        /// </summary>
-        public bool Enabled { get; }
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || obj is RiskRequest other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return Enabled.GetHashCode();
+        }
     }
 }

@@ -1,57 +1,65 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Checkout.Files;
 
 namespace Checkout.Disputes
 {
-    /// <summary>
-    /// Default implementation of <see cref="IDisputesClient"/>.
-    /// </summary>
-    public class DisputesClient : IDisputesClient
+    public class DisputesClient : FilesClient, IDisputesClient
     {
-        private readonly IApiClient _apiClient;
-        private readonly IApiCredentials _credentials;
-        private const string path = "disputes";
+        private const string DisputesPath = "disputes";
+        private const string EvidencePath = "evidence";
+        private const string AcceptPath = "accept";
 
-        public DisputesClient(IApiClient apiClient, CheckoutConfiguration configuration)
+        public DisputesClient(IApiClient apiClient,
+            CheckoutConfiguration configuration) : base(apiClient, configuration)
         {
-            _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
-            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-
-            _credentials = new SecretKeyCredentials(configuration);
         }
 
-        public Task<GetDisputesResponse> GetDisputesAsync(GetDisputesRequest getDisputesRequest, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<DisputesQueryResponse> Query(DisputesQueryFilter filter,
+            CancellationToken cancellationToken = default)
         {
-            if (getDisputesRequest == null) throw new ArgumentNullException(nameof(getDisputesRequest));
-            var pathWithQuery = getDisputesRequest.PathWithQuery(path);
-            
-            return _apiClient.GetAsync<GetDisputesResponse>(pathWithQuery, _credentials, cancellationToken);
+            CheckoutUtils.ValidateParams("filter", filter);
+            return ApiClient.Query<DisputesQueryResponse>(DisputesPath, SdkAuthorization(), filter, cancellationToken);
         }
 
-        public Task<Dispute> GetDisputeAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<DisputeDetailsResponse> GetDisputeDetails(string disputeId,
+            CancellationToken cancellationToken = default)
         {
-            return _apiClient.GetAsync<Dispute>($"{path}/{id}", _credentials, cancellationToken);
+            CheckoutUtils.ValidateParams("disputeId", disputeId);
+            return ApiClient.Get<DisputeDetailsResponse>(BuildPath(DisputesPath, disputeId), SdkAuthorization(),
+                cancellationToken);
         }
 
-        public Task<Type> AcceptDisputeAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<object> Accept(string disputeId, CancellationToken cancellationToken = default)
         {
-            return _apiClient.PostAsync<Type>($"{path}/{id}/accept", _credentials, cancellationToken, null);
+            CheckoutUtils.ValidateParams("disputeId", disputeId);
+            return ApiClient.Post<object>(BuildPath(DisputesPath, disputeId, AcceptPath), SdkAuthorization(), null,
+                cancellationToken);
         }
 
-        public Task<Type> ProvideDisputeEvidenceAsync(string id, DisputeEvidence disputeEvidence, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<object> PutEvidence(string disputeId, DisputeEvidenceRequest disputeEvidenceRequest,
+            CancellationToken cancellationToken = default)
         {
-            return _apiClient.PutAsync<Type>($"{path}/{id}/evidence", _credentials, cancellationToken, disputeEvidence);
+            CheckoutUtils.ValidateParams("disputeId", disputeId, "disputeEvidenceRequest", disputeEvidenceRequest);
+            return ApiClient.Put<object>(BuildPath(DisputesPath, disputeId, EvidencePath), SdkAuthorization(),
+                disputeEvidenceRequest,
+                cancellationToken);
         }
 
-        public Task<Type> SubmitDisputeEvidenceAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<DisputeEvidenceResponse> GetEvidence(string disputeId,
+            CancellationToken cancellationToken = default)
         {
-            return _apiClient.PostAsync<Type>($"{path}/{id}/evidence", _credentials, cancellationToken, null);
+            CheckoutUtils.ValidateParams("disputeId", disputeId);
+            return ApiClient.Get<DisputeEvidenceResponse>(BuildPath(DisputesPath, disputeId, EvidencePath),
+                SdkAuthorization(),
+                cancellationToken);
         }
 
-        public Task<DisputeEvidenceResponse> GetDisputeEvidenceAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<object> SubmitEvidence(string disputeId, CancellationToken cancellationToken = default)
         {
-            return _apiClient.GetAsync<DisputeEvidenceResponse>($"{path}/{id}/evidence", _credentials, cancellationToken);
+            CheckoutUtils.ValidateParams("disputeId", disputeId);
+            return ApiClient.Post<object>(BuildPath(DisputesPath, disputeId, EvidencePath), SdkAuthorization(), null,
+                cancellationToken);
         }
     }
 }

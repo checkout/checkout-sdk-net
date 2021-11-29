@@ -1,42 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Checkout.Sources
 {
-    /// <summary>
-    /// Default implementation of <see cref="ISourcesClient"/>.
-    /// </summary>
-    public class SourcesClient : ISourcesClient
+    public class SourcesClient : AbstractClient, ISourcesClient
     {
-        private static readonly Dictionary<HttpStatusCode, Type> SourceResponseMappings = new Dictionary<HttpStatusCode, Type>
+        private const string SourcesPath = "sources";
+
+        public SourcesClient(IApiClient apiClient,
+            CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKey)
         {
-            { HttpStatusCode.Created, typeof(SourceProcessed)}
-        };
-
-        private readonly IApiClient _apiClient;
-        private readonly IApiCredentials _credentials;
-
-        public SourcesClient(IApiClient apiClient, CheckoutConfiguration configuration)
-        {
-            _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
-            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-
-            _credentials = new SecretKeyCredentials(configuration);
         }
 
-        public Task<SourceResponse> RequestAsync(SourceRequest sourceRequest)
+        public Task<SepaSourceResponse> CreateSepaSource(SepaSourceRequest sepaSourceRequest,
+            CancellationToken cancellationToken = default)
         {
-            return RequestSourceAsync(sourceRequest, SourceResponseMappings);
-        }
-
-        private async Task<SourceResponse> RequestSourceAsync(SourceRequest sourceRequest, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            const string path = "sources";
-            var apiResponse = await _apiClient.PostAsync(path, _credentials, resultTypeMappings, cancellationToken, sourceRequest);
-            return apiResponse;
+            return ApiClient.Post<SepaSourceResponse>(SourcesPath, SdkAuthorization(), sepaSourceRequest,
+                cancellationToken);
         }
     }
 }

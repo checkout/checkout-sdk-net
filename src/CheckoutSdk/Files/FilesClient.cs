@@ -1,36 +1,67 @@
-using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using Checkout.Common;
 
 namespace Checkout.Files
 {
-    /// <summary>
-    /// Default implementation of <see cref="IFilesClient"/>.
-    /// </summary>
-    public class FilesClient : IFilesClient
+    public class FilesClient : AbstractClient, IFilesClient
     {
-        private readonly IApiClient _apiClient;
-        private readonly IApiCredentials _credentials;
-        private const string path = "files";
+        private const string Files = "files";
 
-        public FilesClient(IApiClient apiClient, CheckoutConfiguration configuration)
+        private readonly IDictionary<string, string> _allowedMimeMapping = new Dictionary<string, string>
         {
-            _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
-            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            {".jpg", "image/jpeg"},
+            {".jpeg", "image/jpeg"},
+            {".png", "image/png"},
+            {".pdf", "application/pdf"}
+        };
 
-            _credentials = new SecretKeyCredentials(configuration);
+        public FilesClient(IApiClient apiClient,
+            CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKey)
+        {
         }
 
-        public Task<UploadFileResponse> UploadFileAsync(string pathToFile, string purpose, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<IdResponse> SubmitFile(string pathToFile, string purpose,
+            CancellationToken cancellationToken = default)
         {
-            var fileUploadMultipartFormDataContentRequest = new FileUploadMultipartFormDataContentRequest(pathToFile, purpose);
-
-            return _apiClient.PostAsync<UploadFileResponse>(path, _credentials, cancellationToken, fileUploadMultipartFormDataContentRequest);
+            CheckoutUtils.ValidateParams("pathToFile", pathToFile, "purpose", purpose);
+            var dataContent = CreateMultipartRequest(pathToFile, purpose);
+            return ApiClient.Post<IdResponse>(Files, SdkAuthorization(), dataContent, cancellationToken);
         }
 
-        public Task<File> GetFileAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<FileDetailsResponse> GetFileDetails(string fileId, CancellationToken cancellationToken = default)
         {
-            return _apiClient.GetAsync<File>($"{path}/{id}", _credentials, cancellationToken);
+            CheckoutUtils.ValidateParams("fileId", fileId);
+            return ApiClient.Get<FileDetailsResponse>(BuildPath(Files, fileId), SdkAuthorization(), cancellationToken);
+        }
+
+        private MultipartFormDataContent CreateMultipartRequest(string pathToFile, string purpose)
+        {
+            var fileInfo = new FileInfo(pathToFile);
+            if (!fileInfo.Exists)
+            {
+                throw new CheckoutFileException(
+                    $"The file in {pathToFile} does not exist");
+            }
+
+            if (!_allowedMimeMapping.TryGetValue(fileInfo.Extension.ToLower(), out string mediaType))
+            {
+                throw new CheckoutFileException(
+                    $"The file type {fileInfo.Extension} cannot be uploaded.\n Supported file types: JPG/JPEG, PNG and PDF.");
+            }
+
+            var fileFieldStreamContent =
+                new StreamContent(new FileStream(fileInfo.FullName, FileMode.Open, FileAccess.Read));
+            fileFieldStreamContent.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
+            var purposeFieldStringContent = new StringContent(purpose);
+            var dataContent = new MultipartFormDataContent();
+            dataContent.Add(fileFieldStreamContent, "file", fileInfo.Name);
+            dataContent.Add(purposeFieldStringContent, "purpose");
+            return dataContent;
         }
     }
 }

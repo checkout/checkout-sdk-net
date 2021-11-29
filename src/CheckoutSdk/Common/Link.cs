@@ -1,18 +1,31 @@
+using System;
+
 namespace Checkout.Common
 {
-    /// <summary>
-    /// Hypermedia link as per the JSON HAL specification (http://stateless.co/hal_specification.html).
-    /// </summary>
-    public class Link
+    public sealed class Link : IEquatable<Link>
     {
-        /// <summary>
-        /// Gets or sets the URI of the link.
-        /// </summary>
         public string Href { get; set; }
 
-        /// <summary>
-        /// Gets or sets a title describing the links.
-        /// </summary>
         public string Title { get; set; }
+
+        public bool Equals(Link other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Href == other.Href && Title == other.Title;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Link) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Href, Title);
+        }
     }
 }

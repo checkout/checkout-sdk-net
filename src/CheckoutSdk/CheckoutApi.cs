@@ -1,89 +1,85 @@
+using Checkout.Customers;
+using Checkout.Disputes;
+using Checkout.Events;
+using Checkout.Instruments;
 using Checkout.Payments;
+using Checkout.Risk;
 using Checkout.Sources;
 using Checkout.Tokens;
-using Checkout.Disputes;
-using Checkout.Files;
+using Checkout.Webhooks;
 
 namespace Checkout
 {
-    /// <summary>
-    /// Default implementation of <see cref="ICheckoutApi"/> that defines the available Checkout.com APIs.
-    /// </summary>
-    public class CheckoutApi : ICheckoutApi
+    public class CheckoutApi : AbstractCheckoutApmApi, ICheckoutApi
     {
-        /// <summary>
-        /// Creates a new <see cref="CheckoutApi"/> instance and initializes each underlying API client.
-        /// </summary>
-        /// <param name="apiClient">The API client used to send API requests and handle responses.</param>
-        /// <param name="configuration">A configuration object containing authentication and API specific information.</param>
-        public CheckoutApi(IApiClient apiClient, CheckoutConfiguration configuration)
+        private readonly ITokensClient _tokensClient;
+        private readonly ICustomersClient _customersClient;
+        private readonly ISourcesClient _sourcesClient;
+        private readonly IPaymentsClient _paymentsClient;
+        private readonly IInstrumentsClient _instrumentsClient;
+        private readonly IDisputesClient _disputesClient;
+        private readonly IWebhooksClient _webhooksClient;
+        private readonly IEventsClient _eventsClient;
+        private readonly IRiskClient _riskClient;
+
+        public CheckoutApi(CheckoutConfiguration configuration) : base(configuration)
         {
-            Payments = new PaymentsClient(apiClient, configuration);
-            Sources = new SourcesClient(apiClient, configuration);
-            Tokens = new TokensClient(apiClient, configuration);
-            Disputes = new DisputesClient(apiClient, configuration);
-            Files = new FilesClient(apiClient, configuration);
+            var apiClient = new ApiClient(configuration);
+            _tokensClient = new TokensClient(apiClient, configuration);
+            _customersClient = new CustomersClient(apiClient, configuration);
+            _sourcesClient = new SourcesClient(apiClient, configuration);
+            _paymentsClient = new PaymentsClient(apiClient, configuration);
+            _instrumentsClient = new InstrumentsClient(apiClient, configuration);
+            _disputesClient = new DisputesClient(apiClient, configuration);
+            _webhooksClient = new WebhooksClient(apiClient, configuration);
+            _eventsClient = new EventsClient(apiClient, configuration);
+            _riskClient = new RiskClient(apiClient, configuration);
         }
 
-        /// <summary>
-        /// Gets the Payments API.
-        /// </summary>
-        public IPaymentsClient Payments { get; }
-
-        /// <summary>
-        /// Gets the Sources API.
-        /// </summary>
-        public ISourcesClient Sources { get; }
-
-        /// <summary>
-        /// Gets the Tokenization API. 
-        /// </summary>
-        public ITokensClient Tokens { get; }
-
-        /// <summary>
-        /// Gets the Disutes API. 
-        /// </summary>
-        public IDisputesClient Disputes { get; }
-
-        /// <summary>
-        /// Gets the Files API. 
-        /// </summary>
-        public IFilesClient Files { get; }
-
-        /// <summary>
-        /// Creates a new <see cref="CheckoutApi"/> instance with default dependencies.
-        /// </summary>
-        /// <param name="secretKey">Your secret key obtained from the Checkout Hub.</param>
-        /// <param name="useSandbox">Whether to connect to the Checkout Sandbox. False indicates the live environment should be used.</param>
-        /// <param name="publicKey">Your public key obtained from the Checkout Hub. Required for some API resources.</param>
-        /// <returns>The configured instance.</returns>
-        public static CheckoutApi Create(string secretKey, bool useSandbox = true, string publicKey = null)
+        public ITokensClient TokensClient()
         {
-            var configuration = new CheckoutConfiguration(secretKey, useSandbox)
-            {
-                PublicKey = publicKey
-            };
-
-            var apiClient = new ApiClient(configuration);
-            return new CheckoutApi(apiClient, configuration);
+            return _tokensClient;
         }
 
-        /// <summary>
-        /// Creates a new <see cref="CheckoutApi"/> instance with default dependencies.
-        /// </summary>
-        /// <param name="secretKey">Your secret key obtained from the Checkout Hub.</param>
-        /// <param name="uri">The base URL of the Checkout API you wish to connect to.</param>
-        /// <param name="publicKey">Your public key obtained from the Checkout Hub. Required for some API resources.</param>
-        /// <returns>The configured instance.</returns>
-        public static CheckoutApi Create(string secretKey, string uri, string publicKey = null)
+        public ICustomersClient CustomersClient()
         {
-            var configuration = new CheckoutConfiguration(secretKey, uri)
-            {
-                PublicKey = publicKey
-            };
+            return _customersClient;
+        }
 
-            var apiClient = new ApiClient(configuration);
-            return new CheckoutApi(apiClient, configuration);
+        public ISourcesClient SourcesClient()
+        {
+            return _sourcesClient;
+        }
+
+        public IPaymentsClient PaymentsClient()
+        {
+            return _paymentsClient;
+        }
+
+        public IInstrumentsClient InstrumentsClient()
+        {
+            return _instrumentsClient;
+        }
+
+
+        public IDisputesClient DisputesClient()
+        {
+            return _disputesClient;
+        }
+
+        public IWebhooksClient WebhooksClient()
+        {
+            return _webhooksClient;
+        }
+
+        public IEventsClient EventsClient()
+        {
+            return _eventsClient;
+        }
+
+        public IRiskClient RiskClient()
+        {
+            return _riskClient;
         }
     }
 }

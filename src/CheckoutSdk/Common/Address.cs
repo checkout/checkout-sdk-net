@@ -1,38 +1,40 @@
+using System;
+
 namespace Checkout.Common
 {
-    /// <summary>
-    /// Defines a postal address.
-    /// </summary>
-    public class Address
+    public sealed class Address : IEquatable<Address>
     {
-        /// <summary>
-        /// Gets or sets Line 1 of the address.
-        /// </summary>
         public string AddressLine1 { get; set; }
-        
-        /// <summary>
-        /// Gets or sets Line 2 of the address.
-        /// </summary>
+
         public string AddressLine2 { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the address city.
-        /// </summary>
+
         public string City { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the address state.
-        /// </summary>
+
         public string State { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the address zip or postal code.
-        /// </summary>
+
         public string Zip { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the address country.
-        /// </summary>
-        public string Country { get; set; }
+
+        public CountryCode? Country { get; set; }
+
+        public bool Equals(Address other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return AddressLine1 == other.AddressLine1 && AddressLine2 == other.AddressLine2 && City == other.City &&
+                   State == other.State && Zip == other.Zip && Country == other.Country;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Address) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(AddressLine1, AddressLine2, City, State, Zip, (int) Country);
+        }
     }
 }

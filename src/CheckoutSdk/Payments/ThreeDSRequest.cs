@@ -1,41 +1,42 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace Checkout.Payments
 {
-    /// <summary>
-    /// Information required for 3D-Secure payments
-    /// </summary>
-    public class ThreeDSRequest
+    public sealed class ThreeDsRequest : IEquatable<ThreeDsRequest>
     {
-        /// <summary>
-        /// Gets or sets a value that indicates whether to process this payment as a 3D-Secure.
-        /// </summary>
-        public bool Enabled { get; set; }
+        public bool? Enabled { get; set; } = true;
 
-        /// <summary>
-        /// Gets or sets a value that indicates whether to attempt a 3D-Secure payment as non-3DS should the card issuer not be enrolled.
-        /// </summary>
         [JsonProperty(PropertyName = "attempt_n3d")]
         public bool? AttemptN3D { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the Electronic Commerce Indicator security level associated with the 3D-Secure enrollment result. Required if using a third party MPI.
-        /// </summary>
+
         public string Eci { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the cryptographic identifier used by the card schemes to validate the cardholder authentication result (3D-Secure). Required if using an external MPI.
-        /// </summary>
+
         public string Cryptogram { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the 3D-Secure transaction identifier. Required if using an external MPI.
-        /// </summary>
+
         public string Xid { get; set; }
 
-        public static implicit operator ThreeDSRequest(bool enabled)
+        public string Version { get; set; }
+
+        public Exemption? Exemption { get; set; }
+
+        public bool Equals(ThreeDsRequest other)
         {
-            return new ThreeDSRequest { Enabled = enabled };
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Enabled == other.Enabled && AttemptN3D == other.AttemptN3D && Eci == other.Eci &&
+                   Cryptogram == other.Cryptogram && Xid == other.Xid && Version == other.Version &&
+                   Exemption == other.Exemption;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || obj is ThreeDsRequest other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Enabled, AttemptN3D, Eci, Cryptogram, Xid, Version, Exemption);
         }
     }
 }

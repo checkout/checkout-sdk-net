@@ -1,27 +1,31 @@
+using System;
 using System.Collections.Generic;
 
 namespace Checkout.Payments
 {
-    /// <summary>
-    /// Defines a request to refund an existing payment.
-    /// </summary>
-    public class RefundRequest
+    public sealed class RefundRequest : IEquatable<RefundRequest>
     {
-        /// <summary>
-        /// Gets or sets the amount to refund in the major currency. 
-        /// If not specified, the full payment amount will be refunded.
-        /// </summary>
         public long? Amount { get; set; }
-        
-        
-        /// <summary>
-        /// Gets or sets the action reference you can later use to identify this refund request.
-        /// </summary>
+
         public string Reference { get; set; }
 
-        /// <summary>
-        /// Gets or sets metadata for the refund request.
-        /// </summary>
-        public Dictionary<string, object> Metadata { get; set; }
+        public IDictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
+
+        public bool Equals(RefundRequest other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Amount == other.Amount && Reference == other.Reference && Equals(Metadata, other.Metadata);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || obj is RefundRequest other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Amount, Reference, Metadata);
+        }
     }
 }

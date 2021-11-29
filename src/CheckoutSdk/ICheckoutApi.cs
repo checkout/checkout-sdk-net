@@ -1,39 +1,33 @@
+using Checkout.Customers;
+using Checkout.Disputes;
+using Checkout.Events;
+using Checkout.Instruments;
 using Checkout.Payments;
+using Checkout.Risk;
 using Checkout.Sources;
 using Checkout.Tokens;
-using Checkout.Disputes;
-using Checkout.Files;
+using Checkout.Webhooks;
 
 namespace Checkout
 {
-    /// <summary>
-    /// Convenience interface that provides access to the available Checkout.com APIs.
-    /// </summary>
-    public interface ICheckoutApi
+    public interface ICheckoutApi : ICheckoutApmApi
     {
-        /// <summary>
-        /// Gets the Payments API.
-        /// </summary>
-        IPaymentsClient Payments { get; }
+        ITokensClient TokensClient();
 
-        /// <summary>
-        /// Gets the Sources API.
-        /// </summary>
-        ISourcesClient Sources { get; }
+        ICustomersClient CustomersClient();
 
-        /// <summary>
-        /// Gets the Tokenization API.
-        /// </summary>
-        ITokensClient Tokens { get; }
+        ISourcesClient SourcesClient();
 
-        /// <summary>
-        /// Gets the Disputes API.
-        /// </summary>
-        IDisputesClient Disputes { get; }
+        IPaymentsClient PaymentsClient();
 
-        /// <summary>
-        /// Gets the Files API.
-        /// </summary>
-        IFilesClient Files { get; }
+        IInstrumentsClient InstrumentsClient();
+
+        IDisputesClient DisputesClient();
+
+        IWebhooksClient WebhooksClient();
+
+        IEventsClient EventsClient();
+
+        IRiskClient RiskClient();
     }
 }
