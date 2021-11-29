@@ -1,12 +1,13 @@
-﻿namespace Checkout.Common
+﻿using System.Runtime.Serialization;
+
+namespace Checkout.Common
 {
-    /// <summary>
-    /// Defines the type of card.
-    /// </summary>
-    public static class CardType
+    public enum CardType
     {
-        public const string Credit = "Credit";
-        public const string Debit = "Debit";
-        public const string Prepaid = "Prepaid";
+        [EnumMember(Value = "Credit")] Credit,
+        [EnumMember(Value = "Debit")] Debit,
+        [EnumMember(Value = "Prepaid")] Prepaid,
+        [EnumMember(Value = "Charge")] Charge,
+        [EnumMember(Value = "Deferred Debit")] DeferredDebit,
     }
 }

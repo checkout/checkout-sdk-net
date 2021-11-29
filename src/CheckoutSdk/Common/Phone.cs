@@ -1,20 +1,28 @@
+using System;
+
 namespace Checkout.Common
 {
-    /// <summary>
-    /// Defines a phone number.
-    /// </summary>
-    public class Phone
+    public sealed class Phone : IEquatable<Phone>
     {
-        /// <summary>
-        /// Gets or sets the phone number country code.
-        /// </summary>
-        /// <example>+44</example>
-        public string CountryCode {get;set;}
-        
-        /// <summary>
-        /// Gets or sets the phone number.
-        /// </summary>
-        /// <example>415 555 2671</example>
-        public string Number {get;set;}
+        public string CountryCode { get; set; }
+
+        public string Number { get; set; }
+
+        public bool Equals(Phone other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return CountryCode == other.CountryCode && Number == other.Number;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || obj is Phone other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(CountryCode, Number);
+        }
     }
 }

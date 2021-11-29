@@ -1,20 +1,29 @@
+using System;
 using Checkout.Common;
 
 namespace Checkout.Payments
 {
-    /// <summary>
-    /// The void response indicates the void has been accepted for deferred processing.
-    /// </summary>
-    public class VoidResponse : Resource
+    public sealed class VoidResponse : Resource, IEquatable<VoidResponse>
     {
-        /// <summary>
-        /// Gets the unique identifier of the void action.
-        /// </summary>
         public string ActionId { get; set; }
-        
-        /// <summary>
-        /// Gets your reference for the void request.
-        /// </summary>
+
         public string Reference { get; set; }
+
+        public bool Equals(VoidResponse other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return ActionId == other.ActionId && Reference == other.Reference;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || obj is VoidResponse other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(ActionId, Reference);
+        }
     }
 }

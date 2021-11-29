@@ -1,11 +1,10 @@
-﻿namespace Checkout.Common
+﻿using System.Runtime.Serialization;
+
+namespace Checkout.Common
 {
-    /// <summary>
-    /// Defines the category of a card.
-    /// </summary>
-    public static class CardCategory
+    public enum CardCategory
     {
-        public const string Consumer = "Consumer";
-        public const string Commercial = "Commercial";
+        [EnumMember(Value = "Consumer")] Consumer,
+        [EnumMember(Value = "Commercial")] Commercial,
     }
 }

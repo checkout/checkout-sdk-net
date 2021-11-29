@@ -1,9 +1,19 @@
+using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Checkout.Sources
 {
-    /// <summary>
-    /// Defines the response data of a <see cref="SourceResponse"/>.
-    /// </summary>
-    public class ResponseData : Dictionary<string, object> { }
+    [Serializable]
+    public sealed class ResponseData : Dictionary<string, object>
+    {
+        public ResponseData()
+        {
+        }
+
+        private ResponseData(SerializationInfo info, StreamingContext context) : base(info,
+            context)
+        {
+        }
+    }
 }

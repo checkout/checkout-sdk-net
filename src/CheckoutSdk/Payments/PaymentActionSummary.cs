@@ -1,32 +1,33 @@
-using Checkout.Common;
 using System;
-using System.Collections.Generic;
 
 namespace Checkout.Payments
 {
-    /// <summary>
-    /// Summary of a payment action.
-    /// </summary>
-    public class PaymentActionSummary
+    public sealed class PaymentActionSummary : IEquatable<PaymentActionSummary>
     {
-        /// <summary>
-        /// Gets the unique identifier of the payment action.
-        /// </summary>
         public string Id { get; set; }
-        
-        /// <summary>
-        /// Gets the type of action.
-        /// </summary>
-        public string Type { get; set; }
-        
-        /// <summary>
-        /// Gets the Checkout.com Gateway response code.
-        /// </summary>
+
+        public ActionType? Type { get; set; }
+
         public string ResponseCode { get; set; }
-        
-        /// <summary>
-        /// Gets the response summary.
-        /// </summary>
+
         public string ResponseSummary { get; set; }
+
+        public bool Equals(PaymentActionSummary other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Id == other.Id && Type == other.Type && ResponseCode == other.ResponseCode &&
+                   ResponseSummary == other.ResponseSummary;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || obj is PaymentActionSummary other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, (int) Type, ResponseCode, ResponseSummary);
+        }
     }
 }

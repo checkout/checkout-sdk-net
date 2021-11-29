@@ -1,121 +1,152 @@
-# Checkout SDK for .NET
+# Checkout.com .NET SDK
 
-[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/6ox0xlfjv11avkdf?svg=true)](https://ci.appveyor.com/project/checkout/checkout-sdk-net-74764)
+[![build-master](https://github.com/checkout/checkout-sdk-net/actions/workflows/build-master.yml/badge.svg?branch=master)](https://github.com/checkout/checkout-sdk-net/actions/workflows/build-master.yml)
 [![NuGet](https://img.shields.io/nuget/v/CheckoutSDK.svg)](https://www.nuget.org/packages/CheckoutSDK)
-[![MyGet Pre Release](https://img.shields.io/myget/checkout/vpre/CheckoutSDK.svg)](https://www.myget.org/feed/checkout/package/nuget/CheckoutSDK)
 
-The **Checkout SDK for .NET** enables .NET developers to easily work with [Checkout.com APIs](https://docs.checkout.com/). 
-It supports .NET Framework 4.5+ and .NET Core.
+## Getting started
 
-## Getting Help
+Binaries and sources are all available from [Nuget](https://www.nuget.org/packages/CheckoutSDK).
 
-If you encounter a bug with Checkout SDK for .NET plase search the existing issues and try to make sure your problem doesn’t already exist before opening a new issue. It's helpful if you include the version of Checkout SDK .NET and the OS you're using. Please include a stack trace and reduced repro case when appropriate, too.
+## How to use the SDK
 
-The GitHub issues are intended for bug reports and feature requests. For help and questions with using Checkout SDK for .NET please contact our integration support team.
+This SDK can be used with two different pair of API keys provided by Checkout. However, using different API keys imply using specific API features. Please find in the table below the types of keys that can be used within this SDK.
 
-For full usage details, see the [Wiki](https://github.com/checkout/checkout-sdk-net/wiki).
+| Account System | Public Key (example)                    | Secret Key (example)                    |
+| -------------- | --------------------------------------- | --------------------------------------- |
+| default        | pk_g650ff27-7c42-4ce1-ae90-5691a188ee7b | sk_gk3517a8-3z01-45fq-b4bd-4282384b0a64 |
+| Four           | pk_pkhpdtvabcf7hdgpwnbhw7r2uic          | sk_m73dzypy7cf3gf5d2xr4k7sxo4e          |
 
-## Quickstart
+Note: sandbox keys have a `test_` or `sbx_` identifier, for Default and Four accounts respectively.
 
-To get started install the [`CheckoutSDK`](https://www.nuget.org/packages/CheckoutSDK) package from NuGet. 
+If you don't have your own API keys, you can sign up for a test account [here](https://www.checkout.com/get-test-account).
 
-Initialize a `CheckoutApi` to access the operations for each API:
+
+## Getting started
+
+To get started install the [`CheckoutSDK`](https://www.nuget.org/packages/CheckoutSDK) package from NuGet.
+
+Initialize a `CheckoutApi` to access the operations for each API. Please note that there are 2 different Checkout API interfaces, depending on the way the SDK is built.
+
+### Default
 
 ```c#
-var api = CheckoutApi.Create("sk_70d144d5-92bd-4040-83cf-faeb978b3d75", useSandbox: true);
-
-var paymentRequest = new PaymentRequest<TokenSource>(new TokenSource("tok_ubfj2q76miwundwlk72vxt2i7q"), Currency.USD, 999);
-var apiResponse = await api.Payments.RequestAsync(paymentRequest);
+ICheckoutApi api = CheckoutSdk.DefaultSdk().StaticKeys()
+    .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PUBLIC_KEY"))
+    .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_SECRET_KEY"))
+    .Environment(Environment.Sandbox)
+    .LogProvider(logFactory) // optional
+    .HttpClientFactory(httpClientFactory) // optional
+    .Build();
 ```
 
-All API operations return an `ApiResponse<TResult>` where `TResult` contains the result of the API call, as per our [API reference](https://docs.checkout.com/reference).
+### Four
 
-For detailed examples, please see the WIKI.
+```c#
+Four.ICheckoutApi api = CheckoutSdk.FourSdk().StaticKeys()
+    .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PUBLIC_KEY"))
+    .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_SECRET_KEY"))
+    .Environment(Environment.Sandbox)
+    .LogProvider(logFactory) // optional
+    .HttpClientFactory(httpClientFactory) // optional
+    .Build();
+```
+
+Then just get any client, and start making requests:
+
+```c#
+var paymentResponse = await api.PaymentsClient().RequestPayment(new PaymentRequest());
+```
 
 ### .NET Core Applications
 
-The [`CheckoutSDK.Extensions.Microsoft`](https://www.nuget.org/packages/CheckoutSDK.Extensions.Microsoft) package makes it easy to add the Checkout SDK to your .NET Core applications.
+The [CheckoutSDK.Extensions.Microsoft](https://www.nuget.org/packages/CheckoutSDK.Extensions.Microsoft) package makes it easier to add the Checkout SDK to your .NET Core applications.
 
-Once installed register the SDK with the built-in DI container in `Startup.cs`:
-
-```c#
-public void ConfigureServices(IServiceCollection services)
-{
-    // ...
-    var configuration = new CheckoutConfiguration("sk_70d144d5-92bd-4040-83cf-faeb978b3d75", useSandbox: true);
-    services.AddCheckoutSdk(configuration);    
-}
-```
-
-Then take a dependency on `ICheckoutApi` in your class constructor:
-
-```c#
-public class CheckoutController : ControllerBase
-{
-    private readonly ICheckoutApi _checkoutApi;
-
-    public CheckoutController(ICheckoutApi checkoutApi)
-    {
-        _checkoutApi = checkoutApi ?? throw new ArgumentNullException(nameof(checkoutApi));
-    }
-
-    // etc.
-}
-```
-
-To configure the SDK using [.NET Core Configuration](https://github.com/aspnet/Configuration) pass your application's `IConfiguration`:
-
-```c#
-public class Startup
-{
-    public Startup(IConfiguration configuration, IHostingEnvironment env)
-    {
-        Configuration = configuration;
-    }
-
-    public IConfiguration Configuration { get; }
-
-    public void ConfigureServices(IServiceCollection services)
-    {
-        // ...
-        services.AddCheckoutSdk(Configuration);    
-    }
-}
-```
-
-You can then configure `appsettings.json` file with your Checkout details:
+Initialize the Configuration of your `appsettings.json` file:
 
 ```json
 {
   "Checkout": {
-    "UseSandbox": true,
-    "SecretKey" : "sk_70d144d5-92bd-4040-83cf-faeb978b3d75"
+    "SecretKey": "your_secret_key",
+    "PublicKey": "your_public_key",
+    "Environment": "Sandbox",
+    "PlatformType": "Default"
   }
 }
 ```
+Use `Environment` enum value to choose the desired environment for the SDK, and `PlatformType` value to choose between the different Account Settings. Then add the configuration:
+```c#
+public class Startup 
+{
+    public IConfigurationRoot Configuration { get; set; }
 
-For more details on configuring the SDK, see the [Wiki](https://github.com/checkout/checkout-sdk-net/wiki).
+    public Startup(IWebHostEnvironment env)
+    {
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(env.ContentRootPath)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
-## Building and running tests
+        Configuration = builder.Build();
+    }
+}
+```
+Register the `CheckoutSdk`:
 
-To build the project and run the integration tests, run `build.sh` (Mac/Unix) or `build.ps1` (Windows). The integration tests require your Sandbox keys to be configured. You can do this by adding `test/CheckoutSdk.Tests/appsettings.local.json` with your keys or setting the following environment variables:
+```c#
+public void ConfigureServices(IServiceCollection services)
+{
+    // LogFactory and HttpClientFactory are optional
+    CheckoutServiceCollection.AddCheckoutSdk(services, configuration, logFactory, httpClientFactory);
+}
+```
+Then take a dependency on `ICheckoutApi` in your class constructor:
 
-- `Checkout__SecretKey`
-- `Checkout__PublicKey`
-
-## Versioning
-
-Checkout SDK for .NET uses [Semantic Versioning](https://semver.org/). The latest stable code can be found on the `master` branch and will be published to NuGet. Unstable builds can be downloaded from the [Checkout MyGet server](https://www.myget.org/feed/Packages/checkout).
-
-## More Resources
-
-- [Checkout.com Documentation](http://docs.checkout.com)
-- [Checkout.com API Reference](http://docs.checkout.com/reference)
+```c#
 
 
-## Release Process
+public class CheckoutController : ControllerBase
+{
+    private readonly ICheckoutApi _api;
 
-- Create a PR from `develop` to `master` "Version {Version}" (do not squash merge)
-- Pull the latest from `master` and tag `git tag -a {Version} -m "Version {Version}"`
-- Push the tag: `git push origin master --tags` (this will deploy the package to NuGet)
-- Create a PR from `master` to `develop` to bump the next version (do not squash merge)
+    public CheckoutController(ICheckoutApi api)
+    {
+        _api = api;
+    }
+}
+```
+Please note again that there are 2 different `ICheckoutApi` interfaces, depending on the way the SDK is built.
+
+## Exception handling
+
+All the API responses that do not fall in the 2** status codes will cause a `CheckoutApiException`. The exception encapsulates
+the `requestId`, `httpStatusCode` and a map of `errorDetails`, if available.
+
+More documentation related to Checkout API and the SDK is available at:
+
+* [Official Docs (Default)](https://docs.checkout.com/)
+* [Official Docs (Four)](https://docs.checkout.com/four)
+* [API Reference (Default)](https://api-reference.checkout.com/)
+* [API Reference (Four)](https://api-reference.checkout.com/preview/crusoe/)
+
+## Building from source
+
+Once you checkout the code from GitHub, the project can be built using the netcore CLI tools:
+
+```
+dotnet build
+
+# run tests
+dotnet test
+```
+
+The execution of integration tests require the following environment variables set in your system:
+
+* For Default account systems: `CHECKOUT_PUBLIC_KEY` & `CHECKOUT_SECRET_KEY`
+* For Four account systems: `CHECKOUT_FOUR_PUBLIC_KEY` & `CHECKOUT_FOUR_SECRET_KEY`
+
+## Code of Conduct
+
+Please refer to [Code of Conduct](CODE_OF_CONDUCT.md)
+
+## Licensing
+
+[MIT](LICENSE.md)

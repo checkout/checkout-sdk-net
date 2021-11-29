@@ -1,12 +1,12 @@
-﻿namespace Checkout.Payments
+﻿using System.Runtime.Serialization;
+
+namespace Checkout.Payments
 {
-    /// <summary>
-    /// Defines the type of payment.
-    /// </summary>
-    public static class PaymentType
+    public enum PaymentType
     {
-        public const string Regular = "Regular";
-        public const string Recurring = "Recurring";
-        public const string Moto = "Moto";
+        [EnumMember(Value = "Regular")] Regular,
+        [EnumMember(Value = "Recurring")] Recurring,
+        [EnumMember(Value = "MOTO")] Moto,
+        [EnumMember(Value = "Installment")] Installment,
     }
 }

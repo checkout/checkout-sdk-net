@@ -3,24 +3,12 @@ using Checkout.Common;
 
 namespace Checkout.Tokens
 {
-    /// <summary>
-    /// Indicates successful token creation containing the token details.
-    /// </summary>
     public class TokenResponse : Resource
     {
-        /// <summary>
-        /// Gets the token type.
-        /// </summary>
-        public string Type { get; set; }
-        
-        /// <summary>
-        /// Gets the reference token.
-        /// </summary>
+        public TokenType? Type { get; set; }
+
         public string Token { get; set; }
-        
-        /// <summary>
-        /// Gets the date/time the token will expire.
-        /// </summary>
-        public DateTime ExpiresOn { get; set; }
+
+        public DateTime? ExpiresOn { get; set; }
     }
 }

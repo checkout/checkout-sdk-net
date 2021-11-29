@@ -1,20 +1,29 @@
+using System;
 using Checkout.Common;
 
 namespace Checkout.Payments
 {
-    /// <summary>
-    /// Represents the shipping details for a payment request.
-    /// </summary>
-    public class ShippingDetails
+    public sealed class ShippingDetails : IEquatable<ShippingDetails>
     {
-        /// <summary>
-        /// Gets or sets the shipping address.
-        /// </summary>
         public Address Address { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the phone number associated with the shipping address.
-        /// </summary>
+
         public Phone Phone { get; set; }
+
+        public bool Equals(ShippingDetails other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(Address, other.Address) && Equals(Phone, other.Phone);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || obj is ShippingDetails other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Address, Phone);
+        }
     }
 }
