@@ -5,7 +5,7 @@ on:
       - Directory.Build.props
 jobs:
   deploy:
-    if: github.ref == 'refs/heads/disabled'
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
