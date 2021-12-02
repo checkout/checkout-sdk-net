@@ -6,9 +6,9 @@ namespace Checkout.Payments.Links
 	public class PaymentLinksClient : AbstractClient, IPaymentLinksClient
 	{
 
-		private const string PaymentLinksPath = "/payment-links";
+		private const string PaymentLinksPath = "payment-links";
 
-		public PaymentLinksClient(ApiClient apiClient, CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKey)
+		public PaymentLinksClient(IApiClient apiClient, CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKey)
 		{
 		}
 
