@@ -3,7 +3,7 @@ using System;
 
 namespace Checkout.Payments.Links
 {
-    public class BillingInformation : IEquatable<BillingInformation>
+    public sealed class BillingInformation : IEquatable<BillingInformation>
     {
         public Address Address { get; set; }
 
@@ -13,7 +13,7 @@ namespace Checkout.Payments.Links
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Address == other.Address && Phone == other.Phone;
+            return Address.Equals(other.Address) && Phone.Equals(other.Phone);
         }
 
         public override bool Equals(object obj)

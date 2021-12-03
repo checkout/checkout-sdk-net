@@ -12,7 +12,7 @@ namespace Checkout.SDK.IntegrationTest.Payments.Links
     {
         protected const string IdempotencyKey = "test.net";
 
-        public PaymentLinksIntegrationTest() : base( PlatformType.Default)
+        public PaymentLinksIntegrationTest() : base(PlatformType.Default)
         {
 
         }
@@ -20,7 +20,7 @@ namespace Checkout.SDK.IntegrationTest.Payments.Links
         [Fact]
         private async Task ShouldCreatePaymentLinks()
         {
-           
+
             var address = new Address
             {
                 AddressLine1 = "CheckoutSdk.com",
@@ -35,8 +35,8 @@ namespace Checkout.SDK.IntegrationTest.Payments.Links
             {
                 Amount = 10,
                 Billing = new BillingInformation()
-                { 
-                    Address = address                 
+                {
+                    Address = address
                 },
                 Capture = true,
                 CaptureOn = DateTime.Now,
@@ -51,26 +51,25 @@ namespace Checkout.SDK.IntegrationTest.Payments.Links
                 ExpiresIn = 1,
                 Locale = "loc",
                 Reference = "ORD-123A",
-                ThreeDS =  new ThreeDsRequest
+                ThreeDs = new ThreeDsRequest
                 {
-                   Enabled = true,
-                   AttemptN3D = false,
-                   Eci = "05",
-                   Cryptogram = "AgAAAAAAAIR8CQrXcIhbQAAAAAA",
-                   Xid = "MDAwMDAwMDAwMDAwMDAwMzIyNzY=" ,
-                   Version = "2.0.1"
+                    Enabled = true,
+                    AttemptN3D = false,
+                    Eci = "05",
+                    Cryptogram = "AgAAAAAAAIR8CQrXcIhbQAAAAAA",
+                    Xid = "MDAwMDAwMDAwMDAwMDAwMzIyNzY=",
+                    Version = "2.0.1"
                 }
-               
-             };
 
-            var response = await DefaultApi.PaymentLinksClient().CreateAsync(paymentLinkRequest);
+            };
+
+            var response = await DefaultApi.PaymentLinksClient().Create(paymentLinkRequest);
 
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNull();
             response.Links.ShouldNotBeNull();
             response.Links.Count.ShouldBe(2);
             response.Reference.ShouldNotBeNull();
-
 
         }
 
@@ -107,7 +106,7 @@ namespace Checkout.SDK.IntegrationTest.Payments.Links
                 ExpiresIn = 1,
                 Locale = "loc",
                 Reference = "ORD-123A",
-                ThreeDS = new ThreeDsRequest
+                ThreeDs = new ThreeDsRequest
                 {
                     Enabled = true,
                     AttemptN3D = false,
@@ -119,14 +118,14 @@ namespace Checkout.SDK.IntegrationTest.Payments.Links
 
             };
 
-            var responseToPaymentLinksClientToCreate = await DefaultApi.PaymentLinksClient().CreateAsync(paymentLinkRequest);
+            var responseToPaymentLinksClientToCreate = await DefaultApi.PaymentLinksClient().Create(paymentLinkRequest);
             responseToPaymentLinksClientToCreate.ShouldNotBeNull();
             responseToPaymentLinksClientToCreate.Id.ShouldNotBeNull();
             responseToPaymentLinksClientToCreate.Links.ShouldNotBeNull();
             responseToPaymentLinksClientToCreate.Links.Count.ShouldBe(2);
             responseToPaymentLinksClientToCreate.Reference.ShouldNotBeNull();
 
-            var responseGet = await DefaultApi.PaymentLinksClient().GetAsync(responseToPaymentLinksClientToCreate.Id);
+            var responseGet = await DefaultApi.PaymentLinksClient().Get(responseToPaymentLinksClientToCreate.Id);
 
             responseGet.ShouldNotBeNull();
             responseGet.Id.ShouldNotBeNull();

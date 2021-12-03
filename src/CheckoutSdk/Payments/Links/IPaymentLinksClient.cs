@@ -3,12 +3,11 @@ using System.Threading.Tasks;
 
 namespace Checkout.Payments.Links
 {
-
-	public interface IPaymentLinksClient
+    public interface IPaymentLinksClient
 	{
-		Task<PaymentLinkDetailsResponse> GetAsync(string reference, CancellationToken cancellationToken = default);
+		Task<PaymentLinkDetailsResponse> Get(string reference, CancellationToken cancellationToken = default);
 
-		Task<PaymentLinkResponse> CreateAsync(PaymentLinkRequest paymentLinkRequest, CancellationToken cancellationToken = default);
+		Task<PaymentLinkResponse> Create(PaymentLinkRequest paymentLinkRequest, CancellationToken cancellationToken = default);
 	}
 
 }

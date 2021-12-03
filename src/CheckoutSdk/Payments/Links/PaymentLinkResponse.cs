@@ -1,15 +1,12 @@
 ﻿using Checkout.Common;
-using Newtonsoft.Json;
 using System;
 
 namespace Checkout.Payments.Links
 {
-	public sealed class PaymentLinkResponse : Resource, IEquatable<PaymentLinkResponse>
+    public sealed class PaymentLinkResponse : Resource, IEquatable<PaymentLinkResponse>
 	{
-
 		public string Id { get; set; }
-
-		[JsonProperty(PropertyName = "expires_on")]
+		
 		public string ExpiresOn { get; set; }
 
 		public string Reference { get; set; }
@@ -18,7 +15,7 @@ namespace Checkout.Payments.Links
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
-			return Id == other.Id && ExpiresOn == other.ExpiresOn && Reference == other.Reference;
+			return Id.Equals(other.Id) && ExpiresOn.Equals(other.ExpiresOn) && Reference.Equals(other.Reference);
 		}
 
 		public override bool Equals(object obj)

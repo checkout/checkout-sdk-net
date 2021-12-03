@@ -7,7 +7,6 @@ using Xunit;
 
 namespace Checkout.SDK.UnitTest.Payments.Links
 {
-
     public class PaymentLinksClientTest : UnitTestFixture
     {
         private const string PaymentLinksPath = "payment-links";
@@ -34,24 +33,54 @@ namespace Checkout.SDK.UnitTest.Payments.Links
             PaymentLinkResponse paymentLinkResponse = new PaymentLinkResponse
             {
                 Id = "1",
-                ExpiresOn="2021",
-                Reference="ref1234"
+                ExpiresOn = "2021",
+                Reference = "ref1234"
             };
 
 
             _apiClient.Setup(apiClient =>
-                   apiClient.Post<PaymentLinkResponse>(PaymentLinksPath, _authorization, paymentLinkRequest, CancellationToken.None,null))
+                   apiClient.Post<PaymentLinkResponse>(PaymentLinksPath, _authorization, paymentLinkRequest, CancellationToken.None, null))
                        .ReturnsAsync(() => paymentLinkResponse);
-            
+
             IPaymentLinksClient paymentLinksClient = new PaymentLinksClient(_apiClient.Object, _configuration.Object);
 
-            var response = await paymentLinksClient.CreateAsync(paymentLinkRequest,CancellationToken.None);
+            var response = await paymentLinksClient.Create(paymentLinkRequest, CancellationToken.None);
 
             response.ShouldNotBeNull();
             response.ShouldBeSameAs(paymentLinkResponse);
 
         }
 
+        [Fact]
+        public async Task ShouldInstantiateAndRetrieveClientsDefault()
+        {
+            PaymentLinkRequest paymentLinkRequest = new PaymentLinkRequest();
+            PaymentLinkResponse paymentLinkResponse = new PaymentLinkResponse
+            {
+                Id = "1",
+                ExpiresOn = "2021",
+                Reference = "ref1234"
+            };
+
+
+            _apiClient.Setup(apiClient =>
+                   apiClient.Post<PaymentLinkResponse>(PaymentLinksPath, _authorization, paymentLinkRequest, CancellationToken.None, null))
+                       .ReturnsAsync(() => paymentLinkResponse);
+
+            IPaymentLinksClient paymentLinksClient = new PaymentLinksClient(_apiClient.Object, _configuration.Object);
+
+            var response = await paymentLinksClient.Create(paymentLinkRequest, CancellationToken.None);
+
+            response.ShouldNotBeNull();
+            response.Id.ShouldNotBeNull();
+            response.Id.ShouldBe("1");
+            response.ExpiresOn.ShouldNotBeNull();
+            response.ExpiresOn.ShouldBe("2021");
+            response.Reference.ShouldNotBeNull();
+            response.Reference.ShouldBe("ref1234");
+            response.ShouldBeSameAs(paymentLinkResponse);
+
+        }
 
         [Fact]
         public async Task ShouldRetrievePaymentLinks()
@@ -66,14 +95,14 @@ namespace Checkout.SDK.UnitTest.Payments.Links
                 ReturnUrl = "test.com",
                 Reference = reference
             };
-            
+
             _apiClient.Setup(apiClient =>
                     apiClient.Get<PaymentLinkDetailsResponse>(PaymentLinksPath + "/" + reference, _authorization, CancellationToken.None))
                         .ReturnsAsync(() => paymentLinkDetailsResponse);
 
             IPaymentLinksClient paymentLinksClient = new PaymentLinksClient(_apiClient.Object, _configuration.Object);
 
-            var response = await paymentLinksClient.GetAsync(reference, CancellationToken.None);
+            var response = await paymentLinksClient.Get(reference, CancellationToken.None);
 
             response.ShouldNotBeNull();
             response.ShouldBeSameAs(paymentLinkDetailsResponse);

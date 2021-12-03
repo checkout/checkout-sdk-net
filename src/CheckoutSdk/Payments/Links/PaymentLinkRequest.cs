@@ -1,12 +1,10 @@
 ﻿using Checkout.Common;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-
 namespace Checkout.Payments.Links
 {
-	public sealed class PaymentLinkRequest : IEquatable<PaymentLinkRequest>
+    public sealed class PaymentLinkRequest : IEquatable<PaymentLinkRequest>
 	{
 		public long? Amount { get; set; }
 
@@ -32,8 +30,7 @@ namespace Checkout.Payments.Links
 
 		public IDictionary<string, object> metadata { get; set; }
 
-		[JsonProperty(PropertyName = "3ds")]
-		public ThreeDsRequest ThreeDS { get; set; }
+		public ThreeDsRequest ThreeDs { get; set; }
 
 		public RiskRequest Risk { get; set; }
 
@@ -43,15 +40,14 @@ namespace Checkout.Payments.Links
 
 		public bool? Capture { get; set; }
 
-		[JsonProperty(PropertyName = "capture_on")]
 		public DateTime CaptureOn { get; set; }
 
 		public bool Equals(PaymentLinkRequest other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
-			return Amount == other.Amount && Currency == other.Currency && Reference == other.Reference
-				&& Description == other.Description;
+			return Amount.Equals(other.Amount) && Currency.Equals(other.Currency) && Reference.Equals(other.Reference)
+				&& Description.Equals(other.Description);
 		}
 
 		public override bool Equals(object obj)
