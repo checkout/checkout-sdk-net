@@ -1,4 +1,5 @@
 ﻿using Checkout.Common;
+using Checkout.Common.Extensions;
 using System;
 
 namespace Checkout.Reconciliation
@@ -14,9 +15,12 @@ namespace Checkout.Reconciliation
         public string PayoutCurrencyAmount { get; set; }
 
         public override bool EqualExp(Breakdown other) 
-            => Type == other.Type && Date == other.Date;
+            => Type.EqualsNull(other.Type) 
+                && Date.Equals(other.Date) 
+                && ProcessingCurrencyAmount.EqualsNull(other.ProcessingCurrencyAmount)
+                && PayoutCurrencyAmount.EqualsNull(other.PayoutCurrencyAmount);
 
         public override int GetHashCode()
-            => HashCode.Combine(Type, Date);
+            => HashCode.Combine(Type, Date, ProcessingCurrencyAmount, PayoutCurrencyAmount);
     }
 }

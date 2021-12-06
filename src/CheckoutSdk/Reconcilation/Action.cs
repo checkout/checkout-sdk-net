@@ -1,10 +1,11 @@
 ﻿using Checkout.Common;
+using Checkout.Common.Extensions;
 using System;
 using System.Collections.Generic;
 
 namespace Checkout.Reconciliation
 {
-	public class Action : BaseEquatable<Action>
+	public sealed class Action : BaseEquatable<Action>
 	{
 		public string Id { get; set; }
 		public string Type { get; set; }
@@ -17,7 +18,8 @@ namespace Checkout.Reconciliation
 
 		public IList<Breakdown> Breakdown { get; set; }
 
-        public override bool EqualExp(Action other) => Id == other.Id;
+		public override bool EqualExp(Action other)
+			=> Id.EqualsNull(other.Id);
 
 		public override int GetHashCode()
 			=> HashCode.Combine(Id);

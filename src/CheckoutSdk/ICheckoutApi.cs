@@ -3,6 +3,7 @@ using Checkout.Disputes;
 using Checkout.Events;
 using Checkout.Instruments;
 using Checkout.Payments;
+using Checkout.Reconciliation;
 using Checkout.Risk;
 using Checkout.Sources;
 using Checkout.Tokens;
@@ -29,5 +30,7 @@ namespace Checkout
         IEventsClient EventsClient();
 
         IRiskClient RiskClient();
+
+        IReconciliationClient ReconciliationClient();
     }
 }
