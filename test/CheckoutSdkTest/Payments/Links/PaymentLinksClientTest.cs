@@ -33,7 +33,7 @@ namespace Checkout.SDK.UnitTest.Payments.Links
             PaymentLinkResponse paymentLinkResponse = new PaymentLinkResponse
             {
                 Id = "1",
-                ExpiresOn = "2021",
+                ExpiresOn = System.DateTime.Now,
                 Reference = "ref1234"
             };
 
@@ -58,7 +58,7 @@ namespace Checkout.SDK.UnitTest.Payments.Links
             PaymentLinkResponse paymentLinkResponse = new PaymentLinkResponse
             {
                 Id = "1",
-                ExpiresOn = "2021",
+                ExpiresOn = System.DateTime.Now,
                 Reference = "ref1234"
             };
 
@@ -74,8 +74,7 @@ namespace Checkout.SDK.UnitTest.Payments.Links
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNull();
             response.Id.ShouldBe("1");
-            response.ExpiresOn.ShouldNotBeNull();
-            response.ExpiresOn.ShouldBe("2021");
+            response.ExpiresOn.ShouldNotBeNull();           
             response.Reference.ShouldNotBeNull();
             response.Reference.ShouldBe("ref1234");
             response.ShouldBeSameAs(paymentLinkResponse);
@@ -90,7 +89,7 @@ namespace Checkout.SDK.UnitTest.Payments.Links
             var paymentLinkDetailsResponse = new PaymentLinkDetailsResponse()
             {
                 Id = "1",
-                ExpiresOn = "2021",
+                ExpiresOn = System.DateTime.Now,
                 Description = "Test",
                 ReturnUrl = "test.com",
                 Reference = reference

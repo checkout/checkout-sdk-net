@@ -10,7 +10,7 @@ namespace Checkout.Payments.Links
 
         public PaymentLinkStatus? Status { get; set; }
 
-        public string ExpiresOn { get; set; }
+        public DateTime? ExpiresOn { get; set; }
 
         public string ReturnUrl { get; set; }
 

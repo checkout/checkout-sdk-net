@@ -7,7 +7,7 @@ namespace Checkout.Payments.Links
 	{
 		public string Id { get; set; }
 		
-		public string ExpiresOn { get; set; }
+		public DateTime? ExpiresOn { get; set; }
 
 		public string Reference { get; set; }
 
