@@ -1,11 +1,10 @@
-﻿using Checkout.Payments.Links;
-using Moq;
+﻿using Moq;
 using Shouldly;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Checkout.SDK.UnitTest.Payments.Links
+namespace Checkout.Payments.Links
 {
     public class PaymentLinksClientTest : UnitTestFixture
     {

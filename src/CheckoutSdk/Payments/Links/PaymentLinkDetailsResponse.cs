@@ -28,7 +28,7 @@ namespace Checkout.Payments.Links
 
         public IList<Product> Products { get; set; }
 
-        public IDictionary<string, object> metadata { get; set; }
+        public IDictionary<string, object> Metadata { get; set; }
 
         public bool Equals(PaymentLinkDetailsResponse other)
         {

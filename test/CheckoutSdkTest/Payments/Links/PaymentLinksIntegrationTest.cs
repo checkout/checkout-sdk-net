@@ -1,12 +1,10 @@
 ﻿using Checkout.Common;
-using Checkout.Payments;
-using Checkout.Payments.Links;
 using Shouldly;
 using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Checkout.SDK.IntegrationTest.Payments.Links
+namespace Checkout.Payments.Links
 {
     public class PaymentLinksIntegrationTest : SandboxTestFixture
     {
@@ -69,7 +67,7 @@ namespace Checkout.SDK.IntegrationTest.Payments.Links
             response.Id.ShouldNotBeNull();
             response.Links.ShouldNotBeNull();
             response.Links.Count.ShouldBe(2);
-            response.Reference.ShouldNotBeNull();
+            response.Reference.ShouldNotBeNull();           
 
         }
 
@@ -132,6 +130,8 @@ namespace Checkout.SDK.IntegrationTest.Payments.Links
             responseGet.Links.ShouldNotBeNull();
             responseGet.Links.Count.ShouldBe(2);
             responseGet.Reference.ShouldNotBeNull();
+            responseGet.Metadata.ShouldNotBeNull();
+            responseGet.Metadata.Count.ShouldBe(0);
 
         }
     }

@@ -28,7 +28,7 @@ namespace Checkout.Payments.Links
 
 		public IList<Product> Products { get; set; }
 
-		public IDictionary<string, object> metadata { get; set; }
+		public IDictionary<string, object> Metadata { get; set; }
 
 		public ThreeDsRequest ThreeDs { get; set; }
 
@@ -40,7 +40,7 @@ namespace Checkout.Payments.Links
 
 		public bool? Capture { get; set; }
 
-		public DateTime CaptureOn { get; set; }
+		public DateTime? CaptureOn { get; set; }
 
 		public bool Equals(PaymentLinkRequest other)
 		{
