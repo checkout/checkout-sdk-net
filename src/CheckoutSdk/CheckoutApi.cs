@@ -3,6 +3,7 @@ using Checkout.Disputes;
 using Checkout.Events;
 using Checkout.Instruments;
 using Checkout.Payments;
+using Checkout.Payments.Hosted;
 using Checkout.Risk;
 using Checkout.Sources;
 using Checkout.Tokens;
@@ -21,6 +22,7 @@ namespace Checkout
         private readonly IWebhooksClient _webhooksClient;
         private readonly IEventsClient _eventsClient;
         private readonly IRiskClient _riskClient;
+        private readonly IHostedPaymentsClient _hostedPaymentsClient;
 
         public CheckoutApi(CheckoutConfiguration configuration) : base(configuration)
         {
@@ -34,6 +36,7 @@ namespace Checkout
             _webhooksClient = new WebhooksClient(apiClient, configuration);
             _eventsClient = new EventsClient(apiClient, configuration);
             _riskClient = new RiskClient(apiClient, configuration);
+            _hostedPaymentsClient = new HostedPaymentsClient(apiClient, configuration);
         }
 
         public ITokensClient TokensClient()
@@ -80,6 +83,11 @@ namespace Checkout
         public IRiskClient RiskClient()
         {
             return _riskClient;
+        }
+
+        public IHostedPaymentsClient HostedPaymentsClient()
+        {
+            return _hostedPaymentsClient;
         }
     }
 }
