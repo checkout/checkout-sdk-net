@@ -22,7 +22,7 @@ namespace Checkout.Reconciliation
 
 		public Task<ReconciliationPaymentReportResponse> SinglePaymentReportAsync(string paymentId)
 		{
-			return ApiClient.Query<ReconciliationPaymentReportResponse>(BuildPath(REPORTING, PAYMENTS, paymentId), SdkAuthorization());
+			return ApiClient.Query<ReconciliationPaymentReportResponse>(BuildPath(REPORTING, PAYMENTS, paymentId), SdkAuthorization(),paymentId);
 		}
 
 		public Task<StatementReportResponse> QueryStatementsReport(QueryFilterDateRange filter)

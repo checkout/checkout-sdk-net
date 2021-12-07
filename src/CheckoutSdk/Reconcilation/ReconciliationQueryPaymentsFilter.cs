@@ -8,8 +8,8 @@ namespace Checkout.Reconciliation
     {
         public int? Limit { get; set; }
         public string Reference { get; set; }
-        public string From { get; set; }
-        public string To { get; set; }
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
 
         public override bool EqualExp(ReconciliationQueryPaymentsFilter other)
             => Limit.EqualsNull(other.Limit)
