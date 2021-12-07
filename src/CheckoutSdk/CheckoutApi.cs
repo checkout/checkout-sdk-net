@@ -4,6 +4,7 @@ using Checkout.Events;
 using Checkout.Instruments;
 using Checkout.Payments;
 using Checkout.Reconciliation;
+using Checkout.Payments.Links;
 using Checkout.Risk;
 using Checkout.Sources;
 using Checkout.Tokens;
@@ -22,6 +23,7 @@ namespace Checkout
         private readonly IWebhooksClient _webhooksClient;
         private readonly IEventsClient _eventsClient;
         private readonly IRiskClient _riskClient;
+        private readonly IPaymentLinksClient _paymentLinksClient;
         private readonly IReconciliationClient _reconciliationClient;
 
         public CheckoutApi(CheckoutConfiguration configuration) : base(configuration)
@@ -36,6 +38,7 @@ namespace Checkout
             _webhooksClient = new WebhooksClient(apiClient, configuration);
             _eventsClient = new EventsClient(apiClient, configuration);
             _riskClient = new RiskClient(apiClient, configuration);
+            _paymentLinksClient = new PaymentLinksClient(apiClient,configuration);
             _reconciliationClient = new ReconciliationClient(apiClient, configuration);
         }
 
@@ -83,6 +86,11 @@ namespace Checkout
         public IRiskClient RiskClient()
         {
             return _riskClient;
+        }
+
+        public IPaymentLinksClient PaymentLinksClient()
+        {
+            return _paymentLinksClient;
         }
 
         public IReconciliationClient ReconciliationClient()
