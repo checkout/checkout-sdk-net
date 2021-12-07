@@ -13,7 +13,7 @@ namespace Checkout.Webhooks
 
         public WebhookContentType? ContentType { get; set; }
 
-        public List<string> EventTypes { get; set; }
+        public IList<string> EventTypes { get; set; }
 
         public bool Equals(WebhookRequest other)
         {

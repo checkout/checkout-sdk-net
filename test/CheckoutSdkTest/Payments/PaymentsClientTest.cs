@@ -129,7 +129,7 @@ namespace Checkout.Payments
             var paymentActions = new List<PaymentAction> {new PaymentAction(), new PaymentAction()};
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<List<PaymentAction>>(PaymentsPath + "/payment_id/actions", _authorization,
+                    apiClient.Get<IList<PaymentAction>>(PaymentsPath + "/payment_id/actions", _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(() => paymentActions);
 

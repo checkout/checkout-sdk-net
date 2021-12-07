@@ -7,7 +7,7 @@ namespace Checkout.Risk.PreAuthentication
     {
         public PreAuthenticationDecision? Decision { get; set; }
 
-        public List<string> Reasons { get; set; }
+        public IList<string> Reasons { get; set; }
 
         public bool Equals(PreAuthenticationWarning other)
         {

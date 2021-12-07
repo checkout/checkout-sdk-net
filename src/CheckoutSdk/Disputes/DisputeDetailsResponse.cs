@@ -20,7 +20,7 @@ namespace Checkout.Disputes
 
         public DisputeResolvedReason? ResolvedReason { get; set; }
 
-        public List<DisputeRelevantEvidence> RelevantEvidence { get; set; }
+        public IList<DisputeRelevantEvidence> RelevantEvidence { get; set; }
 
         public string EvidenceRequiredBy { get; set; }
 

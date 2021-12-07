@@ -7,9 +7,9 @@ namespace Checkout.Apm.Klarna
     {
         public string Description { get; set; }
 
-        public List<KlarnaProduct> Products { get; set; }
+        public IList<KlarnaProduct> Products { get; set; }
 
-        public List<KlarnaShippingInfo> ShippingInfo { get; set; }
+        public IList<KlarnaShippingInfo> ShippingInfo { get; set; }
 
         public long? ShippingDelay { get; set; }
 

@@ -6,7 +6,7 @@ namespace Checkout.Webhooks
 {
     public interface IWebhooksClient
     {
-        Task<List<WebhookResponse>> RetrieveWebhooks(CancellationToken cancellationToken = default);
+        Task<IList<WebhookResponse>> RetrieveWebhooks(CancellationToken cancellationToken = default);
 
         Task<WebhookResponse> RegisterWebhook(WebhookRequest webhookRequest, string idempotencyKey = null,
             CancellationToken cancellationToken = default);

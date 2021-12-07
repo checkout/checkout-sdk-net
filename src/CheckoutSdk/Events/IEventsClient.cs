@@ -6,7 +6,7 @@ namespace Checkout.Events
 {
     public interface IEventsClient
     {
-        Task<List<EventTypesResponse>> RetrieveAllEventTypes(string version = null,
+        Task<IList<EventTypesResponse>> RetrieveAllEventTypes(string version = null,
             CancellationToken cancellationToken = default);
 
         Task<EventsPageResponse> RetrieveEvents(RetrieveEventsRequest eventsRequest,

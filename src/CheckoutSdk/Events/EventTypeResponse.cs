@@ -7,7 +7,7 @@ namespace Checkout.Events
     {
         public string Version { get; set; }
 
-        public List<string> EventTypes { get; set; }
+        public IList<string> EventTypes { get; set; }
 
         public bool Equals(EventTypesResponse other)
         {
