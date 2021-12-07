@@ -18,7 +18,7 @@ namespace Checkout.Apm.Klarna
 
         public int? TaxAmount { get; set; }
 
-        public List<KlarnaProduct> Products { get; set; }
+        public IList<KlarnaProduct> Products { get; set; }
 
         public bool Equals(CreditSession other)
         {

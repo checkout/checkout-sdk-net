@@ -24,7 +24,7 @@ namespace Checkout.Disputes.Four
 
         public DisputeResolvedReason? ResolvedReason { get; set; }
 
-        public List<DisputeRelevantEvidence> RelevantEvidence { get; set; }
+        public IList<DisputeRelevantEvidence> RelevantEvidence { get; set; }
 
         public DateTime? EvidenceRequiredBy { get; set; }
 

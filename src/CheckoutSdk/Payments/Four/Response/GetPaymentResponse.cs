@@ -64,7 +64,7 @@ namespace Checkout.Payments.Four.Response
 
         public string SchemeId { get; set; }
 
-        public List<PaymentActionSummary> Actions { get; set; }
+        public IList<PaymentActionSummary> Actions { get; set; }
 
         public bool Equals(GetPaymentResponse other)
         {

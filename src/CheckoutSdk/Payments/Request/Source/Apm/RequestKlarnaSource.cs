@@ -22,7 +22,7 @@ namespace Checkout.Payments.Request.Source.Apm
 
         public KlarnaCustomer Customer { get; set; }
 
-        public List<KlarnaCustomer> Products { get; set; }
+        public IList<KlarnaCustomer> Products { get; set; }
 
         public bool Equals(RequestKlarnaSource other)
         {

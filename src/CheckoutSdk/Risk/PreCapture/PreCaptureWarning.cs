@@ -7,7 +7,7 @@ namespace Checkout.Risk.PreCapture
     {
         public PreCaptureDecision? Decision { get; set; }
 
-        public List<string> Reasons { get; set; }
+        public IList<string> Reasons { get; set; }
 
         public bool Equals(PreCaptureWarning other)
         {

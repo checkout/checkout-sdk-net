@@ -7,7 +7,7 @@ namespace Checkout.Apm.Ideal
     {
         public string Name { get; set; }
 
-        public List<Issuer> Issuers { get; set; }
+        public IList<Issuer> Issuers { get; set; }
 
         public bool Equals(IdealCountry other)
         {

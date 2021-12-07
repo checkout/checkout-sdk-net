@@ -16,7 +16,7 @@ namespace Checkout.Payments.Request.Source.Apm
 
         public string CustomerEmail { get; set; }
 
-        public List<FawryProduct> Products { get; set; }
+        public IList<FawryProduct> Products { get; set; }
 
         public bool Equals(RequestFawrySource other)
         {

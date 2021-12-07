@@ -7,7 +7,7 @@ namespace Checkout.Common
     {
         public string SubEntityId { get; set; }
 
-        public List<MarketplaceDataSubEntity> SubEntities { get; set; }
+        public IList<MarketplaceDataSubEntity> SubEntities { get; set; }
 
         public bool Equals(MarketplaceData other)
         {

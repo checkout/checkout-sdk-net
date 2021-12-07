@@ -15,7 +15,7 @@ namespace Checkout.Events
         {
         }
 
-        public Task<List<EventTypesResponse>> RetrieveAllEventTypes(string version = null,
+        public Task<IList<EventTypesResponse>> RetrieveAllEventTypes(string version = null,
             CancellationToken cancellationToken = default)
         {
             var eventTypesPath = "event-types";
@@ -24,7 +24,7 @@ namespace Checkout.Events
                 eventTypesPath = $"{eventTypesPath}?version={version}";
             }
 
-            return ApiClient.Get<List<EventTypesResponse>>(eventTypesPath, SdkAuthorization(), cancellationToken);
+            return ApiClient.Get<IList<EventTypesResponse>>(eventTypesPath, SdkAuthorization(), cancellationToken);
         }
 
         public Task<EventsPageResponse> RetrieveEvents(RetrieveEventsRequest eventsRequest,
