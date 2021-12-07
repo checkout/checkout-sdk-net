@@ -19,21 +19,8 @@ namespace Checkout.Payments
 
         protected async Task<PaymentResponse> MakeCardPayment(bool shouldCapture = false, long amount = 10L)
         {
-            var phone = new Phone
-            {
-                CountryCode = "44",
-                Number = "020 222333"
-            };
-
-            var billingAddress = new Address
-            {
-                AddressLine1 = "CheckoutSdk.com",
-                AddressLine2 = "90 Tottenham Court Road",
-                City = "London",
-                State = "London",
-                Zip = "W1T 4TJ",
-                Country = CountryCode.GB
-            };
+            var phone = GetPhone();
+            var billingAddress = GetAddress();
 
             var requestCardSource = new RequestCardSource
             {
@@ -62,21 +49,8 @@ namespace Checkout.Payments
 
         protected async Task<PaymentResponse> MakeTokenPayment()
         {
-            var phone = new Phone
-            {
-                CountryCode = "44",
-                Number = "020 222333"
-            };
-
-            var billingAddress = new Address
-            {
-                AddressLine1 = "CheckoutSdk.com",
-                AddressLine2 = "90 Tottenham Court Road",
-                City = "London",
-                State = "London",
-                Zip = "W1T 4TJ",
-                Country = CountryCode.GB
-            };
+            var phone = GetPhone();
+            var billingAddress = GetAddress();
 
             var cardTokenRequest = new CardTokenRequest
             {
@@ -119,21 +93,8 @@ namespace Checkout.Payments
 
         protected async Task<PaymentResponse> Make3dsCardPayment(bool attemptN3d = false)
         {
-            var phone = new Phone
-            {
-                CountryCode = "44",
-                Number = "020 222333"
-            };
-
-            var billingAddress = new Address
-            {
-                AddressLine1 = "CheckoutSdk.com",
-                AddressLine2 = "90 Tottenham Court Road",
-                City = "London",
-                State = "London",
-                Zip = "W1T 4TJ",
-                Country = CountryCode.GB
-            };
+            var phone = GetPhone();
+            var billingAddress = GetAddress();
 
             var requestCardSource = new RequestCardSource
             {
@@ -175,6 +136,28 @@ namespace Checkout.Payments
             var paymentResponse = await DefaultApi.PaymentsClient().RequestPayment(paymentRequest);
             paymentResponse.ShouldNotBeNull();
             return paymentResponse;
+        }
+
+        protected static Phone GetPhone()
+        {
+            return new Phone()
+            {
+                CountryCode = "1",
+                Number = "4155552671"
+            };
+        }
+
+        protected static Address GetAddress()
+        {
+            return new Address()
+            {
+                AddressLine1 = "CheckoutSdk.com",
+                AddressLine2 = "90 Tottenham Court Road",
+                City = "London",
+                State = "London",
+                Zip = "W1T 4TJ",
+                Country = CountryCode.GB
+            };
         }
     }
 }
