@@ -7,7 +7,6 @@ namespace Checkout.Payments.Hosted
 {
 	public sealed class HostedPaymentRequest : IEquatable<HostedPaymentRequest>
 	{
-
 		public long? Amount { get; set; }
 
 		public Currency Currency { get; set; }

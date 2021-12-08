@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Checkout.Common;
+using Checkout.Payments.Hosted;
 using Checkout.Payments.Request;
 using Checkout.Payments.Request.Source;
 using Checkout.Payments.Response;
@@ -157,6 +158,63 @@ namespace Checkout.Payments
                 State = "London",
                 Zip = "W1T 4TJ",
                 Country = CountryCode.GB
+            };
+        }
+
+        protected static HostedPaymentRequest CreateHostedPaymentRequest(string reference)
+        {
+            return new HostedPaymentRequest()
+            {
+                Amount = 1000L,
+                Reference = reference,
+                Currency = Currency.GBP,
+                Description = "Payment for Gold Necklace",
+                Customer = new CustomerRequest
+                {
+                    Name = "Jack Napier",
+                    Email = GenerateRandomEmail()
+                },
+                ShippingDetails = new ShippingDetails
+                {
+                    Address = GetAddress(),
+                    Phone = GetPhone()
+                },
+                Billing = new BillingInformation()
+                {
+                    Address = GetAddress(),
+                    Phone = GetPhone()
+                },
+                Recipient = new PaymentRecipient()
+                {
+                    AccountNumber = "1234567",
+                    Country = CountryCode.ES,
+                    DateOfBirth = "1985-05-15",
+                    FirstName = "IT",
+                    LastName = "TESTING",
+                    Zip = "12345"
+                },
+                Processing = new ProcessingSettings() { Aft = true },
+                Products = new Product[]
+                {
+                    new Product()
+                    {
+                        Name = "Gold Necklace",
+                        Quantity = 1L,
+                        Price = 200L
+                    }
+                },
+                Risk = new RiskRequest() { Enabled = false },
+                SuccessUrl = "https://example.com/payments/success",
+                CancelUrl = "https://example.com/payments/success",
+                FailureUrl = "https://example.com/payments/success",
+                Locale = "en-GB",
+                ThreeDS = new ThreeDsRequest()
+                {
+                    Enabled = false,
+                    AttemptN3D = false
+                },
+                Capture = true,
+                CaptureOn = DateTime.UtcNow
             };
         }
     }

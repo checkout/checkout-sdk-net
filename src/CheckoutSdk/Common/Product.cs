@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Checkout.Common
 {
-    public class Product : IEquatable<Product>
+    public sealed class Product : IEquatable<Product>
     {
         public string Name { get; set; }
         public long Quantity { get; set; }

@@ -7,7 +7,7 @@ namespace Checkout.Payments.Hosted
 	{
 		private const string HOSTED_PAYMENTS = "/hosted-payments";		
 
-		public HostedPaymentsClient(ApiClient apiClient, CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKey)
+		public HostedPaymentsClient(IApiClient apiClient, CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKey)
 		{
 			
 		}
