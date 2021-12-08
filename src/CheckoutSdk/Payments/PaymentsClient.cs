@@ -52,12 +52,12 @@ namespace Checkout.Payments
                 cancellationToken);
         }
 
-        public Task<List<PaymentAction>> GetPaymentActions(
+        public Task<IList<PaymentAction>> GetPaymentActions(
             string paymentId,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("paymentId", paymentId);
-            return ApiClient.Get<List<PaymentAction>>(BuildPath(PaymentsPath, paymentId, "actions"),
+            return ApiClient.Get<IList<PaymentAction>>(BuildPath(PaymentsPath, paymentId, "actions"),
                 SdkAuthorization(),
                 cancellationToken);
         }

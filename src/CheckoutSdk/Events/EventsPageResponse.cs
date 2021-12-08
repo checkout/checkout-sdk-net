@@ -15,7 +15,7 @@ namespace Checkout.Events
 
         public DateTime? To { get; set; }
 
-        public List<EventSummaryResponse> Data { get; set; }
+        public IList<EventSummaryResponse> Data { get; set; }
 
         public bool Equals(EventsPageResponse other)
         {

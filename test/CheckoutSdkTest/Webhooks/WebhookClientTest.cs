@@ -33,7 +33,7 @@ namespace Checkout.Webhooks
             };
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<List<WebhookResponse>>("webhooks", _authorization,
+                    apiClient.Get<IList<WebhookResponse>>("webhooks", _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(() => webhookResponses);
 

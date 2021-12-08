@@ -16,7 +16,7 @@ namespace Checkout.Events
 
         public IDictionary<string, object> Data { get; set; }
 
-        public List<EventNotificationSummaryResponse> Notifications { get; set; }
+        public IList<EventNotificationSummaryResponse> Notifications { get; set; }
 
         public bool Equals(EventResponse other)
         {

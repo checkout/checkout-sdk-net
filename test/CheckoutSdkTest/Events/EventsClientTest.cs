@@ -32,7 +32,7 @@ namespace Checkout.Events
             };
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<List<EventTypesResponse>>("event-types?version=1.0", _authorization,
+                    apiClient.Get<IList<EventTypesResponse>>("event-types?version=1.0", _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(() => eventTypesResponse);
 
@@ -53,7 +53,7 @@ namespace Checkout.Events
             };
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<List<EventTypesResponse>>("event-types", _authorization,
+                    apiClient.Get<IList<EventTypesResponse>>("event-types", _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(() => eventTypesResponse);
 

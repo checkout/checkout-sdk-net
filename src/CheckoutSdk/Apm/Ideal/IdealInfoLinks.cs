@@ -9,7 +9,7 @@ namespace Checkout.Apm.Ideal
     {
         public Link Self { get; set; }
 
-        public List<CuriesLink> Curies { get; set; }
+        public IList<CuriesLink> Curies { get; set; }
 
         [JsonProperty(PropertyName = "ideal:issuers")]
         public Link Issuers { get; set; }

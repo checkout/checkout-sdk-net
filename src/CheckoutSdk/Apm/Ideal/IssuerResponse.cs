@@ -6,7 +6,7 @@ namespace Checkout.Apm.Ideal
 {
     public sealed class IssuerResponse : Resource, IEquatable<IssuerResponse>
     {
-        public List<IdealCountry> Countries { get; set; }
+        public IList<IdealCountry> Countries { get; set; }
 
         public bool Equals(IssuerResponse other)
         {

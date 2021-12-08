@@ -13,9 +13,9 @@ namespace Checkout.Webhooks
         {
         }
 
-        public Task<List<WebhookResponse>> RetrieveWebhooks(CancellationToken cancellationToken = default)
+        public Task<IList<WebhookResponse>> RetrieveWebhooks(CancellationToken cancellationToken = default)
         {
-            return ApiClient.Get<List<WebhookResponse>>(WebhooksPath, SdkAuthorization(), cancellationToken);
+            return ApiClient.Get<IList<WebhookResponse>>(WebhooksPath, SdkAuthorization(), cancellationToken);
         }
 
         public Task<WebhookResponse> RegisterWebhook(WebhookRequest webhookRequest, string idempotencyKey = null,

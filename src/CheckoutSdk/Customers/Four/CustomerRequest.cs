@@ -14,7 +14,7 @@ namespace Checkout.Customers.Four
 
         public IDictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
 
-        public List<string> Instruments { get; set; }
+        public IList<string> Instruments { get; set; }
 
         public bool Equals(CustomerRequest other)
         {

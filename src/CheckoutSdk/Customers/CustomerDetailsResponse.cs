@@ -20,7 +20,7 @@ namespace Checkout.Customers
 
         public IDictionary<string, object> Metadata { get; set; }
 
-        public List<string> Instruments { get; set; }
+        public IList<string> Instruments { get; set; }
 
         public bool Equals(CustomerDetailsResponse other)
         {

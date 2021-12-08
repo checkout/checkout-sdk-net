@@ -10,7 +10,7 @@ namespace Checkout.Apm.Klarna
 
         public string ClientToken { get; set; }
 
-        public List<PaymentMethodCategory> PaymentMethodCategories { get; set; }
+        public IList<PaymentMethodCategory> PaymentMethodCategories { get; set; }
 
         public bool Equals(CreditSessionResponse other)
         {

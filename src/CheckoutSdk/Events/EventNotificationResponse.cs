@@ -14,7 +14,7 @@ namespace Checkout.Events
 
         public string ContentType { get; set; }
 
-        public List<AttemptSummaryResponse> Attempts { get; set; }
+        public IList<AttemptSummaryResponse> Attempts { get; set; }
 
         public bool Equals(EventNotificationResponse other)
         {

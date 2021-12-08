@@ -22,7 +22,7 @@ namespace Checkout.Payments.Four
             string paymentId,
             CancellationToken cancellationToken = default);
 
-        Task<List<PaymentAction>> GetPaymentActions(
+        Task<IList<PaymentAction>> GetPaymentActions(
             string paymentId,
             CancellationToken cancellationToken = default);
 

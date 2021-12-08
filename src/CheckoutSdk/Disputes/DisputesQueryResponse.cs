@@ -27,7 +27,7 @@ namespace Checkout.Disputes
 
         public int? TotalCount { get; set; }
 
-        public List<DisputeSummary> Data { get; set; }
+        public IList<DisputeSummary> Data { get; set; }
 
         public bool Equals(DisputesQueryResponse other)
         {
