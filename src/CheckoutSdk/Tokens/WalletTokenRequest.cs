@@ -1,10 +1,10 @@
 ﻿namespace Checkout.Tokens
 {
-    public abstract class TokenRequest
+    public abstract class WalletTokenRequest
     {
         public TokenType? Type { get; }
 
-        protected TokenRequest(TokenType type)
+        protected WalletTokenRequest(TokenType type)
         {
             Type = type;
         }

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Checkout.Tokens
 {
-    public sealed class ApplePayTokenRequest : TokenRequest, IEquatable<ApplePayTokenRequest>
+    public sealed class ApplePayTokenRequest : WalletTokenRequest, IEquatable<ApplePayTokenRequest>
     {
         public ApplePayTokenRequest() : base(TokenType.ApplePay)
         {

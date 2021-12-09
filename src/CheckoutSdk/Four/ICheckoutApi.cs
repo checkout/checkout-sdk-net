@@ -3,7 +3,7 @@ using Checkout.Disputes.Four;
 using Checkout.Instruments.Four;
 using Checkout.Payments.Four;
 using Checkout.Risk;
-using Checkout.Tokens.Four;
+using Checkout.Tokens;
 
 namespace Checkout.Four
 {

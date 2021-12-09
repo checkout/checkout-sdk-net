@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Checkout.Tokens
 {
-    public sealed class GooglePayTokenRequest : TokenRequest, IEquatable<GooglePayTokenRequest>
+    public sealed class GooglePayTokenRequest : WalletTokenRequest, IEquatable<GooglePayTokenRequest>
     {
         public GooglePayTokenRequest() : base(TokenType.GooglePay)
         {

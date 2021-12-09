@@ -22,11 +22,11 @@ namespace Checkout.Tokens
         }
 
         public Task<TokenResponse> Request(
-            TokenRequest tokenRequest,
+            WalletTokenRequest walletTokenRequest,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("tokenRequest", tokenRequest);
-            return ApiClient.Post<TokenResponse>(Tokens, SdkAuthorization(), tokenRequest, cancellationToken);
+            CheckoutUtils.ValidateParams("walletTokenRequest", walletTokenRequest);
+            return ApiClient.Post<TokenResponse>(Tokens, SdkAuthorization(), walletTokenRequest, cancellationToken);
         }
     }
 }
