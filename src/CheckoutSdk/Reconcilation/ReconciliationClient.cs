@@ -11,7 +11,7 @@ namespace Checkout.Reconciliation
 		private const string STATEMENTS = "statements";
 		private const string DOWNLOAD = "download";
 
-		public ReconciliationClient(ApiClient apiClient, CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKey)
+		public ReconciliationClient(IApiClient apiClient, CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKey)
 		{
 		}
 
