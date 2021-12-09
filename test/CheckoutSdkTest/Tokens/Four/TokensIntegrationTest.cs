@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Checkout.Common;
 using Shouldly;

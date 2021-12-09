@@ -3,11 +3,9 @@ using Checkout.Common;
 
 namespace Checkout.Tokens
 {
-    public sealed class CardTokenRequest : TokenRequest, IEquatable<CardTokenRequest>
+    public sealed class CardTokenRequest : IEquatable<CardTokenRequest>
     {
-        public CardTokenRequest() : base(TokenType.Card)
-        {
-        }
+        public readonly TokenType Type = TokenType.Card;
 
         public string Number { get; set; }
 

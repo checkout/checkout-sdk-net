@@ -7,7 +7,6 @@ using Checkout.Payments.Four.Response;
 using Checkout.Payments.Four.Sender;
 using Checkout.Tokens;
 using Shouldly;
-using CardTokenResponse = Checkout.Tokens.Four.CardTokenResponse;
 
 namespace Checkout.Payments.Four
 {
