@@ -39,6 +39,8 @@ namespace Checkout.Instruments.Four
             cardResponse.AccountHolder.ShouldNotBeNull();
             cardResponse.AccountHolder.BillingAddress.ShouldNotBeNull();
             cardResponse.AccountHolder.Phone.ShouldNotBeNull();
+            cardResponse.CardType.ShouldNotBeNull();
+            cardResponse.CardCategory.ShouldNotBeNull();
         }
 
         [Fact]
@@ -119,6 +121,8 @@ namespace Checkout.Instruments.Four
             cardResponse.Customer.Default.ShouldBeTrue();
             cardResponse.AccountHolder.FirstName.ShouldBe("John");
             cardResponse.AccountHolder.LastName.ShouldBe("Doe");
+            cardResponse.CardType.ShouldNotBeNull();
+            cardResponse.CardCategory.ShouldNotBeNull();
         }
 
         [Fact]
@@ -209,6 +213,8 @@ namespace Checkout.Instruments.Four
             response.ProductId.ShouldNotBeNull();
             response.ProductType.ShouldNotBeNull();
             response.Customer.ShouldNotBeNull();
+            response.CardType.ShouldNotBeNull();
+            response.CardCategory.ShouldNotBeNull();
             return response;
         }
     }
