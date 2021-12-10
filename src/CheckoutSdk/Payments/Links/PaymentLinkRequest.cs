@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using Checkout.Common;
+﻿using Checkout.Common;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
 namespace Checkout.Payments.Links
 {
-    public sealed class PaymentLinkRequest : IEquatable<PaymentLinkRequest>
+    public sealed class PaymentLinkRequest 
     {
         public long? Amount { get; set; }
 
@@ -42,48 +42,6 @@ namespace Checkout.Payments.Links
         public bool? Capture { get; set; }
 
         public DateTime? CaptureOn { get; set; }
-
-        public bool Equals(PaymentLinkRequest other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Amount == other.Amount && Currency == other.Currency && Reference == other.Reference &&
-                   Description == other.Description && ExpiresIn == other.ExpiresIn &&
-                   Equals(Customer, other.Customer) && Equals(Shipping, other.Shipping) &&
-                   Equals(Billing, other.Billing) && Equals(Recipient, other.Recipient) &&
-                   Equals(Processing, other.Processing) && Equals(Products, other.Products) &&
-                   Equals(Metadata, other.Metadata) && Equals(ThreeDs, other.ThreeDs) && Equals(Risk, other.Risk) &&
-                   ReturnUrl == other.ReturnUrl && Locale == other.Locale && Capture == other.Capture &&
-                   Nullable.Equals(CaptureOn, other.CaptureOn);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || obj is PaymentLinkRequest other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            var hashCode = new HashCode();
-            hashCode.Add(Amount);
-            hashCode.Add(Currency);
-            hashCode.Add(Reference);
-            hashCode.Add(Description);
-            hashCode.Add(ExpiresIn);
-            hashCode.Add(Customer);
-            hashCode.Add(Shipping);
-            hashCode.Add(Billing);
-            hashCode.Add(Recipient);
-            hashCode.Add(Processing);
-            hashCode.Add(Products);
-            hashCode.Add(Metadata);
-            hashCode.Add(ThreeDs);
-            hashCode.Add(Risk);
-            hashCode.Add(ReturnUrl);
-            hashCode.Add(Locale);
-            hashCode.Add(Capture);
-            hashCode.Add(CaptureOn);
-            return hashCode.ToHashCode();
-        }
+               
     }
 }

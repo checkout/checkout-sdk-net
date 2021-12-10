@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
 using Checkout.Common;
+using System.Collections.Generic;
 
 namespace Checkout.Events
 {
-    public sealed class EventNotificationResponse : Resource, IEquatable<EventNotificationResponse>
+    public sealed class EventNotificationResponse : Resource
     {
         public string Id { get; set; }
 
@@ -15,23 +14,5 @@ namespace Checkout.Events
         public string ContentType { get; set; }
 
         public IList<AttemptSummaryResponse> Attempts { get; set; }
-
-        public bool Equals(EventNotificationResponse other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Id == other.Id && Url == other.Url && Success == other.Success && ContentType == other.ContentType &&
-                   Equals(Attempts, other.Attempts);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || obj is EventNotificationResponse other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, Url, Success, ContentType, Attempts);
-        }
     }
 }

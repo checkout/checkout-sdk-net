@@ -8,10 +8,12 @@ namespace Checkout.Risk.PreAuthentication
 
         [EnumMember(Value = "try_frictionless")]
         TryFrictionless,
+
         [EnumMember(Value = "no_preference")] NoPreference,
 
         [EnumMember(Value = "force_challenge")]
         ForceChallenge,
+
         [EnumMember(Value = "decline")] Decline
     }
 }

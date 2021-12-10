@@ -13,6 +13,7 @@ namespace Checkout.Common
 
         [EnumMember(Value = "currency_account")]
         CurrencyAccount,
+
         [EnumMember(Value = "baloto")] Baloto,
         [EnumMember(Value = "boleto")] Boleto,
         [EnumMember(Value = "fawry")] Fawry,

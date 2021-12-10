@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Checkout.Common;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Checkout.Common;
 
 namespace Checkout.Payments.Four.Response.Source
 {
@@ -21,7 +21,7 @@ namespace Checkout.Payments.Four.Response.Source
         public PaymentSourceType? Type()
         {
             return CheckoutUtils.GetEnumFromStringMemberValue<PaymentSourceType>(
-                (string) base[CheckoutUtils.Type]);
+                (string)base[CheckoutUtils.Type]);
         }
     }
 }

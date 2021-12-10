@@ -1,6 +1,6 @@
+using Checkout.Files;
 using System.Threading;
 using System.Threading.Tasks;
-using Checkout.Files;
 
 namespace Checkout.Disputes.Four
 {

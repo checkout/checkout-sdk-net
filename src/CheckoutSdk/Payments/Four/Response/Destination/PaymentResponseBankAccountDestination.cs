@@ -1,10 +1,9 @@
-﻿using System;
-using Checkout.Common;
+﻿using Checkout.Common;
 
 namespace Checkout.Payments.Four.Response.Destination
 {
     public sealed class PaymentResponseBankAccountDestination : AbstractPaymentResponseDestination,
-        IPaymentResponseDestination, IEquatable<PaymentResponseBankAccountDestination>
+        IPaymentResponseDestination
     {
         public int? ExpiryMonth { get; set; }
 
@@ -34,39 +33,6 @@ namespace Checkout.Payments.Four.Response.Destination
         {
             return base.Type;
         }
-
-        public bool Equals(PaymentResponseBankAccountDestination other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return ExpiryMonth == other.ExpiryMonth && ExpiryYear == other.ExpiryYear && Name == other.Name &&
-                   Last4 == other.Last4 && Fingerprint == other.Fingerprint && Bin == other.Bin &&
-                   CardType == other.CardType && CardCategory == other.CardCategory && Issuer == other.Issuer &&
-                   IssuerCountry == other.IssuerCountry && ProductId == other.ProductId &&
-                   ProductType == other.ProductType;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || obj is PaymentResponseBankAccountDestination other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            var hashCode = new HashCode();
-            hashCode.Add(ExpiryMonth);
-            hashCode.Add(ExpiryYear);
-            hashCode.Add(Name);
-            hashCode.Add(Last4);
-            hashCode.Add(Fingerprint);
-            hashCode.Add(Bin);
-            hashCode.Add(CardType);
-            hashCode.Add(CardCategory);
-            hashCode.Add(Issuer);
-            hashCode.Add(IssuerCountry);
-            hashCode.Add(ProductId);
-            hashCode.Add(ProductType);
-            return hashCode.ToHashCode();
-        }
+               
     }
 }

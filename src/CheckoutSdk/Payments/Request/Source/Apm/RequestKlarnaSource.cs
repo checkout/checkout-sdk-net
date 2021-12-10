@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Checkout.Common;
 using System.Collections.Generic;
-using Checkout.Common;
 
 namespace Checkout.Payments.Request.Source.Apm
 {
-    public sealed class RequestKlarnaSource : AbstractRequestSource, IEquatable<RequestKlarnaSource>
+    public sealed class RequestKlarnaSource : AbstractRequestSource
     {
         public RequestKlarnaSource() : base(PaymentSourceType.Klarna)
         {
@@ -24,25 +23,5 @@ namespace Checkout.Payments.Request.Source.Apm
 
         public IList<KlarnaCustomer> Products { get; set; }
 
-        public bool Equals(RequestKlarnaSource other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return AuthorizationToken == other.AuthorizationToken && Locale == other.Locale &&
-                   PurchaseCountry == other.PurchaseCountry && TaxAmount == other.TaxAmount &&
-                   Equals(BillingAddress, other.BillingAddress) && Equals(Customer, other.Customer) &&
-                   Equals(Products, other.Products);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || obj is RequestKlarnaSource other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(AuthorizationToken, Locale, PurchaseCountry, TaxAmount, BillingAddress, Customer,
-                Products);
-        }
     }
 }
