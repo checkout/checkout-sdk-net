@@ -54,7 +54,7 @@ namespace Checkout
 
         private Uri GetRequestUri(string path)
         {
-            var baseUri = new Uri(_configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri);
+            var baseUri = _configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri;
             Uri.TryCreate(baseUri, path, out var uri);
             return uri;
         }

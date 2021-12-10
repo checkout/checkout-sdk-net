@@ -9,7 +9,7 @@ namespace Checkout.Customers.Four
         private const string Customers = "customers";
 
         public CustomersClient(IApiClient apiClient,
-            CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKey)
+            CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
         {
         }
 

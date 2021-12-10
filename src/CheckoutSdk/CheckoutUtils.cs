@@ -85,6 +85,16 @@ namespace Checkout
         {
             ValidateMultipleParams(new[,] {{p1, o1}, {p2, o2}, {p3, o3}, {p4, o4}});
         }
+        
+        public static void ValidateParams(
+            string p1, object o1,
+            string p2, object o2,
+            string p3, object o3,
+            string p4, object o4,
+            string p5, object o5)
+        {
+            ValidateMultipleParams(new[,] {{p1, o1}, {p2, o2}, {p3, o3}, {p4, o4}, {p5, o5}});
+        }
 
         private static void ValidateMultipleParams(object[,] parameters)
         {

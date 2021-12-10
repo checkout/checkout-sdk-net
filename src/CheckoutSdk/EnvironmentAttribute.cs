@@ -4,11 +4,13 @@ namespace Checkout
 {
     public class EnvironmentAttribute : Attribute
     {
-        public string ApiUri { get; }
+        public Uri ApiUri { get; }
+        public Uri AuthorizationUri { get; }
 
-        public EnvironmentAttribute(string apiUri)
+        public EnvironmentAttribute(string apiUri, string authorizationUri)
         {
-            ApiUri = apiUri;
+            ApiUri = new Uri(apiUri);
+            AuthorizationUri = new Uri(authorizationUri);
         }
     }
 }

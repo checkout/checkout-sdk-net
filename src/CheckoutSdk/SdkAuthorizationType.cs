@@ -4,9 +4,9 @@ namespace Checkout
     {
         SecretKey,
         PublicKey,
-        SecretKeyOrOauth,
-        PublicKeyOrOauth,
-        Oauth,
+        SecretKeyOrOAuth,
+        PublicKeyOrOAuth,
+        OAuth,
         Custom
     }
 }

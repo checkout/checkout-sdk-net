@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Runtime.Serialization;
 
 namespace Checkout
 {
-    public class CheckoutApiException : CheckoutException
+    [Serializable]
+    public sealed class CheckoutApiException : CheckoutException
     {
         public string RequestId { get; }
         public HttpStatusCode HttpStatusCode { get; }
@@ -18,6 +21,10 @@ namespace Checkout
             RequestId = requestId;
             HttpStatusCode = httpStatusCode;
             ErrorDetails = errorDetails;
+        }
+
+        private CheckoutApiException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
     }
 }

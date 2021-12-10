@@ -31,6 +31,17 @@ namespace Checkout
                         .LogProvider(logFactory)
                         .Build();
                     break;
+                case PlatformType.FourOAuth:
+                    FourApi = CheckoutSdk.FourSdk().OAuth()
+                        .ClientCredentials(System.Environment.GetEnvironmentVariable("CHECKOUT_FOUR_OAUTH_CLIENT_ID"),
+                            System.Environment.GetEnvironmentVariable("CHECKOUT_FOUR_OAUTH_CLIENT_SECRET"))
+                        .Scopes(FourOAuthScope.Files, FourOAuthScope.Flow, FourOAuthScope.Fx, FourOAuthScope.Gateway,
+                            FourOAuthScope.Marketplace, FourOAuthScope.SessionsApp, FourOAuthScope.SessionsBrowser,
+                            FourOAuthScope.Vault)
+                        .Environment(Environment.Sandbox)
+                        .LogProvider(logFactory)
+                        .Build();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(platformType), platformType, null);
             }

@@ -38,6 +38,9 @@
     </ItemGroup>
     <ItemGroup>
         <None Remove="Resources\checkout.jpeg" />
+        <Content Include="Resources\AppSettingsFourOAuthTest.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
         <Content Include="Resources\AppSettingsFourTest.json">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>

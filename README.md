@@ -5,7 +5,7 @@
 
 ## Getting started
 
-Binaries and sources are all available from [Nuget](https://www.nuget.org/packages/CheckoutSDK).
+Packages and sources are available from [Nuget](https://www.nuget.org/packages/CheckoutSDK).
 
 ## How to use the SDK
 
@@ -16,10 +16,13 @@ This SDK can be used with two different pair of API keys provided by Checkout. H
 | default        | pk_g650ff27-7c42-4ce1-ae90-5691a188ee7b | sk_gk3517a8-3z01-45fq-b4bd-4282384b0a64 |
 | Four           | pk_pkhpdtvabcf7hdgpwnbhw7r2uic          | sk_m73dzypy7cf3gf5d2xr4k7sxo4e          |
 
-Note: sandbox keys have a `test_` or `sbox_` identifier, for Default and Four accounts respectively.
+Note: Sandbox keys have a `test_` or `sbox_` identifier, for Default and Four accounts respectively.
 
-If you don't have your own API keys, you can sign up for a test account [here](https://www.checkout.com/get-test-account).
+### OAuth
 
+It's only available for Four accounts and will only work for a limited number of features offered by the API. Please find below the instructions on how to set it up.
+
+If you don't have your own API keys or OAuth access, you can start by signing up for a test account [here](https://www.checkout.com/get-test-account).
 
 ## Getting started
 
@@ -31,8 +34,8 @@ Initialize a `CheckoutApi` to access the operations for each API. Please note th
 
 ```c#
 ICheckoutApi api = CheckoutSdk.DefaultSdk().StaticKeys()
-    .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PUBLIC_KEY"))
-    .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_SECRET_KEY"))
+    .PublicKey("public_key")
+    .SecretKey("secret_key")
     .Environment(Environment.Sandbox)
     .LogProvider(logFactory) // optional
     .HttpClientFactory(httpClientFactory) // optional
@@ -43,8 +46,22 @@ ICheckoutApi api = CheckoutSdk.DefaultSdk().StaticKeys()
 
 ```c#
 Four.ICheckoutApi api = CheckoutSdk.FourSdk().StaticKeys()
-    .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PUBLIC_KEY"))
-    .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_SECRET_KEY"))
+    .PublicKey("public_key")
+    .SecretKey("secret_key")
+    .Environment(Environment.Sandbox)
+    .LogProvider(logFactory) // optional
+    .HttpClientFactory(httpClientFactory) // optional
+    .Build();
+```
+### Four OAuth
+
+The SDK supports client credentials OAuth, when initialized as follows:
+
+```c#
+Four.ICheckoutApi api = CheckoutSdk.FourSdk().OAuth()
+    .ClientCredentials("client_id", "client_secret")
+    .AuthorizationUri(new Uri("https://access.sandbox.checkout.com/connect/token")) // custom authorization URI, optional
+    .Scopes(FourOAuthScope.Files, FourOAuthScope.Flow) // array of scopes, optional
     .Environment(Environment.Sandbox)
     .LogProvider(logFactory) // optional
     .HttpClientFactory(httpClientFactory) // optional
@@ -66,14 +83,29 @@ Initialize the Configuration of your `appsettings.json` file:
 ```json
 {
   "Checkout": {
-    "SecretKey": "your_secret_key",
-    "PublicKey": "your_public_key",
+    "SecretKey": "secret_key",
+    "PublicKey": "public_key",
     "Environment": "Sandbox",
     "PlatformType": "Default"
   }
 }
 ```
+For OAuth, the configuration file should include the following properties:
+
+```json
+{
+  "Checkout": {
+    "ClientId": "client_id",
+    "ClientSecret": "client_secret",
+    "AuthorizationUri": "https://access.sandbox.checkout.com/connect/token",
+    "Scopes": ["vault", "fx"],
+    "Environment": "Sandbox",
+    "PlatformType": "FourOAuth"
+  }
+}
+```
 Use `Environment` enum value to choose the desired environment for the SDK, and `PlatformType` value to choose between the different Account Settings. Then add the configuration:
+
 ```c#
 public class Startup 
 {

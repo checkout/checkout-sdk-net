@@ -1,4 +1,6 @@
+using System;
 using Checkout;
+using Environment = Checkout.Environment;
 
 namespace CheckoutSDK.Extensions.Configuration
 {
@@ -7,6 +9,14 @@ namespace CheckoutSDK.Extensions.Configuration
         public string SecretKey { get; set; }
 
         public string PublicKey { get; set; }
+
+        public string ClientId { get; set; }
+
+        public string ClientSecret { get; set; }
+
+        public Uri AuthorizationUri { get; set; }
+
+        public FourOAuthScope[] Scopes { get; set; }
 
         public Environment Environment { get; set; }
 

@@ -1,8 +1,16 @@
+using System;
+using System.Runtime.Serialization;
+
 namespace Checkout
 {
-    public class CheckoutArgumentException : CheckoutException
+    [Serializable]
+    public sealed class CheckoutArgumentException : CheckoutException
     {
         public CheckoutArgumentException(string message) : base(message)
+        {
+        }
+
+        private CheckoutArgumentException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
 

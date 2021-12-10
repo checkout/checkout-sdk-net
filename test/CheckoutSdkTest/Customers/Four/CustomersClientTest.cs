@@ -17,7 +17,7 @@ namespace Checkout.Customers.Four
 
         public CustomersClientTest()
         {
-            _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.SecretKey))
+            _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth))
                 .Returns(_authorization);
 
             _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,

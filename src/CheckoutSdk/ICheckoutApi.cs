@@ -13,7 +13,7 @@ using Checkout.Webhooks;
 
 namespace Checkout
 {
-    public interface ICheckoutApi : ICheckoutApmApi
+    public interface ICheckoutApi : ICheckoutApmApi, ICheckoutApiClient
     {
         ITokensClient TokensClient();
 

@@ -4,7 +4,7 @@ namespace Checkout
     {
         Default,
         Four,
-        FourOauth,
+        FourOAuth,
         Custom
     }
 }
