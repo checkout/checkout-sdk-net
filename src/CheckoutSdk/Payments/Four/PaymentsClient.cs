@@ -1,8 +1,8 @@
+using Checkout.Payments.Four.Request;
+using Checkout.Payments.Four.Response;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Checkout.Payments.Four.Request;
-using Checkout.Payments.Four.Response;
 
 namespace Checkout.Payments.Four
 {

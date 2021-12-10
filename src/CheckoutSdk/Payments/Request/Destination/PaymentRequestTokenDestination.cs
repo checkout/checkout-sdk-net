@@ -1,10 +1,8 @@
-﻿using System;
-using Checkout.Common;
+﻿using Checkout.Common;
 
 namespace Checkout.Payments.Request.Destination
 {
-    public sealed class PaymentRequestTokenDestination : PaymentRequestDestination,
-        IEquatable<PaymentRequestTokenDestination>
+    public sealed class PaymentRequestTokenDestination : PaymentRequestDestination
     {
         public PaymentRequestTokenDestination() : base(PaymentDestinationType.Token)
         {
@@ -20,22 +18,5 @@ namespace Checkout.Payments.Request.Destination
 
         public Phone Phone { get; set; }
 
-        public bool Equals(PaymentRequestTokenDestination other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Token == other.Token && FirstName == other.FirstName && LastName == other.LastName &&
-                   Equals(BillingAddress, other.BillingAddress) && Equals(Phone, other.Phone);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || obj is PaymentRequestTokenDestination other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Token, FirstName, LastName, BillingAddress, Phone);
-        }
     }
 }

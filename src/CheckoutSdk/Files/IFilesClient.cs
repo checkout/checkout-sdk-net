@@ -1,6 +1,6 @@
+using Checkout.Common;
 using System.Threading;
 using System.Threading.Tasks;
-using Checkout.Common;
 
 namespace Checkout.Files
 {

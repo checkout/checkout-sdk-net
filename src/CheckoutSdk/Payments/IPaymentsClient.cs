@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Checkout.Payments.Request;
+using Checkout.Payments.Response;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Checkout.Payments.Request;
-using Checkout.Payments.Response;
 
 namespace Checkout.Payments
 {

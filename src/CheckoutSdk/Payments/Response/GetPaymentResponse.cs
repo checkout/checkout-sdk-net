@@ -1,14 +1,14 @@
-using System;
-using System.Collections.Generic;
 using Checkout.Common;
 using Checkout.Payments.Response.Destination;
 using Checkout.Payments.Response.Source;
 using Checkout.Payments.Util;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
 namespace Checkout.Payments.Response
 {
-    public sealed class GetPaymentResponse : Resource, IEquatable<GetPaymentResponse>
+    public sealed class GetPaymentResponse : Resource
     {
         public string Id { get; set; }
 
@@ -55,53 +55,6 @@ namespace Checkout.Payments.Response
         public string SchemeId { get; set; }
 
         public IList<PaymentActionSummary> Actions { get; set; }
-
-        public bool Equals(GetPaymentResponse other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Id == other.Id && RequestedOn.Equals(other.RequestedOn) && Equals(Source, other.Source) &&
-                   Equals(Destination, other.Destination) && Amount == other.Amount && Currency == other.Currency &&
-                   PaymentType == other.PaymentType && Reference == other.Reference &&
-                   Description == other.Description && Approved == other.Approved && Status == other.Status &&
-                   Equals(ThreeDs, other.ThreeDs) && Equals(Risk, other.Risk) && Equals(Customer, other.Customer) &&
-                   Equals(BillingDescriptor, other.BillingDescriptor) && Equals(Shipping, other.Shipping) &&
-                   PaymentIp == other.PaymentIp && Equals(Recipient, other.Recipient) &&
-                   Equals(Metadata, other.Metadata) && Eci == other.Eci && SchemeId == other.SchemeId &&
-                   Equals(Actions, other.Actions);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || obj is GetPaymentResponse other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            var hashCode = new HashCode();
-            hashCode.Add(Id);
-            hashCode.Add(RequestedOn);
-            hashCode.Add(Source);
-            hashCode.Add(Destination);
-            hashCode.Add(Amount);
-            hashCode.Add(Currency);
-            hashCode.Add((int) PaymentType);
-            hashCode.Add(Reference);
-            hashCode.Add(Description);
-            hashCode.Add(Approved);
-            hashCode.Add((int) Status);
-            hashCode.Add(ThreeDs);
-            hashCode.Add(Risk);
-            hashCode.Add(Customer);
-            hashCode.Add(BillingDescriptor);
-            hashCode.Add(Shipping);
-            hashCode.Add(PaymentIp);
-            hashCode.Add(Recipient);
-            hashCode.Add(Metadata);
-            hashCode.Add(Eci);
-            hashCode.Add(SchemeId);
-            hashCode.Add(Actions);
-            return hashCode.ToHashCode();
-        }
+             
     }
 }

@@ -8,6 +8,7 @@ namespace Checkout.Payments
 
         [EnumMember(Value = "Card Verification")]
         CardVerification,
+
         [EnumMember(Value = "Void")] Void,
         [EnumMember(Value = "Capture")] Capture,
         [EnumMember(Value = "Refund")] Refund,

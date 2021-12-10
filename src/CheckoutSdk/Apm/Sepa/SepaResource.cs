@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Checkout.Common;
+﻿using Checkout.Common;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Checkout.Apm.Sepa
 {

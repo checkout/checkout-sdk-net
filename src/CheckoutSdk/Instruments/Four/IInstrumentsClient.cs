@@ -1,6 +1,6 @@
-﻿using System.Threading;
+﻿using Checkout.Instruments.Four.Get;
+using System.Threading;
 using System.Threading.Tasks;
-using Checkout.Instruments.Four.Get;
 
 namespace Checkout.Instruments.Four
 {

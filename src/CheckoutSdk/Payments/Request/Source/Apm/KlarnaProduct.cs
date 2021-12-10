@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Checkout.Payments.Request.Source.Apm
+﻿namespace Checkout.Payments.Request.Source.Apm
 {
-    public sealed class KlarnaProduct : IEquatable<KlarnaProduct>
+    public sealed class KlarnaProduct 
     {
         public string Name { get; set; }
 
@@ -16,23 +14,5 @@ namespace Checkout.Payments.Request.Source.Apm
 
         public long? TotalTaxAmount { get; set; }
 
-        public bool Equals(KlarnaProduct other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Name == other.Name && Quantity == other.Quantity && UnitPrice == other.UnitPrice &&
-                   TaxRate == other.TaxRate && TotalAmount == other.TotalAmount &&
-                   TotalTaxAmount == other.TotalTaxAmount;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || obj is KlarnaProduct other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Name, Quantity, UnitPrice, TaxRate, TotalAmount, TotalTaxAmount);
-        }
     }
 }

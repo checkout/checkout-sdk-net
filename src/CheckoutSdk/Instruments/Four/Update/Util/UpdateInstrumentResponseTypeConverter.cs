@@ -1,7 +1,7 @@
-﻿using System;
-using System.Reflection;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Reflection;
 
 namespace Checkout.Instruments.Four.Update.Util
 {

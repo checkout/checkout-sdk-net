@@ -1,10 +1,8 @@
-﻿using System;
-using Checkout.Common;
+﻿using Checkout.Common;
 
 namespace Checkout.Instruments.Four.Create
 {
-    public sealed class CreateTokenInstrumentResponse : CreateInstrumentResponse,
-        IEquatable<CreateTokenInstrumentResponse>
+    public sealed class CreateTokenInstrumentResponse : CreateInstrumentResponse
     {
         public CreateTokenInstrumentResponse() : base(InstrumentType.Card)
         {
@@ -35,40 +33,5 @@ namespace Checkout.Instruments.Four.Create
         public string ProductType { get; set; }
 
         public CustomerResponse Customer { get; set; }
-
-        public bool Equals(CreateTokenInstrumentResponse other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Fingerprint == other.Fingerprint && ExpiryMonth == other.ExpiryMonth &&
-                   ExpiryYear == other.ExpiryYear && Scheme == other.Scheme && Last4 == other.Last4 &&
-                   Bin == other.Bin && CardType == other.CardType && CardCategory == other.CardCategory &&
-                   Issuer == other.Issuer && IssuerCountry == other.IssuerCountry && ProductId == other.ProductId &&
-                   ProductType == other.ProductType && Equals(Customer, other.Customer);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || obj is CreateTokenInstrumentResponse other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            var hashCode = new HashCode();
-            hashCode.Add(Fingerprint);
-            hashCode.Add(ExpiryMonth);
-            hashCode.Add(ExpiryYear);
-            hashCode.Add(Scheme);
-            hashCode.Add(Last4);
-            hashCode.Add(Bin);
-            hashCode.Add((int) CardType);
-            hashCode.Add((int) CardCategory);
-            hashCode.Add(Issuer);
-            hashCode.Add((int) IssuerCountry);
-            hashCode.Add(ProductId);
-            hashCode.Add(ProductType);
-            hashCode.Add(Customer);
-            return hashCode.ToHashCode();
-        }
     }
 }

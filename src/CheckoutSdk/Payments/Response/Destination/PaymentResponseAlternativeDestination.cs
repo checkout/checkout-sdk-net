@@ -20,7 +20,7 @@ namespace Checkout.Payments.Response.Destination
         public PaymentDestinationType? Type()
         {
             return CheckoutUtils.GetEnumFromStringMemberValue<PaymentDestinationType>(
-                (string) base[CheckoutUtils.Type]);
+                (string)base[CheckoutUtils.Type]);
         }
     }
 }

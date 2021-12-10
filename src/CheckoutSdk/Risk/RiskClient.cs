@@ -1,7 +1,7 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Checkout.Risk.PreAuthentication;
 using Checkout.Risk.PreCapture;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Checkout.Risk
 {

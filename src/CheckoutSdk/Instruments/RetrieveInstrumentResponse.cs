@@ -1,9 +1,8 @@
-﻿using System;
-using Checkout.Common;
+﻿using Checkout.Common;
 
 namespace Checkout.Instruments
 {
-    public sealed class RetrieveInstrumentResponse : IEquatable<RetrieveInstrumentResponse>
+    public sealed class RetrieveInstrumentResponse
     {
         public string Id { get; set; }
 
@@ -36,45 +35,5 @@ namespace Checkout.Instruments
         public InstrumentAccountHolder AccountHolder { get; set; }
 
         public InstrumentCustomerResponse Customer { get; set; }
-
-        public bool Equals(RetrieveInstrumentResponse other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Id == other.Id && Type == other.Type && Fingerprint == other.Fingerprint &&
-                   ExpiryMonth == other.ExpiryMonth && ExpiryYear == other.ExpiryYear && Name == other.Name &&
-                   Last4 == other.Last4 && Bin == other.Bin && CardType == other.CardType &&
-                   CardCategory == other.CardCategory && Issuer == other.Issuer &&
-                   IssuerCountry == other.IssuerCountry && ProductId == other.ProductId &&
-                   ProductType == other.ProductType && Equals(AccountHolder, other.AccountHolder) &&
-                   Equals(Customer, other.Customer);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || obj is RetrieveInstrumentResponse other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            var hashCode = new HashCode();
-            hashCode.Add(Id);
-            hashCode.Add((int) Type);
-            hashCode.Add(Fingerprint);
-            hashCode.Add(ExpiryMonth);
-            hashCode.Add(ExpiryYear);
-            hashCode.Add(Name);
-            hashCode.Add(Last4);
-            hashCode.Add(Bin);
-            hashCode.Add((int) CardType);
-            hashCode.Add((int) CardCategory);
-            hashCode.Add(Issuer);
-            hashCode.Add((int) IssuerCountry);
-            hashCode.Add(ProductId);
-            hashCode.Add(ProductType);
-            hashCode.Add(AccountHolder);
-            hashCode.Add(Customer);
-            return hashCode.ToHashCode();
-        }
     }
 }
