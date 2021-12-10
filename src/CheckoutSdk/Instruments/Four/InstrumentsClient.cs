@@ -9,7 +9,7 @@ namespace Checkout.Instruments.Four
         private const string InstrumentsPath = "instruments";
 
         public InstrumentsClient(IApiClient apiClient,
-            CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKey)
+            CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
         {
         }
 

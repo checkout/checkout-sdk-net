@@ -4,13 +4,12 @@ namespace Checkout
 {
     public abstract class AbstractCheckoutSdkBuilder<T>
     {
-        private Environment _environment;
-        
-        private IHttpClientFactory _httpClientFactory = new DefaultHttpClientFactory();
+        protected Environment Env = Checkout.Environment.Sandbox;
+        protected IHttpClientFactory ClientFactory = new DefaultHttpClientFactory();
 
         public AbstractCheckoutSdkBuilder<T> Environment(Environment environment)
         {
-            _environment = environment;
+            Env = environment;
             return this;
         }
 
@@ -19,16 +18,16 @@ namespace Checkout
             Checkout.LogProvider.SetLogFactory(loggerFactory);
             return this;
         }
-        
+
         public AbstractCheckoutSdkBuilder<T> HttpClientFactory(IHttpClientFactory httpClientFactory)
         {
-            _httpClientFactory = httpClientFactory;
+            ClientFactory = httpClientFactory;
             return this;
         }
 
         protected CheckoutConfiguration GetCheckoutConfiguration()
         {
-            return new CheckoutConfiguration(GetSdkCredentials(), _environment, _httpClientFactory);
+            return new CheckoutConfiguration(GetSdkCredentials(), Env, ClientFactory);
         }
 
         protected abstract SdkCredentials GetSdkCredentials();

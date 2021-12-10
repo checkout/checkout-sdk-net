@@ -1,10 +1,20 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace Checkout
 {
-    public class CheckoutAuthorizationException : ArgumentException
+    [Serializable]
+    public sealed class CheckoutAuthorizationException : CheckoutException
     {
         public CheckoutAuthorizationException(string message) : base(message)
+        {
+        }
+
+        public CheckoutAuthorizationException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        private CheckoutAuthorizationException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
 

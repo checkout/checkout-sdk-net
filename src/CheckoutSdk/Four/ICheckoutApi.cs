@@ -7,7 +7,7 @@ using Checkout.Tokens;
 
 namespace Checkout.Four
 {
-    public interface ICheckoutApi
+    public interface ICheckoutApi : ICheckoutApiClient
     {
         ITokensClient TokensClient();
 

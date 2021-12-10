@@ -20,8 +20,10 @@ namespace Checkout
             switch (authorizationType)
             {
                 case SdkAuthorizationType.SecretKey:
+                case SdkAuthorizationType.SecretKeyOrOAuth:
                     return new SdkAuthorization(PlatformType, SecretKey);
                 case SdkAuthorizationType.PublicKey:
+                case SdkAuthorizationType.PublicKeyOrOAuth:
                     return new SdkAuthorization(PlatformType, PublicKey);
                 default:
                     throw CheckoutAuthorizationException.InvalidAuthorization(authorizationType);

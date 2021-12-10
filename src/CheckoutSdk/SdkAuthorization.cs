@@ -23,7 +23,7 @@ namespace Checkout
                 case PlatformType.Custom:
                     return new AuthenticationHeaderValue(_credential);
                 case PlatformType.Four:
-                case PlatformType.FourOauth:
+                case PlatformType.FourOAuth:
                     return new AuthenticationHeaderValue(Bearer, _credential);
                 default:
                     throw new CheckoutAuthorizationException("Invalid platform type");
