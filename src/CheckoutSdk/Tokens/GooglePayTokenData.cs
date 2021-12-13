@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace Checkout.Tokens
 {
@@ -6,8 +7,10 @@ namespace Checkout.Tokens
     {
         public string Signature { get; set; }
 
+        [JsonProperty(PropertyName = "protocolVersion")]
         public string ProtocolVersion { get; set; }
 
+        [JsonProperty(PropertyName = "signedMessage")]
         public string SignedMessage { get; set; }
 
         public bool Equals(GooglePayTokenData other)

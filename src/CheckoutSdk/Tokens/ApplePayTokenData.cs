@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Checkout.Tokens
@@ -11,7 +12,7 @@ namespace Checkout.Tokens
 
         public string Signature { get; set; }
 
-        [JsonProperty("header")] private TokenHeader TokenHeader { get; set; }
+        [JsonProperty("header")] private IDictionary<string, string> TokenHeader { get; set; }
 
         public bool Equals(ApplePayTokenData other)
         {

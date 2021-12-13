@@ -5,33 +5,11 @@ namespace Checkout.Tokens
 {
     public sealed class CardTokenResponse : TokenResponse, IEquatable<CardTokenResponse>
     {
-        public int? ExpiryMonth { get; set; }
-
-        public int? ExpiryYear { get; set; }
-
-        public string Name { get; set; }
-
-        public string Scheme { get; set; }
-
-        public string Last4 { get; set; }
-
-        public string Bin { get; set; }
-
-        public string CardType { get; set; }
-
-        public string CardCategory { get; set; }
-
-        public string Issuer { get; set; }
-
-        public string IssuerCountry { get; set; }
-
-        public string ProductId { get; set; }
-
-        public string ProductType { get; set; }
-
         public Address BillingAddress { get; set; }
 
         public Phone Phone { get; set; }
+
+        public string Name { get; set; }
 
         public bool Equals(CardTokenResponse other)
         {
@@ -41,8 +19,8 @@ namespace Checkout.Tokens
                    Scheme == other.Scheme && Last4 == other.Last4 && Bin == other.Bin && CardType == other.CardType &&
                    CardCategory == other.CardCategory && Issuer == other.Issuer &&
                    IssuerCountry == other.IssuerCountry && ProductId == other.ProductId &&
-                   ProductType == other.ProductType && Equals(BillingAddress, other.BillingAddress) &&
-                   Equals(Phone, other.Phone);
+                   ProductType == other.ProductType && TokenFormat == other.TokenFormat &&
+                   Equals(BillingAddress, other.BillingAddress) && Equals(Phone, other.Phone);
         }
 
         public override bool Equals(object obj)
@@ -55,7 +33,6 @@ namespace Checkout.Tokens
             var hashCode = new HashCode();
             hashCode.Add(ExpiryMonth);
             hashCode.Add(ExpiryYear);
-            hashCode.Add(Name);
             hashCode.Add(Scheme);
             hashCode.Add(Last4);
             hashCode.Add(Bin);
@@ -65,8 +42,10 @@ namespace Checkout.Tokens
             hashCode.Add(IssuerCountry);
             hashCode.Add(ProductId);
             hashCode.Add(ProductType);
+            hashCode.Add(TokenFormat);
             hashCode.Add(BillingAddress);
             hashCode.Add(Phone);
+            hashCode.Add(Name);
             return hashCode.ToHashCode();
         }
     }
