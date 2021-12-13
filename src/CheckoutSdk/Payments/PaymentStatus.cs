@@ -12,10 +12,12 @@ namespace Checkout.Payments
 
         [EnumMember(Value = "Partially Captured")]
         PartiallyCaptured,
+
         [EnumMember(Value = "Captured")] Captured,
 
         [EnumMember(Value = "Partially Refunded")]
         PartiallyRefunded,
+
         [EnumMember(Value = "Refunded")] Refunded,
         [EnumMember(Value = "Declined")] Declined,
         [EnumMember(Value = "Canceled")] Canceled,

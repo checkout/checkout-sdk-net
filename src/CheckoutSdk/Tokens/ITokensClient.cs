@@ -8,6 +8,7 @@ namespace Checkout.Tokens
         Task<CardTokenResponse> Request(CardTokenRequest cardTokenRequest,
             CancellationToken cancellationToken = default);
 
-        Task<TokenResponse> Request(TokenRequest tokenRequest, CancellationToken cancellationToken = default);
+        Task<TokenResponse> Request(WalletTokenRequest walletTokenRequest,
+            CancellationToken cancellationToken = default);
     }
 }

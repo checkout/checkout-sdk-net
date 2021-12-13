@@ -1,9 +1,8 @@
-﻿using System;
-using Checkout.Common.Four;
+﻿using Checkout.Common.Four;
 
 namespace Checkout.Instruments.Four.Create
 {
-    public sealed class CreateTokenInstrumentRequest : CreateInstrumentRequest, IEquatable<CreateTokenInstrumentRequest>
+    public sealed class CreateTokenInstrumentRequest : CreateInstrumentRequest
     {
         public CreateTokenInstrumentRequest() : base(InstrumentType.Token)
         {
@@ -14,23 +13,5 @@ namespace Checkout.Instruments.Four.Create
         public AccountHolder AccountHolder { get; set; }
 
         public CreateCustomerInstrumentRequest Customer { get; set; }
-
-        public bool Equals(CreateTokenInstrumentRequest other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Token == other.Token && Equals(AccountHolder, other.AccountHolder) &&
-                   Equals(Customer, other.Customer);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || obj is CreateTokenInstrumentRequest other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Token, AccountHolder, Customer);
-        }
     }
 }

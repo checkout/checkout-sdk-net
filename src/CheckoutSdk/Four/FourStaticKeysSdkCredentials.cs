@@ -21,8 +21,10 @@ namespace Checkout.Four
             {
                 case SdkAuthorizationType.SecretKey:
                     return new SdkAuthorization(PlatformType, SecretKey);
+
                 case SdkAuthorizationType.PublicKey:
                     return new SdkAuthorization(PlatformType, PublicKey);
+
                 default:
                     throw CheckoutAuthorizationException.InvalidAuthorization(authorizationType);
             }

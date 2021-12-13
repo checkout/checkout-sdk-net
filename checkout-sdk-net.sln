@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31729.503
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckoutSdk", "src\CheckoutSdk\CheckoutSdk.csproj", "{6AA88979-3F0C-4C5C-9DB8-8C1EC09B67E9}"
 EndProject
@@ -11,7 +11,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{090E2EDE-E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckoutSdkTest", "test\CheckoutSdkTest\CheckoutSdkTest.csproj", "{E8D073D9-38E1-4D74-BAB5-9B6117E7DFB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckoutSdk.Extensions", "src\CheckoutSdk.Extensions\CheckoutSdk.Extensions.csproj", "{DA0E758D-B136-4C79-9FE1-B43110D53835}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckoutSdk.Extensions", "src\CheckoutSdk.Extensions\CheckoutSdk.Extensions.csproj", "{DA0E758D-B136-4C79-9FE1-B43110D53835}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CDD17645-4F4C-4019-8C8D-EA70848E03C4}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

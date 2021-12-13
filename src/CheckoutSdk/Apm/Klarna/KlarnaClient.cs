@@ -1,6 +1,6 @@
+using Checkout.Payments;
 using System.Threading;
 using System.Threading.Tasks;
-using Checkout.Payments;
 
 namespace Checkout.Apm.Klarna
 {

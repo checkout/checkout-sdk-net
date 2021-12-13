@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
 using Checkout.Common;
+using System.Collections.Generic;
 
 namespace Checkout.Disputes
 {
-    public sealed class DisputeDetailsResponse : IEquatable<DisputeDetailsResponse>
+    public sealed class DisputeDetailsResponse
     {
         public string Id { get; set; }
 
@@ -29,39 +28,5 @@ namespace Checkout.Disputes
         public string LastUpdate { get; set; }
 
         public PaymentDispute Payment { get; set; }
-
-        public bool Equals(DisputeDetailsResponse other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Id == other.Id && Category == other.Category && Amount == other.Amount &&
-                   Currency == other.Currency && ReasonCode == other.ReasonCode && Status == other.Status &&
-                   ResolvedReason == other.ResolvedReason && Equals(RelevantEvidence, other.RelevantEvidence) &&
-                   EvidenceRequiredBy == other.EvidenceRequiredBy && ReceivedOn == other.ReceivedOn &&
-                   LastUpdate == other.LastUpdate && Equals(Payment, other.Payment);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || obj is DisputeDetailsResponse other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            var hashCode = new HashCode();
-            hashCode.Add(Id);
-            hashCode.Add(Category);
-            hashCode.Add(Amount);
-            hashCode.Add(Currency);
-            hashCode.Add(ReasonCode);
-            hashCode.Add(Status);
-            hashCode.Add(ResolvedReason);
-            hashCode.Add(RelevantEvidence);
-            hashCode.Add(EvidenceRequiredBy);
-            hashCode.Add(ReceivedOn);
-            hashCode.Add(LastUpdate);
-            hashCode.Add(Payment);
-            return hashCode.ToHashCode();
-        }
     }
 }

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Reflection;
-using Checkout.Common;
+﻿using Checkout.Common;
 using Checkout.Payments.Four.Response.Source;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Reflection;
 
 namespace Checkout.Payments.Four.Util
 {
