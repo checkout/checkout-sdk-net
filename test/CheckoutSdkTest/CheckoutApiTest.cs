@@ -35,6 +35,7 @@ namespace Checkout
             checkoutApi.KlarnaClient().ShouldNotBeNull();
             checkoutApi.SepaClient().ShouldNotBeNull();
             checkoutApi.ReconciliationClient().ShouldNotBeNull();
+            checkoutApi.HostedPaymentsClient().ShouldNotBeNull();
         }
 
         [Fact]

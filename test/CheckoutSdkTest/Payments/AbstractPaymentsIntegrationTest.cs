@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Checkout.Common;
+using Checkout.Payments.Hosted;
 using Checkout.Payments.Request;
 using Checkout.Payments.Request.Source;
 using Checkout.Payments.Response;
@@ -19,21 +20,8 @@ namespace Checkout.Payments
 
         protected async Task<PaymentResponse> MakeCardPayment(bool shouldCapture = false, long amount = 10L)
         {
-            var phone = new Phone
-            {
-                CountryCode = "44",
-                Number = "020 222333"
-            };
-
-            var billingAddress = new Address
-            {
-                AddressLine1 = "CheckoutSdk.com",
-                AddressLine2 = "90 Tottenham Court Road",
-                City = "London",
-                State = "London",
-                Zip = "W1T 4TJ",
-                Country = CountryCode.GB
-            };
+            var phone = GetPhone();
+            var billingAddress = GetAddress();
 
             var requestCardSource = new RequestCardSource
             {
@@ -62,21 +50,8 @@ namespace Checkout.Payments
 
         protected async Task<PaymentResponse> MakeTokenPayment()
         {
-            var phone = new Phone
-            {
-                CountryCode = "44",
-                Number = "020 222333"
-            };
-
-            var billingAddress = new Address
-            {
-                AddressLine1 = "CheckoutSdk.com",
-                AddressLine2 = "90 Tottenham Court Road",
-                City = "London",
-                State = "London",
-                Zip = "W1T 4TJ",
-                Country = CountryCode.GB
-            };
+            var phone = GetPhone();
+            var billingAddress = GetAddress();
 
             var cardTokenRequest = new CardTokenRequest
             {
@@ -119,21 +94,8 @@ namespace Checkout.Payments
 
         protected async Task<PaymentResponse> Make3dsCardPayment(bool attemptN3d = false)
         {
-            var phone = new Phone
-            {
-                CountryCode = "44",
-                Number = "020 222333"
-            };
-
-            var billingAddress = new Address
-            {
-                AddressLine1 = "CheckoutSdk.com",
-                AddressLine2 = "90 Tottenham Court Road",
-                City = "London",
-                State = "London",
-                Zip = "W1T 4TJ",
-                Country = CountryCode.GB
-            };
+            var phone = GetPhone();
+            var billingAddress = GetAddress();
 
             var requestCardSource = new RequestCardSource
             {
@@ -175,6 +137,102 @@ namespace Checkout.Payments
             var paymentResponse = await DefaultApi.PaymentsClient().RequestPayment(paymentRequest);
             paymentResponse.ShouldNotBeNull();
             return paymentResponse;
+        }
+
+        protected static Phone GetPhone()
+        {
+            return new Phone()
+            {
+                CountryCode = "1",
+                Number = "4155552671"
+            };
+        }
+
+        protected static Address GetAddress()
+        {
+            return new Address()
+            {
+                AddressLine1 = "CheckoutSdk.com",
+                AddressLine2 = "90 Tottenham Court Road",
+                City = "London",
+                State = "London",
+                Zip = "W1T 4TJ",
+                Country = CountryCode.GB
+            };
+        }
+
+        protected static HostedPaymentRequest CreateHostedPaymentRequest(string reference)
+        {
+            var customer = new CustomerRequest
+            {
+                Name = "Jack Napier",
+                Email = GenerateRandomEmail()
+            };
+
+            var shippingDetails = new ShippingDetails
+            {
+                Address = GetAddress(),
+                Phone = GetPhone()
+            };
+
+            var billing = new BillingInformation()
+            {
+                Address = GetAddress(),
+                Phone = GetPhone()
+            };
+
+
+            var recipient = new PaymentRecipient()
+            {
+                AccountNumber = "1234567",
+                Country = CountryCode.ES,
+                DateOfBirth = "1985-05-15",
+                FirstName = "IT",
+                LastName = "TESTING",
+                Zip = "12345"
+            };
+
+            var products = new Product[]
+            {
+                new Product()
+                {
+                    Name = "Gold Necklace",
+                    Quantity = 1L,
+                    Price = 200L
+                }
+            };
+
+            var threeDS = new ThreeDsRequest()
+            {
+                Enabled = false,
+                AttemptN3D = false
+            };
+
+            var processing = new ProcessingSettings() { Aft = true };
+
+            var risk = new RiskRequest() { Enabled = false };
+
+            return new HostedPaymentRequest()
+            {
+                Amount = 1000L,
+                Reference = reference,
+                Currency = Currency.GBP,
+                Description = "Payment for Gold Necklace",
+                Customer = customer,
+                ShippingDetails = shippingDetails,
+                Billing = billing,
+                Recipient = recipient,
+                Processing = processing,
+                Products = products,
+                Risk = risk,
+                SuccessUrl = "https://example.com/payments/success",
+                CancelUrl = "https://example.com/payments/success",
+                FailureUrl = "https://example.com/payments/success",
+                Locale = "en-GB",
+                ThreeDS = threeDS,
+                Capture = true,
+                CaptureOn = DateTime.UtcNow
+            };
         }
     }
 }

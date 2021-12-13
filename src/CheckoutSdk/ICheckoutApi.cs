@@ -3,6 +3,7 @@ using Checkout.Disputes;
 using Checkout.Events;
 using Checkout.Instruments;
 using Checkout.Payments;
+using Checkout.Payments.Hosted;
 using Checkout.Payments.Links;
 using Checkout.Reconciliation;
 using Checkout.Risk;
@@ -35,5 +36,7 @@ namespace Checkout
         IPaymentLinksClient PaymentLinksClient();
 
         IReconciliationClient ReconciliationClient();
+
+        IHostedPaymentsClient HostedPaymentsClient();
     }
 }

@@ -3,6 +3,7 @@ using Checkout.Disputes;
 using Checkout.Events;
 using Checkout.Instruments;
 using Checkout.Payments;
+using Checkout.Payments.Hosted;
 using Checkout.Payments.Links;
 using Checkout.Reconciliation;
 using Checkout.Risk;
@@ -25,6 +26,7 @@ namespace Checkout
         private readonly IRiskClient _riskClient;
         private readonly IPaymentLinksClient _paymentLinksClient;
         private readonly IReconciliationClient _reconciliationClient;
+        private readonly IHostedPaymentsClient _hostedPaymentsClient;
 
         public CheckoutApi(CheckoutConfiguration configuration) : base(configuration)
         {
@@ -40,6 +42,7 @@ namespace Checkout
             _riskClient = new RiskClient(apiClient, configuration);
             _paymentLinksClient = new PaymentLinksClient(apiClient,configuration);
             _reconciliationClient = new ReconciliationClient(apiClient, configuration);
+            _hostedPaymentsClient = new HostedPaymentsClient(apiClient, configuration);
         }
 
         public ITokensClient TokensClient()
@@ -96,6 +99,11 @@ namespace Checkout
         public IReconciliationClient ReconciliationClient()
         {
             return _reconciliationClient;
+        }
+
+        public IHostedPaymentsClient HostedPaymentsClient()
+        {
+            return _hostedPaymentsClient;
         }
     }
 }
