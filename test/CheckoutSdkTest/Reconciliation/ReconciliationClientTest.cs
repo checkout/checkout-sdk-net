@@ -71,8 +71,8 @@ namespace Checkout.Reconciliation
             };
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Query<ReconciliationPaymentReportResponse>($"reporting/payments/{paymentId}",
-                        _authorization, paymentId,
+                    apiClient.Get<ReconciliationPaymentReportResponse>($"reporting/payments/{paymentId}",
+                        _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(() => returnResponse);
 

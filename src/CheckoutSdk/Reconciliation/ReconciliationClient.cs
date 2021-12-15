@@ -5,7 +5,7 @@ namespace Checkout.Reconciliation
 {
     public class ReconciliationClient : AbstractClient, IReconciliationClient
     {
-        private const string ReportingPath = "/reporting";
+        private const string ReportingPath = "reporting";
         private const string PaymentsPath = "payments";
         private const string StatementsPath = "statements";
 
