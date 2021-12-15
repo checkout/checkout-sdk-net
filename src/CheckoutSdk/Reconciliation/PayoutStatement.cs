@@ -1,14 +1,15 @@
-﻿using System;
+﻿using Checkout.Common;
+using System;
 
 namespace Checkout.Reconciliation
 {
-    public sealed class PayoutStatement
+    public sealed class PayoutStatement : Resource
     {
         public string Id { get; set; }
 
         public string Status { get; set; }
 
-        public double Currency { get; set; }
+        public Currency? Currency { get; set; }
 
         public string PayoutFee { get; set; }
 

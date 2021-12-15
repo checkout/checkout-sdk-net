@@ -1,6 +1,8 @@
+using Checkout.Common;
+
 namespace Checkout.Payments
 {
-    public sealed class PaymentActionSummary 
+    public sealed class PaymentActionSummary
     {
         public string Id { get; set; }
 
@@ -9,6 +11,5 @@ namespace Checkout.Payments
         public string ResponseCode { get; set; }
 
         public string ResponseSummary { get; set; }
-
     }
 }

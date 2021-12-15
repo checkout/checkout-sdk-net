@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace Checkout.Reconciliation
 {
-    public sealed class PaymentReportData
+    public sealed class PaymentReportData : Resource
     {
         public string Id { get; set; }
 
-        public double? ProcessingCurrency { get; set; }
+        public Currency? ProcessingCurrency { get; set; }
 
-        public double? PayoutCurrency { get; set; }
+        public Currency? PayoutCurrency { get; set; }
 
         public DateTime? RequestedOn { get; set; }
 

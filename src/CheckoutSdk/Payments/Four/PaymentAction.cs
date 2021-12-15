@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Checkout.Common;
+using System;
 using System.Collections.Generic;
 
 namespace Checkout.Payments.Four
 {
-    public sealed class PaymentAction 
+    public sealed class PaymentAction
     {
         public string Id { get; set; }
 
@@ -28,6 +29,5 @@ namespace Checkout.Payments.Four
         public Processing Processing { get; set; }
 
         public IDictionary<string, object> Metadata { get; set; }
-              
     }
 }
