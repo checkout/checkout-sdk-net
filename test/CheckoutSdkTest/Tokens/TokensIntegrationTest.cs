@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
 using Checkout.Common;
 using Shouldly;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Tokens
@@ -14,11 +14,7 @@ namespace Checkout.Tokens
         [Fact]
         private async Task ShouldRequestCardToken()
         {
-            var phone = new Phone
-            {
-                CountryCode = "44",
-                Number = "020 222333"
-            };
+            var phone = new Phone {CountryCode = "44", Number = "020 222333"};
 
             var billingAddress = new Address
             {
@@ -59,6 +55,8 @@ namespace Checkout.Tokens
             cardTokenResponse.Phone.ShouldNotBeNull();
             cardTokenResponse.Phone.CountryCode.ShouldBe(cardTokenRequest.Phone.CountryCode);
             cardTokenResponse.Phone.Number.ShouldBe(cardTokenRequest.Phone.Number);
+            cardTokenResponse.CardType.ShouldBe(CardType.Credit);
+            cardTokenResponse.CardCategory.ShouldBe(CardCategory.Consumer);
         }
     }
 }

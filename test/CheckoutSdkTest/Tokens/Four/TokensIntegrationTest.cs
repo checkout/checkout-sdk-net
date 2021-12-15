@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
 using Checkout.Common;
 using Shouldly;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Tokens.Four
@@ -14,11 +14,7 @@ namespace Checkout.Tokens.Four
         [Fact]
         private async Task ShouldRequestCardToken()
         {
-            var phone = new Phone
-            {
-                CountryCode = "44",
-                Number = "020 222333"
-            };
+            var phone = new Phone {CountryCode = "44", Number = "020 222333"};
 
             var billingAddress = new Address
             {
@@ -49,6 +45,8 @@ namespace Checkout.Tokens.Four
             cardTokenResponse.ExpiryMonth.ShouldBe(cardTokenRequest.ExpiryMonth);
             cardTokenResponse.ExpiryYear.ShouldBe(cardTokenRequest.ExpiryYear);
             cardTokenResponse.ExpiresOn.ShouldNotBeNull();
+            cardTokenResponse.CardType.ShouldBe(CardType.Credit);
+            cardTokenResponse.CardCategory.ShouldBe(CardCategory.Consumer);
         }
     }
 }

@@ -1,5 +1,5 @@
-using System;
 using Checkout.Common;
+using System;
 
 namespace Checkout.Tokens
 {
@@ -21,9 +21,9 @@ namespace Checkout.Tokens
 
         public string Bin { get; set; }
 
-        public string CardType { get; set; }
+        public CardType? CardType { get; set; }
 
-        public string CardCategory { get; set; }
+        public CardCategory? CardCategory { get; set; }
 
         public string Issuer { get; set; }
 

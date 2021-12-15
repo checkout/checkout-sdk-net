@@ -2,7 +2,7 @@
 
 namespace Checkout.Tokens
 {
-    public sealed class GooglePayTokenData 
+    public sealed class GooglePayTokenData
     {
         public string Signature { get; set; }
 
@@ -11,6 +11,5 @@ namespace Checkout.Tokens
 
         [JsonProperty(PropertyName = "signedMessage")]
         public string SignedMessage { get; set; }
-     
     }
 }
