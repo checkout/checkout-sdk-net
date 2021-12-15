@@ -9,6 +9,5 @@ namespace Checkout.Tokens
         }
 
         [JsonProperty("token_data")] public ApplePayTokenData TokenData { get; set; }
-     
     }
 }

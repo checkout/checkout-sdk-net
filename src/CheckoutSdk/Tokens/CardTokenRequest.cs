@@ -2,7 +2,7 @@ using Checkout.Common;
 
 namespace Checkout.Tokens
 {
-    public sealed class CardTokenRequest 
+    public sealed class CardTokenRequest
     {
         public readonly TokenType Type = TokenType.Card;
 
@@ -19,6 +19,5 @@ namespace Checkout.Tokens
         public Address BillingAddress { get; set; }
 
         public Phone Phone { get; set; }
-             
     }
 }

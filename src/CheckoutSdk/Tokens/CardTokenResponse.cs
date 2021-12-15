@@ -9,6 +9,5 @@ namespace Checkout.Tokens
         public Phone Phone { get; set; }
 
         public string Name { get; set; }
-       
     }
 }
