@@ -1,3 +1,4 @@
+using Checkout.Common;
 using Checkout.Payments;
 using Shouldly;
 using Xunit;

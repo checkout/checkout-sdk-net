@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Checkout.Common;
+using System;
 using System.Collections.Generic;
 
 namespace Checkout.Reconciliation
@@ -7,11 +8,11 @@ namespace Checkout.Reconciliation
     {
         public string Id { get; set; }
 
-        public string Type { get; set; }
+        public ActionType? Type { get; set; }
 
         public DateTime? ProcessedOn { get; set; }
 
-        public string ResponseCode { get; set; }
+        public long? ResponseCode { get; set; }
 
         public string ResponseDescription { get; set; }
 
