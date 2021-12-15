@@ -17,7 +17,7 @@ namespace Checkout.Payments.Hosted
 
         public CustomerRequest Customer { get; set; }
 
-        public ShippingDetails ShippingDetails { get; set; }
+        public ShippingDetails Shipping { get; set; }
 
         public BillingInformation Billing { get; set; }
 
@@ -39,8 +39,7 @@ namespace Checkout.Payments.Hosted
 
         public string Locale { get; set; }
 
-        [JsonProperty(PropertyName = "3ds")]
-        public ThreeDsRequest ThreeDS { get; set; }
+        [JsonProperty(PropertyName = "3ds")] public ThreeDsRequest ThreeDs { get; set; }
 
         public bool Capture { get; set; }
 
