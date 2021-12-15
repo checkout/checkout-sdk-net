@@ -202,7 +202,7 @@ namespace Checkout.Payments
                 }
             };
 
-            var threeDS = new ThreeDsRequest()
+            var threeDs = new ThreeDsRequest()
             {
                 Enabled = false,
                 AttemptN3D = false
@@ -219,7 +219,7 @@ namespace Checkout.Payments
                 Currency = Currency.GBP,
                 Description = "Payment for Gold Necklace",
                 Customer = customer,
-                ShippingDetails = shippingDetails,
+                Shipping = shippingDetails,
                 Billing = billing,
                 Recipient = recipient,
                 Processing = processing,
@@ -229,7 +229,7 @@ namespace Checkout.Payments
                 CancelUrl = "https://example.com/payments/success",
                 FailureUrl = "https://example.com/payments/success",
                 Locale = "en-GB",
-                ThreeDS = threeDS,
+                ThreeDs = threeDs,
                 Capture = true,
                 CaptureOn = DateTime.UtcNow
             };
