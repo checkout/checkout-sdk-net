@@ -1,5 +1,6 @@
 using Checkout.Customers.Four;
 using Checkout.Disputes.Four;
+using Checkout.Forex;
 using Checkout.Instruments.Four;
 using Checkout.Payments.Four;
 using Checkout.Risk;
@@ -15,6 +16,7 @@ namespace Checkout.Four
         private readonly IInstrumentsClient _instrumentsClient;
         private readonly IDisputesClient _disputesClient;
         private readonly IRiskClient _riskClient;
+        private readonly IForexClient _forexClient;
 
         public CheckoutApi(CheckoutConfiguration configuration)
         {
@@ -25,6 +27,7 @@ namespace Checkout.Four
             _instrumentsClient = new InstrumentsClient(apiClient, configuration);
             _disputesClient = new DisputesClient(apiClient, configuration);
             _riskClient = new RiskClient(apiClient, configuration);
+            _forexClient = new ForexClient(apiClient, configuration);
         }
 
         public ITokensClient TokensClient()
@@ -55,6 +58,11 @@ namespace Checkout.Four
         public IRiskClient RiskClient()
         {
             return _riskClient;
+        }
+
+        public IForexClient ForexClient()
+        {
+            return _forexClient;
         }
     }
 }
