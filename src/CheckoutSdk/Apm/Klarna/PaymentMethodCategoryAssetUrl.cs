@@ -1,6 +1,6 @@
 ﻿namespace Checkout.Apm.Klarna
 {
-    public sealed class PaymentMethodCategoryAssetUrl
+    public class PaymentMethodCategoryAssetUrl
     {
         public string Descriptive { get; set; }
 

@@ -2,7 +2,7 @@ using System;
 
 namespace Checkout.Events
 {
-    public sealed class RetrieveEventsRequest
+    public class RetrieveEventsRequest
     {
         public string PaymentId { get; set; }
 

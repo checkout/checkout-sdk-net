@@ -1,6 +1,6 @@
 namespace Checkout.Payments
 {
-    public sealed class Processing 
+    public class Processing 
     {
         public string AcquirerReferenceNumber { get; set; }
 

@@ -2,7 +2,7 @@ using Checkout.Common;
 
 namespace Checkout.Risk.source
 {
-    public sealed class CustomerSourcePrism : RiskPaymentRequestSource
+    public class CustomerSourcePrism : RiskPaymentRequestSource
     {
         public CustomerSourcePrism() : base(PaymentSourceType.Customer)
         {

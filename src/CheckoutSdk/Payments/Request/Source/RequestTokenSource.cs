@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments.Request.Source
 {
-    public sealed class RequestTokenSource : AbstractRequestSource
+    public class RequestTokenSource : AbstractRequestSource
     {
         public RequestTokenSource() : base(PaymentSourceType.Token)
         {

@@ -2,7 +2,7 @@ using Checkout.Common;
 
 namespace Checkout.Sources
 {
-    public sealed class SepaSourceRequest : SourceRequest
+    public class SepaSourceRequest : SourceRequest
     {
         public SepaSourceRequest() : base(SourceType.Sepa)
         {

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Risk.PreCapture
 {
-    public sealed class PreCaptureWarning
+    public class PreCaptureWarning
     {
         public PreCaptureDecision? Decision { get; set; }
 

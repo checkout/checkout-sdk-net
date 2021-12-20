@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Payments.Links
 {
-    public sealed class PaymentLinkRequest 
+    public class PaymentLinkRequest 
     {
         public long? Amount { get; set; }
 

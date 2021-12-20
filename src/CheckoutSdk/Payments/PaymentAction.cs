@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Payments
 {
-    public sealed class PaymentAction : Resource
+    public class PaymentAction : Resource
     {
         public string Id { get; set; }
 
@@ -27,6 +27,5 @@ namespace Checkout.Payments
         public Processing Processing { get; set; }
 
         public IDictionary<string, object> Metadata { get; set; }
-              
     }
 }

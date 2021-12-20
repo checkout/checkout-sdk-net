@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Payments.Request
 {
-    public sealed class PayoutRequest
+    public class PayoutRequest
     {
         public PaymentRequestDestination Destination { get; set; }
 

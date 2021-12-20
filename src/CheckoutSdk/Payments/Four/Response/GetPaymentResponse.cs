@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Payments.Four.Response
 {
-    public sealed class GetPaymentResponse : Resource
+    public class GetPaymentResponse : Resource
     {
         public string Id { get; set; }
 
@@ -65,6 +65,5 @@ namespace Checkout.Payments.Four.Response
         public string SchemeId { get; set; }
 
         public IList<PaymentActionSummary> Actions { get; set; }
-              
     }
 }

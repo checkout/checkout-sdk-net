@@ -1,6 +1,6 @@
 ﻿namespace Checkout.Common
 {
-    public sealed class Product
+    public class Product
     {
         public string Name { get; set; }
 

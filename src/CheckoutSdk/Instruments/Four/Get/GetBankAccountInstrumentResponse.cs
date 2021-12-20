@@ -3,7 +3,7 @@ using Checkout.Common.Four;
 
 namespace Checkout.Instruments.Four.Get
 {
-    public sealed class GetBankAccountInstrumentResponse : GetInstrumentResponse
+    public class GetBankAccountInstrumentResponse : GetInstrumentResponse
     {
         public GetBankAccountInstrumentResponse() : base(InstrumentType.BankAccount)
         {

@@ -1,6 +1,6 @@
 ﻿namespace Checkout.Apm.Ideal
 {
-    public sealed class Issuer
+    public class Issuer
     {
         public string Bic { get; set; }
 

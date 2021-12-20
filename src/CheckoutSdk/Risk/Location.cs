@@ -1,6 +1,6 @@
 namespace Checkout.Risk
 {
-    public sealed class Location
+    public class Location
     {
         public string Latitude { get; set; }
 

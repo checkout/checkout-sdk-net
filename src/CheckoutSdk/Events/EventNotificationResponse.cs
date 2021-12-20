@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Events
 {
-    public sealed class EventNotificationResponse : Resource
+    public class EventNotificationResponse : Resource
     {
         public string Id { get; set; }
 

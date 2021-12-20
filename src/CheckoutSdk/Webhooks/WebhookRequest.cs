@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 
 namespace Checkout.Webhooks
 {
-    public sealed class WebhookRequest 
+    public class WebhookRequest
     {
         public string Url { get; set; }
 
@@ -14,6 +13,5 @@ namespace Checkout.Webhooks
         public WebhookContentType? ContentType { get; set; }
 
         public IList<string> EventTypes { get; set; }
-      
     }
 }

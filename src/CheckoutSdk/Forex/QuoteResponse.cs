@@ -3,7 +3,7 @@ using System;
 
 namespace Checkout.Forex
 {
-    public sealed class QuoteResponse
+    public class QuoteResponse
     {
         public string Id { get; set; }
 

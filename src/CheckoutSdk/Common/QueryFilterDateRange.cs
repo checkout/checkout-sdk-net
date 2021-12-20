@@ -2,7 +2,7 @@
 
 namespace Checkout.Common
 {
-    public sealed class QueryFilterDateRange
+    public class QueryFilterDateRange
     {
         public DateTime? From { get; set; }
 

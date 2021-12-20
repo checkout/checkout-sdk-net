@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments.Request.Destination
 {
-    public sealed class PaymentRequestTokenDestination : PaymentRequestDestination
+    public class PaymentRequestTokenDestination : PaymentRequestDestination
     {
         public PaymentRequestTokenDestination() : base(PaymentDestinationType.Token)
         {

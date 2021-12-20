@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Payments.Hosted
 {
-    public sealed class HostedPaymentRequest
+    public class HostedPaymentRequest
     {
         public long? Amount { get; set; }
 

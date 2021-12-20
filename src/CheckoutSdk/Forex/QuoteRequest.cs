@@ -2,7 +2,7 @@ using Checkout.Common;
 
 namespace Checkout.Forex
 {
-    public sealed class QuoteRequest
+    public class QuoteRequest
     {
         public Currency? SourceCurrency { get; set; }
 

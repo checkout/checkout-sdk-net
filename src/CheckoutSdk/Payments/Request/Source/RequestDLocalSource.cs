@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments.Request.Source
 {
-    public sealed class RequestDLocalSource : AbstractRequestSource
+    public class RequestDLocalSource : AbstractRequestSource
     {
         public RequestDLocalSource() : base(PaymentSourceType.DLocal)
         {

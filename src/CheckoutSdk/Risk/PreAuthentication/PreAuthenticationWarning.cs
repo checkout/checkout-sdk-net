@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Risk.PreAuthentication
 {
-    public sealed class PreAuthenticationWarning
+    public class PreAuthenticationWarning
     {
         public PreAuthenticationDecision? Decision { get; set; }
 

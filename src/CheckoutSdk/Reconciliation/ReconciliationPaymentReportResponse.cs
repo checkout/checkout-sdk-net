@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Reconciliation
 {
-    public sealed class ReconciliationPaymentReportResponse : Resource
+    public class ReconciliationPaymentReportResponse : Resource
     {
         public int? Count { get; set; }
 

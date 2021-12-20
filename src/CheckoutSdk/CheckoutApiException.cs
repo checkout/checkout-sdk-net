@@ -16,7 +16,7 @@ namespace Checkout
             string requestId,
             HttpStatusCode httpStatusCode,
             IDictionary<string, object> errorDetails) :
-            base($"The API response status code ({(int) httpStatusCode}) does not indicate success.")
+            base($"The API response status code ({(int)httpStatusCode}) does not indicate success.")
         {
             RequestId = requestId;
             HttpStatusCode = httpStatusCode;

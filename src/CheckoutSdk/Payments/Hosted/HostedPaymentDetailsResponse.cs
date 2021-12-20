@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Payments.Hosted
 {
-    public sealed class HostedPaymentDetailsResponse : Resource
+    public class HostedPaymentDetailsResponse : Resource
     {
         public string Id { get; set; }
 

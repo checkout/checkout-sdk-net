@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments.Four
 {
-    public sealed class CaptureResponse : Resource
+    public class CaptureResponse : Resource
     {
         public string ActionId { get; set; }
 

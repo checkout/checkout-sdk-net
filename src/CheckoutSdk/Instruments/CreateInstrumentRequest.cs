@@ -1,6 +1,6 @@
 ﻿namespace Checkout.Instruments
 {
-    public sealed class CreateInstrumentRequest
+    public class CreateInstrumentRequest
     {
         public InstrumentType Type => InstrumentType.Token;
 

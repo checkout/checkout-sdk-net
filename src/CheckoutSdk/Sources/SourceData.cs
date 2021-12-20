@@ -1,6 +1,6 @@
 namespace Checkout.Sources
 {
-    public sealed class SourceData
+    public class SourceData
     {
         public string FirstName { get; set; }
 

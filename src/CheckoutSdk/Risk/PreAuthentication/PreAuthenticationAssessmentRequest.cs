@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace Checkout.Risk.PreAuthentication
 {
-    public sealed class PreAuthenticationAssessmentRequest
+    public class PreAuthenticationAssessmentRequest
     {
         public DateTime? Date { get; set; }
 
