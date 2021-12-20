@@ -2,7 +2,7 @@ using System;
 
 namespace Checkout.Events
 {
-    public sealed class AttemptSummaryResponse
+    public class AttemptSummaryResponse
     {
         public int? StatusCode { get; set; }
 

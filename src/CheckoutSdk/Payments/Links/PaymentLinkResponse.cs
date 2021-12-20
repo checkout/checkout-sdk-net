@@ -3,7 +3,7 @@ using System;
 
 namespace Checkout.Payments.Links
 {
-    public sealed class PaymentLinkResponse : Resource
+    public class PaymentLinkResponse : Resource
     {
         public string Id { get; set; }
 

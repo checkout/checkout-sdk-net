@@ -1,6 +1,6 @@
 ﻿namespace Checkout.Common.Four
 {
-    public sealed class UpdateCustomerRequest
+    public class UpdateCustomerRequest
     {
         public string Id { get; set; }
 

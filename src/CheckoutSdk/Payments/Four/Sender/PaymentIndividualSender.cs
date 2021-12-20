@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments.Four.Sender
 {
-    public sealed class PaymentIndividualSender : PaymentSender
+    public class PaymentIndividualSender : PaymentSender
     {
         public PaymentIndividualSender() : base(PaymentSenderType.Individual)
         {
@@ -13,6 +13,5 @@ namespace Checkout.Payments.Four.Sender
         public string LastName { get; set; }
 
         public Address Address { get; set; }
-              
     }
 }

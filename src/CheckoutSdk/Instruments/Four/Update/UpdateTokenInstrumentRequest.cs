@@ -1,6 +1,6 @@
 ﻿namespace Checkout.Instruments.Four.Update
 {
-    public sealed class UpdateTokenInstrumentRequest : UpdateInstrumentRequest
+    public class UpdateTokenInstrumentRequest : UpdateInstrumentRequest
     {
         public UpdateTokenInstrumentRequest() : base(InstrumentType.Token)
         {

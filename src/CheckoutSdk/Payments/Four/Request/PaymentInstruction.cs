@@ -1,6 +1,6 @@
 namespace Checkout.Payments.Four.Request
 {
-    public sealed class PaymentInstruction 
+    public class PaymentInstruction
     {
         public string Purpose { get; set; }
 
@@ -11,6 +11,5 @@ namespace Checkout.Payments.Four.Request
         public InstructionScheme? Scheme { get; set; }
 
         public string QuoteId { get; set; }
-               
     }
 }

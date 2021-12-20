@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments.Four.Request.Source
 {
-    public sealed class RequestIdSource : AbstractRequestSource
+    public class RequestIdSource : AbstractRequestSource
     {
         public RequestIdSource() : base(PaymentSourceType.Id)
         {
@@ -11,6 +11,5 @@ namespace Checkout.Payments.Four.Request.Source
         public string Id { get; set; }
 
         public string Cvv { get; set; }
-
     }
 }

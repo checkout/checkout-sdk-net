@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments
 {
-    public sealed class BillingInformation 
+    public class BillingInformation 
     {
         public Address Address { get; set; }
 

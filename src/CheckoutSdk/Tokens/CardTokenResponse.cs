@@ -2,7 +2,7 @@ using Checkout.Common;
 
 namespace Checkout.Tokens
 {
-    public sealed class CardTokenResponse : TokenResponse
+    public class CardTokenResponse : TokenResponse
     {
         public Address BillingAddress { get; set; }
 

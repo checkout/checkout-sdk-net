@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments.Hosted
 {
-    public sealed class HostedPaymentResponse : Resource
+    public class HostedPaymentResponse : Resource
     {
         public string Id { get; set; }
 

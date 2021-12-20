@@ -2,13 +2,12 @@
 
 namespace Checkout.Payments.Four
 {
-    public sealed class RefundRequest 
+    public class RefundRequest
     {
         public long? Amount { get; set; }
 
         public string Reference { get; set; }
 
         public IDictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
-
     }
 }

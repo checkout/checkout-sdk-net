@@ -2,7 +2,7 @@ using Checkout.Common;
 
 namespace Checkout.Tokens
 {
-    public sealed class CardTokenRequest
+    public class CardTokenRequest
     {
         public readonly TokenType Type = TokenType.Card;
 

@@ -2,7 +2,7 @@
 
 namespace Checkout.Instruments
 {
-    public sealed class InstrumentCustomerRequest : CustomerRequest
+    public class InstrumentCustomerRequest : CustomerRequest
     {
         public bool Default { get; set; }
 

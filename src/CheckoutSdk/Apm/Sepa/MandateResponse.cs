@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Checkout.Apm.Sepa
 {
-    public sealed class MandateResponse : Resource
+    public class MandateResponse : Resource
     {
         public string MandateReference { get; set; }
 

@@ -2,7 +2,7 @@ using System;
 
 namespace Checkout.Disputes.Four
 {
-    public sealed class DisputesQueryFilter
+    public class DisputesQueryFilter
     {
         public int? Limit { get; set; }
 

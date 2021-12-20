@@ -3,7 +3,7 @@ using System;
 
 namespace Checkout.Disputes.Four
 {
-    public sealed class PaymentDispute
+    public class PaymentDispute
     {
         public string Id { get; set; }
 

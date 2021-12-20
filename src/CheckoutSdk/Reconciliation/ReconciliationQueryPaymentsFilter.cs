@@ -2,7 +2,7 @@
 
 namespace Checkout.Reconciliation
 {
-    public sealed class ReconciliationQueryPaymentsFilter
+    public class ReconciliationQueryPaymentsFilter
     {
         public int Limit { get; set; } = 500;
 

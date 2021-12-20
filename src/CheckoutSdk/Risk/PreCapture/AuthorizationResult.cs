@@ -1,6 +1,6 @@
 namespace Checkout.Risk.PreCapture
 {
-    public sealed class AuthorizationResult
+    public class AuthorizationResult
     {
         public string AvsCode { get; set; }
 

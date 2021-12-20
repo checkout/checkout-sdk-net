@@ -2,7 +2,7 @@
 
 namespace Checkout.Apm.Ideal
 {
-    public sealed class IdealCountry
+    public class IdealCountry
     {
         public string Name { get; set; }
 

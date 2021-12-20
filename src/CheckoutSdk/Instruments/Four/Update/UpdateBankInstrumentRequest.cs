@@ -3,7 +3,7 @@ using Checkout.Common.Four;
 
 namespace Checkout.Instruments.Four.Update
 {
-    public sealed class UpdateBankInstrumentRequest : UpdateInstrumentRequest
+    public class UpdateBankInstrumentRequest : UpdateInstrumentRequest
     {
         public UpdateBankInstrumentRequest() : base(InstrumentType.BankAccount)
         {

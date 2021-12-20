@@ -1,6 +1,6 @@
 ﻿namespace Checkout.Payments.Request.Source.Apm
 {
-    public sealed class KlarnaProduct 
+    public class KlarnaProduct
     {
         public string Name { get; set; }
 
@@ -13,6 +13,5 @@
         public long? TotalAmount { get; set; }
 
         public long? TotalTaxAmount { get; set; }
-
     }
 }

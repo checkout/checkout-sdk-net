@@ -2,7 +2,7 @@
 
 namespace Checkout.Instruments.Four.Update
 {
-    public sealed class UpdateCardInstrumentRequest : UpdateInstrumentRequest
+    public class UpdateCardInstrumentRequest : UpdateInstrumentRequest
     {
         public UpdateCardInstrumentRequest() : base(InstrumentType.Card)
         {

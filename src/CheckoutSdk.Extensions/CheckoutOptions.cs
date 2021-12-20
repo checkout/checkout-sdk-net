@@ -1,10 +1,10 @@
-using System;
 using Checkout;
+using System;
 using Environment = Checkout.Environment;
 
 namespace CheckoutSDK.Extensions.Configuration
 {
-    public sealed class CheckoutOptions
+    public class CheckoutOptions
     {
         public string SecretKey { get; set; }
 

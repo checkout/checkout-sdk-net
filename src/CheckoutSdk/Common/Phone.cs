@@ -1,6 +1,6 @@
 namespace Checkout.Common
 {
-    public sealed class Phone
+    public class Phone
     {
         public string CountryCode { get; set; }
 

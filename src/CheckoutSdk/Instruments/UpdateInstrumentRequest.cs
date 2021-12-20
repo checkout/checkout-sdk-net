@@ -1,6 +1,6 @@
 ﻿namespace Checkout.Instruments
 {
-    public sealed class UpdateInstrumentRequest
+    public class UpdateInstrumentRequest
     {
         public int? ExpiryMonth { get; set; }
 
@@ -12,7 +12,7 @@
 
         public UpdateInstrumentCustomer Customer { get; set; }
 
-        public sealed class UpdateInstrumentCustomer
+        public class UpdateInstrumentCustomer
         {
             public string Id { get; set; }
 

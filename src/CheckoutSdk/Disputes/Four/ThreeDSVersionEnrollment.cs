@@ -2,7 +2,7 @@ using Checkout.Common.Four;
 
 namespace Checkout.Disputes.Four
 {
-    public sealed class ThreeDsVersionEnrollment
+    public class ThreeDsVersionEnrollment
     {
         public string Version { get; set; }
 

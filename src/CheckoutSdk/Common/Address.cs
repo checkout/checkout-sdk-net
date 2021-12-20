@@ -1,6 +1,6 @@
 namespace Checkout.Common
 {
-    public sealed class Address
+    public class Address
     {
         public string AddressLine1 { get; set; }
 

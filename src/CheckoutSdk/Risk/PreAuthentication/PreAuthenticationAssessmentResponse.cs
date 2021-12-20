@@ -2,7 +2,7 @@ using Checkout.Common;
 
 namespace Checkout.Risk.PreAuthentication
 {
-    public sealed class PreAuthenticationAssessmentResponse : Resource
+    public class PreAuthenticationAssessmentResponse : Resource
     {
         public string AssessmentId { get; set; }
 

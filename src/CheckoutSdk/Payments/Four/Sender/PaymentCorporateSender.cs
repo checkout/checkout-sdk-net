@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments.Four.Sender
 {
-    public sealed class PaymentCorporateSender : PaymentSender
+    public class PaymentCorporateSender : PaymentSender
     {
         public PaymentCorporateSender() : base(PaymentSenderType.Corporate)
         {
@@ -11,6 +11,5 @@ namespace Checkout.Payments.Four.Sender
         public string CompanyName { get; set; }
 
         public Address Address { get; set; }
-              
     }
 }

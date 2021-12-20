@@ -2,7 +2,7 @@
 
 namespace Checkout.Instruments.Four.Create
 {
-    public sealed class CreateCustomerInstrumentRequest
+    public class CreateCustomerInstrumentRequest
     {
         public string Id { get; set; }
 

@@ -3,7 +3,7 @@ using Checkout.Common.Four;
 
 namespace Checkout.Payments.Four.Request.Destination
 {
-    public sealed class PaymentBankAccountDestination : PaymentRequestDestination
+    public class PaymentBankAccountDestination : PaymentRequestDestination
     {
         public PaymentBankAccountDestination() : base(PaymentDestinationType.BankAccount)
         {
@@ -26,6 +26,5 @@ namespace Checkout.Payments.Four.Request.Destination
         public AccountHolder AccountHolder { get; set; }
 
         public BankDetails Bank { get; set; }
-               
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments
 {
-    public sealed class ThreeDsRequest 
+    public class ThreeDsRequest
     {
         public bool? Enabled { get; set; } = true;
 
@@ -18,6 +18,5 @@ namespace Checkout.Payments
         public string Version { get; set; }
 
         public Exemption? Exemption { get; set; }
-               
     }
 }

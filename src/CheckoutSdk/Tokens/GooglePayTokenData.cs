@@ -2,7 +2,7 @@
 
 namespace Checkout.Tokens
 {
-    public sealed class GooglePayTokenData
+    public class GooglePayTokenData
     {
         public string Signature { get; set; }
 

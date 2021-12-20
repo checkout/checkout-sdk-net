@@ -1,6 +1,6 @@
 namespace Checkout.Common
 {
-    public sealed class Link
+    public class Link
     {
         public string Href { get; set; }
 

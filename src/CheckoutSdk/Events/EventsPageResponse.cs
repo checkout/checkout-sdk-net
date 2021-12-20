@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Events
 {
-    public sealed class EventsPageResponse
+    public class EventsPageResponse
     {
         public int? TotalCount { get; set; }
 

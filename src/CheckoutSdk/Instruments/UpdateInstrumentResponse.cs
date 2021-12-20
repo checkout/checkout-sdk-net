@@ -1,6 +1,6 @@
 ﻿namespace Checkout.Instruments
 {
-    public sealed class UpdateInstrumentResponse
+    public class UpdateInstrumentResponse
     {
         public InstrumentType? Type { get; set; }
 

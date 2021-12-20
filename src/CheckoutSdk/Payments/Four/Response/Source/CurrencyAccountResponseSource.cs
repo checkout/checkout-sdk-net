@@ -2,7 +2,7 @@ using Checkout.Common;
 
 namespace Checkout.Payments.Four.Response.Source
 {
-    public sealed class CurrencyAccountResponseSource : AbstractResponseSource, IResponseSource
+    public class CurrencyAccountResponseSource : AbstractResponseSource, IResponseSource
     {
         public long? Amount { get; set; }
 
@@ -10,6 +10,5 @@ namespace Checkout.Payments.Four.Response.Source
         {
             return base.Type;
         }
-              
     }
 }

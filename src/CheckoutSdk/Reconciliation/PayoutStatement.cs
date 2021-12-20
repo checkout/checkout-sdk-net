@@ -3,7 +3,7 @@ using System;
 
 namespace Checkout.Reconciliation
 {
-    public sealed class PayoutStatement : Resource
+    public class PayoutStatement : Resource
     {
         public string Id { get; set; }
 

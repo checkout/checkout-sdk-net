@@ -3,7 +3,7 @@ using System;
 
 namespace Checkout.Disputes
 {
-    public sealed class DisputeSummary : Resource
+    public class DisputeSummary : Resource
     {
         public string Id { get; set; }
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Events
 {
-    public sealed class EventResponse : Resource
+    public class EventResponse : Resource
     {
         public string Id { get; set; }
 

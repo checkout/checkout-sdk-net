@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments.Four
 {
-    public sealed class VoidRequest 
+    public class VoidRequest 
     {
         public string Reference { get; set; }
 
