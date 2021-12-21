@@ -8,6 +8,6 @@ namespace Checkout.Tokens
         {
         }
 
-        [JsonProperty("token_data")] public ApplePayTokenData TokenData { get; set; }
+        [JsonProperty("token_data")] public GooglePayTokenData TokenData { get; set; }
     }
 }
