@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments.Request.Source.Apm
 {
-    public class RequestBoletoSource : AbstractRequestSource
+    public sealed class RequestBoletoSource : AbstractRequestSource
     {
         public RequestBoletoSource() : base(PaymentSourceType.Boleto)
         {
@@ -15,5 +15,6 @@ namespace Checkout.Payments.Request.Source.Apm
         public Payer Payer { get; set; }
 
         public string Description { get; set; }
+              
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments.Four.Request.Source
 {
-    public class RequestNetworkTokenSource : AbstractRequestSource
+    public sealed class RequestNetworkTokenSource : AbstractRequestSource
     {
         public RequestNetworkTokenSource() : base(PaymentSourceType.NetworkToken)
         {
@@ -29,5 +29,6 @@ namespace Checkout.Payments.Four.Request.Source
         public Address BillingAddress { get; set; }
 
         public Phone Phone { get; set; }
+
     }
 }

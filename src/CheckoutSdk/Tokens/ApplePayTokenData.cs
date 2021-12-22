@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Tokens
 {
-    public class ApplePayTokenData
+    public sealed class ApplePayTokenData
     {
         public string Version { get; set; }
 

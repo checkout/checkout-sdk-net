@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Events
 {
-    public class EventTypesResponse
+    public sealed class EventTypesResponse
     {
         public string Version { get; set; }
 

@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Checkout.Instruments.Four.Get.Util
 {
-    public class GetInstrumentResponseTypeConverter : JsonConverter
+    public sealed class GetInstrumentResponseTypeConverter : JsonConverter
     {
         public override bool CanWrite => false;
 

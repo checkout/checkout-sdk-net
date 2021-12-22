@@ -1,6 +1,6 @@
 namespace Checkout.Risk.PreCapture
 {
-    public class AuthenticationResult
+    public sealed class AuthenticationResult
     {
         public bool? Attempted { get; set; }
 

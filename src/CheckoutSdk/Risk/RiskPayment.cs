@@ -1,6 +1,6 @@
 namespace Checkout.Risk
 {
-    public class RiskPayment
+    public sealed class RiskPayment
     {
         public string Psp { get; set; }
 

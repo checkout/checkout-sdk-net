@@ -2,7 +2,7 @@
 
 namespace Checkout.Reconciliation
 {
-    public class Breakdown
+    public sealed class Breakdown
     {
         public string Type { get; set; }
 

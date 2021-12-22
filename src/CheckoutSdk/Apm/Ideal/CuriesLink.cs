@@ -1,6 +1,6 @@
 ﻿namespace Checkout.Apm.Ideal
 {
-    public class CuriesLink
+    public sealed class CuriesLink
     {
         public string Name { get; set; }
 

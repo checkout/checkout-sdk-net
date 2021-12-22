@@ -1,6 +1,6 @@
 namespace Checkout.Payments.Four.Response
 {
-    public class PaymentResponseBalances
+    public sealed class PaymentResponseBalances 
     {
         public long? TotalAuthorized { get; set; }
 
@@ -15,5 +15,6 @@ namespace Checkout.Payments.Four.Response
         public long? TotalRefunded { get; set; }
 
         public long? AvailableToRefund { get; set; }
+              
     }
 }

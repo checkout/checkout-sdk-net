@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Disputes.Four
 {
-    public class DisputesQueryResponse
+    public sealed class DisputesQueryResponse
     {
         public int? Limit { get; set; }
 

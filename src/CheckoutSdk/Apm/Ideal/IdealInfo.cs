@@ -2,7 +2,7 @@
 
 namespace Checkout.Apm.Ideal
 {
-    public class IdealInfo
+    public sealed class IdealInfo
     {
         [JsonProperty(PropertyName = "_links")]
         public IdealInfoLinks Links { get; set; }

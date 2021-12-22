@@ -1,6 +1,6 @@
 namespace Checkout.Payments
 {
-    public class ProcessingSettings 
+    public sealed class ProcessingSettings 
     {
         public bool? Aft { get; set; }
             

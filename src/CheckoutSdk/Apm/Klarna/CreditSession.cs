@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Apm.Klarna
 {
-    public class CreditSession : Resource
+    public sealed class CreditSession : Resource
     {
         public string ClientToken { get; set; }
 

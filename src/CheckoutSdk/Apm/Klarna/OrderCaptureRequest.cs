@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Apm.Klarna
 {
-    public class OrderCaptureRequest
+    public sealed class OrderCaptureRequest
     {
         public const PaymentSourceType Type = PaymentSourceType.Klarna;
 

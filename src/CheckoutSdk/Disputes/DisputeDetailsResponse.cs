@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Disputes
 {
-    public class DisputeDetailsResponse
+    public sealed class DisputeDetailsResponse
     {
         public string Id { get; set; }
 

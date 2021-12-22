@@ -1,6 +1,6 @@
 ﻿namespace Checkout.Apm.Klarna
 {
-    public class KlarnaProduct
+    public sealed class KlarnaProduct
     {
         public string Name { get; set; }
 

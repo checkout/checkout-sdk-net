@@ -59,7 +59,6 @@ namespace Checkout
             checkoutApi.InstrumentsClient().ShouldNotBeNull();
             checkoutApi.DisputesClient().ShouldNotBeNull();
             checkoutApi.RiskClient().ShouldNotBeNull();
-            checkoutApi.ForexClient().ShouldNotBeNull();
         }
     }
 }

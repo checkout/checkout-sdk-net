@@ -2,7 +2,7 @@
 
 namespace Checkout.Common
 {
-    public class MarketplaceData
+    public sealed class MarketplaceData
     {
         public string SubEntityId { get; set; }
 

@@ -2,7 +2,7 @@
 
 namespace Checkout.Instruments
 {
-    public class RetrieveInstrumentResponse
+    public sealed class RetrieveInstrumentResponse
     {
         public string Id { get; set; }
 

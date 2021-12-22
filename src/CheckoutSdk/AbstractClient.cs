@@ -1,6 +1,6 @@
 ﻿namespace Checkout
 {
-    public abstract class AbstractClient
+    public class AbstractClient
     {
         protected readonly IApiClient ApiClient;
         private readonly CheckoutConfiguration _configuration;

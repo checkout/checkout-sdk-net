@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments.Request.Source.Apm
 {
-    public class RequestPagoFacilSource : AbstractRequestSource
+    public sealed class RequestPagoFacilSource : AbstractRequestSource
     {
         public RequestPagoFacilSource() : base(PaymentSourceType.PagoFacil)
         {
@@ -15,5 +15,6 @@ namespace Checkout.Payments.Request.Source.Apm
         public Payer Payer { get; set; }
 
         public string Description { get; set; }
+               
     }
 }

@@ -1,6 +1,6 @@
 namespace Checkout.Risk.PreCapture
 {
-    public class PreCaptureResult
+    public sealed class PreCaptureResult
     {
         public PreCaptureDecision? Decision { get; set; }
 

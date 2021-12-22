@@ -5,7 +5,7 @@ using Checkout.Payments.Four.Sender;
 
 namespace Checkout.Payments.Four.Request
 {
-    public class PayoutRequest 
+    public sealed class PayoutRequest 
     {
         public PayoutRequestSource Source { get; set; }
 

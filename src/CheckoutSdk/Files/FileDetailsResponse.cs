@@ -3,7 +3,7 @@ using System;
 
 namespace Checkout.Files
 {
-    public class FileDetailsResponse : Resource
+    public sealed class FileDetailsResponse : Resource
     {
         public string Id { get; set; }
 

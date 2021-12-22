@@ -1,6 +1,6 @@
 ﻿namespace Checkout.Instruments.Four.Update
 {
-    public class UpdateBankInstrumentResponse : UpdateInstrumentResponse
+    public sealed class UpdateBankInstrumentResponse : UpdateInstrumentResponse
     {
         public UpdateBankInstrumentResponse() : base(InstrumentType.BankAccount)
         {

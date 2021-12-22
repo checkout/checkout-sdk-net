@@ -1,6 +1,6 @@
 namespace Checkout.Disputes
 {
-    public class DisputesQueryFilter
+    public sealed class DisputesQueryFilter
     {
         public int? Limit { get; set; }
 

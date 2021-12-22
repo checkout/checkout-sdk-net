@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Payments.Request
 {
-    public class PaymentRequest 
+    public sealed class PaymentRequest 
     {
         public AbstractRequestSource Source { get; set; }
 

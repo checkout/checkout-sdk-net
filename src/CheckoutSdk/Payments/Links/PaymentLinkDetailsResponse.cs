@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Payments.Links
 {
-    public class PaymentLinkDetailsResponse : Resource
+    public sealed class PaymentLinkDetailsResponse : Resource
     {
         public string Id { get; set; }
 

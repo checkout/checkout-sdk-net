@@ -2,7 +2,7 @@ using Checkout.Common;
 
 namespace Checkout.Risk.PreCapture
 {
-    public class PreCaptureAssessmentResponse : Resource
+    public sealed class PreCaptureAssessmentResponse : Resource
     {
         public string AssessmentId { get; set; }
 

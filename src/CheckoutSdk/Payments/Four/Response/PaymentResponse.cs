@@ -6,7 +6,7 @@ using System;
 
 namespace Checkout.Payments.Four.Response
 {
-    public class PaymentResponse : Resource
+    public sealed class PaymentResponse : Resource
     {
         public string ActionId { get; set; }
 
@@ -48,5 +48,6 @@ namespace Checkout.Payments.Four.Response
         public string Eci { get; set; }
 
         public string SchemeId { get; set; }
+              
     }
 }

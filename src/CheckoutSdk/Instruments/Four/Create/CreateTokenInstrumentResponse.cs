@@ -2,7 +2,7 @@
 
 namespace Checkout.Instruments.Four.Create
 {
-    public class CreateTokenInstrumentResponse : CreateInstrumentResponse
+    public sealed class CreateTokenInstrumentResponse : CreateInstrumentResponse
     {
         public CreateTokenInstrumentResponse() : base(InstrumentType.Card)
         {

@@ -2,7 +2,7 @@
 
 namespace Checkout.Instruments.Four.Create
 {
-    public class CreateTokenInstrumentRequest : CreateInstrumentRequest
+    public sealed class CreateTokenInstrumentRequest : CreateInstrumentRequest
     {
         public CreateTokenInstrumentRequest() : base(InstrumentType.Token)
         {

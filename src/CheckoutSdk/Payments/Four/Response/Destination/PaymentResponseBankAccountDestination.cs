@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments.Four.Response.Destination
 {
-    public class PaymentResponseBankAccountDestination : AbstractPaymentResponseDestination,
+    public sealed class PaymentResponseBankAccountDestination : AbstractPaymentResponseDestination,
         IPaymentResponseDestination
     {
         public int? ExpiryMonth { get; set; }
@@ -33,5 +33,6 @@ namespace Checkout.Payments.Four.Response.Destination
         {
             return base.Type;
         }
+               
     }
 }

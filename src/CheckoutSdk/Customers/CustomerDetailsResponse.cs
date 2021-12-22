@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Customers
 {
-    public class CustomerDetailsResponse
+    public sealed class CustomerDetailsResponse
     {
         public string Id { get; set; }
 

@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments.Four
 {
-    public class VoidResponse : Resource
+    public sealed class VoidResponse : Resource
     {
         public string ActionId { get; set; }
 

@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace Checkout.Risk.PreCapture
 {
-    public class PreCaptureAssessmentRequest
+    public sealed class PreCaptureAssessmentRequest
     {
         public string AssessmentId { get; set; }
 

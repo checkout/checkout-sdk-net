@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments.Request.Source.Apm
 {
-    public class RequestIdealSource : AbstractRequestSource
+    public sealed class RequestIdealSource : AbstractRequestSource
     {
         public RequestIdealSource() : base(PaymentSourceType.Ideal)
         {
@@ -13,5 +13,6 @@ namespace Checkout.Payments.Request.Source.Apm
         public string Description { get; set; }
 
         public string Language { get; set; }
+      
     }
 }

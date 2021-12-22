@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments.Request.Source.Apm
 {
-    public class RequestOxxoSource : AbstractRequestSource
+    public sealed class RequestOxxoSource : AbstractRequestSource
     {
         public RequestOxxoSource() : base(PaymentSourceType.Oxxo)
         {
@@ -15,5 +15,6 @@ namespace Checkout.Payments.Request.Source.Apm
         public Payer Payer { get; set; }
 
         public string Description { get; set; }
+       
     }
 }

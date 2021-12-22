@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Checkout.Payments.Util
 {
-    public class PaymentResponseSourceTypeConverter : JsonConverter
+    public sealed class PaymentResponseSourceTypeConverter : JsonConverter
     {
         public override bool CanWrite => false;
 

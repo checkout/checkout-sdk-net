@@ -1,6 +1,6 @@
 ﻿namespace Checkout.Payments.Four.Request.Source
 {
-    public class PayoutRequestCurrencyAccountSource : PayoutRequestSource
+    public sealed class PayoutRequestCurrencyAccountSource : PayoutRequestSource
     {
         public PayoutRequestCurrencyAccountSource() : base(PayoutSourceType.CurrencyAccount)
         {

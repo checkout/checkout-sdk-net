@@ -2,7 +2,7 @@ using System;
 
 namespace Checkout.Risk
 {
-    public class Device
+    public sealed class Device
     {
         public string Ip { get; set; }
 

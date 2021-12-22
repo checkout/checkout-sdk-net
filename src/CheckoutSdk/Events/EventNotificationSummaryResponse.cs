@@ -2,7 +2,7 @@ using Checkout.Common;
 
 namespace Checkout.Events
 {
-    public class EventNotificationSummaryResponse : Resource
+    public sealed class EventNotificationSummaryResponse : Resource
     {
         public string Id { get; set; }
 

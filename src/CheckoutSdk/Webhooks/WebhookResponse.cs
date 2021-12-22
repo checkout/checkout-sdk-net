@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Webhooks
 {
-    public class WebhookResponse : Resource
+    public sealed class WebhookResponse : Resource
     {
         public string Id { get; set; }
 
@@ -16,5 +16,6 @@ namespace Checkout.Webhooks
         public WebhookContentType? ContentType { get; set; }
 
         public IList<string> EventTypes { get; set; }
+      
     }
 }

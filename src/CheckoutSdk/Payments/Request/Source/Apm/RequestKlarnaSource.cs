@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Payments.Request.Source.Apm
 {
-    public class RequestKlarnaSource : AbstractRequestSource
+    public sealed class RequestKlarnaSource : AbstractRequestSource
     {
         public RequestKlarnaSource() : base(PaymentSourceType.Klarna)
         {
@@ -22,5 +22,6 @@ namespace Checkout.Payments.Request.Source.Apm
         public KlarnaCustomer Customer { get; set; }
 
         public IList<KlarnaCustomer> Products { get; set; }
+
     }
 }

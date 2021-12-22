@@ -1,6 +1,6 @@
 ﻿namespace Checkout.Common.Four
 {
-    public class AccountHolder
+    public sealed class AccountHolder
     {
         public string FirstName { get; set; }
 

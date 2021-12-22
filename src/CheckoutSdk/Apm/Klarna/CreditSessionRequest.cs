@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Apm.Klarna
 {
-    public class CreditSessionRequest
+    public sealed class CreditSessionRequest
     {
         public CountryCode? PurchaseCountry { get; set; }
 

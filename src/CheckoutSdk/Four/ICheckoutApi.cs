@@ -1,10 +1,10 @@
 using Checkout.Customers.Four;
 using Checkout.Disputes.Four;
-using Checkout.Forex;
 using Checkout.Instruments.Four;
 using Checkout.Payments.Four;
 using Checkout.Risk;
 using Checkout.Tokens;
+using Checkout.Workflows.Four;
 
 namespace Checkout.Four
 {
@@ -22,6 +22,6 @@ namespace Checkout.Four
 
         IRiskClient RiskClient();
 
-        IForexClient ForexClient();
+        IWorkflowsClient WorkflowsClient();
     }
 }

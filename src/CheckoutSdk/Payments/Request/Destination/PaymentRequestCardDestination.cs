@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments.Request.Destination
 {
-    public class PaymentRequestCardDestination : PaymentRequestDestination
+    public sealed class PaymentRequestCardDestination : PaymentRequestDestination
     {
         public PaymentRequestCardDestination() : base(PaymentDestinationType.Card)
         {

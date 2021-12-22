@@ -1,6 +1,6 @@
 ﻿namespace Checkout.Payments.Request.Destination
 {
-    public class PaymentRequestIdDestination : PaymentRequestDestination
+    public sealed class PaymentRequestIdDestination : PaymentRequestDestination
     {
         public PaymentRequestIdDestination() : base(PaymentDestinationType.Id)
         {

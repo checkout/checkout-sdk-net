@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Reconciliation
 {
-    public class PaymentReportData : Resource
+    public sealed class PaymentReportData : Resource
     {
         public string Id { get; set; }
 

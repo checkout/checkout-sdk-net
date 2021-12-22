@@ -3,7 +3,7 @@ using Checkout.Common.Four;
 
 namespace Checkout.Instruments.Four.Create
 {
-    public class CreateBankAccountInstrumentResponse : CreateInstrumentResponse
+    public sealed class CreateBankAccountInstrumentResponse : CreateInstrumentResponse
     {
         public CreateBankAccountInstrumentResponse() : base(InstrumentType.BankAccount)
         {

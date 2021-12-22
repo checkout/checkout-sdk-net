@@ -1,6 +1,6 @@
 namespace Checkout.Payments
 {
-    public class ThreeDsData 
+    public sealed class ThreeDsData 
     {
         public bool? Downgraded { get; set; }
 

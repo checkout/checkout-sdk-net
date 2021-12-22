@@ -2,7 +2,7 @@ using Checkout.Common;
 
 namespace Checkout.Payments.Response.Source
 {
-    public class ResponseCardSource : AbstractResponseSource, IResponseSource
+    public sealed class ResponseCardSource : AbstractResponseSource, IResponseSource
     {
         public int? ExpiryMonth { get; set; }
 
@@ -44,5 +44,6 @@ namespace Checkout.Payments.Response.Source
         {
             return base.Type;
         }
+              
     }
 }

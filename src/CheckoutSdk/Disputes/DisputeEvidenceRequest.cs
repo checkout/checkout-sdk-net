@@ -1,6 +1,6 @@
 namespace Checkout.Disputes
 {
-    public class DisputeEvidenceRequest
+    public sealed class DisputeEvidenceRequest
     {
         public string ProofOfDeliveryOrServiceFile { get; set; }
 

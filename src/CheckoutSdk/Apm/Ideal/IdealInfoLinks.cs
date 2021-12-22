@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Apm.Ideal
 {
-    public class IdealInfoLinks
+    public sealed class IdealInfoLinks
     {
         public Link Self { get; set; }
 

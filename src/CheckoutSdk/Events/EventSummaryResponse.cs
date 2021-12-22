@@ -3,7 +3,7 @@ using System;
 
 namespace Checkout.Events
 {
-    public class EventSummaryResponse : Resource
+    public sealed class EventSummaryResponse : Resource
     {
         public string Id { get; set; }
 

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Payments.Four.Request
 {
-    public class PaymentRequest
+    public sealed class PaymentRequest 
     {
         public AbstractRequestSource Source { get; set; }
 
@@ -58,5 +58,6 @@ namespace Checkout.Payments.Four.Request
         public ProcessingSettings Processing { get; set; }
 
         public IDictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
+               
     }
 }

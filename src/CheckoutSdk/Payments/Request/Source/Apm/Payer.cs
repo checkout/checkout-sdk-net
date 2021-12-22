@@ -1,6 +1,6 @@
 ﻿namespace Checkout.Payments.Request.Source.Apm
 {
-    public class Payer 
+    public sealed class Payer 
     {
         public string Name { get; set; }
 

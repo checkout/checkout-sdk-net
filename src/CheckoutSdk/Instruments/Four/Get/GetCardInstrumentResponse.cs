@@ -2,7 +2,7 @@
 
 namespace Checkout.Instruments.Four.Get
 {
-    public class GetCardInstrumentResponse : GetInstrumentResponse
+    public sealed class GetCardInstrumentResponse : GetInstrumentResponse
     {
         public GetCardInstrumentResponse() : base(InstrumentType.Card)
         {

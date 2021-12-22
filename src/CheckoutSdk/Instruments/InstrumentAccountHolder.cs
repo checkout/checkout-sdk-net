@@ -2,7 +2,7 @@
 
 namespace Checkout.Instruments
 {
-    public class InstrumentAccountHolder
+    public sealed class InstrumentAccountHolder
     {
         public Address BillingAddress { get; set; }
 

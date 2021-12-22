@@ -21,6 +21,17 @@
         <PackageReleaseNotes>
         </PackageReleaseNotes>
     </PropertyGroup>
+    <ItemGroup>
+      <Compile Remove="Workflows\Conditions\**" />
+      <Compile Remove="Workflows\Events\**" />
+      <Compile Remove="Workflows\Rreflows\**" />
+      <EmbeddedResource Remove="Workflows\Conditions\**" />
+      <EmbeddedResource Remove="Workflows\Events\**" />
+      <EmbeddedResource Remove="Workflows\Rreflows\**" />
+      <None Remove="Workflows\Conditions\**" />
+      <None Remove="Workflows\Events\**" />
+      <None Remove="Workflows\Rreflows\**" />
+    </ItemGroup>
     
     <ItemGroup Label="Package References">
         <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
@@ -33,6 +44,12 @@
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
             <_Parameter1>CheckoutSdkTest</_Parameter1>
         </AssemblyAttribute>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Workflows\Four\Conditions\" />
+      <Folder Include="Workflows\Four\Events\" />
+      <Folder Include="Workflows\Four\Rreflows\" />
     </ItemGroup>
 
 </Project>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Reconciliation
 {
-    public class StatementData
+    public sealed class StatementData
     {
         public string Id { get; set; }
 

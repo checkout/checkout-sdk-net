@@ -2,7 +2,7 @@ using Checkout.Common;
 
 namespace Checkout.Payments
 {
-    public class PaymentActionSummary
+    public sealed class PaymentActionSummary
     {
         public string Id { get; set; }
 

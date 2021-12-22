@@ -40,7 +40,7 @@ namespace Checkout
             _webhooksClient = new WebhooksClient(apiClient, configuration);
             _eventsClient = new EventsClient(apiClient, configuration);
             _riskClient = new RiskClient(apiClient, configuration);
-            _paymentLinksClient = new PaymentLinksClient(apiClient,configuration);
+            _paymentLinksClient = new PaymentLinksClient(apiClient, configuration);
             _reconciliationClient = new ReconciliationClient(apiClient, configuration);
             _hostedPaymentsClient = new HostedPaymentsClient(apiClient, configuration);
         }
@@ -69,7 +69,6 @@ namespace Checkout
         {
             return _instrumentsClient;
         }
-
 
         public IDisputesClient DisputesClient()
         {

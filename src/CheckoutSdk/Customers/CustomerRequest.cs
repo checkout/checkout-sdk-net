@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Customers
 {
-    public class CustomerRequest
+    public sealed class CustomerRequest
     {
         public string Email { get; set; }
 

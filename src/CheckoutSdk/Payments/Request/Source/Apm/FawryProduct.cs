@@ -1,6 +1,8 @@
-﻿namespace Checkout.Payments.Request.Source.Apm
+﻿using System;
+
+namespace Checkout.Payments.Request.Source.Apm
 {
-    public class FawryProduct
+    public sealed class FawryProduct 
     {
         public string ProductId { get; set; }
 
@@ -9,5 +11,6 @@
         public long? Price { get; set; }
 
         public string Description { get; set; }
+
     }
 }
