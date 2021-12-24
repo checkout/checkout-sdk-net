@@ -18,5 +18,7 @@ namespace Checkout.Payments
         public string Version { get; set; }
 
         public Exemption? Exemption { get; set; }
+
+        public ChallengeIndicatorType? ChallengeIndicator { get; set; }
     }
 }

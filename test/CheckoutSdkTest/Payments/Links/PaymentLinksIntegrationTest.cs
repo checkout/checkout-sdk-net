@@ -52,7 +52,8 @@ namespace Checkout.Payments.Links
                     Eci = "05",
                     Cryptogram = "AgAAAAAAAIR8CQrXcIhbQAAAAAA",
                     Xid = "MDAwMDAwMDAwMDAwMDAwMzIyNzY=",
-                    Version = "2.0.1"
+                    Version = "2.0.1",
+                    ChallengeIndicator = ChallengeIndicatorType.NoPreference
                 }
             };
 
@@ -105,7 +106,8 @@ namespace Checkout.Payments.Links
                     Eci = "05",
                     Cryptogram = "AgAAAAAAAIR8CQrXcIhbQAAAAAA",
                     Xid = "MDAwMDAwMDAwMDAwMDAwMzIyNzY=",
-                    Version = "2.0.1"
+                    Version = "2.0.1",
+                    ChallengeIndicator = ChallengeIndicatorType.NoPreference
                 }
             };
 
