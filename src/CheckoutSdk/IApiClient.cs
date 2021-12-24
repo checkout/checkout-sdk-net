@@ -1,3 +1,7 @@
+using Checkout.Common;
+using Checkout.Sessions;
+using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,6 +20,14 @@ namespace Checkout
             object request = null,
             CancellationToken cancellationToken = default,
             string idempotencyKey = null);
+
+        Task<TResult> Post<TResult>(
+            string path,
+            SdkAuthorization authorization,
+            IDictionary<int, Type> resultTypeMappings,
+            object request = null,
+            CancellationToken cancellationToken = default,
+            string idempotencyKey = null) where TResult : Resource;
 
         Task<TResult> Patch<TResult>(
             string path,

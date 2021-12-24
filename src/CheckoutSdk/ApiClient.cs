@@ -7,6 +7,7 @@ using System.Net.Mime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Checkout.Common;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace Checkout
@@ -55,6 +56,26 @@ namespace Checkout
                 idempotencyKey
             );
             return await DeserializeJsonAsync<TResult>(httpResponse);
+        }
+
+        public async Task<TResult> Post<TResult>(string path, SdkAuthorization authorization, IDictionary<int, Type> resultTypeMappings, 
+            object request = null, CancellationToken cancellationToken = default, string idempotencyKey = null) where TResult : Resource
+        {
+            using var httpResponse = await SendRequestAsync(
+                HttpMethod.Post,
+                path,
+                authorization,
+                request,
+                cancellationToken,
+                idempotencyKey
+            );
+
+            resultTypeMappings.TryGetValue((int)httpResponse.StatusCode, out var responseType);
+
+            if (responseType == null)
+                throw new InvalidOperationException($"The status code {(int)httpResponse.StatusCode} is not mapped to a result type");
+
+            return await DeserializeJsonAsync(httpResponse, responseType);
         }
 
         public async Task<TResult> Patch<TResult>(string path,
@@ -190,6 +211,6 @@ namespace Checkout
 
             var json = await httpResponse.Content.ReadAsStringAsync();
             return _serializer.Deserialize(json, resultType);
-        }
+        }        
     }
 }

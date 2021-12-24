@@ -42,7 +42,7 @@ namespace Checkout
 
             httpRequest.Headers.UserAgent.ParseAdd(
                 "checkout-sdk-net/" + CheckoutUtils.GetAssemblyVersion<CheckoutSdk>());
-            httpRequest.Headers.Authorization = authorization.GetAuthorizationHeader();
+            httpRequest.Headers.TryAddWithoutValidation("Authorization", authorization.GetAuthorizationHeader());
 
             if (!string.IsNullOrWhiteSpace(idempotencyKey))
             {
