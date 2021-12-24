@@ -97,11 +97,11 @@ namespace Checkout
 
             var auth1 = credentials.GetSdkAuthorization(SdkAuthorizationType.SecretKey);
             auth1.ShouldNotBeNull();
-            auth1.GetAuthorizationHeader().ShouldBe(new AuthenticationHeaderValue(ValidDefaultSk));
+            auth1.GetAuthorizationHeader().ShouldBe(ValidDefaultSk);
 
             var auth2 = credentials.GetSdkAuthorization(SdkAuthorizationType.PublicKey);
             auth2.ShouldNotBeNull();
-            auth2.GetAuthorizationHeader().ShouldBe(new AuthenticationHeaderValue(ValidDefaultPk));
+            auth2.GetAuthorizationHeader().ShouldBe(ValidDefaultPk);
         }
     }
 }

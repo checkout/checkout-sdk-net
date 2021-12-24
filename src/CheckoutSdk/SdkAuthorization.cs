@@ -4,8 +4,6 @@ namespace Checkout
 {
     public sealed class SdkAuthorization
     {
-        private const string Bearer = "Bearer";
-
         private readonly PlatformType _platformType;
         private readonly string _credential;
 
@@ -15,16 +13,16 @@ namespace Checkout
             _credential = credential;
         }
 
-        public AuthenticationHeaderValue GetAuthorizationHeader()
+        public string GetAuthorizationHeader()
         {
             switch (_platformType)
             {
                 case PlatformType.Default:
                 case PlatformType.Custom:
-                    return new AuthenticationHeaderValue(_credential);
+                    return _credential;
                 case PlatformType.Four:
                 case PlatformType.FourOAuth:
-                    return new AuthenticationHeaderValue(Bearer, _credential);
+                    return $"Bearer {_credential}";
                 default:
                     throw new CheckoutAuthorizationException("Invalid platform type");
             }

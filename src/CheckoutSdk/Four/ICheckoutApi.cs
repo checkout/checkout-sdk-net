@@ -4,6 +4,7 @@ using Checkout.Forex;
 using Checkout.Instruments.Four;
 using Checkout.Payments.Four;
 using Checkout.Risk;
+using Checkout.Sessions;
 using Checkout.Tokens;
 using Checkout.Workflows.Four;
 
@@ -26,5 +27,7 @@ namespace Checkout.Four
         IForexClient ForexClient();
 
         IWorkflowsClient WorkflowsClient();
+
+        ISessionsClient SessionsClient();
     }
 }
