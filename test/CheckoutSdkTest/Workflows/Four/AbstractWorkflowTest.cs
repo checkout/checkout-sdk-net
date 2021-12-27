@@ -128,7 +128,13 @@ namespace Checkout.Workflows.Four
             {
                 FirstName = "Mr",
                 LastName = "Test",
-                Address = address
+                Address = address,
+                Identification = new Identification()
+                {
+                    IssuingCountry = "GT",
+                    Number = "1234",
+                    Type = IdentificationType.DrivingLicence
+                }
             };
 
             var paymentRequest = new PaymentRequest

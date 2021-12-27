@@ -13,5 +13,7 @@ namespace Checkout.Payments.Four.Sender
         public string LastName { get; set; }
 
         public Address Address { get; set; }
+
+        public Identification Identification { get; set; }
     }
 }
