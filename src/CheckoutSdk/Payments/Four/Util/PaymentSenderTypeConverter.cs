@@ -1,4 +1,5 @@
-﻿using Checkout.Payments.Four.Sender;
+﻿using Checkout.Common.Four;
+using Checkout.Payments.Four.Sender;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;

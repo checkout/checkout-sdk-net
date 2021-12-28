@@ -1,10 +1,10 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Checkout.Instruments.Four.Create;
 using Checkout.Instruments.Four.Get;
 using Checkout.Instruments.Four.Update;
 using Moq;
 using Shouldly;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Instruments.Four
@@ -99,6 +99,26 @@ namespace Checkout.Instruments.Four
                 new InstrumentsClient(_apiClient.Object, _configuration.Object);
 
             var response = await client.Delete("instrument_id");
+
+            response.ShouldNotBeNull();
+        }
+
+        [Fact]
+        private async Task ShouldGetBankAccountFieldFormatting()
+        {
+            BankAccountFieldQuery bankAccountFieldQuery = new BankAccountFieldQuery();
+
+            _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.OAuth))
+              .Returns(_authorization);
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Query<BankAccountFieldResponse>("validation/bank-accounts/GB/GBP", _authorization, bankAccountFieldQuery,
+                        CancellationToken.None)).ReturnsAsync(() => new BankAccountFieldResponse());
+
+            IInstrumentsClient client =
+                new InstrumentsClient(_apiClient.Object, _configuration.Object);
+
+            var response = await client.GetBankAccountFieldFormatting(Common.CountryCode.GB, Common.Currency.GBP, bankAccountFieldQuery);
 
             response.ShouldNotBeNull();
         }

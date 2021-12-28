@@ -1,4 +1,5 @@
-﻿using Checkout.Instruments.Four.Get;
+﻿using Checkout.Common;
+using Checkout.Instruments.Four.Get;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -51,6 +52,14 @@ namespace Checkout.Instruments.Four
                 BuildPath(InstrumentsPath, instrumentId),
                 SdkAuthorization(),
                 cancellationToken);
+        }
+
+        public Task<BankAccountFieldResponse> GetBankAccountFieldFormatting(CountryCode country, Currency currency,
+            BankAccountFieldQuery bankAccountFieldQuery, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("country", country, "currency", currency, "bankAccountFieldQuery", bankAccountFieldQuery);
+            return ApiClient.Query<BankAccountFieldResponse>(BuildPath("validation/bank-accounts", country.ToString(), currency.ToString()),
+                SdkAuthorization(SdkAuthorizationType.OAuth), bankAccountFieldQuery, cancellationToken);
         }
     }
 }

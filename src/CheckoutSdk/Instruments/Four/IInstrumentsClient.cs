@@ -1,4 +1,5 @@
-﻿using Checkout.Instruments.Four.Get;
+﻿using Checkout.Common;
+using Checkout.Instruments.Four.Get;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,5 +17,8 @@ namespace Checkout.Instruments.Four
             CancellationToken cancellationToken = default);
 
         Task<object> Delete(string instrumentId, CancellationToken cancellationToken = default);
+
+        Task<BankAccountFieldResponse> GetBankAccountFieldFormatting(CountryCode country, Currency currency,
+            BankAccountFieldQuery bankAccountFieldQuery, CancellationToken cancellationToken = default);
     }
 }

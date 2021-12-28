@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Checkout.Payments.Four.Sender
+namespace Checkout.Common.Four
 {
     public enum PaymentSenderType
     {

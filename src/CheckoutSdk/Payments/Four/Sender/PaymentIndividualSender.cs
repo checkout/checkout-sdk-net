@@ -1,4 +1,5 @@
 ﻿using Checkout.Common;
+using Checkout.Common.Four;
 
 namespace Checkout.Payments.Four.Sender
 {
