@@ -21,6 +21,11 @@
             return _configuration.SdkCredentials.GetSdkAuthorization(_sdkAuthorizationType);
         }
 
+        protected SdkAuthorization SdkAuthorization(SdkAuthorizationType sdkAuthorizationType)
+        {
+            return _configuration.SdkCredentials.GetSdkAuthorization(sdkAuthorizationType);
+        }
+
         protected static string BuildPath(params string[] pathParams)
         {
             return string.Join("/", pathParams);

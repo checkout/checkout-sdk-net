@@ -37,7 +37,7 @@ namespace Checkout
                             System.Environment.GetEnvironmentVariable("CHECKOUT_FOUR_OAUTH_CLIENT_SECRET"))
                         .Scopes(FourOAuthScope.Files, FourOAuthScope.Flow, FourOAuthScope.Fx, FourOAuthScope.Gateway,
                             FourOAuthScope.Marketplace, FourOAuthScope.SessionsApp, FourOAuthScope.SessionsBrowser,
-                            FourOAuthScope.Vault)
+                            FourOAuthScope.Vault, FourOAuthScope.PayoutsBankDetails)
                         .Environment(Environment.Sandbox)
                         .LogProvider(logFactory)
                         .Build();
