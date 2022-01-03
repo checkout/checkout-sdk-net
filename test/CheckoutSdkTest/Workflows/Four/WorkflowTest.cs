@@ -13,9 +13,11 @@ namespace Checkout.Workflows.Four
 {
     public class WorkflowTest : AbstractWorkflowTest
     {
-        [Fact(Timeout = 180000, Skip = " ")]
+        [Fact]
         public async Task ShouldCreateAndGetWorkflows()
         {
+            CleanupWorkflowsForTesting();
+            await Nap(10);
             var createdWorkFlow = await CreateWorkflow();
 
             createdWorkFlow.ShouldNotBeNull();
@@ -28,18 +30,16 @@ namespace Checkout.Workflows.Four
             Assert.Equal(nameWorkFlow, getWorkflowResponse.Name);
             getWorkflowResponse.Actions.ShouldNotBeNull();
             getWorkflowResponse.Actions.Count.ShouldBe(1);
-            Assert.True(getWorkflowResponse.Actions.FirstOrDefault() is WebhookWorkflowActionResponse);
+            Assert.True(getWorkflowResponse.Actions.FirstOrDefault() is WorkflowActionResponse);
 
-            WebhookWorkflowActionResponse webhookWorkflowActionResponse = (WebhookWorkflowActionResponse)getWorkflowResponse.Actions.FirstOrDefault();
-            webhookWorkflowActionResponse.Headers.ShouldNotBeNull();
-            webhookWorkflowActionResponse.Signature.ShouldNotBeNull();
+            WorkflowActionResponse webhookWorkflowActionResponse = (WorkflowActionResponse)getWorkflowResponse.Actions.FirstOrDefault();
+
             webhookWorkflowActionResponse.Id.ShouldNotBeNullOrEmpty();
-            webhookWorkflowActionResponse.Url.ShouldNotBeNullOrEmpty();
 
             getWorkflowResponse.Conditions.ShouldNotBeNull();
             getWorkflowResponse.Conditions.Count.ShouldBe(2);
-            Assert.True(getWorkflowResponse.Conditions.FirstOrDefault() is EventWorkflowConditionResponse);
-            Assert.True(getWorkflowResponse.Conditions[1] is EntityWorkflowConditionResponse);
+            Assert.True(getWorkflowResponse.Conditions.FirstOrDefault() is WorkflowConditionResponse);
+            Assert.True(getWorkflowResponse.Conditions[1] is WorkflowConditionResponse);
             getWorkflowResponse.GetLink("self").ShouldNotBeNull();
 
             GetWorkflowsResponse getWorkflowsResponse = await FourApi.WorkflowsClient().GetWorkflows();
@@ -56,7 +56,7 @@ namespace Checkout.Workflows.Four
             }
         }
 
-        [Fact(Timeout = 180000, Skip = " ")]
+        [Fact]
         public async Task ShouldCreateAndUpdateWorkflow()
         {
             var createdWorkFlow = await CreateWorkflow();
@@ -75,9 +75,12 @@ namespace Checkout.Workflows.Four
             Assert.Equal("testing_2", updateWorkflowResponse.Name);
         }
 
-        [Fact(Timeout = 180000, Skip = " ")]
+        [Fact]
         public async Task ShouldUpdateWorkflowAction()
         {
+            CleanupWorkflowsForTesting();
+            await Nap(10);
+
             var createdWorkFlow = await CreateWorkflow();
 
             createdWorkFlow.ShouldNotBeNull();
@@ -103,19 +106,20 @@ namespace Checkout.Workflows.Four
 
             getWorkflowResponse2.Actions.ShouldNotBeNull();
             getWorkflowResponse2.Actions.Count.ShouldBe(1);
-            Assert.True(getWorkflowResponse2.Actions.FirstOrDefault() is WebhookWorkflowActionResponse);
+            Assert.True(getWorkflowResponse2.Actions.FirstOrDefault() is WorkflowActionResponse);
 
-            WebhookWorkflowActionResponse action = (WebhookWorkflowActionResponse)getWorkflowResponse2.Actions.FirstOrDefault();
+            WorkflowActionResponse action = (WorkflowActionResponse)getWorkflowResponse2.Actions.FirstOrDefault();
 
-            action.Headers.ShouldNotBeNull();
-            action.Signature.ShouldNotBeNull();
             action.Id.ShouldNotBeNullOrEmpty();
-            action.Url.ShouldNotBeNullOrEmpty();
+            action.Type.ShouldNotBeNull();
         }
 
-        [Fact(Timeout = 180000, Skip = " ")]
+        [Fact]
         public async Task ShouldUpdateWorkflowCondition()
         {
+            CleanupWorkflowsForTesting();
+            await Nap(10);
+
             var createdWorkFlow = await CreateWorkflow();
 
             createdWorkFlow.ShouldNotBeNull();
@@ -129,14 +133,28 @@ namespace Checkout.Workflows.Four
             getWorkflowResponse.Conditions.ShouldNotBeNull();
             getWorkflowResponse.Conditions.Count.ShouldBe(2);
 
-            EventWorkflowConditionResponse eventWorkflowConditionResponse = (EventWorkflowConditionResponse)getWorkflowResponse.Conditions.
+            WorkflowConditionResponse eventWorkflowConditionResponse = (WorkflowConditionResponse)getWorkflowResponse.Conditions.
                 FirstOrDefault(x => x.Type.Equals(WorkflowConditionType.Event));
 
             eventWorkflowConditionResponse.ShouldNotBeNull();
 
             EventWorkflowConditionRequest updateEventCondition = new EventWorkflowConditionRequest(new Dictionary<string, ISet<string>>() {
-                        {"gateway", new HashSet<string>{conditionsGateway} },
-                        {"dispute", new HashSet<string>{conditionsDispute} }
+                        {"gateway", new HashSet<string>{
+                                                        "card_verified",
+                                                        "card_verification_declined",
+                                                        "payment_approved",
+                                                        "payment_pending",
+                                                        "payment_declined",
+                                                        "payment_voided",
+                                                        "payment_captured",
+                                                        "payment_refunded"} },
+                        {"dispute", new HashSet<string>{
+                                                        "dispute_canceled",
+                                                        "dispute_evidence_required",
+                                                        "dispute_expired",
+                                                        "dispute_lost",
+                                                        "dispute_resolved",
+                                                        "dispute_won" } }
                     });
 
             await FourApi.WorkflowsClient().UpdateWorkflowCondition(getWorkflowResponse.Id, eventWorkflowConditionResponse.Id, updateEventCondition);
@@ -147,12 +165,12 @@ namespace Checkout.Workflows.Four
             getWorkflowResponse2.Conditions.ShouldNotBeNull();
             getWorkflowResponse2.Conditions.Count.ShouldBe(2);
 
-            EventWorkflowConditionResponse updatedEventConditionResponse = (EventWorkflowConditionResponse)getWorkflowResponse2.Conditions.
+            WorkflowConditionResponse updatedEventConditionResponse = getWorkflowResponse2.Conditions.
               FirstOrDefault(x => x.Type.Equals(WorkflowConditionType.Event));
 
             updatedEventConditionResponse.ShouldNotBeNull();
             updatedEventConditionResponse.Id.ShouldNotBeNull();
-            updatedEventConditionResponse.Events.ShouldNotBeNull();
+            updatedEventConditionResponse.Type.ShouldNotBeNull();
         }
     }
 }
