@@ -52,6 +52,11 @@ namespace Checkout
             await Task.Delay(2000);
         }
 
+        protected static async Task Nap(int seconds)
+        {
+            await Task.Delay(seconds * 1000);
+        }
+
         protected static string GenerateRandomEmail()
         {
             return $"{Guid.NewGuid()}@checkout-sdk-net.com";

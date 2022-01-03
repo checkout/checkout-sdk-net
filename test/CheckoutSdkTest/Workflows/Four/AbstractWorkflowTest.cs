@@ -20,14 +20,6 @@ namespace Checkout.Workflows.Four
         private const string WORKFLOW_ENTITY_ID = "ent_kidtcgc3ge5unf4a5i6enhnr5m";
         private HashSet<string> workflows = new HashSet<string>();
 
-        protected readonly string conditionsGateway = @"payment_approved,card_verification_declined,card_verified,
-                                             payment_authorization_incremented,payment_authorization_increment_declined,
-                                             payment_capture_declined,payment_captured,payment_refund_declined,payment_refunded,
-                                             payment_void_declined,payment_voided";
-
-        protected readonly string conditionsDispute = @"dispute_canceled,dispute_evidence_required,dispute_expired,dispute_lost,
-                                                    dispute_resolved,dispute_won";
-
         protected readonly string nameWorkFlow = "testing";
 
         protected AbstractWorkflowTest() : base(PlatformType.FourOAuth)
@@ -201,6 +193,18 @@ namespace Checkout.Workflows.Four
             foreach (var workflowsId in workflows)
             {
                 await FourApi.WorkflowsClient().RemoveWorkflow(workflowsId);
+            }
+        }
+
+        public async void CleanupWorkflowsForTesting()
+        {
+            GetWorkflowsResponse getWorkflowsResponse = await FourApi.WorkflowsClient().GetWorkflows();
+
+            getWorkflowsResponse.ShouldNotBeNull();
+
+            foreach (var workFlow in getWorkflowsResponse.Workflows)
+            {
+                await FourApi.WorkflowsClient().RemoveWorkflow(workFlow.Id);
             }
         }
     }
