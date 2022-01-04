@@ -2,11 +2,11 @@
 
 namespace Checkout.Instruments
 {
-    public class CreateInstrumentResponse
+    public class InstrumentDetails
     {
         public string Id { get; set; }
 
-        public InstrumentType? Type { get; set; }
+        public string Type { get; set; }
 
         public string Fingerprint { get; set; }
 
@@ -16,13 +16,15 @@ namespace Checkout.Instruments
 
         public string Name { get; set; }
 
+        public string Scheme { get; set; }
+
         public string Last4 { get; set; }
 
         public string Bin { get; set; }
 
-        public CardType? CardType { get; set; }
+        public string CardType { get; set; }
 
-        public CardCategory? CardCategory { get; set; }
+        public string CardCategory { get; set; }
 
         public string Issuer { get; set; }
 
@@ -32,10 +34,6 @@ namespace Checkout.Instruments
 
         public string ProductType { get; set; }
 
-        public string Scheme { get; set; }
-
         public InstrumentAccountHolder AccountHolder { get; set; }
-
-        public InstrumentCustomerResponse Customer { get; set; }
     }
 }
