@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.WebUtilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,6 @@ using System.Net.Mime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace Checkout
 {
@@ -40,9 +40,46 @@ namespace Checkout
         }
 
         public async Task<TResult> Post<TResult>(
+                string path,
+                SdkAuthorization authorization,
+                object request = null,
+                CancellationToken cancellationToken = default,
+                string idempotencyKey = null)
+        {
+            using var httpResponse = await SendRequestAsync(
+               HttpMethod.Post,
+               path,
+               authorization,
+               request,
+               cancellationToken,
+               idempotencyKey
+            );
+
+            return await DeserializeJsonAsync<TResult>(httpResponse);
+        }
+
+        public async Task<HttpResponseMessage> Post(
+                string path,
+                SdkAuthorization authorization,
+                object request = null,
+                CancellationToken cancellationToken = default,
+                string idempotencyKey = null)
+        {
+            using var httpResponse = await SendRequestAsync(
+                HttpMethod.Post,
+                path,
+                authorization,
+                request,
+                cancellationToken,
+                idempotencyKey
+            );
+            return httpResponse;
+        }
+
+        public async Task<TResult> PostFile<TResult>(
             string path,
             SdkAuthorization authorization,
-            object request = null,
+            MultipartFormDataContent request = null,
             CancellationToken cancellationToken = default,
             string idempotencyKey = null)
         {
@@ -52,7 +89,8 @@ namespace Checkout
                 authorization,
                 request,
                 cancellationToken,
-                idempotencyKey
+                idempotencyKey,
+                true
             );
             return await DeserializeJsonAsync<TResult>(httpResponse);
         }
@@ -111,7 +149,7 @@ namespace Checkout
         {
             var json = _serializer.Serialize(request);
             var dictionary =
-                (IDictionary<string, string>) _serializer.Deserialize(json, typeof(IDictionary<string, string>));
+                (IDictionary<string, string>)_serializer.Deserialize(json, typeof(IDictionary<string, string>));
             using var httpResponse = await SendRequestAsync(
                 HttpMethod.Get,
                 QueryHelpers.AddQueryString(path, dictionary),
@@ -129,7 +167,8 @@ namespace Checkout
             SdkAuthorization authorization,
             object requestBody,
             CancellationToken cancellationToken,
-            string idempotencyKey)
+            string idempotencyKey,
+            bool useFileUri = false)
         {
             CheckoutUtils.ValidateParams("httpMethod", httpMethod, "path", path, "authorization", authorization);
 
@@ -153,7 +192,8 @@ namespace Checkout
                 authorization,
                 httpContent,
                 cancellationToken,
-                idempotencyKey);
+                idempotencyKey,
+                useFileUri);
 
             await ValidateResponseAsync(httpResponse);
 
@@ -177,7 +217,7 @@ namespace Checkout
         private async Task<TResult> DeserializeJsonAsync<TResult>(HttpResponseMessage httpResponse)
         {
             var result = await DeserializeJsonAsync(httpResponse, typeof(TResult));
-            return (TResult) result;
+            return (TResult)result;
         }
 
         private async Task<dynamic> DeserializeJsonAsync(HttpResponseMessage httpResponse, Type resultType)

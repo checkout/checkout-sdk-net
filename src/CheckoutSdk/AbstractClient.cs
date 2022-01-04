@@ -3,12 +3,22 @@
     public abstract class AbstractClient
     {
         protected readonly IApiClient ApiClient;
-        private readonly CheckoutConfiguration _configuration;
+        protected readonly ICheckoutConfiguration _configuration;
         private readonly SdkAuthorizationType _sdkAuthorizationType;
 
         protected AbstractClient(
             IApiClient apiClient,
             CheckoutConfiguration configuration,
+            SdkAuthorizationType sdkAuthorizationType)
+        {
+            ApiClient = apiClient;
+            _configuration = configuration;
+            _sdkAuthorizationType = sdkAuthorizationType;
+        }
+
+        protected AbstractClient(
+            IApiClient apiClient,
+            ICheckoutConfiguration configuration,
             SdkAuthorizationType sdkAuthorizationType)
         {
             ApiClient = apiClient;

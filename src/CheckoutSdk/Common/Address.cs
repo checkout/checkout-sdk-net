@@ -12,6 +12,6 @@ namespace Checkout.Common
 
         public string Zip { get; set; }
 
-        public CountryCode? Country { get; set; }
+        public CountryCode Country { get; set; }
     }
 }

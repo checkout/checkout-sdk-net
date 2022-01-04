@@ -39,6 +39,7 @@ namespace Checkout
                             FourOAuthScope.Marketplace, FourOAuthScope.SessionsApp, FourOAuthScope.SessionsBrowser,
                             FourOAuthScope.Vault)
                         .Environment(Environment.Sandbox)
+                        .FileEnvironment(Environment.Sandbox)
                         .LogProvider(logFactory)
                         .Build();
                     break;

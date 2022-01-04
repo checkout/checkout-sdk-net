@@ -6,10 +6,15 @@ namespace Checkout
     {
         public Uri ApiUri { get; }
         public Uri AuthorizationUri { get; }
+        public Uri FileUri { get; }
 
-        public EnvironmentAttribute(string apiUri, string authorizationUri)
+        public EnvironmentAttribute(string apiUri, string authorizationUri, string fileUri = null)
         {
             ApiUri = new Uri(apiUri);
+            if (!string.IsNullOrEmpty(fileUri))
+            {
+                FileUri = new Uri(fileUri);
+            }
             AuthorizationUri = new Uri(authorizationUri);
         }
     }

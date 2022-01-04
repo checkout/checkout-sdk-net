@@ -1,9 +1,9 @@
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using Checkout.Common;
 using Moq;
 using Shouldly;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Files
@@ -25,7 +25,6 @@ namespace Checkout.Files
                 Environment.Sandbox, _httpClientFactory.Object);
         }
 
-
         [Fact]
         private async Task ShouldSubmitFile()
         {
@@ -33,8 +32,12 @@ namespace Checkout.Files
             var idResponse = new IdResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<IdResponse>("files", _authorization, It.IsAny<MultipartFormDataContent>(),
-                        CancellationToken.None, null))
+                    apiClient.Post<IdResponse>(
+                        "files", 
+                        _authorization, 
+                        It.IsAny<MultipartFormDataContent>(),
+                        CancellationToken.None, 
+                        null))
                 .ReturnsAsync(() => idResponse);
 
             IFilesClient client = new FilesClient(_apiClient.Object, _configuration.Object);

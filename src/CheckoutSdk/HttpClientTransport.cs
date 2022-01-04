@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace Checkout
 {
@@ -31,10 +31,11 @@ namespace Checkout
             SdkAuthorization authorization,
             HttpContent httpContent,
             CancellationToken cancellationToken,
-            string idempotencyKey)
+            string idempotencyKey,
+            bool useFileUri = false)
         {
             CheckoutUtils.ValidateParams("httpMethod", httpMethod, "path", path, "authorization", authorization);
-            var httpRequest = new HttpRequestMessage(httpMethod, GetRequestUri(path))
+            var httpRequest = new HttpRequestMessage(httpMethod, GetRequestUri(path, useFileUri))
             {
                 Content = httpContent
             };
@@ -52,10 +53,20 @@ namespace Checkout
             return await _httpClient.SendAsync(httpRequest, cancellationToken);
         }
 
-        private Uri GetRequestUri(string path)
+        private Uri GetRequestUri(string path, bool useFileUri = false)
         {
-            var baseUri = _configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri;
-            Uri.TryCreate(baseUri, path, out var uri);
+            Uri uri;
+            if (useFileUri)
+            {
+                uri = _configuration.Environment.GetAttribute<EnvironmentAttribute>().FileUri;                
+            }
+            else
+            {
+                uri = _configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri;
+            }
+
+            Uri.TryCreate(uri, path, out uri);
+
             return uri;
         }
     }

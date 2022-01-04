@@ -1,3 +1,4 @@
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,10 +11,24 @@ namespace Checkout
             SdkAuthorization authorization,
             CancellationToken cancellationToken = default);
 
+        Task<HttpResponseMessage> Post(
+            string path,
+            SdkAuthorization authorization,
+            object request = null,
+            CancellationToken cancellationToken = default,
+            string idempotencyKey = null);
+
         Task<TResult> Post<TResult>(
             string path,
             SdkAuthorization authorization,
             object request = null,
+            CancellationToken cancellationToken = default,
+            string idempotencyKey = null);
+
+        Task<TResult> PostFile<TResult>(
+            string path,
+            SdkAuthorization authorization,
+            MultipartFormDataContent request = null,
             CancellationToken cancellationToken = default,
             string idempotencyKey = null);
 

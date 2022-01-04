@@ -12,7 +12,7 @@ namespace Checkout.Files
     {
         private const string Files = "files";
 
-        private readonly IDictionary<string, string> _allowedMimeMapping = new Dictionary<string, string>
+        private static readonly IDictionary<string, string> _allowedMimeMapping = new Dictionary<string, string>
         {
             {".jpg", "image/jpeg"},
             {".jpeg", "image/jpeg"},
@@ -26,10 +26,10 @@ namespace Checkout.Files
         }
 
         public Task<IdResponse> SubmitFile(string pathToFile, string purpose,
-            CancellationToken cancellationToken = default)
+                CancellationToken cancellationToken = default, string multipartFileHeaderName = null)
         {
             CheckoutUtils.ValidateParams("pathToFile", pathToFile, "purpose", purpose);
-            var dataContent = CreateMultipartRequest(pathToFile, purpose);
+            var dataContent = CreateMultipartRequest(pathToFile, purpose, multipartFileHeaderName);
             return ApiClient.Post<IdResponse>(Files, SdkAuthorization(), dataContent, cancellationToken);
         }
 
@@ -39,7 +39,7 @@ namespace Checkout.Files
             return ApiClient.Get<FileDetailsResponse>(BuildPath(Files, fileId), SdkAuthorization(), cancellationToken);
         }
 
-        private MultipartFormDataContent CreateMultipartRequest(string pathToFile, string purpose)
+        internal static MultipartFormDataContent CreateMultipartRequest(string pathToFile, string purpose, string multipartFileHeaderName = null)
         {
             var fileInfo = new FileInfo(pathToFile);
             if (!fileInfo.Exists)
@@ -59,7 +59,7 @@ namespace Checkout.Files
             fileFieldStreamContent.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
             var purposeFieldStringContent = new StringContent(purpose);
             var dataContent = new MultipartFormDataContent();
-            dataContent.Add(fileFieldStreamContent, "file", fileInfo.Name);
+            dataContent.Add(fileFieldStreamContent, multipartFileHeaderName ?? "file", fileInfo.Name);
             dataContent.Add(purposeFieldStringContent, "purpose");
             return dataContent;
         }

@@ -2,6 +2,7 @@ using Checkout.Customers.Four;
 using Checkout.Disputes.Four;
 using Checkout.Forex;
 using Checkout.Instruments.Four;
+using Checkout.Marketplace;
 using Checkout.Payments.Four;
 using Checkout.Risk;
 using Checkout.Tokens;
@@ -26,5 +27,7 @@ namespace Checkout.Four
         IForexClient ForexClient();
 
         IWorkflowsClient WorkflowsClient();
+
+        IMarketplaceClient MarketplaceClient();
     }
 }

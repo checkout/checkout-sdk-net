@@ -12,6 +12,7 @@ namespace Checkout
             SdkAuthorization authorization,
             HttpContent httpContent,
             CancellationToken cancellationToken,
-            string idempotencyKey);
+            string idempotencyKey,
+            bool useFileUri = false);
     }
 }
