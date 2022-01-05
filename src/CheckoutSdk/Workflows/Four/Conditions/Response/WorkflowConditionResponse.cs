@@ -1,6 +1,8 @@
-﻿namespace Checkout.Workflows.Four.Conditions.Response
+﻿using Checkout.Common;
+
+namespace Checkout.Workflows.Four.Conditions.Response
 {
-    public class WorkflowConditionResponse
+    public class WorkflowConditionResponse : Resource
     {
         public readonly WorkflowConditionType Type;
 
