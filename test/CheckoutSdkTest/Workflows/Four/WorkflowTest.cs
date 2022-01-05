@@ -37,7 +37,7 @@ namespace Checkout.Workflows.Four
             webhookWorkflowActionResponse.Id.ShouldNotBeNullOrEmpty();
 
             getWorkflowResponse.Conditions.ShouldNotBeNull();
-            getWorkflowResponse.Conditions.Count.ShouldBe(2);
+            getWorkflowResponse.Conditions.Count.ShouldBe(3);
             Assert.True(getWorkflowResponse.Conditions.FirstOrDefault() is WorkflowConditionResponse);
             Assert.True(getWorkflowResponse.Conditions[1] is WorkflowConditionResponse);
             getWorkflowResponse.GetLink("self").ShouldNotBeNull();
@@ -131,7 +131,7 @@ namespace Checkout.Workflows.Four
             getWorkflowResponse.Id.ShouldNotBeNullOrEmpty();
             Assert.Equal(nameWorkFlow, getWorkflowResponse.Name);
             getWorkflowResponse.Conditions.ShouldNotBeNull();
-            getWorkflowResponse.Conditions.Count.ShouldBe(2);
+            getWorkflowResponse.Conditions.Count.ShouldBe(3);
 
             WorkflowConditionResponse eventWorkflowConditionResponse = (WorkflowConditionResponse)getWorkflowResponse.Conditions.
                 FirstOrDefault(x => x.Type.Equals(WorkflowConditionType.Event));
@@ -163,7 +163,7 @@ namespace Checkout.Workflows.Four
 
             getWorkflowResponse2.ShouldNotBeNull();
             getWorkflowResponse2.Conditions.ShouldNotBeNull();
-            getWorkflowResponse2.Conditions.Count.ShouldBe(2);
+            getWorkflowResponse2.Conditions.Count.ShouldBe(3);
 
             WorkflowConditionResponse updatedEventConditionResponse = getWorkflowResponse2.Conditions.
               FirstOrDefault(x => x.Type.Equals(WorkflowConditionType.Event));

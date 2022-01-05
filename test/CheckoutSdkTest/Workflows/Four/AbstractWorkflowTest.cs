@@ -18,6 +18,7 @@ namespace Checkout.Workflows.Four
     public abstract class AbstractWorkflowTest : SandboxTestFixture
     {
         private const string WORKFLOW_ENTITY_ID = "ent_kidtcgc3ge5unf4a5i6enhnr5m";
+        private const string PROCESSING_CHANNEL_ID = "pc_5jp2az55l3cuths25t5p3xhwru";
         private HashSet<string> workflows = new HashSet<string>();
 
         protected readonly string nameWorkFlow = "testing";
@@ -56,7 +57,8 @@ namespace Checkout.Workflows.Four
                                                         "dispute_lost",
                                                         "dispute_resolved",
                                                         "dispute_won" } }
-                    })
+                    }),
+                    new ProcessingChannelWorkflowConditionRequest(new List<string>() { PROCESSING_CHANNEL_ID })
                 },
                 Name = "testing"
             };
