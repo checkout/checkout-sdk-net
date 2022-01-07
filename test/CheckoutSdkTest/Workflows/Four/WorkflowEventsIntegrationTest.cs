@@ -1,7 +1,6 @@
 ﻿using Checkout.Payments.Four.Response;
 using Checkout.Workflows.Four.Events;
 using Shouldly;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,23 +8,17 @@ using Xunit;
 
 namespace Checkout.Workflows.Four
 {
-    public class WorkflowEventsTest : AbstractWorkflowTest, IDisposable
+    public class WorkflowEventsIntegrationTest : AbstractWorkflowIntegrationTest
     {
-        public void Dispose()
-        {
-            CleanupWorkflow();
-        }
-
         [Fact]
         public async Task ShouldEventTypes()
         {
-            List<EventTypesResponse> eventTypesResposes
-                = (List<EventTypesResponse>)await FourApi.WorkflowsClient().GetEventTypes();
+            IList<EventTypesResponse> eventTypesResponses = await FourApi.WorkflowsClient().GetEventTypes();
 
-            eventTypesResposes.ShouldNotBeNull();
-            eventTypesResposes.Count.ShouldBe(7);
+            eventTypesResponses.ShouldNotBeNull();
+            eventTypesResponses.Count.ShouldBe(7);
 
-            foreach (var eventType in eventTypesResposes)
+            foreach (var eventType in eventTypesResponses)
             {
                 eventType.Id.ShouldNotBeNullOrEmpty();
                 eventType.Description.ShouldNotBeNullOrEmpty();
@@ -40,32 +33,35 @@ namespace Checkout.Workflows.Four
             }
         }
 
-        [Fact(Timeout = 180000, Skip = "There is no payment by payment id and capture request")]
+        [Fact]
         public async Task ShouldGetSubjectEventAndEvents()
         {
             await CreateWorkflow();
 
             PaymentResponse paymentResponse = await MakeCardPayment();
 
-            await Nap();
+            await Nap(5);
 
-            await CaptureResponse(paymentResponse.Id);
+            await CapturePayment(paymentResponse.Id);
 
-            await Nap();
+            await Nap(15);
 
-            SubjectEventsResponse subjectEventsResponse = await FourApi.WorkflowsClient().GetSubjectEvents(paymentResponse.Id);
+            SubjectEventsResponse subjectEventsResponse =
+                await FourApi.WorkflowsClient().GetSubjectEvents(paymentResponse.Id);
 
             subjectEventsResponse.ShouldNotBeNull();
             subjectEventsResponse.Events.Count.ShouldBe(2);
 
-            SubjectEvent paymentApprovedEvent = subjectEventsResponse.Events.FirstOrDefault(x => x.Type.Equals("payment_approved"));
+            SubjectEvent paymentApprovedEvent =
+                subjectEventsResponse.Events.FirstOrDefault(x => x.Type.Equals("payment_approved"));
 
             paymentApprovedEvent.ShouldNotBeNull();
             paymentApprovedEvent.Id.ShouldNotBeNullOrEmpty();
             paymentApprovedEvent.Timestamp.ShouldNotBeNullOrEmpty();
             paymentApprovedEvent.GetLink("self").ShouldNotBeNull();
 
-            SubjectEvent paymentCapturedEvent = subjectEventsResponse.Events.FirstOrDefault(x => x.Type.Equals("payment_captured"));
+            SubjectEvent paymentCapturedEvent =
+                subjectEventsResponse.Events.FirstOrDefault(x => x.Type.Equals("payment_captured"));
 
             paymentCapturedEvent.ShouldNotBeNull();
             paymentCapturedEvent.Id.ShouldNotBeNullOrEmpty();

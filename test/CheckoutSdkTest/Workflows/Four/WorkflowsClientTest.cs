@@ -9,12 +9,13 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Checkout.Workflows.Four
 {
     public class WorkflowsClientTest : UnitTestFixture
     {
-        private const string WORKFLOWS_PATH = "workflows";
+        private const string WorkflowsPath = "workflows";
 
         private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.FourOAuth, ValidFourSk);
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
@@ -38,9 +39,9 @@ namespace Checkout.Workflows.Four
             CreateWorkflowResponse createWorkflowResponse = new CreateWorkflowResponse();
 
             _apiClient.Setup(apiClient =>
-                apiClient.Post<CreateWorkflowResponse>(WORKFLOWS_PATH, _authorization,
-                createWorkflowRequest, CancellationToken.None, null))
-               .ReturnsAsync(() => createWorkflowResponse);
+                    apiClient.Post<CreateWorkflowResponse>(WorkflowsPath, _authorization,
+                        createWorkflowRequest, CancellationToken.None, null))
+                .ReturnsAsync(() => createWorkflowResponse);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
 
@@ -56,20 +57,21 @@ namespace Checkout.Workflows.Four
             CreateWorkflowResponse createWorkflowResponse = new CreateWorkflowResponse();
 
             _apiClient.Setup(apiClient =>
-                apiClient.Post<CreateWorkflowResponse>(WORKFLOWS_PATH, _authorization,
-                createWorkflowRequest, CancellationToken.None, null))
-               .ReturnsAsync(() => createWorkflowResponse);
+                    apiClient.Post<CreateWorkflowResponse>(WorkflowsPath, _authorization,
+                        createWorkflowRequest, CancellationToken.None, null))
+                .ReturnsAsync(() => createWorkflowResponse);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
 
             try
             {
-                var response = await workflowsClient.CreateWorkflow(null);
+                await workflowsClient.CreateWorkflow(null);
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("createWorkflowRequest cannot be null", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("createWorkflowRequest cannot be null");
             }
         }
 
@@ -79,8 +81,8 @@ namespace Checkout.Workflows.Four
             GetWorkflowsResponse getWorkflowResponse = new GetWorkflowsResponse();
 
             _apiClient.Setup(apiClient =>
-            apiClient.Get<GetWorkflowsResponse>(WORKFLOWS_PATH, _authorization, CancellationToken.None))
-            .ReturnsAsync(() => getWorkflowResponse);
+                    apiClient.Get<GetWorkflowsResponse>(WorkflowsPath, _authorization, CancellationToken.None))
+                .ReturnsAsync(() => getWorkflowResponse);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
 
@@ -95,8 +97,9 @@ namespace Checkout.Workflows.Four
             GetWorkflowResponse getWorkflowResponse = new GetWorkflowResponse();
 
             _apiClient.Setup(apiClient =>
-            apiClient.Get<GetWorkflowResponse>(WORKFLOWS_PATH + "/workflow_id", _authorization, CancellationToken.None))
-            .ReturnsAsync(() => getWorkflowResponse);
+                    apiClient.Get<GetWorkflowResponse>(WorkflowsPath + "/workflow_id", _authorization,
+                        CancellationToken.None))
+                .ReturnsAsync(() => getWorkflowResponse);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
 
@@ -111,19 +114,21 @@ namespace Checkout.Workflows.Four
             GetWorkflowResponse getWorkflowResponse = new GetWorkflowResponse();
 
             _apiClient.Setup(apiClient =>
-            apiClient.Get<GetWorkflowResponse>(WORKFLOWS_PATH + "/workflow_id", _authorization, CancellationToken.None))
-            .ReturnsAsync(() => getWorkflowResponse);
+                    apiClient.Get<GetWorkflowResponse>(WorkflowsPath + "/workflow_id", _authorization,
+                        CancellationToken.None))
+                .ReturnsAsync(() => getWorkflowResponse);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
 
             try
             {
-                var response = await workflowsClient.GetWorkflow(null);
+                await workflowsClient.GetWorkflow(null);
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("workflowId cannot be null", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("workflowId cannot be null");
             }
         }
 
@@ -134,8 +139,9 @@ namespace Checkout.Workflows.Four
             UpdateWorkflowResponse updateWorkflowResponse = new UpdateWorkflowResponse();
 
             _apiClient.Setup(apiClient =>
-            apiClient.Patch<UpdateWorkflowResponse>(WORKFLOWS_PATH + "/workflow_id", _authorization, updateWorkflowRequest, CancellationToken.None, null))
-            .ReturnsAsync(() => updateWorkflowResponse);
+                    apiClient.Patch<UpdateWorkflowResponse>(WorkflowsPath + "/workflow_id", _authorization,
+                        updateWorkflowRequest, CancellationToken.None, null))
+                .ReturnsAsync(() => updateWorkflowResponse);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
 
@@ -151,33 +157,35 @@ namespace Checkout.Workflows.Four
 
             try
             {
-                var response = await workflowsClient.UpdateWorkflow("", null);
+                await workflowsClient.UpdateWorkflow("", null);
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("workflowId cannot be blank", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("workflowId cannot be blank");
             }
 
             try
             {
-                var response = await workflowsClient.UpdateWorkflow("123", null);
+                await workflowsClient.UpdateWorkflow("123", null);
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("updateWorkflowRequest cannot be null", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("updateWorkflowRequest cannot be null");
             }
         }
 
         [Fact]
         public async Task ShouldRemoveWorkflow()
         {
-            var response = new Object();
+            var response = new object();
 
             _apiClient.Setup(apiClient =>
-            apiClient.Delete<Object>(WORKFLOWS_PATH + "/workflow_id", _authorization, CancellationToken.None))
-            .ReturnsAsync(() => response);
+                    apiClient.Delete<object>(WorkflowsPath + "/workflow_id", _authorization, CancellationToken.None))
+                .ReturnsAsync(() => response);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
 
@@ -193,28 +201,31 @@ namespace Checkout.Workflows.Four
 
             try
             {
-                var response = await workflowsClient.RemoveWorkflow("");
+                await workflowsClient.RemoveWorkflow("");
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("workflowId cannot be blank", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("workflowId cannot be blank");
             }
         }
 
         [Fact]
         public async Task ShouldUpdateWorkflowAction()
         {
-            var response = new Object();
+            var response = new object();
             WebhookWorkflowActionRequest workflowActionRequest = new WebhookWorkflowActionRequest();
 
             _apiClient.Setup(apiClient =>
-            apiClient.Put<Object>(WORKFLOWS_PATH + "/workflow_id/actions/action_id", _authorization, workflowActionRequest, CancellationToken.None, null))
-            .ReturnsAsync(() => response);
+                    apiClient.Put<object>(WorkflowsPath + "/workflow_id/actions/action_id", _authorization,
+                        workflowActionRequest, CancellationToken.None, null))
+                .ReturnsAsync(() => response);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
 
-            var getResponse = await workflowsClient.UpdateWorkflowAction("workflow_id", "action_id", workflowActionRequest);
+            var getResponse =
+                await workflowsClient.UpdateWorkflowAction("workflow_id", "action_id", workflowActionRequest);
 
             getResponse.ShouldNotBeNull();
         }
@@ -226,50 +237,56 @@ namespace Checkout.Workflows.Four
 
             try
             {
-                var response = await workflowsClient.UpdateWorkflowAction("", "action_id", new WebhookWorkflowActionRequest());
+                await workflowsClient.UpdateWorkflowAction("", "action_id", new WebhookWorkflowActionRequest());
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("workflowId cannot be blank", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("workflowId cannot be blank");
             }
 
             try
             {
-                var response = await workflowsClient.UpdateWorkflowAction("12345", "", new WebhookWorkflowActionRequest());
+                await workflowsClient.UpdateWorkflowAction("12345", "", new WebhookWorkflowActionRequest());
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("actionId cannot be blank", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("actionId cannot be blank");
             }
 
             try
             {
-                var response = await workflowsClient.UpdateWorkflowAction("12345", "46562", null);
+                await workflowsClient.UpdateWorkflowAction("12345", "46562", null);
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("workflowActionRequest cannot be null", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("workflowActionRequest cannot be null");
             }
         }
 
         [Fact]
         public async Task ShouldUpdateWorkflowCondition()
         {
-            var response = new Object();
+            var response = new object();
             EventWorkflowConditionRequest eventWorkflowConditionRequest = new EventWorkflowConditionRequest();
 
             _apiClient.Setup(apiClient =>
-            apiClient.Put<Object>(WORKFLOWS_PATH + "/workflow_id/conditions/condition_id", _authorization, eventWorkflowConditionRequest, CancellationToken.None, null))
-            .ReturnsAsync(() => response);
+                    apiClient.Put<object>(WorkflowsPath + "/workflow_id/conditions/condition_id", _authorization,
+                        eventWorkflowConditionRequest, CancellationToken.None, null))
+                .ReturnsAsync(() => response);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
 
-            var getResponse = await workflowsClient.UpdateWorkflowCondition("workflow_id", "condition_id", eventWorkflowConditionRequest);
+            var updateResponse =
+                await workflowsClient.UpdateWorkflowCondition("workflow_id", "condition_id",
+                    eventWorkflowConditionRequest);
 
-            getResponse.ShouldNotBeNull();
+            updateResponse.ShouldNotBeNull();
         }
 
         [Fact]
@@ -279,32 +296,36 @@ namespace Checkout.Workflows.Four
 
             try
             {
-                var response = await workflowsClient.UpdateWorkflowCondition("", "condition_id", new EventWorkflowConditionRequest());
+                await workflowsClient.UpdateWorkflowCondition("", "condition_id",
+                    new EventWorkflowConditionRequest());
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("workflowId cannot be blank", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("workflowId cannot be blank");
             }
 
             try
             {
-                var response = await workflowsClient.UpdateWorkflowCondition("12345", "", new EventWorkflowConditionRequest());
+                await workflowsClient.UpdateWorkflowCondition("12345", "", new EventWorkflowConditionRequest());
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("conditionId cannot be blank", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("conditionId cannot be blank");
             }
 
             try
             {
-                var response = await workflowsClient.UpdateWorkflowCondition("12345", "46562", null);
+                await workflowsClient.UpdateWorkflowCondition("12345", "46562", null);
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("workflowConditionRequest cannot be null", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("workflowConditionRequest cannot be null");
             }
         }
 
@@ -314,8 +335,9 @@ namespace Checkout.Workflows.Four
             List<EventTypesResponse> response = new List<EventTypesResponse>();
 
             _apiClient.Setup(apiClient =>
-            apiClient.Get<IList<EventTypesResponse>>(WORKFLOWS_PATH + "/event-types", _authorization, CancellationToken.None))
-            .ReturnsAsync(() => response);
+                    apiClient.Get<IList<EventTypesResponse>>(WorkflowsPath + "/event-types", _authorization,
+                        CancellationToken.None))
+                .ReturnsAsync(() => response);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
 
@@ -330,8 +352,9 @@ namespace Checkout.Workflows.Four
             SubjectEventsResponse subjectEventsResponse = new SubjectEventsResponse();
 
             _apiClient.Setup(apiClient =>
-            apiClient.Get<SubjectEventsResponse>(WORKFLOWS_PATH + "/events/subject/subject_id", _authorization, CancellationToken.None))
-            .ReturnsAsync(() => subjectEventsResponse);
+                    apiClient.Get<SubjectEventsResponse>(WorkflowsPath + "/events/subject/subject_id", _authorization,
+                        CancellationToken.None))
+                .ReturnsAsync(() => subjectEventsResponse);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
 
@@ -347,12 +370,13 @@ namespace Checkout.Workflows.Four
 
             try
             {
-                var response = await workflowsClient.GetSubjectEvents("  ");
+                await workflowsClient.GetSubjectEvents("  ");
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("subjectId cannot be blank", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("subjectId cannot be blank");
             }
         }
 
@@ -362,8 +386,9 @@ namespace Checkout.Workflows.Four
             GetEventResponse getEventResponse = new GetEventResponse();
 
             _apiClient.Setup(apiClient =>
-            apiClient.Get<GetEventResponse>(WORKFLOWS_PATH + "/events/event_id", _authorization, CancellationToken.None))
-            .ReturnsAsync(() => getEventResponse);
+                    apiClient.Get<GetEventResponse>(WorkflowsPath + "/events/event_id", _authorization,
+                        CancellationToken.None))
+                .ReturnsAsync(() => getEventResponse);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
 
@@ -379,12 +404,13 @@ namespace Checkout.Workflows.Four
 
             try
             {
-                var response = await workflowsClient.GetEvent(null);
+                await workflowsClient.GetEvent(null);
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("eventId cannot be null", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("eventId cannot be null");
             }
         }
 
@@ -394,8 +420,9 @@ namespace Checkout.Workflows.Four
             ReflowResponse response = new ReflowResponse();
 
             _apiClient.Setup(apiClient =>
-                apiClient.Post<ReflowResponse>(WORKFLOWS_PATH + "/events/event_id", _authorization, null, CancellationToken.None, null))
-               .ReturnsAsync(() => response);
+                    apiClient.Post<ReflowResponse>(WorkflowsPath + "/events/event_id", _authorization, null,
+                        CancellationToken.None, null))
+                .ReturnsAsync(() => response);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
 
@@ -411,12 +438,13 @@ namespace Checkout.Workflows.Four
 
             try
             {
-                var response = await workflowsClient.ReflowByEvent("");
+                await workflowsClient.ReflowByEvent("");
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("eventId cannot be blank", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("eventId cannot be blank");
             }
         }
 
@@ -426,8 +454,9 @@ namespace Checkout.Workflows.Four
             ReflowResponse response = new ReflowResponse();
 
             _apiClient.Setup(apiClient =>
-                apiClient.Post<ReflowResponse>(WORKFLOWS_PATH + "/events/subject/subject_id/", _authorization, null, CancellationToken.None, null))
-               .ReturnsAsync(() => response);
+                    apiClient.Post<ReflowResponse>(WorkflowsPath + "/events/subject/subject_id/", _authorization, null,
+                        CancellationToken.None, null))
+                .ReturnsAsync(() => response);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
 
@@ -443,12 +472,13 @@ namespace Checkout.Workflows.Four
 
             try
             {
-                var response = await workflowsClient.ReflowBySubject(null);
+                await workflowsClient.ReflowBySubject(null);
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("subjectId cannot be null", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("subjectId cannot be null");
             }
         }
 
@@ -458,8 +488,9 @@ namespace Checkout.Workflows.Four
             ReflowResponse response = new ReflowResponse();
 
             _apiClient.Setup(apiClient =>
-                apiClient.Post<ReflowResponse>(WORKFLOWS_PATH + "/events/event_id/workflow/workflow_id/reflow/", _authorization, null, CancellationToken.None, null))
-               .ReturnsAsync(() => response);
+                    apiClient.Post<ReflowResponse>(WorkflowsPath + "/events/event_id/workflow/workflow_id/reflow/",
+                        _authorization, null, CancellationToken.None, null))
+                .ReturnsAsync(() => response);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
 
@@ -475,22 +506,24 @@ namespace Checkout.Workflows.Four
 
             try
             {
-                var response = await workflowsClient.ReflowByEventAndWorkflow(" ", "123");
+                await workflowsClient.ReflowByEventAndWorkflow(" ", "123");
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("eventId cannot be blank", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("eventId cannot be blank");
             }
 
             try
             {
-                var response = await workflowsClient.ReflowByEventAndWorkflow("123", null);
+                await workflowsClient.ReflowByEventAndWorkflow("123", null);
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("workflowId cannot be null", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("workflowId cannot be null");
             }
         }
 
@@ -500,8 +533,10 @@ namespace Checkout.Workflows.Four
             ReflowResponse response = new ReflowResponse();
 
             _apiClient.Setup(apiClient =>
-                apiClient.Post<ReflowResponse>(WORKFLOWS_PATH + "/events/event_id/subject/subject_i/workflow/workflow_id/reflow", _authorization, null, CancellationToken.None, null))
-               .ReturnsAsync(() => response);
+                    apiClient.Post<ReflowResponse>(
+                        WorkflowsPath + "/events/event_id/subject/subject_i/workflow/workflow_id/reflow",
+                        _authorization, null, CancellationToken.None, null))
+                .ReturnsAsync(() => response);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
 
@@ -517,34 +552,38 @@ namespace Checkout.Workflows.Four
 
             try
             {
-                var response = await workflowsClient.ReflowBySubjectAndWorkflow(" ", "123");
+                await workflowsClient.ReflowBySubjectAndWorkflow(" ", "123");
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("subjectId cannot be blank", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("subjectId cannot be blank");
             }
 
             try
             {
-                var response = await workflowsClient.ReflowBySubjectAndWorkflow("123", null);
+                await workflowsClient.ReflowBySubjectAndWorkflow("123", null);
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("workflowId cannot be null", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("workflowId cannot be null");
             }
         }
 
         [Fact]
         public async Task ShouldReflow()
         {
-            ReflowBySubjectsRequest reflowBySubjectsRequest = new ReflowBySubjectsRequest(new List<string>(), new List<string>());
+            ReflowBySubjectsRequest reflowBySubjectsRequest =
+                new ReflowBySubjectsRequest(new List<string>(), new List<string>());
             ReflowResponse response = new ReflowResponse();
 
             _apiClient.Setup(apiClient =>
-                apiClient.Post<ReflowResponse>(WORKFLOWS_PATH + "/events/reflow", _authorization, null, CancellationToken.None, null))
-               .ReturnsAsync(() => response);
+                    apiClient.Post<ReflowResponse>(WorkflowsPath + "/events/reflow", _authorization, null,
+                        CancellationToken.None, null))
+                .ReturnsAsync(() => response);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
 
@@ -560,12 +599,13 @@ namespace Checkout.Workflows.Four
 
             try
             {
-                var response = await workflowsClient.Reflow(null);
+                await workflowsClient.Reflow(null);
+                throw new XunitException();
             }
             catch (Exception ex)
             {
-                Assert.True(ex is CheckoutArgumentException);
-                Assert.Equal("reflowRequest cannot be null", ex.Message);
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("reflowRequest cannot be null");
             }
         }
     }
