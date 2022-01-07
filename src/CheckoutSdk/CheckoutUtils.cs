@@ -124,7 +124,7 @@ namespace Checkout
 
         private static void RequiresNonBlank(string property, string content)
         {
-            if (string.IsNullOrEmpty(content))
+            if (string.IsNullOrWhiteSpace(content))
             {
                 throw CheckoutArgumentException.WithMessage($"{property} cannot be blank");
             }
