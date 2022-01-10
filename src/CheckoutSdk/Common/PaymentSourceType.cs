@@ -10,10 +10,7 @@ namespace Checkout.Common
         [EnumMember(Value = "token")] Token,
         [EnumMember(Value = "customer")] Customer,
         [EnumMember(Value = "dlocal")] DLocal,
-
-        [EnumMember(Value = "currency_account")]
-        CurrencyAccount,
-
+        [EnumMember(Value = "currency_account")] CurrencyAccount,
         [EnumMember(Value = "baloto")] Baloto,
         [EnumMember(Value = "boleto")] Boleto,
         [EnumMember(Value = "fawry")] Fawry,
@@ -24,5 +21,14 @@ namespace Checkout.Common
         [EnumMember(Value = "rapipago")] RapiPago,
         [EnumMember(Value = "klarna")] Klarna,
         [EnumMember(Value = "sofort")] Sofort,
+        [EnumMember(Value = "Knet")] Knet,
+        [EnumMember(Value = "qpay")] QPay,
+        [EnumMember(Value = "alipay")] Alipay,
+        [EnumMember(Value = "paypal")] PayPal,
+        [EnumMember(Value = "multibanco")] Multibanco,
+        [EnumMember(Value = "eps")] EPS,
+        [EnumMember(Value = "poli")] Poli,
+        [EnumMember(Value = "przelewy24")] Przelewy24,
+        [EnumMember(Value = "sepa")] Sepa,
     }
 }
