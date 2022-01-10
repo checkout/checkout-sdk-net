@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Payments.Links
 {
-    public class PaymentLinkRequest 
+    public class PaymentLinkRequest
     {
         public long? Amount { get; set; }
 
@@ -42,6 +42,11 @@ namespace Checkout.Payments.Links
         public bool? Capture { get; set; }
 
         public DateTime? CaptureOn { get; set; }
-               
+
+        public PaymentType? PaymentType { get; set; }
+
+        public string PaymentIp { get; set; }
+
+        public BillingDescriptor BillingDescriptor { get; set; }
     }
 }
