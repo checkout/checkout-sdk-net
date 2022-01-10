@@ -9,3 +9,5 @@ riderModule.iml
 testlog.manifest
 .vs
 *.nupkg*
+coverage.cobertura.xml
+SonarQube.xml

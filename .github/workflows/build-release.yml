@@ -9,18 +9,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Setup .NET Core 2.1, 3.1, 5.0
+      - id: setup-net-2_1-3_1-5_0
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: |
             2.1.x
             3.1.x
             5.0.x
-      - name: Installed runtimes
+      - id: list-installed-runtimes
         run: dotnet --list-runtimes
-      - name: Build project
+      - id: build-solution
         run: dotnet build
-      - name: Run tests
+      - id: test-solution
         env:
           CHECKOUT_SECRET_KEY: ${{ secrets.IT_CHECKOUT_SECRET_KEY }}
           CHECKOUT_PUBLIC_KEY: ${{ secrets.IT_CHECKOUT_PUBLIC_KEY }}
@@ -29,15 +29,15 @@ jobs:
           CHECKOUT_FOUR_OAUTH_CLIENT_ID: ${{ secrets.IT_CHECKOUT_FOUR_OAUTH_CLIENT_ID }}
           CHECKOUT_FOUR_OAUTH_CLIENT_SECRET: ${{ secrets.IT_CHECKOUT_FOUR_OAUTH_CLIENT_SECRET }}
         run: dotnet test 
-      - name: Package project
+      - id: package-solution
         run: dotnet pack -o:package
-      - name: Publish project
+      - id: publish-package
         run: dotnet nuget push ./package/*.nupkg --source 'https://api.nuget.org/v3/index.json' --api-key ${{secrets.NUGET_API_KEY}}
-      - name: Get version
+      - id: get-version
         run: echo "CURRENT_VERSION=$(find package -name '*.nupkg' | grep -Eo '[0-9].[0-9].[0-9]' | tail -1)" >> $GITHUB_ENV
-      - name: Print version
+      - id: print-version
         run: echo ${{ env.CURRENT_VERSION}}
-      - name: Create release tag
+      - id: release-tag
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

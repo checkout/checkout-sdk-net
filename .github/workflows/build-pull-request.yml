@@ -5,21 +5,45 @@ on:
       - master
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Setup .NET Core 2.1, 3.1, 5.0
+      - id: setup-java-11
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - id: setup-net-2_1-3_1-5_0
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: |
             2.1.x
             3.1.x
             5.0.x
-      - name: Installed runtimes
+      - id: list-installed-runtimes
         run: dotnet --list-runtimes
-      - id: build
-        run: dotnet build
-      - id: test
+      - id: cache-sonarcloud-packages
+        uses: actions/cache@v1
+        with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - id: cache-sonar-scanner
+        uses: actions/cache@v1
+        with:
+          path: .\.sonar\scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
+      - id: install-sonar-scanner
+        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+        shell: powershell
+        run: |
+          New-Item -Path .\.sonar\scanner -ItemType Directory
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      - id: install-report-generator
+        shell: powershell
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.0.2
+      - id: build-and-analyse
         env:
           CHECKOUT_SECRET_KEY: ${{ secrets.IT_CHECKOUT_SECRET_KEY }}
           CHECKOUT_PUBLIC_KEY: ${{ secrets.IT_CHECKOUT_PUBLIC_KEY }}
@@ -27,4 +51,11 @@ jobs:
           CHECKOUT_FOUR_PUBLIC_KEY: ${{ secrets.IT_CHECKOUT_FOUR_PUBLIC_KEY }}
           CHECKOUT_FOUR_OAUTH_CLIENT_ID: ${{ secrets.IT_CHECKOUT_FOUR_OAUTH_CLIENT_ID }}
           CHECKOUT_FOUR_OAUTH_CLIENT_SECRET: ${{ secrets.IT_CHECKOUT_FOUR_OAUTH_CLIENT_SECRET }}
-        run: dotnet test
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: powershell
+        run: |
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"checkout_checkout-sdk-net" /o:"checkout-ltd" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths=".\sonarqubecoverage\SonarQube.xml"
+          dotnet test --collect:"XPlat Code Coverage"
+          reportgenerator "-reports:test\*\TestResults\*\coverage.cobertura.xml" "-targetdir:sonarqubecoverage" "-reporttypes:SonarQube"
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
