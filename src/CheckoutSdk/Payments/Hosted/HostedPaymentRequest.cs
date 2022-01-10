@@ -44,5 +44,11 @@ namespace Checkout.Payments.Hosted
         public bool Capture { get; set; }
 
         public DateTime? CaptureOn { get; set; }
+
+        public PaymentType? PaymentType { get; set; }
+
+        public string PaymentIp { get; set; }
+
+        public BillingDescriptor BillingDescriptor { get; set; }
     }
 }

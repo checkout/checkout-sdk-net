@@ -54,7 +54,8 @@ namespace Checkout.Payments.Links
                     Xid = "MDAwMDAwMDAwMDAwMDAwMzIyNzY=",
                     Version = "2.0.1",
                     ChallengeIndicator = ChallengeIndicatorType.NoPreference
-                }
+                },
+                PaymentType = PaymentType.Regular                
             };
 
             var response = await DefaultApi.PaymentLinksClient().Create(paymentLinkRequest);
