@@ -1,10 +1,12 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+using Checkout.Common;
 using Checkout.Payments.Request;
+using Checkout.Payments.Request.Source;
 using Checkout.Payments.Response;
 using Moq;
 using Shouldly;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Payments
@@ -45,6 +47,41 @@ namespace Checkout.Payments
 
             response.ShouldNotBeNull();
             response.ShouldBeSameAs(paymentResponse);
+        }
+
+        [Fact]
+        private async Task ShouldRequestPayment_CustomSource()
+        {
+            CustomSource customSource = new CustomSource {amount = 10L, currency = Currency.USD};
+
+            var paymentRequest = new PaymentRequest();
+            paymentRequest.Source = customSource;
+
+            var paymentResponse = new PaymentResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<PaymentResponse>(PaymentsPath, _authorization, paymentRequest,
+                        CancellationToken.None, null))
+                .ReturnsAsync(() => paymentResponse);
+
+            IPaymentsClient paymentsClient = new PaymentsClient(_apiClient.Object, _configuration.Object);
+
+            var response = await paymentsClient.RequestPayment(paymentRequest, null, CancellationToken.None);
+
+            response.ShouldNotBeNull();
+            response.ShouldBeSameAs(paymentResponse);
+        }
+
+
+        private class CustomSource : AbstractRequestSource
+        {
+            public CustomSource() : base(PaymentSourceType.Alipay)
+            {
+            }
+
+            public long? amount { get; set; }
+
+            public Currency? currency { get; set; }
         }
 
         [Fact]
