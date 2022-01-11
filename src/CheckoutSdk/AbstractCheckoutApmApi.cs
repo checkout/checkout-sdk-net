@@ -12,7 +12,8 @@ namespace Checkout
 
         protected AbstractCheckoutApmApi(CheckoutConfiguration configuration)
         {
-            var apiClient = new ApiClient(configuration);
+            var apiClient = new ApiClient(configuration.HttpClientFactory,
+                configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri);
             _idealClient = new IdealClient(apiClient, configuration);
             _klarnaClient = new KlarnaClient(apiClient, configuration);
             _sepaClient = new SepaClient(apiClient, configuration);

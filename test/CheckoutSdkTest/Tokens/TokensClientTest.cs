@@ -20,7 +20,7 @@ namespace Checkout.Tokens
                 .Returns(_authorization);
 
             _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Sandbox, _httpClientFactory.Object);
+                Environment.Sandbox, _httpClientFactory.Object, Environment.Sandbox);
         }
 
         [Fact]
@@ -49,8 +49,7 @@ namespace Checkout.Tokens
 
             _apiClient.Setup(apiClient =>
                     apiClient.Post<TokenResponse>("tokens", _authorization, googlePayTokenRequest,
-                        CancellationToken.None
-                        , null))
+                        CancellationToken.None, null))
                 .ReturnsAsync(() => tokenResponse);
 
             ITokensClient tokensClient = new TokensClient(_apiClient.Object, _configuration.Object);

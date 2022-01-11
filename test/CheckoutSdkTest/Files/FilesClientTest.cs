@@ -1,9 +1,9 @@
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using Checkout.Common;
 using Moq;
 using Shouldly;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Files
@@ -22,9 +22,8 @@ namespace Checkout.Files
                 .Returns(_authorization);
 
             _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Sandbox, _httpClientFactory.Object);
+                Environment.Sandbox, _httpClientFactory.Object, Environment.Sandbox);
         }
-
 
         [Fact]
         private async Task ShouldSubmitFile()
@@ -33,11 +32,15 @@ namespace Checkout.Files
             var idResponse = new IdResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<IdResponse>("files", _authorization, It.IsAny<MultipartFormDataContent>(),
-                        CancellationToken.None, null))
+                    apiClient.Post<IdResponse>(
+                        "files",
+                        _authorization,
+                        It.IsAny<MultipartFormDataContent>(),
+                        CancellationToken.None,
+                        null))
                 .ReturnsAsync(() => idResponse);
 
-            IFilesClient client = new FilesClient(_apiClient.Object, _configuration.Object);
+            IFilesClient client = new FilesClient(_apiClient.Object, null, _configuration.Object);
 
             var response = await client.SubmitFile(filePath, "dispute_evidence");
 
@@ -54,7 +57,7 @@ namespace Checkout.Files
                     apiClient.Get<FileDetailsResponse>($"files/{fileId}", _authorization, CancellationToken.None))
                 .ReturnsAsync(() => idResponse);
 
-            IFilesClient client = new FilesClient(_apiClient.Object, _configuration.Object);
+            IFilesClient client = new FilesClient(_apiClient.Object, null, _configuration.Object);
 
             var response = await client.GetFileDetails(fileId);
 

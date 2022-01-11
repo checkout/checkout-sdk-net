@@ -23,7 +23,7 @@ namespace Checkout.Sessions
         private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
         private readonly Mock<CheckoutConfiguration> _configuration;
 
-        private SessionsClient _sessionsClient;
+        private ISessionsClient _sessionsClient;
 
         private static readonly SdkAuthorization SessionSecretAuthorization =
             new SessionSecretSdkCredentials("sessionSecret").GetSdkAuthorization(SdkAuthorizationType.Custom);
@@ -45,7 +45,7 @@ namespace Checkout.Sessions
                 .Returns(new SdkAuthorization(PlatformType.FourOAuth, string.Empty));
 
             _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Sandbox, _httpClientFactory.Object);
+                Environment.Sandbox, _httpClientFactory.Object, Environment.Sandbox);
         }
 
         [Fact]

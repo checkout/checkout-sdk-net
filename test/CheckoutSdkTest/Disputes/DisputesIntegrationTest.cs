@@ -10,7 +10,7 @@ namespace Checkout.Disputes
         [Fact]
         private async Task ShouldQueryDisputes()
         {
-            var request = new DisputesQueryFilter()
+            var request = new DisputesQueryFilter
             {
                 Limit = 250
             };

@@ -2,6 +2,7 @@ using Checkout.Customers.Four;
 using Checkout.Disputes.Four;
 using Checkout.Forex;
 using Checkout.Instruments.Four;
+using Checkout.Marketplace;
 using Checkout.Payments.Four;
 using Checkout.Risk;
 using Checkout.Sessions;
@@ -29,5 +30,7 @@ namespace Checkout.Four
         IWorkflowsClient WorkflowsClient();
 
         ISessionsClient SessionsClient();
+
+        IMarketplaceClient MarketplaceClient();
     }
 }

@@ -1,3 +1,6 @@
+using Checkout.Common;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,21 +10,22 @@ using System.Net.Mime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Checkout.Common;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace Checkout
 {
     public class ApiClient : IApiClient
     {
-        private readonly ITransport _transport;
-        private readonly ISerializer _serializer;
+        private readonly ILogger _log = LogProvider.GetLogger(typeof(ApiClient));
 
-        public ApiClient(CheckoutConfiguration configuration)
+        private readonly HttpClient _httpClient;
+        private readonly ISerializer _serializer = new JsonSerializer();
+
+        public ApiClient(IHttpClientFactory httpClientFactory, Uri baseUri)
         {
-            CheckoutUtils.ValidateParams("configuration", configuration);
-            _serializer = new JsonSerializer();
-            _transport = new HttpClientTransport(configuration);
+            CheckoutUtils.ValidateParams("httpClientFactory", httpClientFactory, "baseUri", baseUri);
+            var httpClient = httpClientFactory.CreateClient();
+            httpClient.BaseAddress = baseUri;
+            _httpClient = httpClient;
         }
 
         public async Task<TResult> Get<TResult>(
@@ -55,11 +59,14 @@ namespace Checkout
                 cancellationToken,
                 idempotencyKey
             );
+
             return await DeserializeJsonAsync<TResult>(httpResponse);
         }
 
-        public async Task<TResult> Post<TResult>(string path, SdkAuthorization authorization, IDictionary<int, Type> resultTypeMappings, 
-            object request = null, CancellationToken cancellationToken = default, string idempotencyKey = null) where TResult : Resource
+        public async Task<TResult> Post<TResult>(string path, SdkAuthorization authorization,
+            IDictionary<int, Type> resultTypeMappings,
+            object request = null, CancellationToken cancellationToken = default, string idempotencyKey = null)
+            where TResult : Resource
         {
             using var httpResponse = await SendRequestAsync(
                 HttpMethod.Post,
@@ -73,7 +80,8 @@ namespace Checkout
             resultTypeMappings.TryGetValue((int)httpResponse.StatusCode, out var responseType);
 
             if (responseType == null)
-                throw new InvalidOperationException($"The status code {(int)httpResponse.StatusCode} is not mapped to a result type");
+                throw new InvalidOperationException(
+                    $"The status code {(int)httpResponse.StatusCode} is not mapped to a result type");
 
             return await DeserializeJsonAsync(httpResponse, responseType);
         }
@@ -132,7 +140,7 @@ namespace Checkout
         {
             var json = _serializer.Serialize(request);
             var dictionary =
-                (IDictionary<string, string>) _serializer.Deserialize(json, typeof(IDictionary<string, string>));
+                (IDictionary<string, string>)_serializer.Deserialize(json, typeof(IDictionary<string, string>));
             using var httpResponse = await SendRequestAsync(
                 HttpMethod.Get,
                 QueryHelpers.AddQueryString(path, dictionary),
@@ -168,7 +176,7 @@ namespace Checkout
                 }
             }
 
-            var httpResponse = await _transport.Invoke(
+            HttpResponseMessage httpResponse = await Invoke(
                 httpMethod,
                 path,
                 authorization,
@@ -179,6 +187,30 @@ namespace Checkout
             await ValidateResponseAsync(httpResponse);
 
             return httpResponse;
+        }
+
+        private async Task<HttpResponseMessage> Invoke(
+            HttpMethod httpMethod,
+            string path,
+            SdkAuthorization authorization,
+            HttpContent httpContent,
+            CancellationToken cancellationToken,
+            string idempotencyKey)
+        {
+            CheckoutUtils.ValidateParams("httpMethod", httpMethod, "path", path, "authorization", authorization);
+            var httpRequest = new HttpRequestMessage(httpMethod, path) {Content = httpContent};
+            _log.LogInformation(@"{HttpMethod}: {Path}", httpMethod, path);
+
+            httpRequest.Headers.UserAgent.ParseAdd(
+                "checkout-sdk-net/" + CheckoutUtils.GetAssemblyVersion<CheckoutSdk>());
+            httpRequest.Headers.TryAddWithoutValidation("Authorization", authorization.GetAuthorizationHeader());
+
+            if (!string.IsNullOrWhiteSpace(idempotencyKey))
+            {
+                httpRequest.Headers.Add("Cko-Idempotency-Key", idempotencyKey);
+            }
+
+            return await _httpClient.SendAsync(httpRequest, cancellationToken);
         }
 
         private async Task ValidateResponseAsync(HttpResponseMessage httpResponse)
@@ -198,7 +230,7 @@ namespace Checkout
         private async Task<TResult> DeserializeJsonAsync<TResult>(HttpResponseMessage httpResponse)
         {
             var result = await DeserializeJsonAsync(httpResponse, typeof(TResult));
-            return (TResult) result;
+            return (TResult)result;
         }
 
         private async Task<dynamic> DeserializeJsonAsync(HttpResponseMessage httpResponse, Type resultType)
@@ -211,6 +243,6 @@ namespace Checkout
 
             var json = await httpResponse.Content.ReadAsStringAsync();
             return _serializer.Deserialize(json, resultType);
-        }        
+        }
     }
 }

@@ -43,7 +43,7 @@ namespace Checkout.Workflows.Four
             reflowResponse.ShouldBeNull();
         }
 
-        [Fact(Timeout = 180000)]
+        [Fact(Timeout = 180000, Skip = "unstable")]
         public async Task ShouldReflowByEventAndWorkflow()
         {
             CreateWorkflowResponse createWorkflowResponse = await CreateWorkflow();
@@ -60,7 +60,7 @@ namespace Checkout.Workflows.Four
             reflowResponse.ShouldBeNull();
         }
 
-        [Fact(Timeout = 180000)]
+        [Fact(Timeout = 180000, Skip = "unstable")]
         public async Task ShouldReflowBySubjectAndWorkflow()
         {
             CreateWorkflowResponse createWorkflowResponse = await CreateWorkflow();

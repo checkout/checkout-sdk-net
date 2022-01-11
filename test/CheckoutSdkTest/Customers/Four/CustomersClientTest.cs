@@ -1,8 +1,8 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Checkout.Common;
 using Moq;
 using Shouldly;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Customers.Four
@@ -21,7 +21,7 @@ namespace Checkout.Customers.Four
                 .Returns(_authorization);
 
             _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Sandbox, _httpClientFactory.Object);
+                Environment.Sandbox, _httpClientFactory.Object, Environment.Sandbox);
         }
 
         [Fact]

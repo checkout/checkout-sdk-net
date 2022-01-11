@@ -1,11 +1,11 @@
-using System.Collections.Generic;
-using System.Net.Http;
 using CheckoutSDK.Extensions.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Shouldly;
+using System.Collections.Generic;
+using System.Net.Http;
 using Xunit;
 
 namespace Checkout.Extensions
@@ -62,10 +62,7 @@ namespace Checkout.Extensions
         private void ShouldCreateCheckoutFourOAuthApiSingleton()
         {
             var loggerFactoryMock = new Mock<ILoggerFactory>();
-            var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(mock => mock.CreateClient())
-                .Returns(new HttpClient());
-
+            var httpClientFactory = new DefaultHttpClientFactory();
             IEnumerable<KeyValuePair<string, string>> credentials = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("Checkout:ClientId",
@@ -80,13 +77,11 @@ namespace Checkout.Extensions
 
             IServiceCollection services = new ServiceCollection();
             CheckoutServiceCollection.AddCheckoutSdk(services, configuration, loggerFactoryMock.Object,
-                httpClientFactoryMock.Object);
+                httpClientFactory);
 
             var serviceProvider = services.BuildServiceProvider();
             var checkoutApi = serviceProvider.GetService<Four.ICheckoutApi>();
             checkoutApi.ShouldNotBeNull();
-
-            httpClientFactoryMock.Verify(mock => mock.CreateClient());
         }
     }
 }

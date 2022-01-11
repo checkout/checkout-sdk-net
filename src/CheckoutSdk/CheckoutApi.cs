@@ -30,7 +30,8 @@ namespace Checkout
 
         public CheckoutApi(CheckoutConfiguration configuration) : base(configuration)
         {
-            var apiClient = new ApiClient(configuration);
+            var apiClient = new ApiClient(configuration.HttpClientFactory,
+                configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri);
             _tokensClient = new TokensClient(apiClient, configuration);
             _customersClient = new CustomersClient(apiClient, configuration);
             _sourcesClient = new SourcesClient(apiClient, configuration);
@@ -40,7 +41,7 @@ namespace Checkout
             _webhooksClient = new WebhooksClient(apiClient, configuration);
             _eventsClient = new EventsClient(apiClient, configuration);
             _riskClient = new RiskClient(apiClient, configuration);
-            _paymentLinksClient = new PaymentLinksClient(apiClient,configuration);
+            _paymentLinksClient = new PaymentLinksClient(apiClient, configuration);
             _reconciliationClient = new ReconciliationClient(apiClient, configuration);
             _hostedPaymentsClient = new HostedPaymentsClient(apiClient, configuration);
         }

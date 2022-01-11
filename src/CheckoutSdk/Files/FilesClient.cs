@@ -12,24 +12,27 @@ namespace Checkout.Files
     {
         private const string Files = "files";
 
-        private readonly IDictionary<string, string> _allowedMimeMapping = new Dictionary<string, string>
+        private static readonly IDictionary<string, string> AllowedMimeMapping = new Dictionary<string, string>
         {
-            {".jpg", "image/jpeg"},
-            {".jpeg", "image/jpeg"},
-            {".png", "image/png"},
-            {".pdf", "application/pdf"}
+            {".jpg", "image/jpeg"}, {".jpeg", "image/jpeg"}, {".png", "image/png"}, {".pdf", "application/pdf"}
         };
 
-        public FilesClient(IApiClient apiClient,
-            CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
+        private readonly IApiClient _filesApiClient;
+
+        public FilesClient(
+            IApiClient apiClient,
+            IApiClient filesApiClient,
+            CheckoutConfiguration configuration) : base(apiClient, configuration,
+            SdkAuthorizationType.SecretKeyOrOAuth)
         {
+            _filesApiClient = filesApiClient;
         }
 
         public Task<IdResponse> SubmitFile(string pathToFile, string purpose,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("pathToFile", pathToFile, "purpose", purpose);
-            var dataContent = CreateMultipartRequest(pathToFile, purpose);
+            var dataContent = CreateMultipartRequest(pathToFile, purpose, "file");
             return ApiClient.Post<IdResponse>(Files, SdkAuthorization(), dataContent, cancellationToken);
         }
 
@@ -39,7 +42,23 @@ namespace Checkout.Files
             return ApiClient.Get<FileDetailsResponse>(BuildPath(Files, fileId), SdkAuthorization(), cancellationToken);
         }
 
-        private MultipartFormDataContent CreateMultipartRequest(string pathToFile, string purpose)
+        public Task<IdResponse> SubmitFileToFilesApi(string pathToFile, string purpose,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("pathToFile", pathToFile, "purpose", purpose);
+            if (_filesApiClient == null)
+            {
+                throw new CheckoutFileException(
+                    "Files API is not enabled in this client. It must be enabled in CheckoutFourSdk configuration.");
+            }
+
+            var dataContent = CreateMultipartRequest(pathToFile, purpose, "path");
+            return _filesApiClient.Post<IdResponse>(Files, SdkAuthorization(SdkAuthorizationType.OAuth), dataContent,
+                cancellationToken);
+        }
+
+        private static MultipartFormDataContent CreateMultipartRequest(string pathToFile, string purpose,
+            string multipartHeaderName)
         {
             var fileInfo = new FileInfo(pathToFile);
             if (!fileInfo.Exists)
@@ -48,7 +67,7 @@ namespace Checkout.Files
                     $"The file in {pathToFile} does not exist");
             }
 
-            if (!_allowedMimeMapping.TryGetValue(fileInfo.Extension.ToLower(), out string mediaType))
+            if (!AllowedMimeMapping.TryGetValue(fileInfo.Extension.ToLower(), out string mediaType))
             {
                 throw new CheckoutFileException(
                     $"The file type {fileInfo.Extension} cannot be uploaded.\n Supported file types: JPG/JPEG, PNG and PDF.");
@@ -59,7 +78,7 @@ namespace Checkout.Files
             fileFieldStreamContent.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
             var purposeFieldStringContent = new StringContent(purpose);
             var dataContent = new MultipartFormDataContent();
-            dataContent.Add(fileFieldStreamContent, "file", fileInfo.Name);
+            dataContent.Add(fileFieldStreamContent, multipartHeaderName, fileInfo.Name);
             dataContent.Add(purposeFieldStringContent, "purpose");
             return dataContent;
         }

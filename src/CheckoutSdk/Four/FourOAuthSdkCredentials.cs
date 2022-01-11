@@ -1,8 +1,8 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using Microsoft.Extensions.Logging;
 
 namespace Checkout.Four
 {
@@ -10,7 +10,6 @@ namespace Checkout.Four
     {
         private readonly ILogger _log = LogProvider.GetLogger(typeof(FourOAuthSdkCredentials));
 
-        private readonly Uri _authorizationUri;
         private readonly string _clientId;
         private readonly string _clientSecret;
         private readonly JsonSerializer _serializer = new JsonSerializer();
@@ -31,12 +30,11 @@ namespace Checkout.Four
                 "clientId", clientId,
                 "clientSecret", clientSecret,
                 "scopes", scopes);
-
-            _authorizationUri = authorizationUri;
             _clientId = clientId;
             _clientSecret = clientSecret;
             _scopes = scopes;
             _httpClient = httpClientFactory.CreateClient();
+            _httpClient.BaseAddress = authorizationUri;
         }
 
         internal void InitAccess()
@@ -73,7 +71,7 @@ namespace Checkout.Four
             _log.LogInformation("requesting OAuth token using client_credentials flow");
             try
             {
-                var httpRequest = new HttpRequestMessage(HttpMethod.Post, _authorizationUri);
+                var httpRequest = new HttpRequestMessage(HttpMethod.Post, string.Empty);
                 var data = new List<KeyValuePair<string, string>>
                 {
                     new KeyValuePair<string, string>("client_id", _clientId),
@@ -83,7 +81,7 @@ namespace Checkout.Four
                 };
                 httpRequest.Content = new FormUrlEncodedContent(data);
                 var responseMessage = _httpClient.SendAsync(httpRequest).GetAwaiter().GetResult();
-                var oAuthServiceResponse = (OAuthServiceResponse) _serializer.Deserialize(
+                var oAuthServiceResponse = (OAuthServiceResponse)_serializer.Deserialize(
                     responseMessage.Content.ReadAsStringAsync().GetAwaiter().GetResult(),
                     typeof(OAuthServiceResponse));
                 if (!oAuthServiceResponse.IsValid())

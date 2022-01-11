@@ -6,7 +6,7 @@ namespace Checkout.Instruments.Four.Get
     public class BankAccountFieldQuery
     {
         [JsonProperty(PropertyName = "account-holder-type")]
-        public PaymentSenderType AccountHolderType { get; set; }
+        public AccountHolderType? AccountHolderType { get; set; }
 
         [JsonProperty(PropertyName = "payment-network")]
         public PaymentNetwork PaymentNetwork { get; set; }
