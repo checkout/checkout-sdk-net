@@ -4,11 +4,11 @@ namespace Checkout.Workflows.Four.Reflows
 {
     public abstract class ReflowRequest
     {
-        protected internal IList<string> Workflows { get; }
+        public IList<string> Workflows { get; set; }
 
-        protected internal ReflowRequest(IList<string> workflows)
+        protected ReflowRequest(IList<string> workflows)
         {
-            this.Workflows = workflows;
+            Workflows = workflows;
         }
     }
 }

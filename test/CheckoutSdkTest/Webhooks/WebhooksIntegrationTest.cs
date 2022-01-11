@@ -33,7 +33,7 @@ namespace Checkout.Webhooks
             }
         }
 
-        [Fact]
+        [Fact(Timeout = 180000)]
         private async Task ShouldTestFullWebhookOperations()
         {
             const string url = "https://checkout.com/webhooks";
@@ -45,10 +45,22 @@ namespace Checkout.Webhooks
             webhookResponse.ContentType.ShouldBe(WebhookContentType.Json);
             webhookResponse.EventTypes.ShouldBe(_eventTypes);
 
-            await Nap();
-
             //Retrieve webhook
-            var retrieveWebhook = await DefaultApi.WebhooksClient().RetrieveWebhook(webhookResponse.Id);
+            WebhookResponse retrieveWebhook = null;
+            while (retrieveWebhook == null)
+            {
+                try
+                {
+                    await Nap();
+                    retrieveWebhook = await DefaultApi.WebhooksClient().RetrieveWebhook(webhookResponse.Id);
+                }
+                catch (CheckoutApiException ex)
+                {
+                    //expected
+                    ex.HttpStatusCode.ShouldBe(HttpStatusCode.NotFound);
+                }
+            }
+
             retrieveWebhook.ShouldNotBeNull();
             retrieveWebhook.Id.ShouldBe(webhookResponse.Id);
             retrieveWebhook.Url.ShouldBe(webhookResponse.Url);

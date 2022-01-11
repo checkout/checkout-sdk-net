@@ -1,5 +1,3 @@
-using System.Net.Http.Headers;
-
 namespace Checkout
 {
     public sealed class SdkAuthorization

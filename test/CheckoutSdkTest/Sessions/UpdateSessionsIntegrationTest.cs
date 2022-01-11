@@ -1,11 +1,12 @@
-﻿using Shouldly;
+﻿using Checkout.Sessions.Channel;
+using Shouldly;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Sessions
 {
-    public class UpdateSessionsTestIT : AbstractSessionsTestIT
+    public class UpdateSessionsIntegrationTest : AbstractSessionsIntegrationTest
     {
         [Theory]
         [InlineData(true)]
@@ -34,8 +35,10 @@ namespace Checkout.Sessions
 
             GetSessionResponse updated;
 
-            updated = usingSessionSecret ? await FourApi.SessionsClient().UpdateSession(created.SessionSecret, created.Id, BrowserSession(), CancellationToken.None) :
-                await FourApi.SessionsClient().UpdateSession(created.Id, BrowserSession(), CancellationToken.None);
+            updated = usingSessionSecret
+                ? await FourApi.SessionsClient().UpdateSession(created.SessionSecret, created.Id, BrowserSession(),
+                    CancellationToken.None)
+                : await FourApi.SessionsClient().UpdateSession(created.Id, BrowserSession(), CancellationToken.None);
 
             updated.ShouldNotBeNull();
             updated.Id.ShouldNotBeNull();
@@ -83,7 +86,8 @@ namespace Checkout.Sessions
             created.GetLink("failure_url").ShouldNotBeNull();
             created.GetLink("redirect_url").ShouldNotBeNull();
 
-            var updated = await FourApi.SessionsClient().UpdateSession(created.Id, AppSession(), CancellationToken.None);
+            var updated = await FourApi.SessionsClient()
+                .UpdateSession(created.Id, AppSession(), CancellationToken.None);
 
             updated.ShouldNotBeNull();
             updated.Id.ShouldNotBeNull();
@@ -115,13 +119,16 @@ namespace Checkout.Sessions
 
             var threeDsMethodCompletionRequest = new ThreeDsMethodCompletionRequest()
             {
-                ThreeDsMethodCompletion = Channel.ThreeDsMethodCompletion.Y
+                ThreeDsMethodCompletion = ThreeDsMethodCompletion.Y
             };
 
             GetSessionResponseAfterChannelDataSupplied updated;
 
-            updated = usingSessionSecret ? await FourApi.SessionsClient().Update3dsMethodCompletionIndicator(created.Id, threeDsMethodCompletionRequest, CancellationToken.None) :
-                await FourApi.SessionsClient().Update3dsMethodCompletionIndicator(created.SessionSecret, created.Id, threeDsMethodCompletionRequest, CancellationToken.None);
+            updated = usingSessionSecret
+                ? await FourApi.SessionsClient().Update3dsMethodCompletionIndicator(created.Id,
+                    threeDsMethodCompletionRequest, CancellationToken.None)
+                : await FourApi.SessionsClient().Update3dsMethodCompletionIndicator(created.SessionSecret, created.Id,
+                    threeDsMethodCompletionRequest, CancellationToken.None);
 
             updated.ShouldNotBeNull();
         }

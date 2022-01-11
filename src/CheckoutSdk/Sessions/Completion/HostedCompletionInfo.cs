@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace Checkout.Sessions.Completion
+﻿namespace Checkout.Sessions.Completion
 {
     public class HostedCompletionInfo : CompletionInfo
     {        

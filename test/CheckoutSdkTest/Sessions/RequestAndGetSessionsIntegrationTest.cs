@@ -1,21 +1,21 @@
 ﻿using Shouldly;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Sessions
 {
-    public class RequestAndGetSessionsTestIT : AbstractSessionsTestIT
+    public class RequestAndGetSessionsIntegrationTest : AbstractSessionsIntegrationTest
     {
         [Theory]
         [MemberData(nameof(SessionsTypes))]
         private async Task ShouldRequestAndGetCardSessionBrowserSession(Category category,
-                                                       ChallengeIndicator challengeIndicator,
-                                                        TransactionType transactionType)
+            ChallengeIndicator challengeIndicator,
+            TransactionType transactionType)
         {
             var browserSession = BrowserSession();
-            var sessionResponse = await CreateNonHostedSession(browserSession, category, challengeIndicator, transactionType);
+            var sessionResponse =
+                await CreateNonHostedSession(browserSession, category, challengeIndicator, transactionType);
 
             sessionResponse.ShouldNotBeNull();
             sessionResponse.Created.ShouldNotBeNull();
@@ -57,7 +57,7 @@ namespace Checkout.Sessions
             getSessionResponse.AuthenticationType.ShouldBe(AuthenticationType.Regular);
             getSessionResponse.AuthenticationCategory.ShouldBe(category);
             getSessionResponse.Status.ShouldBe(SessionStatus.Challenged);
-            getSessionResponse.NextActions.Count().ShouldBe(1);
+            getSessionResponse.NextActions.Count.ShouldBe(1);
             getSessionResponse.NextActions[0].ShouldBe(NextAction.ChallengeCardHolder);
             getSessionResponse.TransactionType.ShouldBe(transactionType);
             getSessionResponse.ResponseCode.ShouldBe(ResponseCode.C);
@@ -66,7 +66,8 @@ namespace Checkout.Sessions
             getSessionResponse.GetLink("callback_url").ShouldNotBeNull();
             getSessionResponse.Completed.ShouldBe(false);
 
-            var getSessionSecretSessionResponse = await FourApi.SessionsClient().GetSessionDetails(response.SessionSecret, response.Id);
+            var getSessionSecretSessionResponse =
+                await FourApi.SessionsClient().GetSessionDetails(response.SessionSecret, response.Id);
 
             getSessionSecretSessionResponse.Certificates.ShouldBeNull();
             getSessionSecretSessionResponse.SessionSecret.ShouldBeNull();
@@ -81,7 +82,7 @@ namespace Checkout.Sessions
             getSessionSecretSessionResponse.AuthenticationType.ShouldBe(AuthenticationType.Regular);
             getSessionSecretSessionResponse.AuthenticationCategory.ShouldBe(category);
             getSessionSecretSessionResponse.Status.ShouldBe(SessionStatus.Challenged);
-            getSessionSecretSessionResponse.NextActions.Count().ShouldBe(1);
+            getSessionSecretSessionResponse.NextActions.Count.ShouldBe(1);
             getSessionSecretSessionResponse.NextActions[0].ShouldBe(NextAction.ChallengeCardHolder);
             getSessionSecretSessionResponse.TransactionType.ShouldBe(transactionType);
             getSessionSecretSessionResponse.ResponseCode.ShouldBe(ResponseCode.C);
@@ -94,12 +95,13 @@ namespace Checkout.Sessions
         [Theory]
         [MemberData(nameof(SessionsTypes))]
         private async Task ShouldRequestAndGetCardSessionAppSession(Category category,
-                                                       ChallengeIndicator challengeIndicator,
-                                                        TransactionType transactionType)
+            ChallengeIndicator challengeIndicator,
+            TransactionType transactionType)
         {
             var appSession = AppSession();
 
-            var sessionResponse = await CreateNonHostedSession(appSession, category, challengeIndicator, transactionType);
+            var sessionResponse =
+                await CreateNonHostedSession(appSession, category, challengeIndicator, transactionType);
 
             sessionResponse.ShouldNotBeNull();
             sessionResponse.Created.ShouldNotBeNull();
@@ -116,7 +118,7 @@ namespace Checkout.Sessions
             response.AuthenticationType.ShouldBe(AuthenticationType.Regular);
             response.AuthenticationCategory.ShouldBe(category);
             response.Status.ShouldBe(SessionStatus.Challenged);
-            response.NextActions.Count().ShouldBe(1);
+            response.NextActions.Count.ShouldBe(1);
             response.NextActions[0].ShouldBe(NextAction.Authenticate);
             response.TransactionType.ShouldBe(transactionType);
 
@@ -140,7 +142,7 @@ namespace Checkout.Sessions
             getSessionResponse.AuthenticationType.ShouldBe(AuthenticationType.Regular);
             getSessionResponse.AuthenticationCategory.ShouldBe(category);
             getSessionResponse.Status.ShouldBe(SessionStatus.Challenged);
-            getSessionResponse.NextActions.Count().ShouldBe(1);
+            getSessionResponse.NextActions.Count.ShouldBe(1);
             getSessionResponse.NextActions[0].ShouldBe(NextAction.Authenticate);
             getSessionResponse.TransactionType.ShouldBe(transactionType);
             getSessionResponse.ResponseCode.ShouldBeNull();
@@ -149,7 +151,8 @@ namespace Checkout.Sessions
             getSessionResponse.GetLink("callback_url").ShouldNotBeNull();
             getSessionResponse.Completed.ShouldBe(false);
 
-            var getSessionSecretSessionResponse = await FourApi.SessionsClient().GetSessionDetails(response.SessionSecret, response.Id);
+            var getSessionSecretSessionResponse =
+                await FourApi.SessionsClient().GetSessionDetails(response.SessionSecret, response.Id);
 
             getSessionSecretSessionResponse.Certificates.ShouldBeNull();
             getSessionSecretSessionResponse.SessionSecret.ShouldBeNull();
@@ -164,7 +167,7 @@ namespace Checkout.Sessions
             getSessionSecretSessionResponse.AuthenticationType.ShouldBe(AuthenticationType.Regular);
             getSessionSecretSessionResponse.AuthenticationCategory.ShouldBe(category);
             getSessionSecretSessionResponse.Status.ShouldBe(SessionStatus.Challenged);
-            getSessionSecretSessionResponse.NextActions.Count().ShouldBe(1);
+            getSessionSecretSessionResponse.NextActions.Count.ShouldBe(1);
             getSessionSecretSessionResponse.NextActions[0].ShouldBe(NextAction.Authenticate);
             getSessionSecretSessionResponse.TransactionType.ShouldBe(transactionType);
             getSessionSecretSessionResponse.ResponseCode.ShouldBeNull();
@@ -177,9 +180,16 @@ namespace Checkout.Sessions
         public static IEnumerable<object[]> SessionsTypes =>
             new List<object[]>
             {
-              new object[] { Category.Payment, ChallengeIndicator.NoPreference, TransactionType.GoodsService },
-              new object[] { Category.NonPayment, ChallengeIndicator.ChallengeRequested, TransactionType.CheckAcceptance },
-              new object[] { Category.NonPayment, ChallengeIndicator.ChallengeRequestedMandate, TransactionType.AccountFunding }
+                new object[] {Category.Payment, ChallengeIndicator.NoPreference, TransactionType.GoodsService},
+                new object[]
+                {
+                    Category.NonPayment, ChallengeIndicator.ChallengeRequested, TransactionType.CheckAcceptance
+                },
+                new object[]
+                {
+                    Category.NonPayment, ChallengeIndicator.ChallengeRequestedMandate,
+                    TransactionType.AccountFunding
+                }
             };
     }
 }

@@ -1,5 +1,4 @@
 using Checkout.Common;
-using Checkout.Sessions;
 using System;
 using System.Collections.Generic;
 using System.Threading;
