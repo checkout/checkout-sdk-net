@@ -10,18 +10,18 @@ using Xunit;
 
 namespace Checkout.Sessions
 {
-    public class SessionsClientTest
+    public class SessionsClientTest : UnitTestFixture
     {
         private const string Sessions = "sessions";
         private const string CollectData = "collect-data";
         private const string Complete = "complete";
         private const string IssuerFingerprint = "issuer-fingerprint";
 
+        private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.Default, ValidDefaultPk);
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
-        private readonly Mock<CheckoutConfiguration> _configuration;
-        private readonly Mock<SdkCredentials> _credentials = new Mock<SdkCredentials>(PlatformType.Default);
-        private readonly SdkAuthorization _authorization;
+        private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Default);
         private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
+        private readonly Mock<CheckoutConfiguration> _configuration;
 
         private SessionsClient _sessionsClient;
 
@@ -38,13 +38,13 @@ namespace Checkout.Sessions
 
         public SessionsClientTest()
         {
-            _credentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.OAuth))
+            _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.OAuth))
                 .Returns(_authorization);
 
-            _credentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth))
+            _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth))
                 .Returns(new SdkAuthorization(PlatformType.FourOAuth, string.Empty));
 
-            _configuration = new Mock<CheckoutConfiguration>(_credentials.Object,
+            _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
                 Environment.Sandbox, _httpClientFactory.Object);
         }
 
@@ -55,7 +55,9 @@ namespace Checkout.Sessions
             var response = new Mock<CreateSessionOkResponse>();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<Resource>(Sessions, _credentials.Object.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth), SessionResponseMappings, request.Object,
+                    apiClient.Post<Resource>(Sessions,
+                        _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth),
+                        SessionResponseMappings, request.Object,
                         CancellationToken.None, null))
                 .ReturnsAsync(() => response.Object);
 
@@ -75,7 +77,9 @@ namespace Checkout.Sessions
             var response = new Mock<CreateSessionAcceptedResponse>();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<Resource>(Sessions, _credentials.Object.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth), SessionResponseMappings, request.Object,
+                    apiClient.Post<Resource>(Sessions,
+                        _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth),
+                        SessionResponseMappings, request.Object,
                         CancellationToken.None, null))
                 .ReturnsAsync(() => response.Object);
 
@@ -110,7 +114,9 @@ namespace Checkout.Sessions
             var response = new Mock<GetSessionResponse>();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<GetSessionResponse>($"{Sessions}/id", _credentials.Object.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth), CancellationToken.None))
+                    apiClient.Get<GetSessionResponse>($"{Sessions}/id",
+                        _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth),
+                        CancellationToken.None))
                 .ReturnsAsync(() => response.Object);
 
             _sessionsClient = new SessionsClient(_apiClient.Object, _configuration.Object);
@@ -126,12 +132,14 @@ namespace Checkout.Sessions
             var response = new Mock<GetSessionResponse>();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<GetSessionResponse>($"{Sessions}/id", SessionSecretAuthorization, CancellationToken.None))
+                    apiClient.Get<GetSessionResponse>($"{Sessions}/id", SessionSecretAuthorization,
+                        CancellationToken.None))
                 .ReturnsAsync(() => response.Object);
 
             _sessionsClient = new SessionsClient(_apiClient.Object, _configuration.Object);
 
-            var getSessionResponse = await _sessionsClient.GetSessionDetails("sessionSecret", "id", CancellationToken.None);
+            var getSessionResponse =
+                await _sessionsClient.GetSessionDetails("sessionSecret", "id", CancellationToken.None);
 
             getSessionResponse.ShouldNotBeNull();
         }
@@ -175,7 +183,9 @@ namespace Checkout.Sessions
             var response = new Mock<GetSessionResponse>();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Put<GetSessionResponse>($"{Sessions}/id/{CollectData}", _credentials.Object.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth), request.Object,
+                    apiClient.Put<GetSessionResponse>($"{Sessions}/id/{CollectData}",
+                        _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth),
+                        request.Object,
                         CancellationToken.None, null))
                 .ReturnsAsync(() => response.Object);
 
@@ -193,13 +203,15 @@ namespace Checkout.Sessions
             var response = new Mock<GetSessionResponse>();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Put<GetSessionResponse>($"{Sessions}/id/{CollectData}", SessionSecretAuthorization, request.Object,
+                    apiClient.Put<GetSessionResponse>($"{Sessions}/id/{CollectData}", SessionSecretAuthorization,
+                        request.Object,
                         CancellationToken.None, null))
                 .ReturnsAsync(() => response.Object);
 
             _sessionsClient = new SessionsClient(_apiClient.Object, _configuration.Object);
 
-            var getSessionResponse = await _sessionsClient.UpdateSession("sessionSecret", "id", request.Object, CancellationToken.None);
+            var getSessionResponse =
+                await _sessionsClient.UpdateSession("sessionSecret", "id", request.Object, CancellationToken.None);
 
             getSessionResponse.ShouldNotBeNull();
         }
@@ -301,7 +313,8 @@ namespace Checkout.Sessions
 
             _sessionsClient = new SessionsClient(_apiClient.Object, _configuration.Object);
 
-            var completeSessionResponse = _sessionsClient.CompleteSession("sessionSecret", "id", CancellationToken.None);
+            var completeSessionResponse =
+                _sessionsClient.CompleteSession("sessionSecret", "id", CancellationToken.None);
             await completeSessionResponse;
             completeSessionResponse.IsCompleted.ShouldBe(true);
         }
@@ -345,13 +358,16 @@ namespace Checkout.Sessions
             var response = new Mock<GetSessionResponseAfterChannelDataSupplied>();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Put<GetSessionResponseAfterChannelDataSupplied>($"{Sessions}/id/{IssuerFingerprint}", _credentials.Object.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth), request.Object,
+                    apiClient.Put<GetSessionResponseAfterChannelDataSupplied>($"{Sessions}/id/{IssuerFingerprint}",
+                        _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth),
+                        request.Object,
                         CancellationToken.None, null))
                 .ReturnsAsync(() => response.Object);
 
             _sessionsClient = new SessionsClient(_apiClient.Object, _configuration.Object);
 
-            var getSessionResponse = await _sessionsClient.Update3dsMethodCompletionIndicator("id", request.Object, CancellationToken.None);
+            var getSessionResponse =
+                await _sessionsClient.Update3dsMethodCompletionIndicator("id", request.Object, CancellationToken.None);
 
             getSessionResponse.ShouldNotBeNull();
         }
@@ -363,13 +379,15 @@ namespace Checkout.Sessions
             var response = new Mock<GetSessionResponseAfterChannelDataSupplied>();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Put<GetSessionResponseAfterChannelDataSupplied>($"{Sessions}/id/{IssuerFingerprint}", SessionSecretAuthorization, request.Object,
+                    apiClient.Put<GetSessionResponseAfterChannelDataSupplied>($"{Sessions}/id/{IssuerFingerprint}",
+                        SessionSecretAuthorization, request.Object,
                         CancellationToken.None, null))
                 .ReturnsAsync(() => response.Object);
 
             _sessionsClient = new SessionsClient(_apiClient.Object, _configuration.Object);
 
-            var getSessionResponse = await _sessionsClient.Update3dsMethodCompletionIndicator("sessionSecret", "id", request.Object,
+            var getSessionResponse = await _sessionsClient.Update3dsMethodCompletionIndicator("sessionSecret", "id",
+                request.Object,
                 CancellationToken.None);
 
             getSessionResponse.ShouldNotBeNull();
@@ -409,7 +427,8 @@ namespace Checkout.Sessions
             try
             {
                 _sessionsClient = new SessionsClient(_apiClient.Object, _configuration.Object);
-                await _sessionsClient.Update3dsMethodCompletionIndicator("sessionSecret", null, null, CancellationToken.None);
+                await _sessionsClient.Update3dsMethodCompletionIndicator("sessionSecret", null, null,
+                    CancellationToken.None);
             }
             catch (Exception ex)
             {
@@ -421,7 +440,8 @@ namespace Checkout.Sessions
             try
             {
                 _sessionsClient = new SessionsClient(_apiClient.Object, _configuration.Object);
-                await _sessionsClient.Update3dsMethodCompletionIndicator("sessionSecret", "id", null, CancellationToken.None);
+                await _sessionsClient.Update3dsMethodCompletionIndicator("sessionSecret", "id", null,
+                    CancellationToken.None);
             }
             catch (Exception ex)
             {
@@ -433,7 +453,8 @@ namespace Checkout.Sessions
             try
             {
                 _sessionsClient = new SessionsClient(_apiClient.Object, _configuration.Object);
-                await _sessionsClient.Update3dsMethodCompletionIndicator(null, "id", new ThreeDsMethodCompletionRequest(),
+                await _sessionsClient.Update3dsMethodCompletionIndicator(null, "id",
+                    new ThreeDsMethodCompletionRequest(),
                     CancellationToken.None);
             }
             catch (Exception ex)

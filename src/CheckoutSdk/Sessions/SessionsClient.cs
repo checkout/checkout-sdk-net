@@ -87,7 +87,7 @@ namespace Checkout.Sessions
                     return new SessionResponse(sessionAccepted);
 
                 default:
-                    throw new System.InvalidOperationException("Unexpected mapping type " + resource.GetType());
+                    throw new InvalidOperationException("Unexpected mapping type " + resource.GetType());
             }
         }
 

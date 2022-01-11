@@ -19,9 +19,6 @@ namespace Checkout.Workflows.Four
         private const string REFLOW = "reflow";
         private const string SUBJECT = "subject";
         private const string WORKFLOW_ID = "workflowId";
-
-        private IList<EventTypesResponse> EventTypesResponse = new List<EventTypesResponse>();
-
         public WorkflowsClient(IApiClient apiClient, CheckoutConfiguration configuration) :
             base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
         {

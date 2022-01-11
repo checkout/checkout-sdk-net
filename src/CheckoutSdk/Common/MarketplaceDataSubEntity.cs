@@ -6,7 +6,11 @@
 
         public long? Amount { get; set; }
 
-        public class Comission
+        public string Reference { get; set; }
+
+        public MarketPlaceCommission Commission { get; set; }
+
+        public class MarketPlaceCommission
         {
             public long? Amount { get; set; }
 

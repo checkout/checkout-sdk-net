@@ -2,11 +2,11 @@
 {
     public abstract class WorkflowActionRequest
     {
-        public WorkflowActionType Type { get; }
+        public WorkflowActionType Type { get; set; }
 
-        protected internal WorkflowActionRequest(WorkflowActionType type)
+        protected WorkflowActionRequest(WorkflowActionType type)
         {
-            this.Type = type;
+            Type = type;
         }
     }
 }

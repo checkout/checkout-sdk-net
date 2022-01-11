@@ -2,11 +2,11 @@
 {
     public abstract class WorkflowConditionRequest
     {
-        public WorkflowConditionType Type { get; }
+        public WorkflowConditionType Type { get; set; }
 
-        public WorkflowConditionRequest(WorkflowConditionType type)
+        protected WorkflowConditionRequest(WorkflowConditionType type)
         {
-            this.Type = type;
+            Type = type;
         }
     }
 }

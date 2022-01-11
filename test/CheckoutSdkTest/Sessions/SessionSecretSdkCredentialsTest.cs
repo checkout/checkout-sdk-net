@@ -1,6 +1,7 @@
 ﻿using Shouldly;
 using System;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Checkout.Sessions
 {
@@ -12,6 +13,7 @@ namespace Checkout.Sessions
             try
             {
                 new SessionSecretSdkCredentials(null);
+                throw new XunitException();
             }
             catch (Exception ex)
             {
@@ -45,6 +47,7 @@ namespace Checkout.Sessions
             try
             {
                 credentials.GetSdkAuthorization(SdkAuthorizationType.OAuth);
+                throw new XunitException();
             }
             catch (Exception ex)
             {

@@ -1,36 +1,20 @@
 ﻿using Checkout.Common;
-using Newtonsoft.Json;
 
 namespace Checkout.Sessions.Source
 {
     public abstract class SessionSource
     {
-        [JsonProperty(PropertyName = "type")]
-        protected readonly SessionSourceType Type;
+        public SessionSourceType Type { get; set; }
 
-        [JsonProperty(PropertyName = "billing_address")]
-        protected SessionAddress _billingAddress;
+        public SessionAddress BillingAddress { get; set; }
 
-        [JsonProperty(PropertyName = "home_phone")]
-        protected Phone _homePhone;
+        public Phone HomePhone { get; set; }
 
-        [JsonProperty(PropertyName = "mobile_phone")]
-        protected Phone _mobilePhone;
+        public Phone MobilePhone { get; set; }
 
-        [JsonProperty(PropertyName = "work_phone")]
-        protected Phone _workPhone;
+        public Phone WorkPhone { get; set; }
 
-        protected SessionSource(SessionSourceType type, SessionAddress billingAddress, Phone homePhone,
-            Phone mobilePhone, Phone workPhone)
-        {
-            Type = type;
-            _billingAddress = billingAddress;
-            _homePhone = homePhone;
-            _mobilePhone = mobilePhone;
-            _workPhone = workPhone;
-        }
-
-        protected internal SessionSource(SessionSourceType type)
+        protected SessionSource(SessionSourceType type)
         {
             Type = type;
         }

@@ -1,11 +1,12 @@
 ﻿using Shouldly;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Sessions
 {
-    public class CompleteSessionsTestIT : AbstractSessionsTestIT
+    public class CompleteSessionsIntegrationTest : AbstractSessionsIntegrationTest
     {
         [Theory]
         [InlineData(true)]
@@ -54,7 +55,7 @@ namespace Checkout.Sessions
                 ex.ShouldBeAssignableTo(typeof(CheckoutApiException));
                 var checkoutApiException = ex as CheckoutApiException;
                 checkoutApiException.ErrorDetails["error_type"].ToString().ShouldBe("operation_not_allowed");
-                checkoutApiException.HttpStatusCode.ShouldBe(System.Net.HttpStatusCode.Forbidden);
+                checkoutApiException.HttpStatusCode.ShouldBe(HttpStatusCode.Forbidden);
             }
         }
     }
