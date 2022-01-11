@@ -7,7 +7,9 @@ namespace Checkout.Sessions
         [EnumMember(Value = "pending")] Pending,
         [EnumMember(Value = "processing")] Processing,
         [EnumMember(Value = "challenged")] Challenged,
-        [EnumMember(Value = "challenge_abandoned")] ChallengedAbandoned,
+
+        [EnumMember(Value = "challenge_abandoned")]
+        ChallengeAbandoned,
         [EnumMember(Value = "expired")] Expired,
         [EnumMember(Value = "approved")] Approved,
         [EnumMember(Value = "attempted")] Attempted,

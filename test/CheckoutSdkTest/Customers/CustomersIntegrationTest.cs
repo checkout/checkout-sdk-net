@@ -123,14 +123,14 @@ namespace Checkout.Customers
 
             InstrumentDetails instrumentDetails = customerDetailsResponse.Instruments[0];
             createInstrumentResponse.Id.ShouldBe(instrumentDetails.Id);
-            createInstrumentResponse.Type.ShouldNotBeNull();
+            createInstrumentResponse.Type.ShouldBe(InstrumentType.Card);
             createInstrumentResponse.Fingerprint.ShouldBe(instrumentDetails.Fingerprint);
             createInstrumentResponse.ExpiryMonth.ShouldBe(instrumentDetails.ExpiryMonth);
             createInstrumentResponse.ExpiryYear.ShouldBe(instrumentDetails.ExpiryYear);
             createInstrumentResponse.Scheme.ShouldBe(instrumentDetails.Scheme);
             createInstrumentResponse.Last4.ShouldBe(instrumentDetails.Last4);
             createInstrumentResponse.Bin.ShouldBe(instrumentDetails.Bin);
-            createInstrumentResponse.CardType.ShouldNotBeNull();
+            createInstrumentResponse.CardType.ShouldBe(CardType.Credit);
             createInstrumentResponse.Issuer.ShouldBe(instrumentDetails.Issuer);
             createInstrumentResponse.IssuerCountry.ShouldNotBeNull();
             createInstrumentResponse.ProductId.ShouldBe(instrumentDetails.ProductId);

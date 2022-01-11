@@ -21,7 +21,7 @@ namespace Checkout
         public static CheckoutAuthorizationException InvalidAuthorization(SdkAuthorizationType authorizationType)
         {
             return new CheckoutAuthorizationException(
-                $"Operation does not support {authorizationType} authorization type");
+                $"Operation requires {authorizationType} authorization type");
         }
     }
 }

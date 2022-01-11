@@ -1,19 +1,17 @@
-﻿using Checkout.Common.Four;
-using Checkout.Payments.Four.Sender;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Reflection;
 
-namespace Checkout.Payments.Four.Util
+namespace Checkout.Workflows.Four.Conditions.Response.Util
 {
-    public sealed class PaymentSenderTypeConverter : JsonConverter
+    public class WorkflowConditionTypeResponseConverter : JsonConverter
     {
         public override bool CanWrite => false;
 
         public override bool CanConvert(Type objectType)
         {
-            return typeof(PaymentSender).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo());
+            return typeof(WorkflowConditionResponse).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo());
         }
 
         public override object ReadJson(
@@ -40,32 +38,31 @@ namespace Checkout.Payments.Four.Util
             throw new NotImplementedException();
         }
 
-        private static PaymentSender Create(JToken jToken)
+        private static WorkflowConditionResponse Create(JToken jToken)
         {
             CheckoutUtils.ValidateParams("jToken", jToken);
             var sourceType = GetSourceType(jToken);
-            return CreateRequest(sourceType);
+            return Create(sourceType);
         }
 
-        private static PaymentSender CreateRequest(string senderType)
+        private static WorkflowConditionResponse Create(string type)
         {
-            if (CheckoutUtils.GetEnumMemberValue(PaymentSenderType.Individual).Equals(senderType))
+            if (CheckoutUtils.GetEnumMemberValue(WorkflowConditionType.Entity).Equals(type))
             {
-                return new PaymentIndividualSender();
+                return new EntityWorkflowConditionResponse();
             }
 
-            if (CheckoutUtils.GetEnumMemberValue(PaymentSenderType.Corporate).Equals(senderType))
+            if (CheckoutUtils.GetEnumMemberValue(WorkflowConditionType.Event).Equals(type))
             {
-                return new PaymentCorporateSender();
+                return new EventWorkflowConditionResponse();
             }
 
-            if (CheckoutUtils.GetEnumMemberValue(PaymentSenderType.Instrument).Equals(senderType))
+            if (CheckoutUtils.GetEnumMemberValue(WorkflowConditionType.ProcessingChannel).Equals(type))
             {
-                return new PaymentInstrumentSender();
+                return new ProcessingChannelWorkflowConditionResponse();
             }
 
-            return new PaymentSender(
-                CheckoutUtils.GetEnumFromStringMemberValue<PaymentSenderType>(senderType));
+            return new WorkflowConditionResponse();
         }
 
         private static string GetSourceType(JToken jObject)

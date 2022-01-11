@@ -19,9 +19,11 @@ namespace Checkout.Workflows.Four
 
         Task<object> RemoveWorkflow(string workflowId);
 
-        Task<object> UpdateWorkflowAction(string workflowId, string actionId, WorkflowActionRequest workflowActionRequest);
+        Task<object> UpdateWorkflowAction(string workflowId, string actionId,
+            WorkflowActionRequest workflowActionRequest);
 
-        Task<object> UpdateWorkflowCondition(string workflowId, string conditionId, WorkflowConditionRequest workflowConditionRequest);
+        Task<object> UpdateWorkflowCondition(string workflowId, string conditionId,
+            WorkflowConditionRequest workflowConditionRequest);
 
         Task<IList<EventTypesResponse>> GetEventTypes();
 

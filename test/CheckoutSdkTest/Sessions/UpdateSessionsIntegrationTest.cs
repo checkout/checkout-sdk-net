@@ -33,9 +33,7 @@ namespace Checkout.Sessions
             created.GetLink("failure_url").ShouldNotBeNull();
             created.GetLink("redirect_url").ShouldNotBeNull();
 
-            GetSessionResponse updated;
-
-            updated = usingSessionSecret
+            GetSessionResponse updated = usingSessionSecret
                 ? await FourApi.SessionsClient().UpdateSession(created.SessionSecret, created.Id, BrowserSession(),
                     CancellationToken.None)
                 : await FourApi.SessionsClient().UpdateSession(created.Id, BrowserSession(), CancellationToken.None);
@@ -122,9 +120,7 @@ namespace Checkout.Sessions
                 ThreeDsMethodCompletion = ThreeDsMethodCompletion.Y
             };
 
-            GetSessionResponseAfterChannelDataSupplied updated;
-
-            updated = usingSessionSecret
+            GetSessionResponseAfterChannelDataSupplied updated = usingSessionSecret
                 ? await FourApi.SessionsClient().Update3dsMethodCompletionIndicator(created.Id,
                     threeDsMethodCompletionRequest, CancellationToken.None)
                 : await FourApi.SessionsClient().Update3dsMethodCompletionIndicator(created.SessionSecret, created.Id,

@@ -68,9 +68,9 @@ namespace Checkout.Payments.Four
                 FirstName = "Mr",
                 LastName = "Test",
                 Address = address,
-                Identification = new Identification()
+                Identification = new Identification
                 { 
-                    IssuingCountry = "GT",
+                    IssuingCountry = CountryCode.GT,
                     Number = "1234",
                     Type = IdentificationType.DrivingLicence
                 }

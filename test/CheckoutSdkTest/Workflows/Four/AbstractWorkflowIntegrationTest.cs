@@ -33,47 +33,59 @@ namespace Checkout.Workflows.Four
                 Actions =
                     new List<WorkflowActionRequest>
                     {
-                        new WebhookWorkflowActionRequest("https://google.com/fail",
-                            new Dictionary<string, string>(),
-                            new WebhookSignature {Key = "8V8x0dLK%AyD*DNS8JJr", Method = "HMACSHA256"})
+                        new WebhookWorkflowActionRequest
+                        {
+                            Url = "https://google.com/fail",
+                            Headers = new Dictionary<string, string>(),
+                            Signature = new WebhookSignature
+                            {
+                                Key = "8V8x0dLK%AyD*DNS8JJr", Method = "HMACSHA256"
+                            }
+                        }
                     },
                 Conditions = new List<WorkflowConditionRequest>
                 {
-                    new EntityWorkflowConditionRequest(new List<string> {WorkflowEntityId}),
-                    new EventWorkflowConditionRequest(new Dictionary<string, ISet<string>>
+                    new EntityWorkflowConditionRequest {Entities = new List<string> {WorkflowEntityId}},
+                    new EventWorkflowConditionRequest
                     {
+                        Events = new Dictionary<string, ISet<string>>
                         {
-                            "gateway",
-                            new HashSet<string>
                             {
-                                "payment_approved",
-                                "payment_declined",
-                                "card_verification_declined",
-                                "card_verified",
-                                "payment_authorization_incremented",
-                                "payment_authorization_increment_declined",
-                                "payment_capture_declined",
-                                "payment_captured",
-                                "payment_refund_declined",
-                                "payment_refunded",
-                                "payment_void_declined",
-                                "payment_voided"
-                            }
-                        },
-                        {
-                            "dispute",
-                            new HashSet<string>
+                                "gateway",
+                                new HashSet<string>
+                                {
+                                    "payment_approved",
+                                    "payment_declined",
+                                    "card_verification_declined",
+                                    "card_verified",
+                                    "payment_authorization_incremented",
+                                    "payment_authorization_increment_declined",
+                                    "payment_capture_declined",
+                                    "payment_captured",
+                                    "payment_refund_declined",
+                                    "payment_refunded",
+                                    "payment_void_declined",
+                                    "payment_voided"
+                                }
+                            },
                             {
-                                "dispute_canceled",
-                                "dispute_evidence_required",
-                                "dispute_expired",
-                                "dispute_lost",
-                                "dispute_resolved",
-                                "dispute_won"
+                                "dispute",
+                                new HashSet<string>
+                                {
+                                    "dispute_canceled",
+                                    "dispute_evidence_required",
+                                    "dispute_expired",
+                                    "dispute_lost",
+                                    "dispute_resolved",
+                                    "dispute_won"
+                                }
                             }
                         }
-                    }),
-                    new ProcessingChannelWorkflowConditionRequest(new List<string> {ProcessingChannelId})
+                    },
+                    new ProcessingChannelWorkflowConditionRequest
+                    {
+                        ProcessingChannels = new List<string> {ProcessingChannelId}
+                    }
                 },
                 Name = "testing"
             };

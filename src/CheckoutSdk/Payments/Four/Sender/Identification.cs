@@ -1,4 +1,6 @@
-﻿namespace Checkout.Payments.Four.Sender
+﻿using Checkout.Common;
+
+namespace Checkout.Payments.Four.Sender
 {
     public class Identification
     {
@@ -6,6 +8,6 @@
 
         public string Number { get; set; }
 
-        public string IssuingCountry { get; set; }
+        public CountryCode? IssuingCountry { get; set; }
     }
 }

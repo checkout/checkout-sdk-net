@@ -4,6 +4,6 @@ namespace Checkout.Sessions
 {
     public class ThreeDsMethodCompletionRequest
     {
-        public ThreeDsMethodCompletion ThreeDsMethodCompletion { get; set; }
+        public ThreeDsMethodCompletion? ThreeDsMethodCompletion { get; set; }
     }
 }

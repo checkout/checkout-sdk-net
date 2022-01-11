@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Checkout.Payments
+namespace Checkout.Common
 {
     public enum ChallengeIndicatorType
     {

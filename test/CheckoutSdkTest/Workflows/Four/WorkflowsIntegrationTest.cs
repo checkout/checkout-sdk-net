@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Checkout.Workflows.Four
 {
@@ -17,42 +18,59 @@ namespace Checkout.Workflows.Four
         [Fact]
         public async Task ShouldCreateAndGetWorkflows()
         {
-            var createdWorkFlow = await CreateWorkflow();
+            var createdWorkflow = await CreateWorkflow();
 
-            createdWorkFlow.ShouldNotBeNull();
-            createdWorkFlow.Id.ShouldNotBeNull();
-
-            GetWorkflowResponse getWorkflowResponse = await FourApi.WorkflowsClient().GetWorkflow(createdWorkFlow.Id);
+            GetWorkflowResponse getWorkflowResponse = await FourApi.WorkflowsClient().GetWorkflow(createdWorkflow.Id);
 
             getWorkflowResponse.ShouldNotBeNull();
             getWorkflowResponse.Id.ShouldNotBeNullOrEmpty();
             getWorkflowResponse.Name.ShouldBe(WorkflowName);
+
             getWorkflowResponse.Actions.ShouldNotBeNull();
             getWorkflowResponse.Actions.Count.ShouldBe(1);
-
-            WorkflowActionResponse workflowActionResponse =
-                getWorkflowResponse.Actions[0];
-            workflowActionResponse.ShouldNotBeNull();
-            workflowActionResponse.Id.ShouldNotBeNullOrEmpty();
+            getWorkflowResponse.Actions[0].ShouldBeOfType(typeof(WebhookWorkflowActionResponse));
+            WebhookWorkflowActionResponse webhookWorkflowActionResponse =
+                (WebhookWorkflowActionResponse)getWorkflowResponse.Actions[0];
+            webhookWorkflowActionResponse.Headers.ShouldNotBeNull();
+            webhookWorkflowActionResponse.Signature.ShouldNotBeNull();
+            webhookWorkflowActionResponse.Url.ShouldNotBeNullOrEmpty();
+            webhookWorkflowActionResponse.Id.ShouldNotBeNullOrEmpty();
 
             getWorkflowResponse.Conditions.ShouldNotBeNull();
             getWorkflowResponse.Conditions.Count.ShouldBe(3);
-
-            WorkflowConditionResponse conditionResponse = getWorkflowResponse.Conditions[0];
-            conditionResponse.ShouldNotBeNull();
-            getWorkflowResponse.GetLink("self").ShouldNotBeNull();
+            foreach (WorkflowConditionResponse workflowConditionResponse in getWorkflowResponse.Conditions)
+            {
+                if (workflowConditionResponse is EntityWorkflowConditionResponse entityCondition)
+                {
+                    entityCondition.Type.ShouldBe(WorkflowConditionType.Entity);
+                    entityCondition.Entities.ShouldNotBeEmpty();
+                }
+                else if (workflowConditionResponse is EventWorkflowConditionResponse eventCondition)
+                {
+                    eventCondition.Type.ShouldBe(WorkflowConditionType.Event);
+                    eventCondition.Events.ShouldNotBeEmpty();
+                }
+                else if (workflowConditionResponse is ProcessingChannelWorkflowConditionResponse
+                    processingChannelCondition)
+                {
+                    processingChannelCondition.Type.ShouldBe(WorkflowConditionType.ProcessingChannel);
+                    processingChannelCondition.ProcessingChannels.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    throw new XunitException("invalid workflow condition response");
+                }
+            }
 
             GetWorkflowsResponse getWorkflowsResponse = await FourApi.WorkflowsClient().GetWorkflows();
-
             getWorkflowsResponse.ShouldNotBeNull();
-            getWorkflowsResponse.Workflows.ShouldNotBeNull();
             getWorkflowsResponse.Workflows.ShouldNotBeEmpty();
 
-            foreach (var workFlow in getWorkflowsResponse.Workflows)
+            foreach (var workflow in getWorkflowsResponse.Workflows)
             {
-                Assert.Equal(WorkflowName, workFlow.Name);
-                workFlow.Id.ShouldNotBeNullOrEmpty();
-                workFlow.GetLink("self").ShouldNotBeNull();
+                workflow.Name.ShouldBe(WorkflowName);
+                workflow.Id.ShouldNotBeNullOrEmpty();
+                workflow.GetLink("self").ShouldNotBeNull();
             }
         }
 
@@ -67,35 +85,38 @@ namespace Checkout.Workflows.Four
                 await FourApi.WorkflowsClient().UpdateWorkflow(workflow.Id, request);
 
             updateWorkflowResponse.ShouldNotBeNull();
-            Assert.Equal("testing_2", updateWorkflowResponse.Name);
+            updateWorkflowResponse.Name.ShouldBe("testing_2");
         }
 
         [Fact]
         public async Task ShouldUpdateWorkflowAction()
         {
-            var createdWorkFlow = await CreateWorkflow();
+            var createdWorkflow = await CreateWorkflow();
 
-            createdWorkFlow.ShouldNotBeNull();
-            createdWorkFlow.Id.ShouldNotBeNull();
+            createdWorkflow.ShouldNotBeNull();
+            createdWorkflow.Id.ShouldNotBeNull();
 
-            GetWorkflowResponse getWorkflowResponse = await FourApi.WorkflowsClient().GetWorkflow(createdWorkFlow.Id);
+            GetWorkflowResponse getWorkflowResponse = await FourApi.WorkflowsClient().GetWorkflow(createdWorkflow.Id);
 
             getWorkflowResponse.ShouldNotBeNull();
             getWorkflowResponse.Id.ShouldNotBeNullOrEmpty();
-            Assert.Equal(WorkflowName, getWorkflowResponse.Name);
+            getWorkflowResponse.Name.ShouldBe(WorkflowName);
             getWorkflowResponse.Actions.ShouldNotBeNull();
             getWorkflowResponse.Actions.Count.ShouldBe(1);
             string actionId = getWorkflowResponse.Actions[0].Id;
 
             WebhookWorkflowActionRequest updateAction =
-                new WebhookWorkflowActionRequest("https://google.com/fail/fake",
-                    new Dictionary<string, string>(),
-                    new WebhookSignature {Key = "8V8x0dLK%AyD*DNS8JJr", Method = "HMACSHA256"});
+                new WebhookWorkflowActionRequest
+                {
+                    Url = "https://google.com/fail/fake",
+                    Headers = new Dictionary<string, string>(),
+                    Signature = new WebhookSignature {Key = "8V8x0dLK%AyD*DNS8JJr", Method = "HMACSHA256"}
+                };
 
             await FourApi.WorkflowsClient().UpdateWorkflowAction(getWorkflowResponse.Id, actionId, updateAction);
 
             GetWorkflowResponse getWorkflowResponseUpdated =
-                await FourApi.WorkflowsClient().GetWorkflow(createdWorkFlow.Id);
+                await FourApi.WorkflowsClient().GetWorkflow(createdWorkflow.Id);
             getWorkflowResponseUpdated.Actions.ShouldNotBeNull();
             getWorkflowResponseUpdated.Actions.Count.ShouldBe(1);
 
@@ -107,16 +128,16 @@ namespace Checkout.Workflows.Four
         [Fact]
         public async Task ShouldUpdateWorkflowCondition()
         {
-            var createdWorkFlow = await CreateWorkflow();
+            var createdWorkflow = await CreateWorkflow();
 
-            createdWorkFlow.ShouldNotBeNull();
-            createdWorkFlow.Id.ShouldNotBeNull();
+            createdWorkflow.ShouldNotBeNull();
+            createdWorkflow.Id.ShouldNotBeNull();
 
-            GetWorkflowResponse getWorkflowResponse = await FourApi.WorkflowsClient().GetWorkflow(createdWorkFlow.Id);
+            GetWorkflowResponse getWorkflowResponse = await FourApi.WorkflowsClient().GetWorkflow(createdWorkflow.Id);
 
             getWorkflowResponse.ShouldNotBeNull();
             getWorkflowResponse.Id.ShouldNotBeNullOrEmpty();
-            Assert.Equal(WorkflowName, getWorkflowResponse.Name);
+            getWorkflowResponse.Name.ShouldBe(WorkflowName);
             getWorkflowResponse.Conditions.ShouldNotBeNull();
             getWorkflowResponse.Conditions.Count.ShouldBe(3);
 
@@ -125,8 +146,9 @@ namespace Checkout.Workflows.Four
 
             eventWorkflowConditionResponse.ShouldNotBeNull();
 
-            EventWorkflowConditionRequest updateEventCondition = new EventWorkflowConditionRequest(
-                new Dictionary<string, ISet<string>>
+            EventWorkflowConditionRequest updateEventCondition = new EventWorkflowConditionRequest()
+            {
+                Events = new Dictionary<string, ISet<string>>
                 {
                     {
                         "gateway",
@@ -154,12 +176,13 @@ namespace Checkout.Workflows.Four
                             "dispute_won"
                         }
                     }
-                });
+                }
+            };
 
             await FourApi.WorkflowsClient().UpdateWorkflowCondition(getWorkflowResponse.Id,
                 eventWorkflowConditionResponse.Id, updateEventCondition);
 
-            GetWorkflowResponse getWorkflowResponse2 = await FourApi.WorkflowsClient().GetWorkflow(createdWorkFlow.Id);
+            GetWorkflowResponse getWorkflowResponse2 = await FourApi.WorkflowsClient().GetWorkflow(createdWorkflow.Id);
 
             getWorkflowResponse2.ShouldNotBeNull();
             getWorkflowResponse2.Conditions.ShouldNotBeNull();

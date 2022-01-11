@@ -10,15 +10,16 @@ namespace Checkout.Workflows.Four
 {
     public class WorkflowsClient : AbstractClient, IWorkflowsClient
     {
-        private const string WORKFLOWS_PATH = "workflows";
-        private const string WORKFLOW = "workflow";
-        private const string ACTIONS = "actions";
-        private const string CONDITIONS = "conditions";
-        private const string EVENT_TYPES = "event-types";
-        private const string EVENTS = "events";
-        private const string REFLOW = "reflow";
-        private const string SUBJECT = "subject";
-        private const string WORKFLOW_ID = "workflowId";
+        private const string WorkflowsPath = "workflows";
+        private const string WorkflowPath = "workflow";
+        private const string ActionsPath = "actions";
+        private const string ConditionsPath = "conditions";
+        private const string EventTypesPath = "event-types";
+        private const string EventsPath = "events";
+        private const string ReflowPath = "reflow";
+        private const string SubjectPath = "subject";
+        private const string WorkflowId = "workflowId";
+
         public WorkflowsClient(IApiClient apiClient, CheckoutConfiguration configuration) :
             base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
         {
@@ -27,89 +28,108 @@ namespace Checkout.Workflows.Four
         public Task<CreateWorkflowResponse> CreateWorkflow(CreateWorkflowRequest createWorkflowRequest)
         {
             CheckoutUtils.ValidateParams("createWorkflowRequest", createWorkflowRequest);
-            return ApiClient.Post<CreateWorkflowResponse>(WORKFLOWS_PATH, SdkAuthorization(), createWorkflowRequest);
+            return ApiClient.Post<CreateWorkflowResponse>(WorkflowsPath, SdkAuthorization(), createWorkflowRequest);
         }
 
         public Task<GetWorkflowsResponse> GetWorkflows()
         {
-            return ApiClient.Get<GetWorkflowsResponse>(WORKFLOWS_PATH, SdkAuthorization());
+            return ApiClient.Get<GetWorkflowsResponse>(WorkflowsPath, SdkAuthorization());
         }
 
         public Task<GetWorkflowResponse> GetWorkflow(string workflowId)
         {
-            CheckoutUtils.ValidateParams(WORKFLOW_ID, workflowId);
-            return ApiClient.Get<GetWorkflowResponse>(BuildPath(WORKFLOWS_PATH, workflowId), SdkAuthorization());
+            CheckoutUtils.ValidateParams(WorkflowId, workflowId);
+            return ApiClient.Get<GetWorkflowResponse>(BuildPath(WorkflowsPath, workflowId), SdkAuthorization());
         }
 
-        public Task<UpdateWorkflowResponse> UpdateWorkflow(string workflowId, UpdateWorkflowRequest updateWorkflowRequest)
+        public Task<UpdateWorkflowResponse> UpdateWorkflow(string workflowId,
+            UpdateWorkflowRequest updateWorkflowRequest)
         {
-            CheckoutUtils.ValidateParams(WORKFLOW_ID, workflowId, "updateWorkflowRequest", updateWorkflowRequest);
-            return ApiClient.Patch<UpdateWorkflowResponse>(BuildPath(WORKFLOWS_PATH, workflowId), SdkAuthorization(), updateWorkflowRequest);
+            CheckoutUtils.ValidateParams(WorkflowId, workflowId, "updateWorkflowRequest", updateWorkflowRequest);
+            return ApiClient.Patch<UpdateWorkflowResponse>(BuildPath(WorkflowsPath, workflowId), SdkAuthorization(),
+                updateWorkflowRequest);
         }
 
         public Task<object> RemoveWorkflow(string workflowId)
         {
-            CheckoutUtils.ValidateParams(WORKFLOW_ID, workflowId);
-            return ApiClient.Delete<object>(BuildPath(WORKFLOWS_PATH, workflowId), SdkAuthorization());
+            CheckoutUtils.ValidateParams(WorkflowId, workflowId);
+            return ApiClient.Delete<object>(BuildPath(WorkflowsPath, workflowId), SdkAuthorization());
         }
 
-        public Task<object> UpdateWorkflowAction(string workflowId, string actionId, WorkflowActionRequest workflowActionRequest)
+        public Task<object> UpdateWorkflowAction(string workflowId, string actionId,
+            WorkflowActionRequest workflowActionRequest)
         {
-            CheckoutUtils.ValidateParams(WORKFLOW_ID, workflowId, "actionId", actionId, "workflowActionRequest", workflowActionRequest);
-            return ApiClient.Put<object>(BuildPath(WORKFLOWS_PATH, workflowId, ACTIONS, actionId), SdkAuthorization(), workflowActionRequest);
+            CheckoutUtils.ValidateParams(WorkflowId, workflowId, "actionId", actionId, "workflowActionRequest",
+                workflowActionRequest);
+            return ApiClient.Put<object>(BuildPath(WorkflowsPath, workflowId, ActionsPath, actionId),
+                SdkAuthorization(),
+                workflowActionRequest);
         }
 
-        public Task<Object> UpdateWorkflowCondition(string workflowId, string conditionId, WorkflowConditionRequest workflowConditionRequest)
+        public Task<Object> UpdateWorkflowCondition(string workflowId, string conditionId,
+            WorkflowConditionRequest workflowConditionRequest)
         {
-            CheckoutUtils.ValidateParams(WORKFLOW_ID, workflowId, "conditionId", conditionId, "workflowConditionRequest", workflowConditionRequest);
-            return ApiClient.Put<object>(BuildPath(WORKFLOWS_PATH, workflowId, CONDITIONS, conditionId), SdkAuthorization(), workflowConditionRequest);
+            CheckoutUtils.ValidateParams(WorkflowId, workflowId, "conditionId", conditionId,
+                "workflowConditionRequest", workflowConditionRequest);
+            return ApiClient.Put<object>(BuildPath(WorkflowsPath, workflowId, ConditionsPath, conditionId),
+                SdkAuthorization(), workflowConditionRequest);
         }
 
         public Task<IList<EventTypesResponse>> GetEventTypes()
         {
-            return ApiClient.Get<IList<EventTypesResponse>>(BuildPath(WORKFLOWS_PATH, EVENT_TYPES), SdkAuthorization());
+            return ApiClient.Get<IList<EventTypesResponse>>(BuildPath(WorkflowsPath, EventTypesPath),
+                SdkAuthorization());
         }
 
         public Task<SubjectEventsResponse> GetSubjectEvents(string subjectId)
         {
             CheckoutUtils.ValidateParams("subjectId", subjectId);
-            return ApiClient.Get<SubjectEventsResponse>(BuildPath(WORKFLOWS_PATH, EVENTS, SUBJECT, subjectId), SdkAuthorization());
+            return ApiClient.Get<SubjectEventsResponse>(BuildPath(WorkflowsPath, EventsPath, SubjectPath, subjectId),
+                SdkAuthorization());
         }
 
         public Task<GetEventResponse> GetEvent(string eventId)
         {
             CheckoutUtils.ValidateParams("eventId", eventId);
-            return ApiClient.Get<GetEventResponse>(BuildPath(WORKFLOWS_PATH, EVENTS, eventId), SdkAuthorization());
+            return ApiClient.Get<GetEventResponse>(BuildPath(WorkflowsPath, EventsPath, eventId), SdkAuthorization());
         }
 
         public Task<ReflowResponse> ReflowByEvent(string eventId)
         {
             CheckoutUtils.ValidateParams("eventId", eventId);
-            return ApiClient.Post<ReflowResponse>(BuildPath(WORKFLOWS_PATH, EVENTS, eventId, REFLOW), SdkAuthorization(), null);
+            return ApiClient.Post<ReflowResponse>(BuildPath(WorkflowsPath, EventsPath, eventId, ReflowPath),
+                SdkAuthorization());
         }
 
         public Task<ReflowResponse> ReflowBySubject(string subjectId)
         {
             CheckoutUtils.ValidateParams("subjectId", subjectId);
-            return ApiClient.Post<ReflowResponse>(BuildPath(WORKFLOWS_PATH, EVENTS, SUBJECT, subjectId, REFLOW), SdkAuthorization(), null);
+            return ApiClient.Post<ReflowResponse>(
+                BuildPath(WorkflowsPath, EventsPath, SubjectPath, subjectId, ReflowPath),
+                SdkAuthorization());
         }
 
         public Task<ReflowResponse> ReflowByEventAndWorkflow(string eventId, string workflowId)
         {
-            CheckoutUtils.ValidateParams("eventId", eventId, WORKFLOW_ID, workflowId);
-            return ApiClient.Post<ReflowResponse>(BuildPath(WORKFLOWS_PATH, EVENTS, eventId, WORKFLOW, workflowId, REFLOW), SdkAuthorization(), null);
+            CheckoutUtils.ValidateParams("eventId", eventId, WorkflowId, workflowId);
+            return ApiClient.Post<ReflowResponse>(
+                BuildPath(WorkflowsPath, EventsPath, eventId, WorkflowPath, workflowId, ReflowPath),
+                SdkAuthorization());
         }
 
         public Task<ReflowResponse> ReflowBySubjectAndWorkflow(string subjectId, string workflowId)
         {
-            CheckoutUtils.ValidateParams("subjectId", subjectId, WORKFLOW_ID, workflowId);
-            return ApiClient.Post<ReflowResponse>(BuildPath(WORKFLOWS_PATH, EVENTS, SUBJECT, subjectId, WORKFLOW, workflowId, REFLOW), SdkAuthorization(), null);
+            CheckoutUtils.ValidateParams("subjectId", subjectId, WorkflowId, workflowId);
+            return ApiClient.Post<ReflowResponse>(
+                BuildPath(WorkflowsPath, EventsPath, SubjectPath, subjectId, WorkflowPath, workflowId, ReflowPath),
+                SdkAuthorization());
         }
 
         public Task<ReflowResponse> Reflow(ReflowRequest reflowRequest)
         {
             CheckoutUtils.ValidateParams("reflowRequest", reflowRequest);
-            return ApiClient.Post<ReflowResponse>(BuildPath(WORKFLOWS_PATH, EVENTS, REFLOW), SdkAuthorization(), reflowRequest);
+            return ApiClient.Post<ReflowResponse>(BuildPath(WorkflowsPath, EventsPath, ReflowPath), SdkAuthorization(),
+                reflowRequest);
         }
     }
 }
