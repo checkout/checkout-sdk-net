@@ -4,7 +4,6 @@ namespace Checkout.Workflows.Four.Actions
 {
     public enum WorkflowActionType
     {
-        [EnumMember(Value = "webhook")]
-        Webhook
+        [EnumMember(Value = "webhook")] Webhook
     }
 }

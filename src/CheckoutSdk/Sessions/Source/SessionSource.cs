@@ -4,7 +4,7 @@ namespace Checkout.Sessions.Source
 {
     public abstract class SessionSource
     {
-        public SessionSourceType Type { get; set; }
+        public SessionSourceType? Type { get; set; }
 
         public SessionAddress BillingAddress { get; set; }
 

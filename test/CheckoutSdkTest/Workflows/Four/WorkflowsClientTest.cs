@@ -577,7 +577,7 @@ namespace Checkout.Workflows.Four
         public async Task ShouldReflow()
         {
             ReflowBySubjectsRequest reflowBySubjectsRequest =
-                new ReflowBySubjectsRequest(new List<string>(), new List<string>());
+                new ReflowBySubjectsRequest {Subjects = new List<string>(), Workflows = new List<string>()};
             ReflowResponse response = new ReflowResponse();
 
             _apiClient.Setup(apiClient =>

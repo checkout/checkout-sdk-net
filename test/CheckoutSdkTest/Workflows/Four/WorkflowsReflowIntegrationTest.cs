@@ -86,10 +86,11 @@ namespace Checkout.Workflows.Four
 
             SubjectEvent paymentApprovedEvent = await GetSubjectEvent(payment.Id);
 
-            ReflowByEventsRequest request = new ReflowByEventsRequest(
-                new List<string> {paymentApprovedEvent.Id},
-                new List<string> {createWorkflowResponse.Id}
-            );
+            ReflowByEventsRequest request = new ReflowByEventsRequest
+            {
+                Events = new List<string> {paymentApprovedEvent.Id},
+                Workflows = new List<string> {createWorkflowResponse.Id},
+            };
 
             ReflowResponse reflowResponse = await FourApi.WorkflowsClient().Reflow(request);
 
@@ -105,10 +106,10 @@ namespace Checkout.Workflows.Four
 
             await Nap(10);
 
-            ReflowBySubjectsRequest request = new ReflowBySubjectsRequest(
-                new List<string> {payment.Id},
-                new List<string> {createWorkflowResponse.Id}
-            );
+            ReflowBySubjectsRequest request = new ReflowBySubjectsRequest
+            {
+                Subjects = new List<string> {payment.Id}, Workflows = new List<string> {createWorkflowResponse.Id}
+            };
 
             ReflowResponse reflowResponse = await FourApi.WorkflowsClient().Reflow(request);
 

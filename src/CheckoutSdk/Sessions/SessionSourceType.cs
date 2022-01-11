@@ -6,6 +6,6 @@ namespace Checkout.Sessions
     {
         [EnumMember(Value = "card")] Card,
         [EnumMember(Value = "id")] Id,
-        [EnumMember(Value = "artokenes_error")] Token
+        [EnumMember(Value = "token")] Token
     }
 }

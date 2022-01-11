@@ -16,10 +16,9 @@ namespace Checkout.Sessions
 
         protected async Task<SessionResponse> CreateNonHostedSession(ChannelData channelData,
             Category authenticationCategory,
-            ChallengeIndicator challengeIndicator,
+            ChallengeIndicatorType challengeIndicator,
             TransactionType transactionType)
         {
-            var sessionRequest = new SessionRequest();
             var billingAddress = new SessionAddress
             {
                 AddressLine1 = "CheckoutSdk.com",
@@ -53,29 +52,29 @@ namespace Checkout.Sessions
                 Country = CountryCode.GB
             };
 
-            sessionRequest.Source = source;
-            sessionRequest.Amount = 6540L;
-            sessionRequest.Currency = Currency.USD;
-            sessionRequest.ProcessingChannelId = "pc_5jp2az55l3cuths25t5p3xhwru";
-            sessionRequest.Marketplace = new MarketplaceData() {SubEntityId = "ent_ocw5i74vowfg2edpy66izhts2u"};
-            sessionRequest.AuthenticationCategory = authenticationCategory;
-            sessionRequest.ChallengeIndicator = challengeIndicator;
-            sessionRequest.BillingDescriptor = new SessionsBillingDescriptor() {Name = "SUPERHEROES.COM"};
-            sessionRequest.Reference = "ORD-5023-4E89";
-            sessionRequest.TransactionType = transactionType;
-            sessionRequest.ShippingAddress = shippingAddress;
-            sessionRequest.Completion = new NonHostedCompletionInfo("https://merchant.com/callback");
-            sessionRequest.ChannelData = channelData;
+            var sessionRequest = new SessionRequest
+            {
+                Source = source,
+                Amount = 6540L,
+                Currency = Currency.USD,
+                ProcessingChannelId = "pc_5jp2az55l3cuths25t5p3xhwru",
+                Marketplace = new MarketplaceData {SubEntityId = "ent_ocw5i74vowfg2edpy66izhts2u"},
+                AuthenticationCategory = authenticationCategory,
+                ChallengeIndicator = challengeIndicator,
+                BillingDescriptor = new SessionsBillingDescriptor {Name = "SUPERHEROES.COM"},
+                Reference = "ORD-5023-4E89",
+                TransactionType = transactionType,
+                ShippingAddress = shippingAddress,
+                Completion = new NonHostedCompletionInfo {CallbackUrl = "https://merchant.com/callback"},
+                ChannelData = channelData
+            };
 
             return await FourApi.SessionsClient().RequestSession(sessionRequest, CancellationToken.None);
         }
 
         protected async Task<SessionResponse> CreateHostedSession()
         {
-            var sessionRequest = new SessionRequest();
-            var source = new SessionCardSource() {ExpiryMonth = 1, ExpiryYear = 2030, Number = "4485040371536584"};
-
-            var shippingAddress = new SessionAddress()
+            var shippingAddress = new SessionAddress
             {
                 AddressLine1 = "Checkout.com",
                 AddressLine2 = "90 Tottenham Court Road",
@@ -85,32 +84,36 @@ namespace Checkout.Sessions
                 Zip = "W1T 4TJ"
             };
 
-            var completition = new HostedCompletionInfo(string.Empty, "http://example.com/sessions/success",
-                "http://example.com/sessions/fail");
-
-            sessionRequest.Source = source;
-            sessionRequest.Amount = 100L;
-            sessionRequest.Currency = Currency.USD;
-            sessionRequest.ProcessingChannelId = "pc_5jp2az55l3cuths25t5p3xhwru";
-            sessionRequest.AuthenticationType = AuthenticationType.Regular;
-            sessionRequest.AuthenticationCategory = Category.Payment;
-            sessionRequest.ChallengeIndicator = ChallengeIndicator.NoPreference;
-            sessionRequest.Reference = "ORD-5023-4E89";
-            sessionRequest.TransactionType = TransactionType.GoodsService;
-            sessionRequest.ShippingAddress = shippingAddress;
-            sessionRequest.Completion = completition;
+            var sessionRequest = new SessionRequest
+            {
+                Source = new SessionCardSource {ExpiryMonth = 1, ExpiryYear = 2030, Number = "4485040371536584"},
+                Amount = 100L,
+                Currency = Currency.USD,
+                ProcessingChannelId = "pc_5jp2az55l3cuths25t5p3xhwru",
+                AuthenticationType = AuthenticationType.Regular,
+                AuthenticationCategory = Category.Payment,
+                ChallengeIndicator = ChallengeIndicatorType.NoPreference,
+                Reference = "ORD-5023-4E89",
+                TransactionType = TransactionType.GoodsService,
+                ShippingAddress = shippingAddress,
+                Completion = new HostedCompletionInfo
+                {
+                    FailureUrl = "https://example.com/sessions/fail",
+                    SuccessUrl = "https://example.com/sessions/success",
+                }
+            };
 
             return await FourApi.SessionsClient().RequestSession(sessionRequest, CancellationToken.None);
         }
 
         protected static Phone GetPhone()
         {
-            return new Phone() {CountryCode = "234", Number = "0204567895"};
+            return new Phone {CountryCode = "234", Number = "0204567895"};
         }
 
         protected static ChannelData BrowserSession()
         {
-            return new BrowserSession()
+            return new BrowserSession
             {
                 AcceptHeader = "Accept:  *.*, q=0.1",
                 JavaEnabled = true,
@@ -128,7 +131,7 @@ namespace Checkout.Sessions
 
         protected static ChannelData AppSession()
         {
-            var sdkEphemeralPublicKey = new SdkEphemeralPublicKey()
+            var sdkEphemeralPublicKey = new SdkEphemeralPublicKey
             {
                 Kty = "EC",
                 Crv = "P-256",
@@ -136,7 +139,7 @@ namespace Checkout.Sessions
                 Y = "x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0"
             };
 
-            var appSession = new AppSession()
+            var appSession = new AppSession
             {
                 SdkAppId = "dbd64fcb-c19a-4728-8849-e3d50bfdde39",
                 SdkMaxTimeout = 5L,
@@ -145,7 +148,7 @@ namespace Checkout.Sessions
                 SdkReferenceNumber = "3DS_LOA_SDK_PPFU_020100_00007",
                 SdkTransactionId = "b2385523-a66c-4907-ac3c-91848e8c0067",
                 SdkInterfaceType = SdkInterfaceType.Both,
-                SdkUIElements = new List<UIElements>() {UIElements.SingleSelect, UIElements.HtmlOther}
+                SdkUIElements = new List<UIElements> {UIElements.SingleSelect, UIElements.HtmlOther}
             };
 
             return appSession;

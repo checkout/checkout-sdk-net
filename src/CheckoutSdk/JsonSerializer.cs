@@ -1,10 +1,12 @@
-using System;
-using System.Collections.Generic;
 using Checkout.Instruments.Four.Get.Util;
 using Checkout.Instruments.Four.Update.Util;
+using Checkout.Workflows.Four.Actions.Response.Util;
+using Checkout.Workflows.Four.Conditions.Response.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using System;
+using System.Collections.Generic;
 
 namespace Checkout
 {
@@ -39,16 +41,14 @@ namespace Checkout
             var settings = new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,
-                ContractResolver = new DefaultContractResolver
-                {
-                    NamingStrategy = new SnakeCaseNamingStrategy()
-                },
+                ContractResolver = new DefaultContractResolver {NamingStrategy = new SnakeCaseNamingStrategy()},
                 Converters = new JsonConverter[]
                 {
                     new StringEnumConverter(),
                     // Instruments CS2
-                    new GetInstrumentResponseTypeConverter(),
-                    new UpdateInstrumentResponseTypeConverter()
+                    new GetInstrumentResponseTypeConverter(), new UpdateInstrumentResponseTypeConverter(),
+                    // Workflows CS2
+                    new WorkflowActionTypeResponseConverter(), new WorkflowConditionTypeResponseConverter()
                 }
             };
 

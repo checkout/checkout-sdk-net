@@ -15,7 +15,7 @@ namespace Checkout.Instruments.Four
         [Fact]
         private async Task ShouldGetBankAccountFieldFormatting()
         {
-            BankAccountFieldQuery query = new BankAccountFieldQuery()
+            BankAccountFieldQuery query = new BankAccountFieldQuery
             {
                 AccountHolderType = PaymentSenderType.Individual,
                 PaymentNetwork = PaymentNetwork.Local

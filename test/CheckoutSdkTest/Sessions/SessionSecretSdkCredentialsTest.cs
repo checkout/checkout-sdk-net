@@ -52,7 +52,7 @@ namespace Checkout.Sessions
             catch (Exception ex)
             {
                 ex.ShouldBeAssignableTo(typeof(CheckoutAuthorizationException));
-                ex.Message.ShouldBe("Operation does not support OAuth authorization type");
+                ex.Message.ShouldBe("Operation requires OAuth authorization type");
             }
         }
     }

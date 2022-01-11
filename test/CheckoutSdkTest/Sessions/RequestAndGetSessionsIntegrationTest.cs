@@ -1,4 +1,5 @@
-﻿using Shouldly;
+﻿using Checkout.Common;
+using Shouldly;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
@@ -10,7 +11,7 @@ namespace Checkout.Sessions
         [Theory]
         [MemberData(nameof(SessionsTypes))]
         private async Task ShouldRequestAndGetCardSessionBrowserSession(Category category,
-            ChallengeIndicator challengeIndicator,
+            ChallengeIndicatorType challengeIndicator,
             TransactionType transactionType)
         {
             var browserSession = BrowserSession();
@@ -95,7 +96,7 @@ namespace Checkout.Sessions
         [Theory]
         [MemberData(nameof(SessionsTypes))]
         private async Task ShouldRequestAndGetCardSessionAppSession(Category category,
-            ChallengeIndicator challengeIndicator,
+            ChallengeIndicatorType challengeIndicator,
             TransactionType transactionType)
         {
             var appSession = AppSession();
@@ -180,14 +181,15 @@ namespace Checkout.Sessions
         public static IEnumerable<object[]> SessionsTypes =>
             new List<object[]>
             {
-                new object[] {Category.Payment, ChallengeIndicator.NoPreference, TransactionType.GoodsService},
+                new object[] {Category.Payment, ChallengeIndicatorType.NoPreference, TransactionType.GoodsService},
                 new object[]
                 {
-                    Category.NonPayment, ChallengeIndicator.ChallengeRequested, TransactionType.CheckAcceptance
+                    Category.NonPayment, ChallengeIndicatorType.ChallengeRequested,
+                    TransactionType.CheckAcceptance
                 },
                 new object[]
                 {
-                    Category.NonPayment, ChallengeIndicator.ChallengeRequestedMandate,
+                    Category.NonPayment, ChallengeIndicatorType.ChallengeRequestedMandate,
                     TransactionType.AccountFunding
                 }
             };

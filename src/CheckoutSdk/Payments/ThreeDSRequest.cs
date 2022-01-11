@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Checkout.Common;
+using Newtonsoft.Json;
 
 namespace Checkout.Payments
 {

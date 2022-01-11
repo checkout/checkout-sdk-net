@@ -3,6 +3,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Checkout.Sessions
 {
@@ -48,13 +49,16 @@ namespace Checkout.Sessions
                 {
                     await FourApi.SessionsClient().CompleteSession(sessionSecret, sessionId);
                 }
+
+                throw new XunitException();
             }
             catch (Exception ex)
             {
                 ex.ShouldNotBeNull();
                 ex.ShouldBeAssignableTo(typeof(CheckoutApiException));
                 var checkoutApiException = ex as CheckoutApiException;
-                checkoutApiException.ErrorDetails["error_type"].ToString().ShouldBe("operation_not_allowed");
+                checkoutApiException.ShouldNotBeNull();
+                checkoutApiException.ErrorDetails["error_type"].ShouldBe("operation_not_allowed");
                 checkoutApiException.HttpStatusCode.ShouldBe(HttpStatusCode.Forbidden);
             }
         }

@@ -1,11 +1,8 @@
-﻿using Newtonsoft.Json;
-
-namespace Checkout.Sessions.Completion
+﻿namespace Checkout.Sessions.Completion
 {
     public abstract class CompletionInfo
     {
-        [JsonProperty(PropertyName = "type")]
-        protected readonly CompletionInfoType Type;
+        public CompletionInfoType? Type { get; set; }
 
         protected CompletionInfo(CompletionInfoType type)
         {

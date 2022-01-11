@@ -25,7 +25,7 @@ namespace Checkout.Sessions
 
         private SessionsClient _sessionsClient;
 
-        private static SdkAuthorization SessionSecretAuthorization =
+        private static readonly SdkAuthorization SessionSecretAuthorization =
             new SessionSecretSdkCredentials("sessionSecret").GetSdkAuthorization(SdkAuthorizationType.Custom);
 
         private static readonly IDictionary<int, Type> SessionResponseMappings = new Dictionary<int, Type>();
@@ -41,7 +41,7 @@ namespace Checkout.Sessions
             _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.OAuth))
                 .Returns(_authorization);
 
-            _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth))
+            _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.OAuth))
                 .Returns(new SdkAuthorization(PlatformType.FourOAuth, string.Empty));
 
             _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
@@ -56,7 +56,7 @@ namespace Checkout.Sessions
 
             _apiClient.Setup(apiClient =>
                     apiClient.Post<Resource>(Sessions,
-                        _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth),
+                        _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.OAuth),
                         SessionResponseMappings, request.Object,
                         CancellationToken.None, null))
                 .ReturnsAsync(() => response.Object);
@@ -78,7 +78,7 @@ namespace Checkout.Sessions
 
             _apiClient.Setup(apiClient =>
                     apiClient.Post<Resource>(Sessions,
-                        _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth),
+                        _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.OAuth),
                         SessionResponseMappings, request.Object,
                         CancellationToken.None, null))
                 .ReturnsAsync(() => response.Object);
@@ -115,7 +115,7 @@ namespace Checkout.Sessions
 
             _apiClient.Setup(apiClient =>
                     apiClient.Get<GetSessionResponse>($"{Sessions}/id",
-                        _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth),
+                        _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.OAuth),
                         CancellationToken.None))
                 .ReturnsAsync(() => response.Object);
 
@@ -184,7 +184,7 @@ namespace Checkout.Sessions
 
             _apiClient.Setup(apiClient =>
                     apiClient.Put<GetSessionResponse>($"{Sessions}/id/{CollectData}",
-                        _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth),
+                        _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.OAuth),
                         request.Object,
                         CancellationToken.None, null))
                 .ReturnsAsync(() => response.Object);
@@ -359,7 +359,7 @@ namespace Checkout.Sessions
 
             _apiClient.Setup(apiClient =>
                     apiClient.Put<GetSessionResponseAfterChannelDataSupplied>($"{Sessions}/id/{IssuerFingerprint}",
-                        _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth),
+                        _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.OAuth),
                         request.Object,
                         CancellationToken.None, null))
                 .ReturnsAsync(() => response.Object);

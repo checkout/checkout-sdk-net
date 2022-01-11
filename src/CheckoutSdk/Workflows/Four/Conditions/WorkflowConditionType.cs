@@ -6,6 +6,8 @@ namespace Checkout.Workflows.Four.Conditions
     {
         [EnumMember(Value = "event")] Event,
         [EnumMember(Value = "entity")] Entity,
-        [EnumMember(Value = "processing_channel")] ProcessingChannel
+
+        [EnumMember(Value = "processing_channel")]
+        ProcessingChannel
     }
 }

@@ -6,7 +6,7 @@ namespace Checkout.Instruments
     {
         public string Id { get; set; }
 
-        public string Type { get; set; }
+        public InstrumentType? Type { get; set; }
 
         public string Fingerprint { get; set; }
 
@@ -22,9 +22,9 @@ namespace Checkout.Instruments
 
         public string Bin { get; set; }
 
-        public string CardType { get; set; }
+        public CardType? CardType { get; set; }
 
-        public string CardCategory { get; set; }
+        public CardCategory? CardCategory { get; set; }
 
         public string Issuer { get; set; }
 

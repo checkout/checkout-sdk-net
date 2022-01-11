@@ -2,11 +2,10 @@
 {
     public class NonHostedCompletionInfo : CompletionInfo
     {
-        public string CallbackUrl { get; private set; }
+        public string CallbackUrl { get; set; }
 
-        public NonHostedCompletionInfo(string callbackUrl) : base(CompletionInfoType.NonHosted)
+        public NonHostedCompletionInfo() : base(CompletionInfoType.NonHosted)
         {
-            CallbackUrl = callbackUrl;
         }
     }
 }

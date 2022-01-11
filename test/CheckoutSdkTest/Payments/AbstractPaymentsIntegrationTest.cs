@@ -208,11 +208,11 @@ namespace Checkout.Payments
                 AttemptN3D = false
             };
 
-            var processing = new ProcessingSettings() { Aft = true };
+            var processing = new ProcessingSettings { Aft = true };
 
-            var risk = new RiskRequest() { Enabled = false };
+            var risk = new RiskRequest { Enabled = false };
 
-            return new HostedPaymentRequest()
+            return new HostedPaymentRequest
             {
                 Amount = 1000L,
                 Reference = reference,

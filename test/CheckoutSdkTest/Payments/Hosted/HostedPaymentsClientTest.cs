@@ -76,12 +76,12 @@ namespace Checkout.Payments.Hosted
 
         private static Phone GetPhone()
         {
-            return new Phone() {CountryCode = "1", Number = "4155552671"};
+            return new Phone {CountryCode = "1", Number = "4155552671"};
         }
 
         private static Address GetAddress()
         {
-            return new Address()
+            return new Address
             {
                 AddressLine1 = "CheckoutSdk.com",
                 AddressLine2 = "90 Tottenham Court Road",
@@ -94,7 +94,7 @@ namespace Checkout.Payments.Hosted
 
         private static HostedPaymentRequest CreateHostedPaymentRequest(string reference)
         {
-            return new HostedPaymentRequest()
+            return new HostedPaymentRequest
             {
                 Amount = 1000L,
                 Reference = reference,
@@ -102,9 +102,9 @@ namespace Checkout.Payments.Hosted
                 Description = "Payment for Gold Necklace",
                 Customer = new CustomerRequest {Name = "Jack Napier", Email = GenerateRandomEmail()},
                 Shipping = new ShippingDetails {Address = GetAddress(), Phone = GetPhone()},
-                Billing = new BillingInformation() {Address = GetAddress(), Phone = GetPhone()},
+                Billing = new BillingInformation {Address = GetAddress(), Phone = GetPhone()},
                 Recipient =
-                    new PaymentRecipient()
+                    new PaymentRecipient
                     {
                         AccountNumber = "1234567",
                         Country = CountryCode.ES,
@@ -113,9 +113,9 @@ namespace Checkout.Payments.Hosted
                         LastName = "TESTING",
                         Zip = "12345"
                     },
-                Processing = new ProcessingSettings() {Aft = true},
+                Processing = new ProcessingSettings {Aft = true},
                 Products = new Product[] {new Product {Name = "Gold Necklace", Quantity = 1L, Price = 200L}},
-                Risk = new RiskRequest() {Enabled = false},
+                Risk = new RiskRequest {Enabled = false},
                 SuccessUrl = "https://example.com/payments/success",
                 CancelUrl = "https://example.com/payments/success",
                 FailureUrl = "https://example.com/payments/success",
