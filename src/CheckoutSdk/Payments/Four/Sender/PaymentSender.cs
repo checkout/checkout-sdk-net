@@ -1,6 +1,4 @@
-﻿using Checkout.Common.Four;
-
-namespace Checkout.Payments.Four.Sender
+﻿namespace Checkout.Payments.Four.Sender
 {
     public class PaymentSender
     {

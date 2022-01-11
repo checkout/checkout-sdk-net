@@ -5,11 +5,18 @@ namespace Checkout
     public abstract class AbstractCheckoutSdkBuilder<T>
     {
         protected Environment Env = Checkout.Environment.Sandbox;
+        private Environment? _filesEnv;
         protected IHttpClientFactory ClientFactory = new DefaultHttpClientFactory();
 
         public AbstractCheckoutSdkBuilder<T> Environment(Environment environment)
         {
             Env = environment;
+            return this;
+        }
+
+        public AbstractCheckoutSdkBuilder<T> FilesEnvironment(Environment environment)
+        {
+            _filesEnv = environment;
             return this;
         }
 
@@ -27,7 +34,7 @@ namespace Checkout
 
         protected CheckoutConfiguration GetCheckoutConfiguration()
         {
-            return new CheckoutConfiguration(GetSdkCredentials(), Env, ClientFactory);
+            return new CheckoutConfiguration(GetSdkCredentials(), Env, ClientFactory, _filesEnv);
         }
 
         protected abstract SdkCredentials GetSdkCredentials();

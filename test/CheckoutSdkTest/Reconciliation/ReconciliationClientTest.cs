@@ -27,7 +27,7 @@ namespace Checkout.Reconciliation
                 .Returns(_authorization);
 
             Mock<CheckoutConfiguration> configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Sandbox, _httpClientFactory.Object);
+                Environment.Sandbox, _httpClientFactory.Object, Environment.Sandbox);
 
             _reconciliationClient = new ReconciliationClient(_apiClient.Object, configuration.Object);
         }

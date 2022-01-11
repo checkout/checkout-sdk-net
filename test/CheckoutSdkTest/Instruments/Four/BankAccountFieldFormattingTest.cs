@@ -1,4 +1,5 @@
-﻿using Checkout.Common.Four;
+﻿using Checkout.Common;
+using Checkout.Common.Four;
 using Checkout.Instruments.Four.Get;
 using Shouldly;
 using System.Threading.Tasks;
@@ -17,11 +18,11 @@ namespace Checkout.Instruments.Four
         {
             BankAccountFieldQuery query = new BankAccountFieldQuery
             {
-                AccountHolderType = PaymentSenderType.Individual,
-                PaymentNetwork = PaymentNetwork.Local
+                AccountHolderType = AccountHolderType.Individual, PaymentNetwork = PaymentNetwork.Local
             };
 
-            var response = await FourApi.InstrumentsClient().GetBankAccountFieldFormatting(Common.CountryCode.GB, Common.Currency.GBP, query);
+            var response = await FourApi.InstrumentsClient()
+                .GetBankAccountFieldFormatting(CountryCode.GB, Currency.GBP, query);
 
             response.ShouldNotBeNull();
             response.Sections.ShouldNotBeNull();

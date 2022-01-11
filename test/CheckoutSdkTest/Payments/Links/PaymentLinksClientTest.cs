@@ -22,7 +22,7 @@ namespace Checkout.Payments.Links
                 .Returns(_authorization);
 
             _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Production, _httpClientFactory.Object);
+                Environment.Production, _httpClientFactory.Object, Environment.Sandbox);
         }
 
         [Fact]

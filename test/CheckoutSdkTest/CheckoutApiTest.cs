@@ -60,6 +60,9 @@ namespace Checkout
             checkoutApi.DisputesClient().ShouldNotBeNull();
             checkoutApi.RiskClient().ShouldNotBeNull();
             checkoutApi.ForexClient().ShouldNotBeNull();
+            checkoutApi.WorkflowsClient().ShouldNotBeNull();
+            checkoutApi.SessionsClient().ShouldNotBeNull();
+            checkoutApi.MarketplaceClient().ShouldNotBeNull();
         }
     }
 }

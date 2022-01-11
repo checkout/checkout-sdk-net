@@ -16,6 +16,7 @@
             _sdkAuthorizationType = sdkAuthorizationType;
         }
 
+
         protected SdkAuthorization SdkAuthorization()
         {
             return _configuration.SdkCredentials.GetSdkAuthorization(_sdkAuthorizationType);

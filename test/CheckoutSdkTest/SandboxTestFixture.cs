@@ -1,7 +1,7 @@
-using System;
-using System.Threading.Tasks;
 using NLog.Extensions.Logging;
 using Shouldly;
+using System;
+using System.Threading.Tasks;
 
 namespace Checkout
 {
@@ -23,6 +23,7 @@ namespace Checkout
                         .LogProvider(logFactory)
                         .Build();
                     break;
+
                 case PlatformType.Four:
                     FourApi = CheckoutSdk.FourSdk().StaticKeys()
                         .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_FOUR_PUBLIC_KEY"))
@@ -31,6 +32,7 @@ namespace Checkout
                         .LogProvider(logFactory)
                         .Build();
                     break;
+
                 case PlatformType.FourOAuth:
                     FourApi = CheckoutSdk.FourSdk().OAuth()
                         .ClientCredentials(System.Environment.GetEnvironmentVariable("CHECKOUT_FOUR_OAUTH_CLIENT_ID"),
@@ -39,9 +41,11 @@ namespace Checkout
                             FourOAuthScope.Marketplace, FourOAuthScope.SessionsApp, FourOAuthScope.SessionsBrowser,
                             FourOAuthScope.Vault, FourOAuthScope.PayoutsBankDetails)
                         .Environment(Environment.Sandbox)
+                        .FilesEnvironment(Environment.Sandbox)
                         .LogProvider(logFactory)
                         .Build();
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(platformType), platformType, null);
             }

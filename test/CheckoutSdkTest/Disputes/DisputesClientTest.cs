@@ -1,7 +1,7 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Moq;
 using Shouldly;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Disputes
@@ -20,9 +20,8 @@ namespace Checkout.Disputes
                 .Returns(_authorization);
 
             _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Sandbox, _httpClientFactory.Object);
+                Environment.Sandbox, _httpClientFactory.Object, null);
         }
-
 
         [Fact]
         private async Task ShouldQueryDispute()

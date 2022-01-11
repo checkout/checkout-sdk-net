@@ -2,7 +2,7 @@
 
 namespace Checkout.Common.Four
 {
-    public enum PaymentSenderType
+    public enum AccountHolderType
     {
         [EnumMember(Value = "individual")] Individual,
         [EnumMember(Value = "corporate")] Corporate,

@@ -2,6 +2,7 @@ using Checkout.Customers.Four;
 using Checkout.Disputes.Four;
 using Checkout.Forex;
 using Checkout.Instruments.Four;
+using Checkout.Marketplace;
 using Checkout.Payments.Four;
 using Checkout.Risk;
 using Checkout.Sessions;
@@ -21,10 +22,12 @@ namespace Checkout.Four
         private readonly IForexClient _forexClient;
         private readonly IWorkflowsClient _workflowsClient;
         private readonly ISessionsClient _sessionsClient;
+        private readonly IMarketplaceClient _marketplaceClient;
 
         public CheckoutApi(CheckoutConfiguration configuration)
         {
-            var apiClient = new ApiClient(configuration);
+            var apiClient = new ApiClient(configuration.HttpClientFactory,
+                configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri);
             _tokensClient = new TokensClient(apiClient, configuration);
             _customersClient = new CustomersClient(apiClient, configuration);
             _paymentsClient = new PaymentsClient(apiClient, configuration);
@@ -34,6 +37,14 @@ namespace Checkout.Four
             _forexClient = new ForexClient(apiClient, configuration);
             _workflowsClient = new WorkflowsClient(apiClient, configuration);
             _sessionsClient = new SessionsClient(apiClient, configuration);
+            IApiClient apiFilesClient = null;
+            if (configuration.FilesApiConfiguration != null)
+            {
+                apiFilesClient = new ApiClient(configuration.HttpClientFactory,
+                    configuration.FilesApiConfiguration.Environment.GetAttribute<EnvironmentAttribute>().FilesApiUri);
+            }
+
+            _marketplaceClient = new MarketplaceClient(apiClient, apiFilesClient, configuration);
         }
 
         public ITokensClient TokensClient()
@@ -79,6 +90,11 @@ namespace Checkout.Four
         public ISessionsClient SessionsClient()
         {
             return _sessionsClient;
+        }
+
+        public IMarketplaceClient MarketplaceClient()
+        {
+            return _marketplaceClient;
         }
     }
 }

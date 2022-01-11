@@ -1,3 +1,4 @@
+using Checkout.Common;
 using Checkout.Files;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace Checkout.Disputes
         private const string AcceptPath = "accept";
 
         public DisputesClient(IApiClient apiClient,
-            CheckoutConfiguration configuration) : base(apiClient, configuration)
+            CheckoutConfiguration configuration) : base(apiClient, null, configuration)
         {
         }
 
@@ -60,6 +61,18 @@ namespace Checkout.Disputes
             CheckoutUtils.ValidateParams("disputeId", disputeId);
             return ApiClient.Post<object>(BuildPath(DisputesPath, disputeId, EvidencePath), SdkAuthorization(), null,
                 cancellationToken);
+        }
+
+        public new Task<IdResponse> SubmitFile(string pathToFile, string purpose,
+            CancellationToken cancellationToken = default)
+        {
+            return base.SubmitFile(pathToFile, purpose, cancellationToken);
+        }
+
+        public new Task<FileDetailsResponse> GetFileDetails(string fileId,
+            CancellationToken cancellationToken = default)
+        {
+            return base.GetFileDetails(fileId, cancellationToken);
         }
     }
 }
