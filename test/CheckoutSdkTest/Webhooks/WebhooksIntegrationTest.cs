@@ -33,7 +33,7 @@ namespace Checkout.Webhooks
             }
         }
 
-        [Fact(Timeout = 180000)]
+        [Fact(Timeout = 180000, Skip = "unstable")]
         private async Task ShouldTestFullWebhookOperations()
         {
             const string url = "https://checkout.com/webhooks";
