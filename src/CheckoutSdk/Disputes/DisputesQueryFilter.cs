@@ -1,3 +1,5 @@
+using System;
+
 namespace Checkout.Disputes
 {
     public class DisputesQueryFilter
@@ -6,9 +8,9 @@ namespace Checkout.Disputes
 
         public int? Skip { get; set; }
 
-        public string From { get; set; }
+        public DateTime From { get; set; }
 
-        public string To { get; set; }
+        public DateTime To { get; set; }
 
         public string Id { get; set; }
 

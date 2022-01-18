@@ -41,20 +41,31 @@ namespace Checkout
             var settings = new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,
-                ContractResolver = new DefaultContractResolver {NamingStrategy = new SnakeCaseNamingStrategy()},
+                ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() },
                 Converters = new JsonConverter[]
                 {
                     new StringEnumConverter(),
                     // Instruments CS2
                     new GetInstrumentResponseTypeConverter(), new UpdateInstrumentResponseTypeConverter(),
                     // Workflows CS2
-                    new WorkflowActionTypeResponseConverter(), new WorkflowConditionTypeResponseConverter()
-                }
+                    new WorkflowActionTypeResponseConverter(), new WorkflowConditionTypeResponseConverter(),
+                    GetConverterDateTimeToIso()
+                },
             };
 
             configureSettings?.Invoke(settings);
 
             return settings;
+        }
+
+        private static IsoDateTimeConverter GetConverterDateTimeToIso()
+        {
+            IsoDateTimeConverter converter = new IsoDateTimeConverter
+            {
+                DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssK"
+            };
+
+            return converter;
         }
     }
 }
