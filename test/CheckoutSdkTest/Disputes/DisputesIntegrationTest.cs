@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
 using Checkout.Payments;
 using Shouldly;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Disputes
@@ -10,16 +11,18 @@ namespace Checkout.Disputes
         [Fact]
         private async Task ShouldQueryDisputes()
         {
-            var request = new DisputesQueryFilter
-            {
-                Limit = 250
-            };
+            var from = DateTime.UtcNow.Subtract(TimeSpan.FromHours(24));
+            var to = DateTime.Now; // local timezone
+            var request = new DisputesQueryFilter { Limit = 250, To = to, From = from };
 
             var response = await DefaultApi.DisputesClient().Query(request);
             response.ShouldNotBeNull();
             response.Limit.ShouldBe(250);
             response.Skip.ShouldNotBeNull();
             response.TotalCount.ShouldNotBeNull();
+            response.To.ShouldNotBeNull();
+            response.From.ShouldNotBeNull();
+
             if (response.TotalCount > 0)
             {
                 var dispute = response.Data[0];
@@ -79,7 +82,7 @@ namespace Checkout.Disputes
             const string filePath = "./Resources/checkout.jpeg";
             var fileResponse = await DefaultApi.DisputesClient().SubmitFile(filePath, "dispute_evidence");
 
-            //Provide dispute evidence 
+            //Provide dispute evidence
             var disputeEvidenceRequest = new DisputeEvidenceRequest()
             {
                 ProofOfDeliveryOrServiceFile = fileResponse.Id,
