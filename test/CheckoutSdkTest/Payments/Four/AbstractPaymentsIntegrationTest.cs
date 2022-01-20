@@ -7,6 +7,7 @@ using Checkout.Payments.Four.Response;
 using Checkout.Payments.Four.Sender;
 using Checkout.Tokens;
 using Shouldly;
+using Xunit.Sdk;
 
 namespace Checkout.Payments.Four
 {
@@ -18,13 +19,15 @@ namespace Checkout.Payments.Four
         {
         }
 
-        protected async Task<PaymentResponse> MakeCardPayment(bool shouldCapture = false, long amount = 10L)
+        protected async Task<PaymentResponse> MakeCardPayment(bool shouldCapture = false, long amount = 10L,
+            DateTime? captureOn = null)
         {
-            var phone = new Phone
+            if (!shouldCapture && captureOn != null)
             {
-                CountryCode = "44",
-                Number = "020 222333"
-            };
+                throw new XunitException("CaptureOn was provided but the payment is not set for capture");
+            }
+
+            var phone = new Phone {CountryCode = "44", Number = "020 222333"};
 
             var billingAddress = new Address
             {
@@ -47,11 +50,7 @@ namespace Checkout.Payments.Four
                 Phone = phone
             };
 
-            var customerRequest = new CustomerRequest
-            {
-                Email = GenerateRandomEmail(),
-                Name = "Customer"
-            };
+            var customerRequest = new CustomerRequest {Email = GenerateRandomEmail(), Name = "Customer"};
 
             var address = new Address
             {
@@ -69,10 +68,8 @@ namespace Checkout.Payments.Four
                 LastName = "Test",
                 Address = address,
                 Identification = new Identification
-                { 
-                    IssuingCountry = CountryCode.GT,
-                    Number = "1234",
-                    Type = IdentificationType.DrivingLicence
+                {
+                    IssuingCountry = CountryCode.GT, Number = "1234", Type = IdentificationType.DrivingLicence
                 }
             };
 
@@ -84,7 +81,8 @@ namespace Checkout.Payments.Four
                 Amount = amount,
                 Currency = Currency.USD,
                 Customer = customerRequest,
-                Sender = paymentIndividualSender
+                Sender = paymentIndividualSender,
+                CaptureOn = captureOn
             };
 
             var paymentResponse = await FourApi.PaymentsClient().RequestPayment(paymentRequest);
@@ -96,15 +94,9 @@ namespace Checkout.Payments.Four
         {
             var cardTokenResponse = await RequestToken();
 
-            var requestTokenSource = new RequestTokenSource
-            {
-                Token = cardTokenResponse.Token
-            };
+            var requestTokenSource = new RequestTokenSource {Token = cardTokenResponse.Token};
 
-            var customerRequest = new CustomerRequest
-            {
-                Email = GenerateRandomEmail()
-            };
+            var customerRequest = new CustomerRequest {Email = GenerateRandomEmail()};
 
             var paymentInstrument = new PaymentInstrumentSender();
 
@@ -126,11 +118,7 @@ namespace Checkout.Payments.Four
 
         protected async Task<PaymentResponse> Make3dsCardPayment(bool attemptN3d = false)
         {
-            var phone = new Phone
-            {
-                CountryCode = "44",
-                Number = "020 222333"
-            };
+            var phone = new Phone {CountryCode = "44", Number = "020 222333"};
 
             var billingAddress = new Address
             {
@@ -163,11 +151,7 @@ namespace Checkout.Payments.Four
                 Version = "2.0.1"
             };
 
-            var customerRequest = new CustomerRequest
-            {
-                Email = GenerateRandomEmail(),
-                Name = "Customer"
-            };
+            var customerRequest = new CustomerRequest {Email = GenerateRandomEmail(), Name = "Customer"};
 
             var address = new Address
             {
@@ -179,11 +163,7 @@ namespace Checkout.Payments.Four
                 Country = CountryCode.GB
             };
 
-            var paymentIndividualSender = new PaymentCorporateSender
-            {
-                CompanyName = "Testing Inc.",
-                Address = address
-            };
+            var paymentIndividualSender = new PaymentCorporateSender {CompanyName = "Testing Inc.", Address = address};
 
             var paymentRequest = new PaymentRequest
             {
@@ -206,11 +186,7 @@ namespace Checkout.Payments.Four
 
         protected async Task<CardTokenResponse> RequestToken()
         {
-            var phone = new Phone
-            {
-                CountryCode = "44",
-                Number = "020 222333"
-            };
+            var phone = new Phone {CountryCode = "44", Number = "020 222333"};
 
             var billingAddress = new Address
             {

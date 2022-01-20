@@ -53,6 +53,7 @@ Four.ICheckoutApi api = CheckoutSdk.FourSdk().StaticKeys()
     .Environment(Environment.Sandbox)
     .LogProvider(logFactory) // optional
     .HttpClientFactory(httpClientFactory) // optional
+    .FilesEnvironment(Environment.Sandbox) // optional, needed for Marketplace operations
     .Build();
 ```
 ### Four OAuth
@@ -67,6 +68,7 @@ Four.ICheckoutApi api = CheckoutSdk.FourSdk().OAuth()
     .Environment(Environment.Sandbox)
     .LogProvider(logFactory) // optional
     .HttpClientFactory(httpClientFactory) // optional
+    .FilesEnvironment(Environment.Sandbox) // optional, needed for Marketplace operations
     .Build();
 ```
 
@@ -88,7 +90,8 @@ Initialize the Configuration of your `appsettings.json` file:
     "SecretKey": "secret_key",
     "PublicKey": "public_key",
     "Environment": "Sandbox",
-    "PlatformType": "Default"
+    "PlatformType": "Default",
+    "FilesEnvironment": "Sandbox"
   }
 }
 ```
@@ -135,8 +138,6 @@ public void ConfigureServices(IServiceCollection services)
 Then take a dependency on `ICheckoutApi` in your class constructor:
 
 ```c#
-
-
 public class CheckoutController : ControllerBase
 {
     private readonly ICheckoutApi _api;

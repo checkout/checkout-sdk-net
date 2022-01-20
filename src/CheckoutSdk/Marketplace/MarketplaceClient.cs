@@ -66,7 +66,8 @@ namespace Checkout.Marketplace
         public async Task<IdResponse> SubmitFile(MarketplaceFileRequest marketplaceFileRequest,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("marketplaceFileRequest", marketplaceFileRequest);
+            CheckoutUtils.ValidateParams("marketplaceFileRequest", marketplaceFileRequest,
+                "marketplaceFileRequest.purpose", marketplaceFileRequest.Purpose);
             return await SubmitFileToFilesApi(marketplaceFileRequest.File, marketplaceFileRequest.Purpose.Value,
                 cancellationToken);
         }

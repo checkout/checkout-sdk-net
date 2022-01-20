@@ -14,7 +14,7 @@ namespace Checkout
             return this;
         }
 
-        public AbstractCheckoutSdkBuilder<T> FilesEnvironment(Environment environment)
+        public AbstractCheckoutSdkBuilder<T> FilesEnvironment(Environment? environment)
         {
             _filesEnv = environment;
             return this;

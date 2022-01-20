@@ -23,5 +23,7 @@ namespace CheckoutSDK.Extensions.Configuration
         public PlatformType? PlatformType { get; set; }
 
         public IHttpClientFactory HttpClientFactory { get; set; }
+
+        public Environment? FilesEnvironment { get; set; }
     }
 }

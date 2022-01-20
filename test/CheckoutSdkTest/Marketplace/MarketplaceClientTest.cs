@@ -12,7 +12,6 @@ namespace Checkout.Marketplace
     {
         private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.Four, ValidDefaultSk);
         private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Four);
-        private readonly Mock<CheckoutConfiguration> _configuration;
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
         private readonly Mock<IApiClient> _apiFilesClient = new Mock<IApiClient>();
         private readonly IHttpClientFactory _httpClientFactory = new DefaultHttpClientFactory();
@@ -22,10 +21,10 @@ namespace Checkout.Marketplace
         {
             _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.OAuth))
                 .Returns(_authorization);
-            _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
+            Mock<CheckoutConfiguration> configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
                 Environment.Sandbox, _httpClientFactory, Environment.Sandbox);
             _marketplaceClient =
-                new MarketplaceClient(_apiClient.Object, _apiFilesClient.Object, _configuration.Object);
+                new MarketplaceClient(_apiClient.Object, _apiFilesClient.Object, configuration.Object);
         }
 
         [Fact]
