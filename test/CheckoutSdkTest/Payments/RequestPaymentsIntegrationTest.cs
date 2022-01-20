@@ -14,7 +14,7 @@ namespace Checkout.Payments
         [Fact]
         private async Task ShouldMakeCardPayment()
         {
-            var paymentResponse = await MakeCardPayment();
+            var paymentResponse = await MakeCardPayment(true, captureOn: DateTime.Now.AddDays(1));
             paymentResponse.ShouldNotBeNull();
 
             paymentResponse.Id.ShouldNotBeNullOrEmpty();

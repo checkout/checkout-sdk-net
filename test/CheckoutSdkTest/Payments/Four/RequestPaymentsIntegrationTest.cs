@@ -14,7 +14,7 @@ namespace Checkout.Payments.Four
         [Fact]
         private async Task ShouldMakeCardPayment()
         {
-            var paymentResponse = await MakeCardPayment();
+            var paymentResponse = await MakeCardPayment(true, captureOn: DateTime.Now.AddDays(2));
             paymentResponse.ShouldNotBeNull();
 
             paymentResponse.Id.ShouldNotBeNullOrEmpty();
@@ -32,7 +32,7 @@ namespace Checkout.Payments.Four
             paymentResponse.ThreeDs.ShouldBeNull();
             //Source
             paymentResponse.Source.ShouldBeAssignableTo(typeof(CardResponseSource));
-            var cardSourceResponse = (CardResponseSource) paymentResponse.Source;
+            var cardSourceResponse = (CardResponseSource)paymentResponse.Source;
             cardSourceResponse.Type().ShouldBe(PaymentSourceType.Card);
             cardSourceResponse.Id.ShouldNotBeNullOrEmpty();
             cardSourceResponse.AvsCheck.ShouldBe("G");
@@ -82,11 +82,7 @@ namespace Checkout.Payments.Four
         [Fact]
         private async Task ShouldMakeCardVerification()
         {
-            var phone = new Phone
-            {
-                CountryCode = "44",
-                Number = "020 222333"
-            };
+            var phone = new Phone {CountryCode = "44", Number = "020 222333"};
 
             var billingAddress = new Address
             {
@@ -136,7 +132,7 @@ namespace Checkout.Payments.Four
             paymentResponse.ThreeDs.ShouldBeNull();
             //Source
             paymentResponse.Source.ShouldBeAssignableTo(typeof(CardResponseSource));
-            var cardSourceResponse = (CardResponseSource) paymentResponse.Source;
+            var cardSourceResponse = (CardResponseSource)paymentResponse.Source;
             cardSourceResponse.Type().ShouldBe(PaymentSourceType.Card);
             cardSourceResponse.Id.ShouldNotBeNullOrEmpty();
             cardSourceResponse.AvsCheck.ShouldBe("G");
@@ -222,7 +218,7 @@ namespace Checkout.Payments.Four
             paymentResponse.ThreeDs.ShouldBeNull();
             //Source
             paymentResponse.Source.ShouldBeAssignableTo(typeof(CardResponseSource));
-            var cardSourceResponse = (CardResponseSource) paymentResponse.Source;
+            var cardSourceResponse = (CardResponseSource)paymentResponse.Source;
             cardSourceResponse.Type().ShouldBe(PaymentSourceType.Card);
             cardSourceResponse.Id.ShouldNotBeNullOrEmpty();
             cardSourceResponse.AvsCheck.ShouldBe("G");
@@ -279,7 +275,7 @@ namespace Checkout.Payments.Four
             paymentResponse.ThreeDs.ShouldBeNull();
             //Source
             paymentResponse.Source.ShouldBeAssignableTo(typeof(CardResponseSource));
-            var cardSourceResponse = (CardResponseSource) paymentResponse.Source;
+            var cardSourceResponse = (CardResponseSource)paymentResponse.Source;
             cardSourceResponse.Type().ShouldBe(PaymentSourceType.Card);
             cardSourceResponse.Id.ShouldNotBeNullOrEmpty();
             cardSourceResponse.AvsCheck.ShouldBe("G");
@@ -319,11 +315,7 @@ namespace Checkout.Payments.Four
         [Fact]
         private async Task ShouldMakePaymentsIdempotently()
         {
-            var phone = new Phone
-            {
-                CountryCode = "44",
-                Number = "020 222333"
-            };
+            var phone = new Phone {CountryCode = "44", Number = "020 222333"};
 
             var billingAddress = new Address
             {

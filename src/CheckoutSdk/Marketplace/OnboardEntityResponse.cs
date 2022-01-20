@@ -11,7 +11,7 @@ namespace Checkout.Marketplace
 
         public Capabilities Capabilities { get; set; }
 
-        public OnboardingStatus Status { get; set; }
+        public OnboardingStatus? Status { get; set; }
 
         public IList<RequirementsDue> RequirementsDue { get; set; }
     }

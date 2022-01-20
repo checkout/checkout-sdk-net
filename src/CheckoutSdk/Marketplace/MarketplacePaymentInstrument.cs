@@ -32,6 +32,6 @@ namespace Checkout.Marketplace
 
         public BankDetails Bank { get; set; }
 
-        public AccountHolder AccountHolder { get; set; }
+        public MarketplaceAccountHolder AccountHolder { get; set; }
     }
 }

@@ -21,6 +21,7 @@ namespace Checkout
                         .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_SECRET_KEY"))
                         .Environment(Environment.Sandbox)
                         .LogProvider(logFactory)
+                        .HttpClientFactory(new DefaultHttpClientFactory())
                         .Build();
                     break;
 

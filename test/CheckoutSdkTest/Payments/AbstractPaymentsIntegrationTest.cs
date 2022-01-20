@@ -7,6 +7,7 @@ using Checkout.Payments.Request.Source;
 using Checkout.Payments.Response;
 using Checkout.Tokens;
 using Shouldly;
+using Xunit.Sdk;
 
 namespace Checkout.Payments
 {
@@ -18,8 +19,14 @@ namespace Checkout.Payments
         {
         }
 
-        protected async Task<PaymentResponse> MakeCardPayment(bool shouldCapture = false, long amount = 10L)
+        protected async Task<PaymentResponse> MakeCardPayment(bool shouldCapture = false, long amount = 10L,
+            DateTime? captureOn = null)
         {
+            if (!shouldCapture && captureOn != null)
+            {
+                throw new XunitException("CaptureOn was provided but the payment is not set for capture");
+            }
+
             var phone = GetPhone();
             var billingAddress = GetAddress();
 
@@ -41,6 +48,7 @@ namespace Checkout.Payments
                 Reference = Guid.NewGuid().ToString(),
                 Amount = amount,
                 Currency = Currency.GBP,
+                CaptureOn = captureOn
             };
 
             var paymentResponse = await DefaultApi.PaymentsClient().RequestPayment(paymentRequest);
@@ -67,15 +75,9 @@ namespace Checkout.Payments
             var cardTokenResponse = await DefaultApi.TokensClient().Request(cardTokenRequest);
             cardTokenResponse.ShouldNotBeNull();
 
-            var requestTokenSource = new RequestTokenSource
-            {
-                Token = cardTokenResponse.Token
-            };
+            var requestTokenSource = new RequestTokenSource {Token = cardTokenResponse.Token};
 
-            var customerRequest = new CustomerRequest
-            {
-                Email = GenerateRandomEmail()
-            };
+            var customerRequest = new CustomerRequest {Email = GenerateRandomEmail()};
 
             var paymentRequest = new PaymentRequest
             {
@@ -118,10 +120,7 @@ namespace Checkout.Payments
                 Version = "2.0.1"
             };
 
-            var customerRequest = new CustomerRequest
-            {
-                Email = GenerateRandomEmail()
-            };
+            var customerRequest = new CustomerRequest {Email = GenerateRandomEmail()};
 
             var paymentRequest = new PaymentRequest
             {
@@ -141,11 +140,7 @@ namespace Checkout.Payments
 
         protected static Phone GetPhone()
         {
-            return new Phone()
-            {
-                CountryCode = "1",
-                Number = "4155552671"
-            };
+            return new Phone() {CountryCode = "1", Number = "4155552671"};
         }
 
         protected static Address GetAddress()
@@ -163,23 +158,11 @@ namespace Checkout.Payments
 
         protected static HostedPaymentRequest CreateHostedPaymentRequest(string reference)
         {
-            var customer = new CustomerRequest
-            {
-                Name = "Jack Napier",
-                Email = GenerateRandomEmail()
-            };
+            var customer = new CustomerRequest {Name = "Jack Napier", Email = GenerateRandomEmail()};
 
-            var shippingDetails = new ShippingDetails
-            {
-                Address = GetAddress(),
-                Phone = GetPhone()
-            };
+            var shippingDetails = new ShippingDetails {Address = GetAddress(), Phone = GetPhone()};
 
-            var billing = new BillingInformation()
-            {
-                Address = GetAddress(),
-                Phone = GetPhone()
-            };
+            var billing = new BillingInformation() {Address = GetAddress(), Phone = GetPhone()};
 
 
             var recipient = new PaymentRecipient()
@@ -192,25 +175,13 @@ namespace Checkout.Payments
                 Zip = "12345"
             };
 
-            var products = new Product[]
-            {
-                new Product()
-                {
-                    Name = "Gold Necklace",
-                    Quantity = 1L,
-                    Price = 200L
-                }
-            };
+            var products = new Product[] {new Product() {Name = "Gold Necklace", Quantity = 1L, Price = 200L}};
 
-            var threeDs = new ThreeDsRequest()
-            {
-                Enabled = false,
-                AttemptN3D = false
-            };
+            var threeDs = new ThreeDsRequest() {Enabled = false, AttemptN3D = false};
 
-            var processing = new ProcessingSettings { Aft = true };
+            var processing = new ProcessingSettings {Aft = true};
 
-            var risk = new RiskRequest { Enabled = false };
+            var risk = new RiskRequest {Enabled = false};
 
             return new HostedPaymentRequest
             {
