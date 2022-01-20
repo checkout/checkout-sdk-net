@@ -10,7 +10,7 @@ namespace Checkout.Workflows.Four
 {
     public class WorkflowsReflowIntegrationTest : AbstractWorkflowIntegrationTest
     {
-        [Fact(Timeout = 180000)]
+        [Fact(Skip = "unstable")]
         public async Task ShouldReflowByEvent()
         {
             await CreateWorkflow();
@@ -75,7 +75,7 @@ namespace Checkout.Workflows.Four
             reflowResponse.ShouldBeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "unstable")]
         public async Task ShouldReflowByEvents()
         {
             CreateWorkflowResponse createWorkflowResponse = await CreateWorkflow();
