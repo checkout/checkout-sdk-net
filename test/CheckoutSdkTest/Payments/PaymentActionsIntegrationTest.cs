@@ -1,12 +1,12 @@
-using System.Threading.Tasks;
 using Shouldly;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Payments
 {
     public class PaymentActionsIntegrationTest : AbstractPaymentsIntegrationTest
     {
-        [Fact]
+        [Fact(Skip = "unstable")]
         private async Task ShouldGetPaymentActions()
         {
             var paymentResponse = await MakeCardPayment(true);
