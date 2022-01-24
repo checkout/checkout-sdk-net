@@ -9,11 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - id: setup-net-2_1-3_1-5_0
+      - id: setup-net-2_0-3_1-5_0
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: |
-            2.1.x
+            2.0.x
             3.1.x
             5.0.x
       - id: list-installed-runtimes

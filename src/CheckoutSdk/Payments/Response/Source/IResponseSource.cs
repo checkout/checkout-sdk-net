@@ -4,6 +4,6 @@ namespace Checkout.Payments.Response.Source
 {
     public interface IResponseSource
     {
-        public PaymentSourceType? Type();
+        PaymentSourceType? Type();
     }
 }

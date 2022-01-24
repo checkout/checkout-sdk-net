@@ -100,7 +100,7 @@ namespace Checkout.Four
 
         private string GetScopes()
         {
-            return string.Join(' ',
+            return string.Join(" ",
                 _scopes.Select(scope => scope.GetAttribute<FourOAuthScopeAttribute>().Scope).ToArray());
         }
     }
