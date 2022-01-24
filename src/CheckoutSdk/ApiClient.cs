@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Mime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,7 +32,7 @@ namespace Checkout
             SdkAuthorization authorization,
             CancellationToken cancellationToken = default)
         {
-            using var httpResponse = await SendRequestAsync(
+            var httpResponse = await SendRequestAsync(
                 HttpMethod.Get,
                 path,
                 authorization,
@@ -51,7 +50,7 @@ namespace Checkout
             CancellationToken cancellationToken = default,
             string idempotencyKey = null)
         {
-            using var httpResponse = await SendRequestAsync(
+            var httpResponse = await SendRequestAsync(
                 HttpMethod.Post,
                 path,
                 authorization,
@@ -68,7 +67,7 @@ namespace Checkout
             object request = null, CancellationToken cancellationToken = default, string idempotencyKey = null)
             where TResult : Resource
         {
-            using var httpResponse = await SendRequestAsync(
+            var httpResponse = await SendRequestAsync(
                 HttpMethod.Post,
                 path,
                 authorization,
@@ -92,7 +91,7 @@ namespace Checkout
             CancellationToken cancellationToken = default,
             string idempotencyKey = null)
         {
-            using var httpResponse = await SendRequestAsync(
+            var httpResponse = await SendRequestAsync(
                 new HttpMethod("PATCH"),
                 path,
                 authorization,
@@ -106,7 +105,7 @@ namespace Checkout
         public async Task<TResult> Put<TResult>(string path, SdkAuthorization authorization, object request = null,
             CancellationToken cancellationToken = default, string idempotencyKey = null)
         {
-            using var httpResponse = await SendRequestAsync(
+            var httpResponse = await SendRequestAsync(
                 HttpMethod.Put,
                 path,
                 authorization,
@@ -121,7 +120,7 @@ namespace Checkout
             SdkAuthorization authorization,
             CancellationToken cancellationToken = default)
         {
-            using var httpResponse = await SendRequestAsync(
+            var httpResponse = await SendRequestAsync(
                 HttpMethod.Delete,
                 path,
                 authorization,
@@ -141,7 +140,7 @@ namespace Checkout
             var json = _serializer.Serialize(request);
             var dictionary =
                 (IDictionary<string, string>)_serializer.Deserialize(json, typeof(IDictionary<string, string>));
-            using var httpResponse = await SendRequestAsync(
+            var httpResponse = await SendRequestAsync(
                 HttpMethod.Get,
                 QueryHelpers.AddQueryString(path, dictionary),
                 authorization,
@@ -172,7 +171,7 @@ namespace Checkout
                 else
                 {
                     httpContent = new StringContent(_serializer.Serialize(requestBody), Encoding.UTF8,
-                        MediaTypeNames.Application.Json);
+                        "application/json");
                 }
             }
 

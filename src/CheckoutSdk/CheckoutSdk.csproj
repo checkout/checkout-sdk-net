@@ -16,7 +16,7 @@
         <PackageTags>Checkout.com;payments;gateway;sdk</PackageTags>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>git://github.com/checkout/checkout-sdk-net</RepositoryUrl>
-        <TargetFrameworks>net5.0;netstandard2.1;netcoreapp3.1</TargetFrameworks>
+        <TargetFrameworks>net5.0;netstandard2.0;netcoreapp3.1</TargetFrameworks>
         <RootNamespace>Checkout</RootNamespace>
         <PackageReleaseNotes>
         </PackageReleaseNotes>

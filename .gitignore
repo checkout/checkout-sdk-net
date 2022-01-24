@@ -9,5 +9,7 @@ riderModule.iml
 testlog.manifest
 .vs
 *.nupkg*
+*.nuspec
+nuget.exe
 coverage.cobertura.xml
 SonarQube.xml

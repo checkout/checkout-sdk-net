@@ -11,13 +11,13 @@ jobs:
       - id: setup-java-11
         uses: actions/setup-java@v2
         with:
-          distribution: 'temurin'
-          java-version: '11'
-      - id: setup-net-2_1-3_1-5_0
+          distribution: "temurin"
+          java-version: "11"
+      - id: setup-net-2_0-3_1-5_0
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: |
-            2.1.x
+            2.0.x
             3.1.x
             5.0.x
       - id: list-installed-runtimes
