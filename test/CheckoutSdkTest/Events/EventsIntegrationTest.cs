@@ -1,8 +1,8 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Checkout.Payments;
 using Checkout.Webhooks;
 using Shouldly;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Events
@@ -59,18 +59,11 @@ namespace Checkout.Events
             payment.ShouldNotBeNull();
 
 
-            var retrieveEventsRequest = new RetrieveEventsRequest()
-            {
-                PaymentId = payment.Id
-            };
+            var retrieveEventsRequest = new RetrieveEventsRequest {PaymentId = payment.Id};
 
             //Retrieve events
-            EventsPageResponse events = null;
-            while (events == null)
-            {
-                await Nap();
-                events = await DefaultApi.EventsClient().RetrieveEvents(retrieveEventsRequest);
-            }
+            EventsPageResponse events = await Retriable(async () =>
+                await DefaultApi.EventsClient().RetrieveEvents(retrieveEventsRequest));
 
             events.ShouldNotBeNull();
             events.TotalCount.ShouldBe(1);

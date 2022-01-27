@@ -1,7 +1,9 @@
+using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using Shouldly;
 using System;
 using System.Threading.Tasks;
+using Xunit.Sdk;
 
 namespace Checkout
 {
@@ -9,10 +11,13 @@ namespace Checkout
     {
         protected readonly ICheckoutApi DefaultApi;
         protected readonly Four.ICheckoutApi FourApi;
+        private readonly ILogger _log;
+        private const int TryMaxAttempts = 10;
 
         protected SandboxTestFixture(PlatformType platformType)
         {
             var logFactory = new NLogLoggerFactory();
+            _log = logFactory.CreateLogger(typeof(SandboxTestFixture));
             switch (platformType)
             {
                 case PlatformType.Default:
@@ -52,19 +57,34 @@ namespace Checkout
             }
         }
 
-        protected static async Task Nap()
-        {
-            await Task.Delay(2000);
-        }
-
-        protected static async Task Nap(int seconds)
-        {
-            await Task.Delay(seconds * 1000);
-        }
-
         protected static string GenerateRandomEmail()
         {
             return $"{Guid.NewGuid()}@checkout-sdk-net.com";
+        }
+
+        protected async Task<T> Retriable<T>(Func<Task<T>> func, Predicate<T> predicate = null)
+        {
+            var attempts = 1;
+            while (attempts <= TryMaxAttempts)
+            {
+                try
+                {
+                    T t = await func.Invoke();
+                    predicate?.Invoke(t).ShouldBeTrue();
+                    return t;
+                }
+                catch (Exception ex)
+                {
+                    _log.LogWarning(
+                        @"Request/Predicate failed with error '{Error}' - retry {CurrentAttempt}/{MaxAttempts}",
+                        ex.Message, attempts, TryMaxAttempts);
+                }
+
+                attempts++;
+                await Task.Delay(2000);
+            }
+
+            throw new XunitException("Max attempts reached!");
         }
 
         protected static async Task AssertNotFound<T>(Task<T> task)

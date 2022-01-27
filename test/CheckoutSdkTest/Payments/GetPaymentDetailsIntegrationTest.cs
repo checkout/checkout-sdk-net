@@ -13,9 +13,8 @@ namespace Checkout.Payments
         {
             var paymentResponse = await MakeCardPayment(true);
 
-            await Nap();
-
-            var payment = await DefaultApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id);
+            var payment = await Retriable(async () =>
+                await DefaultApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id));
 
             payment.Id.ShouldNotBeNullOrEmpty();
             payment.PaymentType.ShouldBe(PaymentType.Regular);

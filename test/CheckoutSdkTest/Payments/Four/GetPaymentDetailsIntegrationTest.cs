@@ -1,7 +1,8 @@
-using System.Threading.Tasks;
 using Checkout.Common;
+using Checkout.Payments.Four.Response;
 using Checkout.Payments.Four.Response.Source;
 using Shouldly;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Payments.Four
@@ -13,9 +14,8 @@ namespace Checkout.Payments.Four
         {
             var paymentResponse = await MakeCardPayment(true);
 
-            await Nap();
-
-            var payment = await FourApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id);
+            var payment = await Retriable(async () =>
+                await FourApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id), PaymentIsCaptured);
 
             payment.Id.ShouldNotBeNullOrEmpty();
             payment.PaymentType.ShouldBe(PaymentType.Regular);
@@ -31,7 +31,7 @@ namespace Checkout.Payments.Four
             payment.Eci.ShouldBeNull();
             //Source
             payment.Source.ShouldBeAssignableTo(typeof(CardResponseSource));
-            var cardSourcePayment = (CardResponseSource) payment.Source;
+            var cardSourcePayment = (CardResponseSource)payment.Source;
             cardSourcePayment.Type().ShouldBe(PaymentSourceType.Card);
             cardSourcePayment.Id.ShouldNotBeNullOrEmpty();
             cardSourcePayment.AvsCheck.ShouldBe("G");
@@ -63,6 +63,11 @@ namespace Checkout.Payments.Four
             payment.HasLink("actions").ShouldBeTrue();
             payment.HasLink("capture").ShouldBeFalse();
             payment.HasLink("void").ShouldBeFalse();
+        }
+
+        private static bool PaymentIsCaptured(GetPaymentResponse obj)
+        {
+            return obj.Status == PaymentStatus.Captured;
         }
     }
 }

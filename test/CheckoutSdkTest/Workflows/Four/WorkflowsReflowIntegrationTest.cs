@@ -10,16 +10,14 @@ namespace Checkout.Workflows.Four
 {
     public class WorkflowsReflowIntegrationTest : AbstractWorkflowIntegrationTest
     {
-        [Fact(Skip = "unstable")]
+        [Fact]
         public async Task ShouldReflowByEvent()
         {
             await CreateWorkflow();
 
             PaymentResponse payment = await MakeCardPayment();
 
-            await Nap(10);
-
-            SubjectEvent paymentApprovedEvent = await GetSubjectEvent(payment.Id);
+            SubjectEvent paymentApprovedEvent = await Retriable(async () => await GetSubjectEvent(payment.Id));
 
             paymentApprovedEvent.ShouldNotBeNull();
             paymentApprovedEvent.Id.ShouldNotBeNullOrEmpty();
@@ -29,62 +27,55 @@ namespace Checkout.Workflows.Four
             reflowResponse.ShouldBeNull();
         }
 
-        [Fact(Timeout = 180000, Skip = "unstable")]
+        [Fact]
         public async Task ShouldReflowBySubject()
         {
             await CreateWorkflow();
 
             PaymentResponse payment = await MakeCardPayment();
 
-            await Nap(10);
-
-            ReflowResponse reflowResponse = await FourApi.WorkflowsClient().ReflowBySubject(payment.Id);
+            ReflowResponse reflowResponse =
+                await Retriable(async () => await FourApi.WorkflowsClient().ReflowBySubject(payment.Id));
 
             reflowResponse.ShouldBeNull();
         }
 
-        [Fact(Timeout = 180000, Skip = "unstable")]
+        [Fact]
         public async Task ShouldReflowByEventAndWorkflow()
         {
             CreateWorkflowResponse createWorkflowResponse = await CreateWorkflow();
 
             PaymentResponse payment = await MakeCardPayment();
 
-            await Nap(10);
+            SubjectEvent paymentApprovedEvent = await Retriable(async () => await GetSubjectEvent(payment.Id));
 
-            SubjectEvent paymentApprovedEvent = await GetSubjectEvent(payment.Id);
-
-            ReflowResponse reflowResponse = await FourApi.WorkflowsClient()
-                .ReflowByEventAndWorkflow(paymentApprovedEvent.Id, createWorkflowResponse.Id);
+            ReflowResponse reflowResponse = await Retriable(async () => await FourApi.WorkflowsClient()
+                .ReflowByEventAndWorkflow(paymentApprovedEvent.Id, createWorkflowResponse.Id));
 
             reflowResponse.ShouldBeNull();
         }
 
-        [Fact(Timeout = 180000, Skip = "unstable")]
+        [Fact]
         public async Task ShouldReflowBySubjectAndWorkflow()
         {
             CreateWorkflowResponse createWorkflowResponse = await CreateWorkflow();
 
             PaymentResponse payment = await MakeCardPayment();
 
-            await Nap(10);
-
-            ReflowResponse reflowResponse = await FourApi.WorkflowsClient()
-                .ReflowBySubjectAndWorkflow(payment.Id, createWorkflowResponse.Id);
+            ReflowResponse reflowResponse = await Retriable(async () => await FourApi.WorkflowsClient()
+                .ReflowBySubjectAndWorkflow(payment.Id, createWorkflowResponse.Id));
 
             reflowResponse.ShouldBeNull();
         }
 
-        [Fact(Skip = "unstable")]
+        [Fact]
         public async Task ShouldReflowByEvents()
         {
             CreateWorkflowResponse createWorkflowResponse = await CreateWorkflow();
 
             PaymentResponse payment = await MakeCardPayment();
 
-            await Nap(10);
-
-            SubjectEvent paymentApprovedEvent = await GetSubjectEvent(payment.Id);
+            SubjectEvent paymentApprovedEvent = await Retriable(async () => await GetSubjectEvent(payment.Id));
 
             ReflowByEventsRequest request = new ReflowByEventsRequest
             {
@@ -104,14 +95,13 @@ namespace Checkout.Workflows.Four
 
             PaymentResponse payment = await MakeCardPayment();
 
-            await Nap(10);
-
             ReflowBySubjectsRequest request = new ReflowBySubjectsRequest
             {
                 Subjects = new List<string> {payment.Id}, Workflows = new List<string> {createWorkflowResponse.Id}
             };
 
-            ReflowResponse reflowResponse = await FourApi.WorkflowsClient().Reflow(request);
+            ReflowResponse reflowResponse =
+                await Retriable(async () => await FourApi.WorkflowsClient().Reflow(request));
 
             reflowResponse.ShouldBeNull();
         }

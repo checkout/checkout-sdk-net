@@ -64,9 +64,8 @@ namespace Checkout.Payments
             paymentResponse.HasLink("capture").ShouldBeFalse();
             paymentResponse.HasLink("void").ShouldBeFalse();
 
-            await Nap();
-
-            var payment = await DefaultApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id);
+            var payment = await Retriable(async () =>
+                await DefaultApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id));
             payment.ShouldNotBeNull();
 
             // Destination

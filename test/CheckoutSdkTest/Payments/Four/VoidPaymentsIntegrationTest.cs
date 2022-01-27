@@ -1,6 +1,7 @@
+using Checkout.Payments.Four.Response;
+using Shouldly;
 using System;
 using System.Threading.Tasks;
-using Shouldly;
 using Xunit;
 
 namespace Checkout.Payments.Four
@@ -12,10 +13,7 @@ namespace Checkout.Payments.Four
         {
             var paymentResponse = await MakeCardPayment();
 
-            var voidRequest = new VoidRequest
-            {
-                Reference = Guid.NewGuid().ToString()
-            };
+            var voidRequest = new VoidRequest {Reference = Guid.NewGuid().ToString()};
 
             var response = await FourApi.PaymentsClient().VoidPayment(paymentResponse.Id, voidRequest);
 
@@ -24,10 +22,9 @@ namespace Checkout.Payments.Four
             response.Reference.ShouldNotBeNullOrEmpty();
             response.GetLink("payment").ShouldNotBeNull();
 
-            await Nap();
+            var payment = await Retriable(async () =>
+                await FourApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id), TotalVoidedIs10);
 
-            var payment = await FourApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id);
-            //Balances
             payment.Balances.TotalAuthorized.ShouldBe(paymentResponse.Amount);
             payment.Balances.TotalCaptured.ShouldBe(0);
             payment.Balances.TotalRefunded.ShouldBe(0);
@@ -37,15 +34,17 @@ namespace Checkout.Payments.Four
             payment.Balances.AvailableToVoid.ShouldBe(0);
         }
 
+        private static bool TotalVoidedIs10(GetPaymentResponse obj)
+        {
+            return obj.Balances.TotalVoided == 10;
+        }
+
         [Fact]
         private async Task ShouldVoidCardPaymentIdempotently()
         {
             var paymentResponse = await MakeCardPayment();
 
-            var voidRequest = new VoidRequest
-            {
-                Reference = Guid.NewGuid().ToString()
-            };
+            var voidRequest = new VoidRequest {Reference = Guid.NewGuid().ToString()};
 
             var response = await FourApi.PaymentsClient()
                 .VoidPayment(paymentResponse.Id, voidRequest, IdempotencyKey);

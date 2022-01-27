@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
 using Checkout.Common;
 using Shouldly;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Customers.Four
@@ -18,11 +18,7 @@ namespace Checkout.Customers.Four
             {
                 Email = GenerateRandomEmail(),
                 Name = "Customer",
-                Phone = new Phone
-                {
-                    CountryCode = "1",
-                    Number = "4155552671"
-                }
+                Phone = new Phone {CountryCode = "1", Number = "4155552671"}
             };
             var customerResponse = await FourApi.CustomersClient().Create(request);
             customerResponse.ShouldNotBeNull();
@@ -31,7 +27,7 @@ namespace Checkout.Customers.Four
             customerDetails.ShouldNotBeNull();
             customerDetails.Email.ShouldBe(request.Email);
             customerDetails.Name.ShouldBe(request.Name);
-            customerDetails.Phone.ShouldNotBeNull(); 
+            customerDetails.Phone.ShouldNotBeNull();
             customerDetails.DefaultId.ShouldBeNull();
             customerDetails.Instruments.ShouldBeEmpty();
         }
@@ -44,11 +40,7 @@ namespace Checkout.Customers.Four
             {
                 Email = GenerateRandomEmail(),
                 Name = "Customer",
-                Phone = new Phone
-                {
-                    CountryCode = "1",
-                    Number = "4155552671"
-                }
+                Phone = new Phone {CountryCode = "1", Number = "4155552671"}
             };
             var customerResponse = await FourApi.CustomersClient().Create(request);
             customerResponse.ShouldNotBeNull();
@@ -72,19 +64,13 @@ namespace Checkout.Customers.Four
             {
                 Email = GenerateRandomEmail(),
                 Name = "Customer",
-                Phone = new Phone
-                {
-                    CountryCode = "1",
-                    Number = "4155552671"
-                }
+                Phone = new Phone {CountryCode = "1", Number = "4155552671"}
             };
             var customerResponse = await FourApi.CustomersClient().Create(request);
             customerResponse.ShouldNotBeNull();
 
             var customerId = customerResponse.Id;
             await FourApi.CustomersClient().Delete(customerId);
-
-            await Nap();
 
             await AssertNotFound(FourApi.CustomersClient().Get(customerId));
         }
