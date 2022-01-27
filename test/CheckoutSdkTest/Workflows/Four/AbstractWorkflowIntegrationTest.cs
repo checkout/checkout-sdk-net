@@ -140,14 +140,6 @@ namespace Checkout.Workflows.Four
             return paymentResponse;
         }
 
-        protected async Task CapturePayment(string paymentId)
-        {
-            var response = await FourApi.PaymentsClient().CapturePayment(paymentId, null);
-
-            response.ShouldNotBeNull();
-            response.ActionId.ShouldNotBeNullOrEmpty();
-        }
-
         protected async Task<SubjectEvent> GetSubjectEvent(string subjectId)
         {
             SubjectEventsResponse subjectEventsResponse = await FourApi.WorkflowsClient().GetSubjectEvents(subjectId);

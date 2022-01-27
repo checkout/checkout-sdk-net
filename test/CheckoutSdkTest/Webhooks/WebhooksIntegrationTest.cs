@@ -1,19 +1,15 @@
+using Castle.Core.Internal;
+using Shouldly;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Castle.Core.Internal;
-using Shouldly;
 using Xunit;
 
 namespace Checkout.Webhooks
 {
     public class WebhooksIntegrationTest : SandboxTestFixture
     {
-        private readonly List<string> _eventTypes = new List<string>
-        {
-            "invoice.cancelled",
-            "card.updated",
-        };
+        private readonly List<string> _eventTypes = new List<string> {"invoice.cancelled", "card.updated",};
 
         public WebhooksIntegrationTest() : base(PlatformType.Default)
         {
@@ -33,7 +29,7 @@ namespace Checkout.Webhooks
             }
         }
 
-        [Fact(Timeout = 180000, Skip = "unstable")]
+        [Fact]
         private async Task ShouldTestFullWebhookOperations()
         {
             const string url = "https://checkout.com/webhooks";
@@ -46,20 +42,8 @@ namespace Checkout.Webhooks
             webhookResponse.EventTypes.ShouldBe(_eventTypes);
 
             //Retrieve webhook
-            WebhookResponse retrieveWebhook = null;
-            while (retrieveWebhook == null)
-            {
-                try
-                {
-                    await Nap();
-                    retrieveWebhook = await DefaultApi.WebhooksClient().RetrieveWebhook(webhookResponse.Id);
-                }
-                catch (CheckoutApiException ex)
-                {
-                    //expected
-                    ex.HttpStatusCode.ShouldBe(HttpStatusCode.NotFound);
-                }
-            }
+            WebhookResponse retrieveWebhook = await Retriable(async () =>
+                await DefaultApi.WebhooksClient().RetrieveWebhook(webhookResponse.Id));
 
             retrieveWebhook.ShouldNotBeNull();
             retrieveWebhook.Id.ShouldBe(webhookResponse.Id);
@@ -70,7 +54,7 @@ namespace Checkout.Webhooks
 
             //Update webhook
             const string urlChanged = "https://checkout.com/failed2";
-            var updateRequest = new WebhookRequest()
+            var updateRequest = new WebhookRequest
             {
                 Url = urlChanged,
                 Headers = retrieveWebhook.Headers,
@@ -78,9 +62,9 @@ namespace Checkout.Webhooks
                 ContentType = WebhookContentType.Json
             };
 
-            await Nap();
+            var updateWebhook = await Retriable(async () =>
+                await DefaultApi.WebhooksClient().UpdateWebhook(webhookResponse.Id, updateRequest));
 
-            var updateWebhook = await DefaultApi.WebhooksClient().UpdateWebhook(webhookResponse.Id, updateRequest);
             updateWebhook.ShouldNotBeNull();
             updateWebhook.Url.ShouldBe(urlChanged);
             updateWebhook.Headers.ShouldBe(retrieveWebhook.Headers);
@@ -106,9 +90,7 @@ namespace Checkout.Webhooks
         {
             var webhookRequest = new WebhookRequest()
             {
-                Url = url,
-                ContentType = WebhookContentType.Json,
-                EventTypes = _eventTypes
+                Url = url, ContentType = WebhookContentType.Json, EventTypes = _eventTypes
             };
             return await DefaultApi.WebhooksClient().RegisterWebhook(webhookRequest);
         }

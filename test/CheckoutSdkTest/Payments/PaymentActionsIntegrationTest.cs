@@ -1,4 +1,5 @@
 using Shouldly;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -6,14 +7,13 @@ namespace Checkout.Payments
 {
     public class PaymentActionsIntegrationTest : AbstractPaymentsIntegrationTest
     {
-        [Fact(Skip = "unstable")]
+        [Fact]
         private async Task ShouldGetPaymentActions()
         {
             var paymentResponse = await MakeCardPayment(true);
 
-            await Nap();
-
-            var actions = await DefaultApi.PaymentsClient().GetPaymentActions(paymentResponse.Id);
+            var actions = await Retriable(async () =>
+                await DefaultApi.PaymentsClient().GetPaymentActions(paymentResponse.Id), ThereAreTwoPaymentActions);
 
             actions.ShouldNotBeNull();
             actions.Count.ShouldBe(2);
@@ -29,6 +29,11 @@ namespace Checkout.Payments
                 paymentAction.ResponseSummary.ShouldNotBeNullOrEmpty();
                 paymentAction.Type.ShouldNotBeNull();
             }
+        }
+
+        private static bool ThereAreTwoPaymentActions(IList<PaymentAction> obj)
+        {
+            return obj.Count == 2;
         }
     }
 }

@@ -16,14 +16,15 @@ namespace Checkout.Payments
 
             captureRequest.Metadata.Add("CapturePaymentsIntegrationTest", "ShouldFullCaptureCardPayment");
 
-            var response = await DefaultApi.PaymentsClient().CapturePayment(paymentResponse.Id, captureRequest);
+            var response = await Retriable(async () =>
+                await DefaultApi.PaymentsClient().CapturePayment(paymentResponse.Id, captureRequest));
 
             response.ShouldNotBeNull();
             response.Reference.ShouldNotBeNullOrEmpty();
             response.ActionId.ShouldNotBeNullOrEmpty();
         }
 
-        [Fact(Skip = "unstable")]
+        [Fact]
         private async Task ShouldPartiallyCaptureCardPayment()
         {
             var paymentResponse = await MakeCardPayment();
@@ -32,7 +33,8 @@ namespace Checkout.Payments
 
             captureRequest.Metadata.Add("CapturePaymentsIntegrationTest", "ShouldFullCaptureCardPayment");
 
-            var response = await DefaultApi.PaymentsClient().CapturePayment(paymentResponse.Id, captureRequest);
+            var response = await Retriable(async () =>
+                await DefaultApi.PaymentsClient().CapturePayment(paymentResponse.Id, captureRequest));
 
             response.ShouldNotBeNull();
             response.Reference.ShouldNotBeNullOrEmpty();

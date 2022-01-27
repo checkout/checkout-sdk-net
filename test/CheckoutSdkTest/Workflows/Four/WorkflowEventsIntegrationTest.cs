@@ -38,16 +38,11 @@ namespace Checkout.Workflows.Four
         {
             await CreateWorkflow();
 
-            PaymentResponse paymentResponse = await MakeCardPayment();
-
-            await Nap(5);
-
-            await CapturePayment(paymentResponse.Id);
-
-            await Nap(15);
+            PaymentResponse paymentResponse = await MakeCardPayment(true);
 
             SubjectEventsResponse subjectEventsResponse =
-                await FourApi.WorkflowsClient().GetSubjectEvents(paymentResponse.Id);
+                await Retriable(async () => await FourApi.WorkflowsClient().GetSubjectEvents(paymentResponse.Id),
+                    HasTwoEvents);
 
             subjectEventsResponse.ShouldNotBeNull();
             subjectEventsResponse.Events.Count.ShouldBe(2);
@@ -75,6 +70,11 @@ namespace Checkout.Workflows.Four
             getEventResponse.Timestamp.ShouldNotBeNull();
             getEventResponse.Version.ShouldNotBeNull();
             getEventResponse.Data.ShouldNotBeNull();
+        }
+
+        private static bool HasTwoEvents(SubjectEventsResponse obj)
+        {
+            return obj.Events.Count == 2;
         }
     }
 }

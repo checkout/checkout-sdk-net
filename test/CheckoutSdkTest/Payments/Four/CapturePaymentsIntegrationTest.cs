@@ -1,6 +1,7 @@
+using Checkout.Payments.Four.Response;
+using Shouldly;
 using System;
 using System.Threading.Tasks;
-using Shouldly;
 using Xunit;
 
 namespace Checkout.Payments.Four
@@ -12,11 +13,7 @@ namespace Checkout.Payments.Four
         {
             var paymentResponse = await MakeCardPayment();
 
-            var captureRequest = new CaptureRequest
-            {
-                Reference = Guid.NewGuid().ToString(),
-                Amount = 10
-            };
+            var captureRequest = new CaptureRequest {Reference = Guid.NewGuid().ToString(), Amount = 10};
 
             captureRequest.Metadata.Add("CapturePaymentsIntegrationTest", "ShouldFullCaptureCardPayment");
 
@@ -26,9 +23,9 @@ namespace Checkout.Payments.Four
             response.Reference.ShouldNotBeNullOrEmpty();
             response.ActionId.ShouldNotBeNullOrEmpty();
 
-            await Nap();
+            var payment = await Retriable(async () =>
+                await FourApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id), TotalCapturedIs10);
 
-            var payment = await FourApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id);
             //Balances
             payment.Balances.TotalAuthorized.ShouldBe(paymentResponse.Amount);
             payment.Balances.TotalCaptured.ShouldBe(paymentResponse.Amount);
@@ -39,6 +36,11 @@ namespace Checkout.Payments.Four
             payment.Balances.AvailableToVoid.ShouldBe(0);
         }
 
+        private static bool TotalCapturedIs10(GetPaymentResponse obj)
+        {
+            return obj.Balances.TotalCaptured == 10;
+        }
+
         [Fact]
         private async Task ShouldPartiallyCaptureCardPayment()
         {
@@ -46,8 +48,7 @@ namespace Checkout.Payments.Four
 
             var captureRequest = new CaptureRequest
             {
-                Reference = Guid.NewGuid().ToString(),
-                Amount = paymentResponse.Amount / 2
+                Reference = Guid.NewGuid().ToString(), Amount = paymentResponse.Amount / 2
             };
 
             captureRequest.Metadata.Add("CapturePaymentsIntegrationTest", "ShouldFullCaptureCardPayment");
@@ -58,9 +59,9 @@ namespace Checkout.Payments.Four
             response.Reference.ShouldNotBeNullOrEmpty();
             response.ActionId.ShouldNotBeNullOrEmpty();
 
-            await Nap();
+            var payment = await Retriable(async () =>
+                await FourApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id), TotalCapturedIs5);
 
-            var payment = await FourApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id);
             //Balances
             payment.Balances.TotalAuthorized.ShouldBe(paymentResponse.Amount);
             payment.Balances.TotalCaptured.ShouldBe(paymentResponse.Amount / 2);
@@ -71,15 +72,17 @@ namespace Checkout.Payments.Four
             payment.Balances.AvailableToVoid.ShouldBe(0);
         }
 
+        private static bool TotalCapturedIs5(GetPaymentResponse obj)
+        {
+            return obj.Balances.TotalCaptured == 5;
+        }
+
         [Fact]
         private async Task ShouldCaptureCardPaymentIdempotently()
         {
             var paymentResponse = await MakeCardPayment();
 
-            var captureRequest = new CaptureRequest
-            {
-                Reference = Guid.NewGuid().ToString()
-            };
+            var captureRequest = new CaptureRequest {Reference = Guid.NewGuid().ToString()};
 
             captureRequest.Metadata.Add("CapturePaymentsIntegrationTest", "ShouldFullCaptureCardPayment");
 

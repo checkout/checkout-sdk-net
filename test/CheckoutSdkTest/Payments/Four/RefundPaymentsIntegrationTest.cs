@@ -1,6 +1,6 @@
+using Shouldly;
 using System;
 using System.Threading.Tasks;
-using Shouldly;
 using Xunit;
 
 namespace Checkout.Payments.Four
@@ -12,24 +12,21 @@ namespace Checkout.Payments.Four
         {
             var paymentResponse = await MakeCardPayment(true);
 
-            await Nap();
-
             var refundRequest = new RefundRequest
             {
-                Reference = Guid.NewGuid().ToString(),
-                Amount = paymentResponse.Amount
+                Reference = Guid.NewGuid().ToString(), Amount = paymentResponse.Amount
             };
 
-            var response = await FourApi.PaymentsClient().RefundPayment(paymentResponse.Id, refundRequest);
+            var response = await Retriable(async () =>
+                await FourApi.PaymentsClient().RefundPayment(paymentResponse.Id, refundRequest));
 
             response.ShouldNotBeNull();
             response.ActionId.ShouldNotBeNullOrEmpty();
             response.Reference.ShouldNotBeNullOrEmpty();
             response.GetLink("payment").ShouldNotBeNull();
 
-            await Nap();
-
-            var payment = await FourApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id);
+            var payment = await Retriable(async () =>
+                await FourApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id));
             //Balances
             payment.Balances.TotalAuthorized.ShouldBe(paymentResponse.Amount);
             payment.Balances.TotalCaptured.ShouldBe(paymentResponse.Amount);
@@ -45,24 +42,21 @@ namespace Checkout.Payments.Four
         {
             var paymentResponse = await MakeCardPayment(true);
 
-            await Nap();
-
             var refundRequest = new RefundRequest
             {
-                Reference = Guid.NewGuid().ToString(),
-                Amount = paymentResponse.Amount / 2
+                Reference = Guid.NewGuid().ToString(), Amount = paymentResponse.Amount / 2
             };
 
-            var response = await FourApi.PaymentsClient().RefundPayment(paymentResponse.Id, refundRequest);
+            var response = await Retriable(async () =>
+                await FourApi.PaymentsClient().RefundPayment(paymentResponse.Id, refundRequest));
 
             response.ShouldNotBeNull();
             response.ActionId.ShouldNotBeNullOrEmpty();
             response.Reference.ShouldNotBeNullOrEmpty();
             response.GetLink("payment").ShouldNotBeNull();
 
-            await Nap();
-
-            var payment = await FourApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id);
+            var payment = await Retriable(async () =>
+                await FourApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id));
             //Balances
             payment.Balances.TotalAuthorized.ShouldBe(paymentResponse.Amount);
             payment.Balances.TotalCaptured.ShouldBe(paymentResponse.Amount);

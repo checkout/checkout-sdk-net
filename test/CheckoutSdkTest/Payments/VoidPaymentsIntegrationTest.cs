@@ -22,19 +22,22 @@ namespace Checkout.Payments
             response.GetLink("payment").ShouldNotBeNull();
         }
 
-        [Fact(Skip = "unstable")]
+        [Fact]
         private async Task ShouldVoidCardPaymentIdempotently()
         {
             var paymentResponse = await MakeCardPayment();
 
             var voidRequest = new VoidRequest {Reference = Guid.NewGuid().ToString()};
 
-            var response = await DefaultApi.PaymentsClient()
-                .VoidPayment(paymentResponse.Id, voidRequest, IdempotencyKey);
+            var response = await Retriable(async () =>
+                await DefaultApi.PaymentsClient()
+                    .VoidPayment(paymentResponse.Id, voidRequest, IdempotencyKey));
+
             response.ShouldNotBeNull();
 
-            var response2 = await DefaultApi.PaymentsClient()
-                .VoidPayment(paymentResponse.Id, voidRequest, IdempotencyKey);
+            var response2 = await Retriable(async () =>
+                await DefaultApi.PaymentsClient()
+                    .VoidPayment(paymentResponse.Id, voidRequest, IdempotencyKey));
             response2.ShouldNotBeNull();
 
             response.ActionId.ShouldBe(response2.ActionId);

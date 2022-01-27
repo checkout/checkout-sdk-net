@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
 using Checkout.Payments.Four;
 using Shouldly;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Disputes.Four
@@ -56,18 +56,11 @@ namespace Checkout.Disputes.Four
             //Make the payment
             var payment = await MakeCardPayment(true, 1040L);
             payment.ShouldNotBeNull();
-            var query = new DisputesQueryFilter()
-            {
-                PaymentId = payment.Id
-            };
+            var query = new DisputesQueryFilter {PaymentId = payment.Id};
 
             //Query for dispute
-            DisputesQueryResponse queryResponse = null;
-            while (queryResponse == null || queryResponse.TotalCount == 0)
-            {
-                await Nap();
-                queryResponse = await FourApi.DisputesClient().Query(query);
-            }
+            DisputesQueryResponse queryResponse = await Retriable(async () =>
+                await FourApi.DisputesClient().Query(query), HasItems);
 
             queryResponse.ShouldNotBeNull();
             queryResponse.Data[0].PaymentId.ShouldBe(payment.Id);
@@ -88,6 +81,7 @@ namespace Checkout.Disputes.Four
                 AdditionalEvidenceFile = fileResponse.Id,
                 AdditionalEvidenceText = "Scanned document"
             };
+
             var disputeId = queryResponse.Data[0].Id;
             await FourApi.DisputesClient().PutEvidence(disputeId, disputeEvidenceRequest);
 
@@ -105,6 +99,11 @@ namespace Checkout.Disputes.Four
 
             //Submit the dispute
             await FourApi.DisputesClient().SubmitEvidence(disputeId);
+        }
+
+        private static bool HasItems(DisputesQueryResponse obj)
+        {
+            return obj.TotalCount > 0;
         }
     }
 }

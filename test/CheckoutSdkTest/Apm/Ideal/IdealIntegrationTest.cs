@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using Shouldly;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Apm.Ideal
@@ -10,7 +10,7 @@ namespace Checkout.Apm.Ideal
         {
         }
 
-        [Fact(Skip = "unstable")]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldGetInfo()
         {
             var idealInfo = await DefaultApi.IdealClient().GetInfo();

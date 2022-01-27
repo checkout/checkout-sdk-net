@@ -1,5 +1,6 @@
-using System.Threading.Tasks;
 using Shouldly;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Payments.Four
@@ -11,9 +12,8 @@ namespace Checkout.Payments.Four
         {
             var paymentResponse = await MakeCardPayment(true);
 
-            await Nap();
-
-            var actions = await FourApi.PaymentsClient().GetPaymentActions(paymentResponse.Id);
+            var actions = await Retriable(async () =>
+                await FourApi.PaymentsClient().GetPaymentActions(paymentResponse.Id), ThereAreTwoPaymentActions);
 
             actions.ShouldNotBeNull();
             actions.Count.ShouldBe(2);
@@ -28,6 +28,11 @@ namespace Checkout.Payments.Four
                 paymentAction.ResponseSummary.ShouldNotBeNullOrEmpty();
                 paymentAction.Type.ShouldNotBeNull();
             }
+        }
+
+        private static bool ThereAreTwoPaymentActions(IList<PaymentAction> obj)
+        {
+            return obj.Count == 2;
         }
     }
 }

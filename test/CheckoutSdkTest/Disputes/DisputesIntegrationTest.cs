@@ -13,7 +13,7 @@ namespace Checkout.Disputes
         {
             var from = DateTime.UtcNow.Subtract(TimeSpan.FromHours(24));
             var to = DateTime.Now; // local timezone
-            var request = new DisputesQueryFilter { Limit = 250, To = to, From = from };
+            var request = new DisputesQueryFilter {Limit = 250, To = to, From = from};
 
             var response = await DefaultApi.DisputesClient().Query(request);
             response.ShouldNotBeNull();
@@ -62,18 +62,12 @@ namespace Checkout.Disputes
             //Make the payment
             var payment = await MakeCardPayment(true, 1040L);
             payment.ShouldNotBeNull();
-            var query = new DisputesQueryFilter()
-            {
-                PaymentId = payment.Id
-            };
+
+            var query = new DisputesQueryFilter {PaymentId = payment.Id};
 
             //Query for dispute
-            DisputesQueryResponse queryResponse = null;
-            while (queryResponse == null || queryResponse.TotalCount == 0)
-            {
-                await Nap();
-                queryResponse = await DefaultApi.DisputesClient().Query(query);
-            }
+            DisputesQueryResponse queryResponse = await Retriable(async () =>
+                await DefaultApi.DisputesClient().Query(query), HasItems);
 
             queryResponse.ShouldNotBeNull();
             queryResponse.Data[0].PaymentId.ShouldBe(payment.Id);
@@ -83,7 +77,7 @@ namespace Checkout.Disputes
             var fileResponse = await DefaultApi.DisputesClient().SubmitFile(filePath, "dispute_evidence");
 
             //Provide dispute evidence
-            var disputeEvidenceRequest = new DisputeEvidenceRequest()
+            var disputeEvidenceRequest = new DisputeEvidenceRequest
             {
                 ProofOfDeliveryOrServiceFile = fileResponse.Id,
                 ProofOfDeliveryOrServiceText = "proof of delivery or service text",
@@ -111,6 +105,11 @@ namespace Checkout.Disputes
 
             //Submit the dispute
             await DefaultApi.DisputesClient().SubmitEvidence(disputeId);
+        }
+
+        private static bool HasItems(DisputesQueryResponse obj)
+        {
+            return obj.TotalCount > 0;
         }
     }
 }
