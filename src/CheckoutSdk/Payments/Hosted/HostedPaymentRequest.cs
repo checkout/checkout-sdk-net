@@ -1,5 +1,9 @@
 ﻿using Checkout.Common;
+#if NET5_0_OR_GREATER
+using System.Text.Json.Serialization;
+#else
 using Newtonsoft.Json;
+#endif
 using System;
 using System.Collections.Generic;
 
@@ -39,7 +43,12 @@ namespace Checkout.Payments.Hosted
 
         public string Locale { get; set; }
 
-        [JsonProperty(PropertyName = "3ds")] public ThreeDsRequest ThreeDs { get; set; }
+#if NET5_0_OR_GREATER
+        [JsonPropertyName("3ds")]
+#else
+        [JsonProperty(PropertyName = "3ds")]
+#endif
+        public ThreeDsRequest ThreeDs { get; set; }
 
         public bool Capture { get; set; }
 

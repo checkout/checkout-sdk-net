@@ -1,5 +1,9 @@
 ﻿using Checkout.Common;
+#if NET5_0_OR_GREATER
+using System.Text.Json.Serialization;
+#else
 using Newtonsoft.Json;
+#endif
 
 namespace Checkout.Payments
 {
@@ -7,7 +11,11 @@ namespace Checkout.Payments
     {
         public bool? Enabled { get; set; } = true;
 
+#if NET5_0_OR_GREATER
+        [JsonPropertyName("attempt_n3d")]
+#else
         [JsonProperty(PropertyName = "attempt_n3d")]
+#endif
         public bool? AttemptN3D { get; set; }
 
         public string Eci { get; set; }

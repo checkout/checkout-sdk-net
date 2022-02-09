@@ -1,3 +1,5 @@
+#if NETSTANDARD2_0
+
 using Checkout.Instruments.Four.Get.Util;
 using Checkout.Instruments.Four.Update.Util;
 using Checkout.Workflows.Four.Actions.Response.Util;
@@ -69,3 +71,4 @@ namespace Checkout
         }
     }
 }
+#endif

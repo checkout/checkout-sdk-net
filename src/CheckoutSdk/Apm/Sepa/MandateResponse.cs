@@ -1,5 +1,10 @@
 ﻿using Checkout.Common;
+#if NET5_0_OR_GREATER
+using System.Text.Json.Serialization;
+#else
 using Newtonsoft.Json;
+#endif
+
 
 namespace Checkout.Apm.Sepa
 {
@@ -13,7 +18,11 @@ namespace Checkout.Apm.Sepa
 
         public string LastName { get; set; }
 
+#if NET5_0_OR_GREATER
+        [JsonPropertyName("address_line1")]
+#else
         [JsonProperty(PropertyName = "address_line1")]
+#endif
         public string AddressLine1 { get; set; }
 
         public string City { get; set; }

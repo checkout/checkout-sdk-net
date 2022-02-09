@@ -16,20 +16,26 @@
         <PackageTags>Checkout.com;payments;gateway;sdk</PackageTags>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>git://github.com/checkout/checkout-sdk-net</RepositoryUrl>
-        <TargetFrameworks>net5.0;netstandard2.0;netcoreapp3.1</TargetFrameworks>
+      <TargetFrameworks>net6.0;net5.0;netstandard2.0</TargetFrameworks>
         <RootNamespace>Checkout</RootNamespace>
         <PackageReleaseNotes>
         </PackageReleaseNotes>
     </PropertyGroup>
     
-    <ItemGroup Label="Package References">
+    <ItemGroup Label="Package References"  Condition=" '$(TargetFramework)' == 'netstandard2.0'">
         <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.22" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     </ItemGroup>
 
-    <ItemGroup>
+  <ItemGroup Label="Package References"  Condition=" '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0'">
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
             <_Parameter1>CheckoutSdkTest</_Parameter1>
         </AssemblyAttribute>

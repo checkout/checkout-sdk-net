@@ -1,11 +1,20 @@
 ﻿using Checkout.Common;
+#if NET5_0_OR_GREATER
+using System.Text.Json.Serialization;
+#else
 using Newtonsoft.Json;
+#endif
 
 namespace Checkout.Payments
 {
     public class PaymentRecipient
     {
-        [JsonProperty("dob")] public string DateOfBirth { get; set; }
+#if NET5_0_OR_GREATER
+        [JsonPropertyName("dob")]
+#else
+        [JsonProperty(PropertyName = "dob")]
+#endif
+        public string DateOfBirth { get; set; }
 
         public string AccountNumber { get; set; }
 
