@@ -1,4 +1,8 @@
+#if NET5_0_OR_GREATER
+using System.Text.Json.Serialization;
+#else
 using Newtonsoft.Json;
+#endif
 using System;
 
 namespace Checkout.Disputes.Four
@@ -21,7 +25,12 @@ namespace Checkout.Disputes.Four
 
         public string Mcc { get; set; }
 
-        [JsonProperty(PropertyName = "3ds")] public ThreeDsVersionEnrollment ThreeDs { get; set; }
+#if NET5_0_OR_GREATER
+        [JsonPropertyName("3ds")]
+#else
+        [JsonProperty(PropertyName = "3ds")]
+#endif
+        public ThreeDsVersionEnrollment ThreeDs { get; set; }
 
         public string Eci { get; set; }
 

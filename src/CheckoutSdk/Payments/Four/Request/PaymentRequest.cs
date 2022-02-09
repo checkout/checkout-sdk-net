@@ -1,7 +1,11 @@
 using Checkout.Common;
 using Checkout.Payments.Four.Request.Source;
 using Checkout.Payments.Four.Sender;
+#if NET5_0_OR_GREATER
+using System.Text.Json.Serialization;
+#else
 using Newtonsoft.Json;
+#endif
 using System;
 using System.Collections.Generic;
 
@@ -35,7 +39,12 @@ namespace Checkout.Payments.Four.Request
 
         public ShippingDetails Shipping { get; set; }
 
-        [JsonProperty(PropertyName = "3ds")] public ThreeDsRequest ThreeDs { get; set; }
+#if NET5_0_OR_GREATER
+        [JsonPropertyName("3ds")]
+#else
+        [JsonProperty(PropertyName = "3ds")]
+#endif        
+        public ThreeDsRequest ThreeDs { get; set; }
 
         public string ProcessingChannelId { get; set; }
 

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿#if NETSTANDARD2_0
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Reflection;
@@ -71,3 +72,4 @@ namespace Checkout.Workflows.Four.Conditions.Response.Util
         }
     }
 }
+#endif

@@ -1,4 +1,5 @@
-﻿using Checkout.Common;
+﻿#if NETSTANDARD2_0
+using Checkout.Common;
 using Checkout.Payments.Response.Source;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -63,3 +64,4 @@ namespace Checkout.Payments.Util
         }
     }
 }
+#endif
