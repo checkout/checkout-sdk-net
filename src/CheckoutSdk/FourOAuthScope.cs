@@ -5,6 +5,7 @@
         [FourOAuthScope("vault")] Vault,
         [FourOAuthScope("vault:instruments")] VaultInstruments,
         [FourOAuthScope("vault:tokenization")] VaultTokenization,
+        [FourOAuthScope("vault:customers")] VaultCustomers,
         [FourOAuthScope("gateway")] Gateway,
         [FourOAuthScope("gateway:payment")] GatewayPayment,
 

@@ -1,10 +1,10 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Checkout.Payments.Four.Request;
 using Checkout.Payments.Four.Response;
 using Moq;
 using Shouldly;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Payments.Four
@@ -303,6 +303,26 @@ namespace Checkout.Payments.Four
             IPaymentsClient paymentsClient = new PaymentsClient(_apiClient.Object, _configuration.Object);
 
             var response = await paymentsClient.VoidPayment("payment_id", voidRequest, "test");
+
+            response.ShouldNotBeNull();
+        }
+
+        [Fact]
+        private async Task ShouldIncrementPaymentAuthorization()
+        {
+            var authorizationRequest = new AuthorizationRequest();
+            var authorizationResponse = new AuthorizationResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<AuthorizationResponse>(PaymentsPath + "/payment_id/authorizations", _authorization,
+                        authorizationRequest,
+                        CancellationToken.None, "test"))
+                .ReturnsAsync(() => authorizationResponse);
+
+            IPaymentsClient paymentsClient = new PaymentsClient(_apiClient.Object, _configuration.Object);
+
+            var response =
+                await paymentsClient.IncrementPaymentAuthorization("payment_id", authorizationRequest, "test");
 
             response.ShouldNotBeNull();
         }

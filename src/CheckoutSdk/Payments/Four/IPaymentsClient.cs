@@ -43,5 +43,11 @@ namespace Checkout.Payments.Four
             VoidRequest voidRequest = null,
             string idempotencyKey = null,
             CancellationToken cancellationToken = default);
+
+        Task<AuthorizationResponse> IncrementPaymentAuthorization(
+            string paymentId,
+            AuthorizationRequest authorizationRequest = null,
+            string idempotencyKey = null,
+            CancellationToken cancellationToken = default);
     }
 }
