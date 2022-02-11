@@ -103,5 +103,19 @@ namespace Checkout.Payments.Four
                 cancellationToken,
                 idempotencyKey);
         }
+
+        public Task<AuthorizationResponse> IncrementPaymentAuthorization(
+            string paymentId,
+            AuthorizationRequest authorizationRequest = null,
+            string idempotencyKey = null,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("paymentId", paymentId);
+            return ApiClient.Post<AuthorizationResponse>(BuildPath(PaymentsPath, paymentId, "authorizations"),
+                SdkAuthorization(),
+                authorizationRequest,
+                cancellationToken,
+                idempotencyKey);
+        }
     }
 }

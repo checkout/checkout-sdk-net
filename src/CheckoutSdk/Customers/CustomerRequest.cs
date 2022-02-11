@@ -1,4 +1,5 @@
 using Checkout.Common;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Checkout.Customers
@@ -10,6 +11,9 @@ namespace Checkout.Customers
         public string Name { get; set; }
 
         public Phone Phone { get; set; }
+
+        [JsonProperty(PropertyName = "default")]
+        public string DefaultId { get; set; }
 
         public IDictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
     }
