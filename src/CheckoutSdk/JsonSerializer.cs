@@ -1,3 +1,4 @@
+using Checkout.Common;
 using Checkout.Instruments.Four.Get.Util;
 using Checkout.Instruments.Four.Update.Util;
 using Checkout.Workflows.Four.Actions.Response.Util;
@@ -19,6 +20,7 @@ namespace Checkout
 {
     public class JsonSerializer : ISerializer
     {
+
 #if NET5_0_OR_GREATER
 
         private readonly JsonSerializerOptions _serializerSettings;
@@ -59,8 +61,8 @@ namespace Checkout
             settings.Converters.Add(new UpdateInstrumentResponseConverter());
             settings.Converters.Add(new WorkflowActionResponseConverter());
             settings.Converters.Add(new WorkflowConditionResponseConverter());
-
-
+            settings.Converters.Add(new IsoDateTimeConverter());
+           
             configureSettings?.Invoke(settings);
 
             return settings;
