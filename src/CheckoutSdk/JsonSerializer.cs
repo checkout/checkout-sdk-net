@@ -58,7 +58,7 @@ namespace Checkout
             settings.Converters.Add(new GetInstrumentResponseConverter());
             settings.Converters.Add(new UpdateInstrumentResponseConverter());
             settings.Converters.Add(new WorkflowActionResponseConverter());
-            settings.Converters.Add(new WorkflowActionResponseConverter());
+            settings.Converters.Add(new WorkflowConditionResponseConverter());
 
 
             configureSettings?.Invoke(settings);
