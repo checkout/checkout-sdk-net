@@ -137,9 +137,14 @@ namespace Checkout
             object request = null,
             CancellationToken cancellationToken = default)
         {
-            var json = _serializer.Serialize(request);
-            var dictionary =
-                (IDictionary<string, string>)_serializer.Deserialize(json, typeof(IDictionary<string, string>));
+            var dictionary = new Dictionary<string, string>();
+            if (request != null)
+            {
+                var json = _serializer.Serialize(request);
+                dictionary =
+                    (Dictionary<string, string>)_serializer.Deserialize(json, typeof(IDictionary<string, string>));
+            }
+
             var httpResponse = await SendRequestAsync(
                 HttpMethod.Get,
                 QueryHelpers.AddQueryString(path, dictionary),
@@ -148,6 +153,12 @@ namespace Checkout
                 cancellationToken,
                 null
             );
+            // If TResult is a string, we assume it's non Json content (CSV, raw...)
+            if (typeof(TResult) == typeof(string))
+            {
+                return await GetContent<TResult>(httpResponse);
+            }
+
             return await DeserializeJsonAsync<TResult>(httpResponse);
         }
 
@@ -224,6 +235,12 @@ namespace Checkout
             var json = await httpResponse.Content.ReadAsStringAsync();
             var errorDetails = _serializer.Deserialize(json);
             throw new CheckoutApiException(requestId, httpResponse.StatusCode, errorDetails);
+        }
+
+        private static async Task<TResult> GetContent<TResult>(HttpResponseMessage httpResponse)
+        {
+            var result = (object)await httpResponse.Content.ReadAsStringAsync();
+            return (TResult)result;
         }
 
         private async Task<TResult> DeserializeJsonAsync<TResult>(HttpResponseMessage httpResponse)

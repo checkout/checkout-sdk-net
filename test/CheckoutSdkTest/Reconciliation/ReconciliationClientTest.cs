@@ -20,6 +20,7 @@ namespace Checkout.Reconciliation
         private readonly DateTime _from = new DateTime(2019, 2, 22, 12, 31, 44, 0, DateTimeKind.Utc);
         private readonly DateTime _to = new DateTime(2021, 12, 30, 13, 21, 34, 0, DateTimeKind.Utc);
         private const string Reference = "ORD-5023-4E89";
+        private const string Csv = "csv_content";
 
         public ReconciliationClientTest()
         {
@@ -103,6 +104,52 @@ namespace Checkout.Reconciliation
             //Assert
             response.ShouldNotBeNull();
             response.Count.ShouldBe(returnResponse.Count);
+        }
+
+        [Fact]
+        private async Task ShouldRetrieveCsvPaymentReport()
+        {
+            var request = new QueryFilterDateRange {To = _to, From = _from};
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Query<string>("reporting/payments/download", _authorization, request,
+                        CancellationToken.None))
+                .ReturnsAsync(() => Csv);
+
+            var response = await _reconciliationClient.RetrieveCsvPaymentReport(request);
+
+            response.ShouldNotBeNull();
+            response.ShouldBe(Csv);
+        }
+
+        [Fact]
+        private async Task ShouldRetrieveCsvSingleStatementReport()
+        {
+            _apiClient.Setup(apiClient =>
+                    apiClient.Query<string>("reporting/statements/id/payments/download", _authorization,
+                        It.IsAny<QueryFilterDateRange>(),
+                        CancellationToken.None))
+                .ReturnsAsync(() => Csv);
+
+            var response = await _reconciliationClient.RetrieveCsvSingleStatementReport("id");
+            response.ShouldNotBeNull();
+            response.ShouldBe(Csv);
+        }
+
+        [Fact]
+        private async Task ShouldRetrieveCsvStatementsReport()
+        {
+            var request = new QueryFilterDateRange {To = _to, From = _from};
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Query<string>("reporting/statements/download", _authorization, request,
+                        CancellationToken.None))
+                .ReturnsAsync(() => Csv);
+
+            var response = await _reconciliationClient.RetrieveCsvStatementsReport(request);
+
+            response.ShouldNotBeNull();
+            response.ShouldBe(Csv);
         }
     }
 }

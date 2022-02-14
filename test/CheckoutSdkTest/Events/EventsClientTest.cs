@@ -1,8 +1,8 @@
+using Moq;
+using Shouldly;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Moq;
-using Shouldly;
 using Xunit;
 
 namespace Checkout.Events
@@ -26,10 +26,7 @@ namespace Checkout.Events
         [Fact]
         private async Task ShouldRetrieveAllEventTypes()
         {
-            var eventTypesResponse = new List<EventTypesResponse>
-            {
-                new EventTypesResponse()
-            };
+            var eventTypesResponse = new List<EventTypesResponse> {new EventTypesResponse()};
 
             _apiClient.Setup(apiClient =>
                     apiClient.Get<IList<EventTypesResponse>>("event-types?version=1.0", _authorization,
@@ -47,10 +44,7 @@ namespace Checkout.Events
         [Fact]
         private async Task ShouldRetrieveAllEventTypesWithoutVersion()
         {
-            var eventTypesResponse = new List<EventTypesResponse>
-            {
-                new EventTypesResponse()
-            };
+            var eventTypesResponse = new List<EventTypesResponse> {new EventTypesResponse()};
 
             _apiClient.Setup(apiClient =>
                     apiClient.Get<IList<EventTypesResponse>>("event-types", _authorization,

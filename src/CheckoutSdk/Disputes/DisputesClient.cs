@@ -20,7 +20,8 @@ namespace Checkout.Disputes
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("filter", filter);
-            return ApiClient.Query<DisputesQueryResponse>(DisputesPath, SdkAuthorization(), filter, cancellationToken);
+            return ApiClient.Query<DisputesQueryResponse>(DisputesPath, SdkAuthorization(), filter,
+                cancellationToken);
         }
 
         public Task<DisputeDetailsResponse> GetDisputeDetails(string disputeId,
