@@ -1,4 +1,5 @@
 ﻿using Checkout.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Checkout.Reconciliation
@@ -7,6 +8,7 @@ namespace Checkout.Reconciliation
     {
         private const string ReportingPath = "reporting";
         private const string PaymentsPath = "payments";
+        private const string DownloadPath = "download";
         private const string StatementsPath = "statements";
 
         public ReconciliationClient(IApiClient apiClient, CheckoutConfiguration configuration) : base(apiClient,
@@ -14,25 +16,56 @@ namespace Checkout.Reconciliation
         {
         }
 
-        public Task<ReconciliationPaymentReportResponse> QueryPaymentsReport(ReconciliationQueryPaymentsFilter filter)
+        public Task<ReconciliationPaymentReportResponse> QueryPaymentsReport(ReconciliationQueryPaymentsFilter filter,
+            CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("filter", filter);
             return ApiClient.Query<ReconciliationPaymentReportResponse>(BuildPath(ReportingPath, PaymentsPath),
-                SdkAuthorization(), filter);
+                SdkAuthorization(), filter, cancellationToken);
         }
 
-        public Task<ReconciliationPaymentReportResponse> SinglePaymentReport(string paymentId)
+        public Task<ReconciliationPaymentReportResponse> SinglePaymentReport(string paymentId,
+            CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("paymentId", paymentId);
             return ApiClient.Get<ReconciliationPaymentReportResponse>(BuildPath(ReportingPath, PaymentsPath, paymentId),
-                SdkAuthorization());
+                SdkAuthorization(), cancellationToken);
         }
 
-        public Task<StatementReportResponse> QueryStatementsReport(QueryFilterDateRange filter)
+        public Task<StatementReportResponse> QueryStatementsReport(QueryFilterDateRange filter,
+            CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("filter", filter);
             return ApiClient.Query<StatementReportResponse>(BuildPath(ReportingPath, StatementsPath),
-                SdkAuthorization(), filter);
+                SdkAuthorization(), filter, cancellationToken);
+        }
+
+        public Task<string> RetrieveCsvPaymentReport(QueryFilterDateRange filter,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("filter", filter);
+            return ApiClient.Query<string>(BuildPath(ReportingPath, PaymentsPath, DownloadPath), SdkAuthorization(),
+                filter,
+                cancellationToken);
+        }
+
+        public Task<string> RetrieveCsvSingleStatementReport(string statementId,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("statementId", statementId);
+            return ApiClient.Query<string>(
+                BuildPath(ReportingPath, StatementsPath, statementId, PaymentsPath, DownloadPath), SdkAuthorization(),
+                null,
+                cancellationToken);
+        }
+
+        public Task<string> RetrieveCsvStatementsReport(QueryFilterDateRange filter,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("filter", filter);
+            return ApiClient.Query<string>(
+                BuildPath(ReportingPath, StatementsPath, DownloadPath), SdkAuthorization(), filter,
+                cancellationToken);
         }
     }
 }

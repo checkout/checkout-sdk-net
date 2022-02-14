@@ -57,8 +57,10 @@ namespace Checkout.Instruments.Four
         public Task<BankAccountFieldResponse> GetBankAccountFieldFormatting(CountryCode country, Currency currency,
             BankAccountFieldQuery bankAccountFieldQuery, CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("country", country, "currency", currency, "bankAccountFieldQuery", bankAccountFieldQuery);
-            return ApiClient.Query<BankAccountFieldResponse>(BuildPath("validation/bank-accounts", country.ToString(), currency.ToString()),
+            CheckoutUtils.ValidateParams("country", country, "currency", currency, "bankAccountFieldQuery",
+                bankAccountFieldQuery);
+            return ApiClient.Query<BankAccountFieldResponse>(
+                BuildPath("validation/bank-accounts", country.ToString(), currency.ToString()),
                 SdkAuthorization(SdkAuthorizationType.OAuth), bankAccountFieldQuery, cancellationToken);
         }
     }

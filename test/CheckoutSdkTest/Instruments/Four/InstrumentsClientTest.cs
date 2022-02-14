@@ -1,3 +1,4 @@
+using Checkout.Common;
 using Checkout.Instruments.Four.Create;
 using Checkout.Instruments.Four.Get;
 using Checkout.Instruments.Four.Update;
@@ -109,16 +110,17 @@ namespace Checkout.Instruments.Four
             BankAccountFieldQuery bankAccountFieldQuery = new BankAccountFieldQuery();
 
             _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.OAuth))
-              .Returns(_authorization);
+                .Returns(_authorization);
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Query<BankAccountFieldResponse>("validation/bank-accounts/GB/GBP", _authorization, bankAccountFieldQuery,
-                        CancellationToken.None)).ReturnsAsync(() => new BankAccountFieldResponse());
+                apiClient.Query<BankAccountFieldResponse>("validation/bank-accounts/GB/GBP", _authorization,
+                    bankAccountFieldQuery, CancellationToken.None)).ReturnsAsync(() => new BankAccountFieldResponse());
 
             IInstrumentsClient client =
                 new InstrumentsClient(_apiClient.Object, _configuration.Object);
 
-            var response = await client.GetBankAccountFieldFormatting(Common.CountryCode.GB, Common.Currency.GBP, bankAccountFieldQuery);
+            var response = await client.GetBankAccountFieldFormatting(CountryCode.GB, Currency.GBP,
+                bankAccountFieldQuery);
 
             response.ShouldNotBeNull();
         }

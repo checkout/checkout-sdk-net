@@ -11,12 +11,12 @@ namespace Checkout.Workflows.Four
     public class WorkflowEventsIntegrationTest : AbstractWorkflowIntegrationTest
     {
         [Fact]
-        public async Task ShouldEventTypes()
+        public async Task ShouldGetEventTypes()
         {
             IList<EventTypesResponse> eventTypesResponses = await FourApi.WorkflowsClient().GetEventTypes();
 
             eventTypesResponses.ShouldNotBeNull();
-            eventTypesResponses.Count.ShouldBe(7);
+            eventTypesResponses.Count.ShouldBe(8);
 
             foreach (var eventType in eventTypesResponses)
             {
