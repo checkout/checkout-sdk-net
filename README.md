@@ -20,6 +20,8 @@ This SDK can be used with two different pair of API keys provided by Checkout. H
 
 Note: Sandbox keys have a `test_` or `sbox_` identifier, for Default and Four accounts respectively.
 
+**PLEASE NEVER SHARE OR PUBLISH YOUR CHECKOUT CREDENTIALS.**
+
 ### OAuth
 
 It's only available for Four accounts and will only work for a limited number of features offered by the API. Please find below the instructions on how to set it up.
