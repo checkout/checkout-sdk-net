@@ -16,6 +16,7 @@ jobs:
             2.0.x
             3.1.x
             5.0.x
+            6.0.x
       - id: list-installed-runtimes
         run: dotnet --list-runtimes
       - id: build-solution
