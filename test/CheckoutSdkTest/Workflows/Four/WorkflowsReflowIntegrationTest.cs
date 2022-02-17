@@ -40,7 +40,7 @@ namespace Checkout.Workflows.Four
             reflowResponse.ShouldBeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "unstable")]
         public async Task ShouldReflowByEventAndWorkflow()
         {
             CreateWorkflowResponse createWorkflowResponse = await CreateWorkflow();
