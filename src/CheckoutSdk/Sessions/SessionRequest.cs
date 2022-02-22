@@ -15,7 +15,7 @@ namespace Checkout.Sessions
 
         public string ProcessingChannelId { get; set; }
 
-        public MarketplaceData Marketplace { get; set; }
+        public SessionMarketplaceData Marketplace { get; set; }
 
         public AuthenticationType? AuthenticationType { get; set; }
 

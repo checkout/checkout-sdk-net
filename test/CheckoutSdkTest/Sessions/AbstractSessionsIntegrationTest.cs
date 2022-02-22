@@ -58,7 +58,7 @@ namespace Checkout.Sessions
                 Amount = 6540L,
                 Currency = Currency.USD,
                 ProcessingChannelId = "pc_5jp2az55l3cuths25t5p3xhwru",
-                Marketplace = new MarketplaceData {SubEntityId = "ent_ocw5i74vowfg2edpy66izhts2u"},
+                Marketplace = new SessionMarketplaceData {SubEntityId = "ent_ocw5i74vowfg2edpy66izhts2u"},
                 AuthenticationCategory = authenticationCategory,
                 ChallengeIndicator = challengeIndicator,
                 BillingDescriptor = new SessionsBillingDescriptor {Name = "SUPERHEROES.COM"},
