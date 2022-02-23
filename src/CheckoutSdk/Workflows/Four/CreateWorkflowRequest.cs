@@ -7,6 +7,8 @@ namespace Checkout.Workflows.Four
     public class CreateWorkflowRequest
     {
         public string Name { get; set; }
+        
+        public bool? Active { get; set; }
 
         public IList<WorkflowConditionRequest> Conditions { get; set; }
 

@@ -87,7 +87,8 @@ namespace Checkout.Workflows.Four
                         ProcessingChannels = new List<string> {ProcessingChannelId}
                     }
                 },
-                Name = "testing"
+                Name = "testing",
+                Active = true
             };
 
             CreateWorkflowResponse response = await FourApi.WorkflowsClient().CreateWorkflow(createWorkflowRequest);
