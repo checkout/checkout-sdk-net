@@ -25,6 +25,7 @@ namespace Checkout.Workflows.Four
             getWorkflowResponse.ShouldNotBeNull();
             getWorkflowResponse.Id.ShouldNotBeNullOrEmpty();
             getWorkflowResponse.Name.ShouldBe(WorkflowName);
+            getWorkflowResponse.Active.ShouldBe(true);
 
             getWorkflowResponse.Actions.ShouldNotBeNull();
             getWorkflowResponse.Actions.Count.ShouldBe(1);
@@ -71,6 +72,7 @@ namespace Checkout.Workflows.Four
                 workflow.Name.ShouldBe(WorkflowName);
                 workflow.Id.ShouldNotBeNullOrEmpty();
                 workflow.GetLink("self").ShouldNotBeNull();
+                workflow.Active.ShouldBe(true);
             }
         }
 
@@ -79,13 +81,14 @@ namespace Checkout.Workflows.Four
         {
             var workflow = await CreateWorkflow();
 
-            UpdateWorkflowRequest request = new UpdateWorkflowRequest {Name = "testing_2"};
+            UpdateWorkflowRequest request = new UpdateWorkflowRequest {Name = "testing_2", Active = false};
 
             UpdateWorkflowResponse updateWorkflowResponse =
                 await FourApi.WorkflowsClient().UpdateWorkflow(workflow.Id, request);
 
             updateWorkflowResponse.ShouldNotBeNull();
             updateWorkflowResponse.Name.ShouldBe("testing_2");
+            updateWorkflowResponse.Active.ShouldBe(false);
         }
 
         [Fact]
