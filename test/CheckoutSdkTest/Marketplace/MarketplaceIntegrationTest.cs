@@ -1,4 +1,5 @@
 using Checkout.Common;
+using Checkout.Marketplace.Transfer;
 using Shouldly;
 using System;
 using System.Collections.Generic;
@@ -110,6 +111,27 @@ namespace Checkout.Marketplace
 
             fileResponse.ShouldNotBeNull();
             fileResponse.Id.ShouldNotBeNull();
+        }
+
+        [Fact]
+        private async Task ShouldInitiateTransferOfFunds()
+        {
+            var createTransferRequest =
+                new CreateTransferRequest
+                {
+                    Source = new TransferSource {Amount = 100, Id = "ent_kidtcgc3ge5unf4a5i6enhnr5m"},
+                    Destination = new TransferDestination {Id = "ent_w4jelhppmfiufdnatam37wrfc4"},
+                    TransferType = TransferType.Commission
+                };
+
+            var createTransferResponse =
+                await FourApi.MarketplaceClient().InitiateTransferOfFunds(createTransferRequest);
+
+            createTransferResponse.ShouldNotBeNull();
+            createTransferResponse.Id.ShouldNotBeNullOrEmpty();
+            createTransferResponse.Status.ShouldNotBeNull();
+            createTransferResponse.Links.ShouldNotBeNull();
+            createTransferResponse.Links.ShouldBeEmpty();
         }
     }
 }

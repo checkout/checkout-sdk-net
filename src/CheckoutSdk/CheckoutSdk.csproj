@@ -23,17 +23,17 @@
   </PropertyGroup>
 
   <ItemGroup Label="Global Package References">
-    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0"/>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0"/>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
   </ItemGroup>
 
-  <ItemGroup Label="NET Standard Package References"  Condition=" '$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.22" />
+  <ItemGroup Label="NET Standard Package References" Condition=" '$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.22"/>
   </ItemGroup>
 
-  <ItemGroup Label="NET 5 Package References"  Condition=" '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+  <ItemGroup Label="NET 5 Package References" Condition=" '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0'">
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0"/>
   </ItemGroup>
 
   <ItemGroup>
