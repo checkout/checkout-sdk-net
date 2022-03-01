@@ -106,11 +106,6 @@ namespace Checkout.Sessions
             return await FourApi.SessionsClient().RequestSession(sessionRequest, CancellationToken.None);
         }
 
-        protected static Phone GetPhone()
-        {
-            return new Phone {CountryCode = "234", Number = "0204567895"};
-        }
-
         protected static ChannelData BrowserSession()
         {
             return new BrowserSession

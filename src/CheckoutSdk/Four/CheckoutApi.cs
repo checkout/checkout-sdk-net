@@ -4,6 +4,8 @@ using Checkout.Forex;
 using Checkout.Instruments.Four;
 using Checkout.Marketplace;
 using Checkout.Payments.Four;
+using Checkout.Payments.Hosted;
+using Checkout.Payments.Links;
 using Checkout.Risk;
 using Checkout.Sessions;
 using Checkout.Tokens;
@@ -23,6 +25,8 @@ namespace Checkout.Four
         private readonly IWorkflowsClient _workflowsClient;
         private readonly ISessionsClient _sessionsClient;
         private readonly IMarketplaceClient _marketplaceClient;
+        private readonly IPaymentLinksClient _paymentLinksClient;
+        private readonly IHostedPaymentsClient _hostedPaymentsClient;
 
         public CheckoutApi(CheckoutConfiguration configuration)
         {
@@ -45,6 +49,8 @@ namespace Checkout.Four
             }
 
             _marketplaceClient = new MarketplaceClient(apiClient, apiFilesClient, configuration);
+            _paymentLinksClient = new PaymentLinksClient(apiClient, configuration);
+            _hostedPaymentsClient = new HostedPaymentsClient(apiClient, configuration);
         }
 
         public ITokensClient TokensClient()
@@ -95,6 +101,16 @@ namespace Checkout.Four
         public IMarketplaceClient MarketplaceClient()
         {
             return _marketplaceClient;
+        }
+
+        public IPaymentLinksClient PaymentLinksClient()
+        {
+            return _paymentLinksClient;
+        }
+
+        public IHostedPaymentsClient HostedPaymentsClient()
+        {
+            return _hostedPaymentsClient;
         }
     }
 }

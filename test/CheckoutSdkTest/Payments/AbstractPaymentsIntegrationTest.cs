@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Checkout.Common;
 using Checkout.Payments.Hosted;
 using Checkout.Payments.Request;
@@ -7,6 +5,9 @@ using Checkout.Payments.Request.Source;
 using Checkout.Payments.Response;
 using Checkout.Tokens;
 using Shouldly;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit.Sdk;
 
 namespace Checkout.Payments
@@ -27,9 +28,6 @@ namespace Checkout.Payments
                 throw new XunitException("CaptureOn was provided but the payment is not set for capture");
             }
 
-            var phone = GetPhone();
-            var billingAddress = GetAddress();
-
             var requestCardSource = new RequestCardSource
             {
                 Name = TestCardSource.Visa.Name,
@@ -37,8 +35,8 @@ namespace Checkout.Payments
                 ExpiryYear = TestCardSource.Visa.ExpiryYear,
                 ExpiryMonth = TestCardSource.Visa.ExpiryMonth,
                 Cvv = TestCardSource.Visa.Cvv,
-                BillingAddress = billingAddress,
-                Phone = phone
+                BillingAddress = GetAddress(),
+                Phone = GetPhone()
             };
 
             var paymentRequest = new PaymentRequest
@@ -75,18 +73,14 @@ namespace Checkout.Payments
             var cardTokenResponse = await DefaultApi.TokensClient().Request(cardTokenRequest);
             cardTokenResponse.ShouldNotBeNull();
 
-            var requestTokenSource = new RequestTokenSource {Token = cardTokenResponse.Token};
-
-            var customerRequest = new CustomerRequest {Email = GenerateRandomEmail()};
-
             var paymentRequest = new PaymentRequest
             {
-                Source = requestTokenSource,
+                Source = new RequestTokenSource {Token = cardTokenResponse.Token},
                 Capture = true,
                 Reference = Guid.NewGuid().ToString(),
                 Amount = 10L,
                 Currency = Currency.USD,
-                Customer = customerRequest
+                Customer = new CustomerRequest {Email = GenerateRandomEmail()}
             };
 
             var paymentResponse = await DefaultApi.PaymentsClient().RequestPayment(paymentRequest);
@@ -138,34 +132,13 @@ namespace Checkout.Payments
             return paymentResponse;
         }
 
-        protected static Phone GetPhone()
-        {
-            return new Phone() {CountryCode = "1", Number = "4155552671"};
-        }
-
-        protected static Address GetAddress()
-        {
-            return new Address()
-            {
-                AddressLine1 = "CheckoutSdk.com",
-                AddressLine2 = "90 Tottenham Court Road",
-                City = "London",
-                State = "London",
-                Zip = "W1T 4TJ",
-                Country = CountryCode.GB
-            };
-        }
-
         protected static HostedPaymentRequest CreateHostedPaymentRequest(string reference)
         {
             var customer = new CustomerRequest {Name = "Jack Napier", Email = GenerateRandomEmail()};
-
             var shippingDetails = new ShippingDetails {Address = GetAddress(), Phone = GetPhone()};
+            var billing = new BillingInformation {Address = GetAddress(), Phone = GetPhone()};
 
-            var billing = new BillingInformation() {Address = GetAddress(), Phone = GetPhone()};
-
-
-            var recipient = new PaymentRecipient()
+            var recipient = new PaymentRecipient
             {
                 AccountNumber = "1234567",
                 Country = CountryCode.ES,
@@ -174,14 +147,6 @@ namespace Checkout.Payments
                 LastName = "TESTING",
                 Zip = "12345"
             };
-
-            var products = new Product[] {new Product() {Name = "Gold Necklace", Quantity = 1L, Price = 200L}};
-
-            var threeDs = new ThreeDsRequest() {Enabled = false, AttemptN3D = false};
-
-            var processing = new ProcessingSettings {Aft = true};
-
-            var risk = new RiskRequest {Enabled = false};
 
             return new HostedPaymentRequest
             {
@@ -193,14 +158,14 @@ namespace Checkout.Payments
                 Shipping = shippingDetails,
                 Billing = billing,
                 Recipient = recipient,
-                Processing = processing,
-                Products = products,
-                Risk = risk,
+                Processing = new ProcessingSettings {Aft = true},
+                Products = new List<Product> {new Product {Name = "Gold Necklace", Quantity = 1L, Price = 200L}},
+                Risk = new RiskRequest {Enabled = false},
                 SuccessUrl = "https://example.com/payments/success",
                 CancelUrl = "https://example.com/payments/success",
                 FailureUrl = "https://example.com/payments/success",
                 Locale = "en-GB",
-                ThreeDs = threeDs,
+                ThreeDs = new ThreeDsRequest {Enabled = false, AttemptN3D = false},
                 Capture = true,
                 CaptureOn = DateTime.UtcNow
             };
