@@ -1,4 +1,5 @@
 using Checkout.Common;
+using Checkout.Marketplace.Transfer;
 using Moq;
 using Shouldly;
 using System.Net.Http;
@@ -14,6 +15,7 @@ namespace Checkout.Marketplace
         private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Four);
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
         private readonly Mock<IApiClient> _apiFilesClient = new Mock<IApiClient>();
+        private readonly Mock<IApiClient> _transfersClient = new Mock<IApiClient>();
         private readonly IHttpClientFactory _httpClientFactory = new DefaultHttpClientFactory();
         private readonly MarketplaceClient _marketplaceClient;
 
@@ -24,11 +26,12 @@ namespace Checkout.Marketplace
             Mock<CheckoutConfiguration> configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
                 Environment.Sandbox, _httpClientFactory, Environment.Sandbox);
             _marketplaceClient =
-                new MarketplaceClient(_apiClient.Object, _apiFilesClient.Object, configuration.Object);
+                new MarketplaceClient(_apiClient.Object, _apiFilesClient.Object, _transfersClient.Object,
+                    configuration.Object);
         }
 
         [Fact]
-        public async Task ShouldCreateEntity() //throws ExecutionException, InterruptedException
+        public async Task ShouldCreateEntity()
         {
             var onboardEntityResponse = new OnboardEntityResponse {Id = "Id"};
 
@@ -141,7 +144,7 @@ namespace Checkout.Marketplace
             Mock<CheckoutConfiguration> configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
                 Environment.Sandbox, _httpClientFactory, Environment.Sandbox);
             MarketplaceClient marketplaceClient =
-                new MarketplaceClient(_apiClient.Object, null, configuration.Object);
+                new MarketplaceClient(_apiClient.Object, null, null, configuration.Object);
             var exception = await Assert.ThrowsAsync<CheckoutFileException>(
                 () => marketplaceClient.SubmitFile(new MarketplaceFileRequest
                 {
@@ -150,6 +153,22 @@ namespace Checkout.Marketplace
 
             exception.Message.ShouldBe(
                 "Files API is not enabled in this client. It must be enabled in CheckoutFourSdk configuration.");
+        }
+
+        [Fact]
+        public async Task ShouldInitiateTransferOfFunds()
+        {
+            var createTransferRequest = new CreateTransferRequest {Reference = "Reference"};
+            var createTransferResponse = new CreateTransferResponse();
+
+            _transfersClient.Setup(x => x.Post<CreateTransferResponse>("transfers", It.IsAny<SdkAuthorization>(),
+                    createTransferRequest, It.IsAny<CancellationToken>(), It.IsAny<string>()))
+                .ReturnsAsync(createTransferResponse);
+
+            var response = await _marketplaceClient.InitiateTransferOfFunds(createTransferRequest);
+
+            response.ShouldNotBeNull();
+            response.ShouldBe(createTransferResponse);
         }
     }
 }

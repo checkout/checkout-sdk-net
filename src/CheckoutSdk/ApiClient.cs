@@ -170,7 +170,7 @@ namespace Checkout
             CancellationToken cancellationToken,
             string idempotencyKey)
         {
-            CheckoutUtils.ValidateParams("httpMethod", httpMethod, "path", path, "authorization", authorization);
+            CheckoutUtils.ValidateParams("httpMethod", httpMethod, "authorization", authorization);
 
             HttpContent httpContent = null;
             if (requestBody != null)
@@ -207,7 +207,7 @@ namespace Checkout
             CancellationToken cancellationToken,
             string idempotencyKey)
         {
-            CheckoutUtils.ValidateParams("httpMethod", httpMethod, "path", path, "authorization", authorization);
+            CheckoutUtils.ValidateParams("httpMethod", httpMethod, "authorization", authorization);
             var httpRequest = new HttpRequestMessage(httpMethod, path) {Content = httpContent};
             _log.LogInformation(@"{HttpMethod}: {Path}", httpMethod, path);
 

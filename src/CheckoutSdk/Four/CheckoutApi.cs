@@ -30,28 +30,49 @@ namespace Checkout.Four
 
         public CheckoutApi(CheckoutConfiguration configuration)
         {
-            var apiClient = new ApiClient(configuration.HttpClientFactory,
-                configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri);
-            _tokensClient = new TokensClient(apiClient, configuration);
-            _customersClient = new CustomersClient(apiClient, configuration);
-            _paymentsClient = new PaymentsClient(apiClient, configuration);
-            _instrumentsClient = new InstrumentsClient(apiClient, configuration);
-            _disputesClient = new DisputesClient(apiClient, configuration);
-            _riskClient = new RiskClient(apiClient, configuration);
-            _forexClient = new ForexClient(apiClient, configuration);
-            _workflowsClient = new WorkflowsClient(apiClient, configuration);
-            _sessionsClient = new SessionsClient(apiClient, configuration);
+            var baseApiClient = BaseApiClient(configuration);
+            _tokensClient = new TokensClient(baseApiClient, configuration);
+            _customersClient = new CustomersClient(baseApiClient, configuration);
+            _paymentsClient = new PaymentsClient(baseApiClient, configuration);
+            _instrumentsClient = new InstrumentsClient(baseApiClient, configuration);
+            _disputesClient = new DisputesClient(baseApiClient, configuration);
+            _riskClient = new RiskClient(baseApiClient, configuration);
+            _forexClient = new ForexClient(baseApiClient, configuration);
+            _workflowsClient = new WorkflowsClient(baseApiClient, configuration);
+            _sessionsClient = new SessionsClient(baseApiClient, configuration);
             IApiClient apiFilesClient = null;
             if (configuration.FilesApiConfiguration != null)
             {
-                apiFilesClient = new ApiClient(configuration.HttpClientFactory,
-                    configuration.FilesApiConfiguration.Environment.GetAttribute<EnvironmentAttribute>().FilesApiUri);
+                apiFilesClient = ApiFilesClient(configuration);
             }
 
-            _marketplaceClient = new MarketplaceClient(apiClient, apiFilesClient, configuration);
-            _paymentLinksClient = new PaymentLinksClient(apiClient, configuration);
-            _hostedPaymentsClient = new HostedPaymentsClient(apiClient, configuration);
+            _marketplaceClient = new MarketplaceClient(
+                baseApiClient,
+                apiFilesClient,
+                TransfersApiClient(configuration),
+                configuration);
+            _paymentLinksClient = new PaymentLinksClient(baseApiClient, configuration);
+            _hostedPaymentsClient = new HostedPaymentsClient(baseApiClient, configuration);
         }
+
+        private static ApiClient BaseApiClient(CheckoutConfiguration configuration)
+        {
+            return new ApiClient(configuration.HttpClientFactory,
+                configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri);
+        }
+
+        private static ApiClient ApiFilesClient(CheckoutConfiguration configuration)
+        {
+            return new ApiClient(configuration.HttpClientFactory,
+                configuration.FilesApiConfiguration.Environment.GetAttribute<EnvironmentAttribute>().FilesApiUri);
+        }
+
+        private static ApiClient TransfersApiClient(CheckoutConfiguration configuration)
+        {
+            return new ApiClient(configuration.HttpClientFactory,
+                configuration.Environment.GetAttribute<EnvironmentAttribute>().TransfersApiUri);
+        }
+
 
         public ITokensClient TokensClient()
         {

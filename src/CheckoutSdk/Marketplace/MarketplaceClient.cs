@@ -1,5 +1,6 @@
 ﻿using Checkout.Common;
 using Checkout.Files;
+using Checkout.Marketplace.Transfer;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,13 +11,18 @@ namespace Checkout.Marketplace
         private const string MarketplacePath = "marketplace";
         private const string EntitiesPath = "entities";
         private const string InstrumentPath = "instruments";
+        private const string TransfersPath = "transfers";
+
+        private readonly IApiClient _transfersApiClient;
 
         public MarketplaceClient(
             IApiClient apiClient,
             IApiClient filesApiClient,
+            IApiClient transfersApiClient,
             CheckoutConfiguration configuration)
             : base(apiClient, filesApiClient, configuration)
         {
+            _transfersApiClient = transfersApiClient;
         }
 
         public async Task<OnboardEntityResponse> CreateEntity(OnboardEntityRequest entityRequest,
@@ -69,6 +75,16 @@ namespace Checkout.Marketplace
             CheckoutUtils.ValidateParams("marketplaceFileRequest", marketplaceFileRequest,
                 "marketplaceFileRequest.purpose", marketplaceFileRequest.Purpose);
             return await SubmitFileToFilesApi(marketplaceFileRequest.File, marketplaceFileRequest.Purpose.Value,
+                cancellationToken);
+        }
+
+        public async Task<CreateTransferResponse> InitiateTransferOfFunds(CreateTransferRequest createTransferRequest,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("createTransferRequest", createTransferRequest);
+            return await _transfersApiClient.Post<CreateTransferResponse>(TransfersPath,
+                SdkAuthorization(SdkAuthorizationType.OAuth),
+                createTransferRequest,
                 cancellationToken);
         }
     }
