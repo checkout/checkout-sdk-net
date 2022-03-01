@@ -38,5 +38,10 @@ namespace Checkout.Payments.Links
 
         public string Locale { get; set; }
 
+        // Only available in Four
+
+        public string ProcessingChannelId { get; set; }
+
+        public MarketplaceData Marketplace { get; set; }
     }
 }

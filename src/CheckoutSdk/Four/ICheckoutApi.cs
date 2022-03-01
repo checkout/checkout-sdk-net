@@ -4,6 +4,8 @@ using Checkout.Forex;
 using Checkout.Instruments.Four;
 using Checkout.Marketplace;
 using Checkout.Payments.Four;
+using Checkout.Payments.Hosted;
+using Checkout.Payments.Links;
 using Checkout.Risk;
 using Checkout.Sessions;
 using Checkout.Tokens;
@@ -32,5 +34,9 @@ namespace Checkout.Four
         ISessionsClient SessionsClient();
 
         IMarketplaceClient MarketplaceClient();
+
+        IPaymentLinksClient PaymentLinksClient();
+
+        IHostedPaymentsClient HostedPaymentsClient();
     }
 }

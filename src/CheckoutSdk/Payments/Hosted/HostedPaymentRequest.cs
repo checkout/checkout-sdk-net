@@ -11,6 +11,12 @@ namespace Checkout.Payments.Hosted
 
         public Currency? Currency { get; set; }
 
+        public PaymentType? PaymentType { get; set; }
+
+        public string PaymentIp { get; set; }
+
+        public BillingDescriptor BillingDescriptor { get; set; }
+
         public string Reference { get; set; }
 
         public string Description { get; set; }
@@ -45,10 +51,12 @@ namespace Checkout.Payments.Hosted
 
         public DateTime? CaptureOn { get; set; }
 
-        public PaymentType? PaymentType { get; set; }
+        public IList<PaymentSourceType> AllowPaymentMethods { get; set; }
 
-        public string PaymentIp { get; set; }
+        // Only available in Four
 
-        public BillingDescriptor BillingDescriptor { get; set; }
+        public string ProcessingChannelId { get; set; }
+
+        public MarketplaceData Marketplace { get; set; }
     }
 }

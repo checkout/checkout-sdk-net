@@ -32,7 +32,5 @@ namespace Checkout.Payments.Hosted
         public string CancelUrl { get; set; }
 
         public string FailureUrl { get; set; }
-
-        public string Locale { get; set; }
     }
 }

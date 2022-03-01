@@ -1,3 +1,4 @@
+using Checkout.Common;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using Shouldly;
@@ -99,6 +100,24 @@ namespace Checkout
                 ex.ShouldBeAssignableTo(typeof(CheckoutApiException));
                 ex.Message.ShouldBe("The API response status code (404) does not indicate success.");
             }
+        }
+
+        protected static Phone GetPhone()
+        {
+            return new Phone {CountryCode = "1", Number = "4155552671"};
+        }
+
+        protected static Address GetAddress()
+        {
+            return new Address
+            {
+                AddressLine1 = "CheckoutSdk.com",
+                AddressLine2 = "90 Tottenham Court Road",
+                City = "London",
+                State = "London",
+                Zip = "W1T 4TJ",
+                Country = CountryCode.GB
+            };
         }
     }
 }

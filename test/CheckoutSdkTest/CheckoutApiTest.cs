@@ -1,6 +1,6 @@
-using System.Net.Http;
 using Moq;
 using Shouldly;
+using System.Net.Http;
 using Xunit;
 
 namespace Checkout
@@ -19,7 +19,7 @@ namespace Checkout
                 httpClientFactoryMock.Object);
 
             //Act
-            var checkoutApi = new CheckoutApi(checkoutConfiguration);
+            CheckoutApi checkoutApi = new CheckoutApi(checkoutConfiguration);
 
             //Assert
             checkoutApi.TokensClient().ShouldNotBeNull();
@@ -50,8 +50,8 @@ namespace Checkout
                 httpClientFactoryMock.Object);
 
             //Act
-            var checkoutApi = new Four.CheckoutApi(checkoutConfiguration);
-            
+            Four.ICheckoutApi checkoutApi = new Four.CheckoutApi(checkoutConfiguration);
+
             //Assert
             checkoutApi.TokensClient().ShouldNotBeNull();
             checkoutApi.CustomersClient().ShouldNotBeNull();
@@ -63,6 +63,8 @@ namespace Checkout
             checkoutApi.WorkflowsClient().ShouldNotBeNull();
             checkoutApi.SessionsClient().ShouldNotBeNull();
             checkoutApi.MarketplaceClient().ShouldNotBeNull();
+            checkoutApi.PaymentLinksClient().ShouldNotBeNull();
+            checkoutApi.HostedPaymentsClient().ShouldNotBeNull();
         }
     }
 }

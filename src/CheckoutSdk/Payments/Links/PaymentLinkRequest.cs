@@ -48,5 +48,7 @@ namespace Checkout.Payments.Links
         public string PaymentIp { get; set; }
 
         public BillingDescriptor BillingDescriptor { get; set; }
+
+        public IList<PaymentSourceType> AllowPaymentMethods { get; set; }
     }
 }

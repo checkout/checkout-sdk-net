@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Checkout.Common;
 using Checkout.Payments.Four.Request;
 using Checkout.Payments.Four.Request.Source;
@@ -7,6 +5,8 @@ using Checkout.Payments.Four.Response;
 using Checkout.Payments.Four.Sender;
 using Checkout.Tokens;
 using Shouldly;
+using System;
+using System.Threading.Tasks;
 using Xunit.Sdk;
 
 namespace Checkout.Payments.Four
@@ -27,18 +27,6 @@ namespace Checkout.Payments.Four
                 throw new XunitException("CaptureOn was provided but the payment is not set for capture");
             }
 
-            var phone = new Phone {CountryCode = "44", Number = "020 222333"};
-
-            var billingAddress = new Address
-            {
-                AddressLine1 = "CheckoutSdk.com",
-                AddressLine2 = "90 Tottenham Court Road",
-                City = "London",
-                State = "London",
-                Zip = "W1T 4TJ",
-                Country = CountryCode.GB
-            };
-
             var requestCardSource = new RequestCardSource
             {
                 Name = TestCardSource.Visa.Name,
@@ -46,27 +34,17 @@ namespace Checkout.Payments.Four
                 ExpiryYear = TestCardSource.Visa.ExpiryYear,
                 ExpiryMonth = TestCardSource.Visa.ExpiryMonth,
                 Cvv = TestCardSource.Visa.Cvv,
-                BillingAddress = billingAddress,
-                Phone = phone
+                BillingAddress = GetAddress(),
+                Phone = GetPhone()
             };
 
             var customerRequest = new CustomerRequest {Email = GenerateRandomEmail(), Name = "Customer"};
-
-            var address = new Address
-            {
-                AddressLine1 = "CheckoutSdk.com",
-                AddressLine2 = "90 Tottenham Court Road",
-                City = "London",
-                State = "London",
-                Zip = "W1T 4TJ",
-                Country = CountryCode.GB
-            };
 
             var paymentIndividualSender = new PaymentIndividualSender
             {
                 FirstName = "Mr",
                 LastName = "Test",
-                Address = address,
+                Address = GetAddress(),
                 Identification = new Identification
                 {
                     IssuingCountry = CountryCode.GT, Number = "1234", Type = IdentificationType.DrivingLicence
@@ -118,18 +96,6 @@ namespace Checkout.Payments.Four
 
         protected async Task<PaymentResponse> Make3dsCardPayment(bool attemptN3d = false)
         {
-            var phone = new Phone {CountryCode = "44", Number = "020 222333"};
-
-            var billingAddress = new Address
-            {
-                AddressLine1 = "CheckoutSdk.com",
-                AddressLine2 = "90 Tottenham Court Road",
-                City = "London",
-                State = "London",
-                Zip = "W1T 4TJ",
-                Country = CountryCode.GB
-            };
-
             var requestCardSource = new RequestCardSource
             {
                 Name = TestCardSource.Visa.Name,
@@ -137,8 +103,8 @@ namespace Checkout.Payments.Four
                 ExpiryYear = TestCardSource.Visa.ExpiryYear,
                 ExpiryMonth = TestCardSource.Visa.ExpiryMonth,
                 Cvv = TestCardSource.Visa.Cvv,
-                BillingAddress = billingAddress,
-                Phone = phone
+                BillingAddress = GetAddress(),
+                Phone = GetPhone()
             };
 
             var threeDsRequest = new ThreeDsRequest
@@ -153,17 +119,8 @@ namespace Checkout.Payments.Four
 
             var customerRequest = new CustomerRequest {Email = GenerateRandomEmail(), Name = "Customer"};
 
-            var address = new Address
-            {
-                AddressLine1 = "CheckoutSdk.com",
-                AddressLine2 = "90 Tottenham Court Road",
-                City = "London",
-                State = "London",
-                Zip = "W1T 4TJ",
-                Country = CountryCode.GB
-            };
-
-            var paymentIndividualSender = new PaymentCorporateSender {CompanyName = "Testing Inc.", Address = address};
+            var paymentIndividualSender =
+                new PaymentCorporateSender {CompanyName = "Testing Inc.", Address = GetAddress()};
 
             var paymentRequest = new PaymentRequest
             {
@@ -186,18 +143,6 @@ namespace Checkout.Payments.Four
 
         protected async Task<CardTokenResponse> RequestToken()
         {
-            var phone = new Phone {CountryCode = "44", Number = "020 222333"};
-
-            var billingAddress = new Address
-            {
-                AddressLine1 = "CheckoutSdk.com",
-                AddressLine2 = "90 Tottenham Court Road",
-                City = "London",
-                State = "London",
-                Zip = "W1T 4TJ",
-                Country = CountryCode.GB
-            };
-
             var cardTokenRequest = new CardTokenRequest
             {
                 Name = TestCardSource.Visa.Name,
@@ -205,8 +150,8 @@ namespace Checkout.Payments.Four
                 ExpiryYear = TestCardSource.Visa.ExpiryYear,
                 ExpiryMonth = TestCardSource.Visa.ExpiryMonth,
                 Cvv = TestCardSource.Visa.Cvv,
-                BillingAddress = billingAddress,
-                Phone = phone
+                BillingAddress = GetAddress(),
+                Phone = GetPhone()
             };
 
             var cardTokenResponse = await FourApi.TokensClient().Request(cardTokenRequest);
