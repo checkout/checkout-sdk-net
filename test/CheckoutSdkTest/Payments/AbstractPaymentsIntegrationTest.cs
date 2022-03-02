@@ -80,7 +80,8 @@ namespace Checkout.Payments
                 Reference = Guid.NewGuid().ToString(),
                 Amount = 10L,
                 Currency = Currency.USD,
-                Customer = new CustomerRequest {Email = GenerateRandomEmail()}
+                Customer = new CustomerRequest {Email = GenerateRandomEmail()},
+                BillingDescriptor = new BillingDescriptor {Name = "name", City = "London", Reference = "reference"}
             };
 
             var paymentResponse = await DefaultApi.PaymentsClient().RequestPayment(paymentRequest);

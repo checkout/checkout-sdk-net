@@ -60,6 +60,8 @@ namespace Checkout.Payments
             payment.HasLink("actions").ShouldBeTrue();
             //payment.HasLink("capture").ShouldBeFalse();
             //payment.HasLink("void").ShouldBeFalse();
+            //Other
+            payment.BillingDescriptor.ShouldNotBeNull();
         }
     }
 }

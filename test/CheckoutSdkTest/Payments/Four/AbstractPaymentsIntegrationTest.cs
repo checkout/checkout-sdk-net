@@ -60,7 +60,8 @@ namespace Checkout.Payments.Four
                 Currency = Currency.USD,
                 Customer = customerRequest,
                 Sender = paymentIndividualSender,
-                CaptureOn = captureOn
+                CaptureOn = captureOn,
+                BillingDescriptor = new BillingDescriptor {Name = "name", City = "London", Reference = "reference"}
             };
 
             var paymentResponse = await FourApi.PaymentsClient().RequestPayment(paymentRequest);
