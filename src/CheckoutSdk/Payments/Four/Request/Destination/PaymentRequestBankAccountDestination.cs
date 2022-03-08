@@ -3,9 +3,9 @@ using Checkout.Common.Four;
 
 namespace Checkout.Payments.Four.Request.Destination
 {
-    public class PaymentBankAccountDestination : PaymentRequestDestination
+    public class PaymentRequestBankAccountDestination : PaymentRequestDestination
     {
-        public PaymentBankAccountDestination() : base(PaymentDestinationType.BankAccount)
+        public PaymentRequestBankAccountDestination() : base(PaymentDestinationType.BankAccount)
         {
         }
 
@@ -14,6 +14,8 @@ namespace Checkout.Payments.Four.Request.Destination
         public string AccountNumber { get; set; }
 
         public string BankCode { get; set; }
+
+        public string BranchCode { get; set; }
 
         public string Iban { get; set; }
 
