@@ -1,4 +1,7 @@
+using Checkout.Common;
+using Checkout.Common.Four;
 using Checkout.Payments.Four.Request;
+using Checkout.Payments.Four.Request.Destination;
 using Checkout.Payments.Four.Response;
 using Moq;
 using Shouldly;
@@ -69,7 +72,22 @@ namespace Checkout.Payments.Four
         [Fact]
         private async Task ShouldRequestPayout()
         {
-            var payoutRequest = new PayoutRequest();
+            var payoutRequest = new PayoutRequest
+            {
+                Destination = new PaymentRequestBankAccountDestination
+                {
+                    AccountType = AccountType.Cash,
+                    AccountNumber = "13654567455",
+                    BankCode = "bank_code",
+                    BranchCode = "6443",
+                    Bban = "3704 0044 0532 0130 00",
+                    Iban = "HU93116000060000000012345676",
+                    SwiftBic = "37040044",
+                    Country = CountryCode.HU,
+                    AccountHolder = new AccountHolder {FirstName = "First Name", LastName = "Last Name",},
+                    Bank = new BankDetails {Name = "Bank Name", Address = new Address(), Branch = "branch"}
+                }
+            };
             var payoutResponse = new PayoutResponse();
 
             _apiClient.Setup(apiClient =>
