@@ -35,7 +35,7 @@ jobs:
       - id: publish-package
         run: dotnet nuget push ./package/*.nupkg --source 'https://api.nuget.org/v3/index.json' --api-key ${{secrets.NUGET_API_KEY}}
       - id: get-version
-        run: echo "CURRENT_VERSION=$(find package -name '*.nupkg' | grep -Eo '[0-9].[0-9].[0-9]' | tail -1)" >> $GITHUB_ENV
+        run: echo "CURRENT_VERSION=$(find package -name '*.nupkg' | grep -Eo '[0-9].[0-9].[0-9].[0-9]' | tail -1)" >> $GITHUB_ENV
       - id: print-version
         run: echo ${{ env.CURRENT_VERSION}}
       - id: release-tag
