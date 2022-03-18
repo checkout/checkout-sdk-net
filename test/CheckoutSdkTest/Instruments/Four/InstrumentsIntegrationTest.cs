@@ -31,7 +31,7 @@ namespace Checkout.Instruments.Four
             cardResponse.Scheme.ShouldNotBeNull();
             cardResponse.Last4.ShouldNotBeNull();
             cardResponse.Bin.ShouldNotBeNull();
-            cardResponse.Issuer.ShouldNotBeNull();
+            //cardResponse.Issuer.ShouldNotBeNull();
             cardResponse.IssuerCountry.ShouldNotBeNull();
             cardResponse.ProductId.ShouldNotBeNull();
             cardResponse.ProductType.ShouldNotBeNull();
@@ -208,7 +208,7 @@ namespace Checkout.Instruments.Four
             response.Scheme.ShouldNotBeNull();
             response.Last4.ShouldNotBeNull();
             response.Bin.ShouldNotBeNull();
-            response.Issuer.ShouldNotBeNull();
+            //response.Issuer.ShouldNotBeNull();
             response.IssuerCountry.ShouldNotBeNull();
             response.ProductId.ShouldNotBeNull();
             response.ProductType.ShouldNotBeNull();

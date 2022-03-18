@@ -11,7 +11,7 @@ namespace Checkout.Payments
 {
     public class RequestApmPaymentsIntegrationTest : AbstractPaymentsIntegrationTest
     {
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakeBalotoPayment()
         {
             var balotoSource = new RequestBalotoSource
@@ -56,8 +56,8 @@ namespace Checkout.Payments
             source.Count.ShouldBePositive();
             source.Type().ShouldBe(PaymentSourceType.Baloto);
         }
-
-        [Fact]
+        
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakeBoletoPayment_Redirect()
         {
             var boletoSource = new RequestBoletoSource
@@ -103,7 +103,7 @@ namespace Checkout.Payments
             source.Type().ShouldBe(PaymentSourceType.Boleto);
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakeBoletoPayment_Direct()
         {
             var boletoSource = new RequestBoletoSource
@@ -279,7 +279,7 @@ namespace Checkout.Payments
             source.Type().ShouldBe(PaymentSourceType.Ideal);
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakeOxxoPayment()
         {
             var oxxoSource = new RequestOxxoSource
@@ -323,10 +323,10 @@ namespace Checkout.Payments
             source.Type().ShouldBe(PaymentSourceType.Oxxo);
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakePagoFacilPayment()
         {
-            var pagoFacilSource = new RequestPagoFacilSource()
+            var pagoFacilSource = new RequestPagoFacilSource
             {
                 Country = CountryCode.AR,
                 Description = "simulate Via Pago Facil Demo Payment",
@@ -367,7 +367,7 @@ namespace Checkout.Payments
             source.Type().ShouldBe(PaymentSourceType.PagoFacil);
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakeRapiPagoPayment()
         {
             var rapiPagoSource = new RequestRapiPagoSource

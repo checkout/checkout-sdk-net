@@ -2,6 +2,7 @@ using Checkout.Common;
 using Checkout.Common.Four;
 using Checkout.Payments.Four.Request;
 using Checkout.Payments.Four.Request.Destination;
+using Checkout.Payments.Four.Request.Source.Apm;
 using Checkout.Payments.Four.Response;
 using Moq;
 using Shouldly;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using Product = Checkout.Payments.Four.Request.Product;
 
 namespace Checkout.Payments.Four
 {
@@ -48,6 +50,61 @@ namespace Checkout.Payments.Four
 
             response.ShouldNotBeNull();
             response.ShouldBeSameAs(paymentResponse);
+        }
+
+        [Fact]
+        private async Task ShouldRequestPayment_CustomSource()
+        {
+            var paymentRequest = new PaymentRequest
+            {
+                Customer = new CustomerRequest {Phone = new Phone()},
+                Processing = new ProcessingSettings {TaxAmount = 500, ShippingAmount = 1000},
+                Source = new RequestTamaraSource
+                {
+                    BillingAddress = new Address
+                    {
+                        AddressLine1 = "Cecilia Chapman",
+                        AddressLine2 = "711-2880 Nulla St.",
+                        City = "Mankato",
+                        State = "Mississippi",
+                        Zip = "96522",
+                        Country = CountryCode.SA
+                    }
+                },
+                Items = new List<Product>
+                {
+                    new Product
+                    {
+                        Name = "Item name",
+                        Quantity = 3,
+                        UnitPrice = 100,
+                        TotalAmount = 100,
+                        TaxAmount = 19,
+                        DiscountAmount = 2,
+                        Reference = "some description about item",
+                        ImageUrl = "https://some_s3bucket.com",
+                        Url = "https://some.website.com/item",
+                        Sku = "123687000111"
+                    }
+                }
+            };
+            var paymentResponse = new PaymentResponse
+            {
+                Customer = new CustomerResponse {Id = "id", Email = "email", Name = "name", Phone = new Phone()}
+            };
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<PaymentResponse>(PaymentsPath, _authorization, paymentRequest,
+                        CancellationToken.None, null))
+                .ReturnsAsync(() => paymentResponse);
+
+            IPaymentsClient paymentsClient = new PaymentsClient(_apiClient.Object, _configuration.Object);
+
+            var response = await paymentsClient.RequestPayment(paymentRequest, null, CancellationToken.None);
+
+            response.ShouldNotBeNull();
+            response.ShouldBeSameAs(paymentResponse);
+            response.Customer.ShouldNotBeNull();
+            response.Customer.Phone.ShouldNotBeNull();
         }
 
         [Fact]
