@@ -47,8 +47,8 @@ namespace Checkout.Payments.Four
             cardSourceResponse.Name.ShouldNotBeNullOrEmpty();
             cardSourceResponse.FastFunds.ShouldBeNull();
             cardSourceResponse.Fingerprint.ShouldNotBeNullOrEmpty();
-            cardSourceResponse.Issuer.ShouldNotBeNullOrEmpty();
-            cardSourceResponse.IssuerCountry.ShouldBe(CountryCode.US);
+            //cardSourceResponse.Issuer.ShouldNotBeNullOrEmpty();
+            //cardSourceResponse.IssuerCountry.ShouldBe(CountryCode.US);
             cardSourceResponse.Payouts.ShouldBeNull();
             cardSourceResponse.ProductId.ShouldNotBeNullOrEmpty();
             cardSourceResponse.ProductType.ShouldNotBeNullOrEmpty();
@@ -147,8 +147,8 @@ namespace Checkout.Payments.Four
             cardSourceResponse.Name.ShouldNotBeNullOrEmpty();
             cardSourceResponse.FastFunds.ShouldBeNull();
             cardSourceResponse.Fingerprint.ShouldNotBeNullOrEmpty();
-            cardSourceResponse.Issuer.ShouldNotBeNullOrEmpty();
-            cardSourceResponse.IssuerCountry.ShouldBe(CountryCode.US);
+            //cardSourceResponse.Issuer.ShouldNotBeNullOrEmpty();
+            //cardSourceResponse.IssuerCountry.ShouldBe(CountryCode.US);
             cardSourceResponse.Payouts.ShouldBeNull();
             cardSourceResponse.ProductId.ShouldNotBeNullOrEmpty();
             cardSourceResponse.ProductType.ShouldNotBeNullOrEmpty();
@@ -233,8 +233,8 @@ namespace Checkout.Payments.Four
             cardSourceResponse.Name.ShouldNotBeNullOrEmpty();
             cardSourceResponse.FastFunds.ShouldBeNull();
             cardSourceResponse.Fingerprint.ShouldNotBeNullOrEmpty();
-            cardSourceResponse.Issuer.ShouldNotBeNullOrEmpty();
-            cardSourceResponse.IssuerCountry.ShouldBe(CountryCode.US);
+            //cardSourceResponse.Issuer.ShouldNotBeNullOrEmpty();
+            //cardSourceResponse.IssuerCountry.ShouldBe(CountryCode.US);
             cardSourceResponse.Payouts.ShouldBeNull();
             cardSourceResponse.ProductId.ShouldNotBeNullOrEmpty();
             cardSourceResponse.ProductType.ShouldNotBeNullOrEmpty();
@@ -290,8 +290,8 @@ namespace Checkout.Payments.Four
             cardSourceResponse.Name.ShouldNotBeNullOrEmpty();
             cardSourceResponse.FastFunds.ShouldBeNull();
             cardSourceResponse.Fingerprint.ShouldNotBeNullOrEmpty();
-            cardSourceResponse.Issuer.ShouldNotBeNullOrEmpty();
-            cardSourceResponse.IssuerCountry.ShouldBe(CountryCode.US);
+            //cardSourceResponse.Issuer.ShouldNotBeNullOrEmpty();
+            //cardSourceResponse.IssuerCountry.ShouldBe(CountryCode.US);
             cardSourceResponse.Payouts.ShouldBeNull();
             cardSourceResponse.ProductId.ShouldNotBeNullOrEmpty();
             cardSourceResponse.ProductType.ShouldNotBeNullOrEmpty();

@@ -57,6 +57,8 @@ namespace Checkout.Payments.Four.Request
 
         public ProcessingSettings Processing { get; set; }
 
+        public IList<Product> Items { get; set; }
+
         public IDictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
     }
 }
