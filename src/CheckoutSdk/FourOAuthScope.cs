@@ -50,6 +50,8 @@
         [FourOAuthScope("issuing:partner")] IssuingPartner,
         [FourOAuthScope("risk")] Risk,
         [FourOAuthScope("risk:assessment")] RiskAssessment,
-        [FourOAuthScope("risk:settings")] RiskSettings
+        [FourOAuthScope("risk:settings")] RiskSettings,
+        [FourOAuthScope("balances")] Balances,
+        [FourOAuthScope("balances:view")] BalancesView
     }
 }

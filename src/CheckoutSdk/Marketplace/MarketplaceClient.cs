@@ -1,5 +1,6 @@
 ﻿using Checkout.Common;
 using Checkout.Files;
+using Checkout.Marketplace.Balances;
 using Checkout.Marketplace.Transfer;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,17 +13,21 @@ namespace Checkout.Marketplace
         private const string EntitiesPath = "entities";
         private const string InstrumentPath = "instruments";
         private const string TransfersPath = "transfers";
+        private const string BalancesPath = "balances";
 
         private readonly IApiClient _transfersApiClient;
+        private readonly IApiClient _balancesApiClient;
 
         public MarketplaceClient(
             IApiClient apiClient,
             IApiClient filesApiClient,
             IApiClient transfersApiClient,
+            IApiClient balancesApiClient,
             CheckoutConfiguration configuration)
             : base(apiClient, filesApiClient, configuration)
         {
             _transfersApiClient = transfersApiClient;
+            _balancesApiClient = balancesApiClient;
         }
 
         public async Task<OnboardEntityResponse> CreateEntity(OnboardEntityRequest entityRequest,
@@ -85,6 +90,16 @@ namespace Checkout.Marketplace
             return await _transfersApiClient.Post<CreateTransferResponse>(TransfersPath,
                 SdkAuthorization(SdkAuthorizationType.OAuth),
                 createTransferRequest,
+                cancellationToken);
+        }
+
+        public async Task<BalancesResponse> RetrieveEntityBalances(string entityId, BalancesQuery balancesQuery,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("filter", entityId, "balancesQuery", balancesQuery);
+            return await _balancesApiClient.Query<BalancesResponse>(BuildPath(BalancesPath, entityId),
+                SdkAuthorization(),
+                balancesQuery,
                 cancellationToken);
         }
     }

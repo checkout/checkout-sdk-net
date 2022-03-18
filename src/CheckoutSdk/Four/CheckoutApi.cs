@@ -50,6 +50,7 @@ namespace Checkout.Four
                 baseApiClient,
                 apiFilesClient,
                 TransfersApiClient(configuration),
+                BalancesApiClient(configuration),
                 configuration);
             _paymentLinksClient = new PaymentLinksClient(baseApiClient, configuration);
             _hostedPaymentsClient = new HostedPaymentsClient(baseApiClient, configuration);
@@ -71,6 +72,12 @@ namespace Checkout.Four
         {
             return new ApiClient(configuration.HttpClientFactory,
                 configuration.Environment.GetAttribute<EnvironmentAttribute>().TransfersApiUri);
+        }
+
+        private static ApiClient BalancesApiClient(CheckoutConfiguration configuration)
+        {
+            return new ApiClient(configuration.HttpClientFactory,
+                configuration.Environment.GetAttribute<EnvironmentAttribute>().BalancesApiUri);
         }
 
 

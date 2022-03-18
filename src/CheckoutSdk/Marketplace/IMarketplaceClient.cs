@@ -1,4 +1,5 @@
 ﻿using Checkout.Common;
+using Checkout.Marketplace.Balances;
 using Checkout.Marketplace.Transfer;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,6 +23,9 @@ namespace Checkout.Marketplace
             CancellationToken cancellationToken = default);
 
         Task<CreateTransferResponse> InitiateTransferOfFunds(CreateTransferRequest createTransferRequest,
+            CancellationToken cancellationToken = default);
+
+        Task<BalancesResponse> RetrieveEntityBalances(string entityId, BalancesQuery balancesQuery,
             CancellationToken cancellationToken = default);
     }
 }
