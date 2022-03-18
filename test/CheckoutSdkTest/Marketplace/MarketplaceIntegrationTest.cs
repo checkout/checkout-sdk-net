@@ -1,4 +1,5 @@
 using Checkout.Common;
+using Checkout.Marketplace.Balances;
 using Checkout.Marketplace.Transfer;
 using Shouldly;
 using System;
@@ -132,6 +133,22 @@ namespace Checkout.Marketplace
             createTransferResponse.Status.ShouldNotBeNull();
             createTransferResponse.Links.ShouldNotBeNull();
             createTransferResponse.Links.ShouldBeEmpty();
+        }
+
+        [Fact]
+        private async Task ShouldRetrieveEntityBalances()
+        {
+            var query = new BalancesQuery() {Query = "currency:" + Currency.GBP};
+
+            var balances = await FourApi.MarketplaceClient().RetrieveEntityBalances("ent_kidtcgc3ge5unf4a5i6enhnr5m", query);
+            balances.ShouldNotBeNull();
+            balances.Data.ShouldNotBeNull();
+            foreach (var balance in balances.Data)
+            {
+                balance.Descriptor.ShouldNotBeNull();
+                balance.HoldingCurrency.ShouldNotBeNull();
+                balance.Balances.ShouldNotBeNull();
+            }
         }
     }
 }

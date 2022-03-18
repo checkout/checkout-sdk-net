@@ -1,4 +1,5 @@
 using Checkout.Common;
+using Checkout.Marketplace.Balances;
 using Checkout.Marketplace.Transfer;
 using Moq;
 using Shouldly;
@@ -16,6 +17,7 @@ namespace Checkout.Marketplace
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
         private readonly Mock<IApiClient> _apiFilesClient = new Mock<IApiClient>();
         private readonly Mock<IApiClient> _transfersClient = new Mock<IApiClient>();
+        private readonly Mock<IApiClient> _balancesClient = new Mock<IApiClient>();
         private readonly IHttpClientFactory _httpClientFactory = new DefaultHttpClientFactory();
         private readonly MarketplaceClient _marketplaceClient;
 
@@ -27,7 +29,7 @@ namespace Checkout.Marketplace
                 Environment.Sandbox, _httpClientFactory, Environment.Sandbox);
             _marketplaceClient =
                 new MarketplaceClient(_apiClient.Object, _apiFilesClient.Object, _transfersClient.Object,
-                    configuration.Object);
+                    _balancesClient.Object, configuration.Object);
         }
 
         [Fact]
@@ -144,7 +146,7 @@ namespace Checkout.Marketplace
             Mock<CheckoutConfiguration> configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
                 Environment.Sandbox, _httpClientFactory, Environment.Sandbox);
             MarketplaceClient marketplaceClient =
-                new MarketplaceClient(_apiClient.Object, null, null, configuration.Object);
+                new MarketplaceClient(_apiClient.Object, null, null, null,configuration.Object);
             var exception = await Assert.ThrowsAsync<CheckoutFileException>(
                 () => marketplaceClient.SubmitFile(new MarketplaceFileRequest
                 {
@@ -169,6 +171,22 @@ namespace Checkout.Marketplace
 
             response.ShouldNotBeNull();
             response.ShouldBe(createTransferResponse);
+        }
+
+        [Fact]
+        private async Task ShouldRetrieveEntityBalances()
+        {
+            var request = new BalancesQuery();
+            var responseAsync = new BalancesResponse();
+
+            _balancesClient.Setup(apiClient =>
+                    apiClient.Query<BalancesResponse>("balances/entity_id", It.IsAny<SdkAuthorization>(), request,
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => responseAsync);
+
+            var response = await _marketplaceClient.RetrieveEntityBalances("entity_id", request);
+
+            response.ShouldNotBeNull();
         }
     }
 }

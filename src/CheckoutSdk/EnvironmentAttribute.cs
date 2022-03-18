@@ -9,12 +9,19 @@ namespace Checkout
         public Uri FilesApiUri { get; }
         public Uri TransfersApiUri { get; }
 
-        public EnvironmentAttribute(string apiUri, string authorizationUri, string filesApiUri, string transfersApiUri)
+        public Uri BalancesApiUri { get; }
+
+        public EnvironmentAttribute(string apiUri,
+            string authorizationUri,
+            string filesApiUri,
+            string transfersApiUri,
+            string balancesApiUri)
         {
             ApiUri = new Uri(apiUri);
             FilesApiUri = new Uri(filesApiUri);
             AuthorizationUri = new Uri(authorizationUri);
             TransfersApiUri = new Uri(transfersApiUri);
+            BalancesApiUri = new Uri(balancesApiUri);
         }
     }
 }
