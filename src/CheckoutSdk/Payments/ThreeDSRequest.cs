@@ -36,6 +36,8 @@ namespace Checkout.Payments
         public string Version { get; set; }
         
         public string Exemption { get; set; }
+
+        public string ChallengeIndicator { get; set; }
         
         public static implicit operator ThreeDSRequest(bool enabled)
         {

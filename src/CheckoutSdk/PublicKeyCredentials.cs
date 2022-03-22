@@ -31,10 +31,13 @@ namespace Checkout
             if (httpRequest == null)
                 throw new ArgumentNullException(nameof(httpRequest));
 
-            if (string.IsNullOrEmpty(_configuration.PublicKey)) 
+            if (string.IsNullOrEmpty(_configuration.PublicKey))
                 throw new ArgumentException("Your Public Key must be configured", nameof(_configuration.PublicKey));
 
-            httpRequest.Headers.Authorization = new AuthenticationHeaderValue(_configuration.PublicKey);
+            httpRequest.Headers.Authorization = _configuration.IsFour(_configuration.PublicKey)
+                ? new AuthenticationHeaderValue("Bearer", _configuration.PublicKey)
+                : new AuthenticationHeaderValue(_configuration.PublicKey);
+
             return Task.FromResult(0);
         }
     }
