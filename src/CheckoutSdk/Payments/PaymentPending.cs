@@ -34,6 +34,8 @@ namespace Checkout.Payments
         [JsonProperty(PropertyName = "3ds")]
         public ThreeDSEnrollment ThreeDS { get; set; }
 
+        public string SchemeId { get; set; }
+        
         /// <summary>
         /// Determines whether the payment requires a redirect.
         /// </summary>

@@ -104,5 +104,12 @@ namespace Checkout.Payments
         /// Gets the CVV check result.
         /// </summary>
         public string CvvCheck { get; set; }
+        
+        public bool? Payouts { get; set; }
+        
+        public string FastFunds { get; set; }
+        
+        public string PaymentAccountReference { get; set; }
+        
     }
 }

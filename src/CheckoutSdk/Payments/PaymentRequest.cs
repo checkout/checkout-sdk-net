@@ -137,5 +137,8 @@ namespace Checkout.Payments
         /// Use the processing object to influence or override the data sent during card processing
         /// </summary>
         public Dictionary<string, object> Processing { get; set; } = new Dictionary<string, object>();
+        
+        public bool? MerchantInitiated { get; set; }
+        
     }
 }

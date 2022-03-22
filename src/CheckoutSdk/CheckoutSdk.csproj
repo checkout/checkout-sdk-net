@@ -21,13 +21,7 @@
     <TargetFrameworks>net45;netstandard1.4;netstandard2.0</TargetFrameworks>
     <RootNamespace>Checkout</RootNamespace>
     <DefineConstants>LIBLOG_PORTABLE</DefineConstants>
-    <Version>2.3.0</Version>
-    <PackageReleaseNotes>
-      .NET SDK 2.3.0 introduces three features:
-      - the dLocal card source for use in LATAM https://docs.checkout.com/docs/request-a-payment-using-dlocal
-      - the Files client https://docs.checkout.com/docs/disputes
-      - the Disputes client https://docs.checkout.com/docs/disputes
-    </PackageReleaseNotes>
+    <Version>2.5.0</Version>
   </PropertyGroup>
   
   <PropertyGroup Label="Unix Build Targets" Condition=" '$(OS)' == 'Unix' ">

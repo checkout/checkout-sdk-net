@@ -32,7 +32,11 @@ namespace Checkout.Payments
         /// Gets or sets the 3D-Secure transaction identifier. Required if using an external MPI.
         /// </summary>
         public string Xid { get; set; }
-
+        
+        public string Version { get; set; }
+        
+        public string Exemption { get; set; }
+        
         public static implicit operator ThreeDSRequest(bool enabled)
         {
             return new ThreeDSRequest { Enabled = enabled };

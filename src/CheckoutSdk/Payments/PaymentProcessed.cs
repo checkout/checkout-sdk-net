@@ -97,6 +97,8 @@ namespace Checkout.Payments
         /// </summary>
         public string Eci { get; set; }
 
+        public string SchemeId { get; set; }
+        
         /// <summary>
         /// Gets the payment's actions link.
         /// </summary>
