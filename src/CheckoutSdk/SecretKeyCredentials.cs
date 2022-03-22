@@ -34,7 +34,10 @@ namespace Checkout
             if (string.IsNullOrEmpty(_configuration.SecretKey)) 
                 throw new ArgumentException("Your Secret Key must be configured", nameof(_configuration.SecretKey));
 
-            httpRequest.Headers.Authorization = new AuthenticationHeaderValue(_configuration.SecretKey);
+            httpRequest.Headers.Authorization = _configuration.IsFour(_configuration.SecretKey)
+                ? new AuthenticationHeaderValue("Bearer", _configuration.SecretKey)
+                : new AuthenticationHeaderValue(_configuration.SecretKey);
+
             return Task.FromResult(0);
         }
     }

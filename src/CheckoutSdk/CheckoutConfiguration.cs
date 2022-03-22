@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 
 namespace Checkout
 {
@@ -9,6 +10,7 @@ namespace Checkout
     {
         public const string ProductionUri = "https://api.checkout.com/";
         public const string SandboxUri = "https://api.sandbox.checkout.com/";
+        private readonly Regex _fourKeyPattern;
 
         /// <summary>
         /// Creates a new <see cref="CheckoutConfiguration"/> instance.
@@ -18,7 +20,6 @@ namespace Checkout
         public CheckoutConfiguration(string secretKey, bool useSandbox)
             : this(secretKey, useSandbox ? SandboxUri : ProductionUri)
         {
-
         }
 
         /// <summary>
@@ -28,18 +29,20 @@ namespace Checkout
         /// <param name="uri">The base URL of the Checkout API you wish to connect to.</param>
         public CheckoutConfiguration(string secretKey, string uri)
         {
-            if (string.IsNullOrEmpty(secretKey)) throw new ArgumentException($"Your API secret key is required", nameof(secretKey));
+            if (string.IsNullOrEmpty(secretKey))
+                throw new ArgumentException($"Your API secret key is required", nameof(secretKey));
             if (string.IsNullOrEmpty(uri)) throw new ArgumentException($"The API URI is required", nameof(uri));
 
             SecretKey = secretKey;
             Uri = uri;
+            _fourKeyPattern = new Regex("^(sk|pk)_(sbox_)?[a-z2-7]{26}[a-z2-7*#$=]$");
         }
 
         /// <summary>
         /// Gets the secret key that will be used to authenticate to the Checkout API.
         /// </summary>
         public string SecretKey { get; }
-        
+
         /// <summary>
         /// Gets the Uri of the Checkout API to connect to.
         /// </summary>
@@ -49,5 +52,10 @@ namespace Checkout
         /// Gets or sets your public key as obtained from the Checkout Hub.
         /// </summary>
         public string PublicKey { get; set; }
+
+        public bool IsFour(string key)
+        {
+            return key != null && _fourKeyPattern.IsMatch(key);
+        }
     }
 }
