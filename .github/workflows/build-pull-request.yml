@@ -43,7 +43,10 @@ jobs:
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
       - id: install-report-generator
         shell: powershell
-        run: dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.0.2
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.1.3
+      - id: begin-sonar-scan
+        shell: powershell
+        run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"checkout_checkout-sdk-net" /o:"checkout-ltd" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths=".\sonarqubecoverage\SonarQube.xml"
       - id: build-and-analyse
         env:
           CHECKOUT_SECRET_KEY: ${{ secrets.IT_CHECKOUT_SECRET_KEY }}
@@ -55,8 +58,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
-        run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"checkout_checkout-sdk-net" /o:"checkout-ltd" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths=".\sonarqubecoverage\SonarQube.xml"
+        run: 
           dotnet test --collect:"XPlat Code Coverage"
-          reportgenerator "-reports:test\*\TestResults\*\coverage.cobertura.xml" "-targetdir:sonarqubecoverage" "-reporttypes:SonarQube"
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+      - id: generate-report
+        shell: powershell
+        run: reportgenerator "-reports:test\*\TestResults\*\coverage.cobertura.xml" "-targetdir:sonarqubecoverage" "-reporttypes:SonarQube"
+      - id: end-sonar-scan
+        shell: powershell
+        run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
