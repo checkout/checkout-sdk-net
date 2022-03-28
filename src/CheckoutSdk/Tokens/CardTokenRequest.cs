@@ -66,6 +66,6 @@ namespace Checkout.Tokens
         /// <summary>
         /// Gets the type of source.
         /// </summary>
-        public string Type => CardSource.TypeName;
+        public TokenType Type => TokenType.Card;
     }
 }

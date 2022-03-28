@@ -1,6 +1,5 @@
 namespace Checkout.Tokens
 {
-    
     /// <summary>
     /// Defines a token request.
     /// </summary>
@@ -9,6 +8,6 @@ namespace Checkout.Tokens
         /// <summary>
         /// Gets the type of details to be tokenized.
         /// </summary>
-        string Type { get; }
+        TokenType Type { get; }
     }
 }
