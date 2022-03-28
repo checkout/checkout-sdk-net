@@ -1,8 +1,7 @@
-using Shouldly;
-using System;
 using System.Threading.Tasks;
 using Checkout.Common;
 using Checkout.Tokens;
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -27,7 +26,7 @@ namespace Checkout.Tests
 
             token.ShouldNotBeNull();
             token.Token.ShouldNotBeNullOrEmpty();
-            token.ExpiresOn.ShouldBeGreaterThan(DateTime.UtcNow);
+            token.ExpiresOn.ShouldNotBeNull();
             token.BillingAddress.ShouldNotBeNull();
             token.BillingAddress.AddressLine1.ShouldBe(request.BillingAddress.AddressLine1);
             token.BillingAddress.AddressLine2.ShouldBe(request.BillingAddress.AddressLine2);
@@ -45,7 +44,8 @@ namespace Checkout.Tests
 
         private CardTokenRequest CreateValidRequest()
         {
-            return new CardTokenRequest(TestCardSource.Visa.Number, TestCardSource.Visa.ExpiryMonth, TestCardSource.Visa.ExpiryYear)
+            return new CardTokenRequest(TestCardSource.Visa.Number, TestCardSource.Visa.ExpiryMonth,
+                TestCardSource.Visa.ExpiryYear)
             {
                 Cvv = TestCardSource.Visa.Cvv,
                 BillingAddress = new Address
