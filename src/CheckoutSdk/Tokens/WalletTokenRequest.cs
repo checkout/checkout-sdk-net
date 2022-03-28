@@ -12,7 +12,7 @@ namespace Checkout.Tokens
         /// </summary>
         /// <param name="tokenType">The token type.</param>
         /// <param name="tokenData">The wallet token data.</param>
-        public WalletTokenRequest(TokenType tokenType, Dictionary<string, object> tokenData)
+        public WalletTokenRequest(TokenType tokenType, IDictionary<string, object> tokenData)
         {
             Type = tokenType;
             TokenData = tokenData;
@@ -26,6 +26,6 @@ namespace Checkout.Tokens
         /// <summary>
         /// Gets the wallet (Google Pay, Apple Pay etc) payment token data.
         /// </summary>
-        public Dictionary<string, object> TokenData { get; }
+        public IDictionary<string, object> TokenData { get; }
     }
 }
