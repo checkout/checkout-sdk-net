@@ -151,6 +151,7 @@ namespace Checkout.Payments.Four
             paymentResponse.Customer.Name.ShouldNotBeEmpty();
             paymentResponse.Customer.Email.ShouldNotBeEmpty();
             paymentResponse.Customer.Phone.ShouldNotBeNull();
+            paymentResponse.Processing.PartnerPaymentId.ShouldNotBeNull();
             paymentResponse.Links.ShouldNotBeEmpty();
         }
     }

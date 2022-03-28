@@ -90,7 +90,8 @@ namespace Checkout.Payments.Four
             };
             var paymentResponse = new PaymentResponse
             {
-                Customer = new CustomerResponse {Id = "id", Email = "email", Name = "name", Phone = new Phone()}
+                Customer = new CustomerResponse {Id = "id", Email = "email", Name = "name", Phone = new Phone()},
+                Processing = new PaymentProcessing {PartnerPaymentId = "123456"}
             };
             _apiClient.Setup(apiClient =>
                     apiClient.Post<PaymentResponse>(PaymentsPath, _authorization, paymentRequest,
