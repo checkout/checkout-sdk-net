@@ -11,6 +11,8 @@ namespace Checkout.Payments.Request
 
         public long? Amount { get; set; }
 
+        public FundTransferType? FundTransferType { get; set; }
+
         public Currency? Currency { get; set; }
 
         public PaymentType? PaymentType { get; set; }
@@ -46,6 +48,5 @@ namespace Checkout.Payments.Request
         public IDictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
 
         public IDictionary<string, object> Processing { get; set; } = new Dictionary<string, object>();
-              
     }
 }
