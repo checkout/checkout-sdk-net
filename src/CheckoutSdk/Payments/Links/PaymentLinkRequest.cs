@@ -50,5 +50,11 @@ namespace Checkout.Payments.Links
         public BillingDescriptor BillingDescriptor { get; set; }
 
         public IList<PaymentSourceType> AllowPaymentMethods { get; set; }
+
+        // Only available in Four
+
+        public string ProcessingChannelId { get; set; }
+
+        public MarketplaceData Marketplace { get; set; }
     }
 }
