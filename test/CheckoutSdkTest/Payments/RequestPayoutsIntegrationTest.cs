@@ -41,6 +41,7 @@ namespace Checkout.Payments
             var payoutRequest = new PayoutRequest
             {
                 Destination = requestCardDestination,
+                FundTransferType = FundTransferType.AA,
                 Capture = false,
                 Reference = Guid.NewGuid().ToString(),
                 Amount = 5,
