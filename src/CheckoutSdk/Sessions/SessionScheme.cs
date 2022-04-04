@@ -8,6 +8,7 @@ namespace Checkout.Sessions
         [EnumMember(Value = "mastercard")] Mastercard,
         [EnumMember(Value = "jcb")] Jcb,
         [EnumMember(Value = "amex")] Amex,
-        [EnumMember(Value = "diners")] Diners
+        [EnumMember(Value = "diners")] Diners,
+        [EnumMember(Value = "cartes_bancaires")] CartesBancaires
     }
 }
