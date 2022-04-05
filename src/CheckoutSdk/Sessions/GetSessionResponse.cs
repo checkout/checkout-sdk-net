@@ -1,4 +1,5 @@
 ﻿using Checkout.Common;
+using System;
 using System.Collections.Generic;
 
 namespace Checkout.Sessions
@@ -60,5 +61,15 @@ namespace Checkout.Sessions
         public string CardholderInfo { get; set; }
 
         public CardInfo Card { get; set; }
+
+        public DateTime? AuthenticationDate { get; set; }
+
+        public ThreeDsExemption Exemption { get; set; }
+
+        public ThreeDSFlowType? FlowType { get; set; }
+
+        public ChallengeIndicatorType? ChallengeIndicator { get; set; }
+
+        public SchemeInfo SchemeInfo { get; set; }
     }
 }

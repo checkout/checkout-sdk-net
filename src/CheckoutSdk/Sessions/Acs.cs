@@ -19,5 +19,7 @@
         public SessionInterface? SessionInterface { get; set; }
 
         public UIElements? UiTemplate { get; set; }
+
+        public string ChallengeCancelReasonCode { get; set; }
     }
 }

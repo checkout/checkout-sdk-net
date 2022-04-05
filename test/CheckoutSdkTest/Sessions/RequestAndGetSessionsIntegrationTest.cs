@@ -38,6 +38,7 @@ namespace Checkout.Sessions
             response.NextActions[0].ShouldBe(NextAction.ChallengeCardHolder);
             response.TransactionType.ShouldBe(transactionType);
             response.ResponseCode.ShouldBe(ResponseCode.C);
+            response.AuthenticationDate.ShouldNotBeNull();
 
             response.GetSelfLink().ShouldNotBeNull();
             response.GetLink("callback_url").ShouldNotBeNull();
@@ -62,6 +63,7 @@ namespace Checkout.Sessions
             getSessionResponse.NextActions[0].ShouldBe(NextAction.ChallengeCardHolder);
             getSessionResponse.TransactionType.ShouldBe(transactionType);
             getSessionResponse.ResponseCode.ShouldBe(ResponseCode.C);
+            response.AuthenticationDate.ShouldNotBeNull();
 
             getSessionResponse.GetSelfLink().ShouldNotBeNull();
             getSessionResponse.GetLink("callback_url").ShouldNotBeNull();
@@ -147,6 +149,7 @@ namespace Checkout.Sessions
             getSessionResponse.NextActions[0].ShouldBe(NextAction.Authenticate);
             getSessionResponse.TransactionType.ShouldBe(transactionType);
             getSessionResponse.ResponseCode.ShouldBeNull();
+            getSessionResponse.AuthenticationDate.ShouldNotBeNull();
 
             getSessionResponse.GetSelfLink().ShouldNotBeNull();
             getSessionResponse.GetLink("callback_url").ShouldNotBeNull();

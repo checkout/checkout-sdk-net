@@ -6,6 +6,7 @@ namespace Checkout.Sessions
     {
         [EnumMember(Value = "card")] Card,
         [EnumMember(Value = "id")] Id,
-        [EnumMember(Value = "token")] Token
+        [EnumMember(Value = "token")] Token,
+        [EnumMember(Value = "network_token")] NetworkToken
     }
 }

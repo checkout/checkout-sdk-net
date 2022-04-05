@@ -14,6 +14,8 @@ namespace Checkout.Sessions.Source
 
         public Phone WorkPhone { get; set; }
 
+        public SessionScheme? Scheme { get; set; }
+
         protected SessionSource(SessionSourceType type)
         {
             Type = type;

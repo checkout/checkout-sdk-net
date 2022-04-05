@@ -1,4 +1,5 @@
 ﻿using Checkout.Common;
+using System;
 using System.Collections.Generic;
 
 namespace Checkout.Sessions
@@ -32,5 +33,9 @@ namespace Checkout.Sessions
         public string Reference { get; set; }
 
         public CardInfo Card { get; set; }
+
+        public DateTime? AuthenticationDate { get; set; }
+
+        public ChallengeIndicatorType? ChallengeIndicator { get; set; }
     }
 }
