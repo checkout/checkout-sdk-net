@@ -9,6 +9,7 @@ namespace Checkout.Common
         [EnumMember(Value = "network_token")] NetworkToken,
         [EnumMember(Value = "token")] Token,
         [EnumMember(Value = "customer")] Customer,
+        [EnumMember(Value = "provider_token")] ProviderToken,
         [EnumMember(Value = "dLocal")] DLocal,
         [EnumMember(Value = "currency_account")] CurrencyAccount,
         [EnumMember(Value = "baloto")] Baloto,

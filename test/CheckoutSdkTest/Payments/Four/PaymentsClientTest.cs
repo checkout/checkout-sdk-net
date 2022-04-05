@@ -2,6 +2,7 @@ using Checkout.Common;
 using Checkout.Common.Four;
 using Checkout.Payments.Four.Request;
 using Checkout.Payments.Four.Request.Destination;
+using Checkout.Payments.Four.Request.Source;
 using Checkout.Payments.Four.Request.Source.Apm;
 using Checkout.Payments.Four.Response;
 using Moq;
@@ -36,7 +37,13 @@ namespace Checkout.Payments.Four
         [Fact]
         private async Task ShouldRequestPayment()
         {
-            var paymentRequest = new PaymentRequest();
+            var paymentRequest = new PaymentRequest
+            {
+                Source = new RequestProviderTokenSource
+                {
+                    Token = "token", PaymentMethod = "method", AccountHolder = new AccountHolder()
+                }
+            };
             var paymentResponse = new PaymentResponse();
 
             _apiClient.Setup(apiClient =>
@@ -111,7 +118,23 @@ namespace Checkout.Payments.Four
         [Fact]
         private async Task ShouldRequestPayment_IdempotencyKey()
         {
-            var paymentRequest = new PaymentRequest();
+            var paymentRequest = new PaymentRequest
+            {
+                Source = new RequestNetworkTokenSource
+                {
+                    Token = "token",
+                    Cryptogram = "cryptogram",
+                    Cvv = "123",
+                    Eci = "eci",
+                    Name = "name",
+                    Phone = new Phone(),
+                    Stored = false,
+                    BillingAddress = new Address(),
+                    ExpiryMonth = 12,
+                    ExpiryYear = 2024,
+                    TokenType = NetworkTokenType.Vts
+                }
+            };
             var paymentResponse = new PaymentResponse();
 
             _apiClient.Setup(apiClient =>
