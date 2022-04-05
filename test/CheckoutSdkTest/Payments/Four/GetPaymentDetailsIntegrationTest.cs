@@ -46,8 +46,8 @@ namespace Checkout.Payments.Four
             cardSourcePayment.Name.ShouldNotBeNullOrEmpty();
             cardSourcePayment.FastFunds.ShouldBeNull();
             cardSourcePayment.Fingerprint.ShouldNotBeNullOrEmpty();
-            cardSourcePayment.Issuer.ShouldNotBeNullOrEmpty();
-            cardSourcePayment.IssuerCountry.ShouldBe(CountryCode.US);
+            //cardSourcePayment.Issuer.ShouldNotBeNullOrEmpty();
+            //cardSourcePayment.IssuerCountry.ShouldBe(CountryCode.US);
             cardSourcePayment.Payouts.ShouldBeNull();
             cardSourcePayment.ProductId.ShouldNotBeNullOrEmpty();
             cardSourcePayment.ProductType.ShouldNotBeNullOrEmpty();

@@ -56,8 +56,8 @@ namespace Checkout.Marketplace
                     },
                     NationalTaxId = "TAX123456",
                     DateOfBirth = new DateOfBirth {Day = 5, Month = 6, Year = 1996},
-                    Identification = new Identification {NationalIdNumber = "AB123456C"}
-                }
+                    Identification = new Identification {NationalIdNumber = "AB123456C"},
+                },
             };
 
             OnboardEntityResponse entityResponse = await FourApi.MarketplaceClient().CreateEntity(onboardEntityRequest);
@@ -140,7 +140,8 @@ namespace Checkout.Marketplace
         {
             var query = new BalancesQuery() {Query = "currency:" + Currency.GBP};
 
-            var balances = await FourApi.MarketplaceClient().RetrieveEntityBalances("ent_kidtcgc3ge5unf4a5i6enhnr5m", query);
+            var balances = await FourApi.MarketplaceClient()
+                .RetrieveEntityBalances("ent_kidtcgc3ge5unf4a5i6enhnr5m", query);
             balances.ShouldNotBeNull();
             balances.Data.ShouldNotBeNull();
             foreach (var balance in balances.Data)
