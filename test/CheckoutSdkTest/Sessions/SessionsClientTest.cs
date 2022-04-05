@@ -1,5 +1,6 @@
 ﻿using Checkout.Common;
 using Checkout.Sessions.Channel;
+using Checkout.Sessions.Source;
 using Moq;
 using Shouldly;
 using System;
@@ -51,44 +52,68 @@ namespace Checkout.Sessions
         [Fact]
         private async Task ShouldRequestSessionCreateSessionOkResponse()
         {
-            var request = new Mock<SessionRequest>();
-            var response = new Mock<CreateSessionOkResponse>();
+            var request = new SessionRequest
+            {
+                Source = new SessionNetworkTokenSource
+                {
+                    Token = "token", ExpiryMonth = 12, ExpiryYear = 2024, Name = "name"
+                }
+            };
+            var response = new CreateSessionOkResponse
+            {
+                Acs = new Acs {ChallengeCancelReasonCode = "code"},
+                SchemeInfo = new SchemeInfo
+                {
+                    Name = SessionScheme.CartesBancaires, Score = "score", Avalgo = "avalgo"
+                }
+            };
 
             _apiClient.Setup(apiClient =>
                     apiClient.Post<Resource>(Sessions,
                         _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.OAuth),
-                        SessionResponseMappings, request.Object,
+                        SessionResponseMappings, request,
                         CancellationToken.None, null))
-                .ReturnsAsync(() => response.Object);
+                .ReturnsAsync(() => response);
 
             _sessionsClient = new SessionsClient(_apiClient.Object, _configuration.Object);
 
-            var getSessionResponse = await _sessionsClient.RequestSession(request.Object, CancellationToken.None);
+            var getSessionResponse = await _sessionsClient.RequestSession(request, CancellationToken.None);
 
             getSessionResponse.ShouldNotBeNull();
-            getSessionResponse.Created.ShouldNotBeNull();
             getSessionResponse.Accepted.ShouldBeNull();
+            getSessionResponse.Created.ShouldNotBeNull();
+            getSessionResponse.Created.Acs.ChallengeCancelReasonCode.ShouldNotBeNull();
+            getSessionResponse.Created.SchemeInfo.ShouldNotBeNull();
+            getSessionResponse.Created.SchemeInfo.Name.ShouldNotBeNull();
+            getSessionResponse.Created.SchemeInfo.Score.ShouldNotBeNull();
+            getSessionResponse.Created.SchemeInfo.Avalgo.ShouldNotBeNull();
         }
 
         [Fact]
         private async Task ShouldRequestSessionCreateSessionAcceptedResponse()
         {
-            var request = new Mock<SessionRequest>();
-            var response = new Mock<CreateSessionAcceptedResponse>();
+            var request = new SessionRequest {Source = new SessionIdSource {Id = "id"}};
+            var response = new CreateSessionAcceptedResponse
+            {
+                AuthenticationDate = DateTime.Now,
+                ChallengeIndicator = ChallengeIndicatorType.ChallengeRequestedMandate
+            };
 
             _apiClient.Setup(apiClient =>
                     apiClient.Post<Resource>(Sessions,
                         _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.OAuth),
-                        SessionResponseMappings, request.Object,
+                        SessionResponseMappings, request,
                         CancellationToken.None, null))
-                .ReturnsAsync(() => response.Object);
+                .ReturnsAsync(() => response);
 
             _sessionsClient = new SessionsClient(_apiClient.Object, _configuration.Object);
 
-            var getSessionResponse = await _sessionsClient.RequestSession(request.Object, CancellationToken.None);
+            var getSessionResponse = await _sessionsClient.RequestSession(request, CancellationToken.None);
 
             getSessionResponse.ShouldNotBeNull();
             getSessionResponse.Accepted.ShouldNotBeNull();
+            getSessionResponse.Accepted.AuthenticationDate.ShouldNotBeNull();
+            getSessionResponse.Accepted.ChallengeIndicator.ShouldNotBeNull();
             getSessionResponse.Created.ShouldBeNull();
         }
 
@@ -111,19 +136,35 @@ namespace Checkout.Sessions
         [Fact]
         private async Task ShouldGetSessionDetails()
         {
-            var response = new Mock<GetSessionResponse>();
+            var response = new GetSessionResponse
+            {
+                Exemption =
+                    new ThreeDsExemption
+                    {
+                        Requested = "requested", Applied = Exemption.RecurringOperation, Code = "code"
+                    },
+                AuthenticationDate = DateTime.Now,
+                FlowType = ThreeDSFlowType.Frictionless,
+                ChallengeIndicator = ChallengeIndicatorType.ChallengeRequested,
+                SchemeInfo = new SchemeInfo {Name = SessionScheme.CartesBancaires, Score = "score", Avalgo = "avalgo"}
+            };
 
             _apiClient.Setup(apiClient =>
                     apiClient.Get<GetSessionResponse>($"{Sessions}/id",
                         _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.OAuth),
                         CancellationToken.None))
-                .ReturnsAsync(() => response.Object);
+                .ReturnsAsync(() => response);
 
             _sessionsClient = new SessionsClient(_apiClient.Object, _configuration.Object);
 
             var getSessionResponse = await _sessionsClient.GetSessionDetails("id", CancellationToken.None);
 
             getSessionResponse.ShouldNotBeNull();
+            getSessionResponse.Exemption.ShouldNotBeNull();
+            getSessionResponse.AuthenticationDate.ShouldNotBeNull();
+            getSessionResponse.FlowType.ShouldNotBeNull();
+            getSessionResponse.ChallengeIndicator.ShouldNotBeNull();
+            getSessionResponse.SchemeInfo.ShouldNotBeNull();
         }
 
         [Fact]

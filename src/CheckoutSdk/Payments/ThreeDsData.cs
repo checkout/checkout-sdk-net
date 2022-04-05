@@ -1,6 +1,8 @@
+using Checkout.Common;
+
 namespace Checkout.Payments
 {
-    public class ThreeDsData 
+    public class ThreeDsData
     {
         public bool? Downgraded { get; set; }
 
@@ -17,6 +19,5 @@ namespace Checkout.Payments
         public string Version { get; set; }
 
         public Exemption? Exemption { get; set; }
-             
     }
 }
