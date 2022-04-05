@@ -16,5 +16,7 @@ namespace Checkout.Marketplace
         public Address RegisteredAddress { get; set; }
 
         public IList<Representative> Representatives { get; set; }
+
+        public EntityDocument Document { get; set; }
     }
 }
