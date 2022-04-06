@@ -1,4 +1,5 @@
 ﻿using Checkout.Workflows.Four.Actions.Request;
+using Checkout.Workflows.Four.Actions.Response;
 using Checkout.Workflows.Four.Conditions.Request;
 using Checkout.Workflows.Four.Events;
 using Checkout.Workflows.Four.Reflows;
@@ -15,8 +16,6 @@ namespace Checkout.Workflows.Four
 {
     public class WorkflowsClientTest : UnitTestFixture
     {
-        private const string WorkflowsPath = "workflows";
-
         private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.FourOAuth, ValidFourSk);
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
         private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.FourOAuth);
@@ -39,7 +38,7 @@ namespace Checkout.Workflows.Four
             CreateWorkflowResponse createWorkflowResponse = new CreateWorkflowResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<CreateWorkflowResponse>(WorkflowsPath, _authorization,
+                    apiClient.Post<CreateWorkflowResponse>("workflows", _authorization,
                         createWorkflowRequest, CancellationToken.None, null))
                 .ReturnsAsync(() => createWorkflowResponse);
 
@@ -57,7 +56,7 @@ namespace Checkout.Workflows.Four
             CreateWorkflowResponse createWorkflowResponse = new CreateWorkflowResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<CreateWorkflowResponse>(WorkflowsPath, _authorization,
+                    apiClient.Post<CreateWorkflowResponse>("workflows", _authorization,
                         createWorkflowRequest, CancellationToken.None, null))
                 .ReturnsAsync(() => createWorkflowResponse);
 
@@ -81,7 +80,7 @@ namespace Checkout.Workflows.Four
             GetWorkflowsResponse getWorkflowResponse = new GetWorkflowsResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<GetWorkflowsResponse>(WorkflowsPath, _authorization, CancellationToken.None))
+                    apiClient.Get<GetWorkflowsResponse>("workflows", _authorization, CancellationToken.None))
                 .ReturnsAsync(() => getWorkflowResponse);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
@@ -97,7 +96,7 @@ namespace Checkout.Workflows.Four
             GetWorkflowResponse getWorkflowResponse = new GetWorkflowResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<GetWorkflowResponse>(WorkflowsPath + "/workflow_id", _authorization,
+                    apiClient.Get<GetWorkflowResponse>("workflows" + "/workflow_id", _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(() => getWorkflowResponse);
 
@@ -114,7 +113,7 @@ namespace Checkout.Workflows.Four
             GetWorkflowResponse getWorkflowResponse = new GetWorkflowResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<GetWorkflowResponse>(WorkflowsPath + "/workflow_id", _authorization,
+                    apiClient.Get<GetWorkflowResponse>("workflows" + "/workflow_id", _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(() => getWorkflowResponse);
 
@@ -139,7 +138,7 @@ namespace Checkout.Workflows.Four
             UpdateWorkflowResponse updateWorkflowResponse = new UpdateWorkflowResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Patch<UpdateWorkflowResponse>(WorkflowsPath + "/workflow_id", _authorization,
+                    apiClient.Patch<UpdateWorkflowResponse>("workflows" + "/workflow_id", _authorization,
                         updateWorkflowRequest, CancellationToken.None, null))
                 .ReturnsAsync(() => updateWorkflowResponse);
 
@@ -184,7 +183,7 @@ namespace Checkout.Workflows.Four
             var response = new object();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Delete<object>(WorkflowsPath + "/workflow_id", _authorization, CancellationToken.None))
+                    apiClient.Delete<object>("workflows" + "/workflow_id", _authorization, CancellationToken.None))
                 .ReturnsAsync(() => response);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
@@ -218,7 +217,7 @@ namespace Checkout.Workflows.Four
             WebhookWorkflowActionRequest workflowActionRequest = new WebhookWorkflowActionRequest();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Put<object>(WorkflowsPath + "/workflow_id/actions/action_id", _authorization,
+                    apiClient.Put<object>("workflows" + "/workflow_id/actions/action_id", _authorization,
                         workflowActionRequest, CancellationToken.None, null))
                 .ReturnsAsync(() => response);
 
@@ -276,7 +275,7 @@ namespace Checkout.Workflows.Four
             EventWorkflowConditionRequest eventWorkflowConditionRequest = new EventWorkflowConditionRequest();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Put<object>(WorkflowsPath + "/workflow_id/conditions/condition_id", _authorization,
+                    apiClient.Put<object>("workflows" + "/workflow_id/conditions/condition_id", _authorization,
                         eventWorkflowConditionRequest, CancellationToken.None, null))
                 .ReturnsAsync(() => response);
 
@@ -335,7 +334,7 @@ namespace Checkout.Workflows.Four
             List<EventTypesResponse> response = new List<EventTypesResponse>();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<IList<EventTypesResponse>>(WorkflowsPath + "/event-types", _authorization,
+                    apiClient.Get<IList<EventTypesResponse>>("workflows" + "/event-types", _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(() => response);
 
@@ -352,7 +351,7 @@ namespace Checkout.Workflows.Four
             SubjectEventsResponse subjectEventsResponse = new SubjectEventsResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<SubjectEventsResponse>(WorkflowsPath + "/events/subject/subject_id", _authorization,
+                    apiClient.Get<SubjectEventsResponse>("workflows" + "/events/subject/subject_id", _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(() => subjectEventsResponse);
 
@@ -386,7 +385,7 @@ namespace Checkout.Workflows.Four
             GetEventResponse getEventResponse = new GetEventResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<GetEventResponse>(WorkflowsPath + "/events/event_id", _authorization,
+                    apiClient.Get<GetEventResponse>("workflows/events/event_id", _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(() => getEventResponse);
 
@@ -420,7 +419,7 @@ namespace Checkout.Workflows.Four
             ReflowResponse response = new ReflowResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<ReflowResponse>(WorkflowsPath + "/events/event_id", _authorization, null,
+                    apiClient.Post<ReflowResponse>("workflows/events/event_id/reflow", _authorization, null,
                         CancellationToken.None, null))
                 .ReturnsAsync(() => response);
 
@@ -428,7 +427,7 @@ namespace Checkout.Workflows.Four
 
             var getResponse = await workflowsClient.ReflowByEvent("event_id");
 
-            getResponse.ShouldBeNull();
+            getResponse.ShouldNotBeNull();
         }
 
         [Fact]
@@ -454,7 +453,7 @@ namespace Checkout.Workflows.Four
             ReflowResponse response = new ReflowResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<ReflowResponse>(WorkflowsPath + "/events/subject/subject_id/", _authorization, null,
+                    apiClient.Post<ReflowResponse>("workflows/events/subject/subject_id/reflow", _authorization, null,
                         CancellationToken.None, null))
                 .ReturnsAsync(() => response);
 
@@ -462,7 +461,7 @@ namespace Checkout.Workflows.Four
 
             var getResponse = await workflowsClient.ReflowBySubject("subject_id");
 
-            getResponse.ShouldBeNull();
+            getResponse.ShouldNotBeNull();
         }
 
         [Fact]
@@ -488,7 +487,7 @@ namespace Checkout.Workflows.Four
             ReflowResponse response = new ReflowResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<ReflowResponse>(WorkflowsPath + "/events/event_id/workflow/workflow_id/reflow/",
+                    apiClient.Post<ReflowResponse>("workflows/events/event_id/workflow/workflow_id/reflow",
                         _authorization, null, CancellationToken.None, null))
                 .ReturnsAsync(() => response);
 
@@ -496,7 +495,7 @@ namespace Checkout.Workflows.Four
 
             var getResponse = await workflowsClient.ReflowByEventAndWorkflow("event_id", "workflow_id");
 
-            getResponse.ShouldBeNull();
+            getResponse.ShouldNotBeNull();
         }
 
         [Fact]
@@ -534,7 +533,7 @@ namespace Checkout.Workflows.Four
 
             _apiClient.Setup(apiClient =>
                     apiClient.Post<ReflowResponse>(
-                        WorkflowsPath + "/events/event_id/subject/subject_i/workflow/workflow_id/reflow",
+                        "workflows/events/subject/subject_id/workflow/workflow_id/reflow",
                         _authorization, null, CancellationToken.None, null))
                 .ReturnsAsync(() => response);
 
@@ -542,7 +541,7 @@ namespace Checkout.Workflows.Four
 
             var getResponse = await workflowsClient.ReflowBySubjectAndWorkflow("subject_id", "workflow_id");
 
-            getResponse.ShouldBeNull();
+            getResponse.ShouldNotBeNull();
         }
 
         [Fact]
@@ -581,7 +580,7 @@ namespace Checkout.Workflows.Four
             ReflowResponse response = new ReflowResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<ReflowResponse>(WorkflowsPath + "/events/reflow", _authorization, null,
+                    apiClient.Post<ReflowResponse>("workflows/events/reflow", _authorization, reflowBySubjectsRequest,
                         CancellationToken.None, null))
                 .ReturnsAsync(() => response);
 
@@ -589,7 +588,7 @@ namespace Checkout.Workflows.Four
 
             var getResponse = await workflowsClient.Reflow(reflowBySubjectsRequest);
 
-            getResponse.ShouldBeNull();
+            getResponse.ShouldNotBeNull();
         }
 
         [Fact]
@@ -607,6 +606,23 @@ namespace Checkout.Workflows.Four
                 ex.ShouldBeOfType(typeof(CheckoutArgumentException));
                 ex.Message.ShouldBe("reflowRequest cannot be null");
             }
+        }
+
+        [Fact]
+        public async Task ShouldGetActionInvocations()
+        {
+            WorkflowActionInvocationsResponse response = new WorkflowActionInvocationsResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Get<WorkflowActionInvocationsResponse>("workflows/events/eventId/actions/actionId",
+                        _authorization, CancellationToken.None))
+                .ReturnsAsync(() => response);
+
+            IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
+
+            var getResponse = await workflowsClient.GetActionInvocations("eventId", "actionId");
+
+            getResponse.ShouldNotBeNull();
         }
     }
 }

@@ -82,7 +82,7 @@ namespace Checkout
                 }
 
                 attempts++;
-                await Task.Delay(2000);
+                await Task.Delay(2500);
             }
 
             throw new XunitException("Max attempts reached!");
