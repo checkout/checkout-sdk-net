@@ -1,4 +1,5 @@
 ﻿using Checkout.Workflows.Four.Actions.Request;
+using Checkout.Workflows.Four.Actions.Response;
 using Checkout.Workflows.Four.Conditions.Request;
 using Checkout.Workflows.Four.Events;
 using Checkout.Workflows.Four.Reflows;
@@ -40,5 +41,7 @@ namespace Checkout.Workflows.Four
         Task<ReflowResponse> ReflowBySubjectAndWorkflow(string subjectId, string workflowId);
 
         Task<ReflowResponse> Reflow(ReflowRequest reflowRequest);
+
+        Task<WorkflowActionInvocationsResponse> GetActionInvocations(string eventId, string actionId);
     }
 }

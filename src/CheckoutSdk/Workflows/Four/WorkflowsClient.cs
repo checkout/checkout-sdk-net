@@ -1,8 +1,8 @@
 ﻿using Checkout.Workflows.Four.Actions.Request;
+using Checkout.Workflows.Four.Actions.Response;
 using Checkout.Workflows.Four.Conditions.Request;
 using Checkout.Workflows.Four.Events;
 using Checkout.Workflows.Four.Reflows;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -66,7 +66,7 @@ namespace Checkout.Workflows.Four
                 workflowActionRequest);
         }
 
-        public Task<Object> UpdateWorkflowCondition(string workflowId, string conditionId,
+        public Task<object> UpdateWorkflowCondition(string workflowId, string conditionId,
             WorkflowConditionRequest workflowConditionRequest)
         {
             CheckoutUtils.ValidateParams(WorkflowId, workflowId, "conditionId", conditionId,
@@ -130,6 +130,13 @@ namespace Checkout.Workflows.Four
             CheckoutUtils.ValidateParams("reflowRequest", reflowRequest);
             return ApiClient.Post<ReflowResponse>(BuildPath(WorkflowsPath, EventsPath, ReflowPath), SdkAuthorization(),
                 reflowRequest);
+        }
+
+        public Task<WorkflowActionInvocationsResponse> GetActionInvocations(string eventId, string actionId)
+        {
+            CheckoutUtils.ValidateParams("eventId", eventId, "actionId", actionId);
+            return ApiClient.Get<WorkflowActionInvocationsResponse>(
+                BuildPath(WorkflowsPath, EventsPath, eventId, ActionsPath, actionId), SdkAuthorization());
         }
     }
 }
