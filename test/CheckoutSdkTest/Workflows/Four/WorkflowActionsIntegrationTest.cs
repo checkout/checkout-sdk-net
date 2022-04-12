@@ -10,7 +10,7 @@ namespace Checkout.Workflows.Four
 {
     public class WorkflowActionsIntegrationTest : AbstractWorkflowIntegrationTest
     {
-        [Fact]
+        [Fact(Skip = "unstable")]
         public async Task ShouldGetActionInvocations()
         {
             var createWorkflowResponse = await CreateWorkflow();
