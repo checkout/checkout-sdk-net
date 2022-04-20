@@ -1,3 +1,4 @@
+using Checkout.Instruments.Four.Create.Util;
 using Checkout.Instruments.Four.Get.Util;
 using Checkout.Instruments.Four.Update.Util;
 using Checkout.Workflows.Four.Actions.Response.Util;
@@ -41,12 +42,13 @@ namespace Checkout
             var settings = new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,
-                ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() },
+                ContractResolver = new DefaultContractResolver {NamingStrategy = new SnakeCaseNamingStrategy()},
                 Converters = new JsonConverter[]
                 {
                     new StringEnumConverter(),
                     // Instruments CS2
-                    new GetInstrumentResponseTypeConverter(), new UpdateInstrumentResponseTypeConverter(),
+                    new CreateInstrumentResponseTypeConverter(), new GetInstrumentResponseTypeConverter(),
+                    new UpdateInstrumentResponseTypeConverter(),
                     // Workflows CS2
                     new WorkflowActionTypeResponseConverter(), new WorkflowConditionTypeResponseConverter(),
                     GetConverterDateTimeToIso()
