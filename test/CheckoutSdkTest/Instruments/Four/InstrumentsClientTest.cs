@@ -53,7 +53,7 @@ namespace Checkout.Instruments.Four
             var createInstrumentResponse = new CreateBankAccountInstrumentResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<CreateBankAccountInstrumentResponse>("instruments", _authorization,
+                    apiClient.Post<Create.CreateInstrumentResponse>("instruments", _authorization,
                         createInstrumentRequest,
                         CancellationToken.None, null))
                 .ReturnsAsync(() => createInstrumentResponse);
@@ -61,7 +61,7 @@ namespace Checkout.Instruments.Four
             IInstrumentsClient client =
                 new InstrumentsClient(_apiClient.Object, _configuration.Object);
 
-            var response = await client.Create<CreateBankAccountInstrumentResponse>(createInstrumentRequest);
+            var response = await client.Create(createInstrumentRequest);
 
             response.ShouldNotBeNull();
             response.ShouldBe(createInstrumentResponse);

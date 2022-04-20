@@ -7,8 +7,8 @@ namespace Checkout.Instruments.Four
 {
     public interface IInstrumentsClient
     {
-        Task<T> Create<T>(Create.CreateInstrumentRequest createInstrumentRequest,
-            CancellationToken cancellationToken = default) where T : Create.CreateInstrumentResponse;
+        Task<Create.CreateInstrumentResponse> Create(Create.CreateInstrumentRequest createInstrumentRequest,
+            CancellationToken cancellationToken = default);
 
         Task<GetInstrumentResponse> Get(string instrumentId, CancellationToken cancellationToken = default);
 

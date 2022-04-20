@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
-using Checkout.Common;
+﻿using Checkout.Common;
 using Checkout.Common.Four;
 using Checkout.Instruments.Four.Create;
 using Checkout.Instruments.Four.Get;
 using Checkout.Instruments.Four.Update;
 using Checkout.Payments.Four;
 using Shouldly;
+using System.Threading.Tasks;
 using Xunit;
 using CustomerRequest = Checkout.Customers.Four.CustomerRequest;
 
@@ -22,7 +22,7 @@ namespace Checkout.Instruments.Four
             var getResponse = await FourApi.InstrumentsClient().Get(tokenInstrument.Id);
             getResponse.ShouldNotBeNull();
 
-            var cardResponse = (GetCardInstrumentResponse) getResponse;
+            var cardResponse = (GetCardInstrumentResponse)getResponse;
             cardResponse.ShouldNotBeNull();
             cardResponse.Id.ShouldNotBeNull();
             cardResponse.Fingerprint.ShouldNotBeNull();
@@ -31,7 +31,6 @@ namespace Checkout.Instruments.Four
             cardResponse.Scheme.ShouldNotBeNull();
             cardResponse.Last4.ShouldNotBeNull();
             cardResponse.Bin.ShouldNotBeNull();
-            //cardResponse.Issuer.ShouldNotBeNull();
             cardResponse.IssuerCountry.ShouldNotBeNull();
             cardResponse.ProductId.ShouldNotBeNull();
             cardResponse.ProductType.ShouldNotBeNull();
@@ -52,17 +51,14 @@ namespace Checkout.Instruments.Four
             var tokenResponse = await RequestToken();
             tokenResponse.Token.ShouldNotBeNull();
 
-            var updateInstrumentTokenRequest = new UpdateTokenInstrumentRequest
-            {
-                Token = tokenResponse.Token
-            };
+            var updateInstrumentTokenRequest = new UpdateTokenInstrumentRequest {Token = tokenResponse.Token};
 
             var updateResponse =
                 await FourApi.InstrumentsClient().Update(tokenInstrument.Id, updateInstrumentTokenRequest);
 
             updateResponse.ShouldNotBeNull();
 
-            var updateCardInstrumentResponse = (UpdateCardInstrumentResponse) updateResponse;
+            var updateCardInstrumentResponse = (UpdateCardInstrumentResponse)updateResponse;
             updateCardInstrumentResponse.Fingerprint.ShouldNotBeNull();
         }
 
@@ -77,20 +73,12 @@ namespace Checkout.Instruments.Four
                 ExpiryMonth = 12,
                 ExpiryYear = 2024,
                 Name = "John Doe",
-                Customer = new UpdateCustomerRequest
-                {
-                    Id = tokenInstrument.Customer.Id,
-                    Default = true
-                },
+                Customer = new UpdateCustomerRequest {Id = tokenInstrument.Customer.Id, Default = true},
                 AccountHolder = new AccountHolder
                 {
                     FirstName = "John",
                     LastName = "Doe",
-                    Phone = new Phone
-                    {
-                        CountryCode = "+1",
-                        Number = "415 555 2671"
-                    },
+                    Phone = new Phone {CountryCode = "+1", Number = "415 555 2671"},
                     BillingAddress = new Address
                     {
                         AddressLine1 = "CheckoutSdk.com",
@@ -106,13 +94,13 @@ namespace Checkout.Instruments.Four
             var updateInstrumentResponse =
                 await FourApi.InstrumentsClient().Update(tokenInstrument.Id, updateCardInstrument);
             updateInstrumentResponse.ShouldNotBeNull();
-            var updateCardInstrumentResponse = (UpdateCardInstrumentResponse) updateInstrumentResponse;
+            var updateCardInstrumentResponse = (UpdateCardInstrumentResponse)updateInstrumentResponse;
             updateCardInstrumentResponse.Fingerprint.ShouldNotBeNullOrEmpty();
 
             var getResponse = await FourApi.InstrumentsClient().Get(tokenInstrument.Id);
             getResponse.ShouldNotBeNull();
 
-            var cardResponse = (GetCardInstrumentResponse) getResponse;
+            var cardResponse = (GetCardInstrumentResponse)getResponse;
             cardResponse.ShouldNotBeNull();
             cardResponse.Id.ShouldNotBeNull();
             cardResponse.Fingerprint.ShouldNotBeNull();
@@ -138,18 +126,9 @@ namespace Checkout.Instruments.Four
 
         private async Task<CreateTokenInstrumentResponse> CreateTokenInstrument()
         {
-            var phone = new Phone
-            {
-                CountryCode = "1",
-                Number = "4155552671"
-            };
+            var phone = new Phone {CountryCode = "1", Number = "4155552671"};
 
-            var customerRequest = new CustomerRequest
-            {
-                Email = GenerateRandomEmail(),
-                Name = "Testing",
-                Phone = phone
-            };
+            var customerRequest = new CustomerRequest {Email = GenerateRandomEmail(), Name = "Testing", Phone = phone};
 
             var customer = await FourApi.CustomersClient().Create(customerRequest);
             customer.ShouldNotBeNull();
@@ -162,11 +141,7 @@ namespace Checkout.Instruments.Four
             var tokenResponse = await RequestToken();
             tokenResponse.Token.ShouldNotBeNull();
 
-            var phone = new Phone
-            {
-                CountryCode = "+1",
-                Number = "415 555 2671"
-            };
+            var phone = new Phone {CountryCode = "+1", Number = "415 555 2671"};
 
             var billingAddress = new Address
             {
@@ -180,42 +155,35 @@ namespace Checkout.Instruments.Four
 
             var accountHolder = new AccountHolder
             {
-                FirstName = "John",
-                LastName = "Smith",
-                Phone = phone,
-                BillingAddress = billingAddress
+                FirstName = "John", LastName = "Smith", Phone = phone, BillingAddress = billingAddress
             };
 
-            var customer = new CreateCustomerInstrumentRequest
-            {
-                Id = customerId
-            };
+            var customer = new CreateCustomerInstrumentRequest {Id = customerId};
 
             var createTokenInstrumentRequest = new CreateTokenInstrumentRequest
             {
-                Token = tokenResponse.Token,
-                AccountHolder = accountHolder,
-                Customer = customer
+                Token = tokenResponse.Token, AccountHolder = accountHolder, Customer = customer
             };
 
             var response = await FourApi.InstrumentsClient()
-                .Create<CreateTokenInstrumentResponse>(createTokenInstrumentRequest);
-            response.ShouldNotBeNull();
-            response.Id.ShouldNotBeNull();
-            response.Fingerprint.ShouldNotBeNull();
-            response.ExpiryMonth.ShouldNotBeNull();
-            response.ExpiryYear.ShouldNotBeNull();
-            response.Scheme.ShouldNotBeNull();
-            response.Last4.ShouldNotBeNull();
-            response.Bin.ShouldNotBeNull();
-            //response.Issuer.ShouldNotBeNull();
-            response.IssuerCountry.ShouldNotBeNull();
-            response.ProductId.ShouldNotBeNull();
-            response.ProductType.ShouldNotBeNull();
-            response.Customer.ShouldNotBeNull();
-            response.CardType.ShouldNotBeNull();
-            response.CardCategory.ShouldNotBeNull();
-            return response;
+                .Create(createTokenInstrumentRequest);
+            response.ShouldBeAssignableTo(typeof(CreateTokenInstrumentResponse));
+            CreateTokenInstrumentResponse createTokenInstrumentResponse = (CreateTokenInstrumentResponse)response;
+            createTokenInstrumentResponse.ShouldNotBeNull();
+            createTokenInstrumentResponse.Id.ShouldNotBeNull();
+            createTokenInstrumentResponse.Fingerprint.ShouldNotBeNull();
+            createTokenInstrumentResponse.ExpiryMonth.ShouldNotBeNull();
+            createTokenInstrumentResponse.ExpiryYear.ShouldNotBeNull();
+            createTokenInstrumentResponse.Scheme.ShouldNotBeNull();
+            createTokenInstrumentResponse.Last4.ShouldNotBeNull();
+            createTokenInstrumentResponse.Bin.ShouldNotBeNull();
+            createTokenInstrumentResponse.IssuerCountry.ShouldNotBeNull();
+            createTokenInstrumentResponse.ProductId.ShouldNotBeNull();
+            createTokenInstrumentResponse.ProductType.ShouldNotBeNull();
+            createTokenInstrumentResponse.Customer.ShouldNotBeNull();
+            createTokenInstrumentResponse.CardType.ShouldNotBeNull();
+            createTokenInstrumentResponse.CardCategory.ShouldNotBeNull();
+            return createTokenInstrumentResponse;
         }
     }
 }

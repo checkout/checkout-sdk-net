@@ -14,11 +14,11 @@ namespace Checkout.Instruments.Four
         {
         }
 
-        public Task<T> Create<T>(Create.CreateInstrumentRequest createInstrumentRequest,
-            CancellationToken cancellationToken = default) where T : Create.CreateInstrumentResponse
+        public Task<Create.CreateInstrumentResponse> Create(Create.CreateInstrumentRequest createInstrumentRequest,
+            CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("createInstrumentRequest", createInstrumentRequest);
-            return ApiClient.Post<T>(
+            return ApiClient.Post<Create.CreateInstrumentResponse>(
                 InstrumentsPath,
                 SdkAuthorization(),
                 createInstrumentRequest,
