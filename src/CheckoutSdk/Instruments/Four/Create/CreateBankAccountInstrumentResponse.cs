@@ -9,10 +9,6 @@ namespace Checkout.Instruments.Four.Create
         {
         }
 
-        public string Fingerprint { get; set; }
-
-        public CustomerResponse Customer { get; set; }
-
         public BankDetails Bank { get; set; }
 
         public string SwiftBic { get; set; }

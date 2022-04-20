@@ -8,13 +8,13 @@ namespace Checkout.Instruments.Four.Create
         {
         }
 
-        public string Fingerprint { get; set; }
-
         public int? ExpiryMonth { get; set; }
 
         public int? ExpiryYear { get; set; }
 
         public string Scheme { get; set; }
+        
+        public string SchemeLocal { get; set; }
 
         public string Last4 { get; set; }
 
@@ -32,6 +32,5 @@ namespace Checkout.Instruments.Four.Create
 
         public string ProductType { get; set; }
 
-        public CustomerResponse Customer { get; set; }
     }
 }

@@ -15,6 +15,8 @@ namespace Checkout.Instruments.Four.Get
         public string Name { get; set; }
 
         public string Scheme { get; set; }
+        
+        public string SchemeLocal { get; set; }
 
         public string Last4 { get; set; }
 

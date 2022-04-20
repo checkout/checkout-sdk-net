@@ -34,5 +34,9 @@ namespace Checkout.Tokens
         public string ProductType { get; set; }
 
         public string TokenFormat { get; set; }
+
+        //Only available in CS2
+
+        public string SchemeLocal { get; set; }
     }
 }
