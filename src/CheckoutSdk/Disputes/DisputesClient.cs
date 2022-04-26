@@ -63,17 +63,5 @@ namespace Checkout.Disputes
             return ApiClient.Post<object>(BuildPath(DisputesPath, disputeId, EvidencePath), SdkAuthorization(), null,
                 cancellationToken);
         }
-
-        public new Task<IdResponse> SubmitFile(string pathToFile, string purpose,
-            CancellationToken cancellationToken = default)
-        {
-            return base.SubmitFile(pathToFile, purpose, cancellationToken);
-        }
-
-        public new Task<FileDetailsResponse> GetFileDetails(string fileId,
-            CancellationToken cancellationToken = default)
-        {
-            return base.GetFileDetails(fileId, cancellationToken);
-        }
     }
 }

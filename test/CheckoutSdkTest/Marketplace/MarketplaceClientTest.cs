@@ -141,23 +141,6 @@ namespace Checkout.Marketplace
         }
 
         [Fact]
-        private async Task ShouldFailSubmitFile()
-        {
-            Mock<CheckoutConfiguration> configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Sandbox, _httpClientFactory, Environment.Sandbox);
-            MarketplaceClient marketplaceClient =
-                new MarketplaceClient(_apiClient.Object, null, null, null,configuration.Object);
-            var exception = await Assert.ThrowsAsync<CheckoutFileException>(
-                () => marketplaceClient.SubmitFile(new MarketplaceFileRequest
-                {
-                    File = "file", ContentType = null, Purpose = MarketplaceFilePurpose.Identification
-                }));
-
-            exception.Message.ShouldBe(
-                "Files API is not enabled in this client. It must be enabled in CheckoutFourSdk configuration.");
-        }
-
-        [Fact]
         public async Task ShouldInitiateTransferOfFunds()
         {
             var createTransferRequest = new CreateTransferRequest {Reference = "Reference"};
