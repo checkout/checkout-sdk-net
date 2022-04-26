@@ -40,15 +40,9 @@ namespace Checkout.Four
             _forexClient = new ForexClient(baseApiClient, configuration);
             _workflowsClient = new WorkflowsClient(baseApiClient, configuration);
             _sessionsClient = new SessionsClient(baseApiClient, configuration);
-            IApiClient apiFilesClient = null;
-            if (configuration.FilesApiConfiguration != null)
-            {
-                apiFilesClient = ApiFilesClient(configuration);
-            }
-
             _marketplaceClient = new MarketplaceClient(
                 baseApiClient,
-                apiFilesClient,
+                FilesApiClient(configuration),
                 TransfersApiClient(configuration),
                 BalancesApiClient(configuration),
                 configuration);
@@ -62,10 +56,11 @@ namespace Checkout.Four
                 configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri);
         }
 
-        private static ApiClient ApiFilesClient(CheckoutConfiguration configuration)
+        private static ApiClient FilesApiClient(CheckoutConfiguration configuration)
         {
+            Environment environment = configuration.FilesEnvironment ?? configuration.Environment;
             return new ApiClient(configuration.HttpClientFactory,
-                configuration.FilesApiConfiguration.Environment.GetAttribute<EnvironmentAttribute>().FilesApiUri);
+                environment.GetAttribute<EnvironmentAttribute>().FilesApiUri);
         }
 
         private static ApiClient TransfersApiClient(CheckoutConfiguration configuration)

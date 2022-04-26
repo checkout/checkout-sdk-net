@@ -8,7 +8,7 @@ namespace Checkout
 
         public IHttpClientFactory HttpClientFactory { get; }
 
-        public CheckoutFilesConfiguration FilesApiConfiguration { get; }
+        public Environment? FilesEnvironment { get; }
 
         public CheckoutConfiguration(
             SdkCredentials sdkCredentials,
@@ -21,10 +21,7 @@ namespace Checkout
             SdkCredentials = sdkCredentials;
             Environment = environment;
             HttpClientFactory = httpClientFactory;
-            if (filesEnvironment != null)
-            {
-                FilesApiConfiguration = new CheckoutFilesConfiguration(filesEnvironment);
-            }
+            FilesEnvironment = filesEnvironment;
         }
     }
 }

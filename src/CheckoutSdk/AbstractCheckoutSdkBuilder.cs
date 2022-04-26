@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace Checkout
 {
@@ -14,6 +15,7 @@ namespace Checkout
             return this;
         }
 
+        [Obsolete ("Won't be supported anymore from version 6.0.0 in favor of using defined URI's in Environment")]
         public AbstractCheckoutSdkBuilder<T> FilesEnvironment(Environment? environment)
         {
             _filesEnv = environment;

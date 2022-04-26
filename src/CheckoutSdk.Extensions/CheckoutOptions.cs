@@ -24,6 +24,7 @@ namespace CheckoutSDK.Extensions.Configuration
 
         public IHttpClientFactory HttpClientFactory { get; set; }
 
+        [Obsolete ("Won't be supported anymore from version 6.0.0 in favor of using defined URI's in Environment")]
         public Environment? FilesEnvironment { get; set; }
     }
 }

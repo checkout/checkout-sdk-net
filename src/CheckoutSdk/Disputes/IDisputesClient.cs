@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Checkout.Disputes
 {
-    public interface IDisputesClient
+    public interface IDisputesClient : IFilesClient
     {
         Task<DisputesQueryResponse> Query(DisputesQueryFilter filter, CancellationToken cancellationToken = default);
 
@@ -19,11 +19,5 @@ namespace Checkout.Disputes
         Task<DisputeEvidenceResponse> GetEvidence(string disputeId, CancellationToken cancellationToken = default);
 
         Task<object> SubmitEvidence(string disputeId, CancellationToken cancellationToken = default);
-
-        Task<IdResponse> SubmitFile(string pathToFile, string purpose,
-            CancellationToken cancellationToken = default);
-
-        Task<FileDetailsResponse> GetFileDetails(string fileId,
-            CancellationToken cancellationToken = default);
     }
 }

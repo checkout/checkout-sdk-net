@@ -46,12 +46,6 @@ namespace Checkout.Files
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("pathToFile", pathToFile, "purpose", purpose);
-            if (_filesApiClient == null)
-            {
-                throw new CheckoutFileException(
-                    "Files API is not enabled in this client. It must be enabled in CheckoutFourSdk configuration.");
-            }
-
             var dataContent = CreateMultipartRequest(pathToFile, purpose, "path");
             return _filesApiClient.Post<IdResponse>(Files, SdkAuthorization(SdkAuthorizationType.OAuth), dataContent,
                 cancellationToken);
