@@ -11,6 +11,6 @@ namespace Checkout.Tokens
 
         public string Signature { get; set; }
 
-        [JsonProperty("header")] private IDictionary<string, string> TokenHeader { get; set; }
+        [JsonProperty("header")] public IDictionary<string, string> TokenHeader { get; set; }
     }
 }
