@@ -41,5 +41,10 @@ namespace Checkout.Payments
         /// Gets the unique identifier for the transaction assigned by the MPI.
         /// </summary>
         public string Xid { get; set; }
+        
+        /// <summary>
+        /// Gets the version of 3D protocol 
+        /// </summary>
+        public string Version { get; set; }
     }
 }
