@@ -1,6 +1,7 @@
 using Checkout.Instruments.Four.Create.Util;
 using Checkout.Instruments.Four.Get.Util;
 using Checkout.Instruments.Four.Update.Util;
+using Checkout.Marketplace.Payout.Response.Util;
 using Checkout.Workflows.Four.Actions.Response.Util;
 using Checkout.Workflows.Four.Conditions.Response.Util;
 using Newtonsoft.Json;
@@ -51,7 +52,9 @@ namespace Checkout
                     new UpdateInstrumentResponseTypeConverter(),
                     // Workflows CS2
                     new WorkflowActionTypeResponseConverter(), new WorkflowConditionTypeResponseConverter(),
-                    GetConverterDateTimeToIso()
+                    GetConverterDateTimeToIso(),
+                    // Marketplace Payout Schedules
+                    new GetScheduleResponseTypeConverter(), new ScheduleResponseTypeConverter()
                 },
             };
 
