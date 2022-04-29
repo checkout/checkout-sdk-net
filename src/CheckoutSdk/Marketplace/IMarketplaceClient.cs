@@ -1,5 +1,7 @@
 ﻿using Checkout.Common;
 using Checkout.Marketplace.Balances;
+using Checkout.Marketplace.Payout.Request;
+using Checkout.Marketplace.Payout.Response;
 using Checkout.Marketplace.Transfer;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,5 +29,11 @@ namespace Checkout.Marketplace
 
         Task<BalancesResponse> RetrieveEntityBalances(string entityId, BalancesQuery balancesQuery,
             CancellationToken cancellationToken = default);
+
+        Task<VoidResponse> UpdatePayoutSchedule(string entityId, Currency currency,
+            UpdateScheduleRequest updateScheduleRequest, CancellationToken cancellationToken = default);
+
+        Task<GetScheduleResponse>
+            RetrievePayoutSchedule(string entityId, CancellationToken cancellationToken = default);
     }
 }

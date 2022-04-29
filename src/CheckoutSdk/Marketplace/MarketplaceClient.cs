@@ -1,7 +1,10 @@
 ﻿using Checkout.Common;
 using Checkout.Files;
 using Checkout.Marketplace.Balances;
+using Checkout.Marketplace.Payout.Request;
+using Checkout.Marketplace.Payout.Response;
 using Checkout.Marketplace.Transfer;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,6 +17,7 @@ namespace Checkout.Marketplace
         private const string InstrumentPath = "instruments";
         private const string TransfersPath = "transfers";
         private const string BalancesPath = "balances";
+        private const string PayoutSchedulePath = "payout-schedules";
 
         private readonly IApiClient _transfersApiClient;
         private readonly IApiClient _balancesApiClient;
@@ -100,6 +104,29 @@ namespace Checkout.Marketplace
             return await _balancesApiClient.Query<BalancesResponse>(BuildPath(BalancesPath, entityId),
                 SdkAuthorization(),
                 balancesQuery,
+                cancellationToken);
+        }
+
+        public async Task<VoidResponse> UpdatePayoutSchedule(string entityId, Currency currency,
+            UpdateScheduleRequest updateScheduleRequest,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("entityId", entityId, "currency", currency, "updateScheduleRequest",
+                updateScheduleRequest);
+            return await ApiClient.Put<VoidResponse>(
+                BuildPath(MarketplacePath, EntitiesPath, entityId, PayoutSchedulePath),
+                SdkAuthorization(SdkAuthorizationType.OAuth),
+                new Dictionary<Currency, UpdateScheduleRequest>() {{currency, updateScheduleRequest}},
+                cancellationToken);
+        }
+
+        public async Task<GetScheduleResponse> RetrievePayoutSchedule(string entityId,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("entityId", entityId);
+            return await ApiClient.Get<GetScheduleResponse>(
+                BuildPath(MarketplacePath, EntitiesPath, entityId, PayoutSchedulePath),
+                SdkAuthorization(SdkAuthorizationType.OAuth),
                 cancellationToken);
         }
     }

@@ -1,5 +1,7 @@
 using Checkout.Common;
 using Checkout.Marketplace.Balances;
+using Checkout.Marketplace.Payout.Request;
+using Checkout.Marketplace.Payout.Response;
 using Checkout.Marketplace.Transfer;
 using Moq;
 using Shouldly;
@@ -168,6 +170,48 @@ namespace Checkout.Marketplace
                 .ReturnsAsync(() => responseAsync);
 
             var response = await _marketplaceClient.RetrieveEntityBalances("entity_id", request);
+
+            response.ShouldNotBeNull();
+        }
+
+        [Fact]
+        private async Task ShouldUpdatePayoutSchedule()
+        {
+            var responseAsync = new VoidResponse();
+
+            _apiClient
+                .Setup(x =>
+                    x.Put<VoidResponse>(
+                        "marketplace/entities/entity_id/payout-schedules",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<object>(),
+                        It.IsAny<CancellationToken>(),
+                        null
+                    )
+                )
+                .ReturnsAsync(responseAsync);
+
+            var response =
+                await _marketplaceClient.UpdatePayoutSchedule("entity_id", Currency.AED, new UpdateScheduleRequest());
+
+            response.ShouldNotBeNull();
+        }
+
+        [Fact]
+        private async Task ShouldRetrievePayoutSchedule()
+        {
+            var responseAsync = new GetScheduleResponse();
+
+            _apiClient
+                .Setup(x =>
+                    x.Get<GetScheduleResponse>(
+                        "marketplace/entities/entity_id/payout-schedules",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(responseAsync);
+
+            var response = await _marketplaceClient.RetrievePayoutSchedule(
+                "entity_id");
 
             response.ShouldNotBeNull();
         }
