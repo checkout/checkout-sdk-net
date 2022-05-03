@@ -43,8 +43,6 @@ namespace Checkout.Payments.Request
 
         public PaymentRecipient Recipient { get; set; }
 
-        public Purpose? Purpose { get; set; }
-
         public IDictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
 
         public IDictionary<string, object> Processing { get; set; } = new Dictionary<string, object>();
