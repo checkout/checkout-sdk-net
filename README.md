@@ -38,7 +38,7 @@ Initialize a `CheckoutApi` to access the operations for each API. Please note th
 
 ```c#
 ICheckoutApi api = CheckoutSdk.DefaultSdk().StaticKeys()
-    .PublicKey("public_key")
+    .PublicKey("public_key") // optional, only required for operations related with tokens
     .SecretKey("secret_key")
     .Environment(Environment.Sandbox)
     .LogProvider(logFactory) // optional
@@ -50,7 +50,7 @@ ICheckoutApi api = CheckoutSdk.DefaultSdk().StaticKeys()
 
 ```c#
 Four.ICheckoutApi api = CheckoutSdk.FourSdk().StaticKeys()
-    .PublicKey("public_key")
+    .PublicKey("public_key") // optional, only required for operations related with tokens
     .SecretKey("secret_key")
     .Environment(Environment.Sandbox)
     .LogProvider(logFactory) // optional
