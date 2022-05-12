@@ -7,12 +7,12 @@ namespace Checkout.Instruments.Four.Create
         public InstrumentType? Type { get; set; }
 
         public string Id { get; set; }
-        
+
         public string Fingerprint { get; set; }
-        
+
         public CustomerResponse Customer { get; set; }
 
-        public CreateInstrumentResponse(InstrumentType type)
+        public CreateInstrumentResponse(InstrumentType? type)
         {
             Type = type;
         }

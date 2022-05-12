@@ -8,7 +8,7 @@ namespace Checkout.Instruments.Four.Get
         {
         }
 
-        public GetInstrumentResponse(InstrumentType type)
+        public GetInstrumentResponse(InstrumentType? type)
         {
             Type = type;
         }

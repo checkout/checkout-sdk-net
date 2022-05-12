@@ -9,7 +9,7 @@ namespace Checkout
     {
         public const string Type = "type";
         public const string Frequency = "frequency";
-        
+
         public static string GetAssemblyVersion<T>()
         {
             var containingAssembly = typeof(T).GetTypeInfo().Assembly;
@@ -32,7 +32,7 @@ namespace Checkout
                 ?.Value;
         }
 
-        public static T GetEnumFromStringMemberValue<T>(string value)
+        public static T? GetEnumFromStringMemberValue<T>(string value)
             where T : struct, IConvertible
         {
             ValidateEnumType<T>();
@@ -45,8 +45,7 @@ namespace Checkout
                 }
             }
 
-            // returns first element by default
-            return (T) typeof(T).GetEnumValues().GetValue(0);
+            return null;
         }
 
         private static void ValidateEnumType<T>()
@@ -86,7 +85,7 @@ namespace Checkout
         {
             ValidateMultipleParams(new[,] {{p1, o1}, {p2, o2}, {p3, o3}, {p4, o4}});
         }
-        
+
         public static void ValidateParams(
             string p1, object o1,
             string p2, object o2,

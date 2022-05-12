@@ -21,8 +21,8 @@ namespace Checkout.Payments.Four.Response
         [JsonConverter(typeof(PaymentResponseDestinationTypeConverter))]
         public IPaymentResponseDestination Destination { get; set; }
 
-        [JsonConverter(typeof(PaymentResponseDestinationTypeConverter))]
-        public PaymentSender Sender { get; set; }
+        [JsonConverter(typeof(PaymentResponseSenderTypeConverter))]
+        public ISender Sender { get; set; }
 
         public long? Amount { get; set; }
 

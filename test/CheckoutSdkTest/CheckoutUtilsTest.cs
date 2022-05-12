@@ -15,7 +15,7 @@ namespace Checkout
             CheckoutUtils.GetEnumFromStringMemberValue<ActionType>("Card Verification")
                 .ShouldBe(ActionType.CardVerification);
             CheckoutUtils.GetEnumFromStringMemberValue<PaymentType>("XYZ")
-                .ShouldBe(PaymentType.Regular);
+                .ShouldBeNull();
         }
     }
 }
