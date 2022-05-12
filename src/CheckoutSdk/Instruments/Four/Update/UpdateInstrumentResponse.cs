@@ -6,7 +6,7 @@
 
         public string Id { get; set; }
 
-        public UpdateInstrumentResponse(InstrumentType type)
+        public UpdateInstrumentResponse(InstrumentType? type)
         {
             Type = type;
         }

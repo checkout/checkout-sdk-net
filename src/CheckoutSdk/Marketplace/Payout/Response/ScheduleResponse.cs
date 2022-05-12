@@ -4,7 +4,7 @@ namespace Checkout.Marketplace.Payout.Response
     {
         public ScheduleFrequency? Type { get; set; }
 
-        public ScheduleResponse(ScheduleFrequency type)
+        public ScheduleResponse(ScheduleFrequency? type)
         {
             Type = type;
         }

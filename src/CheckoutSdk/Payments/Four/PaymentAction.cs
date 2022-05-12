@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Payments.Four
 {
-    public class PaymentAction
+    public class PaymentAction : Resource
     {
         public string Id { get; set; }
 

@@ -132,7 +132,7 @@ namespace Checkout.Marketplace
             createTransferResponse.Id.ShouldNotBeNullOrEmpty();
             createTransferResponse.Status.ShouldNotBeNull();
             createTransferResponse.Links.ShouldNotBeNull();
-            createTransferResponse.Links.ShouldBeEmpty();
+            createTransferResponse.Links.ShouldNotBeEmpty();
         }
 
         [Fact]
