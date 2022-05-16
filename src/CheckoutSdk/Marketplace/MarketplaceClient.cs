@@ -88,13 +88,15 @@ namespace Checkout.Marketplace
         }
 
         public async Task<CreateTransferResponse> InitiateTransferOfFunds(CreateTransferRequest createTransferRequest,
+            string idempotencyKey = null,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("createTransferRequest", createTransferRequest);
             return await _transfersApiClient.Post<CreateTransferResponse>(TransfersPath,
                 SdkAuthorization(SdkAuthorizationType.OAuth),
                 createTransferRequest,
-                cancellationToken);
+                cancellationToken,
+                idempotencyKey);
         }
 
         public async Task<BalancesResponse> RetrieveEntityBalances(string entityId, BalancesQuery balancesQuery,

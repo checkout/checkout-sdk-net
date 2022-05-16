@@ -114,7 +114,7 @@ namespace Checkout.Sessions
             response.SessionSecret.ShouldNotBeNull();
             response.TransactionId.ShouldNotBeNull();
             response.Amount.ShouldNotBeNull();
-            //response.Certificates.ShouldNotBeNull();
+            response.Certificates.ShouldNotBeNull();
             response.Ds.ShouldNotBeNull();
             response.Card.ShouldNotBeNull();
 
