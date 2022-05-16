@@ -69,7 +69,9 @@ namespace Checkout.Sessions
                 ChannelData = channelData
             };
 
-            return await FourApi.SessionsClient().RequestSession(sessionRequest, CancellationToken.None);
+            return await Retriable(
+                async () => await FourApi.SessionsClient().RequestSession(sessionRequest, CancellationToken.None),
+                HasSessionCreated);
         }
 
         protected async Task<SessionResponse> CreateHostedSession()
@@ -106,11 +108,6 @@ namespace Checkout.Sessions
             return await Retriable(
                 async () => await FourApi.SessionsClient().RequestSession(sessionRequest, CancellationToken.None),
                 HasSessionAccepted);
-        }
-
-        private static bool HasSessionAccepted(SessionResponse obj)
-        {
-            return obj.Accepted != null;
         }
 
         protected static ChannelData BrowserSession()
@@ -154,6 +151,20 @@ namespace Checkout.Sessions
             };
 
             return appSession;
+        }
+
+        private static bool HasSessionAccepted(SessionResponse obj)
+        {
+            return obj.Accepted != null &&
+                   obj.Accepted.Card != null;
+        }
+
+        private static bool HasSessionCreated(SessionResponse obj)
+        {
+            return obj.Created != null &&
+                   obj.Created.Certificates != null &&
+                   obj.Created.Ds != null &&
+                   obj.Created.Card != null;
         }
     }
 }

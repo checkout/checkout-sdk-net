@@ -136,9 +136,43 @@ namespace Checkout.Marketplace
         }
 
         [Fact]
+        private async Task ShouldInitiateTransferOfFundsIdempotently()
+        {
+            var createTransferRequest =
+                new CreateTransferRequest
+                {
+                    Source = new TransferSource {Amount = 100, Id = "ent_kidtcgc3ge5unf4a5i6enhnr5m"},
+                    Destination = new TransferDestination {Id = "ent_w4jelhppmfiufdnatam37wrfc4"},
+                    TransferType = TransferType.Commission
+                };
+
+            var idempotencyKey = Guid.NewGuid().ToString();
+
+            var createTransferResponse =
+                await FourApi.MarketplaceClient().InitiateTransferOfFunds(createTransferRequest, idempotencyKey);
+
+            createTransferResponse.ShouldNotBeNull();
+            createTransferResponse.Id.ShouldNotBeNullOrEmpty();
+            createTransferResponse.Status.ShouldNotBeNull();
+            createTransferResponse.Links.ShouldNotBeNull();
+            createTransferResponse.Links.ShouldNotBeEmpty();
+
+            try
+            {
+                await FourApi.MarketplaceClient().InitiateTransferOfFunds(createTransferRequest, idempotencyKey);
+            }
+            catch (Exception ex)
+            {
+                ex.ShouldNotBeNull();
+                ex.ShouldBeAssignableTo(typeof(CheckoutApiException));
+                ex.Message.ShouldBe("The API response status code (409) does not indicate success.");
+            }
+        }
+
+        [Fact]
         private async Task ShouldRetrieveEntityBalances()
         {
-            var query = new BalancesQuery() {Query = "currency:" + Currency.GBP};
+            var query = new BalancesQuery {Query = "currency:" + Currency.GBP};
 
             var balances = await FourApi.MarketplaceClient()
                 .RetrieveEntityBalances("ent_kidtcgc3ge5unf4a5i6enhnr5m", query);
