@@ -49,7 +49,6 @@ namespace Checkout
                             FourOAuthScope.Vault, FourOAuthScope.PayoutsBankDetails, FourOAuthScope.TransfersCreate, 
                             FourOAuthScope.TransfersView, FourOAuthScope.BalancesView)
                         .Environment(Environment.Sandbox)
-                        .FilesEnvironment(Environment.Sandbox)
                         .LogProvider(logFactory)
                         .Build();
                     break;
