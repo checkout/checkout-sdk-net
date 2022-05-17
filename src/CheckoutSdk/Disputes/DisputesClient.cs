@@ -1,4 +1,3 @@
-using Checkout.Common;
 using Checkout.Files;
 using System.Threading;
 using System.Threading.Tasks;

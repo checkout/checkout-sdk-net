@@ -58,9 +58,8 @@ namespace Checkout.Four
 
         private static ApiClient FilesApiClient(CheckoutConfiguration configuration)
         {
-            Environment environment = configuration.FilesEnvironment ?? configuration.Environment;
             return new ApiClient(configuration.HttpClientFactory,
-                environment.GetAttribute<EnvironmentAttribute>().FilesApiUri);
+                configuration.Environment.GetAttribute<EnvironmentAttribute>().FilesApiUri);
         }
 
         private static ApiClient TransfersApiClient(CheckoutConfiguration configuration)
