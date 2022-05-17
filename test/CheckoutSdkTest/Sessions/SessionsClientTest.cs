@@ -46,7 +46,7 @@ namespace Checkout.Sessions
                 .Returns(new SdkAuthorization(PlatformType.FourOAuth, string.Empty));
 
             _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Sandbox, _httpClientFactory.Object, Environment.Sandbox);
+                Environment.Sandbox, _httpClientFactory.Object);
         }
 
         [Fact]
