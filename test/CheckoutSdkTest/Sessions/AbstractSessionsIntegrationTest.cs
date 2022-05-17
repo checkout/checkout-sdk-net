@@ -103,7 +103,14 @@ namespace Checkout.Sessions
                 }
             };
 
-            return await FourApi.SessionsClient().RequestSession(sessionRequest, CancellationToken.None);
+            return await Retriable(
+                async () => await FourApi.SessionsClient().RequestSession(sessionRequest, CancellationToken.None),
+                HasSessionAccepted);
+        }
+
+        private static bool HasSessionAccepted(SessionResponse obj)
+        {
+            return obj.Accepted != null;
         }
 
         protected static ChannelData BrowserSession()

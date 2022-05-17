@@ -23,11 +23,11 @@
 
         [FourOAuthScope("gateway:payment-refunds")]
         GatewayPaymentRefunds,
+        [FourOAuthScope("gateway:moto")] GatewayMoto,
         [FourOAuthScope("fx")] Fx,
 
         [FourOAuthScope("payouts:bank-details")]
         PayoutsBankDetails,
-        [FourOAuthScope("sessions")] Sessions,
         [FourOAuthScope("sessions:app")] SessionsApp,
         [FourOAuthScope("sessions:browser")] SessionsBrowser,
         [FourOAuthScope("disputes")] Disputes,
@@ -46,12 +46,23 @@
         [FourOAuthScope("files")] Files,
         [FourOAuthScope("files:retrieve")] FilesRetrieve,
         [FourOAuthScope("files:upload")] FilesUpload,
-        [FourOAuthScope("issuing:client")] IssuingClient,
-        [FourOAuthScope("issuing:partner")] IssuingPartner,
+        [FourOAuthScope("files:download")] FilesDownload,
         [FourOAuthScope("risk")] Risk,
-        [FourOAuthScope("risk:assessment")] RiskAssessment,
+        [FourOAuthScope("risk:assessments")] RiskAssessments,
         [FourOAuthScope("risk:settings")] RiskSettings,
         [FourOAuthScope("balances")] Balances,
-        [FourOAuthScope("balances:view")] BalancesView
+        [FourOAuthScope("balances:view")] BalancesView,
+
+        [FourOAuthScope("middleware")] Middleware,
+        [FourOAuthScope("middleware:gateway")] MiddlewareGateway,
+
+        [FourOAuthScope("middleware:payment-context")]
+        MiddlewarePaymentContext,
+
+        [FourOAuthScope("middleware:merchants-secret")]
+        MiddlewareMerchantsSecret,
+
+        [FourOAuthScope("middleware:merchants-public")]
+        MiddlewareMerchantsPublic
     }
 }
