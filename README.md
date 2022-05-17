@@ -55,7 +55,6 @@ Four.ICheckoutApi api = CheckoutSdk.FourSdk().StaticKeys()
     .Environment(Environment.Sandbox)
     .LogProvider(logFactory) // optional
     .HttpClientFactory(httpClientFactory) // optional
-    .FilesEnvironment(Environment.Sandbox) // optional, needed for Marketplace operations
     .Build();
 ```
 ### Four OAuth
@@ -70,7 +69,6 @@ Four.ICheckoutApi api = CheckoutSdk.FourSdk().OAuth()
     .Environment(Environment.Sandbox)
     .LogProvider(logFactory) // optional
     .HttpClientFactory(httpClientFactory) // optional
-    .FilesEnvironment(Environment.Sandbox) // optional, needed for Marketplace operations
     .Build();
 ```
 
@@ -93,7 +91,6 @@ Initialize the Configuration of your `appsettings.json` file:
     "PublicKey": "public_key",
     "Environment": "Sandbox",
     "PlatformType": "Default",
-    "FilesEnvironment": "Sandbox"
   }
 }
 ```
