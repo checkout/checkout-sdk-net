@@ -1,24 +1,15 @@
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace Checkout
 {
     public abstract class AbstractCheckoutSdkBuilder<T>
     {
         protected Environment Env = Checkout.Environment.Sandbox;
-        private Environment? _filesEnv;
         protected IHttpClientFactory ClientFactory = new DefaultHttpClientFactory();
 
         public AbstractCheckoutSdkBuilder<T> Environment(Environment environment)
         {
             Env = environment;
-            return this;
-        }
-
-        [Obsolete ("Won't be supported anymore from version 6.0.0 in favor of using defined URI's in Environment")]
-        public AbstractCheckoutSdkBuilder<T> FilesEnvironment(Environment? environment)
-        {
-            _filesEnv = environment;
             return this;
         }
 
@@ -36,7 +27,7 @@ namespace Checkout
 
         protected CheckoutConfiguration GetCheckoutConfiguration()
         {
-            return new CheckoutConfiguration(GetSdkCredentials(), Env, ClientFactory, _filesEnv);
+            return new CheckoutConfiguration(GetSdkCredentials(), Env, ClientFactory);
         }
 
         protected abstract SdkCredentials GetSdkCredentials();
