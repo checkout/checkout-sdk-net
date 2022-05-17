@@ -19,5 +19,7 @@ namespace Checkout.Payments
         public string Version { get; set; }
 
         public Exemption? Exemption { get; set; }
+        
+        public bool? Challenged { get; set; }
     }
 }

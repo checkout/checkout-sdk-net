@@ -36,10 +36,6 @@ namespace Checkout.Payments.Four.Response.Source
 
         public string CvvCheck { get; set; }
 
-        public bool? Payouts { get; set; }
-
-        public string FastFunds { get; set; }
-
         public string PaymentAccountReference { get; set; }
 
         public new PaymentSourceType? Type()
