@@ -28,7 +28,7 @@ namespace Checkout.Workflows.Four
                 .Returns(_authorization);
 
             _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Sandbox, _httpClientFactory.Object, Environment.Sandbox);
+                Environment.Sandbox, _httpClientFactory.Object);
         }
 
         [Fact]

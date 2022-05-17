@@ -81,10 +81,6 @@ namespace CheckoutSDK.Extensions.Configuration
             where TC : ICheckoutApiClient
         {
             builder.Environment(options.Environment);
-            if (options.FilesEnvironment != null)
-            {
-                builder.FilesEnvironment(options.FilesEnvironment);
-            }
             if (loggerFactory != null)
             {
                 builder.LogProvider(loggerFactory);

@@ -28,7 +28,7 @@ namespace Checkout.Marketplace
             _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.OAuth))
                 .Returns(_authorization);
             Mock<CheckoutConfiguration> configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Sandbox, _httpClientFactory, Environment.Sandbox);
+                Environment.Sandbox, _httpClientFactory);
             _marketplaceClient =
                 new MarketplaceClient(_apiClient.Object, _apiFilesClient.Object, _transfersClient.Object,
                     _balancesClient.Object, configuration.Object);
