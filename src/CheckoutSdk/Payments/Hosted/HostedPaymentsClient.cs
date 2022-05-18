@@ -12,7 +12,7 @@ namespace Checkout.Payments.Hosted
         {
         }
 
-        public Task<HostedPaymentDetailsResponse> Get(string hostedPaymentId,
+        public Task<HostedPaymentDetailsResponse> GetHostedPaymentsPageDetails(string hostedPaymentId,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("hostedPaymentId", hostedPaymentId);
@@ -21,7 +21,7 @@ namespace Checkout.Payments.Hosted
                 cancellationToken);
         }
 
-        public Task<HostedPaymentResponse> Create(HostedPaymentRequest hostedPaymentRequest,
+        public Task<HostedPaymentResponse> CreateHostedPaymentsPageSession(HostedPaymentRequest hostedPaymentRequest,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("hostedPaymentRequest", hostedPaymentRequest);
