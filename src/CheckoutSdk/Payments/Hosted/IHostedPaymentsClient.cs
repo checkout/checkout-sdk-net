@@ -5,10 +5,10 @@ namespace Checkout.Payments.Hosted
 {
     public interface IHostedPaymentsClient
     {
-        Task<HostedPaymentDetailsResponse> Get(string hostedPaymentId,
+        Task<HostedPaymentDetailsResponse> GetHostedPaymentsPageDetails(string hostedPaymentId,
             CancellationToken cancellationToken = default);
 
-        Task<HostedPaymentResponse> Create(HostedPaymentRequest hostedPaymentRequest,
+        Task<HostedPaymentResponse> CreateHostedPaymentsPageSession(HostedPaymentRequest hostedPaymentRequest,
             CancellationToken cancellationToken = default);
     }
 }
