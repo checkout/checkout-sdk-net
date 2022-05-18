@@ -19,7 +19,7 @@ namespace Checkout.Payments.Four.Hosted
         {
             var hostedPaymentRequest = CreateHostedPaymentRequest();
 
-            var createResponse = await FourApi.HostedPaymentsClient().Create(hostedPaymentRequest);
+            var createResponse = await FourApi.HostedPaymentsClient().CreateHostedPaymentsPageSession(hostedPaymentRequest);
 
             createResponse.ShouldNotBeNull();
             createResponse.Id.ShouldNotBeNullOrEmpty();
@@ -28,7 +28,7 @@ namespace Checkout.Payments.Four.Hosted
             createResponse.Links.ContainsKey("redirect").ShouldBeTrue();
             createResponse.Warnings.Count.ShouldBe(1);
 
-            var getResponse = await FourApi.HostedPaymentsClient().Get(createResponse.Id);
+            var getResponse = await FourApi.HostedPaymentsClient().GetHostedPaymentsPageDetails(createResponse.Id);
 
             getResponse.ShouldNotBeNull();
             getResponse.Id.ShouldNotBeNullOrEmpty();

@@ -45,7 +45,7 @@ namespace Checkout.Payments.Hosted
 
             var client = new HostedPaymentsClient(_apiClient.Object, _configuration.Object);
 
-            var response = await client.Get("id", CancellationToken.None);
+            var response = await client.GetHostedPaymentsPageDetails("id", CancellationToken.None);
 
             response.ShouldNotBeNull();
         }
@@ -62,7 +62,7 @@ namespace Checkout.Payments.Hosted
 
             var client = new HostedPaymentsClient(_apiClient.Object, _configuration.Object);
 
-            var response = await client.Create(hostedPaymentRequest, CancellationToken.None);
+            var response = await client.CreateHostedPaymentsPageSession(hostedPaymentRequest, CancellationToken.None);
 
             response.ShouldNotBeNull();
             response.Reference.ShouldBe(Reference);
