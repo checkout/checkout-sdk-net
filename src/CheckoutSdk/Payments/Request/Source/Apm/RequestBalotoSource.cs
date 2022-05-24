@@ -12,7 +12,7 @@ namespace Checkout.Payments.Request.Source.Apm
 
         public CountryCode? Country { get; set; }
 
-        public BalotoPayer Payer { get; set; }
+        public Payer Payer { get; set; }
 
         public string Description { get; set; }
     }

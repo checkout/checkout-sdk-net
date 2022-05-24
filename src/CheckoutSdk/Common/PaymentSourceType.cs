@@ -33,5 +33,6 @@ namespace Checkout.Common
         [EnumMember(Value = "benefitpay")] BenefitPay,
         [EnumMember(Value = "bancontact")] Bancontact,
         [EnumMember(Value = "tamara")] Tamara,
+        [EnumMember(Value = "bank_account")] BankAccount
     }
 }
