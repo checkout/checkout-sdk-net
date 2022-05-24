@@ -9,5 +9,7 @@ namespace Checkout.Payments.Request.Source.Apm
         }
 
         public string Purpose { get; set; }
+
+        public string Bic { get; set; }
     }
 }
