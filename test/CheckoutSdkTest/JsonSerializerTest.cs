@@ -10,7 +10,7 @@ namespace Checkout
         [Fact]
         public void ShouldDeserializeFourGetPaymentResponseIndividualSender()
         {
-            var fileContent = GetJsonFileContent("Sender/GetPaymentResponseIndividualSender.json");
+            var fileContent = GetJsonFileContent("./Resources/Sender/GetPaymentResponseIndividualSender.json");
             GetPaymentResponse getPaymentResponse =
                 (GetPaymentResponse)new JsonSerializer().Deserialize(fileContent, typeof(GetPaymentResponse));
             getPaymentResponse.ShouldNotBeNull();
@@ -25,7 +25,7 @@ namespace Checkout
         [Fact]
         public void ShouldDeserializeFourGetPaymentResponseCorporateSender()
         {
-            var fileContent = GetJsonFileContent("Sender/GetPaymentResponseCorporateSender.json");
+            var fileContent = GetJsonFileContent("./Resources/Sender/GetPaymentResponseCorporateSender.json");
             GetPaymentResponse getPaymentResponse =
                 (GetPaymentResponse)new JsonSerializer().Deserialize(fileContent, typeof(GetPaymentResponse));
             getPaymentResponse.ShouldNotBeNull();
@@ -39,7 +39,7 @@ namespace Checkout
         [Fact]
         public void ShouldDeserializeFourGetPaymentResponseInstrumentSender()
         {
-            var fileContent = GetJsonFileContent("Sender/GetPaymentResponseInstrumentSender.json");
+            var fileContent = GetJsonFileContent("./Resources/Sender/GetPaymentResponseInstrumentSender.json");
             GetPaymentResponse getPaymentResponse =
                 (GetPaymentResponse)new JsonSerializer().Deserialize(fileContent, typeof(GetPaymentResponse));
             getPaymentResponse.ShouldNotBeNull();
@@ -51,7 +51,7 @@ namespace Checkout
         [Fact]
         public void ShouldDeserializeFourGetPaymentResponseAlternativeSender()
         {
-            var fileContent = GetJsonFileContent("Sender/GetPaymentResponseAlternativeSender.json");
+            var fileContent = GetJsonFileContent("./Resources/Sender/GetPaymentResponseAlternativeSender.json");
             GetPaymentResponse getPaymentResponse =
                 (GetPaymentResponse)new JsonSerializer().Deserialize(fileContent, typeof(GetPaymentResponse));
             getPaymentResponse.ShouldNotBeNull();

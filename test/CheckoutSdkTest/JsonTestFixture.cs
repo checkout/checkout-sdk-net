@@ -6,7 +6,7 @@ namespace Checkout
     {
         protected static string GetJsonFileContent(string file)
         {
-            var filePath = Path.Combine(System.Environment.CurrentDirectory, "Resources\\" + file);
+            var filePath = Path.Combine(System.Environment.CurrentDirectory, file);
             return new StreamReader(filePath).ReadToEnd();
         }
     }
