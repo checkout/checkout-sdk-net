@@ -32,5 +32,14 @@ namespace Checkout.Disputes
         public DateTime? ReceivedOn { get; set; }
 
         public DateTime? LastUpdate { get; set; }
+        
+        //Only available in Four
+
+        public string EntityId { get; set; }
+
+        public string SubEntityId { get; set; }
+
+        public string PaymentMcc { get; set; }
+
     }
 }

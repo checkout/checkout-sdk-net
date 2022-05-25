@@ -23,5 +23,14 @@ namespace Checkout.Disputes
         public string PaymentArn { get; set; }
 
         public string ThisChannelOnly { get; set; }
+        
+        //Only available in Four
+        
+        public string EntityIds { get; set; }
+
+        public string SubEntityIds { get; set; }
+
+        public string PaymentMcc { get; set; }
+
     }
 }
