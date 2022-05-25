@@ -1,6 +1,6 @@
 using Checkout.Common.Four;
 
-namespace Checkout.Disputes.Four
+namespace Checkout.Disputes
 {
     public class ThreeDsVersionEnrollment
     {

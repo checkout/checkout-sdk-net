@@ -28,5 +28,14 @@ namespace Checkout.Disputes
         public int? TotalCount { get; set; }
 
         public IList<DisputeSummary> Data { get; set; }
+        
+        //Only available in Four
+        
+        public string EntityIds { get; set; }
+
+        public string SubEntityIds { get; set; }
+
+        public string PaymentMcc { get; set; }
+        
     }
 }
