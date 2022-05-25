@@ -1,5 +1,5 @@
 using Checkout.Customers.Four;
-using Checkout.Disputes.Four;
+using Checkout.Disputes;
 using Checkout.Forex;
 using Checkout.Instruments.Four;
 using Checkout.Marketplace;
