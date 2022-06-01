@@ -1,5 +1,4 @@
 using Shouldly;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -12,9 +11,9 @@ namespace Checkout.Payments
         {
             var paymentResponse = await MakeCardPayment(true);
 
-            var actions = await Retriable(async () =>
+            var actionsWrapper = await Retriable(async () =>
                 await DefaultApi.PaymentsClient().GetPaymentActions(paymentResponse.Id), ThereAreTwoPaymentActions);
-
+            var actions = actionsWrapper.Items;
             actions.ShouldNotBeNull();
             actions.Count.ShouldBe(2);
 
@@ -31,9 +30,9 @@ namespace Checkout.Payments
             }
         }
 
-        private static bool ThereAreTwoPaymentActions(IList<PaymentAction> obj)
+        private static bool ThereAreTwoPaymentActions(ItemsResponse<PaymentAction> obj)
         {
-            return obj.Count == 2;
+            return obj.Items.Count == 2;
         }
     }
 }

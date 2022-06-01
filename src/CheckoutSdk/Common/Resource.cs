@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Common
 {
-    public class Resource
+    public class Resource : HttpMetadata
     {
         public Resource()
         {

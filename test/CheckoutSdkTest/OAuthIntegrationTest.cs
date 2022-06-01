@@ -1,10 +1,10 @@
-using System;
-using System.Threading.Tasks;
 using Checkout.Common;
 using Checkout.Payments.Four.Request;
 using Checkout.Payments.Four.Request.Source;
 using Checkout.Payments.Four.Sender;
 using Shouldly;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Sdk;
 

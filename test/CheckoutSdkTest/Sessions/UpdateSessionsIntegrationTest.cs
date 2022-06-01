@@ -39,6 +39,8 @@ namespace Checkout.Sessions
                 : await FourApi.SessionsClient().UpdateSession(created.Id, BrowserSession(), CancellationToken.None);
 
             updated.ShouldNotBeNull();
+            updated.HttpStatusCode.ShouldNotBeNull();
+            updated.ResponseHeaders.ShouldNotBeNull();
             updated.Id.ShouldNotBeNull();
 
             if (usingSessionSecret)
@@ -127,6 +129,8 @@ namespace Checkout.Sessions
                     threeDsMethodCompletionRequest, CancellationToken.None);
 
             updated.ShouldNotBeNull();
+            updated.HttpStatusCode.ShouldNotBeNull();
+            updated.ResponseHeaders.ShouldNotBeNull();
         }
     }
 }

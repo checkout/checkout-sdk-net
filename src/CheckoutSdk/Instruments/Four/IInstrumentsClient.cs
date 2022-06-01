@@ -16,7 +16,7 @@ namespace Checkout.Instruments.Four
             Update.UpdateInstrumentRequest updateInstrumentRequest,
             CancellationToken cancellationToken = default);
 
-        Task<object> Delete(string instrumentId, CancellationToken cancellationToken = default);
+        Task<EmptyResponse> Delete(string instrumentId, CancellationToken cancellationToken = default);
 
         Task<BankAccountFieldResponse> GetBankAccountFieldFormatting(CountryCode country, Currency currency,
             BankAccountFieldQuery bankAccountFieldQuery, CancellationToken cancellationToken = default);

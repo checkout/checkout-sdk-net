@@ -1,5 +1,6 @@
 ﻿using Moq;
 using Shouldly;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -32,7 +33,7 @@ namespace Checkout.Payments.Links
             PaymentLinkResponse paymentLinkResponse = new PaymentLinkResponse
             {
                 Id = "1",
-                ExpiresOn = System.DateTime.Now,
+                ExpiresOn = DateTime.Now,
                 Reference = "ref1234"
             };
 
@@ -57,7 +58,7 @@ namespace Checkout.Payments.Links
             PaymentLinkResponse paymentLinkResponse = new PaymentLinkResponse
             {
                 Id = "1",
-                ExpiresOn = System.DateTime.Now,
+                ExpiresOn = DateTime.Now,
                 Reference = "ref1234"
             };
 
@@ -88,7 +89,7 @@ namespace Checkout.Payments.Links
             var paymentLinkDetailsResponse = new PaymentLinkDetailsResponse()
             {
                 Id = "1",
-                ExpiresOn = System.DateTime.Now,
+                ExpiresOn = DateTime.Now,
                 Description = "Test",
                 ReturnUrl = "test.com",
                 Reference = reference

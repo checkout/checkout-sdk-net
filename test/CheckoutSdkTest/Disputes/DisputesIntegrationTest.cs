@@ -89,7 +89,10 @@ namespace Checkout.Disputes
                 AdditionalEvidenceText = "Scanned document"
             };
             var disputeId = queryResponse.Data[0].Id;
-            await DefaultApi.DisputesClient().PutEvidence(disputeId, disputeEvidenceRequest);
+            var emptyResponse = await DefaultApi.DisputesClient().PutEvidence(disputeId, disputeEvidenceRequest);
+            emptyResponse.ShouldNotBeNull();
+            emptyResponse.HttpStatusCode.ShouldNotBeNull();
+            emptyResponse.ResponseHeaders.ShouldNotBeNull();
 
             //Verify the dispute evidence
             var evidence = await DefaultApi.DisputesClient().GetEvidence(disputeId);

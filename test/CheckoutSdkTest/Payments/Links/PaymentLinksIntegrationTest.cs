@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using Checkout.Common;
+﻿using Checkout.Common;
 using Shouldly;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Payments.Links

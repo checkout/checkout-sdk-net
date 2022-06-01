@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Events
 {
-    public class EventsPageResponse
+    public class EventsPageResponse : HttpMetadata
     {
         public int? TotalCount { get; set; }
 

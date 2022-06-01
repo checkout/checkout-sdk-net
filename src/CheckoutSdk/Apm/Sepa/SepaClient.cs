@@ -29,7 +29,8 @@ namespace Checkout.Apm.Sepa
                 BuildPath(SepaMandatesPath, mandateId, CancelPath),
                 SdkAuthorization(),
                 null,
-                cancellationToken);
+                cancellationToken,
+                null);
         }
 
         public Task<MandateResponse> GetMandateViaPpro(string mandateId, CancellationToken cancellationToken = default)
@@ -46,7 +47,8 @@ namespace Checkout.Apm.Sepa
                 BuildPath(PproPath, SepaMandatesPath, mandateId, CancelPath),
                 SdkAuthorization(),
                 null,
-                cancellationToken);
+                cancellationToken,
+                null);
         }
     }
 }

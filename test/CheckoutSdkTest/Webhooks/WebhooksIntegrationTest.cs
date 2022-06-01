@@ -9,19 +9,23 @@ namespace Checkout.Webhooks
 {
     public class WebhooksIntegrationTest : SandboxTestFixture
     {
-        private readonly List<string> _eventTypes = new List<string> {"invoice.cancelled", "card.updated",};
+        private readonly List<string> _eventTypes = new List<string> {"payment_approved", "payment_pending",
+            "payment_declined", "payment_expired", "payment_canceled", "payment_voided", "payment_void_declined",
+            "payment_captured", "payment_capture_declined", "payment_capture_pending", "payment_refunded",
+            "payment_refund_declined", "payment_refund_pending"};
 
         public WebhooksIntegrationTest() : base(PlatformType.Default)
         {
-            Task.Run(CleanUp);
         }
 
         private async Task CleanUp()
         {
             var webhookResponses = await DefaultApi.WebhooksClient().RetrieveWebhooks();
-            if (!webhookResponses.IsNullOrEmpty())
+            webhookResponses.HttpStatusCode.ShouldNotBeNull();
+            webhookResponses.HttpStatusCode.ShouldNotBeNull();
+            if (!webhookResponses.Items.IsNullOrEmpty())
             {
-                foreach (var webhook in webhookResponses)
+                foreach (var webhook in webhookResponses.Items)
                 {
                     webhook.ShouldNotBeNull();
                     await DefaultApi.WebhooksClient().RemoveWebhook(webhook.Id);
@@ -29,9 +33,10 @@ namespace Checkout.Webhooks
             }
         }
 
-        [Fact(Skip = "unstable")]
+        [Fact]
         private async Task ShouldTestFullWebhookOperations()
         {
+            await CleanUp();
             const string url = "https://checkout.com/webhooks";
             //Create webhook
             var webhookResponse = await RegisterWebhook(url);
@@ -66,13 +71,18 @@ namespace Checkout.Webhooks
                 await DefaultApi.WebhooksClient().UpdateWebhook(webhookResponse.Id, updateRequest));
 
             updateWebhook.ShouldNotBeNull();
+            updateWebhook.HttpStatusCode.ShouldNotBeNull();
+            updateWebhook.ResponseHeaders.ShouldNotBeNull();
             updateWebhook.Url.ShouldBe(urlChanged);
             updateWebhook.Headers.ShouldBe(retrieveWebhook.Headers);
             updateWebhook.EventTypes.ShouldNotBe(retrieveWebhook.EventTypes);
             updateWebhook.EventTypes.ShouldBe(updateRequest.EventTypes);
 
             //Delete webhook
-            await DefaultApi.WebhooksClient().RemoveWebhook(webhookResponse.Id);
+            var emptyResponse = await DefaultApi.WebhooksClient().RemoveWebhook(webhookResponse.Id);
+            emptyResponse.ShouldNotBeNull();
+            emptyResponse.HttpStatusCode.ShouldNotBeNull();
+            emptyResponse.ResponseHeaders.ShouldNotBeNull();
 
             //Confirm delete
             try

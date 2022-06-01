@@ -1,7 +1,7 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Moq;
 using Shouldly;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Apm.Ideal

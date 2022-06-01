@@ -3,7 +3,6 @@ using Checkout.Workflows.Four.Actions.Response;
 using Checkout.Workflows.Four.Conditions.Request;
 using Checkout.Workflows.Four.Events;
 using Checkout.Workflows.Four.Reflows;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Checkout.Workflows.Four
@@ -18,15 +17,15 @@ namespace Checkout.Workflows.Four
 
         Task<UpdateWorkflowResponse> UpdateWorkflow(string workflowId, UpdateWorkflowRequest updateWorkflowRequest);
 
-        Task<object> RemoveWorkflow(string workflowId);
+        Task<EmptyResponse> RemoveWorkflow(string workflowId);
 
-        Task<object> UpdateWorkflowAction(string workflowId, string actionId,
+        Task<EmptyResponse> UpdateWorkflowAction(string workflowId, string actionId,
             WorkflowActionRequest workflowActionRequest);
 
-        Task<object> UpdateWorkflowCondition(string workflowId, string conditionId,
+        Task<EmptyResponse> UpdateWorkflowCondition(string workflowId, string conditionId,
             WorkflowConditionRequest workflowConditionRequest);
 
-        Task<IList<EventTypesResponse>> GetEventTypes();
+        Task<ItemsResponse<EventTypesResponse>> GetEventTypes();
 
         Task<SubjectEventsResponse> GetSubjectEvents(string subjectId);
 

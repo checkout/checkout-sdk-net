@@ -69,7 +69,7 @@ namespace Checkout.Sessions
             };
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<Resource>(Sessions,
+                    apiClient.Post<HttpMetadata>(Sessions,
                         _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.OAuth),
                         SessionResponseMappings, request,
                         CancellationToken.None, null))
@@ -100,7 +100,7 @@ namespace Checkout.Sessions
             };
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<Resource>(Sessions,
+                    apiClient.Post<HttpMetadata>(Sessions,
                         _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.OAuth),
                         SessionResponseMappings, request,
                         CancellationToken.None, null))
@@ -331,9 +331,9 @@ namespace Checkout.Sessions
             var response = new Mock<GetSessionResponse>();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<object>($"{Sessions}/id/{Complete}", _authorization, null,
+                    apiClient.Post<EmptyResponse>($"{Sessions}/id/{Complete}", _authorization, null,
                         CancellationToken.None, null))
-                .ReturnsAsync(() => response.Object);
+                .ReturnsAsync(() => new EmptyResponse());
 
             _sessionsClient = new SessionsClient(_apiClient.Object, _configuration.Object);
 
@@ -348,9 +348,9 @@ namespace Checkout.Sessions
             var response = new Mock<GetSessionResponse>();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<object>($"{Sessions}/id/{Complete}", SessionSecretAuthorization, null,
+                    apiClient.Post<EmptyResponse>($"{Sessions}/id/{Complete}", SessionSecretAuthorization, null,
                         CancellationToken.None, null))
-                .ReturnsAsync(() => response.Object);
+                .ReturnsAsync(() => new EmptyResponse());
 
             _sessionsClient = new SessionsClient(_apiClient.Object, _configuration.Object);
 

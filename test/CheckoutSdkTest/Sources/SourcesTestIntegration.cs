@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
 using Checkout.Common;
 using Shouldly;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Sources

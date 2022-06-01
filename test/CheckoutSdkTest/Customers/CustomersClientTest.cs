@@ -1,8 +1,8 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Checkout.Common;
 using Moq;
 using Shouldly;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Customers
@@ -62,10 +62,10 @@ namespace Checkout.Customers
             var customerRequest = new CustomerRequest();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Patch<object>("customers/cus_12345", _authorization, customerRequest,
+                    apiClient.Patch<EmptyResponse>("customers/cus_12345", _authorization, customerRequest,
                         CancellationToken.None
                         , null))
-                .ReturnsAsync(() => new object());
+                .ReturnsAsync(() => new EmptyResponse());
 
             ICustomersClient client = new CustomersClient(_apiClient.Object, _configuration.Object);
 
@@ -78,9 +78,9 @@ namespace Checkout.Customers
         private async Task ShouldDeleteCustomer()
         {
             _apiClient.Setup(apiClient =>
-                    apiClient.Delete<object>("customers/cus_12345", _authorization,
+                    apiClient.Delete<EmptyResponse>("customers/cus_12345", _authorization,
                         CancellationToken.None))
-                .ReturnsAsync(() => new object());
+                .ReturnsAsync(() => new EmptyResponse());
 
             ICustomersClient client = new CustomersClient(_apiClient.Object, _configuration.Object);
 
