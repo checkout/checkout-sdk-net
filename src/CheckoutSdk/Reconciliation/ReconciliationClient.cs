@@ -40,30 +40,30 @@ namespace Checkout.Reconciliation
                 SdkAuthorization(), filter, cancellationToken);
         }
 
-        public Task<string> RetrieveCsvPaymentReport(QueryFilterDateRange filter,
+        public Task<ContentsResponse> RetrieveCsvPaymentReport(QueryFilterDateRange filter,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("filter", filter);
-            return ApiClient.Query<string>(BuildPath(ReportingPath, PaymentsPath, DownloadPath), SdkAuthorization(),
+            return ApiClient.Query<ContentsResponse>(BuildPath(ReportingPath, PaymentsPath, DownloadPath), SdkAuthorization(),
                 filter,
                 cancellationToken);
         }
 
-        public Task<string> RetrieveCsvSingleStatementReport(string statementId,
+        public Task<ContentsResponse> RetrieveCsvSingleStatementReport(string statementId,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("statementId", statementId);
-            return ApiClient.Query<string>(
+            return ApiClient.Query<ContentsResponse>(
                 BuildPath(ReportingPath, StatementsPath, statementId, PaymentsPath, DownloadPath), SdkAuthorization(),
                 null,
                 cancellationToken);
         }
 
-        public Task<string> RetrieveCsvStatementsReport(QueryFilterDateRange filter,
+        public Task<ContentsResponse> RetrieveCsvStatementsReport(QueryFilterDateRange filter,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("filter", filter);
-            return ApiClient.Query<string>(
+            return ApiClient.Query<ContentsResponse>(
                 BuildPath(ReportingPath, StatementsPath, DownloadPath), SdkAuthorization(), filter,
                 cancellationToken);
         }

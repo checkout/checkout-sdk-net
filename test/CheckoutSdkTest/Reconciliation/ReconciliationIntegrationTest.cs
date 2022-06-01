@@ -59,7 +59,7 @@ namespace Checkout.Reconciliation
         {
             var response = await _productionApi.ReconciliationClient().RetrieveCsvPaymentReport(_queryFilterDateRange);
             response.ShouldNotBeNull();
-            response.ShouldNotBeEmpty();
+            response.Content.ShouldNotBeEmpty();
         }
 
         [Fact(Skip = "Only works in Production")]
@@ -68,7 +68,7 @@ namespace Checkout.Reconciliation
             var response = await _productionApi.ReconciliationClient()
                 .RetrieveCsvSingleStatementReport("reference");
             response.ShouldNotBeNull();
-            response.ShouldNotBeEmpty();
+            response.Content.ShouldNotBeEmpty();
         }
 
         [Fact(Skip = "Only works in Production")]
@@ -77,7 +77,7 @@ namespace Checkout.Reconciliation
             var response = await _productionApi.ReconciliationClient()
                 .RetrieveCsvStatementsReport(_queryFilterDateRange);
             response.ShouldNotBeNull();
-            response.ShouldNotBeEmpty();
+            response.Content.ShouldNotBeEmpty();
         }
     }
 }

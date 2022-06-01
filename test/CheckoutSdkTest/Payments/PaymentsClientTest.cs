@@ -4,7 +4,6 @@ using Checkout.Payments.Request.Source;
 using Checkout.Payments.Response;
 using Moq;
 using Shouldly;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -163,10 +162,10 @@ namespace Checkout.Payments
         [Fact]
         private async Task ShouldGetPaymentActions()
         {
-            var paymentActions = new List<PaymentAction> {new PaymentAction(), new PaymentAction()};
+            var paymentActions = new ItemsResponse<PaymentAction>();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<IList<PaymentAction>>(PaymentsPath + "/payment_id/actions", _authorization,
+                    apiClient.Get<ItemsResponse<PaymentAction>>(PaymentsPath + "/payment_id/actions", _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(() => paymentActions);
 

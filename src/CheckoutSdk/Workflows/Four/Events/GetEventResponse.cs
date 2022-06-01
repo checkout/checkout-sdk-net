@@ -2,7 +2,7 @@
 
 namespace Checkout.Workflows.Four.Events
 {
-    public class GetEventResponse
+    public class GetEventResponse : HttpMetadata
     {
         public string Id { get; set; }
 

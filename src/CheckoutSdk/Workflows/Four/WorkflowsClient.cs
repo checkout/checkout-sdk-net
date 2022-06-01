@@ -3,7 +3,6 @@ using Checkout.Workflows.Four.Actions.Response;
 using Checkout.Workflows.Four.Conditions.Request;
 using Checkout.Workflows.Four.Events;
 using Checkout.Workflows.Four.Reflows;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Checkout.Workflows.Four
@@ -50,34 +49,34 @@ namespace Checkout.Workflows.Four
                 updateWorkflowRequest);
         }
 
-        public Task<object> RemoveWorkflow(string workflowId)
+        public Task<EmptyResponse> RemoveWorkflow(string workflowId)
         {
             CheckoutUtils.ValidateParams(WorkflowId, workflowId);
-            return ApiClient.Delete<object>(BuildPath(WorkflowsPath, workflowId), SdkAuthorization());
+            return ApiClient.Delete<EmptyResponse>(BuildPath(WorkflowsPath, workflowId), SdkAuthorization());
         }
 
-        public Task<object> UpdateWorkflowAction(string workflowId, string actionId,
+        public Task<EmptyResponse> UpdateWorkflowAction(string workflowId, string actionId,
             WorkflowActionRequest workflowActionRequest)
         {
             CheckoutUtils.ValidateParams(WorkflowId, workflowId, "actionId", actionId, "workflowActionRequest",
                 workflowActionRequest);
-            return ApiClient.Put<object>(BuildPath(WorkflowsPath, workflowId, ActionsPath, actionId),
+            return ApiClient.Put<EmptyResponse>(BuildPath(WorkflowsPath, workflowId, ActionsPath, actionId),
                 SdkAuthorization(),
                 workflowActionRequest);
         }
 
-        public Task<object> UpdateWorkflowCondition(string workflowId, string conditionId,
+        public Task<EmptyResponse> UpdateWorkflowCondition(string workflowId, string conditionId,
             WorkflowConditionRequest workflowConditionRequest)
         {
             CheckoutUtils.ValidateParams(WorkflowId, workflowId, "conditionId", conditionId,
                 "workflowConditionRequest", workflowConditionRequest);
-            return ApiClient.Put<object>(BuildPath(WorkflowsPath, workflowId, ConditionsPath, conditionId),
+            return ApiClient.Put<EmptyResponse>(BuildPath(WorkflowsPath, workflowId, ConditionsPath, conditionId),
                 SdkAuthorization(), workflowConditionRequest);
         }
 
-        public Task<IList<EventTypesResponse>> GetEventTypes()
+        public Task<ItemsResponse<EventTypesResponse>> GetEventTypes()
         {
-            return ApiClient.Get<IList<EventTypesResponse>>(BuildPath(WorkflowsPath, EventTypesPath),
+            return ApiClient.Get<ItemsResponse<EventTypesResponse>>(BuildPath(WorkflowsPath, EventTypesPath),
                 SdkAuthorization());
         }
 

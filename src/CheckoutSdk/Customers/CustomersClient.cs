@@ -26,18 +26,18 @@ namespace Checkout.Customers
             return ApiClient.Post<IdResponse>(Customers, SdkAuthorization(), customerRequest, cancellationToken, null);
         }
 
-        public Task<object> Update(string customerId, CustomerRequest customerRequest,
+        public Task<EmptyResponse> Update(string customerId, CustomerRequest customerRequest,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("customerId", customerId, "customerRequest", customerRequest);
-            return ApiClient.Patch<object>(BuildPath(Customers, customerId), SdkAuthorization(), customerRequest,
+            return ApiClient.Patch<EmptyResponse>(BuildPath(Customers, customerId), SdkAuthorization(), customerRequest,
                 cancellationToken);
         }
 
-        public Task<object> Delete(string customerId, CancellationToken cancellationToken = default)
+        public Task<EmptyResponse> Delete(string customerId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("customerId", customerId);
-            return ApiClient.Delete<object>(BuildPath(Customers, customerId), SdkAuthorization(), cancellationToken);
+            return ApiClient.Delete<EmptyResponse>(BuildPath(Customers, customerId), SdkAuthorization(), cancellationToken);
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Disputes
 {
-    public class DisputesQueryResponse
+    public class DisputesQueryResponse : HttpMetadata
     {
         public int? Limit { get; set; }
 
