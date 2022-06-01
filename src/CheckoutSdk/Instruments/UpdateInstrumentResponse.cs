@@ -1,6 +1,6 @@
 ﻿namespace Checkout.Instruments
 {
-    public class UpdateInstrumentResponse
+    public class UpdateInstrumentResponse : HttpMetadata
     {
         public InstrumentType? Type { get; set; }
 

@@ -2,7 +2,7 @@
 
 namespace Checkout.Instruments
 {
-    public class RetrieveInstrumentResponse
+    public class RetrieveInstrumentResponse : HttpMetadata
     {
         public string Id { get; set; }
 

@@ -70,7 +70,10 @@ namespace Checkout.Customers.Four
             customerResponse.ShouldNotBeNull();
 
             var customerId = customerResponse.Id;
-            await FourApi.CustomersClient().Delete(customerId);
+            var emptyResponse = await FourApi.CustomersClient().Delete(customerId);
+            emptyResponse.ShouldNotBeNull();
+            emptyResponse.HttpStatusCode.ShouldNotBeNull();
+            emptyResponse.ResponseHeaders.ShouldNotBeNull();
 
             await AssertNotFound(FourApi.CustomersClient().Get(customerId));
         }

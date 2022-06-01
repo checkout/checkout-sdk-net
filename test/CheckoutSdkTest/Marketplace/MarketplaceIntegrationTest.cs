@@ -90,6 +90,8 @@ namespace Checkout.Marketplace
                 await FourApi.MarketplaceClient().UpdateEntity(entityId, onboardEntityRequest);
 
             updatedEntityResponse.ShouldNotBeNull();
+            updatedEntityResponse.HttpStatusCode.ShouldNotBeNull();
+            updatedEntityResponse.ResponseHeaders.ShouldNotBeNull();
 
             OnboardEntityDetailsResponse verifyUpdated = await FourApi.MarketplaceClient().GetEntity(entityId);
 

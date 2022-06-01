@@ -66,12 +66,12 @@ namespace Checkout.Marketplace
                 cancellationToken);
         }
 
-        public async Task<object> CreatePaymentInstrument(string entityId,
+        public async Task<EmptyResponse> CreatePaymentInstrument(string entityId,
             MarketplacePaymentInstrument marketplacePaymentInstrument, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("marketplacePaymentInstrument", marketplacePaymentInstrument, "entityId",
                 entityId);
-            return await ApiClient.Post<object>(
+            return await ApiClient.Post<EmptyResponse>(
                 BuildPath(MarketplacePath, EntitiesPath, entityId, InstrumentPath),
                 SdkAuthorization(SdkAuthorizationType.OAuth),
                 marketplacePaymentInstrument,
@@ -109,13 +109,13 @@ namespace Checkout.Marketplace
                 cancellationToken);
         }
 
-        public async Task<VoidResponse> UpdatePayoutSchedule(string entityId, Currency currency,
+        public async Task<EmptyResponse> UpdatePayoutSchedule(string entityId, Currency currency,
             UpdateScheduleRequest updateScheduleRequest,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("entityId", entityId, "currency", currency, "updateScheduleRequest",
                 updateScheduleRequest);
-            return await ApiClient.Put<VoidResponse>(
+            return await ApiClient.Put<EmptyResponse>(
                 BuildPath(MarketplacePath, EntitiesPath, entityId, PayoutSchedulePath),
                 SdkAuthorization(SdkAuthorizationType.OAuth),
                 new Dictionary<Currency, UpdateScheduleRequest>() {{currency, updateScheduleRequest}},

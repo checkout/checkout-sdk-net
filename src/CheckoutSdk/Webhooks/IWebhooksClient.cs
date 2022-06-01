@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,7 +5,7 @@ namespace Checkout.Webhooks
 {
     public interface IWebhooksClient
     {
-        Task<IList<WebhookResponse>> RetrieveWebhooks(CancellationToken cancellationToken = default);
+        Task<ItemsResponse<WebhookResponse>> RetrieveWebhooks(CancellationToken cancellationToken = default);
 
         Task<WebhookResponse> RegisterWebhook(WebhookRequest webhookRequest, string idempotencyKey = null,
             CancellationToken cancellationToken = default);
@@ -19,6 +18,6 @@ namespace Checkout.Webhooks
         Task<WebhookResponse> PatchWebhook(string webhookId, WebhookRequest webhookRequest,
             CancellationToken cancellationToken = default);
 
-        Task<object> RemoveWebhook(string webhookId, CancellationToken cancellationToken = default);
+        Task<EmptyResponse> RemoveWebhook(string webhookId, CancellationToken cancellationToken = default);
     }
 }

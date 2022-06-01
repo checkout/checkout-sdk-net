@@ -1,8 +1,7 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Moq;
 using Shouldly;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Webhooks
@@ -27,13 +26,10 @@ namespace Checkout.Webhooks
         [Fact]
         private async Task ShouldRetrieveWebhooks()
         {
-            var webhookResponses = new List<WebhookResponse>
-            {
-                new WebhookResponse()
-            };
+            var webhookResponses = new ItemsResponse<WebhookResponse>();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<IList<WebhookResponse>>("webhooks", _authorization,
+                    apiClient.Get<ItemsResponse<WebhookResponse>>("webhooks", _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(() => webhookResponses);
 
@@ -126,9 +122,9 @@ namespace Checkout.Webhooks
         private async Task ShouldRemoveWebhook()
         {
             _apiClient.Setup(apiClient =>
-                    apiClient.Delete<object>("webhooks/wh_kve4kqtq3ueezaxriev666j4ky", _authorization,
+                    apiClient.Delete<EmptyResponse>("webhooks/wh_kve4kqtq3ueezaxriev666j4ky", _authorization,
                         CancellationToken.None))
-                .ReturnsAsync(() => new object());
+                .ReturnsAsync(() => new EmptyResponse());
 
             IWebhooksClient client = new WebhooksClient(_apiClient.Object, _configuration.Object);
 

@@ -1,6 +1,5 @@
 using Moq;
 using Shouldly;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -26,10 +25,10 @@ namespace Checkout.Events
         [Fact]
         private async Task ShouldRetrieveAllEventTypes()
         {
-            var eventTypesResponse = new List<EventTypesResponse> {new EventTypesResponse()};
+            var eventTypesResponse = new ItemsResponse<EventTypesResponse>();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<IList<EventTypesResponse>>("event-types?version=1.0", _authorization,
+                    apiClient.Get<ItemsResponse<EventTypesResponse>>("event-types?version=1.0", _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(() => eventTypesResponse);
 
@@ -44,10 +43,10 @@ namespace Checkout.Events
         [Fact]
         private async Task ShouldRetrieveAllEventTypesWithoutVersion()
         {
-            var eventTypesResponse = new List<EventTypesResponse> {new EventTypesResponse()};
+            var eventTypesResponse = new ItemsResponse<EventTypesResponse>();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<IList<EventTypesResponse>>("event-types", _authorization,
+                    apiClient.Get<ItemsResponse<EventTypesResponse>>("event-types", _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(() => eventTypesResponse);
 
@@ -116,9 +115,9 @@ namespace Checkout.Events
         private async Task ShouldRetryWebhook()
         {
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<object>("events/event_id/webhooks/webhook_id/retry", _authorization, null,
+                    apiClient.Post<EmptyResponse>("events/event_id/webhooks/webhook_id/retry", _authorization, null,
                         CancellationToken.None, null))
-                .ReturnsAsync(() => new object());
+                .ReturnsAsync(() => new EmptyResponse());
 
             IEventsClient client = new EventsClient(_apiClient.Object, _configuration.Object);
 
@@ -131,9 +130,9 @@ namespace Checkout.Events
         private async Task ShouldRetryAllWebhooks()
         {
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<object>("events/event_id/webhooks/retry", _authorization, null,
+                    apiClient.Post<EmptyResponse>("events/event_id/webhooks/retry", _authorization, null,
                         CancellationToken.None, null))
-                .ReturnsAsync(() => new object());
+                .ReturnsAsync(() => new EmptyResponse());
 
             IEventsClient client = new EventsClient(_apiClient.Object, _configuration.Object);
 

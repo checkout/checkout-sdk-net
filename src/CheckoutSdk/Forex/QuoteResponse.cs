@@ -3,7 +3,7 @@ using System;
 
 namespace Checkout.Forex
 {
-    public class QuoteResponse
+    public class QuoteResponse : HttpMetadata
     {
         public string Id { get; set; }
 

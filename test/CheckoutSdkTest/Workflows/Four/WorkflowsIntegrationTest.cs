@@ -87,6 +87,9 @@ namespace Checkout.Workflows.Four
                 await FourApi.WorkflowsClient().UpdateWorkflow(workflow.Id, request);
 
             updateWorkflowResponse.ShouldNotBeNull();
+            updateWorkflowResponse.HttpStatusCode.ShouldNotBeNull();
+            updateWorkflowResponse.ResponseHeaders.ShouldNotBeNull();
+            updateWorkflowResponse.Body.ShouldNotBeNull();
             updateWorkflowResponse.Name.ShouldBe("testing_2");
             updateWorkflowResponse.Active.ShouldBe(false);
         }
@@ -116,7 +119,10 @@ namespace Checkout.Workflows.Four
                     Signature = new WebhookSignature {Key = "8V8x0dLK%AyD*DNS8JJr", Method = "HMACSHA256"}
                 };
 
-            await FourApi.WorkflowsClient().UpdateWorkflowAction(getWorkflowResponse.Id, actionId, updateAction);
+            var emptyResponse = await FourApi.WorkflowsClient().UpdateWorkflowAction(getWorkflowResponse.Id, actionId, updateAction);
+            emptyResponse.ShouldNotBeNull();
+            emptyResponse.HttpStatusCode.ShouldNotBeNull();
+            emptyResponse.ResponseHeaders.ShouldNotBeNull();
 
             GetWorkflowResponse getWorkflowResponseUpdated =
                 await FourApi.WorkflowsClient().GetWorkflow(createdWorkflow.Id);

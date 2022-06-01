@@ -2,7 +2,7 @@
 
 namespace Checkout.Instruments.Four.Get
 {
-    public class GetInstrumentResponse
+    public class GetInstrumentResponse : HttpMetadata
     {
         public GetInstrumentResponse()
         {

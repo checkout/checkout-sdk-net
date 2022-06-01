@@ -97,13 +97,13 @@ namespace Checkout.Marketplace
         {
             _apiClient
                 .Setup(x =>
-                    x.Post<object>(
+                    x.Post<EmptyResponse>(
                         "marketplace/entities/entity_id/instruments",
                         It.IsAny<SdkAuthorization>(),
                         It.IsAny<object>(),
                         It.IsAny<CancellationToken>(),
                         It.IsAny<string>()))
-                .ReturnsAsync(() => new object());
+                .ReturnsAsync(() => new EmptyResponse());
 
             var response = await _marketplaceClient.CreatePaymentInstrument(
                 "entity_id",
@@ -177,11 +177,11 @@ namespace Checkout.Marketplace
         [Fact]
         private async Task ShouldUpdatePayoutSchedule()
         {
-            var responseAsync = new VoidResponse();
+            var responseAsync = new EmptyResponse();
 
             _apiClient
                 .Setup(x =>
-                    x.Put<VoidResponse>(
+                    x.Put<EmptyResponse>(
                         "marketplace/entities/entity_id/payout-schedules",
                         It.IsAny<SdkAuthorization>(),
                         It.IsAny<object>(),

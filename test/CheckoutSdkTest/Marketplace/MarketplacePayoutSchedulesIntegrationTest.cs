@@ -20,8 +20,11 @@ namespace Checkout.Marketplace
                 Recurrence = new ScheduleFrequencyWeeklyRequest {ByDay = DaySchedule.Sunday}
             };
 
-            await GetPayoutSchedulesCheckoutApi().MarketplaceClient()
+            var emptyResponse = await GetPayoutSchedulesCheckoutApi().MarketplaceClient()
                 .UpdatePayoutSchedule("ent_sdioy6bajpzxyl3utftdp7legq", Currency.USD, scheduleRequest);
+            emptyResponse.ShouldNotBeNull();
+            emptyResponse.HttpStatusCode.ShouldNotBeNull();
+            emptyResponse.ResponseHeaders.ShouldNotBeNull();
 
             var response = await GetPayoutSchedulesCheckoutApi().MarketplaceClient()
                 .RetrievePayoutSchedule("ent_sdioy6bajpzxyl3utftdp7legq");
@@ -43,8 +46,11 @@ namespace Checkout.Marketplace
                 Enabled = true, Threshold = 1000, Recurrence = new ScheduleFrequencyDailyRequest()
             };
 
-            await GetPayoutSchedulesCheckoutApi().MarketplaceClient()
+            var emptyResponse = await GetPayoutSchedulesCheckoutApi().MarketplaceClient()
                 .UpdatePayoutSchedule("ent_sdioy6bajpzxyl3utftdp7legq", Currency.USD, scheduleRequest);
+            emptyResponse.ShouldNotBeNull();
+            emptyResponse.HttpStatusCode.ShouldNotBeNull();
+            emptyResponse.ResponseHeaders.ShouldNotBeNull();
 
             var response = await GetPayoutSchedulesCheckoutApi().MarketplaceClient()
                 .RetrievePayoutSchedule("ent_sdioy6bajpzxyl3utftdp7legq");
@@ -68,8 +74,11 @@ namespace Checkout.Marketplace
                 Recurrence = new ScheduleFrequencyMonthlyRequest {ByMonthDay = 3}
             };
 
-            await GetPayoutSchedulesCheckoutApi().MarketplaceClient()
+            var emptyResponse = await GetPayoutSchedulesCheckoutApi().MarketplaceClient()
                 .UpdatePayoutSchedule("ent_sdioy6bajpzxyl3utftdp7legq", Currency.USD, scheduleRequest);
+            emptyResponse.ShouldNotBeNull();
+            emptyResponse.HttpStatusCode.ShouldNotBeNull();
+            emptyResponse.ResponseHeaders.ShouldNotBeNull();
 
             var response = await GetPayoutSchedulesCheckoutApi().MarketplaceClient()
                 .RetrievePayoutSchedule("ent_sdioy6bajpzxyl3utftdp7legq");

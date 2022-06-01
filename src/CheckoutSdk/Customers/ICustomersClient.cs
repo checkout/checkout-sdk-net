@@ -10,9 +10,9 @@ namespace Checkout.Customers
 
         Task<IdResponse> Create(CustomerRequest customerRequest, CancellationToken cancellationToken = default);
 
-        Task<object> Update(string customerId, CustomerRequest customerRequest,
+        Task<EmptyResponse> Update(string customerId, CustomerRequest customerRequest,
             CancellationToken cancellationToken = default);
 
-        Task<object> Delete(string customerId, CancellationToken cancellationToken = default);
+        Task<EmptyResponse> Delete(string customerId, CancellationToken cancellationToken = default);
     }
 }

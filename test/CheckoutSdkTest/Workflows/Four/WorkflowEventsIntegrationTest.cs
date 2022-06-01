@@ -1,7 +1,6 @@
 ﻿using Checkout.Payments.Four.Response;
 using Checkout.Workflows.Four.Events;
 using Shouldly;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -13,8 +12,9 @@ namespace Checkout.Workflows.Four
         [Fact]
         public async Task ShouldGetEventTypes()
         {
-            IList<EventTypesResponse> eventTypesResponses = await FourApi.WorkflowsClient().GetEventTypes();
+            ItemsResponse<EventTypesResponse> eventTypesResponsesWrapper = await FourApi.WorkflowsClient().GetEventTypes();
 
+            var eventTypesResponses = eventTypesResponsesWrapper.Items;
             eventTypesResponses.ShouldNotBeNull();
             eventTypesResponses.Count.ShouldBe(9);
 

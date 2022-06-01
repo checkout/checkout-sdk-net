@@ -18,7 +18,7 @@ namespace Checkout.Marketplace
         Task<OnboardEntityResponse> UpdateEntity(string entityId, OnboardEntityRequest entityRequest,
             CancellationToken cancellationToken = default);
 
-        Task<object> CreatePaymentInstrument(string entityId, MarketplacePaymentInstrument marketplacePaymentInstrument,
+        Task<EmptyResponse> CreatePaymentInstrument(string entityId, MarketplacePaymentInstrument marketplacePaymentInstrument,
             CancellationToken cancellationToken = default);
 
         Task<IdResponse> SubmitFile(MarketplaceFileRequest marketplaceFileRequest,
@@ -31,7 +31,7 @@ namespace Checkout.Marketplace
         Task<BalancesResponse> RetrieveEntityBalances(string entityId, BalancesQuery balancesQuery,
             CancellationToken cancellationToken = default);
 
-        Task<VoidResponse> UpdatePayoutSchedule(string entityId, Currency currency,
+        Task<EmptyResponse> UpdatePayoutSchedule(string entityId, Currency currency,
             UpdateScheduleRequest updateScheduleRequest, CancellationToken cancellationToken = default);
 
         Task<GetScheduleResponse>

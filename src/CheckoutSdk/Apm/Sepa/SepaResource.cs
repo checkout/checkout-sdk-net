@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Apm.Sepa
 {
-    public class SepaResource
+    public class SepaResource : HttpMetadata
     {
         public SepaResource()
         {
