@@ -20,9 +20,9 @@ namespace Checkout.Sessions
         Task<GetSessionResponse> UpdateSession(string sessionSecret, string sessionId, ChannelData channelData,
             CancellationToken cancellationToken = default);
 
-        Task CompleteSession(string sessionId, CancellationToken cancellationToken = default);
+        Task<EmptyResponse> CompleteSession(string sessionId, CancellationToken cancellationToken = default);
 
-        Task CompleteSession(string sessionSecret, string sessionId, CancellationToken cancellationToken = default);
+        Task<EmptyResponse> CompleteSession(string sessionSecret, string sessionId, CancellationToken cancellationToken = default);
 
         Task<GetSessionResponseAfterChannelDataSupplied> Update3dsMethodCompletionIndicator(string sessionId,
             ThreeDsMethodCompletionRequest threeDsMethodCompletionRequest,

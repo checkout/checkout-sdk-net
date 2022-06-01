@@ -1,7 +1,7 @@
-using System;
-using System.Net.Http;
 using Moq;
 using Shouldly;
+using System;
+using System.Net.Http;
 using Xunit;
 using Xunit.Sdk;
 

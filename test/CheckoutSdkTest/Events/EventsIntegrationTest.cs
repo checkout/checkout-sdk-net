@@ -32,18 +32,21 @@ namespace Checkout.Events
         [Fact]
         private async Task ShouldRetrieveDefaultEventTypes()
         {
-            var allEventTypes = await DefaultApi.EventsClient().RetrieveAllEventTypes();
+            var allEventTypesWrapper = await DefaultApi.EventsClient().RetrieveAllEventTypes();
+            var allEventTypes = allEventTypesWrapper.Items;
             allEventTypes.ShouldNotBeNull();
             allEventTypes.Count.ShouldBe(2);
             allEventTypes[0].EventTypes.ShouldNotBeNull();
 
-            var versionOneEventTypes = await DefaultApi.EventsClient().RetrieveAllEventTypes(allEventTypes[0].Version);
+            var versionOneEventTypesWrap = await DefaultApi.EventsClient().RetrieveAllEventTypes(allEventTypes[0].Version);
+            var versionOneEventTypes = versionOneEventTypesWrap.Items;
             versionOneEventTypes.ShouldNotBeNull();
             versionOneEventTypes.Count.ShouldBe(1);
             versionOneEventTypes[0].Version.ShouldBe(allEventTypes[0].Version);
             versionOneEventTypes[0].EventTypes.Count.ShouldBe(allEventTypes[0].EventTypes.Count);
 
-            var versionTwoEventTypes = await DefaultApi.EventsClient().RetrieveAllEventTypes(allEventTypes[1].Version);
+            var versionTwoEventTypesWrap = await DefaultApi.EventsClient().RetrieveAllEventTypes(allEventTypes[1].Version);
+            var versionTwoEventTypes = versionTwoEventTypesWrap.Items;
             versionTwoEventTypes.ShouldNotBeNull();
             versionTwoEventTypes.Count.ShouldBe(1);
             versionTwoEventTypes[0].Version.ShouldBe(allEventTypes[1].Version);

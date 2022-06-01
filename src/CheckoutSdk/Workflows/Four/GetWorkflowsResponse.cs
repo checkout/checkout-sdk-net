@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Workflows.Four
 {
-    public class GetWorkflowsResponse
+    public class GetWorkflowsResponse : HttpMetadata
     {
         [JsonProperty(PropertyName = "data")] public IList<Workflow> Workflows { get; set; }
     }

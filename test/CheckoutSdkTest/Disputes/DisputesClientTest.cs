@@ -65,9 +65,9 @@ namespace Checkout.Disputes
             const string disputeId = "dsp_s5151531";
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<object>($"disputes/{disputeId}/accept", _authorization, null, CancellationToken.None,
+                    apiClient.Post<EmptyResponse>($"disputes/{disputeId}/accept", _authorization, null, CancellationToken.None,
                         null))
-                .ReturnsAsync(() => new object());
+                .ReturnsAsync(() => new EmptyResponse());
 
             IDisputesClient client = new DisputesClient(_apiClient.Object, _configuration.Object);
 
@@ -83,10 +83,10 @@ namespace Checkout.Disputes
             var request = new DisputeEvidenceRequest();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Put<object>($"disputes/{disputeId}/evidence", _authorization, request,
+                    apiClient.Put<EmptyResponse>($"disputes/{disputeId}/evidence", _authorization, request,
                         CancellationToken.None,
                         null))
-                .ReturnsAsync(() => new object());
+                .ReturnsAsync(() => new EmptyResponse());
 
             IDisputesClient client = new DisputesClient(_apiClient.Object, _configuration.Object);
 
@@ -119,10 +119,10 @@ namespace Checkout.Disputes
             const string disputeId = "dsp_s5151531";
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<object>($"disputes/{disputeId}/evidence", _authorization, null,
+                    apiClient.Post<EmptyResponse>($"disputes/{disputeId}/evidence", _authorization, null,
                         CancellationToken.None,
                         null))
-                .ReturnsAsync(() => new object());
+                .ReturnsAsync(() => new EmptyResponse());
 
             IDisputesClient client = new DisputesClient(_apiClient.Object, _configuration.Object);
 

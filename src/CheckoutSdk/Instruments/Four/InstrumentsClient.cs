@@ -45,10 +45,10 @@ namespace Checkout.Instruments.Four
                 cancellationToken);
         }
 
-        public Task<object> Delete(string instrumentId, CancellationToken cancellationToken = default)
+        public Task<EmptyResponse> Delete(string instrumentId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("instrumentId", instrumentId);
-            return ApiClient.Delete<object>(
+            return ApiClient.Delete<EmptyResponse>(
                 BuildPath(InstrumentsPath, instrumentId),
                 SdkAuthorization(),
                 cancellationToken);

@@ -15,13 +15,13 @@ namespace Checkout.Reconciliation
         Task<StatementReportResponse> QueryStatementsReport(QueryFilterDateRange filter,
             CancellationToken cancellationToken = default);
 
-        Task<string> RetrieveCsvPaymentReport(QueryFilterDateRange filter,
+        Task<ContentsResponse> RetrieveCsvPaymentReport(QueryFilterDateRange filter,
             CancellationToken cancellationToken = default);
 
-        Task<string> RetrieveCsvSingleStatementReport(string statementId,
+        Task<ContentsResponse> RetrieveCsvSingleStatementReport(string statementId,
             CancellationToken cancellationToken = default);
 
-        Task<string> RetrieveCsvStatementsReport(QueryFilterDateRange filter,
+        Task<ContentsResponse> RetrieveCsvStatementsReport(QueryFilterDateRange filter,
             CancellationToken cancellationToken = default);
     }
 }

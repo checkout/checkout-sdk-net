@@ -1,6 +1,5 @@
 using Checkout.Payments.Request;
 using Checkout.Payments.Response;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -52,12 +51,12 @@ namespace Checkout.Payments
                 cancellationToken);
         }
 
-        public Task<IList<PaymentAction>> GetPaymentActions(
+        public Task<ItemsResponse<PaymentAction>> GetPaymentActions(
             string paymentId,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("paymentId", paymentId);
-            return ApiClient.Get<IList<PaymentAction>>(BuildPath(PaymentsPath, paymentId, "actions"),
+            return ApiClient.Get<ItemsResponse<PaymentAction>>(BuildPath(PaymentsPath, paymentId, "actions"),
                 SdkAuthorization(),
                 cancellationToken);
         }

@@ -31,18 +31,18 @@ namespace Checkout.Disputes
                 cancellationToken);
         }
 
-        public Task<object> Accept(string disputeId, CancellationToken cancellationToken = default)
+        public Task<EmptyResponse> Accept(string disputeId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("disputeId", disputeId);
-            return ApiClient.Post<object>(BuildPath(DisputesPath, disputeId, AcceptPath), SdkAuthorization(), null,
-                cancellationToken);
+            return ApiClient.Post<EmptyResponse>(BuildPath(DisputesPath, disputeId, AcceptPath), SdkAuthorization(), null,
+                cancellationToken, null);
         }
 
-        public Task<object> PutEvidence(string disputeId, DisputeEvidenceRequest disputeEvidenceRequest,
+        public Task<EmptyResponse> PutEvidence(string disputeId, DisputeEvidenceRequest disputeEvidenceRequest,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("disputeId", disputeId, "disputeEvidenceRequest", disputeEvidenceRequest);
-            return ApiClient.Put<object>(BuildPath(DisputesPath, disputeId, EvidencePath), SdkAuthorization(),
+            return ApiClient.Put<EmptyResponse>(BuildPath(DisputesPath, disputeId, EvidencePath), SdkAuthorization(),
                 disputeEvidenceRequest,
                 cancellationToken);
         }
@@ -56,11 +56,11 @@ namespace Checkout.Disputes
                 cancellationToken);
         }
 
-        public Task<object> SubmitEvidence(string disputeId, CancellationToken cancellationToken = default)
+        public Task<EmptyResponse> SubmitEvidence(string disputeId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("disputeId", disputeId);
-            return ApiClient.Post<object>(BuildPath(DisputesPath, disputeId, EvidencePath), SdkAuthorization(), null,
-                cancellationToken);
+            return ApiClient.Post<EmptyResponse>(BuildPath(DisputesPath, disputeId, EvidencePath), SdkAuthorization(), null,
+                cancellationToken, null);
         }
     }
 }

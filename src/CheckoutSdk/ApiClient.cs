@@ -1,4 +1,3 @@
-using Checkout.Common;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using System;
@@ -31,6 +30,7 @@ namespace Checkout
             string path,
             SdkAuthorization authorization,
             CancellationToken cancellationToken = default)
+            where TResult : HttpMetadata
         {
             var httpResponse = await SendRequestAsync(
                 HttpMethod.Get,
@@ -40,7 +40,7 @@ namespace Checkout
                 cancellationToken,
                 null
             );
-            return await DeserializeJsonAsync<TResult>(httpResponse);
+            return await DeserializeResponseAsync<TResult>(httpResponse);
         }
 
         public async Task<TResult> Post<TResult>(
@@ -49,6 +49,7 @@ namespace Checkout
             object request = null,
             CancellationToken cancellationToken = default,
             string idempotencyKey = null)
+            where TResult : HttpMetadata
         {
             var httpResponse = await SendRequestAsync(
                 HttpMethod.Post,
@@ -59,13 +60,15 @@ namespace Checkout
                 idempotencyKey
             );
 
-            return await DeserializeJsonAsync<TResult>(httpResponse);
+            return await DeserializeResponseAsync<TResult>(httpResponse);
         }
 
-        public async Task<TResult> Post<TResult>(string path, SdkAuthorization authorization,
+        public async Task<TResult> Post<TResult>(
+            string path, 
+            SdkAuthorization authorization,
             IDictionary<int, Type> resultTypeMappings,
             object request = null, CancellationToken cancellationToken = default, string idempotencyKey = null)
-            where TResult : Resource
+            where TResult : HttpMetadata
         {
             var httpResponse = await SendRequestAsync(
                 HttpMethod.Post,
@@ -82,14 +85,16 @@ namespace Checkout
                 throw new InvalidOperationException(
                     $"The status code {(int)httpResponse.StatusCode} is not mapped to a result type");
 
-            return await DeserializeJsonAsync(httpResponse, responseType);
+            return await DeserializeResponseAsync(httpResponse, responseType);
         }
 
-        public async Task<TResult> Patch<TResult>(string path,
+        public async Task<TResult> Patch<TResult>(
+            string path,
             SdkAuthorization authorization,
             object request = null,
             CancellationToken cancellationToken = default,
             string idempotencyKey = null)
+            where TResult : HttpMetadata
         {
             var httpResponse = await SendRequestAsync(
                 new HttpMethod("PATCH"),
@@ -99,11 +104,16 @@ namespace Checkout
                 cancellationToken,
                 null
             );
-            return await DeserializeJsonAsync<TResult>(httpResponse);
+            return await DeserializeResponseAsync<TResult>(httpResponse);
         }
 
-        public async Task<TResult> Put<TResult>(string path, SdkAuthorization authorization, object request = null,
-            CancellationToken cancellationToken = default, string idempotencyKey = null)
+        public async Task<TResult> Put<TResult>(
+            string path,
+            SdkAuthorization authorization,
+            object request = null,
+            CancellationToken cancellationToken = default,
+            string idempotencyKey = null)
+            where TResult : HttpMetadata
         {
             var httpResponse = await SendRequestAsync(
                 HttpMethod.Put,
@@ -113,12 +123,14 @@ namespace Checkout
                 cancellationToken,
                 null
             );
-            return await DeserializeJsonAsync<TResult>(httpResponse);
+            return await DeserializeResponseAsync<TResult>(httpResponse);
         }
 
-        public async Task<TResult> Delete<TResult>(string path,
+        public async Task<TResult> Delete<TResult>(
+            string path,
             SdkAuthorization authorization,
             CancellationToken cancellationToken = default)
+            where TResult : HttpMetadata
         {
             var httpResponse = await SendRequestAsync(
                 HttpMethod.Delete,
@@ -128,7 +140,7 @@ namespace Checkout
                 cancellationToken,
                 null
             );
-            return await DeserializeJsonAsync<TResult>(httpResponse);
+            return await DeserializeResponseAsync<TResult>(httpResponse);
         }
 
         public async Task<TResult> Query<TResult>(
@@ -136,6 +148,7 @@ namespace Checkout
             SdkAuthorization authorization,
             object request = null,
             CancellationToken cancellationToken = default)
+            where TResult : HttpMetadata
         {
             var dictionary = new Dictionary<string, string>();
             if (request != null)
@@ -153,13 +166,7 @@ namespace Checkout
                 cancellationToken,
                 null
             );
-            // If TResult is a string, we assume it's non Json content (CSV, raw...)
-            if (typeof(TResult) == typeof(string))
-            {
-                return await GetContent<TResult>(httpResponse);
-            }
-
-            return await DeserializeJsonAsync<TResult>(httpResponse);
+            return await DeserializeResponseAsync<TResult>(httpResponse);
         }
 
         private async Task<HttpResponseMessage> SendRequestAsync(
@@ -243,22 +250,44 @@ namespace Checkout
             return (TResult)result;
         }
 
-        private async Task<TResult> DeserializeJsonAsync<TResult>(HttpResponseMessage httpResponse)
+        private async Task<TResult> DeserializeResponseAsync<TResult>(HttpResponseMessage httpResponse)
         {
-            var result = await DeserializeJsonAsync(httpResponse, typeof(TResult));
-            return (TResult)result;
+            return await DeserializeResponseAsync(httpResponse, typeof(TResult));
         }
 
-        private async Task<dynamic> DeserializeJsonAsync(HttpResponseMessage httpResponse, Type resultType)
+        private async Task<dynamic> DeserializeResponseAsync(HttpResponseMessage httpResponse, Type resultType)
         {
-            if (httpResponse.StatusCode == HttpStatusCode.NoContent ||
-                httpResponse.Content.Headers.ContentLength == 0)
+            dynamic deserializedObject;
+            if (httpResponse.StatusCode == HttpStatusCode.NoContent || httpResponse.Content.Headers.ContentLength == 0)
             {
-                return null;
+                deserializedObject = Activator.CreateInstance(resultType);
+            }
+            else if (resultType == typeof(ContentsResponse))
+            {
+                deserializedObject = new ContentsResponse {Content = await GetContent<string>(httpResponse)};
+            }
+            else
+            {
+                var json = await httpResponse.Content.ReadAsStringAsync();
+                deserializedObject = _serializer.Deserialize(json, resultType);
             }
 
-            var json = await httpResponse.Content.ReadAsStringAsync();
-            return _serializer.Deserialize(json, resultType);
+            await SetHttpMetadata(httpResponse, deserializedObject);
+
+            return deserializedObject;
+        }
+
+        private static async Task SetHttpMetadata(HttpResponseMessage httpResponse, dynamic deserializedObject)
+        {
+                ((HttpMetadata)deserializedObject).Body = await httpResponse.Content.ReadAsStringAsync();
+                ((HttpMetadata)deserializedObject).HttpStatusCode = (int)httpResponse.StatusCode;
+                IDictionary<string, string> headers = new Dictionary<string, string>();
+                foreach (var header in httpResponse.Headers)
+                {
+                    headers.Add(header.Key, header.Value.First());
+                }
+
+                ((HttpMetadata)deserializedObject).ResponseHeaders = headers;
         }
     }
 }

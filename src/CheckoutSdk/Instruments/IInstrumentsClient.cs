@@ -13,6 +13,6 @@ namespace Checkout.Instruments
         Task<UpdateInstrumentResponse> Update(string instrumentId, UpdateInstrumentRequest updateInstrumentRequest,
             CancellationToken cancellationToken = default);
 
-        Task<object> Delete(string instrumentId, CancellationToken cancellationToken = default);
+        Task<EmptyResponse> Delete(string instrumentId, CancellationToken cancellationToken = default);
     }
 }

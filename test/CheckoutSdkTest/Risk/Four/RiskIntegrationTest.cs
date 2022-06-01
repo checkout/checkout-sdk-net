@@ -1,13 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Checkout.Common;
 using Checkout.Risk.PreAuthentication;
 using Checkout.Risk.PreCapture;
 using Checkout.Risk.source;
 using Shouldly;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
-using CustomerRequest = Checkout.Customers.CustomerRequest;
+using CustomerRequest = Checkout.Customers.Four.CustomerRequest;
 
 namespace Checkout.Risk.Four
 {
@@ -48,7 +48,7 @@ namespace Checkout.Risk.Four
         [Fact]
         private async Task ShouldRiskCustomerSource()
         {
-            var customerRequest = new Customers.Four.CustomerRequest()
+            var customerRequest = new CustomerRequest()
             {
                 Email = GenerateRandomEmail(),
                 Name = "Customer"

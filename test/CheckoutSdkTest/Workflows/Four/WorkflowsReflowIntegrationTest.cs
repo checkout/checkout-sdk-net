@@ -24,7 +24,10 @@ namespace Checkout.Workflows.Four
 
             ReflowResponse reflowResponse = await FourApi.WorkflowsClient().ReflowByEvent(paymentApprovedEvent.Id);
 
-            reflowResponse.ShouldBeNull();
+            reflowResponse.ShouldNotBeNull();
+            reflowResponse.HttpStatusCode.ShouldNotBeNull();
+            reflowResponse.ResponseHeaders.ShouldNotBeNull();
+            
         }
 
         [Fact(Skip = "unstable")]
@@ -37,7 +40,7 @@ namespace Checkout.Workflows.Four
             ReflowResponse reflowResponse =
                 await Retriable(async () => await FourApi.WorkflowsClient().ReflowBySubject(payment.Id));
 
-            reflowResponse.ShouldBeNull();
+            reflowResponse.ShouldNotBeNull();
         }
 
         [Fact(Skip = "unstable")]
@@ -52,7 +55,9 @@ namespace Checkout.Workflows.Four
             ReflowResponse reflowResponse = await Retriable(async () => await FourApi.WorkflowsClient()
                 .ReflowByEventAndWorkflow(paymentApprovedEvent.Id, createWorkflowResponse.Id));
 
-            reflowResponse.ShouldBeNull();
+            reflowResponse.ShouldNotBeNull();
+            reflowResponse.HttpStatusCode.ShouldNotBeNull();
+            reflowResponse.ResponseHeaders.ShouldNotBeNull();
         }
 
         [Fact(Skip = "unstable")]
@@ -65,7 +70,7 @@ namespace Checkout.Workflows.Four
             ReflowResponse reflowResponse = await Retriable(async () => await FourApi.WorkflowsClient()
                 .ReflowBySubjectAndWorkflow(payment.Id, createWorkflowResponse.Id));
 
-            reflowResponse.ShouldBeNull();
+            reflowResponse.ShouldNotBeNull();
         }
 
         [Fact(Skip = "unstable")]
@@ -85,7 +90,9 @@ namespace Checkout.Workflows.Four
 
             ReflowResponse reflowResponse = await FourApi.WorkflowsClient().Reflow(request);
 
-            reflowResponse.ShouldBeNull();
+            reflowResponse.ShouldNotBeNull();
+            reflowResponse.HttpStatusCode.ShouldNotBeNull();
+            reflowResponse.ResponseHeaders.ShouldNotBeNull();
         }
 
         [Fact(Skip = "unstable")]
@@ -103,7 +110,9 @@ namespace Checkout.Workflows.Four
             ReflowResponse reflowResponse =
                 await Retriable(async () => await FourApi.WorkflowsClient().Reflow(request));
 
-            reflowResponse.ShouldBeNull();
+            reflowResponse.ShouldNotBeNull();
+            reflowResponse.HttpStatusCode.ShouldNotBeNull();
+            reflowResponse.ResponseHeaders.ShouldNotBeNull();
         }
     }
 }

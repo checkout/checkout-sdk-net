@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Disputes
 {
-    public class DisputeDetailsResponse
+    public class DisputeDetailsResponse : HttpMetadata
     {
         public string Id { get; set; }
 

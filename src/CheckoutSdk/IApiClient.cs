@@ -1,4 +1,3 @@
-using Checkout.Common;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -11,14 +10,16 @@ namespace Checkout
         Task<TResult> Get<TResult>(
             string path,
             SdkAuthorization authorization,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default)
+            where TResult : HttpMetadata;
 
         Task<TResult> Post<TResult>(
             string path,
             SdkAuthorization authorization,
             object request = null,
             CancellationToken cancellationToken = default,
-            string idempotencyKey = null);
+            string idempotencyKey = null)
+            where TResult : HttpMetadata;
 
         Task<TResult> Post<TResult>(
             string path,
@@ -26,31 +27,36 @@ namespace Checkout
             IDictionary<int, Type> resultTypeMappings,
             object request = null,
             CancellationToken cancellationToken = default,
-            string idempotencyKey = null) where TResult : Resource;
+            string idempotencyKey = null) 
+            where TResult : HttpMetadata;
 
         Task<TResult> Patch<TResult>(
             string path,
             SdkAuthorization authorization,
             object request = null,
             CancellationToken cancellationToken = default,
-            string idempotencyKey = null);
+            string idempotencyKey = null)
+            where TResult : HttpMetadata;
 
         Task<TResult> Put<TResult>(
             string path,
             SdkAuthorization authorization,
             object request = null,
             CancellationToken cancellationToken = default,
-            string idempotencyKey = null);
+            string idempotencyKey = null)
+            where TResult : HttpMetadata;
 
         Task<TResult> Delete<TResult>(
             string path,
             SdkAuthorization authorization,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default)
+            where TResult : HttpMetadata;
 
         Task<TResult> Query<TResult>(
             string path,
             SdkAuthorization authorization,
             object request = null,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default)
+            where TResult : HttpMetadata;
     }
 }

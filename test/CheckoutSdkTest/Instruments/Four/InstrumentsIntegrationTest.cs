@@ -57,6 +57,9 @@ namespace Checkout.Instruments.Four
                 await FourApi.InstrumentsClient().Update(tokenInstrument.Id, updateInstrumentTokenRequest);
 
             updateResponse.ShouldNotBeNull();
+            updateResponse.HttpStatusCode.ShouldNotBeNull();
+            updateResponse.ResponseHeaders.ShouldNotBeNull();
+            updateResponse.Body.ShouldNotBeNull();
 
             var updateCardInstrumentResponse = (UpdateCardInstrumentResponse)updateResponse;
             updateCardInstrumentResponse.Fingerprint.ShouldNotBeNull();
@@ -119,7 +122,10 @@ namespace Checkout.Instruments.Four
             var tokenInstrument = await CreateTokenInstrument();
             tokenInstrument.ShouldNotBeNull();
 
-            await FourApi.InstrumentsClient().Delete(tokenInstrument.Id);
+            var emptyResponse = await FourApi.InstrumentsClient().Delete(tokenInstrument.Id);
+            emptyResponse.ShouldNotBeNull();
+            emptyResponse.HttpStatusCode.ShouldNotBeNull();
+            emptyResponse.ResponseHeaders.ShouldNotBeNull();
 
             await AssertNotFound(FourApi.InstrumentsClient().Get(tokenInstrument.Id));
         }

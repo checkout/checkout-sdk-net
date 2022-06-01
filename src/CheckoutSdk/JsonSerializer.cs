@@ -54,8 +54,10 @@ namespace Checkout
                     new WorkflowActionTypeResponseConverter(), new WorkflowConditionTypeResponseConverter(),
                     GetConverterDateTimeToIso(),
                     // Marketplace Payout Schedules
-                    new GetScheduleResponseTypeConverter(), new ScheduleResponseTypeConverter()
-                },
+                    new GetScheduleResponseTypeConverter(), new ScheduleResponseTypeConverter(),
+                    // Items Response
+                    new ItemsResponseConverter(),
+                }
             };
 
             configureSettings?.Invoke(settings);

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,9 +12,9 @@ namespace Checkout.Webhooks
         {
         }
 
-        public Task<IList<WebhookResponse>> RetrieveWebhooks(CancellationToken cancellationToken = default)
+        public Task<ItemsResponse<WebhookResponse>> RetrieveWebhooks(CancellationToken cancellationToken = default)
         {
-            return ApiClient.Get<IList<WebhookResponse>>(WebhooksPath, SdkAuthorization(), cancellationToken);
+            return ApiClient.Get<ItemsResponse<WebhookResponse>>(WebhooksPath, SdkAuthorization(), cancellationToken);
         }
 
         public Task<WebhookResponse> RegisterWebhook(WebhookRequest webhookRequest, string idempotencyKey = null,
@@ -51,10 +50,10 @@ namespace Checkout.Webhooks
                 cancellationToken);
         }
 
-        public Task<object> RemoveWebhook(string webhookId, CancellationToken cancellationToken = default)
+        public Task<EmptyResponse> RemoveWebhook(string webhookId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("webhookId", webhookId);
-            return ApiClient.Delete<object>(BuildPath(WebhooksPath, webhookId), SdkAuthorization(), cancellationToken);
+            return ApiClient.Delete<EmptyResponse>(BuildPath(WebhooksPath, webhookId), SdkAuthorization(), cancellationToken);
         }
     }
 }

@@ -24,9 +24,9 @@ namespace Checkout.Reconciliation
 
         public CardCategory? CardCategory { get; set; }
 
-        public CountryCode? IssuerCountry { get; set; }
+        public string IssuerCountry { get; set; }
 
-        public CountryCode? MerchantCountry { get; set; }
+        public string MerchantCountry { get; set; }
 
         public string Mid { get; set; }
 
