@@ -1,6 +1,5 @@
 ﻿using Checkout.Payments.Four.Request;
 using Checkout.Payments.Four.Response;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,7 +21,7 @@ namespace Checkout.Payments.Four
             string paymentId,
             CancellationToken cancellationToken = default);
 
-        Task<IList<PaymentAction>> GetPaymentActions(
+        Task<ItemsResponse<PaymentAction>> GetPaymentActions(
             string paymentId,
             CancellationToken cancellationToken = default);
 

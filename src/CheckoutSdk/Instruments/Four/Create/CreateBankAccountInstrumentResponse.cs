@@ -1,5 +1,4 @@
-﻿using Checkout.Common;
-using Checkout.Common.Four;
+﻿using Checkout.Common.Four;
 
 namespace Checkout.Instruments.Four.Create
 {

@@ -84,7 +84,10 @@ namespace Checkout.Customers
             customerResponse.ShouldNotBeNull();
 
             var customerId = customerResponse.Id;
-            await DefaultApi.CustomersClient().Delete(customerId);
+            var emptyResponse = await DefaultApi.CustomersClient().Delete(customerId);
+            emptyResponse.ShouldNotBeNull();
+            emptyResponse.HttpStatusCode.ShouldNotBeNull();
+            emptyResponse.ResponseHeaders.ShouldNotBeNull();
             await AssertNotFound(DefaultApi.CustomersClient().Get(customerId));
         }
 

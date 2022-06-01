@@ -1,6 +1,6 @@
 namespace Checkout.Disputes
 {
-    public class DisputeEvidenceResponse
+    public class DisputeEvidenceResponse : HttpMetadata
     {
         public string ProofOfDeliveryOrServiceFile { get; set; }
 

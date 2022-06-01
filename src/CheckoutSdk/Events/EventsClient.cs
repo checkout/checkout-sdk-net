@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,7 +14,7 @@ namespace Checkout.Events
         {
         }
 
-        public Task<IList<EventTypesResponse>> RetrieveAllEventTypes(string version = null,
+        public Task<ItemsResponse<EventTypesResponse>> RetrieveAllEventTypes(string version = null,
             CancellationToken cancellationToken = default)
         {
             var eventTypesPath = "event-types";
@@ -24,7 +23,7 @@ namespace Checkout.Events
                 eventTypesPath = $"{eventTypesPath}?version={version}";
             }
 
-            return ApiClient.Get<IList<EventTypesResponse>>(eventTypesPath, SdkAuthorization(), cancellationToken);
+            return ApiClient.Get<ItemsResponse<EventTypesResponse>>(eventTypesPath, SdkAuthorization(), cancellationToken);
         }
 
         public Task<EventsPageResponse> RetrieveEvents(RetrieveEventsRequest eventsRequest,
@@ -50,19 +49,19 @@ namespace Checkout.Events
                 SdkAuthorization(), cancellationToken);
         }
 
-        public Task<object> RetryWebhook(string eventId, string webhookId,
+        public Task<EmptyResponse> RetryWebhook(string eventId, string webhookId,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("eventId", eventId, "webhookId", webhookId);
-            return ApiClient.Post<object>(BuildPath(EventsPath, eventId, WebhooksPath, webhookId, RetryPath),
-                SdkAuthorization(), null, cancellationToken);
+            return ApiClient.Post<EmptyResponse>(BuildPath(EventsPath, eventId, WebhooksPath, webhookId, RetryPath),
+                SdkAuthorization(), null, cancellationToken, null);
         }
 
-        public Task<object> RetryAllWebhooks(string eventId, CancellationToken cancellationToken = default)
+        public Task<EmptyResponse> RetryAllWebhooks(string eventId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("eventId", eventId);
-            return ApiClient.Post<object>(BuildPath(EventsPath, eventId, WebhooksPath, RetryPath),
-                SdkAuthorization(), null, cancellationToken);
+            return ApiClient.Post<EmptyResponse>(BuildPath(EventsPath, eventId, WebhooksPath, RetryPath),
+                SdkAuthorization(), null, cancellationToken, null);
         }
     }
 }

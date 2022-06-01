@@ -1,7 +1,7 @@
-using System.Threading.Tasks;
 using Checkout.Common;
 using Checkout.Tokens;
 using Shouldly;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Instruments
@@ -74,7 +74,11 @@ namespace Checkout.Instruments
                 ExpiryYear = 2026,
             };
 
-            await DefaultApi.InstrumentsClient().Update(createInstrumentResponse.Id, updateInstrumentRequest);
+            var update = await DefaultApi.InstrumentsClient().Update(createInstrumentResponse.Id, updateInstrumentRequest);
+            update.ShouldNotBeNull();
+            update.HttpStatusCode.ShouldNotBeNull();
+            update.ResponseHeaders.ShouldNotBeNull();
+            update.Body.ShouldNotBeNull();
 
             var retrieveInstrumentResponse = await DefaultApi.InstrumentsClient().Get(createInstrumentResponse.Id);
             retrieveInstrumentResponse.ShouldNotBeNull();
@@ -88,7 +92,10 @@ namespace Checkout.Instruments
         {
             var createInstrumentResponse = await CreateTokenInstrument();
 
-            await DefaultApi.InstrumentsClient().Delete(createInstrumentResponse.Id);
+            var emptyResponse = await DefaultApi.InstrumentsClient().Delete(createInstrumentResponse.Id);
+            emptyResponse.ShouldNotBeNull();
+            emptyResponse.HttpStatusCode.ShouldNotBeNull();
+            emptyResponse.ResponseHeaders.ShouldNotBeNull();
 
             await AssertNotFound(DefaultApi.InstrumentsClient().Get(createInstrumentResponse.Id));
         }

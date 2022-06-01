@@ -1,7 +1,6 @@
-using System;
-using System.Net.Http.Headers;
 using Checkout.Four;
 using Shouldly;
+using System;
 using Xunit;
 using Xunit.Sdk;
 

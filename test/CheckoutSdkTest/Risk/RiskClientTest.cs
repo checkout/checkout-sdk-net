@@ -1,9 +1,9 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Checkout.Risk.PreAuthentication;
 using Checkout.Risk.PreCapture;
 using Moq;
 using Shouldly;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Checkout.Risk

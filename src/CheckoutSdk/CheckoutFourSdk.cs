@@ -1,6 +1,6 @@
+using Checkout.Four;
 using System;
 using System.Collections.Generic;
-using Checkout.Four;
 
 namespace Checkout
 {

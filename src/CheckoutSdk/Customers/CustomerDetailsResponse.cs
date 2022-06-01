@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Checkout.Customers
 {
-    public class CustomerDetailsResponse
+    public class CustomerDetailsResponse : HttpMetadata
     {
         public string Id { get; set; }
 

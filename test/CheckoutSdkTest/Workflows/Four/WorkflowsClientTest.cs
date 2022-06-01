@@ -180,10 +180,10 @@ namespace Checkout.Workflows.Four
         [Fact]
         public async Task ShouldRemoveWorkflow()
         {
-            var response = new object();
+            var response = new EmptyResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Delete<object>("workflows" + "/workflow_id", _authorization, CancellationToken.None))
+                    apiClient.Delete<EmptyResponse>("workflows" + "/workflow_id", _authorization, CancellationToken.None))
                 .ReturnsAsync(() => response);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
@@ -213,13 +213,12 @@ namespace Checkout.Workflows.Four
         [Fact]
         public async Task ShouldUpdateWorkflowAction()
         {
-            var response = new object();
             WebhookWorkflowActionRequest workflowActionRequest = new WebhookWorkflowActionRequest();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Put<object>("workflows" + "/workflow_id/actions/action_id", _authorization,
+                    apiClient.Put<EmptyResponse>("workflows" + "/workflow_id/actions/action_id", _authorization,
                         workflowActionRequest, CancellationToken.None, null))
-                .ReturnsAsync(() => response);
+                .ReturnsAsync(() => new EmptyResponse());
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
 
@@ -271,13 +270,12 @@ namespace Checkout.Workflows.Four
         [Fact]
         public async Task ShouldUpdateWorkflowCondition()
         {
-            var response = new object();
             EventWorkflowConditionRequest eventWorkflowConditionRequest = new EventWorkflowConditionRequest();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Put<object>("workflows" + "/workflow_id/conditions/condition_id", _authorization,
+                    apiClient.Put<EmptyResponse>("workflows" + "/workflow_id/conditions/condition_id", _authorization,
                         eventWorkflowConditionRequest, CancellationToken.None, null))
-                .ReturnsAsync(() => response);
+                .ReturnsAsync(() => new EmptyResponse());
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
 
@@ -331,10 +329,10 @@ namespace Checkout.Workflows.Four
         [Fact]
         public async Task ShouldGetEventTypes()
         {
-            List<EventTypesResponse> response = new List<EventTypesResponse>();
+            ItemsResponse<EventTypesResponse> response = new ItemsResponse<EventTypesResponse>();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<IList<EventTypesResponse>>("workflows" + "/event-types", _authorization,
+                    apiClient.Get<ItemsResponse<EventTypesResponse>>("workflows" + "/event-types", _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(() => response);
 

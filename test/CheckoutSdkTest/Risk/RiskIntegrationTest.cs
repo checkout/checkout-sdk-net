@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Checkout.Common;
 using Checkout.Risk.PreAuthentication;
 using Checkout.Risk.PreCapture;
 using Checkout.Risk.source;
 using Shouldly;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 using CustomerRequest = Checkout.Customers.CustomerRequest;
 

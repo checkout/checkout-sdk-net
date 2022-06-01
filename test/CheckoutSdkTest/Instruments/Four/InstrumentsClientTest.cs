@@ -92,9 +92,9 @@ namespace Checkout.Instruments.Four
         private async Task ShouldDeleteInstrument()
         {
             _apiClient.Setup(apiClient =>
-                    apiClient.Delete<object>("instruments/instrument_id", _authorization,
+                    apiClient.Delete<EmptyResponse>("instruments/instrument_id", _authorization,
                         CancellationToken.None))
-                .ReturnsAsync(() => new object());
+                .ReturnsAsync(() => new EmptyResponse());
 
             IInstrumentsClient client =
                 new InstrumentsClient(_apiClient.Object, _configuration.Object);

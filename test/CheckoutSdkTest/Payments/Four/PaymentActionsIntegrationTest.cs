@@ -1,5 +1,4 @@
 using Shouldly;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -15,10 +14,10 @@ namespace Checkout.Payments.Four
             var actions = await Retriable(async () =>
                 await FourApi.PaymentsClient().GetPaymentActions(paymentResponse.Id), ThereAreTwoPaymentActions);
 
-            actions.ShouldNotBeNull();
-            actions.Count.ShouldBe(2);
+            actions.Items.ShouldNotBeNull();
+            actions.Items.Count.ShouldBe(2);
 
-            foreach (var paymentAction in actions)
+            foreach (var paymentAction in actions.Items)
             {
                 paymentAction.Amount.ShouldBe(10);
                 paymentAction.Approved.ShouldBe(true);
@@ -30,9 +29,9 @@ namespace Checkout.Payments.Four
             }
         }
 
-        private static bool ThereAreTwoPaymentActions(IList<PaymentAction> obj)
+        private static bool ThereAreTwoPaymentActions(ItemsResponse<PaymentAction> obj)
         {
-            return obj.Count == 2;
+            return obj.Items.Count == 2;
         }
     }
 }

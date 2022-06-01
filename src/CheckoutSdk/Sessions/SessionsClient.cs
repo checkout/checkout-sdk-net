@@ -1,5 +1,4 @@
-﻿using Checkout.Common;
-using Checkout.Sessions.Channel;
+﻿using Checkout.Sessions.Channel;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -65,17 +64,17 @@ namespace Checkout.Sessions
                 cancellationToken);
         }
 
-        public async Task CompleteSession(string sessionId, CancellationToken cancellationToken = default)
+        public async Task<EmptyResponse> CompleteSession(string sessionId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("sessionId", sessionId);
-            await CompleteSession(sessionId, SdkAuthorization(), cancellationToken);
+            return await CompleteSession(sessionId, SdkAuthorization(), cancellationToken);
         }
 
-        public async Task CompleteSession(string sessionSecret, string sessionId,
+        public async Task<EmptyResponse> CompleteSession(string sessionSecret, string sessionId,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("sessionSecret", sessionSecret, "sessionId", sessionId);
-            await CompleteSession(sessionId, SessionSecretAuthorization(sessionSecret), cancellationToken);
+            return await CompleteSession(sessionId, SessionSecretAuthorization(sessionSecret), cancellationToken);
         }
 
         public Task<GetSessionResponseAfterChannelDataSupplied> Update3dsMethodCompletionIndicator(string sessionId,
@@ -101,7 +100,7 @@ namespace Checkout.Sessions
         private async Task<SessionResponse> CreateSession(SessionRequest sessionRequest,
             CancellationToken cancellationToken = default)
         {
-            var resource = await ApiClient.Post<Resource>(SessionsPath, SdkAuthorization(), SessionResponseMappings,
+            var resource = await ApiClient.Post<HttpMetadata>(SessionsPath, SdkAuthorization(), SessionResponseMappings,
                 sessionRequest, cancellationToken);
 
             switch (resource)
@@ -133,11 +132,11 @@ namespace Checkout.Sessions
                 sdkAuthorization, channelData, cancellationToken);
         }
 
-        private async Task CompleteSession(string sessionId, SdkAuthorization sdkAuthorization,
+        private async Task<EmptyResponse> CompleteSession(string sessionId, SdkAuthorization sdkAuthorization,
             CancellationToken cancellationToken = default)
         {
-            await ApiClient.Post<object>(BuildPath(SessionsPath, sessionId, CompletePath), sdkAuthorization, null,
-                cancellationToken);
+            return await ApiClient.Post<EmptyResponse>(BuildPath(SessionsPath, sessionId, CompletePath), sdkAuthorization, null,
+                cancellationToken, null);
         }
 
         private async Task<GetSessionResponseAfterChannelDataSupplied> Update3dsMethodCompletionIndicator(
