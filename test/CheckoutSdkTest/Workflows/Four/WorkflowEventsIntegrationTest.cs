@@ -16,7 +16,7 @@ namespace Checkout.Workflows.Four
             IList<EventTypesResponse> eventTypesResponses = await FourApi.WorkflowsClient().GetEventTypes();
 
             eventTypesResponses.ShouldNotBeNull();
-            eventTypesResponses.Count.ShouldBe(9);
+            eventTypesResponses.Count.ShouldBeGreaterThanOrEqualTo(8);
 
             foreach (var eventType in eventTypesResponses)
             {

@@ -7,6 +7,15 @@ namespace Checkout.Payments
         public long? TaxAmount { get; set; }
         
         public long? ShippingAmount { get; set; }
-            
+        
+        public PreferredSchema? PreferredScheme{ get; set; }
+        
+        public ProductType? ProductType{ get; set; }
+        
+        public string OpenId{ get; set; }
+        
+        public long? OriginalOrderAmount{ get; set; }
+        
+        public string ReceiptId{ get; set; }
     }
 }
