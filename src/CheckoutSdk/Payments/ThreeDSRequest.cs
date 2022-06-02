@@ -1,5 +1,7 @@
 ﻿using Checkout.Common;
+using Checkout.Sessions;
 using Newtonsoft.Json;
+using System;
 
 namespace Checkout.Payments
 {
@@ -21,5 +23,23 @@ namespace Checkout.Payments
         public Exemption? Exemption { get; set; }
 
         public ChallengeIndicatorType? ChallengeIndicator { get; set; }
+        
+        //Only available in Four
+        
+        public string Status { get; set; }
+        
+        public DateTime? AuthenticationDate { get; set; }
+
+        public long? AuthenticationAmount { get; set; }
+        
+        public ThreeDSFlowType? FlowType { get; set; }
+        
+        public string StatusReasonCode { get; set; }
+        
+        public string ChallengeCancelReason { get; set; }
+        
+        public string Score { get; set; }
+        
+        public string CryptogramAlgorithm { get; set; }
     }
 }
