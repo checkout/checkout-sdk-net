@@ -6,7 +6,6 @@ namespace Checkout.Marketplace
     public class MarketplaceAccountHolder
     {
         public AccountHolderType? Type { get; set; }
-
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
@@ -20,12 +19,12 @@ namespace Checkout.Marketplace
         public CountryCode? CountryOfBirth { get; set; }
 
         public string ResidentialStatus { get; set; }
-
+        
         public Address BillingAddress { get; set; }
-
+        
         public Phone Phone { get; set; }
 
-        public Identification Identification { get; set; }
+        public AccountHolderIdentification Identification { get; set; }
 
         public string Email { get; set; }
     }
