@@ -1,4 +1,5 @@
 ﻿using Checkout.Common;
+using Checkout.Common.Four;
 
 namespace Checkout.Payments.Four.Sender
 {
@@ -14,6 +15,6 @@ namespace Checkout.Payments.Four.Sender
 
         public Address Address { get; set; }
 
-        public Identification Identification { get; set; }
+        public AccountHolderIdentification AccountHolderIdentification { get; set; }
     }
 }
