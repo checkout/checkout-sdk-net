@@ -30,7 +30,7 @@ namespace Checkout.Sessions
 
         public SessionStatus? Status { get; set; }
 
-        public StatusReason? Reason { get; set; }
+        public StatusReason? StatusReason { get; set; }
 
         public bool? Approved { get; set; }
 
@@ -61,6 +61,8 @@ namespace Checkout.Sessions
         public string CardholderInfo { get; set; }
 
         public CardInfo Card { get; set; }
+        
+        public Recurring Recurring { get; set; }
 
         public DateTime? AuthenticationDate { get; set; }
 

@@ -21,18 +21,28 @@ namespace Checkout.Sessions
 
         public Category? AuthenticationCategory { get; set; }
 
+        public CardholderAccountInfo AccountInfo { get; set; }
+
         public ChallengeIndicatorType? ChallengeIndicator { get; set; }
 
         public SessionsBillingDescriptor BillingDescriptor { get; set; }
 
         public string Reference { get; set; }
 
+        public MerchantRiskInfo MerchantRiskInfo { get; set; }
+
+        public string PriorTransactionReference { get; set; }
+
         public TransactionType? TransactionType { get; set; }
 
         public SessionAddress ShippingAddress { get; set; }
 
+        public bool? ShippingAddressMatchesBilling { get; set; }
+
         public CompletionInfo Completion { get; set; }
 
         public ChannelData ChannelData { get; set; }
+
+        public Recurring Recurring { get; set; }
     }
 }
