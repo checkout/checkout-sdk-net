@@ -10,7 +10,7 @@
 
         public string Name { get; set; }
         
-        public string Email { get; set; }
+        public bool? Stored { get; set; }
 
         public SessionNetworkTokenSource() : base(SessionSourceType.NetworkToken)
         {

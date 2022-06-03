@@ -30,18 +30,16 @@ namespace Checkout.Payments.Four
             var paymentResponse = await FourApi.PaymentsClient().RequestPayment(paymentRequest);
 
             paymentResponse.ShouldNotBeNull();
-            paymentResponse.Status.ShouldBe(PaymentStatus.Pending);
-            paymentResponse.ResponseSummary.ShouldBeNull();
-            paymentResponse.Links["self"].ShouldNotBeNull();
-            paymentResponse.Links["redirect"].ShouldNotBeNull();
+            paymentResponse.Status.ShouldNotBeNull();
+            paymentResponse.ResponseSummary.ShouldNotBeNull();
+            paymentResponse.Links.ShouldNotBeNull();
 
             var payment = await FourApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id);
 
             payment.ShouldNotBeNull();
 
-            payment.Status.ShouldBe(PaymentStatus.Pending);
-            payment.Links["self"].ShouldNotBeNull();
-            payment.Links["redirect"].ShouldNotBeNull();
+            payment.Status.ShouldNotBeNull();
+            payment.Links.ShouldNotBeNull();
 
             payment.Source.ShouldBeOfType(typeof(AlternativePaymentSourceResponse));
             var source = (AlternativePaymentSourceResponse)payment.Source;
