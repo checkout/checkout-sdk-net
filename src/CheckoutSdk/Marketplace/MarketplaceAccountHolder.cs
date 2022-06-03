@@ -3,9 +3,12 @@ using Checkout.Common.Four;
 
 namespace Checkout.Marketplace
 {
-    public class MarketplaceAccountHolder : AccountHolder
+    public class MarketplaceAccountHolder
     {
-        public MarketplaceAccountHolderType? Type { get; set; }
+        public AccountHolderType? Type { get; set; }
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
 
         public string CompanyName { get; set; }
 
@@ -16,8 +19,12 @@ namespace Checkout.Marketplace
         public CountryCode? CountryOfBirth { get; set; }
 
         public string ResidentialStatus { get; set; }
+        
+        public Address BillingAddress { get; set; }
+        
+        public Phone Phone { get; set; }
 
-        public Identification Identification { get; set; }
+        public AccountHolderIdentification Identification { get; set; }
 
         public string Email { get; set; }
     }
