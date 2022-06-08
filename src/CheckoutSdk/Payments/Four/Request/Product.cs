@@ -19,7 +19,11 @@
         public long? TaxAmount { get; set; }
 
         public long? DiscountAmount { get; set; }
-        
+
         public string Sku { get; set; }
+
+        public string GoodsId { get; set; }
+
+        public string WxpayGoodsId { get; set; }
     }
 }
