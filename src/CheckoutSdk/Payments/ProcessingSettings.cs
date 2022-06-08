@@ -19,5 +19,6 @@ namespace Checkout.Payments
         public long? OriginalOrderAmount{ get; set; }
         
         public string ReceiptId{ get; set; }
+        
     }
 }

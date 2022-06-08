@@ -7,6 +7,6 @@ namespace Checkout.Payments
         [EnumMember(Value = "QR Code")] QrCode,
         [EnumMember(Value = "In-App")] InApp,
         [EnumMember(Value = "Official Account")]OfficialAccount,
-        [EnumMember(Value = "Mini Program")] MiniProgram,
+        [EnumMember(Value = "Mini Program")] MiniProgram
     }
 }
