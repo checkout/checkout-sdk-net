@@ -65,7 +65,12 @@ namespace Checkout.Payments.Four
             var paymentRequest = new PaymentRequest
             {
                 Customer = new CustomerRequest {Phone = new Phone()},
-                Processing = new ProcessingSettings {TaxAmount = 500, ShippingAmount = 1000},
+                Processing =
+                    new ProcessingSettings
+                    {
+                        TaxAmount = 500,
+                        ShippingAmount = 1000,
+                    },
                 Source = new RequestTamaraSource
                 {
                     BillingAddress = new Address
@@ -114,7 +119,7 @@ namespace Checkout.Payments.Four
             response.Customer.ShouldNotBeNull();
             response.Customer.Phone.ShouldNotBeNull();
         }
-
+        
         [Fact]
         private async Task ShouldRequestPayment_IdempotencyKey()
         {
