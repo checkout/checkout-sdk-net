@@ -10,7 +10,7 @@ namespace Checkout.Workflows.Four
 {
     public class WorkflowsReflowIntegrationTest : AbstractWorkflowIntegrationTest
     {
-        [Fact]
+        [Fact(Skip = "unstable")]
         public async Task ShouldReflowByEvent()
         {
             await CreateWorkflow();
@@ -27,7 +27,7 @@ namespace Checkout.Workflows.Four
             reflowResponse.ShouldBeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "unstable")]
         public async Task ShouldReflowBySubject()
         {
             await CreateWorkflow();
@@ -55,7 +55,7 @@ namespace Checkout.Workflows.Four
             reflowResponse.ShouldBeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "unstable")]
         public async Task ShouldReflowBySubjectAndWorkflow()
         {
             CreateWorkflowResponse createWorkflowResponse = await CreateWorkflow();
@@ -68,7 +68,7 @@ namespace Checkout.Workflows.Four
             reflowResponse.ShouldBeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "unstable")]
         public async Task ShouldReflowByEvents()
         {
             CreateWorkflowResponse createWorkflowResponse = await CreateWorkflow();
@@ -88,7 +88,7 @@ namespace Checkout.Workflows.Four
             reflowResponse.ShouldBeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "unstable")]
         public async Task ShouldReflowSubjects()
         {
             CreateWorkflowResponse createWorkflowResponse = await CreateWorkflow();

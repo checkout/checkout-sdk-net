@@ -15,12 +15,24 @@ namespace Checkout.Payments.Request.Source.Apm
 
         public CountryCode? PurchaseCountry { get; set; }
 
+        public bool? AutoCapture { get; set; }
+
+        public IDictionary<string, string> BillingAddress { get; set; }
+
+        public IDictionary<string, string> ShippingAddress { get; set; }
+
         public long? TaxAmount { get; set; }
 
-        public Address BillingAddress { get; set; }
+        public IDictionary<string, string> Products { get; set; }
 
-        public KlarnaCustomer Customer { get; set; }
+        public IDictionary<string, string> Customer { get; set; }
 
-        public IList<KlarnaProduct> Products { get; set; }
+        public string MerchantReference1 { get; set; }
+
+        public string MerchantReference2 { get; set; }
+
+        public string MerchantData { get; set; }
+
+        public string Attachment { get; set; }
     }
 }

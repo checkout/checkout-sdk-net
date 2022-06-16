@@ -10,7 +10,7 @@ namespace Checkout.Workflows.Four
 {
     public class WorkflowEventsIntegrationTest : AbstractWorkflowIntegrationTest
     {
-        [Fact]
+        [Fact(Skip = "unstable")]
         public async Task ShouldGetEventTypes()
         {
             IList<EventTypesResponse> eventTypesResponses = await FourApi.WorkflowsClient().GetEventTypes();
