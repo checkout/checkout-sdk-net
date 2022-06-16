@@ -98,6 +98,15 @@ namespace Checkout.Marketplace
                 cancellationToken,
                 idempotencyKey);
         }
+        
+        public async Task<TransferDetailsResponse> RetrieveATransfer(string transferId,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("transferId", transferId);
+            return await _transfersApiClient.Get<TransferDetailsResponse>(BuildPath(TransfersPath, transferId),
+                SdkAuthorization(SdkAuthorizationType.OAuth),
+                cancellationToken);
+        }
 
         public async Task<BalancesResponse> RetrieveEntityBalances(string entityId, BalancesQuery balancesQuery,
             CancellationToken cancellationToken = default)

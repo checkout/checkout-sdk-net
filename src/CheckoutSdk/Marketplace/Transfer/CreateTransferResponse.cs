@@ -6,6 +6,6 @@ namespace Checkout.Marketplace.Transfer
     {
         public string Id { get; set; }
 
-        public string Status { get; set; }
+        public TransferStatus? Status { get; set; }
     }
 }

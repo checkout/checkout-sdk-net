@@ -27,6 +27,9 @@ namespace Checkout.Marketplace
         Task<CreateTransferResponse> InitiateTransferOfFunds(CreateTransferRequest createTransferRequest,
             string idempotencyKey = null,
             CancellationToken cancellationToken = default);
+        
+        Task<TransferDetailsResponse> RetrieveATransfer(string transferId,
+            CancellationToken cancellationToken = default);
 
         Task<BalancesResponse> RetrieveEntityBalances(string entityId, BalancesQuery balancesQuery,
             CancellationToken cancellationToken = default);

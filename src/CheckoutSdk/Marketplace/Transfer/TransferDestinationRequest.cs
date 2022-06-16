@@ -1,9 +1,7 @@
 ﻿namespace Checkout.Marketplace.Transfer
 {
-    public class TransferSource
+    public class TransferDestinationRequest
     {
         public string Id { get; set; }
-
-        public long? Amount { get; set; }
     }
 }

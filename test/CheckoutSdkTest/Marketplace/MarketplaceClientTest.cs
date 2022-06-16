@@ -157,6 +157,21 @@ namespace Checkout.Marketplace
             response.ShouldNotBeNull();
             response.ShouldBe(createTransferResponse);
         }
+        
+        [Fact]
+        public async Task ShouldRetrieveATransfer()
+        {
+            var transferDetailsResponse = new TransferDetailsResponse();
+
+            _transfersClient.Setup(x => x.Get<TransferDetailsResponse>("transfers/transfer_id", It.IsAny<SdkAuthorization>(),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(transferDetailsResponse);
+
+            var response = await _marketplaceClient.RetrieveATransfer("transfer_id");
+
+            response.ShouldNotBeNull();
+            response.ShouldBe(transferDetailsResponse);
+        }
 
         [Fact]
         private async Task ShouldRetrieveEntityBalances()

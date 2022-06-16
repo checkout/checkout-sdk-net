@@ -6,8 +6,8 @@
 
         public TransferType? TransferType { get; set; }
 
-        public TransferSource Source { get; set; }
+        public TransferSourceRequest Source { get; set; }
 
-        public TransferDestination Destination { get; set; }
+        public TransferDestinationRequest Destination { get; set; }
     }
 }
