@@ -15,7 +15,7 @@ namespace Checkout.Workflows.Four
 {
     public class WorkflowsIntegrationTest : AbstractWorkflowIntegrationTest
     {
-        [Fact]
+        [Fact(Skip = "unstable")]
         public async Task ShouldCreateAndGetWorkflows()
         {
             var createdWorkflow = await CreateWorkflow();
@@ -76,7 +76,7 @@ namespace Checkout.Workflows.Four
             }
         }
 
-        [Fact]
+        [Fact(Skip = "unstable")]
         public async Task ShouldCreateAndUpdateWorkflow()
         {
             var workflow = await CreateWorkflow();
@@ -91,7 +91,7 @@ namespace Checkout.Workflows.Four
             updateWorkflowResponse.Active.ShouldBe(false);
         }
 
-        [Fact]
+        [Fact(Skip = "unstable")]
         public async Task ShouldUpdateWorkflowAction()
         {
             var createdWorkflow = await CreateWorkflow();
@@ -128,7 +128,7 @@ namespace Checkout.Workflows.Four
             action.Type.ShouldNotBeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "unstable")]
         public async Task ShouldUpdateWorkflowCondition()
         {
             var createdWorkflow = await CreateWorkflow();

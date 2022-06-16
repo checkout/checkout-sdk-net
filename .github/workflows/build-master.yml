@@ -7,6 +7,19 @@ jobs:
   build:
     if: "!contains(github.event.commits[0].message, 'Release')"
     runs-on: windows-latest
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        dotnet: [ '3.1', '5.0', '6.0' ]
+        include:
+          - dotnet: 3.1
+            framework: netcoreapp3.1
+          - dotnet: 5.0
+            framework: net5.0
+          - dotnet: 6.0
+            framework: net6.0
+    name: NET ${{ matrix.dotnet }}
     steps:
       - uses: actions/checkout@v2
       - id: setup-java-11
@@ -14,7 +27,7 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "11"
-      - id: setup-net-2_0-3_1-5_0
+      - id: setup-net
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: |
@@ -60,6 +73,6 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"checkout_checkout-sdk-net" /o:"checkout-ltd" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths=".\sonarqubecoverage\SonarQube.xml"
-          dotnet test --collect:"XPlat Code Coverage"
+          dotnet test --collect:"XPlat Code Coverage" -f ${{ matrix.framework }}
           reportgenerator "-reports:test\*\TestResults\*\coverage.cobertura.xml" "-targetdir:sonarqubecoverage" "-reporttypes:SonarQube"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
