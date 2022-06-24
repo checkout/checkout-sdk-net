@@ -1,9 +1,10 @@
+using Checkout.Common;
 using System;
 using System.Collections.Generic;
 
 namespace Checkout.Marketplace.Transfer
 {
-    public class TransferDetailsResponse
+    public class TransferDetailsResponse : Resource
     {
         public string Id { get; set; }
 

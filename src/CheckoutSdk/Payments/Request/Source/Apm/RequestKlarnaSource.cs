@@ -23,7 +23,7 @@ namespace Checkout.Payments.Request.Source.Apm
 
         public long? TaxAmount { get; set; }
 
-        public IDictionary<string, string> Products { get; set; }
+        public IList<IDictionary<string, string>> Products { get; set; }
 
         public IDictionary<string, string> Customer { get; set; }
 
@@ -33,6 +33,6 @@ namespace Checkout.Payments.Request.Source.Apm
 
         public string MerchantData { get; set; }
 
-        public string Attachment { get; set; }
+        public IDictionary<string, string> Attachment { get; set; }
     }
 }
