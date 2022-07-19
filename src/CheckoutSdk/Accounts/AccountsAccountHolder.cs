@@ -1,6 +1,9 @@
-﻿namespace Checkout.Common.Four
+﻿using Checkout.Common;
+using Checkout.Common.Four;
+
+namespace Checkout.Accounts
 {
-    public class AccountHolder
+    public class AccountsAccountHolder
     {
         public AccountHolderType? Type { get; set; }
         
@@ -12,11 +15,11 @@
 
         public string TaxId { get; set; }
 
-        public string DateOfBirth { get; set; }
+        public DateOfBirth DateOfBirth { get; set; }
 
         public CountryCode? CountryOfBirth { get; set; }
 
-        public string ResidentialStatus { get; set; } 
+        public string ResidentialStatus { get; set; }
         
         public Address BillingAddress { get; set; }
         

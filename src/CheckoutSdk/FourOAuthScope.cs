@@ -37,6 +37,7 @@
         DisputesProvideEvidence,
         [FourOAuthScope("disputes:accept")] DisputesAccept,
         [FourOAuthScope("marketplace")] Marketplace,
+        [FourOAuthScope("accounts")] Accounts,
         [FourOAuthScope("transfers")] Transfers,
         [FourOAuthScope("transfers:create")] TransfersCreate,
         [FourOAuthScope("transfers:view")] TransfersView,
