@@ -17,7 +17,7 @@ namespace Checkout.Marketplace
             {
                 Enabled = true,
                 Threshold = 1000,
-                Recurrence = new ScheduleFrequencyWeeklyRequest {ByDay = DaySchedule.Sunday}
+                Recurrence = new ScheduleFrequencyWeeklyRequest {ByDay = new[] {DaySchedule.Sunday, DaySchedule.Monday}}
             };
 
             await GetPayoutSchedulesCheckoutApi().MarketplaceClient()
@@ -33,6 +33,7 @@ namespace Checkout.Marketplace
             currencySchedule.Enabled.ShouldNotBeNull();
             currencySchedule.Threshold.ShouldNotBeNull();
             currencySchedule.Recurrence.ShouldBeOfType(typeof(ScheduleFrequencyWeeklyResponse));
+            ((ScheduleFrequencyWeeklyResponse)currencySchedule.Recurrence).ByDay.Count.ShouldBe(2);
         }
 
         [Fact]
@@ -65,7 +66,7 @@ namespace Checkout.Marketplace
             {
                 Enabled = true,
                 Threshold = 1000,
-                Recurrence = new ScheduleFrequencyMonthlyRequest {ByMonthDay = 3}
+                Recurrence = new ScheduleFrequencyMonthlyRequest {ByMonthDay = new[] {3, 5}}
             };
 
             await GetPayoutSchedulesCheckoutApi().MarketplaceClient()
@@ -81,6 +82,7 @@ namespace Checkout.Marketplace
             currencySchedule.Enabled.ShouldNotBeNull();
             currencySchedule.Threshold.ShouldNotBeNull();
             currencySchedule.Recurrence.ShouldBeOfType(typeof(ScheduleFrequencyMonthlyResponse));
+            ((ScheduleFrequencyMonthlyResponse)currencySchedule.Recurrence).ByMonthDay.Count.ShouldBe(2);
         }
 
         private static Four.CheckoutApi GetPayoutSchedulesCheckoutApi()
