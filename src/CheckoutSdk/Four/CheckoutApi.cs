@@ -1,14 +1,16 @@
+using Checkout.Accounts;
+using Checkout.Balances;
 using Checkout.Customers.Four;
 using Checkout.Disputes;
 using Checkout.Forex;
 using Checkout.Instruments.Four;
-using Checkout.Marketplace;
 using Checkout.Payments.Four;
 using Checkout.Payments.Hosted;
 using Checkout.Payments.Links;
 using Checkout.Risk;
 using Checkout.Sessions;
 using Checkout.Tokens;
+using Checkout.Transfers;
 using Checkout.Workflows.Four;
 
 namespace Checkout.Four
@@ -24,9 +26,11 @@ namespace Checkout.Four
         private readonly IForexClient _forexClient;
         private readonly IWorkflowsClient _workflowsClient;
         private readonly ISessionsClient _sessionsClient;
-        private readonly IMarketplaceClient _marketplaceClient;
+        private readonly IAccountsClient _accountsClient;
         private readonly IPaymentLinksClient _paymentLinksClient;
         private readonly IHostedPaymentsClient _hostedPaymentsClient;
+        private readonly IBalancesClient _balancesClient;
+        private readonly ITransfersClient _transfersClient;
 
         public CheckoutApi(CheckoutConfiguration configuration)
         {
@@ -40,14 +44,16 @@ namespace Checkout.Four
             _forexClient = new ForexClient(baseApiClient, configuration);
             _workflowsClient = new WorkflowsClient(baseApiClient, configuration);
             _sessionsClient = new SessionsClient(baseApiClient, configuration);
-            _marketplaceClient = new MarketplaceClient(
+            _accountsClient = new AccountsClient(
                 baseApiClient,
                 FilesApiClient(configuration),
-                TransfersApiClient(configuration),
-                BalancesApiClient(configuration),
                 configuration);
             _paymentLinksClient = new PaymentLinksClient(baseApiClient, configuration);
             _hostedPaymentsClient = new HostedPaymentsClient(baseApiClient, configuration);
+            _balancesClient = new BalancesClient(BalancesApiClient(configuration),
+                configuration);
+            _transfersClient = new TransfersClient(TransfersApiClient(configuration),
+                configuration);
         }
 
         private static ApiClient BaseApiClient(CheckoutConfiguration configuration)
@@ -120,9 +126,9 @@ namespace Checkout.Four
             return _sessionsClient;
         }
 
-        public IMarketplaceClient MarketplaceClient()
+        public IAccountsClient AccountsClient()
         {
-            return _marketplaceClient;
+            return _accountsClient;
         }
 
         public IPaymentLinksClient PaymentLinksClient()
@@ -133,6 +139,16 @@ namespace Checkout.Four
         public IHostedPaymentsClient HostedPaymentsClient()
         {
             return _hostedPaymentsClient;
+        }
+        
+        public IBalancesClient BalancesClient()
+        {
+            return _balancesClient;
+        }
+
+        public ITransfersClient TransfersClient()
+        {
+            return _transfersClient;
         }
     }
 }
