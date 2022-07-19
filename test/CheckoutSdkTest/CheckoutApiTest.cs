@@ -62,9 +62,11 @@ namespace Checkout
             checkoutApi.ForexClient().ShouldNotBeNull();
             checkoutApi.WorkflowsClient().ShouldNotBeNull();
             checkoutApi.SessionsClient().ShouldNotBeNull();
-            checkoutApi.MarketplaceClient().ShouldNotBeNull();
+            checkoutApi.AccountsClient().ShouldNotBeNull();
             checkoutApi.PaymentLinksClient().ShouldNotBeNull();
             checkoutApi.HostedPaymentsClient().ShouldNotBeNull();
+            checkoutApi.BalancesClient().ShouldNotBeNull();
+            checkoutApi.TransfersClient().ShouldNotBeNull();
         }
     }
 }
