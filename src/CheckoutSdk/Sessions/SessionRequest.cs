@@ -44,5 +44,7 @@ namespace Checkout.Sessions
         public ChannelData ChannelData { get; set; }
 
         public Recurring Recurring { get; set; }
+        
+        public Installment Installment { get; set; }
     }
 }
