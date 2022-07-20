@@ -8,8 +8,8 @@ namespace Checkout.Transfers
 {
     public class TransfersClientTest : UnitTestFixture
     {
-        private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.Four, ValidDefaultSk);
-        private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Four);
+        private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.Default, ValidPreviousSk);
+        private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Default);
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
         private readonly IHttpClientFactory _httpClientFactory = new DefaultHttpClientFactory();
         private readonly TransfersClient _transfersClient;

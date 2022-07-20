@@ -12,7 +12,10 @@ namespace Checkout.Payments
         {
             var paymentResponse = await MakeCardPayment(true);
 
-            var refundRequest = new RefundRequest {Reference = Guid.NewGuid().ToString()};
+            var refundRequest = new RefundRequest
+            {
+                Reference = Guid.NewGuid().ToString(), Amount = paymentResponse.Amount
+            };
 
             var response = await Retriable(async () =>
                 await DefaultApi.PaymentsClient().RefundPayment(paymentResponse.Id, refundRequest));
@@ -21,24 +24,47 @@ namespace Checkout.Payments
             response.ActionId.ShouldNotBeNullOrEmpty();
             response.Reference.ShouldNotBeNullOrEmpty();
             response.GetLink("payment").ShouldNotBeNull();
+
+            var payment = await Retriable(async () =>
+                await DefaultApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id));
+            //Balances
+            payment.Balances.TotalAuthorized.ShouldBe(paymentResponse.Amount);
+            payment.Balances.TotalCaptured.ShouldBe(paymentResponse.Amount);
+            payment.Balances.TotalRefunded.ShouldBe(paymentResponse.Amount);
+            payment.Balances.TotalVoided.ShouldBe(0);
+            payment.Balances.AvailableToCapture.ShouldBe(0);
+            payment.Balances.AvailableToRefund.ShouldBe(0);
+            payment.Balances.AvailableToVoid.ShouldBe(0);
         }
 
         [Fact]
-        private async Task ShouldRefundCardPayment_Idempotently()
+        private async Task ShouldRefundPartiallyCardPayment()
         {
             var paymentResponse = await MakeCardPayment(true);
 
-            var refundRequest = new RefundRequest {Reference = Guid.NewGuid().ToString(), Amount = 2};
+            var refundRequest = new RefundRequest
+            {
+                Reference = Guid.NewGuid().ToString(), Amount = paymentResponse.Amount / 2
+            };
 
-            var response1 = await Retriable(async () => await DefaultApi.PaymentsClient()
-                .RefundPayment(paymentResponse.Id, refundRequest, IdempotencyKey));
+            var response = await Retriable(async () =>
+                await DefaultApi.PaymentsClient().RefundPayment(paymentResponse.Id, refundRequest));
 
-            var refundRequest2 = new RefundRequest {Reference = Guid.NewGuid().ToString(), Amount = 2};
+            response.ShouldNotBeNull();
+            response.ActionId.ShouldNotBeNullOrEmpty();
+            response.Reference.ShouldNotBeNullOrEmpty();
+            response.GetLink("payment").ShouldNotBeNull();
 
-            var response2 = await Retriable(async () => await DefaultApi.PaymentsClient()
-                .RefundPayment(paymentResponse.Id, refundRequest2, IdempotencyKey));
-
-            response1.ActionId.ShouldBe(response2.ActionId);
+            var payment = await Retriable(async () =>
+                await DefaultApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id));
+            //Balances
+            payment.Balances.TotalAuthorized.ShouldBe(paymentResponse.Amount);
+            payment.Balances.TotalCaptured.ShouldBe(paymentResponse.Amount);
+            payment.Balances.TotalRefunded.ShouldBe(paymentResponse.Amount / 2);
+            payment.Balances.TotalVoided.ShouldBe(0);
+            payment.Balances.AvailableToCapture.ShouldBe(0);
+            payment.Balances.AvailableToRefund.ShouldBe(paymentResponse.Amount / 2);
+            payment.Balances.AvailableToVoid.ShouldBe(0);
         }
     }
 }

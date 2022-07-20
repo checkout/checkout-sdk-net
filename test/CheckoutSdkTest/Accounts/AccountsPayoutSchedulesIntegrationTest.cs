@@ -17,7 +17,8 @@ namespace Checkout.Accounts
             {
                 Enabled = true,
                 Threshold = 1000,
-                Recurrence = new ScheduleFrequencyWeeklyRequest {ByDay = new[] {DaySchedule.Sunday, DaySchedule.Monday}}
+                Recurrence =
+                    new ScheduleFrequencyWeeklyRequest {ByDay = new[] {DaySchedule.Sunday, DaySchedule.Monday}}
             };
 
             var emptyResponse = await GetPayoutSchedulesCheckoutApi().AccountsClient()
@@ -94,14 +95,15 @@ namespace Checkout.Accounts
             ((ScheduleFrequencyMonthlyResponse)currencySchedule.Recurrence).ByMonthDay.Count.ShouldBe(2);
         }
 
-        private static Four.CheckoutApi GetPayoutSchedulesCheckoutApi()
+        private static CheckoutApi GetPayoutSchedulesCheckoutApi()
         {
-            return CheckoutSdk.FourSdk().OAuth()
+            return CheckoutSdk.Builder()
+                .OAuth()
                 .ClientCredentials(
-                    System.Environment.GetEnvironmentVariable("CHECKOUT_FOUR_OAUTH_PAYOUT_SCHEDULE_CLIENT_ID"),
-                    System.Environment.GetEnvironmentVariable("CHECKOUT_FOUR_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET"))
-                .Scopes(FourOAuthScope.Marketplace)
-                .Build() as Four.CheckoutApi;
+                    System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_ID"),
+                    System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET"))
+                .Scopes(OAuthScope.Marketplace)
+                .Build() as CheckoutApi;
         }
     }
 }

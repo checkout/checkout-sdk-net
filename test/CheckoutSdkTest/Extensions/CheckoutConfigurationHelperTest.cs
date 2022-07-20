@@ -8,6 +8,20 @@ namespace Checkout.Extensions
     public class CheckoutConfigurationHelperTest
     {
         [Fact]
+        private void ShouldGetPreviousAppSettings()
+        {
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("./Resources/AppSettingsPreviousTest.json")
+                .Build();
+            var checkoutOptions = configuration.GetCheckoutOptions();
+            checkoutOptions.ShouldNotBeNull();
+            checkoutOptions.Environment.ShouldBe(Environment.Sandbox);
+            checkoutOptions.PlatformType.ShouldBe(PlatformType.Previous);
+            checkoutOptions.PublicKey.ShouldNotBeNull();
+            checkoutOptions.SecretKey.ShouldNotBeNull();
+        }
+
+        [Fact]
         private void ShouldGetDefaultAppSettings()
         {
             var configuration = new ConfigurationBuilder()
@@ -17,20 +31,6 @@ namespace Checkout.Extensions
             checkoutOptions.ShouldNotBeNull();
             checkoutOptions.Environment.ShouldBe(Environment.Sandbox);
             checkoutOptions.PlatformType.ShouldBe(PlatformType.Default);
-            checkoutOptions.PublicKey.ShouldNotBeNull();
-            checkoutOptions.SecretKey.ShouldNotBeNull();
-        }
-
-        [Fact]
-        private void ShouldGetFourAppSettings()
-        {
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("./Resources/AppSettingsFourTest.json")
-                .Build();
-            var checkoutOptions = configuration.GetCheckoutOptions();
-            checkoutOptions.ShouldNotBeNull();
-            checkoutOptions.Environment.ShouldBe(Environment.Sandbox);
-            checkoutOptions.PlatformType.ShouldBe(PlatformType.Four);
             checkoutOptions.PublicKey.ShouldNotBeNull();
             checkoutOptions.SecretKey.ShouldNotBeNull();
         }

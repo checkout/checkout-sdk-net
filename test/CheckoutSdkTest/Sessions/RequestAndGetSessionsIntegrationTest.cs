@@ -44,7 +44,7 @@ namespace Checkout.Sessions
             response.GetLink("callback_url").ShouldNotBeNull();
             response.Completed.ShouldBe(false);
 
-            var getSessionResponse = await FourApi.SessionsClient().GetSessionDetails(response.Id);
+            var getSessionResponse = await DefaultApi.SessionsClient().GetSessionDetails(response.Id);
 
             getSessionResponse.ShouldNotBeNull();
 
@@ -70,7 +70,7 @@ namespace Checkout.Sessions
             getSessionResponse.Completed.ShouldBe(false);
 
             var getSessionSecretSessionResponse =
-                await FourApi.SessionsClient().GetSessionDetails(response.SessionSecret, response.Id);
+                await DefaultApi.SessionsClient().GetSessionDetails(response.SessionSecret, response.Id);
 
             getSessionSecretSessionResponse.Certificates.ShouldBeNull();
             getSessionSecretSessionResponse.SessionSecret.ShouldBeNull();
@@ -129,7 +129,7 @@ namespace Checkout.Sessions
             response.GetLink("callback_url").ShouldNotBeNull();
             response.Completed.ShouldBe(false);
 
-            var getSessionResponse = await FourApi.SessionsClient().GetSessionDetails(response.Id);
+            var getSessionResponse = await DefaultApi.SessionsClient().GetSessionDetails(response.Id);
 
             getSessionResponse.ShouldNotBeNull();
 
@@ -156,7 +156,7 @@ namespace Checkout.Sessions
             getSessionResponse.Completed.ShouldBe(false);
 
             var getSessionSecretSessionResponse =
-                await FourApi.SessionsClient().GetSessionDetails(response.SessionSecret, response.Id);
+                await DefaultApi.SessionsClient().GetSessionDetails(response.SessionSecret, response.Id);
 
             getSessionSecretSessionResponse.Certificates.ShouldBeNull();
             getSessionSecretSessionResponse.SessionSecret.ShouldBeNull();

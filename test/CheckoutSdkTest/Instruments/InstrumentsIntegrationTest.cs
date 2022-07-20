@@ -1,112 +1,152 @@
-using Checkout.Common;
-using Checkout.Tokens;
+﻿using Checkout.Common;
+using Checkout.Instruments.Create;
+using Checkout.Instruments.Get;
+using Checkout.Instruments.Update;
+using Checkout.Payments;
 using Shouldly;
 using System.Threading.Tasks;
 using Xunit;
+using CustomerRequest = Checkout.Customers.CustomerRequest;
 
 namespace Checkout.Instruments
 {
-    public class InstrumentsIntegrationTest : SandboxTestFixture
+    public class InstrumentsIntegrationTest : AbstractPaymentsIntegrationTest
     {
-        public InstrumentsIntegrationTest() : base(PlatformType.Default)
-        {
-        }
-
         [Fact]
         private async Task ShouldCreateAndGetInstrument()
         {
-            var createInstrumentResponse = await CreateTokenInstrument();
+            var tokenInstrument = await CreateTokenInstrument();
+            tokenInstrument.ShouldNotBeNull();
 
-            createInstrumentResponse.ShouldNotBeNull();
-            createInstrumentResponse.Bin.ShouldNotBeNullOrEmpty();
-            createInstrumentResponse.CardCategory.ShouldBe(CardCategory.Consumer);
-            createInstrumentResponse.CardType.ShouldBe(CardType.Credit);
-            createInstrumentResponse.Customer.ShouldNotBeNull();
-            createInstrumentResponse.Customer.Default.ShouldBeFalse();
-            createInstrumentResponse.Customer.Email.ShouldNotBeNullOrEmpty();
-            createInstrumentResponse.Customer.Id.ShouldNotBeNullOrEmpty();
-            createInstrumentResponse.Customer.Name.ShouldNotBeNullOrEmpty();
-            createInstrumentResponse.ExpiryMonth.ShouldBe(6);
-            createInstrumentResponse.ExpiryYear.ShouldBe(2025);
-            createInstrumentResponse.Fingerprint.ShouldNotBeNullOrEmpty();
-            createInstrumentResponse.Id.ShouldNotBeNullOrEmpty();
-            //createInstrumentResponse.Issuer.ShouldNotBeNull();
-            createInstrumentResponse.IssuerCountry.ShouldNotBeNull();
-            createInstrumentResponse.Last4.ShouldNotBeNullOrEmpty();
-            createInstrumentResponse.Name.ShouldBeNull();
-            createInstrumentResponse.ProductId.ShouldNotBeNull();
-            createInstrumentResponse.ProductType.ShouldNotBeNullOrEmpty();
-            createInstrumentResponse.Type.ShouldBe(InstrumentType.Card);
+            var getResponse = await DefaultApi.InstrumentsClient().Get(tokenInstrument.Id);
+            getResponse.ShouldNotBeNull();
 
-            var retrieveInstrumentResponse = await DefaultApi.InstrumentsClient().Get(createInstrumentResponse.Id);
-
-            retrieveInstrumentResponse.ShouldNotBeNull();
-            retrieveInstrumentResponse.Bin.ShouldNotBeNullOrEmpty();
-            retrieveInstrumentResponse.CardCategory.ShouldBe(CardCategory.Consumer);
-            retrieveInstrumentResponse.CardType.ShouldBe(CardType.Credit);
-            retrieveInstrumentResponse.Customer.ShouldNotBeNull();
-            retrieveInstrumentResponse.Customer.Default.ShouldBeTrue();
-            retrieveInstrumentResponse.Customer.Email.ShouldNotBeNullOrEmpty();
-            retrieveInstrumentResponse.Customer.Id.ShouldNotBeNullOrEmpty();
-            retrieveInstrumentResponse.Customer.Name.ShouldNotBeNullOrEmpty();
-            retrieveInstrumentResponse.ExpiryMonth.ShouldBe(6);
-            retrieveInstrumentResponse.ExpiryYear.ShouldBe(2025);
-            retrieveInstrumentResponse.Fingerprint.ShouldNotBeNullOrEmpty();
-            retrieveInstrumentResponse.Id.ShouldNotBeNullOrEmpty();
-            //retrieveInstrumentResponse.Issuer.ShouldNotBeNullOrEmpty();
-            //retrieveInstrumentResponse.IssuerCountry.ShouldBe(CountryCode.GB);
-            retrieveInstrumentResponse.Last4.ShouldNotBeNullOrEmpty();
-            retrieveInstrumentResponse.Name.ShouldNotBeNullOrEmpty();
-            retrieveInstrumentResponse.ProductId.ShouldNotBeNullOrEmpty();
-            retrieveInstrumentResponse.ProductType.ShouldNotBeNullOrEmpty();
-            retrieveInstrumentResponse.Type.ShouldBe(InstrumentType.Card);
+            var cardResponse = (GetCardInstrumentResponse)getResponse;
+            cardResponse.ShouldNotBeNull();
+            cardResponse.Id.ShouldNotBeNull();
+            cardResponse.Fingerprint.ShouldNotBeNull();
+            cardResponse.ExpiryMonth.ShouldNotBeNull();
+            cardResponse.ExpiryYear.ShouldNotBeNull();
+            cardResponse.Scheme.ShouldNotBeNull();
+            cardResponse.Last4.ShouldNotBeNull();
+            cardResponse.Bin.ShouldNotBeNull();
+            cardResponse.IssuerCountry.ShouldNotBeNull();
+            cardResponse.ProductId.ShouldNotBeNull();
+            cardResponse.ProductType.ShouldNotBeNull();
+            cardResponse.Customer.ShouldNotBeNull();
+            cardResponse.AccountHolder.ShouldNotBeNull();
+            cardResponse.AccountHolder.BillingAddress.ShouldNotBeNull();
+            cardResponse.AccountHolder.Phone.ShouldNotBeNull();
+            cardResponse.CardType.ShouldNotBeNull();
+            cardResponse.CardCategory.ShouldNotBeNull();
         }
 
         [Fact]
-        private async Task ShouldCreateAndUpdateInstrument()
+        private async Task ShouldUpdateTokenInstrument()
         {
-            var createInstrumentResponse = await CreateTokenInstrument();
+            var tokenInstrument = await CreateTokenInstrument();
+            tokenInstrument.ShouldNotBeNull();
 
-            var updateInstrumentRequest = new UpdateInstrumentRequest
+            var tokenResponse = await RequestToken();
+            tokenResponse.Token.ShouldNotBeNull();
+
+            var updateInstrumentTokenRequest = new UpdateTokenInstrumentRequest {Token = tokenResponse.Token};
+
+            var updateResponse =
+                await DefaultApi.InstrumentsClient().Update(tokenInstrument.Id, updateInstrumentTokenRequest);
+
+            updateResponse.ShouldNotBeNull();
+            updateResponse.HttpStatusCode.ShouldNotBeNull();
+            updateResponse.ResponseHeaders.ShouldNotBeNull();
+            updateResponse.Body.ShouldNotBeNull();
+
+            var updateCardInstrumentResponse = (UpdateCardInstrumentResponse)updateResponse;
+            updateCardInstrumentResponse.Fingerprint.ShouldNotBeNull();
+        }
+
+        [Fact]
+        private async Task ShouldUpdateCardInstrument()
+        {
+            var tokenInstrument = await CreateTokenInstrument();
+            tokenInstrument.ShouldNotBeNull();
+
+            var updateCardInstrument = new UpdateCardInstrumentRequest
             {
-                Name = "New Name",
                 ExpiryMonth = 12,
-                ExpiryYear = 2026,
+                ExpiryYear = 2024,
+                Name = "John Doe",
+                Customer = new UpdateCustomerRequest {Id = tokenInstrument.Customer.Id, Default = true},
+                AccountHolder = new AccountHolder
+                {
+                    FirstName = "John",
+                    LastName = "Doe",
+                    Phone = new Phone {CountryCode = "+1", Number = "415 555 2671"},
+                    BillingAddress = new Address
+                    {
+                        AddressLine1 = "CheckoutSdk.com",
+                        AddressLine2 = "90 Tottenham Court Road",
+                        City = "London",
+                        State = "London",
+                        Zip = "W1T 4TJ",
+                        Country = CountryCode.GB
+                    }
+                }
             };
 
-            var update = await DefaultApi.InstrumentsClient().Update(createInstrumentResponse.Id, updateInstrumentRequest);
-            update.ShouldNotBeNull();
-            update.HttpStatusCode.ShouldNotBeNull();
-            update.ResponseHeaders.ShouldNotBeNull();
-            update.Body.ShouldNotBeNull();
+            var updateInstrumentResponse =
+                await DefaultApi.InstrumentsClient().Update(tokenInstrument.Id, updateCardInstrument);
+            updateInstrumentResponse.ShouldNotBeNull();
+            var updateCardInstrumentResponse = (UpdateCardInstrumentResponse)updateInstrumentResponse;
+            updateCardInstrumentResponse.Fingerprint.ShouldNotBeNullOrEmpty();
 
-            var retrieveInstrumentResponse = await DefaultApi.InstrumentsClient().Get(createInstrumentResponse.Id);
-            retrieveInstrumentResponse.ShouldNotBeNull();
-            retrieveInstrumentResponse.Name.ShouldBe("New Name");
-            retrieveInstrumentResponse.ExpiryMonth.ShouldBe(12);
-            retrieveInstrumentResponse.ExpiryYear.ShouldBe(2026);
+            var getResponse = await DefaultApi.InstrumentsClient().Get(tokenInstrument.Id);
+            getResponse.ShouldNotBeNull();
+
+            var cardResponse = (GetCardInstrumentResponse)getResponse;
+            cardResponse.ShouldNotBeNull();
+            cardResponse.Id.ShouldNotBeNull();
+            cardResponse.Fingerprint.ShouldNotBeNull();
+            cardResponse.ExpiryMonth.ShouldBe(12);
+            cardResponse.ExpiryYear.ShouldBe(2024);
+            cardResponse.Customer.Default.ShouldBeTrue();
+            cardResponse.AccountHolder.FirstName.ShouldBe("John");
+            cardResponse.AccountHolder.LastName.ShouldBe("Doe");
+            cardResponse.CardType.ShouldNotBeNull();
+            cardResponse.CardCategory.ShouldNotBeNull();
         }
 
         [Fact]
-        private async Task ShouldCreateAndDeleteInstrument()
+        private async Task ShouldDeleteInstrument()
         {
-            var createInstrumentResponse = await CreateTokenInstrument();
+            var tokenInstrument = await CreateTokenInstrument();
+            tokenInstrument.ShouldNotBeNull();
 
-            var emptyResponse = await DefaultApi.InstrumentsClient().Delete(createInstrumentResponse.Id);
+            var emptyResponse = await DefaultApi.InstrumentsClient().Delete(tokenInstrument.Id);
             emptyResponse.ShouldNotBeNull();
             emptyResponse.HttpStatusCode.ShouldNotBeNull();
             emptyResponse.ResponseHeaders.ShouldNotBeNull();
 
-            await AssertNotFound(DefaultApi.InstrumentsClient().Get(createInstrumentResponse.Id));
+            await AssertNotFound(DefaultApi.InstrumentsClient().Get(tokenInstrument.Id));
         }
 
-        private async Task<CreateInstrumentResponse> CreateTokenInstrument()
+        private async Task<CreateTokenInstrumentResponse> CreateTokenInstrument()
         {
-            var phone = new Phone
-            {
-                CountryCode = "44",
-                Number = "020 222333"
-            };
+            var phone = new Phone {CountryCode = "1", Number = "4155552671"};
+
+            var customerRequest = new CustomerRequest {Email = GenerateRandomEmail(), Name = "Testing", Phone = phone};
+
+            var customer = await DefaultApi.CustomersClient().Create(customerRequest);
+            customer.ShouldNotBeNull();
+
+            return await CreateTokenInstrument(customer.Id);
+        }
+
+        private async Task<CreateTokenInstrumentResponse> CreateTokenInstrument(string customerId)
+        {
+            var tokenResponse = await RequestToken();
+            tokenResponse.Token.ShouldNotBeNull();
+
+            var phone = new Phone {CountryCode = "+1", Number = "415 555 2671"};
 
             var billingAddress = new Address
             {
@@ -118,40 +158,37 @@ namespace Checkout.Instruments
                 Country = CountryCode.GB
             };
 
-            var cardTokenRequest = new CardTokenRequest
+            var accountHolder = new AccountHolder
             {
-                Name = TestCardSource.Visa.Name,
-                Number = TestCardSource.Visa.Number,
-                ExpiryYear = TestCardSource.Visa.ExpiryYear,
-                ExpiryMonth = TestCardSource.Visa.ExpiryMonth,
-                Cvv = TestCardSource.Visa.Cvv,
-                BillingAddress = billingAddress,
-                Phone = phone
+                FirstName = "John", LastName = "Smith", Phone = phone, BillingAddress = billingAddress
             };
 
-            var cardTokenResponse = await DefaultApi.TokensClient().Request(cardTokenRequest);
-            cardTokenResponse.ShouldNotBeNull();
+            var customer = new CreateCustomerInstrumentRequest {Id = customerId};
 
-            var request = new CreateInstrumentRequest
+            var createTokenInstrumentRequest = new CreateTokenInstrumentRequest
             {
-                Token = cardTokenResponse.Token,
-                Customer = new InstrumentCustomerRequest
-                {
-                    Email = "brucewayne@gmail.com",
-                    Name = "Bruce Wayne",
-                    Default = true,
-                    Phone = new Phone
-                    {
-                        CountryCode = "+1",
-                        Number = "4155552671"
-                    }
-                }
+                Token = tokenResponse.Token, AccountHolder = accountHolder, Customer = customer
             };
 
-            var createInstrumentResponse = await DefaultApi.InstrumentsClient().Create(request);
-            createInstrumentResponse.ShouldNotBeNull();
-
-            return createInstrumentResponse;
+            var response = await DefaultApi.InstrumentsClient()
+                .Create(createTokenInstrumentRequest);
+            response.ShouldBeAssignableTo(typeof(CreateTokenInstrumentResponse));
+            CreateTokenInstrumentResponse createTokenInstrumentResponse = (CreateTokenInstrumentResponse)response;
+            createTokenInstrumentResponse.ShouldNotBeNull();
+            createTokenInstrumentResponse.Id.ShouldNotBeNull();
+            createTokenInstrumentResponse.Fingerprint.ShouldNotBeNull();
+            createTokenInstrumentResponse.ExpiryMonth.ShouldNotBeNull();
+            createTokenInstrumentResponse.ExpiryYear.ShouldNotBeNull();
+            createTokenInstrumentResponse.Scheme.ShouldNotBeNull();
+            createTokenInstrumentResponse.Last4.ShouldNotBeNull();
+            createTokenInstrumentResponse.Bin.ShouldNotBeNull();
+            createTokenInstrumentResponse.IssuerCountry.ShouldNotBeNull();
+            createTokenInstrumentResponse.ProductId.ShouldNotBeNull();
+            createTokenInstrumentResponse.ProductType.ShouldNotBeNull();
+            createTokenInstrumentResponse.Customer.ShouldNotBeNull();
+            createTokenInstrumentResponse.CardType.ShouldNotBeNull();
+            createTokenInstrumentResponse.CardCategory.ShouldNotBeNull();
+            return createTokenInstrumentResponse;
         }
     }
 }

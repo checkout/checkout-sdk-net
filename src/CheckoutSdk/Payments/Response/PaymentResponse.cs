@@ -39,6 +39,10 @@ namespace Checkout.Payments.Response
 
         public DateTime? ProcessedOn { get; set; }
 
+        public DateTime? ExpiresOn { get; set; }
+
+        public PaymentResponseBalances Balances { get; set; }
+
         public PaymentProcessing Processing { get; set; }
 
         public string Eci { get; set; }

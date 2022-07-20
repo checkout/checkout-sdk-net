@@ -45,18 +45,8 @@ namespace Checkout.Tokens
             cardTokenResponse.ExpiryMonth.ShouldBe(cardTokenRequest.ExpiryMonth);
             cardTokenResponse.ExpiryYear.ShouldBe(cardTokenRequest.ExpiryYear);
             cardTokenResponse.ExpiresOn.ShouldNotBeNull();
-            cardTokenResponse.BillingAddress.ShouldNotBeNull();
-            cardTokenResponse.BillingAddress.AddressLine1.ShouldBe(cardTokenRequest.BillingAddress.AddressLine1);
-            cardTokenResponse.BillingAddress.AddressLine2.ShouldBe(cardTokenResponse.BillingAddress.AddressLine2);
-            cardTokenResponse.BillingAddress.City.ShouldBe(cardTokenRequest.BillingAddress.City);
-            cardTokenResponse.BillingAddress.State.ShouldBe(cardTokenRequest.BillingAddress.State);
-            cardTokenResponse.BillingAddress.Zip.ShouldBe(cardTokenRequest.BillingAddress.Zip);
-            cardTokenResponse.BillingAddress.Country.ShouldBe(cardTokenRequest.BillingAddress.Country);
-            cardTokenResponse.Phone.ShouldNotBeNull();
-            cardTokenResponse.Phone.CountryCode.ShouldBe(cardTokenRequest.Phone.CountryCode);
-            cardTokenResponse.Phone.Number.ShouldBe(cardTokenRequest.Phone.Number);
-            //cardTokenResponse.CardType.ShouldBe(CardType.Credit);
-            //cardTokenResponse.CardCategory.ShouldBe(CardCategory.Consumer);
+            cardTokenResponse.CardType.ShouldBe(CardType.Credit);
+            cardTokenResponse.CardCategory.ShouldBe(CardCategory.Consumer);
         }
     }
 }

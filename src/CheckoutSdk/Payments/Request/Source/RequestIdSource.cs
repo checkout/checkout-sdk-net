@@ -11,6 +11,5 @@ namespace Checkout.Payments.Request.Source
         public string Id { get; set; }
 
         public string Cvv { get; set; }
-               
     }
 }

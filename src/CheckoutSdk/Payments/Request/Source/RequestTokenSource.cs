@@ -15,6 +15,5 @@ namespace Checkout.Payments.Request.Source
         public Phone Phone { get; set; }
         
         public bool? StoreForFutureUse { get; set; }
-
     }
 }

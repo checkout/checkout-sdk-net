@@ -1,6 +1,6 @@
-using Checkout.Events;
-using Checkout.Payments;
-using Checkout.Webhooks;
+using Checkout.Events.Previous;
+using Checkout.Payments.Previous;
+using Checkout.Webhooks.Previous;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -62,20 +62,20 @@ namespace Checkout
             {
                 ((ItemsResponse<EventTypesResponse>)wrapper).Items = (List<EventTypesResponse>)target;
             }
-            else if (genericArgument == typeof(Workflows.Four.Events.EventTypesResponse))
+            else if (genericArgument == typeof(Workflows.Events.EventTypesResponse))
             {
-                ((ItemsResponse<Workflows.Four.Events.EventTypesResponse>)wrapper).Items =
-                    (List<Workflows.Four.Events.EventTypesResponse>)target;
+                ((ItemsResponse<Workflows.Events.EventTypesResponse>)wrapper).Items =
+                    (List<Workflows.Events.EventTypesResponse>)target;
             }
             else if (genericArgument == typeof(PaymentAction))
             {
                 ((ItemsResponse<PaymentAction>)wrapper).Items =
                     (List<PaymentAction>)target;
             }
-            else if (genericArgument == typeof(Payments.Four.PaymentAction))
+            else if (genericArgument == typeof(Payments.PaymentAction))
             {
-                ((ItemsResponse<Payments.Four.PaymentAction>)wrapper).Items =
-                    (List<Payments.Four.PaymentAction>)target;
+                ((ItemsResponse<Payments.PaymentAction>)wrapper).Items =
+                    (List<Payments.PaymentAction>)target;
             }
         }
     }

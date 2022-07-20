@@ -11,7 +11,7 @@ namespace Checkout.Payments
 
         public PaymentsClient(
             IApiClient apiClient,
-            CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKey)
+            CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
         {
         }
 
@@ -28,12 +28,12 @@ namespace Checkout.Payments
                 idempotencyKey);
         }
 
-        public Task<PaymentResponse> RequestPayout(PayoutRequest payoutRequest,
+        public Task<PayoutResponse> RequestPayout(PayoutRequest payoutRequest,
             string idempotencyKey = null,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("payoutRequest", payoutRequest);
-            return ApiClient.Post<PaymentResponse>(
+            return ApiClient.Post<PayoutResponse>(
                 PaymentsPath,
                 SdkAuthorization(),
                 payoutRequest,
@@ -99,6 +99,20 @@ namespace Checkout.Payments
             return ApiClient.Post<VoidResponse>(BuildPath(PaymentsPath, paymentId, "voids"),
                 SdkAuthorization(),
                 voidRequest,
+                cancellationToken,
+                idempotencyKey);
+        }
+
+        public Task<AuthorizationResponse> IncrementPaymentAuthorization(
+            string paymentId,
+            AuthorizationRequest authorizationRequest = null,
+            string idempotencyKey = null,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("paymentId", paymentId);
+            return ApiClient.Post<AuthorizationResponse>(BuildPath(PaymentsPath, paymentId, "authorizations"),
+                SdkAuthorization(),
+                authorizationRequest,
                 cancellationToken,
                 idempotencyKey);
         }

@@ -1,7 +1,7 @@
 using Checkout.Common;
-using Checkout.Payments.Four.Request;
-using Checkout.Payments.Four.Request.Source;
-using Checkout.Payments.Four.Sender;
+using Checkout.Payments.Request;
+using Checkout.Payments.Request.Source;
+using Checkout.Payments.Sender;
 using Shouldly;
 using System;
 using System.Threading.Tasks;
@@ -12,7 +12,7 @@ namespace Checkout
 {
     public class OAuthIntegrationTest : SandboxTestFixture
     {
-        public OAuthIntegrationTest() : base(PlatformType.FourOAuth)
+        public OAuthIntegrationTest() : base(PlatformType.DefaultOAuth)
         {
         }
 
@@ -40,9 +40,7 @@ namespace Checkout
 
             var paymentIndividualSender = new PaymentIndividualSender
             {
-                FirstName = "Mr",
-                LastName = "Test",
-                Address = address
+                FirstName = "Mr", LastName = "Test", Address = address
             };
 
             var paymentRequest = new PaymentRequest
@@ -53,14 +51,11 @@ namespace Checkout
                 Amount = 10L,
                 Currency = Currency.EUR,
                 ProcessingChannelId = "pc_a6dabcfa2o3ejghb3sjuotdzzy",
-                Marketplace = new MarketplaceData
-                {
-                    SubEntityId = "ent_ocw5i74vowfg2edpy66izhts2u"
-                },
+                Marketplace = new MarketplaceData {SubEntityId = "ent_ocw5i74vowfg2edpy66izhts2u"},
                 Sender = paymentIndividualSender
             };
 
-            var paymentResponse = await FourApi.PaymentsClient().RequestPayment(paymentRequest);
+            var paymentResponse = await DefaultApi.PaymentsClient().RequestPayment(paymentRequest);
             paymentResponse.ShouldNotBeNull();
         }
 
@@ -69,7 +64,8 @@ namespace Checkout
         {
             try
             {
-                CheckoutSdk.FourSdk().OAuth()
+                CheckoutSdk.Builder()
+                    .OAuth()
                     .ClientCredentials("fake", "fake")
                     .Environment(Environment.Sandbox)
                     .Build();
@@ -86,9 +82,10 @@ namespace Checkout
         {
             try
             {
-                CheckoutSdk.FourSdk().OAuth()
-                    .ClientCredentials(System.Environment.GetEnvironmentVariable("CHECKOUT_FOUR_OAUTH_CLIENT_ID"),
-                        System.Environment.GetEnvironmentVariable("CHECKOUT_FOUR_OAUTH_CLIENT_SECRET"))
+                CheckoutSdk.Builder()
+                    .OAuth()
+                    .ClientCredentials(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_ID"),
+                        System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET"))
                     .AuthorizationUri(new Uri("https://test.checkout.com"))
                     .HttpClientFactory(new DefaultHttpClientFactory())
                     .Build();

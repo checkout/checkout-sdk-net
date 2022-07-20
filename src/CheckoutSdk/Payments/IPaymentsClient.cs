@@ -12,7 +12,7 @@ namespace Checkout.Payments
             string idempotencyKey = null,
             CancellationToken cancellationToken = default);
 
-        Task<PaymentResponse> RequestPayout(
+        Task<PayoutResponse> RequestPayout(
             PayoutRequest payoutRequest,
             string idempotencyKey = null,
             CancellationToken cancellationToken = default);
@@ -40,6 +40,12 @@ namespace Checkout.Payments
         Task<VoidResponse> VoidPayment(
             string paymentId,
             VoidRequest voidRequest = null,
+            string idempotencyKey = null,
+            CancellationToken cancellationToken = default);
+
+        Task<AuthorizationResponse> IncrementPaymentAuthorization(
+            string paymentId,
+            AuthorizationRequest authorizationRequest = null,
             string idempotencyKey = null,
             CancellationToken cancellationToken = default);
     }

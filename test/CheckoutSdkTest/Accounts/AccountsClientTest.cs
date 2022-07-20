@@ -12,8 +12,8 @@ namespace Checkout.Accounts
 {
     public class AccountsClientTest : UnitTestFixture
     {
-        private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.Four, ValidDefaultSk);
-        private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Four);
+        private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.Default, ValidPreviousSk);
+        private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Default);
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
         private readonly Mock<IApiClient> _apiFilesClient = new Mock<IApiClient>();
         private readonly IHttpClientFactory _httpClientFactory = new DefaultHttpClientFactory();

@@ -10,7 +10,7 @@ namespace Checkout.Sessions
 {
     public abstract class AbstractSessionsIntegrationTest : SandboxTestFixture
     {
-        protected AbstractSessionsIntegrationTest() : base(PlatformType.FourOAuth)
+        protected AbstractSessionsIntegrationTest() : base(PlatformType.DefaultOAuth)
         {
         }
 
@@ -70,7 +70,7 @@ namespace Checkout.Sessions
             };
 
             return await Retriable(
-                async () => await FourApi.SessionsClient().RequestSession(sessionRequest, CancellationToken.None),
+                async () => await DefaultApi.SessionsClient().RequestSession(sessionRequest, CancellationToken.None),
                 HasSessionCreated);
         }
 
@@ -106,7 +106,7 @@ namespace Checkout.Sessions
             };
 
             return await Retriable(
-                async () => await FourApi.SessionsClient().RequestSession(sessionRequest, CancellationToken.None),
+                async () => await DefaultApi.SessionsClient().RequestSession(sessionRequest, CancellationToken.None),
                 HasSessionAccepted);
         }
 

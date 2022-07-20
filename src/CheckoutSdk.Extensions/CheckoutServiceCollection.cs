@@ -1,13 +1,16 @@
 using Checkout;
+using Checkout.Previous;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using ICheckoutApi = Checkout.Previous.ICheckoutApi;
 
 namespace CheckoutSDK.Extensions.Configuration
 {
     public static class CheckoutServiceCollection
     {
-        public static IServiceCollection AddCheckoutSdk(IServiceCollection serviceCollection,
+        public static IServiceCollection AddCheckoutSdk(
+            IServiceCollection serviceCollection,
             IConfiguration configuration,
             ILoggerFactory loggerFactory = null,
             IHttpClientFactory httpClientFactory = null)
@@ -21,63 +24,81 @@ namespace CheckoutSDK.Extensions.Configuration
 
             switch (checkoutOptions.PlatformType)
             {
+                case PlatformType.Previous:
+                    return AddSingletonPreviousSdk(serviceCollection, checkoutOptions, loggerFactory,
+                        httpClientFactory);
                 case PlatformType.Default:
                     return AddSingletonDefaultSdk(serviceCollection, checkoutOptions, loggerFactory, httpClientFactory);
-                case PlatformType.Four:
-                    return AddSingletonFourSdk(serviceCollection, checkoutOptions, loggerFactory, httpClientFactory);
-                case PlatformType.FourOAuth:
-                    return AddSingletonFourOAuthSdk(serviceCollection, checkoutOptions, loggerFactory,
+                case PlatformType.DefaultOAuth:
+                    return AddSingletonDefaultOAuthSdk(serviceCollection, checkoutOptions, loggerFactory,
                         httpClientFactory);
                 default:
                     throw new CheckoutArgumentException($"Unsupported PlatformType:{checkoutOptions.PlatformType}");
             }
         }
 
-        private static IServiceCollection AddSingletonDefaultSdk(IServiceCollection serviceCollection,
-            CheckoutOptions checkoutOptions, ILoggerFactory loggerFactory, IHttpClientFactory httpClientFactory)
+        private static IServiceCollection AddSingletonPreviousSdk(
+            IServiceCollection serviceCollection,
+            CheckoutOptions checkoutOptions,
+            ILoggerFactory loggerFactory,
+            IHttpClientFactory httpClientFactory)
         {
-            var defaultBuilder = CheckoutSdk.DefaultSdk().StaticKeys()
+            var checkoutSdkBuilder = CheckoutSdk.Builder()
+                .Previous()
+                .StaticKeys()
                 .SecretKey(checkoutOptions.SecretKey)
                 .PublicKey(checkoutOptions.PublicKey);
-            SetCommonAttributes<CheckoutDefaultSdk.StaticKeysCheckoutSdkBuilder, ICheckoutApi>(defaultBuilder,
+            SetCommonAttributes<CheckoutPreviousSdk.CheckoutStaticKeysSdkBuilder, ICheckoutApi>(
+                checkoutSdkBuilder,
                 checkoutOptions, loggerFactory, httpClientFactory);
-            return serviceCollection.AddSingleton(defaultBuilder.Build());
+            return serviceCollection.AddSingleton(checkoutSdkBuilder.Build());
         }
 
-        private static IServiceCollection AddSingletonFourSdk(IServiceCollection serviceCollection,
-            CheckoutOptions checkoutOptions, ILoggerFactory loggerFactory, IHttpClientFactory httpClientFactory)
+        private static IServiceCollection AddSingletonDefaultSdk(
+            IServiceCollection serviceCollection,
+            CheckoutOptions checkoutOptions,
+            ILoggerFactory loggerFactory,
+            IHttpClientFactory httpClientFactory)
         {
-            var fourBuilder = CheckoutSdk.FourSdk().StaticKeys()
+            var checkoutSdkBuilder = CheckoutSdk.Builder()
+                .StaticKeys()
                 .SecretKey(checkoutOptions.SecretKey)
                 .PublicKey(checkoutOptions.PublicKey);
-            SetCommonAttributes<CheckoutFourSdk.FourStaticKeysCheckoutSdkBuilder, Checkout.Four.ICheckoutApi>(
-                fourBuilder, checkoutOptions, loggerFactory, httpClientFactory);
-            return serviceCollection.AddSingleton(fourBuilder.Build());
+            SetCommonAttributes<CheckoutSdkBuilder.CheckoutStaticKeysSdkBuilder, Checkout.ICheckoutApi>(
+                checkoutSdkBuilder, checkoutOptions, loggerFactory, httpClientFactory);
+            return serviceCollection.AddSingleton(checkoutSdkBuilder.Build());
         }
 
-        private static IServiceCollection AddSingletonFourOAuthSdk(IServiceCollection serviceCollection,
-            CheckoutOptions checkoutOptions, ILoggerFactory loggerFactory, IHttpClientFactory httpClientFactory)
+        private static IServiceCollection AddSingletonDefaultOAuthSdk(
+            IServiceCollection serviceCollection,
+            CheckoutOptions checkoutOptions,
+            ILoggerFactory loggerFactory,
+            IHttpClientFactory httpClientFactory)
         {
-            var fourOAuthBuilder = CheckoutSdk.FourSdk().OAuth()
+            var checkoutSdkBuilder = CheckoutSdk.Builder()
+                .OAuth()
                 .ClientCredentials(checkoutOptions.ClientId, checkoutOptions.ClientSecret);
             if (checkoutOptions.AuthorizationUri != null)
             {
-                fourOAuthBuilder.AuthorizationUri(checkoutOptions.AuthorizationUri);
+                checkoutSdkBuilder.AuthorizationUri(checkoutOptions.AuthorizationUri);
             }
 
             if (checkoutOptions.Scopes != null)
             {
-                fourOAuthBuilder.Scopes(checkoutOptions.Scopes);
+                checkoutSdkBuilder.Scopes(checkoutOptions.Scopes);
             }
 
-            SetCommonAttributes<CheckoutFourSdk.FourOAuthCheckoutSdkBuilder, Checkout.Four.ICheckoutApi>(
-                fourOAuthBuilder, checkoutOptions, loggerFactory, httpClientFactory);
-            return serviceCollection.AddSingleton(fourOAuthBuilder.Build());
+            SetCommonAttributes<CheckoutSdkBuilder.CheckoutOAuthSdkBuilder, Checkout.ICheckoutApi>(
+                checkoutSdkBuilder, checkoutOptions, loggerFactory, httpClientFactory);
+            return serviceCollection.AddSingleton(checkoutSdkBuilder.Build());
         }
 
-        private static void SetCommonAttributes<TB, TC>(TB builder, CheckoutOptions options,
+        private static void SetCommonAttributes<TB, TC>(
+            TB builder,
+            CheckoutOptions options,
             ILoggerFactory loggerFactory,
-            IHttpClientFactory httpClientFactory) where TB : AbstractCheckoutSdkBuilder<TC>
+            IHttpClientFactory httpClientFactory)
+            where TB : AbstractCheckoutSdkBuilder<TC>
             where TC : ICheckoutApiClient
         {
             builder.Environment(options.Environment);

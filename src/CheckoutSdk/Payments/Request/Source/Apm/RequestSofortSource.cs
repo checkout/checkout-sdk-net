@@ -1,4 +1,4 @@
-using Checkout.Common;
+﻿using Checkout.Common;
 using Newtonsoft.Json;
 
 namespace Checkout.Payments.Request.Source.Apm
@@ -10,7 +10,7 @@ namespace Checkout.Payments.Request.Source.Apm
 
         [JsonProperty("languageCode")]
         public string LanguageCode { get; set; }
-
+        
         public RequestSofortSource() : base(PaymentSourceType.Sofort)
         {
         }

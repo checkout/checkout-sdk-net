@@ -44,14 +44,19 @@ namespace Checkout.Payments.Util
         {
             CheckoutUtils.ValidateParams("jToken", jToken);
             var sourceType = GetSourceType(jToken);
-            return CreateRequest(sourceType);
+            return CreateResponse(sourceType);
         }
 
-        private static IResponseSource CreateRequest(string sourceType)
+        private static IResponseSource CreateResponse(string sourceType)
         {
             if (CheckoutUtils.GetEnumMemberValue(PaymentSourceType.Card).Equals(sourceType))
             {
-                return new ResponseCardSource();
+                return new CardResponseSource();
+            }
+
+            if (CheckoutUtils.GetEnumMemberValue(PaymentSourceType.CurrencyAccount).Equals(sourceType))
+            {
+                return new CurrencyAccountResponseSource();
             }
 
             return new AlternativePaymentSourceResponse();

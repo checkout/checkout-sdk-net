@@ -10,8 +10,8 @@ namespace Checkout
 {
     public abstract class SandboxTestFixture
     {
+        protected readonly Previous.ICheckoutApi PreviousApi;
         protected readonly ICheckoutApi DefaultApi;
-        protected readonly Four.ICheckoutApi FourApi;
         private readonly ILogger _log;
         private const int TryMaxAttempts = 10;
 
@@ -21,33 +21,35 @@ namespace Checkout
             _log = logFactory.CreateLogger(typeof(SandboxTestFixture));
             switch (platformType)
             {
-                case PlatformType.Default:
-                    DefaultApi = CheckoutSdk.DefaultSdk().StaticKeys()
-                        .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PUBLIC_KEY"))
-                        .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_SECRET_KEY"))
+                case PlatformType.Previous:
+                    PreviousApi = CheckoutSdk.Builder()
+                        .Previous()
+                        .StaticKeys()
+                        .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_PUBLIC_KEY"))
+                        .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_SECRET_KEY"))
                         .Environment(Environment.Sandbox)
                         .LogProvider(logFactory)
                         .HttpClientFactory(new DefaultHttpClientFactory())
                         .Build();
                     break;
 
-                case PlatformType.Four:
-                    FourApi = CheckoutSdk.FourSdk().StaticKeys()
-                        .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_FOUR_PUBLIC_KEY"))
-                        .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_FOUR_SECRET_KEY"))
+                case PlatformType.Default:
+                    DefaultApi = CheckoutSdk.Builder().StaticKeys()
+                        .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PUBLIC_KEY"))
+                        .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_SECRET_KEY"))
                         .Environment(Environment.Sandbox)
                         .LogProvider(logFactory)
                         .Build();
                     break;
 
-                case PlatformType.FourOAuth:
-                    FourApi = CheckoutSdk.FourSdk().OAuth()
-                        .ClientCredentials(System.Environment.GetEnvironmentVariable("CHECKOUT_FOUR_OAUTH_CLIENT_ID"),
-                            System.Environment.GetEnvironmentVariable("CHECKOUT_FOUR_OAUTH_CLIENT_SECRET"))
-                        .Scopes(FourOAuthScope.Files, FourOAuthScope.Flow, FourOAuthScope.Fx, FourOAuthScope.Gateway,
-                            FourOAuthScope.Marketplace, FourOAuthScope.SessionsApp, FourOAuthScope.SessionsBrowser,
-                            FourOAuthScope.Vault, FourOAuthScope.PayoutsBankDetails, FourOAuthScope.TransfersCreate, 
-                            FourOAuthScope.TransfersView, FourOAuthScope.BalancesView)
+                case PlatformType.DefaultOAuth:
+                    DefaultApi = CheckoutSdk.Builder().OAuth()
+                        .ClientCredentials(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_ID"),
+                            System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET"))
+                        .Scopes(OAuthScope.Files, OAuthScope.Flow, OAuthScope.Fx, OAuthScope.Gateway,
+                            OAuthScope.Marketplace, OAuthScope.SessionsApp, OAuthScope.SessionsBrowser,
+                            OAuthScope.Vault, OAuthScope.PayoutsBankDetails, OAuthScope.TransfersCreate, 
+                            OAuthScope.TransfersView, OAuthScope.BalancesView)
                         .Environment(Environment.Sandbox)
                         .LogProvider(logFactory)
                         .Build();
