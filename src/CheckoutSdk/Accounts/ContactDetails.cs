@@ -2,6 +2,6 @@
 {
     public class ContactDetails
     {
-        public Phone Phone { get; set; }
+        public AccountPhone Phone { get; set; }
     }
 }

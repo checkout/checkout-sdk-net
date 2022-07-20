@@ -1,12 +1,13 @@
 using Checkout.Common;
 using Checkout.Payments.Request.Source;
+using Checkout.Payments.Sender;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
 namespace Checkout.Payments.Request
 {
-    public class PaymentRequest 
+    public class PaymentRequest
     {
         public AbstractRequestSource Source { get; set; }
 
@@ -22,6 +23,8 @@ namespace Checkout.Payments.Request
 
         public string Description { get; set; }
 
+        public AuthorizationType? AuthorizationType { get; set; }
+
         public bool? Capture { get; set; }
 
         public DateTime? CaptureOn { get; set; }
@@ -31,6 +34,10 @@ namespace Checkout.Payments.Request
         public BillingDescriptor BillingDescriptor { get; set; }
 
         public ShippingDetails Shipping { get; set; }
+
+        [JsonProperty(PropertyName = "3ds")] public ThreeDsRequest ThreeDs { get; set; }
+
+        public string ProcessingChannelId { get; set; }
 
         public string PreviousPaymentId { get; set; }
 
@@ -42,13 +49,16 @@ namespace Checkout.Payments.Request
 
         public string PaymentIp { get; set; }
 
-        [JsonProperty(PropertyName = "3ds")] public ThreeDsRequest ThreeDs { get; set; }
+        public PaymentSender Sender { get; set; }
 
         public PaymentRecipient Recipient { get; set; }
 
-        public IDictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
+        public MarketplaceData Marketplace { get; set; }
 
-        public IDictionary<string, object> Processing { get; set; } = new Dictionary<string, object>();
-            
+        public ProcessingSettings Processing { get; set; }
+
+        public IList<Product> Items { get; set; }
+
+        public IDictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
     }
 }

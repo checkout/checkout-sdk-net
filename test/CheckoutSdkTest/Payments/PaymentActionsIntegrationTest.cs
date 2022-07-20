@@ -11,17 +11,16 @@ namespace Checkout.Payments
         {
             var paymentResponse = await MakeCardPayment(true);
 
-            var actionsWrapper = await Retriable(async () =>
+            var actions = await Retriable(async () =>
                 await DefaultApi.PaymentsClient().GetPaymentActions(paymentResponse.Id), ThereAreTwoPaymentActions);
-            var actions = actionsWrapper.Items;
-            actions.ShouldNotBeNull();
-            actions.Count.ShouldBe(2);
 
-            foreach (var paymentAction in actions)
+            actions.Items.ShouldNotBeNull();
+            actions.Items.Count.ShouldBe(2);
+
+            foreach (var paymentAction in actions.Items)
             {
                 paymentAction.Amount.ShouldBe(10);
                 paymentAction.Approved.ShouldBe(true);
-                paymentAction.Links.ShouldNotBeNull();
                 paymentAction.ProcessedOn.ShouldNotBeNull();
                 paymentAction.Reference.ShouldNotBeNullOrEmpty();
                 paymentAction.ResponseCode.ShouldNotBeNullOrEmpty();

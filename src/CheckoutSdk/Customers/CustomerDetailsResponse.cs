@@ -1,5 +1,5 @@
 using Checkout.Common;
-using Checkout.Instruments;
+using Checkout.Instruments.Get;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
@@ -20,6 +20,6 @@ namespace Checkout.Customers
 
         public IDictionary<string, object> Metadata { get; set; }
 
-        public IList<InstrumentDetails> Instruments { get; set; }
+        public IList<GetInstrumentResponse> Instruments { get; set; }
     }
 }

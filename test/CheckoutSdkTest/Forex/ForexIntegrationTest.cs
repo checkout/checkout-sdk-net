@@ -7,7 +7,7 @@ namespace Checkout.Forex
 {
     public class ForexIntegrationTest : SandboxTestFixture
     {
-        public ForexIntegrationTest() : base(PlatformType.FourOAuth)
+        public ForexIntegrationTest() : base(PlatformType.DefaultOAuth)
         {
         }
 
@@ -21,7 +21,7 @@ namespace Checkout.Forex
                 DestinationCurrency = Currency.USD,
                 ProcessChannelId = "pc_abcdefghijklmnopqrstuvwxyz"
             };
-            var response = await FourApi.ForexClient().RequestQuote(request);
+            var response = await DefaultApi.ForexClient().RequestQuote(request);
 
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNull();

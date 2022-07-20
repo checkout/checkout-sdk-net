@@ -15,11 +15,11 @@ namespace Checkout
         {
             switch (_platformType)
             {
-                case PlatformType.Default:
+                case PlatformType.Previous:
                 case PlatformType.Custom:
                     return _credential;
-                case PlatformType.Four:
-                case PlatformType.FourOAuth:
+                case PlatformType.Default:
+                case PlatformType.DefaultOAuth:
                     return $"Bearer {_credential}";
                 default:
                     throw new CheckoutAuthorizationException("Invalid platform type");

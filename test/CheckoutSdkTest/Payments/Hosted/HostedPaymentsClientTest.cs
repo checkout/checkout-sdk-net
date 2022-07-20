@@ -16,8 +16,8 @@ namespace Checkout.Payments.Hosted
 
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
         private readonly Mock<CheckoutConfiguration> _configuration;
-        private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Default);
-        private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.Default, ValidDefaultSk);
+        private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Previous);
+        private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.Previous, ValidPreviousSk);
         private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
         private readonly HostedPaymentResponse _hostedPaymentResponse = new HostedPaymentResponse();
 

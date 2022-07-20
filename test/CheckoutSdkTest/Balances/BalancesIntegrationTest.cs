@@ -7,7 +7,7 @@ namespace Checkout.Balances
 {
     public class BalancesIntegrationTest : SandboxTestFixture
     {
-        public BalancesIntegrationTest() : base(PlatformType.FourOAuth)
+        public BalancesIntegrationTest() : base(PlatformType.DefaultOAuth)
         {
         }
 
@@ -16,7 +16,7 @@ namespace Checkout.Balances
         {
             var query = new BalancesQuery {Query = "currency:" + Currency.GBP};
 
-            var balances = await FourApi.BalancesClient()
+            var balances = await DefaultApi.BalancesClient()
                 .RetrieveEntityBalances("ent_kidtcgc3ge5unf4a5i6enhnr5m", query);
             balances.ShouldNotBeNull();
             balances.Data.ShouldNotBeNull();

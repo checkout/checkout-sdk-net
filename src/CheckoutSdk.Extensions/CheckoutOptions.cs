@@ -16,7 +16,7 @@ namespace CheckoutSDK.Extensions.Configuration
 
         public Uri AuthorizationUri { get; set; }
 
-        public FourOAuthScope[] Scopes { get; set; }
+        public OAuthScope[] Scopes { get; set; }
 
         public Environment Environment { get; set; }
 

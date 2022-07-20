@@ -1,5 +1,4 @@
 ﻿using Checkout.Common;
-using Checkout.Common.Four;
 
 namespace Checkout.Accounts
 {
@@ -23,7 +22,7 @@ namespace Checkout.Accounts
         
         public Address BillingAddress { get; set; }
         
-        public Phone Phone { get; set; }
+        public AccountPhone Phone { get; set; }
 
         public AccountHolderIdentification Identification { get; set; }
 

@@ -15,9 +15,12 @@ namespace Checkout
         [Fact]
         public async Task ShouldInstantiateClientWithCustomHttpClientFactory()
         {
-            var checkoutApi = CheckoutSdk.DefaultSdk().StaticKeys()
-                .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PUBLIC_KEY"))
-                .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_SECRET_KEY"))
+            var checkoutApi = CheckoutSdk
+                .Builder()
+                .Previous()
+                .StaticKeys()
+                .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_PUBLIC_KEY"))
+                .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_SECRET_KEY"))
                 .Environment(Environment.Sandbox)
                 .HttpClientFactory(new TestingClientFactory())
                 .Build();

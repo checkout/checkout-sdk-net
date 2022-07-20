@@ -18,9 +18,9 @@ namespace Checkout.Sessions
         private const string Complete = "complete";
         private const string IssuerFingerprint = "issuer-fingerprint";
 
-        private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.Default, ValidDefaultPk);
+        private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.Previous, ValidPreviousPk);
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
-        private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Default);
+        private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Previous);
         private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
         private readonly Mock<CheckoutConfiguration> _configuration;
 
@@ -43,7 +43,7 @@ namespace Checkout.Sessions
                 .Returns(_authorization);
 
             _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.OAuth))
-                .Returns(new SdkAuthorization(PlatformType.FourOAuth, string.Empty));
+                .Returns(new SdkAuthorization(PlatformType.DefaultOAuth, string.Empty));
 
             _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
                 Environment.Sandbox, _httpClientFactory.Object);

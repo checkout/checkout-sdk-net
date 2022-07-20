@@ -1,5 +1,5 @@
-using Checkout.Payments.Four.Response;
-using Checkout.Payments.Four.Sender;
+using Checkout.Payments.Response;
+using Checkout.Payments.Sender;
 using Shouldly;
 using Xunit;
 
@@ -8,7 +8,7 @@ namespace Checkout
     public class JsonSerializerTest : JsonTestFixture
     {
         [Fact]
-        public void ShouldDeserializeFourGetPaymentResponseIndividualSender()
+        public void ShouldDeserializeDefaultGetPaymentResponseIndividualSender()
         {
             var fileContent = GetJsonFileContent("./Resources/Sender/GetPaymentResponseIndividualSender.json");
             GetPaymentResponse getPaymentResponse =
@@ -23,7 +23,7 @@ namespace Checkout
         }
 
         [Fact]
-        public void ShouldDeserializeFourGetPaymentResponseCorporateSender()
+        public void ShouldDeserializeDefaultGetPaymentResponseCorporateSender()
         {
             var fileContent = GetJsonFileContent("./Resources/Sender/GetPaymentResponseCorporateSender.json");
             GetPaymentResponse getPaymentResponse =
@@ -37,7 +37,7 @@ namespace Checkout
         }
 
         [Fact]
-        public void ShouldDeserializeFourGetPaymentResponseInstrumentSender()
+        public void ShouldDeserializeDefaultGetPaymentResponseInstrumentSender()
         {
             var fileContent = GetJsonFileContent("./Resources/Sender/GetPaymentResponseInstrumentSender.json");
             GetPaymentResponse getPaymentResponse =
@@ -49,7 +49,7 @@ namespace Checkout
         }
 
         [Fact]
-        public void ShouldDeserializeFourGetPaymentResponseAlternativeSender()
+        public void ShouldDeserializeDefaultGetPaymentResponseAlternativeSender()
         {
             var fileContent = GetJsonFileContent("./Resources/Sender/GetPaymentResponseAlternativeSender.json");
             GetPaymentResponse getPaymentResponse =

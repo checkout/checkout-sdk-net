@@ -13,7 +13,7 @@ namespace Checkout.Accounts
     {
         private static readonly Random Random = new Random();
 
-        public AccountsIntegrationTest() : base(PlatformType.FourOAuth)
+        public AccountsIntegrationTest() : base(PlatformType.DefaultOAuth)
         {
         }
 
@@ -24,7 +24,7 @@ namespace Checkout.Accounts
             OnboardEntityRequest onboardEntityRequest = new OnboardEntityRequest
             {
                 Reference = randomReference,
-                ContactDetails = new ContactDetails {Phone = new Phone {Number = "2345678910"}},
+                ContactDetails = new ContactDetails {Phone = new AccountPhone {Number = "2345678910"}},
                 Profile =
                     new Profile
                     {
@@ -51,7 +51,7 @@ namespace Checkout.Accounts
                 },
             };
 
-            OnboardEntityResponse entityResponse = await FourApi.AccountsClient().CreateEntity(onboardEntityRequest);
+            OnboardEntityResponse entityResponse = await DefaultApi.AccountsClient().CreateEntity(onboardEntityRequest);
 
             entityResponse.ShouldNotBeNull();
 
@@ -60,7 +60,7 @@ namespace Checkout.Accounts
             entityId.ShouldNotBeNullOrEmpty();
             entityResponse.Reference.ShouldBe(randomReference);
 
-            OnboardEntityDetailsResponse entityDetailsResponse = await FourApi.AccountsClient().GetEntity(entityId);
+            OnboardEntityDetailsResponse entityDetailsResponse = await DefaultApi.AccountsClient().GetEntity(entityId);
 
             entityDetailsResponse.ShouldNotBeNull();
             entityDetailsResponse.Id.ShouldBe(entityId);
@@ -78,13 +78,13 @@ namespace Checkout.Accounts
             onboardEntityRequest.Individual.FirstName = "John";
 
             OnboardEntityResponse updatedEntityResponse =
-                await FourApi.AccountsClient().UpdateEntity(entityId, onboardEntityRequest);
+                await DefaultApi.AccountsClient().UpdateEntity(entityId, onboardEntityRequest);
 
             updatedEntityResponse.ShouldNotBeNull();
             updatedEntityResponse.HttpStatusCode.ShouldNotBeNull();
             updatedEntityResponse.ResponseHeaders.ShouldNotBeNull();
 
-            OnboardEntityDetailsResponse verifyUpdated = await FourApi.AccountsClient().GetEntity(entityId);
+            OnboardEntityDetailsResponse verifyUpdated = await DefaultApi.AccountsClient().GetEntity(entityId);
 
             verifyUpdated.ShouldNotBeNull();
             onboardEntityRequest.Individual.FirstName.ShouldBe(verifyUpdated.Individual.FirstName);
@@ -101,7 +101,7 @@ namespace Checkout.Accounts
                     Purpose = AccountsFilePurpose.Identification
                 };
 
-            IdResponse fileResponse = await FourApi.AccountsClient().SubmitFile(fileRequest);
+            IdResponse fileResponse = await DefaultApi.AccountsClient().SubmitFile(fileRequest);
 
             fileResponse.ShouldNotBeNull();
             fileResponse.Id.ShouldNotBeNull();

@@ -1,50 +1,85 @@
+using Checkout.Accounts;
+using Checkout.Balances;
 using Checkout.Customers;
 using Checkout.Disputes;
-using Checkout.Events;
+using Checkout.Forex;
 using Checkout.Instruments;
 using Checkout.Payments;
 using Checkout.Payments.Hosted;
 using Checkout.Payments.Links;
-using Checkout.Reconciliation;
 using Checkout.Risk;
-using Checkout.Sources;
+using Checkout.Sessions;
 using Checkout.Tokens;
-using Checkout.Webhooks;
+using Checkout.Transfers;
+using Checkout.Workflows;
 
 namespace Checkout
 {
-    public class CheckoutApi : AbstractCheckoutApmApi, ICheckoutApi
+    public class CheckoutApi : ICheckoutApi
     {
         private readonly ITokensClient _tokensClient;
         private readonly ICustomersClient _customersClient;
-        private readonly ISourcesClient _sourcesClient;
         private readonly IPaymentsClient _paymentsClient;
         private readonly IInstrumentsClient _instrumentsClient;
         private readonly IDisputesClient _disputesClient;
-        private readonly IWebhooksClient _webhooksClient;
-        private readonly IEventsClient _eventsClient;
         private readonly IRiskClient _riskClient;
+        private readonly IForexClient _forexClient;
+        private readonly IWorkflowsClient _workflowsClient;
+        private readonly ISessionsClient _sessionsClient;
+        private readonly IAccountsClient _accountsClient;
         private readonly IPaymentLinksClient _paymentLinksClient;
-        private readonly IReconciliationClient _reconciliationClient;
         private readonly IHostedPaymentsClient _hostedPaymentsClient;
+        private readonly IBalancesClient _balancesClient;
+        private readonly ITransfersClient _transfersClient;
 
-        public CheckoutApi(CheckoutConfiguration configuration) : base(configuration)
+        public CheckoutApi(CheckoutConfiguration configuration)
         {
-            var apiClient = new ApiClient(configuration.HttpClientFactory,
-                configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri);
-            _tokensClient = new TokensClient(apiClient, configuration);
-            _customersClient = new CustomersClient(apiClient, configuration);
-            _sourcesClient = new SourcesClient(apiClient, configuration);
-            _paymentsClient = new PaymentsClient(apiClient, configuration);
-            _instrumentsClient = new InstrumentsClient(apiClient, configuration);
-            _disputesClient = new DisputesClient(apiClient, configuration);
-            _webhooksClient = new WebhooksClient(apiClient, configuration);
-            _eventsClient = new EventsClient(apiClient, configuration);
-            _riskClient = new RiskClient(apiClient, configuration);
-            _paymentLinksClient = new PaymentLinksClient(apiClient, configuration);
-            _reconciliationClient = new ReconciliationClient(apiClient, configuration);
-            _hostedPaymentsClient = new HostedPaymentsClient(apiClient, configuration);
+            var baseApiClient = BaseApiClient(configuration);
+            _tokensClient = new TokensClient(baseApiClient, configuration);
+            _customersClient = new CustomersClient(baseApiClient, configuration);
+            _paymentsClient = new PaymentsClient(baseApiClient, configuration);
+            _instrumentsClient = new InstrumentsClient(baseApiClient, configuration);
+            _disputesClient = new DisputesClient(baseApiClient, configuration);
+            _riskClient = new RiskClient(baseApiClient, configuration);
+            _forexClient = new ForexClient(baseApiClient, configuration);
+            _workflowsClient = new WorkflowsClient(baseApiClient, configuration);
+            _sessionsClient = new SessionsClient(baseApiClient, configuration);
+            _accountsClient = new AccountsClient(
+                baseApiClient,
+                FilesApiClient(configuration),
+                configuration);
+            _paymentLinksClient = new PaymentLinksClient(baseApiClient, configuration);
+            _hostedPaymentsClient = new HostedPaymentsClient(baseApiClient, configuration);
+            _balancesClient = new BalancesClient(BalancesApiClient(configuration),
+                configuration);
+            _transfersClient = new TransfersClient(TransfersApiClient(configuration),
+                configuration);
         }
+
+        private static ApiClient BaseApiClient(CheckoutConfiguration configuration)
+        {
+            return new ApiClient(configuration.HttpClientFactory,
+                configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri);
+        }
+
+        private static ApiClient FilesApiClient(CheckoutConfiguration configuration)
+        {
+            return new ApiClient(configuration.HttpClientFactory,
+                configuration.Environment.GetAttribute<EnvironmentAttribute>().FilesApiUri);
+        }
+
+        private static ApiClient TransfersApiClient(CheckoutConfiguration configuration)
+        {
+            return new ApiClient(configuration.HttpClientFactory,
+                configuration.Environment.GetAttribute<EnvironmentAttribute>().TransfersApiUri);
+        }
+
+        private static ApiClient BalancesApiClient(CheckoutConfiguration configuration)
+        {
+            return new ApiClient(configuration.HttpClientFactory,
+                configuration.Environment.GetAttribute<EnvironmentAttribute>().BalancesApiUri);
+        }
+
 
         public ITokensClient TokensClient()
         {
@@ -54,11 +89,6 @@ namespace Checkout
         public ICustomersClient CustomersClient()
         {
             return _customersClient;
-        }
-
-        public ISourcesClient SourcesClient()
-        {
-            return _sourcesClient;
         }
 
         public IPaymentsClient PaymentsClient()
@@ -71,20 +101,9 @@ namespace Checkout
             return _instrumentsClient;
         }
 
-
         public IDisputesClient DisputesClient()
         {
             return _disputesClient;
-        }
-
-        public IWebhooksClient WebhooksClient()
-        {
-            return _webhooksClient;
-        }
-
-        public IEventsClient EventsClient()
-        {
-            return _eventsClient;
         }
 
         public IRiskClient RiskClient()
@@ -92,19 +111,44 @@ namespace Checkout
             return _riskClient;
         }
 
+        public IForexClient ForexClient()
+        {
+            return _forexClient;
+        }
+
+        public IWorkflowsClient WorkflowsClient()
+        {
+            return _workflowsClient;
+        }
+
+        public ISessionsClient SessionsClient()
+        {
+            return _sessionsClient;
+        }
+
+        public IAccountsClient AccountsClient()
+        {
+            return _accountsClient;
+        }
+
         public IPaymentLinksClient PaymentLinksClient()
         {
             return _paymentLinksClient;
         }
 
-        public IReconciliationClient ReconciliationClient()
-        {
-            return _reconciliationClient;
-        }
-
         public IHostedPaymentsClient HostedPaymentsClient()
         {
             return _hostedPaymentsClient;
+        }
+        
+        public IBalancesClient BalancesClient()
+        {
+            return _balancesClient;
+        }
+
+        public ITransfersClient TransfersClient()
+        {
+            return _transfersClient;
         }
     }
 }

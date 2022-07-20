@@ -1,5 +1,4 @@
 using Checkout.Common;
-using Checkout.Payments.Request.Source.Apm;
 
 namespace Checkout.Payments
 {

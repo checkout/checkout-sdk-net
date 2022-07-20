@@ -8,10 +8,10 @@ namespace Checkout
     public class CheckoutApiTest : UnitTestFixture
     {
         [Fact]
-        public void ShouldInstantiateAndRetrieveClientsDefault()
+        public void ShouldInstantiateAndRetrieveClientsPrevious()
         {
             //Arrange
-            var sdkCredentialsMock = new Mock<SdkCredentials>(MockBehavior.Strict, PlatformType.Default);
+            var sdkCredentialsMock = new Mock<SdkCredentials>(MockBehavior.Strict, PlatformType.Previous);
             var httpClientFactoryMock = new Mock<IHttpClientFactory>();
             httpClientFactoryMock.Setup(mock => mock.CreateClient())
                 .Returns(new HttpClient());
@@ -19,7 +19,7 @@ namespace Checkout
                 httpClientFactoryMock.Object);
 
             //Act
-            CheckoutApi checkoutApi = new CheckoutApi(checkoutConfiguration);
+            Previous.ICheckoutApi checkoutApi = new Previous.CheckoutApi(checkoutConfiguration);
 
             //Assert
             checkoutApi.TokensClient().ShouldNotBeNull();
@@ -27,22 +27,23 @@ namespace Checkout
             checkoutApi.SourcesClient().ShouldNotBeNull();
             checkoutApi.PaymentsClient().ShouldNotBeNull();
             checkoutApi.InstrumentsClient().ShouldNotBeNull();
+            checkoutApi.DisputesClient().ShouldNotBeNull();
             checkoutApi.WebhooksClient().ShouldNotBeNull();
             checkoutApi.EventsClient().ShouldNotBeNull();
-            checkoutApi.DisputesClient().ShouldNotBeNull();
             checkoutApi.RiskClient().ShouldNotBeNull();
+            checkoutApi.PaymentLinksClient().ShouldNotBeNull();
+            checkoutApi.ReconciliationClient().ShouldNotBeNull();
+            checkoutApi.HostedPaymentsClient().ShouldNotBeNull();
             checkoutApi.IdealClient().ShouldNotBeNull();
             checkoutApi.KlarnaClient().ShouldNotBeNull();
             checkoutApi.SepaClient().ShouldNotBeNull();
-            checkoutApi.ReconciliationClient().ShouldNotBeNull();
-            checkoutApi.HostedPaymentsClient().ShouldNotBeNull();
         }
 
         [Fact]
-        public void ShouldInstantiateAndRetrieveClientsFour()
+        public void ShouldInstantiateAndRetrieveClientsDefault()
         {
             //Arrange
-            var sdkCredentialsMock = new Mock<SdkCredentials>(MockBehavior.Strict, PlatformType.Default);
+            var sdkCredentialsMock = new Mock<SdkCredentials>(MockBehavior.Strict, PlatformType.Previous);
             var httpClientFactoryMock = new Mock<IHttpClientFactory>();
             httpClientFactoryMock.Setup(mock => mock.CreateClient())
                 .Returns(new HttpClient());
@@ -50,7 +51,7 @@ namespace Checkout
                 httpClientFactoryMock.Object);
 
             //Act
-            Four.ICheckoutApi checkoutApi = new Four.CheckoutApi(checkoutConfiguration);
+            ICheckoutApi checkoutApi = new CheckoutApi(checkoutConfiguration);
 
             //Assert
             checkoutApi.TokensClient().ShouldNotBeNull();

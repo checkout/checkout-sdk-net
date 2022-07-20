@@ -1,12 +1,16 @@
 using Checkout.Common;
 using Checkout.Payments.Request;
+using Checkout.Payments.Request.Destination;
 using Checkout.Payments.Request.Source;
+using Checkout.Payments.Request.Source.Apm;
 using Checkout.Payments.Response;
 using Moq;
 using Shouldly;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using Product = Checkout.Payments.Request.Product;
 
 namespace Checkout.Payments
 {
@@ -16,23 +20,29 @@ namespace Checkout.Payments
 
         private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.Default, ValidDefaultSk);
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
-        private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Default);
+        private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Previous);
         private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
         private readonly Mock<CheckoutConfiguration> _configuration;
 
         public PaymentsClientTest()
         {
-            _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.SecretKey))
+            _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth))
                 .Returns(_authorization);
 
             _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Production, _httpClientFactory.Object);
+                Environment.Sandbox, _httpClientFactory.Object);
         }
 
         [Fact]
         private async Task ShouldRequestPayment()
         {
-            var paymentRequest = new PaymentRequest();
+            var paymentRequest = new PaymentRequest
+            {
+                Source = new RequestProviderTokenSource
+                {
+                    Token = "token", PaymentMethod = "method", AccountHolder = new AccountHolder()
+                }
+            };
             var paymentResponse = new PaymentResponse();
 
             _apiClient.Setup(apiClient =>
@@ -51,13 +61,49 @@ namespace Checkout.Payments
         [Fact]
         private async Task ShouldRequestPayment_CustomSource()
         {
-            CustomSource customSource = new CustomSource {amount = 10L, currency = Currency.USD};
-
-            var paymentRequest = new PaymentRequest();
-            paymentRequest.Source = customSource;
-
-            var paymentResponse = new PaymentResponse();
-
+            var paymentRequest = new PaymentRequest
+            {
+                Customer = new CustomerRequest {Phone = new Phone()},
+                Processing =
+                    new ProcessingSettings
+                    {
+                        TaxAmount = 500,
+                        ShippingAmount = 1000,
+                    },
+                Source = new RequestTamaraSource
+                {
+                    BillingAddress = new Address
+                    {
+                        AddressLine1 = "Cecilia Chapman",
+                        AddressLine2 = "711-2880 Nulla St.",
+                        City = "Mankato",
+                        State = "Mississippi",
+                        Zip = "96522",
+                        Country = CountryCode.SA
+                    }
+                },
+                Items = new List<Product>
+                {
+                    new Product
+                    {
+                        Name = "Item name",
+                        Quantity = 3,
+                        UnitPrice = 100,
+                        TotalAmount = 100,
+                        TaxAmount = 19,
+                        DiscountAmount = 2,
+                        Reference = "some description about item",
+                        ImageUrl = "https://some_s3bucket.com",
+                        Url = "https://some.website.com/item",
+                        Sku = "123687000111"
+                    }
+                }
+            };
+            var paymentResponse = new PaymentResponse
+            {
+                Customer = new CustomerResponse {Id = "id", Email = "email", Name = "name", Phone = new Phone()},
+                Processing = new PaymentProcessing {PartnerPaymentId = "123456"}
+            };
             _apiClient.Setup(apiClient =>
                     apiClient.Post<PaymentResponse>(PaymentsPath, _authorization, paymentRequest,
                         CancellationToken.None, null))
@@ -69,24 +115,30 @@ namespace Checkout.Payments
 
             response.ShouldNotBeNull();
             response.ShouldBeSameAs(paymentResponse);
+            response.Customer.ShouldNotBeNull();
+            response.Customer.Phone.ShouldNotBeNull();
         }
-
-
-        private class CustomSource : AbstractRequestSource
-        {
-            public CustomSource() : base(PaymentSourceType.Alipay)
-            {
-            }
-
-            public long? amount { get; set; }
-
-            public Currency? currency { get; set; }
-        }
-
+        
         [Fact]
         private async Task ShouldRequestPayment_IdempotencyKey()
         {
-            var paymentRequest = new PaymentRequest();
+            var paymentRequest = new PaymentRequest
+            {
+                Source = new RequestNetworkTokenSource
+                {
+                    Token = "token",
+                    Cryptogram = "cryptogram",
+                    Cvv = "123",
+                    Eci = "eci",
+                    Name = "name",
+                    Phone = new Phone(),
+                    Stored = false,
+                    BillingAddress = new Address(),
+                    ExpiryMonth = 12,
+                    ExpiryYear = 2024,
+                    TokenType = NetworkTokenType.Vts
+                }
+            };
             var paymentResponse = new PaymentResponse();
 
             _apiClient.Setup(apiClient =>
@@ -105,41 +157,55 @@ namespace Checkout.Payments
         [Fact]
         private async Task ShouldRequestPayout()
         {
-            var payoutRequest = new PayoutRequest();
-            var paymentResponse = new PaymentResponse();
+            var payoutRequest = new PayoutRequest
+            {
+                Destination = new PaymentRequestBankAccountDestination
+                {
+                    AccountType = AccountType.Cash,
+                    AccountNumber = "13654567455",
+                    BankCode = "bank_code",
+                    BranchCode = "6443",
+                    Bban = "3704 0044 0532 0130 00",
+                    Iban = "HU93116000060000000012345676",
+                    SwiftBic = "37040044",
+                    Country = CountryCode.HU,
+                    AccountHolder = new AccountHolder {FirstName = "First Name", LastName = "Last Name",},
+                    Bank = new BankDetails {Name = "Bank Name", Address = new Address(), Branch = "branch"}
+                }
+            };
+            var payoutResponse = new PayoutResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<PaymentResponse>(PaymentsPath, _authorization, payoutRequest,
+                    apiClient.Post<PayoutResponse>(PaymentsPath, _authorization, payoutRequest,
                         CancellationToken.None, null))
-                .ReturnsAsync(() => paymentResponse);
+                .ReturnsAsync(() => payoutResponse);
 
             IPaymentsClient paymentsClient = new PaymentsClient(_apiClient.Object, _configuration.Object);
 
             var response = await paymentsClient.RequestPayout(payoutRequest, null, CancellationToken.None);
 
             response.ShouldNotBeNull();
-            response.ShouldBeSameAs(paymentResponse);
+            response.ShouldBeSameAs(payoutResponse);
         }
 
         [Fact]
         private async Task ShouldRequestPayout_IdempotencyKey()
         {
             var payoutRequest = new PayoutRequest();
-            var paymentResponse = new PaymentResponse();
+            var payoutResponse = new PayoutResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<PaymentResponse>(PaymentsPath, _authorization, payoutRequest,
+                    apiClient.Post<PayoutResponse>(PaymentsPath, _authorization, payoutRequest,
                         CancellationToken.None, "test"))
-                .ReturnsAsync(() => paymentResponse);
+                .ReturnsAsync(() => payoutResponse);
 
             IPaymentsClient paymentsClient = new PaymentsClient(_apiClient.Object, _configuration.Object);
 
             var response = await paymentsClient.RequestPayout(payoutRequest, "test", CancellationToken.None);
 
             response.ShouldNotBeNull();
-            response.ShouldBeSameAs(paymentResponse);
+            response.ShouldBeSameAs(payoutResponse);
         }
-
 
         [Fact]
         private async Task ShouldGetPaymentDetails()
@@ -340,6 +406,26 @@ namespace Checkout.Payments
             IPaymentsClient paymentsClient = new PaymentsClient(_apiClient.Object, _configuration.Object);
 
             var response = await paymentsClient.VoidPayment("payment_id", voidRequest, "test");
+
+            response.ShouldNotBeNull();
+        }
+
+        [Fact]
+        private async Task ShouldIncrementPaymentAuthorization()
+        {
+            var authorizationRequest = new AuthorizationRequest();
+            var authorizationResponse = new AuthorizationResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<AuthorizationResponse>(PaymentsPath + "/payment_id/authorizations", _authorization,
+                        authorizationRequest,
+                        CancellationToken.None, "test"))
+                .ReturnsAsync(() => authorizationResponse);
+
+            IPaymentsClient paymentsClient = new PaymentsClient(_apiClient.Object, _configuration.Object);
+
+            var response =
+                await paymentsClient.IncrementPaymentAuthorization("payment_id", authorizationRequest, "test");
 
             response.ShouldNotBeNull();
         }

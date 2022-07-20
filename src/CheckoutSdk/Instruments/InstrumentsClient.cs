@@ -1,3 +1,7 @@
+﻿using Checkout.Common;
+using Checkout.Instruments.Create;
+using Checkout.Instruments.Get;
+using Checkout.Instruments.Update;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,16 +12,8 @@ namespace Checkout.Instruments
         private const string InstrumentsPath = "instruments";
 
         public InstrumentsClient(IApiClient apiClient,
-            CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKey)
+            CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
         {
-        }
-
-        public Task<RetrieveInstrumentResponse> Get(string instrumentId, CancellationToken cancellationToken = default)
-        {
-            CheckoutUtils.ValidateParams("instrumentId", instrumentId);
-            return ApiClient.Get<RetrieveInstrumentResponse>(BuildPath(InstrumentsPath, instrumentId),
-                SdkAuthorization(),
-                cancellationToken);
         }
 
         public Task<CreateInstrumentResponse> Create(CreateInstrumentRequest createInstrumentRequest,
@@ -28,6 +24,14 @@ namespace Checkout.Instruments
                 InstrumentsPath,
                 SdkAuthorization(),
                 createInstrumentRequest,
+                cancellationToken);
+        }
+
+        public Task<GetInstrumentResponse> Get(string instrumentId, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("instrumentId", instrumentId);
+            return ApiClient.Get<GetInstrumentResponse>(BuildPath(InstrumentsPath, instrumentId),
+                SdkAuthorization(),
                 cancellationToken);
         }
 
@@ -50,6 +54,16 @@ namespace Checkout.Instruments
                 BuildPath(InstrumentsPath, instrumentId),
                 SdkAuthorization(),
                 cancellationToken);
+        }
+
+        public Task<BankAccountFieldResponse> GetBankAccountFieldFormatting(CountryCode country, Currency currency,
+            BankAccountFieldQuery bankAccountFieldQuery, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("country", country, "currency", currency, "bankAccountFieldQuery",
+                bankAccountFieldQuery);
+            return ApiClient.Query<BankAccountFieldResponse>(
+                BuildPath("validation/bank-accounts", country.ToString(), currency.ToString()),
+                SdkAuthorization(SdkAuthorizationType.OAuth), bankAccountFieldQuery, cancellationToken);
         }
     }
 }

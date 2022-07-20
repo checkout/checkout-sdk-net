@@ -38,7 +38,7 @@ namespace Checkout.Payments.Links
 
         public string Locale { get; set; }
 
-        // Only available in Four
+        //Not available on Previous
 
         public string ProcessingChannelId { get; set; }
 
