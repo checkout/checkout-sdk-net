@@ -6,14 +6,14 @@ namespace Checkout.Apm.Ideal
 {
     public class IdealIntegrationTest : SandboxTestFixture
     {
-        public IdealIntegrationTest() : base(PlatformType.Default)
+        public IdealIntegrationTest() : base(PlatformType.Previous)
         {
         }
 
         [Fact(Skip = "unavailable")]
         private async Task ShouldGetInfo()
         {
-            var idealInfo = await DefaultApi.IdealClient().GetInfo();
+            var idealInfo = await PreviousApi.IdealClient().GetInfo();
 
             idealInfo.ShouldNotBeNull();
             idealInfo.Links.ShouldNotBeNull();
@@ -26,7 +26,7 @@ namespace Checkout.Apm.Ideal
         [Fact]
         private async Task ShouldGetIssuers()
         {
-            var idealInfo = await DefaultApi.IdealClient().GetIssuers();
+            var idealInfo = await PreviousApi.IdealClient().GetIssuers();
 
             idealInfo.ShouldNotBeNull();
             idealInfo.GetSelfLink().ShouldNotBeNull();

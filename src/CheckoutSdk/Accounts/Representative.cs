@@ -14,7 +14,7 @@ namespace Checkout.Accounts
 
         public Identification Identification { get; set; }
 
-        public Phone Phone { get; set; }
+        public AccountPhone Phone { get; set; }
 
         public DateOfBirth DateOfBirth { get; set; }
     }

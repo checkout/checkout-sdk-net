@@ -9,15 +9,15 @@ namespace Checkout.Customers
 {
     public class CustomersClientTest : UnitTestFixture
     {
-        private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.Default, ValidDefaultSk);
+        private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.Previous, ValidPreviousSk);
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
-        private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Default);
+        private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Previous);
         private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
         private readonly Mock<CheckoutConfiguration> _configuration;
 
         public CustomersClientTest()
         {
-            _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.SecretKey))
+            _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth))
                 .Returns(_authorization);
 
             _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,

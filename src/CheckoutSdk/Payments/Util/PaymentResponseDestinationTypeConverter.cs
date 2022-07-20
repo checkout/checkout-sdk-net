@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Checkout.Payments.Util
 {
-    public class PaymentResponseDestinationTypeConverter : JsonConverter
+    public sealed class PaymentResponseDestinationTypeConverter : JsonConverter
     {
         public override bool CanWrite => false;
 
@@ -48,9 +48,9 @@ namespace Checkout.Payments.Util
 
         private static IPaymentResponseDestination CreateRequest(string destinationType)
         {
-            if (CheckoutUtils.GetEnumMemberValue(PaymentDestinationType.Card).Equals(destinationType))
+            if (CheckoutUtils.GetEnumMemberValue(PaymentDestinationType.BankAccount).Equals(destinationType))
             {
-                return new PaymentResponseCardDestination();
+                return new PaymentResponseBankAccountDestination();
             }
 
             return new PaymentResponseAlternativeDestination();

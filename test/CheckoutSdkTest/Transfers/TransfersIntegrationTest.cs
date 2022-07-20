@@ -7,7 +7,7 @@ namespace Checkout.Transfers
 {
     public class TransfersIntegrationTest : SandboxTestFixture
     {
-        public TransfersIntegrationTest() : base(PlatformType.FourOAuth)
+        public TransfersIntegrationTest() : base(PlatformType.DefaultOAuth)
         {
         }
 
@@ -23,7 +23,7 @@ namespace Checkout.Transfers
                 };
 
             var createTransferResponse =
-                await FourApi.TransfersClient().InitiateTransferOfFunds(createTransferRequest);
+                await DefaultApi.TransfersClient().InitiateTransferOfFunds(createTransferRequest);
 
             createTransferResponse.ShouldNotBeNull();
             createTransferResponse.Id.ShouldNotBeNullOrEmpty();
@@ -31,7 +31,7 @@ namespace Checkout.Transfers
             createTransferResponse.Links.ShouldNotBeNull();
             createTransferResponse.Links.ShouldNotBeEmpty();
 
-            var transferDetailsResponse = await FourApi.TransfersClient().RetrieveATransfer(createTransferResponse.Id);
+            var transferDetailsResponse = await DefaultApi.TransfersClient().RetrieveATransfer(createTransferResponse.Id);
             transferDetailsResponse.ShouldNotBeNull();
             transferDetailsResponse.Status.ShouldNotBeNull();
             transferDetailsResponse.TransferType.ShouldNotBeNull();
@@ -56,7 +56,7 @@ namespace Checkout.Transfers
             var idempotencyKey = Guid.NewGuid().ToString();
 
             var createTransferResponse =
-                await FourApi.TransfersClient().InitiateTransferOfFunds(createTransferRequest, idempotencyKey);
+                await DefaultApi.TransfersClient().InitiateTransferOfFunds(createTransferRequest, idempotencyKey);
 
             createTransferResponse.ShouldNotBeNull();
             createTransferResponse.Id.ShouldNotBeNullOrEmpty();
@@ -66,7 +66,7 @@ namespace Checkout.Transfers
 
             try
             {
-                await FourApi.TransfersClient().InitiateTransferOfFunds(createTransferRequest, idempotencyKey);
+                await DefaultApi.TransfersClient().InitiateTransferOfFunds(createTransferRequest, idempotencyKey);
             }
             catch (Exception ex)
             {

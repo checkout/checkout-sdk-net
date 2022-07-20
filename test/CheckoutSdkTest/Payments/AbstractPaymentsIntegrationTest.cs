@@ -1,12 +1,11 @@
 using Checkout.Common;
-using Checkout.Payments.Hosted;
 using Checkout.Payments.Request;
 using Checkout.Payments.Request.Source;
 using Checkout.Payments.Response;
+using Checkout.Payments.Sender;
 using Checkout.Tokens;
 using Shouldly;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit.Sdk;
 
@@ -39,14 +38,30 @@ namespace Checkout.Payments
                 Phone = GetPhone()
             };
 
+            var customerRequest = new CustomerRequest {Email = GenerateRandomEmail(), Name = "Customer"};
+
+            var paymentIndividualSender = new PaymentIndividualSender
+            {
+                FirstName = "Mr",
+                LastName = "Test",
+                Address = GetAddress(),
+                AccountHolderIdentification = new AccountHolderIdentification
+                {
+                    IssuingCountry = CountryCode.GT, Number = "1234", Type = AccountHolderIdentificationType.DrivingLicence
+                }
+            };
+
             var paymentRequest = new PaymentRequest
             {
                 Source = requestCardSource,
                 Capture = shouldCapture,
                 Reference = Guid.NewGuid().ToString(),
                 Amount = amount,
-                Currency = Currency.GBP,
-                CaptureOn = captureOn
+                Currency = Currency.USD,
+                Customer = customerRequest,
+                Sender = paymentIndividualSender,
+                CaptureOn = captureOn,
+                BillingDescriptor = new BillingDescriptor {Name = "name", City = "London", Reference = "reference"}
             };
 
             var paymentResponse = await DefaultApi.PaymentsClient().RequestPayment(paymentRequest);
@@ -56,32 +71,23 @@ namespace Checkout.Payments
 
         protected async Task<PaymentResponse> MakeTokenPayment()
         {
-            var phone = GetPhone();
-            var billingAddress = GetAddress();
+            var cardTokenResponse = await RequestToken();
 
-            var cardTokenRequest = new CardTokenRequest
-            {
-                Name = TestCardSource.Visa.Name,
-                Number = TestCardSource.Visa.Number,
-                ExpiryYear = TestCardSource.Visa.ExpiryYear,
-                ExpiryMonth = TestCardSource.Visa.ExpiryMonth,
-                Cvv = TestCardSource.Visa.Cvv,
-                BillingAddress = billingAddress,
-                Phone = phone
-            };
+            var requestTokenSource = new RequestTokenSource {Token = cardTokenResponse.Token};
 
-            var cardTokenResponse = await DefaultApi.TokensClient().Request(cardTokenRequest);
-            cardTokenResponse.ShouldNotBeNull();
+            var customerRequest = new CustomerRequest {Email = GenerateRandomEmail()};
+
+            var paymentInstrument = new PaymentInstrumentSender();
 
             var paymentRequest = new PaymentRequest
             {
-                Source = new RequestTokenSource {Token = cardTokenResponse.Token},
+                Source = requestTokenSource,
                 Capture = true,
                 Reference = Guid.NewGuid().ToString(),
                 Amount = 10L,
                 Currency = Currency.USD,
-                Customer = new CustomerRequest {Email = GenerateRandomEmail()},
-                BillingDescriptor = new BillingDescriptor {Name = "name", City = "London", Reference = "reference"}
+                Customer = customerRequest,
+                Sender = paymentInstrument
             };
 
             var paymentResponse = await DefaultApi.PaymentsClient().RequestPayment(paymentRequest);
@@ -91,9 +97,6 @@ namespace Checkout.Payments
 
         protected async Task<PaymentResponse> Make3dsCardPayment(bool attemptN3d = false)
         {
-            var phone = GetPhone();
-            var billingAddress = GetAddress();
-
             var requestCardSource = new RequestCardSource
             {
                 Name = TestCardSource.Visa.Name,
@@ -101,8 +104,8 @@ namespace Checkout.Payments
                 ExpiryYear = TestCardSource.Visa.ExpiryYear,
                 ExpiryMonth = TestCardSource.Visa.ExpiryMonth,
                 Cvv = TestCardSource.Visa.Cvv,
-                BillingAddress = billingAddress,
-                Phone = phone
+                BillingAddress = GetAddress(),
+                Phone = GetPhone()
             };
 
             var threeDsRequest = new ThreeDsRequest
@@ -115,7 +118,10 @@ namespace Checkout.Payments
                 Version = "2.0.1"
             };
 
-            var customerRequest = new CustomerRequest {Email = GenerateRandomEmail()};
+            var customerRequest = new CustomerRequest {Email = GenerateRandomEmail(), Name = "Customer"};
+
+            var paymentIndividualSender =
+                new PaymentCorporateSender {CompanyName = "Testing Inc.", Address = GetAddress()};
 
             var paymentRequest = new PaymentRequest
             {
@@ -125,7 +131,10 @@ namespace Checkout.Payments
                 Amount = 10L,
                 Currency = Currency.USD,
                 Customer = customerRequest,
-                ThreeDs = threeDsRequest
+                ThreeDs = threeDsRequest,
+                Sender = paymentIndividualSender,
+                SuccessUrl = "https://test.checkout.com/success",
+                FailureUrl = "https://test.checkout.com/failure"
             };
 
             var paymentResponse = await DefaultApi.PaymentsClient().RequestPayment(paymentRequest);
@@ -133,41 +142,22 @@ namespace Checkout.Payments
             return paymentResponse;
         }
 
-        protected static HostedPaymentRequest CreateHostedPaymentRequest(string reference)
+        protected async Task<CardTokenResponse> RequestToken()
         {
-            var customer = new CustomerRequest {Name = "Jack Napier", Email = GenerateRandomEmail()};
-            var shippingDetails = new ShippingDetails {Address = GetAddress(), Phone = GetPhone()};
-            var billing = new BillingInformation {Address = GetAddress(), Phone = GetPhone()};
-
-            var recipient = new PaymentRecipient
+            var cardTokenRequest = new CardTokenRequest
             {
-                AccountNumber = "1234567",
-                DateOfBirth = "1985-05-15",
-                LastName = "TESTING",
-                Zip = "12345"
+                Name = TestCardSource.Visa.Name,
+                Number = TestCardSource.Visa.Number,
+                ExpiryYear = TestCardSource.Visa.ExpiryYear,
+                ExpiryMonth = TestCardSource.Visa.ExpiryMonth,
+                Cvv = TestCardSource.Visa.Cvv,
+                BillingAddress = GetAddress(),
+                Phone = GetPhone()
             };
 
-            return new HostedPaymentRequest
-            {
-                Amount = 1000L,
-                Reference = reference,
-                Currency = Currency.GBP,
-                Description = "Payment for Gold Necklace",
-                Customer = customer,
-                Shipping = shippingDetails,
-                Billing = billing,
-                Recipient = recipient,
-                Processing = new ProcessingSettings {Aft = true},
-                Products = new List<Product> {new Product {Name = "Gold Necklace", Quantity = 1L, Price = 200L}},
-                Risk = new RiskRequest {Enabled = false},
-                SuccessUrl = "https://example.com/payments/success",
-                CancelUrl = "https://example.com/payments/success",
-                FailureUrl = "https://example.com/payments/success",
-                Locale = "en-GB",
-                ThreeDs = new ThreeDsRequest {Enabled = false, AttemptN3D = false},
-                Capture = true,
-                CaptureOn = DateTime.UtcNow
-            };
+            var cardTokenResponse = await DefaultApi.TokensClient().Request(cardTokenRequest);
+            cardTokenResponse.ShouldNotBeNull();
+            return cardTokenResponse;
         }
     }
 }

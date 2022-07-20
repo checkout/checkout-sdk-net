@@ -1,6 +1,5 @@
 using Checkout.Payments;
 using Shouldly;
-using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -11,18 +10,13 @@ namespace Checkout.Disputes
         [Fact]
         private async Task ShouldQueryDisputes()
         {
-            var from = DateTime.UtcNow.Subtract(TimeSpan.FromHours(24));
-            var to = DateTime.Now; // local timezone
-            var request = new DisputesQueryFilter {Limit = 250, To = to, From = from};
+            var request = new DisputesQueryFilter();
 
             var response = await DefaultApi.DisputesClient().Query(request);
             response.ShouldNotBeNull();
-            response.Limit.ShouldBe(250);
+            response.Limit.ShouldNotBeNull();
             response.Skip.ShouldNotBeNull();
             response.TotalCount.ShouldNotBeNull();
-            response.To.ShouldNotBeNull();
-            response.From.ShouldNotBeNull();
-
             if (response.TotalCount > 0)
             {
                 var dispute = response.Data[0];
@@ -62,7 +56,6 @@ namespace Checkout.Disputes
             //Make the payment
             var payment = await MakeCardPayment(true, 1040L);
             payment.ShouldNotBeNull();
-
             var query = new DisputesQueryFilter {PaymentId = payment.Id};
 
             //Query for dispute
@@ -76,8 +69,8 @@ namespace Checkout.Disputes
             const string filePath = "./Resources/checkout.jpeg";
             var fileResponse = await DefaultApi.DisputesClient().SubmitFile(filePath, "dispute_evidence");
 
-            //Provide dispute evidence
-            var disputeEvidenceRequest = new DisputeEvidenceRequest
+            //Provide dispute evidence 
+            var disputeEvidenceRequest = new DisputeEvidenceRequest()
             {
                 ProofOfDeliveryOrServiceFile = fileResponse.Id,
                 ProofOfDeliveryOrServiceText = "proof of delivery or service text",
@@ -88,11 +81,9 @@ namespace Checkout.Disputes
                 AdditionalEvidenceFile = fileResponse.Id,
                 AdditionalEvidenceText = "Scanned document"
             };
+
             var disputeId = queryResponse.Data[0].Id;
-            var emptyResponse = await DefaultApi.DisputesClient().PutEvidence(disputeId, disputeEvidenceRequest);
-            emptyResponse.ShouldNotBeNull();
-            emptyResponse.HttpStatusCode.ShouldNotBeNull();
-            emptyResponse.ResponseHeaders.ShouldNotBeNull();
+            await DefaultApi.DisputesClient().PutEvidence(disputeId, disputeEvidenceRequest);
 
             //Verify the dispute evidence
             var evidence = await DefaultApi.DisputesClient().GetEvidence(disputeId);

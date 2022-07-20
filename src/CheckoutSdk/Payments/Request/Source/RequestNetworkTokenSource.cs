@@ -29,6 +29,5 @@ namespace Checkout.Payments.Request.Source
         public Address BillingAddress { get; set; }
 
         public Phone Phone { get; set; }
-              
     }
 }

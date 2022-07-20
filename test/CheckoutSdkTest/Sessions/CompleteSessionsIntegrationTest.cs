@@ -43,11 +43,11 @@ namespace Checkout.Sessions
             {
                 if (!usingSessionSecret)
                 {
-                    await FourApi.SessionsClient().CompleteSession(sessionId);
+                    await DefaultApi.SessionsClient().CompleteSession(sessionId);
                 }
                 else
                 {
-                    await FourApi.SessionsClient().CompleteSession(sessionSecret, sessionId);
+                    await DefaultApi.SessionsClient().CompleteSession(sessionSecret, sessionId);
                 }
 
                 throw new XunitException();

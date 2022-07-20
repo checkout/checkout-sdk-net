@@ -1,4 +1,4 @@
-﻿using Checkout.Common;
+using Checkout.Common;
 
 namespace Checkout.Payments.Request.Destination
 {
@@ -14,15 +14,6 @@ namespace Checkout.Payments.Request.Destination
 
         public int? ExpiryYear { get; set; }
 
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
-
-        public string Name { get; set; }
-
-        public Address BillingAddress { get; set; }
-
-        public Phone Phone { get; set; }
-              
+        public AccountHolder AccountHolder { get; set; }
     }
 }

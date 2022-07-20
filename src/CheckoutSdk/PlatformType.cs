@@ -2,9 +2,9 @@ namespace Checkout
 {
     public enum PlatformType
     {
+        Previous,
         Default,
-        Four,
-        FourOAuth,
+        DefaultOAuth,
         Custom
     }
 }

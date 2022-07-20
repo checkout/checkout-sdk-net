@@ -10,9 +10,11 @@ namespace Checkout
     public class CheckoutDefaultSdkTest : UnitTestFixture
     {
         [Fact]
-        private void ShouldCreateCheckoutSdks()
+        private void ShouldCreateStaticKeysCheckoutSdks()
         {
-            var checkoutApi1 = CheckoutSdk.DefaultSdk().StaticKeys()
+            var checkoutApi1 = CheckoutSdk
+                .Builder()
+                .StaticKeys()
                 .PublicKey(ValidDefaultPk)
                 .SecretKey(ValidDefaultSk)
                 .Environment(Environment.Sandbox)
@@ -20,7 +22,9 @@ namespace Checkout
 
             checkoutApi1.ShouldNotBeNull();
 
-            var checkoutApi2 = CheckoutSdk.DefaultSdk().StaticKeys()
+            var checkoutApi2 = CheckoutSdk
+                .Builder()
+                .StaticKeys()
                 .SecretKey(ValidDefaultSk)
                 .Environment(Environment.Sandbox)
                 .Build();
@@ -33,8 +37,10 @@ namespace Checkout
         {
             try
             {
-                CheckoutSdk.DefaultSdk().StaticKeys()
-                    .PublicKey(InvalidDefaultPk)
+                CheckoutSdk
+                    .Builder()
+                    .StaticKeys()
+                    .PublicKey(InvalidPreviousPk)
                     .SecretKey(ValidDefaultSk)
                     .Environment(Environment.Sandbox)
                     .Build();
@@ -48,7 +54,9 @@ namespace Checkout
 
             try
             {
-                CheckoutSdk.DefaultSdk().StaticKeys()
+                CheckoutSdk
+                    .Builder()
+                    .StaticKeys()
                     .PublicKey(ValidDefaultPk)
                     .SecretKey(InvalidDefaultSk)
                     .Environment(Environment.Sandbox)
@@ -70,7 +78,9 @@ namespace Checkout
             httpClientFactory.Setup(mock => mock.CreateClient())
                 .Returns(new HttpClient());
 
-            var checkoutApi = CheckoutSdk.DefaultSdk().StaticKeys()
+            var checkoutApi = CheckoutSdk
+                .Builder()
+                .StaticKeys()
                 .PublicKey(ValidDefaultPk)
                 .SecretKey(ValidDefaultSk)
                 .Environment(Environment.Sandbox)

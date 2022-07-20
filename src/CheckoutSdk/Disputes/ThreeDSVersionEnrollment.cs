@@ -1,4 +1,4 @@
-using Checkout.Common.Four;
+using Checkout.Common;
 
 namespace Checkout.Disputes
 {

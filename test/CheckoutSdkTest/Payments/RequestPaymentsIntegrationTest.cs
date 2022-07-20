@@ -14,7 +14,7 @@ namespace Checkout.Payments
         [Fact]
         private async Task ShouldMakeCardPayment()
         {
-            var paymentResponse = await MakeCardPayment(true, captureOn: DateTime.Now.AddDays(1));
+            var paymentResponse = await MakeCardPayment(true, captureOn: DateTime.Now.AddDays(2));
             paymentResponse.ShouldNotBeNull();
 
             paymentResponse.Id.ShouldNotBeNullOrEmpty();
@@ -28,40 +28,48 @@ namespace Checkout.Payments
             paymentResponse.Amount.ShouldBe(10);
             paymentResponse.Approved.ShouldBe(true);
             paymentResponse.AuthCode.ShouldNotBeNullOrEmpty();
-            paymentResponse.Currency.ShouldBe(Currency.GBP);
+            paymentResponse.Currency.ShouldBe(Currency.USD);
             paymentResponse.ThreeDs.ShouldBeNull();
             //Source
-            paymentResponse.Source.ShouldBeAssignableTo(typeof(ResponseCardSource));
-            var cardSourceResponse = (ResponseCardSource)paymentResponse.Source;
+            paymentResponse.Source.ShouldBeAssignableTo(typeof(CardResponseSource));
+            var cardSourceResponse = (CardResponseSource)paymentResponse.Source;
             cardSourceResponse.Type().ShouldBe(PaymentSourceType.Card);
             cardSourceResponse.Id.ShouldNotBeNullOrEmpty();
-            cardSourceResponse.AvsCheck.ShouldBe("S");
+            cardSourceResponse.AvsCheck.ShouldBe("G");
             cardSourceResponse.CvvCheck.ShouldBe("Y");
             cardSourceResponse.Bin.ShouldNotBeNull();
-            //cardSourceResponse.CardCategory.ShouldBe(CardCategory.Consumer);
-            //cardSourceResponse.CardType.ShouldBe(CardType.Credit);
+            cardSourceResponse.CardCategory.ShouldBe(CardCategory.Consumer);
+            cardSourceResponse.CardType.ShouldBe(CardType.Credit);
             cardSourceResponse.ExpiryMonth.ShouldNotBeNull();
             cardSourceResponse.ExpiryYear.ShouldNotBeNull();
             cardSourceResponse.Last4.ShouldNotBeNullOrEmpty();
-            //cardSourceResponse.Scheme.ShouldNotBeNullOrEmpty();
+            cardSourceResponse.Scheme.ShouldNotBeNullOrEmpty();
             cardSourceResponse.Name.ShouldNotBeNullOrEmpty();
-            cardSourceResponse.FastFunds.ShouldNotBeNullOrEmpty();
             cardSourceResponse.Fingerprint.ShouldNotBeNullOrEmpty();
             //cardSourceResponse.Issuer.ShouldNotBeNullOrEmpty();
             //cardSourceResponse.IssuerCountry.ShouldBe(CountryCode.US);
-            cardSourceResponse.Payouts.ShouldBe(true);
-            //cardSourceResponse.ProductId.ShouldNotBeNullOrEmpty();
-            //cardSourceResponse.ProductType.ShouldNotBeNullOrEmpty();
+            cardSourceResponse.ProductId.ShouldNotBeNullOrEmpty();
+            cardSourceResponse.ProductType.ShouldNotBeNullOrEmpty();
             //Customer
             paymentResponse.Customer.ShouldNotBeNull();
             paymentResponse.Customer.Id.ShouldNotBeNull();
             paymentResponse.Customer.Name.ShouldNotBeNull();
+            paymentResponse.Customer.Email.ShouldNotBeNull();
             //Processing
             paymentResponse.Processing.ShouldNotBeNull();
             paymentResponse.Processing.AcquirerTransactionId.ShouldNotBeNullOrEmpty();
             paymentResponse.Processing.RetrievalReferenceNumber.ShouldNotBeNullOrEmpty();
             //Risk
             paymentResponse.Risk.Flagged.ShouldBe(false);
+            //Balances
+            paymentResponse.Balances.ShouldNotBeNull();
+            paymentResponse.Balances.TotalAuthorized.ShouldBe(10);
+            paymentResponse.Balances.TotalCaptured.ShouldBe(0);
+            paymentResponse.Balances.TotalRefunded.ShouldBe(0);
+            paymentResponse.Balances.TotalVoided.ShouldBe(0);
+            paymentResponse.Balances.AvailableToCapture.ShouldBe(10);
+            paymentResponse.Balances.AvailableToRefund.ShouldBe(0);
+            paymentResponse.Balances.AvailableToVoid.ShouldBe(10);
             //Links
             paymentResponse.GetSelfLink().ShouldNotBeNull();
             paymentResponse.HasLink("actions").ShouldBeTrue();
@@ -84,7 +92,7 @@ namespace Checkout.Payments
                 Country = CountryCode.GB
             };
 
-            var requestCardSource = new RequestCardSource
+            var requestCardSource = new RequestCardSource()
             {
                 Name = TestCardSource.Visa.Name,
                 Number = TestCardSource.Visa.Number,
@@ -121,37 +129,42 @@ namespace Checkout.Payments
             paymentResponse.Currency.ShouldBe(Currency.USD);
             paymentResponse.ThreeDs.ShouldBeNull();
             //Source
-            paymentResponse.Source.ShouldBeAssignableTo(typeof(ResponseCardSource));
-            var cardSourceResponse = (ResponseCardSource)paymentResponse.Source;
+            paymentResponse.Source.ShouldBeAssignableTo(typeof(CardResponseSource));
+            var cardSourceResponse = (CardResponseSource)paymentResponse.Source;
             cardSourceResponse.Type().ShouldBe(PaymentSourceType.Card);
             cardSourceResponse.Id.ShouldNotBeNullOrEmpty();
-            cardSourceResponse.AvsCheck.ShouldBe("S");
+            cardSourceResponse.AvsCheck.ShouldBe("G");
             cardSourceResponse.CvvCheck.ShouldBe("Y");
             cardSourceResponse.Bin.ShouldNotBeNull();
-            //cardSourceResponse.CardCategory.ShouldBe(CardCategory.Consumer);
-            //cardSourceResponse.CardType.ShouldBe(CardType.Credit);
+            cardSourceResponse.CardCategory.ShouldBe(CardCategory.Consumer);
+            cardSourceResponse.CardType.ShouldBe(CardType.Credit);
             cardSourceResponse.ExpiryMonth.ShouldNotBeNull();
             cardSourceResponse.ExpiryYear.ShouldNotBeNull();
             cardSourceResponse.Last4.ShouldNotBeNullOrEmpty();
-            //cardSourceResponse.Scheme.ShouldNotBeNullOrEmpty();
+            cardSourceResponse.Scheme.ShouldNotBeNullOrEmpty();
             cardSourceResponse.Name.ShouldNotBeNullOrEmpty();
-            cardSourceResponse.FastFunds.ShouldNotBeNullOrEmpty();
             cardSourceResponse.Fingerprint.ShouldNotBeNullOrEmpty();
             //cardSourceResponse.Issuer.ShouldNotBeNullOrEmpty();
             //cardSourceResponse.IssuerCountry.ShouldBe(CountryCode.US);
-            cardSourceResponse.Payouts.ShouldBe(true);
-            //cardSourceResponse.ProductId.ShouldNotBeNullOrEmpty();
-            //cardSourceResponse.ProductType.ShouldNotBeNullOrEmpty();
+            cardSourceResponse.ProductId.ShouldNotBeNullOrEmpty();
+            cardSourceResponse.ProductType.ShouldNotBeNullOrEmpty();
             //Customer
-            paymentResponse.Customer.ShouldNotBeNull();
-            paymentResponse.Customer.Id.ShouldNotBeNull();
-            paymentResponse.Customer.Name.ShouldNotBeNull();
+            paymentResponse.Customer.ShouldBeNull();
             //Processing
             paymentResponse.Processing.ShouldNotBeNull();
             paymentResponse.Processing.AcquirerTransactionId.ShouldNotBeNullOrEmpty();
             paymentResponse.Processing.RetrievalReferenceNumber.ShouldNotBeNullOrEmpty();
             //Risk
             paymentResponse.Risk.Flagged.ShouldBe(false);
+            //Balances
+            paymentResponse.Balances.ShouldNotBeNull();
+            paymentResponse.Balances.TotalAuthorized.ShouldBe(0);
+            paymentResponse.Balances.TotalCaptured.ShouldBe(0);
+            paymentResponse.Balances.TotalRefunded.ShouldBe(0);
+            paymentResponse.Balances.TotalVoided.ShouldBe(0);
+            paymentResponse.Balances.AvailableToCapture.ShouldBe(0);
+            paymentResponse.Balances.AvailableToRefund.ShouldBe(0);
+            paymentResponse.Balances.AvailableToVoid.ShouldBe(0);
             //Links
             paymentResponse.GetSelfLink().ShouldNotBeNull();
             paymentResponse.HasLink("actions").ShouldBeTrue();
@@ -170,7 +183,7 @@ namespace Checkout.Payments
             //3ds
             paymentResponse.ThreeDs.ShouldNotBeNull();
             paymentResponse.ThreeDs.Downgraded.ShouldBe(false);
-            paymentResponse.ThreeDs.Enrolled.ShouldBe(ThreeDsEnrollmentStatus.Yes);
+            paymentResponse.ThreeDs.Enrolled.ShouldBe(ThreeDsEnrollmentStatus.IssuerEnrolled);
             //Customer
             paymentResponse.Customer.ShouldNotBeNull();
             paymentResponse.Customer.Id.ShouldNotBeNull();
@@ -200,27 +213,25 @@ namespace Checkout.Payments
             paymentResponse.Currency.ShouldBe(Currency.USD);
             paymentResponse.ThreeDs.ShouldBeNull();
             //Source
-            paymentResponse.Source.ShouldBeAssignableTo(typeof(ResponseCardSource));
-            var cardSourceResponse = (ResponseCardSource)paymentResponse.Source;
+            paymentResponse.Source.ShouldBeAssignableTo(typeof(CardResponseSource));
+            var cardSourceResponse = (CardResponseSource)paymentResponse.Source;
             cardSourceResponse.Type().ShouldBe(PaymentSourceType.Card);
             cardSourceResponse.Id.ShouldNotBeNullOrEmpty();
-            cardSourceResponse.AvsCheck.ShouldBe("S");
+            cardSourceResponse.AvsCheck.ShouldBe("G");
             cardSourceResponse.CvvCheck.ShouldBe("Y");
             cardSourceResponse.Bin.ShouldNotBeNull();
-            //cardSourceResponse.CardCategory.ShouldBe(CardCategory.Consumer);
-            //cardSourceResponse.CardType.ShouldBe(CardType.Credit);
+            cardSourceResponse.CardCategory.ShouldBe(CardCategory.Consumer);
+            cardSourceResponse.CardType.ShouldBe(CardType.Credit);
             cardSourceResponse.ExpiryMonth.ShouldNotBeNull();
             cardSourceResponse.ExpiryYear.ShouldNotBeNull();
             cardSourceResponse.Last4.ShouldNotBeNullOrEmpty();
-            //cardSourceResponse.Scheme.ShouldNotBeNullOrEmpty();
+            cardSourceResponse.Scheme.ShouldNotBeNullOrEmpty();
             cardSourceResponse.Name.ShouldNotBeNullOrEmpty();
-            cardSourceResponse.FastFunds.ShouldNotBeNullOrEmpty();
             cardSourceResponse.Fingerprint.ShouldNotBeNullOrEmpty();
             //cardSourceResponse.Issuer.ShouldNotBeNullOrEmpty();
             //cardSourceResponse.IssuerCountry.ShouldBe(CountryCode.US);
-            cardSourceResponse.Payouts.ShouldBe(true);
-            //cardSourceResponse.ProductId.ShouldNotBeNullOrEmpty();
-            //cardSourceResponse.ProductType.ShouldNotBeNullOrEmpty();
+            cardSourceResponse.ProductId.ShouldNotBeNullOrEmpty();
+            cardSourceResponse.ProductType.ShouldNotBeNullOrEmpty();
             //Customer
             paymentResponse.Customer.ShouldNotBeNull();
             paymentResponse.Customer.Id.ShouldNotBeNull();
@@ -257,27 +268,25 @@ namespace Checkout.Payments
             paymentResponse.Currency.ShouldBe(Currency.USD);
             paymentResponse.ThreeDs.ShouldBeNull();
             //Source
-            paymentResponse.Source.ShouldBeAssignableTo(typeof(ResponseCardSource));
-            var cardSourceResponse = (ResponseCardSource)paymentResponse.Source;
+            paymentResponse.Source.ShouldBeAssignableTo(typeof(CardResponseSource));
+            var cardSourceResponse = (CardResponseSource)paymentResponse.Source;
             cardSourceResponse.Type().ShouldBe(PaymentSourceType.Card);
             cardSourceResponse.Id.ShouldNotBeNullOrEmpty();
-            cardSourceResponse.AvsCheck.ShouldBe("S");
+            cardSourceResponse.AvsCheck.ShouldBe("G");
             cardSourceResponse.CvvCheck.ShouldBe("Y");
             cardSourceResponse.Bin.ShouldNotBeNull();
-            //cardSourceResponse.CardCategory.ShouldBe(CardCategory.Consumer);
-            //cardSourceResponse.CardType.ShouldBe(CardType.Credit);
+            cardSourceResponse.CardCategory.ShouldBe(CardCategory.Consumer);
+            cardSourceResponse.CardType.ShouldBe(CardType.Credit);
             cardSourceResponse.ExpiryMonth.ShouldNotBeNull();
             cardSourceResponse.ExpiryYear.ShouldNotBeNull();
             cardSourceResponse.Last4.ShouldNotBeNullOrEmpty();
-            //cardSourceResponse.Scheme.ShouldNotBeNullOrEmpty();
+            cardSourceResponse.Scheme.ShouldNotBeNullOrEmpty();
             cardSourceResponse.Name.ShouldNotBeNullOrEmpty();
-            cardSourceResponse.FastFunds.ShouldNotBeNullOrEmpty();
             cardSourceResponse.Fingerprint.ShouldNotBeNullOrEmpty();
             //cardSourceResponse.Issuer.ShouldNotBeNullOrEmpty();
             //cardSourceResponse.IssuerCountry.ShouldBe(CountryCode.US);
-            cardSourceResponse.Payouts.ShouldBe(true);
-            //cardSourceResponse.ProductId.ShouldNotBeNullOrEmpty();
-            //cardSourceResponse.ProductType.ShouldNotBeNullOrEmpty();
+            cardSourceResponse.ProductId.ShouldNotBeNullOrEmpty();
+            cardSourceResponse.ProductType.ShouldNotBeNullOrEmpty();
             //Customer
             paymentResponse.Customer.ShouldNotBeNull();
             paymentResponse.Customer.Id.ShouldNotBeNull();

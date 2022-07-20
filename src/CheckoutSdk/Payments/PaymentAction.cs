@@ -1,4 +1,4 @@
-using Checkout.Common;
+﻿using Checkout.Common;
 using System;
 using System.Collections.Generic;
 
@@ -21,6 +21,8 @@ namespace Checkout.Payments
         public string ResponseCode { get; set; }
 
         public string ResponseSummary { get; set; }
+
+        public AuthorizationType? AuthorizationType { get; set; }
 
         public string Reference { get; set; }
 

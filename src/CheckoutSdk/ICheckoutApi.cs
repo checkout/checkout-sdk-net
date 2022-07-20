@@ -1,25 +1,25 @@
+using Checkout.Accounts;
+using Checkout.Balances;
 using Checkout.Customers;
 using Checkout.Disputes;
-using Checkout.Events;
+using Checkout.Forex;
 using Checkout.Instruments;
 using Checkout.Payments;
 using Checkout.Payments.Hosted;
 using Checkout.Payments.Links;
-using Checkout.Reconciliation;
 using Checkout.Risk;
-using Checkout.Sources;
+using Checkout.Sessions;
 using Checkout.Tokens;
-using Checkout.Webhooks;
+using Checkout.Transfers;
+using Checkout.Workflows;
 
 namespace Checkout
 {
-    public interface ICheckoutApi : ICheckoutApmApi, ICheckoutApiClient
+    public interface ICheckoutApi : ICheckoutApiClient
     {
         ITokensClient TokensClient();
 
         ICustomersClient CustomersClient();
-
-        ISourcesClient SourcesClient();
 
         IPaymentsClient PaymentsClient();
 
@@ -27,16 +27,22 @@ namespace Checkout
 
         IDisputesClient DisputesClient();
 
-        IWebhooksClient WebhooksClient();
-
-        IEventsClient EventsClient();
-
         IRiskClient RiskClient();
+
+        IForexClient ForexClient();
+
+        IWorkflowsClient WorkflowsClient();
+
+        ISessionsClient SessionsClient();
+
+        IAccountsClient AccountsClient();
 
         IPaymentLinksClient PaymentLinksClient();
 
-        IReconciliationClient ReconciliationClient();
-
         IHostedPaymentsClient HostedPaymentsClient();
+        
+        IBalancesClient BalancesClient();
+
+        ITransfersClient TransfersClient();
     }
 }

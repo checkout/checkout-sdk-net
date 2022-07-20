@@ -1,3 +1,4 @@
+using Checkout.Payments.Response;
 using Shouldly;
 using System;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ namespace Checkout.Payments
     public class VoidPaymentsIntegrationTest : AbstractPaymentsIntegrationTest
     {
         [Fact]
-        private async Task ShouldVoidCardPayment()
+        private async Task ShouldFullVoidCardPayment()
         {
             var paymentResponse = await MakeCardPayment();
 
@@ -20,6 +21,22 @@ namespace Checkout.Payments
             response.ActionId.ShouldNotBeNullOrEmpty();
             response.Reference.ShouldNotBeNullOrEmpty();
             response.GetLink("payment").ShouldNotBeNull();
+
+            var payment = await Retriable(async () =>
+                await DefaultApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id), TotalVoidedIs10);
+
+            payment.Balances.TotalAuthorized.ShouldBe(paymentResponse.Amount);
+            payment.Balances.TotalCaptured.ShouldBe(0);
+            payment.Balances.TotalRefunded.ShouldBe(0);
+            payment.Balances.TotalVoided.ShouldBe(paymentResponse.Amount);
+            payment.Balances.AvailableToCapture.ShouldBe(0);
+            payment.Balances.AvailableToRefund.ShouldBe(0);
+            payment.Balances.AvailableToVoid.ShouldBe(0);
+        }
+
+        private static bool TotalVoidedIs10(GetPaymentResponse obj)
+        {
+            return obj.Balances.TotalVoided == 10;
         }
 
         [Fact]
@@ -29,15 +46,12 @@ namespace Checkout.Payments
 
             var voidRequest = new VoidRequest {Reference = Guid.NewGuid().ToString()};
 
-            var response = await Retriable(async () =>
-                await DefaultApi.PaymentsClient()
-                    .VoidPayment(paymentResponse.Id, voidRequest, IdempotencyKey));
-
+            var response = await DefaultApi.PaymentsClient()
+                .VoidPayment(paymentResponse.Id, voidRequest, IdempotencyKey);
             response.ShouldNotBeNull();
 
-            var response2 = await Retriable(async () =>
-                await DefaultApi.PaymentsClient()
-                    .VoidPayment(paymentResponse.Id, voidRequest, IdempotencyKey));
+            var response2 = await DefaultApi.PaymentsClient()
+                .VoidPayment(paymentResponse.Id, voidRequest, IdempotencyKey);
             response2.ShouldNotBeNull();
 
             response.ActionId.ShouldBe(response2.ActionId);

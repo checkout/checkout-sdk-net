@@ -1,6 +1,7 @@
-using Checkout.Common;
+﻿using Checkout.Common;
 using Checkout.Payments.Response.Destination;
 using Checkout.Payments.Response.Source;
+using Checkout.Payments.Sender;
 using Checkout.Payments.Util;
 using Newtonsoft.Json;
 using System;
@@ -20,6 +21,9 @@ namespace Checkout.Payments.Response
         [JsonConverter(typeof(PaymentResponseDestinationTypeConverter))]
         public IPaymentResponseDestination Destination { get; set; }
 
+        [JsonConverter(typeof(PaymentResponseSenderTypeConverter))]
+        public ISender Sender { get; set; }
+
         public long? Amount { get; set; }
 
         public Currency? Currency { get; set; }
@@ -32,7 +36,11 @@ namespace Checkout.Payments.Response
 
         public bool? Approved { get; set; }
 
+        public DateTime? ExpiresOn { get; set; }
+
         public PaymentStatus? Status { get; set; }
+
+        public PaymentResponseBalances Balances { get; set; }
 
         [JsonProperty(PropertyName = "3ds")] public ThreeDsData ThreeDs { get; set; }
 
@@ -45,6 +53,8 @@ namespace Checkout.Payments.Response
         public ShippingDetails Shipping { get; set; }
 
         public string PaymentIp { get; set; }
+
+        public MarketplaceData Marketplace { get; set; }
 
         public PaymentRecipient Recipient { get; set; }
 

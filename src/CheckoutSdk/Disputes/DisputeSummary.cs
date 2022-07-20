@@ -33,7 +33,7 @@ namespace Checkout.Disputes
 
         public DateTime? LastUpdate { get; set; }
         
-        //Only available in Four
+        //Not available on Previous
 
         public string EntityId { get; set; }
 

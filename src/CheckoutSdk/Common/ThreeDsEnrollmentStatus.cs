@@ -4,8 +4,8 @@ namespace Checkout.Common
 {
     public enum ThreeDsEnrollmentStatus
     {
-        [EnumMember(Value = "Y")] Yes,
-        [EnumMember(Value = "N")] No,
-        [EnumMember(Value = "U")] U,
+        [EnumMember(Value = "Y")] IssuerEnrolled,
+        [EnumMember(Value = "N")] CustomerNotEnrolled,
+        [EnumMember(Value = "U")] Unknown,
     }
 }

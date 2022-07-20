@@ -1,9 +1,9 @@
 using Checkout.Accounts.Payout.Response.Util;
-using Checkout.Instruments.Four.Create.Util;
-using Checkout.Instruments.Four.Get.Util;
-using Checkout.Instruments.Four.Update.Util;
-using Checkout.Workflows.Four.Actions.Response.Util;
-using Checkout.Workflows.Four.Conditions.Response.Util;
+using Checkout.Instruments.Create.Util;
+using Checkout.Instruments.Get.Util;
+using Checkout.Instruments.Update.Util;
+using Checkout.Workflows.Actions.Response.Util;
+using Checkout.Workflows.Conditions.Response.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;

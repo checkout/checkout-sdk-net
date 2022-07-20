@@ -9,7 +9,7 @@ namespace Checkout.Customers
         private const string Customers = "customers";
 
         public CustomersClient(IApiClient apiClient,
-            CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKey)
+            CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
         {
         }
 
@@ -31,7 +31,8 @@ namespace Checkout.Customers
         {
             CheckoutUtils.ValidateParams("customerId", customerId, "customerRequest", customerRequest);
             return ApiClient.Patch<EmptyResponse>(BuildPath(Customers, customerId), SdkAuthorization(), customerRequest,
-                cancellationToken);
+                cancellationToken,
+                null);
         }
 
         public Task<EmptyResponse> Delete(string customerId, CancellationToken cancellationToken = default)

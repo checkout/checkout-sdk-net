@@ -6,14 +6,9 @@ namespace Checkout
         {
         }
 
-        public static CheckoutDefaultSdk DefaultSdk()
+        public static CheckoutSdkBuilder Builder()
         {
-            return new CheckoutDefaultSdk();
-        }
-
-        public static CheckoutFourSdk FourSdk()
-        {
-            return new CheckoutFourSdk();
+            return new CheckoutSdkBuilder();
         }
     }
 }
