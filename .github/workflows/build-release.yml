@@ -1,6 +1,8 @@
 name: build-release
 on:
   push:
+    branches:
+      - master
     paths:
       - Directory.Build.props
 jobs:
