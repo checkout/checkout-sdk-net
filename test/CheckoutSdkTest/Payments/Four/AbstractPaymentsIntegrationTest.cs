@@ -1,4 +1,5 @@
 using Checkout.Common;
+using Checkout.Common.Four;
 using Checkout.Payments.Four.Request;
 using Checkout.Payments.Four.Request.Source;
 using Checkout.Payments.Four.Response;

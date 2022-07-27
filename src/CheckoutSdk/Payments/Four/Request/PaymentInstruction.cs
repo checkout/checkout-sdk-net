@@ -11,5 +11,11 @@ namespace Checkout.Payments.Four.Request
         public InstructionScheme? Scheme { get; set; }
 
         public string QuoteId { get; set; }
+
+        public bool? SkipExpiry { get; set; }
+
+        public string FundsTransferType { get; set; }
+
+        public string Mvv { get; set; }
     }
 }
