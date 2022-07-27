@@ -10,7 +10,7 @@ namespace Checkout.Marketplace
 {
     public class MarketplacePayoutSchedulesIntegrationTest
     {
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldUpdateAndRetrieveWeeklyPayoutSchedules()
         {
             var scheduleRequest = new UpdateScheduleRequest
@@ -36,7 +36,7 @@ namespace Checkout.Marketplace
             ((ScheduleFrequencyWeeklyResponse)currencySchedule.Recurrence).ByDay.Count.ShouldBe(2);
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldUpdateAndRetrieveDailyPayoutSchedules()
         {
             var scheduleRequest = new UpdateScheduleRequest
@@ -59,7 +59,7 @@ namespace Checkout.Marketplace
             currencySchedule.Recurrence.ShouldBeOfType(typeof(ScheduleFrequencyDailyResponse));
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldUpdateAndRetrieveMonthlyPayoutSchedules()
         {
             var scheduleRequest = new UpdateScheduleRequest
