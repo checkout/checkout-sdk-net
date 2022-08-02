@@ -2,7 +2,9 @@ name: build-pull-request
 on:
   pull_request:
     branches:
-      - master
+      - v3
+      - 'integration/**'
+      - 'feature/**'
 jobs:
   build:
     runs-on: windows-latest

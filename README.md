@@ -7,6 +7,25 @@
 
 ## Getting started
 
+> **This is a Legacy Version** </br>
+> We will provide support to some features or changes on APIs until users are fully migrated to the version 4.X.X,
+> however we recommend to upgrade to version 4.X.X because this support is momentary and a lot of things were fixed and changed. </br>
+> If you’re still having issues don't hesitate to open a [ticket](https://github.com/checkout/checkout-sdk-net/issues/new/choose). </br></br>
+> Remember: </br>
+> * In documentation Marketplace prefixes no longer exist, you need to search in documentation as Platforms. </br>
+> * The `default` prefixes on versions < 4, in documentation you need to search as `previous` </br>
+> * In documentation `Four` prefixes no longer exist, your need to search as `default`.
+
+### :book: Checkout our official documentation.
+
+* [Official Docs (Four)](https://docs.checkout.com/)
+* [Official Docs (Previous/Current default)](https://docs.checkout.com/previous)
+
+### :books: Check out our official API documentation guide, where you can also find more usage examples.
+
+* [API Reference (Four)](https://api-reference.checkout.com/)
+* [API Reference (Previous/Current default)](https://api-reference.checkout.com/previous)
+
 Packages and sources are available from [Nuget](https://www.nuget.org/packages/CheckoutSDK).
 
 ## How to use the SDK
@@ -15,7 +34,7 @@ This SDK can be used with two different pair of API keys provided by Checkout. H
 
 | Account System | Public Key (example)                    | Secret Key (example)                    |
 | -------------- | --------------------------------------- | --------------------------------------- |
-| default        | pk_g650ff27-7c42-4ce1-ae90-5691a188ee7b | sk_gk3517a8-3z01-45fq-b4bd-4282384b0a64 |
+| Previous        | pk_g650ff27-7c42-4ce1-ae90-5691a188ee7b | sk_gk3517a8-3z01-45fq-b4bd-4282384b0a64 |
 | Four           | pk_pkhpdtvabcf7hdgpwnbhw7r2uic          | sk_m73dzypy7cf3gf5d2xr4k7sxo4e          |
 
 Note: Sandbox keys have a `test_` or `sbox_` identifier, for Default and Four accounts respectively.
@@ -34,7 +53,7 @@ To get started install the [`CheckoutSDK`](https://www.nuget.org/packages/Checko
 
 Initialize a `CheckoutApi` to access the operations for each API. Please note that there are 2 different Checkout API interfaces, depending on the way the SDK is built.
 
-### Default
+### Previous
 
 ```c#
 ICheckoutApi api = CheckoutSdk.DefaultSdk().StaticKeys()
@@ -157,13 +176,6 @@ Please note again that there are 2 different `ICheckoutApi` interfaces, dependin
 All the API responses that do not fall in the 2** status codes will cause a `CheckoutApiException`. The exception encapsulates
 the `requestId`, `httpStatusCode` and a map of `errorDetails`, if available.
 
-More documentation related to Checkout API and the SDK is available at:
-
-* [Official Docs (Default)](https://docs.checkout.com/)
-* [Official Docs (Four)](https://docs.checkout.com/four)
-* [API Reference (Default)](https://api-reference.checkout.com/)
-* [API Reference (Four)](https://api-reference.checkout.com/preview/crusoe/)
-
 ## Building from source
 
 Once you checkout the code from GitHub, the project can be built using the netcore CLI tools:
@@ -177,8 +189,9 @@ dotnet test
 
 The execution of integration tests require the following environment variables set in your system:
 
-* For Default account systems: `CHECKOUT_PUBLIC_KEY` & `CHECKOUT_SECRET_KEY`
+* For Previous account systems: `CHECKOUT_PUBLIC_KEY` & `CHECKOUT_SECRET_KEY`
 * For Four account systems: `CHECKOUT_FOUR_PUBLIC_KEY` & `CHECKOUT_FOUR_SECRET_KEY`
+* For Four account systems (OAuth): `CHECKOUT_FOUR_OAUTH_CLIENT_ID` & `CHECKOUT_FOUR_OAUTH_CLIENT_SECRET`
 
 ## Code of Conduct
 
