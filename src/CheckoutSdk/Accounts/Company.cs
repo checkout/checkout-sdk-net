@@ -6,6 +6,8 @@ namespace Checkout.Accounts
     public class Company
     {
         public string BusinessRegistrationNumber { get; set; }
+        
+        public BusinessType? BusinessType { get; set; }
 
         public string LegalName { get; set; }
 
@@ -18,5 +20,7 @@ namespace Checkout.Accounts
         public IList<Representative> Representatives { get; set; }
 
         public EntityDocument Document { get; set; }
+        
+        public EntityFinancialDetails FinancialDetails { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using Checkout.Accounts.Payout.Response;
 using Checkout.Common;
 using Moq;
 using Shouldly;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -67,6 +68,49 @@ namespace Checkout.Accounts
         private async Task ShouldUpdateEntity()
         {
             var responseObject = new OnboardEntityResponse {Id = "entity_id", Reference = "A"};
+            var request = new OnboardEntityRequest
+            {
+                Reference = "123",
+                ContactDetails = new ContactDetails {Phone = new AccountPhone()},
+                Profile = new Profile(),
+                Company = new Company
+                {
+                    BusinessRegistrationNumber = "123",
+                    BusinessType = BusinessType.UnincorporatedAssociation,
+                    LegalName = "LEGAL",
+                    TradingName = "TRADING",
+                    PrincipalAddress = new Address(),
+                    RegisteredAddress = new Address(),
+                    Representatives = new List<Representative>
+                    {
+                        new Representative
+                        {
+                            Id = "1203",
+                            FirstName = "first",
+                            LastName = "last",
+                            Address = new Address(),
+                            Identification = new Identification(),
+                            Phone = new AccountPhone(),
+                            DateOfBirth = new DateOfBirth {Day = 1, Month = 1, Year = 2000},
+                            PlaceOfBirth = new PlaceOfBirth {Country = CountryCode.AF},
+                            Roles = new List<EntityRoles> {EntityRoles.Ubo}
+                        }
+                    },
+                    Document = new EntityDocument(),
+                    FinancialDetails = new EntityFinancialDetails
+                    {
+                        AnnualProcessingVolume = 1,
+                        AverageTransactionValue = 1,
+                        HighestTransactionValue = 1,
+                        Documents = new EntityFinancialDocuments
+                        {
+                            BankStatement = new EntityDocument(),
+                            FinancialStatement = new EntityDocument()
+                        }
+                    }
+                },
+                Individual = null
+            };
 
             _apiClient
                 .Setup(x =>
@@ -80,7 +124,7 @@ namespace Checkout.Accounts
 
             var response = await _accountsClient.UpdateEntity(
                 responseObject.Id,
-                new OnboardEntityRequest {Reference = "A"});
+                request);
 
             response.ShouldNotBeNull();
             response.Id.ShouldBe(responseObject.Id);
@@ -102,7 +146,24 @@ namespace Checkout.Accounts
 
             var response = await _accountsClient.CreatePaymentInstrument(
                 "entity_id",
-                new AccountsPaymentInstrument {AccountNumber = "324445"});
+                new AccountsPaymentInstrument
+                {
+                    AccountNumber = "324445",
+                    AccountHolder = new AccountsIndividualAccountHolder
+                    {
+                        Type = AccountHolderType.Individual,
+                        TaxId = "123",
+                        DateOfBirth = new DateOfBirth(),
+                        CountryOfBirth = CountryCode.AC,
+                        ResidentialStatus = "status",
+                        BillingAddress = new Address(),
+                        Phone = new AccountPhone(),
+                        Identification = new AccountHolderIdentification(),
+                        Email = "account@checkout.com",
+                        FirstName = "First",
+                        LastName = "Last"
+                    }
+                });
 
             response.ShouldNotBeNull();
         }

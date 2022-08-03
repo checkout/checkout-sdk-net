@@ -20,6 +20,8 @@ namespace Checkout.Accounts
 
         public DateOfBirth DateOfBirth { get; set; }
 
+        public PlaceOfBirth PlaceOfBirth { get; set; }
+
         public Identification Identification { get; set; }
     }
 }
