@@ -11,5 +11,7 @@ namespace Checkout.Payments.Four.Request.Source
         public string Id { get; set; }
 
         public string Cvv { get; set; }
+
+        public string PaymentMethod { get; set; }
     }
 }
