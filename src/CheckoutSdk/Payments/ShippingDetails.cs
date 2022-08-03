@@ -7,5 +7,7 @@ namespace Checkout.Payments
         public Address Address { get; set; }
 
         public Phone Phone { get; set; }
+
+        public string FromAddressZip { get; set; }
     }
 }

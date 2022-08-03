@@ -1,8 +1,12 @@
+using Checkout.Common;
+using Checkout.Payments.Request;
 using Checkout.Payments.Response;
 using Shouldly;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
+using Product = Checkout.Payments.Request.Product;
 
 namespace Checkout.Payments
 {
@@ -13,7 +17,105 @@ namespace Checkout.Payments
         {
             var paymentResponse = await MakeCardPayment();
 
-            var captureRequest = new CaptureRequest {Reference = Guid.NewGuid().ToString(), Amount = 10};
+            var captureRequest = new CaptureRequest
+            {
+                Amount = 10,
+                CaptureType = CaptureType.Final,
+                Reference = Guid.NewGuid().ToString(),
+                Customer =
+                    new PaymentCustomerRequest
+                    {
+                        Email = GenerateRandomEmail(),
+                        Name = "Bruce Wayne",
+                        Phone = GetPhone(),
+                        TaxNumber = "1350693505279"
+                    },
+                Description = "Set of 3 masks",
+                BillingDescriptor =
+                    new BillingDescriptor
+                    {
+                        Name = "SUPERHEROES.COM", City = "GOTHAM", Reference = Guid.NewGuid().ToString()
+                    },
+                Shipping =
+                    new ShippingDetails {Address = GetAddress(), Phone = GetPhone(), FromAddressZip = "10014"},
+                Items =
+                    new List<Product>
+                    {
+                        new Product
+                        {
+                            Name = "Kevlar batterang",
+                            Quantity = 2,
+                            UnitPrice = 50,
+                            Reference = Guid.NewGuid().ToString(),
+                            CommodityCode = "DEF123",
+                            UnitOfMeasure = "metres",
+                            TotalAmount = 19000,
+                            TaxAmount = 1000,
+                            DiscountAmount = 1000,
+                            WxpayGoodsId = "1001"
+                        }
+                    },
+                Processing = new ProcessingSettings
+                {
+                    OrderId = "123456789",
+                    TaxAmount = 3000,
+                    DiscountAmount = 0,
+                    DutyAmount = 0,
+                    ShippingAmount = 300,
+                    ShippingTaxAmount = 100,
+                    Aft = true,
+                    PreferredScheme = PreferredSchema.Mastercard,
+                    MerchantInitiatedReason = MerchantInitiatedReason.DelayedCharge,
+                    ProductType = ProductType.QrCode,
+                    OpenId = "oUpF8uMuAJO_M2pxb1Q9zNjWeS6o",
+                    OriginalOrderAmount = 10,
+                    ReceiptId = "10",
+                    TerminalType = TerminalType.Wap,
+                    OsType = OsType.Android,
+                    InvoiceId = Guid.NewGuid().ToString(),
+                    BrandName = "Super Brand",
+                    Locale = "en-US",
+                    ShippingPreference = ShippingPreference.SetProvidedAddress,
+                    UserAction = UserAction.PayNow,
+                    AirlineData = new List<AirlineData>
+                    {
+                        new AirlineData
+                        {
+                            Ticket =
+                                new Ticket
+                                {
+                                    Number = "123456",
+                                    IssueDate = "SATE",
+                                    IssuingCarrierCode = "ST",
+                                    TravelAgencyName = "AGENCY",
+                                    TravelAgencyCode = "CODE"
+                                },
+                            Passenger =
+                                new Passenger
+                                {
+                                    Name = new PassengerName {FullName = "passenger"},
+                                    DateOfBirth = "01-01-01",
+                                    CountryCode = CountryCode.AC
+                                },
+                            FlightLegDetails = new List<FlightLegDetails>
+                            {
+                                new FlightLegDetails
+                                {
+                                    FlightNumber = 123,
+                                    CarrierCode = "code",
+                                    ServiceClass = "class",
+                                    DepartureDate = "DepartureDate",
+                                    DepartureTime = "time",
+                                    DepartureAirport = "airport",
+                                    ArrivalAirport = "arrival",
+                                    StopoverCode = "StopoverCode",
+                                    FareBasisCode = "basis"
+                                }
+                            }
+                        }
+                    }
+                }
+            };
 
             captureRequest.Metadata.Add("CapturePaymentsIntegrationTest", "ShouldFullCaptureCardPayment");
 

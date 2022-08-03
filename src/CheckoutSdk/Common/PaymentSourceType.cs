@@ -39,6 +39,10 @@ namespace Checkout.Common
         [EnumMember(Value = "alipay_hk")] AlipayHk,
         [EnumMember(Value = "alipay_cn")] AlipayCn,
         [EnumMember(Value = "gcash")] Gcash,
-        [EnumMember(Value = "wechatpay")] Wechatpay
+        [EnumMember(Value = "wechatpay")] Wechatpay,
+        [EnumMember(Value = "dana")] Dana,
+        [EnumMember(Value = "kakaopay")] Kakaopay,
+        [EnumMember(Value = "truemoney")] Truemoney,
+        [EnumMember(Value = "tng")] Tng
     }
 }

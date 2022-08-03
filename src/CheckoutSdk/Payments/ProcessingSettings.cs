@@ -4,17 +4,23 @@ namespace Checkout.Payments
 {
     public class ProcessingSettings
     {
-        public bool? Aft { get; set; }
-
-        public MerchantInitiatedReason? MerchantInitiatedReason { get; set; }
-
-        public DLocalProcessingSettings Dlocal { get; set; }
+        public string OrderId { get; set; }
 
         public long? TaxAmount { get; set; }
 
+        public long? DiscountAmount { get; set; }
+
+        public long? DutyAmount { get; set; }
+
         public long? ShippingAmount { get; set; }
 
+        public long? ShippingTaxAmount { get; set; }
+
+        public bool? Aft { get; set; }
+
         public PreferredSchema? PreferredScheme { get; set; }
+
+        public MerchantInitiatedReason? MerchantInitiatedReason { get; set; }
 
         public ProductType? ProductType { get; set; }
 
@@ -41,5 +47,7 @@ namespace Checkout.Payments
         public IList<IDictionary<string, string>> SetTransactionContext { get; set; }
 
         public IList<AirlineData> AirlineData { get; set; }
+
+        public DLocalProcessingSettings Dlocal { get; set; }
     }
 }

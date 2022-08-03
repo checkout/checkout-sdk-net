@@ -3,6 +3,7 @@ using Checkout.Payments.Request;
 using Checkout.Payments.Request.Source.Apm;
 using Checkout.Payments.Response.Source;
 using Shouldly;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
@@ -12,6 +13,37 @@ namespace Checkout.Payments
 {
     public class RequestApmPaymentsIntegrationTest : AbstractPaymentsIntegrationTest
     {
+        [Fact]
+        private async Task ShouldMakeAliPayPayment()
+        {
+            var source = RequestAlipayPlusSource.RequestAlipayPlusCnSource();
+            source = RequestAlipayPlusSource.RequestAlipayPlusGCashSource();
+            source = RequestAlipayPlusSource.RequestAlipayPlusHkSource();
+            source = RequestAlipayPlusSource.RequestAlipayPlusDanaSource();
+            source = RequestAlipayPlusSource.RequestAlipayPlusKakaoPaySource();
+            source = RequestAlipayPlusSource.RequestAlipayPlusTrueMoneySource();
+            source = RequestAlipayPlusSource.RequestAlipayPlusTngSource();
+
+            var request = new PaymentRequest
+            {
+                Source = source,
+                Amount = 10L,
+                Currency = Currency.EUR,
+                ProcessingChannelId = "pc_5jp2az55l3cuths25t5p3xhwru",
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure",
+            };
+
+            try
+            {
+                await DefaultApi.PaymentsClient().RequestPayment(request);
+            }
+            catch (Exception e)
+            {
+                e.ShouldBeAssignableTo<CheckoutApiException>();
+            }
+        }
+
         [Fact]
         private async Task ShouldMakeIdealPayment()
         {
@@ -88,7 +120,8 @@ namespace Checkout.Payments
         {
             ICheckoutApi previewApi = CheckoutSdk.Builder()
                 .OAuth()
-                .ClientCredentials(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PREVIEW_OAUTH_CLIENT_ID"),
+                .ClientCredentials(
+                    System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PREVIEW_OAUTH_CLIENT_ID"),
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PREVIEW_OAUTH_CLIENT_SECRET"))
                 .Environment(Environment.Sandbox)
                 .Build();
