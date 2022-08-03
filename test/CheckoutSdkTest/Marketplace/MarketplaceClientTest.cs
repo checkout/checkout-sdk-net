@@ -1,10 +1,12 @@
 using Checkout.Common;
+using Checkout.Common.Four;
 using Checkout.Marketplace.Balances;
 using Checkout.Marketplace.Payout.Request;
 using Checkout.Marketplace.Payout.Response;
 using Checkout.Marketplace.Transfer;
 using Moq;
 using Shouldly;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -72,6 +74,49 @@ namespace Checkout.Marketplace
         private async Task ShouldUpdateEntity()
         {
             var responseObject = new OnboardEntityResponse {Id = "entity_id", Reference = "A"};
+            var request = new OnboardEntityRequest
+            {
+                Reference = "123",
+                ContactDetails = new ContactDetails {Phone = new Phone()},
+                Profile = new Profile(),
+                Company = new Company
+                {
+                    BusinessRegistrationNumber = "123",
+                    BusinessType = BusinessType.UnincorporatedAssociation,
+                    LegalName = "LEGAL",
+                    TradingName = "TRADING",
+                    PrincipalAddress = new Address(),
+                    RegisteredAddress = new Address(),
+                    Representatives = new List<Representative>
+                    {
+                        new Representative
+                        {
+                            Id = "1203",
+                            FirstName = "first",
+                            LastName = "last",
+                            Address = new Address(),
+                            Identification = new Identification(),
+                            Phone = new Phone(),
+                            DateOfBirth = new DateOfBirth {Day = 1, Month = 1, Year = 2000},
+                            PlaceOfBirth = new PlaceOfBirth {Country = CountryCode.AF},
+                            Roles = new List<EntityRoles> {EntityRoles.Ubo}
+                        }
+                    },
+                    Document = new EntityDocument(),
+                    FinancialDetails = new EntityFinancialDetails
+                    {
+                        AnnualProcessingVolume = 1,
+                        AverageTransactionValue = 1,
+                        HighestTransactionValue = 1,
+                        Documents = new EntityFinancialDocuments
+                        {
+                            BankStatement = new EntityDocument(),
+                            FinancialStatement = new EntityDocument()
+                        }
+                    }
+                },
+                Individual = null
+            };
 
             _apiClient
                 .Setup(x =>
@@ -85,7 +130,7 @@ namespace Checkout.Marketplace
 
             var response = await _marketplaceClient.UpdateEntity(
                 responseObject.Id,
-                new OnboardEntityRequest {Reference = "A"});
+                request);
 
             response.ShouldNotBeNull();
             response.Id.ShouldBe(responseObject.Id);
@@ -107,7 +152,24 @@ namespace Checkout.Marketplace
 
             var response = await _marketplaceClient.CreatePaymentInstrument(
                 "entity_id",
-                new MarketplacePaymentInstrument {AccountNumber = "324445"});
+                new MarketplacePaymentInstrument
+                {
+                    AccountNumber = "324445",
+                    AccountHolder = new AccountsIndividualAccountHolder
+                    {
+                        Type = AccountHolderType.Individual,
+                        TaxId = "123",
+                        DateOfBirth = new DateOfBirth(),
+                        CountryOfBirth = CountryCode.AC,
+                        ResidentialStatus = "status",
+                        BillingAddress = new Address(),
+                        Phone = new Phone(),
+                        Identification = new Identification(),
+                        Email = "account@checkout.com",
+                        FirstName = "First",
+                        LastName = "Last"
+                    }
+                });
 
             response.ShouldNotBeNull();
         }
@@ -157,13 +219,14 @@ namespace Checkout.Marketplace
             response.ShouldNotBeNull();
             response.ShouldBe(createTransferResponse);
         }
-        
+
         [Fact]
         public async Task ShouldRetrieveATransfer()
         {
             var transferDetailsResponse = new TransferDetailsResponse();
 
-            _transfersClient.Setup(x => x.Get<TransferDetailsResponse>("transfers/transfer_id", It.IsAny<SdkAuthorization>(),
+            _transfersClient.Setup(x => x.Get<TransferDetailsResponse>("transfers/transfer_id",
+                    It.IsAny<SdkAuthorization>(),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(transferDetailsResponse);
 

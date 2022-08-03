@@ -7,12 +7,6 @@ namespace Checkout.Marketplace
     {
         public AccountHolderType? Type { get; set; }
 
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
-
-        public string CompanyName { get; set; }
-
         public string TaxId { get; set; }
 
         public DateOfBirth DateOfBirth { get; set; }
