@@ -9,5 +9,7 @@ namespace Checkout.Sessions
         public Exemption? Applied { get; set; }
 
         public string Code { get; set; }
+        
+        public TrustedBeneficiary TrustedBeneficiary { get; set; }
     }
 }

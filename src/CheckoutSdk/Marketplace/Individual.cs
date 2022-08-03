@@ -19,6 +19,8 @@ namespace Checkout.Marketplace
         public Address RegisteredAddress { get; set; }
 
         public DateOfBirth DateOfBirth { get; set; }
+        
+        public PlaceOfBirth PlaceOfBirth { get; set; }
 
         public Identification Identification { get; set; }
     }

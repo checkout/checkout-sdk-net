@@ -7,6 +7,8 @@ namespace Checkout.Marketplace
     {
         public string BusinessRegistrationNumber { get; set; }
 
+        public BusinessType? BusinessType { get; set; }
+
         public string LegalName { get; set; }
 
         public string TradingName { get; set; }
@@ -18,5 +20,7 @@ namespace Checkout.Marketplace
         public IList<Representative> Representatives { get; set; }
 
         public EntityDocument Document { get; set; }
+        
+        public EntityFinancialDetails FinancialDetails { get; set; }
     }
 }
