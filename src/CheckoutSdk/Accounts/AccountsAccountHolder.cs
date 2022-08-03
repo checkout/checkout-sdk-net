@@ -2,16 +2,10 @@
 
 namespace Checkout.Accounts
 {
-    public class AccountsAccountHolder
+    public abstract class AccountsAccountHolder
     {
         public AccountHolderType? Type { get; set; }
         
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
-
-        public string CompanyName { get; set; }
-
         public string TaxId { get; set; }
 
         public DateOfBirth DateOfBirth { get; set; }
