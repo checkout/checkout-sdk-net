@@ -2,12 +2,12 @@ name: build-release
 on:
   push:
     branches:
-      - master
+      - v3
     paths:
       - Directory.Build.props
 jobs:
   deploy:
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/v3'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
