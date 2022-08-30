@@ -34,5 +34,7 @@ namespace Checkout.Payments.Previous.Request.Source.Apm
         public string MerchantData { get; set; }
 
         public IDictionary<string, string> Attachment { get; set; }
+        
+        public IList<IDictionary<string, string>> CustomPaymentMethodIds { get; set; }
     }
 }

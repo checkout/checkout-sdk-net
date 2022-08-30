@@ -21,6 +21,8 @@ namespace Checkout.Payments
         public PreferredSchema? PreferredScheme { get; set; }
 
         public MerchantInitiatedReason? MerchantInitiatedReason { get; set; }
+        
+        public long? CampaignId { get; set; }
 
         public ProductType? ProductType { get; set; }
 

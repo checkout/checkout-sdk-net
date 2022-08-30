@@ -23,6 +23,7 @@ namespace Checkout.Payments
             source = RequestAlipayPlusSource.RequestAlipayPlusKakaoPaySource();
             source = RequestAlipayPlusSource.RequestAlipayPlusTrueMoneySource();
             source = RequestAlipayPlusSource.RequestAlipayPlusTngSource();
+            source = RequestAlipayPlusSource.RequestAliPayPlusSource();
 
             var request = new PaymentRequest
             {
@@ -185,6 +186,144 @@ namespace Checkout.Payments
             paymentResponse.Customer.Phone.ShouldNotBeNull();
             paymentResponse.Processing.PartnerPaymentId.ShouldNotBeNull();
             paymentResponse.Links.ShouldNotBeEmpty();
+        }
+
+        [Fact]
+        private async Task ShouldMakeAfterPayPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestAfterPaySource {AccountHolder = new AccountHolder()},
+                Amount = 10L,
+                Currency = Currency.EUR,
+                ProcessingChannelId = "pc_5jp2az55l3cuths25t5p3xhwru",
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure",
+            };
+
+            try
+            {
+                await DefaultApi.PaymentsClient().RequestPayment(request);
+            }
+            catch (Exception e)
+            {
+                e.ShouldBeAssignableTo<CheckoutApiException>();
+            }
+        }
+
+        [Fact]
+        private async Task ShouldMakeBenefitPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestBenefitSource(),
+                Amount = 10L,
+                Currency = Currency.BHD,
+                Reference = "REFERENCE",
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure",
+            };
+
+            try
+            {
+                await DefaultApi.PaymentsClient().RequestPayment(request);
+            }
+            catch (Exception e)
+            {
+                e.ShouldBeAssignableTo<CheckoutApiException>();
+            }
+        }
+
+        [Fact]
+        private async Task ShouldMakeQPayPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestQPaySource(),
+                Amount = 10L,
+                Currency = Currency.BHD,
+                Reference = "REFERENCE",
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure",
+            };
+
+            try
+            {
+                await DefaultApi.PaymentsClient().RequestPayment(request);
+            }
+            catch (Exception e)
+            {
+                e.ShouldBeAssignableTo<CheckoutApiException>();
+            }
+        }
+
+        [Fact]
+        private async Task ShouldMakeMbwayPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestMbwaySource(),
+                Amount = 10L,
+                Currency = Currency.BHD,
+                Reference = "REFERENCE",
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure",
+            };
+
+            try
+            {
+                await DefaultApi.PaymentsClient().RequestPayment(request);
+            }
+            catch (Exception e)
+            {
+                e.ShouldBeAssignableTo<CheckoutApiException>();
+            }
+        }
+
+        [Fact]
+        private async Task ShouldMakeEpsPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestEpsSource {Purpose = "Mens black t-shirt L"},
+                Amount = 10L,
+                Currency = Currency.BHD,
+                Reference = "REFERENCE",
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure",
+            };
+
+            try
+            {
+                await DefaultApi.PaymentsClient().RequestPayment(request);
+            }
+            catch (Exception e)
+            {
+                e.ShouldBeAssignableTo<CheckoutApiException>();
+            }
+        }
+
+        [Fact]
+        private async Task ShouldMakeGiropayPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestGiropaySource {Purpose = "CKO Giropay test",},
+                Amount = 10L,
+                Currency = Currency.BHD,
+                Reference = "REFERENCE",
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure",
+            };
+
+            try
+            {
+                await DefaultApi.PaymentsClient().RequestPayment(request);
+            }
+            catch (Exception e)
+            {
+                e.ShouldBeAssignableTo<CheckoutApiException>();
+            }
         }
     }
 }
