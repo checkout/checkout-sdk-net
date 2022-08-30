@@ -7,6 +7,11 @@ namespace Checkout.Payments.Request.Source.Apm
         private RequestAlipayPlusSource(PaymentSourceType paymentSourceType) : base(paymentSourceType)
         {
         }
+        
+        public static RequestAlipayPlusSource RequestAliPayPlusSource()
+        {
+            return new RequestAlipayPlusSource(PaymentSourceType.AlipayPlus);
+        }
 
         public static RequestAlipayPlusSource RequestAlipayPlusCnSource()
         {

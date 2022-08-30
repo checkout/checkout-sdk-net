@@ -8,11 +8,15 @@
 
         public class PaymentsNC
         {
+            public bool? Available { get; set; }
+            
             public bool? Enabled { get; set; }
         }
 
         public class PayoutsNC
         {
+            public bool? Available { get; set; }
+            
             public bool? Enabled { get; set; }
         }
     }
