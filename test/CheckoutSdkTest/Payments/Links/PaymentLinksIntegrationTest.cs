@@ -19,11 +19,11 @@ namespace Checkout.Payments.Links
             var paymentLinkRequest = new PaymentLinkRequest
             {
                 Amount = 10,
-                Billing = new BillingInformation {Address = GetAddress()},
+                Billing = new BillingInformation { Address = GetAddress() },
                 Capture = true,
                 CaptureOn = DateTime.Now,
                 Currency = Currency.GBP,
-                Customer = new CustomerRequest {Id = "Id", Email = GenerateRandomEmail(), Name = "name"},
+                Customer = new CustomerRequest { Id = "Id", Email = GenerateRandomEmail(), Name = "name" },
                 Description = "description",
                 ExpiresIn = 1,
                 Locale = "locale",
@@ -39,7 +39,18 @@ namespace Checkout.Payments.Links
                     ChallengeIndicator = ChallengeIndicatorType.NoPreference
                 },
                 PaymentType = PaymentType.Regular,
-                AllowPaymentMethods = new List<PaymentSourceType> {PaymentSourceType.Card, PaymentSourceType.Ideal}
+                AllowPaymentMethods =
+                    new List<PaymentSourceType> { PaymentSourceType.Card, PaymentSourceType.Ideal },
+                AmountAllocations = new List<AmountAllocations>
+                {
+                    new AmountAllocations
+                    {
+                        Id = "ent_sdioy6bajpzxyl3utftdp7legq",
+                        Amount = 100,
+                        Reference = Guid.NewGuid().ToString(),
+                        Commission = new Commission { Amount = 1, Percentage = 0.1 }
+                    }
+                }
             };
 
             var response = await DefaultApi.PaymentLinksClient().Create(paymentLinkRequest);
