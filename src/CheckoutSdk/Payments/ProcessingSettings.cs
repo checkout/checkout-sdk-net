@@ -51,5 +51,7 @@ namespace Checkout.Payments
         public IList<AirlineData> AirlineData { get; set; }
 
         public DLocalProcessingSettings Dlocal { get; set; }
+
+        public string OtpValue { get; set; }
     }
 }

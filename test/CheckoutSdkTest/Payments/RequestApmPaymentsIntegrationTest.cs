@@ -325,5 +325,170 @@ namespace Checkout.Payments
                 e.ShouldBeAssignableTo<CheckoutApiException>();
             }
         }
+        
+        [Fact]
+        private async Task ShouldMakePrzelewy24Payment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestP24Source
+                {
+                    PaymentCountry = CountryCode.PL,
+                    AccountHolderName = "Bruce Wayne",
+                    AccountHolderEmail = "bruce@wayne-enterprises.com",
+                    BillingDescriptor = "P24 Demo Payment"
+                },
+                Currency = Currency.PLN,
+                Amount = 100,
+                Reference = Guid.NewGuid().ToString(),
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure"
+            };
+
+            try
+            {
+                await DefaultApi.PaymentsClient().RequestPayment(request);
+            }
+            catch (Exception e)
+            {
+                e.ShouldBeAssignableTo<CheckoutApiException>();
+            }
+        }
+        
+        [Fact]
+        private async Task ShouldMakeKnetPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestKnetSource
+                {
+                    Language = "en",
+                },
+                Currency = Currency.KWD,
+                Amount = 100,
+                Reference = Guid.NewGuid().ToString(),
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure"
+            };
+
+            try
+            {
+                await DefaultApi.PaymentsClient().RequestPayment(request);
+            }
+            catch (Exception e)
+            {
+                e.ShouldBeAssignableTo<CheckoutApiException>();
+            }
+        }
+        
+        [Fact]
+        private async Task ShouldMakeBancontactPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestBancontactSource
+                {
+                    Language = "en",
+                },
+                Currency = Currency.EUR,
+                Amount = 10,
+                Reference = Guid.NewGuid().ToString(),
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure"
+            };
+
+            try
+            {
+                await DefaultApi.PaymentsClient().RequestPayment(request);
+            }
+            catch (Exception e)
+            {
+                e.ShouldBeAssignableTo<CheckoutApiException>();
+            }
+        }
+        
+        [Fact]
+        private async Task ShouldMakeMultiBancoPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestMultiBancoSource
+                {
+                    PaymentCountry = CountryCode.PT,
+                    AccountHolderName = "Bruce Wayne",
+                    BillingDescriptor = "Multibanco Demo Payment"
+                },
+                Currency = Currency.EUR,
+                Amount = 10,
+                Reference = Guid.NewGuid().ToString(),
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure"
+            };
+
+            try
+            {
+                await DefaultApi.PaymentsClient().RequestPayment(request);
+            }
+            catch (Exception e)
+            {
+                e.ShouldBeAssignableTo<CheckoutApiException>();
+            }
+        }
+        
+        [Fact]
+        private async Task ShouldMakePostFinancePayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestPostFinanceSource
+                {
+                    PaymentCountry = CountryCode.PT,
+                    AccountHolderName = "Bruce Wayne",
+                    BillingDescriptor = "Multibanco Demo Payment"
+                },
+                Currency = Currency.EUR,
+                Amount = 10,
+                Reference = Guid.NewGuid().ToString(),
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure"
+            };
+
+            try
+            {
+                await DefaultApi.PaymentsClient().RequestPayment(request);
+            }
+            catch (Exception e)
+            {
+                e.ShouldBeAssignableTo<CheckoutApiException>();
+            }
+        }
+        
+        [Fact]
+        private async Task ShouldMakeStcPayPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestMultiBancoSource
+                {
+                    PaymentCountry = CountryCode.PT,
+                    AccountHolderName = "Bruce Wayne",
+                    BillingDescriptor = "Multibanco Demo Payment"
+                },
+                Currency = Currency.QAR,
+                Amount = 10,
+                Reference = Guid.NewGuid().ToString(),
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure"
+            };
+
+            try
+            {
+                await DefaultApi.PaymentsClient().RequestPayment(request);
+            }
+            catch (Exception e)
+            {
+                e.ShouldBeAssignableTo<CheckoutApiException>();
+            }
+        }
     }
 }
