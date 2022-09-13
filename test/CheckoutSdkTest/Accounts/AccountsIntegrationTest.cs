@@ -43,7 +43,7 @@ namespace Checkout.Accounts
                         City = "London",
                         State = "London",
                         Zip = "WIT 4TJ",
-                        Country = CountryCode.GB
+                        Country = CountryCode.ES
                     },
                     NationalTaxId = "TAX123456",
                     DateOfBirth = new DateOfBirth {Day = 5, Month = 6, Year = 1996},

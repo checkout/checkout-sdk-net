@@ -73,51 +73,7 @@ namespace Checkout.Payments.Previous
             source.Count.ShouldBePositive();
             source.Type().ShouldBe(PaymentSourceType.BenefitPay);
         }
-        
-        [Fact(Skip = "unavailable")]
-        private async Task ShouldMakeBalotoPayment()
-        {
-            var paymentRequest = new PaymentRequest
-            {
-                Source = new RequestBalotoSource
-                {
-                    Country = CountryCode.CO,
-                    Description = "simulate Via Baloto Demo Payment",
-                    Payer = new Payer
-                    {
-                        Email = "bruce@wayne-enterprises.com",
-                        Name = "Bruce Wayne"
-                    }
-                },
-                Currency = Currency.COP,
-                Amount = 100000
-            };
 
-            var paymentResponse = await PreviousApi.PaymentsClient().RequestPayment(paymentRequest);
-
-            paymentResponse.ShouldNotBeNull();
-            paymentResponse.Status.ShouldBe(PaymentStatus.Pending);
-            paymentResponse.Links["self"].ShouldNotBeNull();
-            paymentResponse.Links["redirect"].ShouldNotBeNull();
-            paymentResponse.Links["simulator:payment-succeed"].ShouldNotBeNull();
-            paymentResponse.Links["simulator:payment-expire"].ShouldNotBeNull();
-
-            var payment = await PreviousApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id);
-
-            payment.ShouldNotBeNull();
-
-            payment.Status.ShouldBe(PaymentStatus.Pending);
-            payment.Links["self"].ShouldNotBeNull();
-            payment.Links["redirect"].ShouldNotBeNull();
-            payment.Links["simulator:payment-succeed"].ShouldNotBeNull();
-            payment.Links["simulator:payment-expire"].ShouldNotBeNull();
-
-            payment.Source.ShouldBeOfType(typeof(AlternativePaymentSourceResponse));
-            var source = (AlternativePaymentSourceResponse) payment.Source;
-            source.Count.ShouldBePositive();
-            source.Type().ShouldBe(PaymentSourceType.Baloto);
-        }
-        
         [Fact(Skip = "unavailable")]
         private async Task ShouldMakeBoletoPayment_Redirect()
         {

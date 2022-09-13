@@ -253,6 +253,7 @@
         YE,
         ZM,
         ZW,
-        PS
+        PS,
+        QZ
     }
 }

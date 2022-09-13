@@ -14,7 +14,6 @@ namespace Checkout.Common
 
         [EnumMember(Value = "currency_account")]
         CurrencyAccount,
-        [EnumMember(Value = "baloto")] Baloto,
         [EnumMember(Value = "boleto")] Boleto,
         [EnumMember(Value = "fawry")] Fawry,
         [EnumMember(Value = "giropay")] Giropay,
@@ -47,6 +46,8 @@ namespace Checkout.Common
         [EnumMember(Value = "tng")] Tng,
         [EnumMember(Value = "afterpay")] Afterpay,
         [EnumMember(Value = "benefit")] Benefit,
-        [EnumMember(Value = "mbway")] Mbway
+        [EnumMember(Value = "mbway")] Mbway,
+        [EnumMember(Value = "postfinance")] Postfinance,
+        [EnumMember(Value = "stcpay")] Stcpay
     }
 }
