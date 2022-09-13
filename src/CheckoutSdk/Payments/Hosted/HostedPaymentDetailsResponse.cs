@@ -32,5 +32,7 @@ namespace Checkout.Payments.Hosted
         public string CancelUrl { get; set; }
 
         public string FailureUrl { get; set; }
+        
+        public IList<AmountAllocations> AmountAllocations { get; set; }
     }
 }

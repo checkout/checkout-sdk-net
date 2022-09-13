@@ -54,7 +54,10 @@ namespace Checkout.Payments.Response
 
         public string PaymentIp { get; set; }
 
+        [Obsolete("This property will be removed in the future, and should not be used. Use AmountAllocations instead.", false)]
         public MarketplaceData Marketplace { get; set; }
+        
+        public IList<AmountAllocations> AmountAllocations { get; set; }
 
         public PaymentRecipient Recipient { get; set; }
 

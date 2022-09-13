@@ -42,6 +42,9 @@ namespace Checkout.Payments.Links
 
         public string ProcessingChannelId { get; set; }
 
+        [Obsolete("This property will be removed in the future, and should not be used. Use AmountAllocations instead.", false)]
         public MarketplaceData Marketplace { get; set; }
+        
+        public IList<AmountAllocations> AmountAllocations { get; set; }
     }
 }

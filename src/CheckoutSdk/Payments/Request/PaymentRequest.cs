@@ -53,7 +53,10 @@ namespace Checkout.Payments.Request
 
         public PaymentRecipient Recipient { get; set; }
 
+        [Obsolete("This property will be removed in the future, and should not be used. Use AmountAllocations instead.", false)]
         public MarketplaceData Marketplace { get; set; }
+        
+        public IList<AmountAllocations> AmountAllocations { get; set; }
 
         public ProcessingSettings Processing { get; set; }
 
