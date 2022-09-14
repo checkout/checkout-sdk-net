@@ -52,7 +52,7 @@ namespace Checkout
                         .Scopes(OAuthScope.Files, OAuthScope.Flow, OAuthScope.Fx, OAuthScope.Gateway,
                             OAuthScope.Marketplace, OAuthScope.SessionsApp, OAuthScope.SessionsBrowser,
                             OAuthScope.Vault, OAuthScope.PayoutsBankDetails, OAuthScope.TransfersCreate,
-                            OAuthScope.TransfersView, OAuthScope.BalancesView)
+                            OAuthScope.TransfersView, OAuthScope.BalancesView, OAuthScope.Reporting)
                         .Environment(Environment.Sandbox)
                         .LogProvider(logFactory)
                         .Build();

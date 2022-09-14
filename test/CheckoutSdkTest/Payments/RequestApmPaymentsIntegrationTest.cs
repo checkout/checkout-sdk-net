@@ -262,7 +262,7 @@ namespace Checkout.Payments
             };
 
             await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
-                ApmServiceUnavailable);
+                "cko_processing_channel_id_invalid");
         }
 
         [Fact]

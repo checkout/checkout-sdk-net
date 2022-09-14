@@ -37,6 +37,8 @@
         [OAuthScope("balances:view")] BalancesView,
         [OAuthScope("middleware")] Middleware,
         [OAuthScope("middleware:merchants-secret")] MiddlewareMerchantsSecret,
-        [OAuthScope("middleware:merchants-public")] MiddlewareMerchantsPublic
+        [OAuthScope("middleware:merchants-public")] MiddlewareMerchantsPublic,
+        [OAuthScope("reporting")] Reporting,
+        [OAuthScope("reporting:view")] ReportingView
     }
 }

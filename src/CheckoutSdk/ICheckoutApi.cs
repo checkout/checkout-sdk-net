@@ -7,6 +7,7 @@ using Checkout.Instruments;
 using Checkout.Payments;
 using Checkout.Payments.Hosted;
 using Checkout.Payments.Links;
+using Checkout.Reports;
 using Checkout.Risk;
 using Checkout.Sessions;
 using Checkout.Tokens;
@@ -44,5 +45,7 @@ namespace Checkout
         IBalancesClient BalancesClient();
 
         ITransfersClient TransfersClient();
+
+        IReportsClient ReportsClient();
     }
 }
