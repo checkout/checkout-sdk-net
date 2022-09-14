@@ -7,6 +7,7 @@ using Checkout.Instruments;
 using Checkout.Payments;
 using Checkout.Payments.Hosted;
 using Checkout.Payments.Links;
+using Checkout.Reports;
 using Checkout.Risk;
 using Checkout.Sessions;
 using Checkout.Tokens;
@@ -31,6 +32,7 @@ namespace Checkout
         private readonly IHostedPaymentsClient _hostedPaymentsClient;
         private readonly IBalancesClient _balancesClient;
         private readonly ITransfersClient _transfersClient;
+        private readonly IReportsClient _reportsClient;
 
         public CheckoutApi(CheckoutConfiguration configuration)
         {
@@ -54,6 +56,7 @@ namespace Checkout
                 configuration);
             _transfersClient = new TransfersClient(TransfersApiClient(configuration),
                 configuration);
+            _reportsClient = new ReportsClient(baseApiClient, configuration);
         }
 
         private static ApiClient BaseApiClient(CheckoutConfiguration configuration)
@@ -149,6 +152,11 @@ namespace Checkout
         public ITransfersClient TransfersClient()
         {
             return _transfersClient;
+        }
+
+        public IReportsClient ReportsClient()
+        {
+            return _reportsClient;
         }
     }
 }
