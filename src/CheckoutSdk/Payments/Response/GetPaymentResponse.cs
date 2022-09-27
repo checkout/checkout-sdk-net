@@ -60,7 +60,11 @@ namespace Checkout.Payments.Response
         public IList<AmountAllocations> AmountAllocations { get; set; }
 
         public PaymentRecipient Recipient { get; set; }
-
+        
+        public ProcessingData Processing { get; set; }
+        
+        public IList<Product> Items { get; set; }
+        
         public IDictionary<string, object> Metadata { get; set; }
 
         public string Eci { get; set; }
@@ -68,5 +72,7 @@ namespace Checkout.Payments.Response
         public string SchemeId { get; set; }
 
         public IList<PaymentActionSummary> Actions { get; set; }
+        
+        public string ProcessedOn { get; set; }
     }
 }

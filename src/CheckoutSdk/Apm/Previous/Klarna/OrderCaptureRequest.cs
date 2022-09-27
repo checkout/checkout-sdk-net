@@ -15,7 +15,7 @@ namespace Checkout.Apm.Previous.Klarna
 
         public Klarna Klarna { get; set; }
 
-        public KlarnaShippingInfo ShippingInfo { get; set; }
+        public ShippingInfo ShippingInfo { get; set; }
 
         public long? ShippingDelay { get; set; }
     }

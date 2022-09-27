@@ -1,8 +1,10 @@
 using Checkout.Common;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using NLog.Extensions.Logging;
 using Shouldly;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit.Sdk;
 
@@ -44,11 +46,12 @@ namespace Checkout
 
                 case PlatformType.DefaultOAuth:
                     DefaultApi = CheckoutSdk.Builder().OAuth()
-                        .ClientCredentials(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_ID"),
+                        .ClientCredentials(
+                            System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_ID"),
                             System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET"))
                         .Scopes(OAuthScope.Files, OAuthScope.Flow, OAuthScope.Fx, OAuthScope.Gateway,
                             OAuthScope.Marketplace, OAuthScope.SessionsApp, OAuthScope.SessionsBrowser,
-                            OAuthScope.Vault, OAuthScope.PayoutsBankDetails, OAuthScope.TransfersCreate, 
+                            OAuthScope.Vault, OAuthScope.PayoutsBankDetails, OAuthScope.TransfersCreate,
                             OAuthScope.TransfersView, OAuthScope.BalancesView)
                         .Environment(Environment.Sandbox)
                         .LogProvider(logFactory)
@@ -90,6 +93,18 @@ namespace Checkout
             throw new XunitException("Max attempts reached!");
         }
 
+        protected async Task CheckErrorItem<T>(Func<Task<T>> func, string errorItem)
+        {
+            try
+            {
+                T t = await func.Invoke();
+            }
+            catch (CheckoutApiException ex)
+            {
+                ((JArray)ex.ErrorDetails["error_codes"]).ToList().ShouldContain(errorItem);
+            }
+        }
+
         protected static async Task AssertNotFound<T>(Task<T> task)
         {
             try
@@ -106,7 +121,7 @@ namespace Checkout
 
         protected static Phone GetPhone()
         {
-            return new Phone {CountryCode = "1", Number = "4155552671"};
+            return new Phone { CountryCode = "1", Number = "4155552671" };
         }
 
         protected static Address GetAddress()
@@ -119,6 +134,14 @@ namespace Checkout
                 State = "London",
                 Zip = "W1T 4TJ",
                 Country = CountryCode.GB
+            };
+        }
+
+        protected static AccountHolder GetAccountHolder()
+        {
+            return new AccountHolder
+            {
+                FirstName = "John", LastName = "Doe", Phone = GetPhone(), BillingAddress = GetAddress()
             };
         }
     }

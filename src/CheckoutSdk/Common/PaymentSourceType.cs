@@ -48,6 +48,7 @@ namespace Checkout.Common
         [EnumMember(Value = "benefit")] Benefit,
         [EnumMember(Value = "mbway")] Mbway,
         [EnumMember(Value = "postfinance")] Postfinance,
-        [EnumMember(Value = "stcpay")] Stcpay
+        [EnumMember(Value = "stcpay")] Stcpay,
+        [EnumMember(Value = "alma")] Alma
     }
 }

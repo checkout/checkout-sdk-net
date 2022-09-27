@@ -41,5 +41,7 @@ namespace Checkout.Payments
         public string Score { get; set; }
         
         public string CryptogramAlgorithm { get; set; }
+        
+        public string AuthenticationId { get; set; }
     }
 }

@@ -10,8 +10,6 @@
 
         public string Name { get; set; }
 
-        public SessionScheme? Scheme { get; set; }
-
         public bool? Stored { get; set; }
         
         public bool? StoreForFutureUse { get; set; }

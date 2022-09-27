@@ -2,10 +2,22 @@ using Checkout.Common;
 using Checkout.Payments.Previous.Request;
 using Checkout.Payments.Previous.Request.Source.Apm;
 using Checkout.Payments.Previous.Response.Source;
+using Checkout.Payments.Request.Source.Apm;
 using Shouldly;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
+using RequestBancontactSource = Checkout.Payments.Previous.Request.Source.Apm.RequestBancontactSource;
+using RequestEpsSource = Checkout.Payments.Previous.Request.Source.Apm.RequestEpsSource;
+using RequestFawrySource = Checkout.Payments.Previous.Request.Source.Apm.RequestFawrySource;
+using RequestGiropaySource = Checkout.Payments.Previous.Request.Source.Apm.RequestGiropaySource;
+using RequestIdealSource = Checkout.Payments.Previous.Request.Source.Apm.RequestIdealSource;
+using RequestKnetSource = Checkout.Payments.Previous.Request.Source.Apm.RequestKnetSource;
+using RequestMultiBancoSource = Checkout.Payments.Previous.Request.Source.Apm.RequestMultiBancoSource;
+using RequestP24Source = Checkout.Payments.Previous.Request.Source.Apm.RequestP24Source;
+using RequestPayPalSource = Checkout.Payments.Previous.Request.Source.Apm.RequestPayPalSource;
+using RequestQPaySource = Checkout.Payments.Previous.Request.Source.Apm.RequestQPaySource;
+using RequestSofortSource = Checkout.Payments.Previous.Request.Source.Apm.RequestSofortSource;
 
 namespace Checkout.Payments.Previous
 {
