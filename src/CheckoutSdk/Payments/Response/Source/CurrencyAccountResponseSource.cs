@@ -6,6 +6,8 @@ namespace Checkout.Payments.Response.Source
     {
         public long? Amount { get; set; }
 
+        public Currency? Currency { get; set; }
+
         public new PaymentSourceType? Type()
         {
             return base.Type;

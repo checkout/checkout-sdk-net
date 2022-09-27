@@ -1,9 +1,8 @@
 ﻿using Checkout.Common;
-using Checkout.Payments.Request.Source.Apm;
 using System;
 using System.Collections.Generic;
 
-namespace Checkout.Payments.Previous.Request.Source.Apm
+namespace Checkout.Payments.Request.Source.Apm
 {
     public class RequestFawrySource : AbstractRequestSource
     {

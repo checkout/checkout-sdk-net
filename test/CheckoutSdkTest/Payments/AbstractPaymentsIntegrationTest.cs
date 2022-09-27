@@ -14,6 +14,8 @@ namespace Checkout.Payments
     public abstract class AbstractPaymentsIntegrationTest : SandboxTestFixture
     {
         protected const string IdempotencyKey = "test.net";
+        protected const string PayeeNotOnboarded = "payee_not_onboarded";
+        protected const string ApmServiceUnavailable = "apm_service_unavailable";
 
         protected AbstractPaymentsIntegrationTest() : base(PlatformType.Default)
         {

@@ -1,3 +1,4 @@
+using Checkout.Common;
 using System.Collections.Generic;
 
 namespace Checkout.Payments
@@ -21,7 +22,7 @@ namespace Checkout.Payments
         public PreferredSchema? PreferredScheme { get; set; }
 
         public MerchantInitiatedReason? MerchantInitiatedReason { get; set; }
-        
+
         public long? CampaignId { get; set; }
 
         public ProductType? ProductType { get; set; }
@@ -53,5 +54,13 @@ namespace Checkout.Payments
         public DLocalProcessingSettings Dlocal { get; set; }
 
         public string OtpValue { get; set; }
+
+        public CountryCode? PurchaseCountry { get; set; }
+
+        public IList<string> CustomPaymentMethodIds { get; set; }
+
+        public long? ShippingDelay { get; set; }
+
+        public IList<ShippingInfo> ShippingInfo { get; set; }
     }
 }

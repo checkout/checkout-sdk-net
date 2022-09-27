@@ -7,5 +7,7 @@ namespace Checkout.Payments.Request.Source.Apm
         public RequestPayPalSource() : base(PaymentSourceType.PayPal)
         {
         }
+
+        public BillingPlan plan { get; set; }
     }
 }

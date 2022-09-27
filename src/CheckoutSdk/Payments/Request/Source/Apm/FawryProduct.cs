@@ -1,4 +1,4 @@
-﻿namespace Checkout.Payments.Previous.Request.Source.Apm
+﻿namespace Checkout.Payments.Request.Source.Apm
 {
     public class FawryProduct
     {

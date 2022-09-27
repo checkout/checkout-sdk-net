@@ -9,7 +9,11 @@ namespace Checkout.Payments
         public string RecommendationCode { get; set; }
         
         public string PartnerOrderId { get; set; }
-
+        
+        public string PartnerSessionId { get; set; }
+        
+        public string PartnerClientToken { get; set; }
+        
         public string PartnerPaymentId { get; set; }
 
         public string ContinuationPayload { get; set; }
