@@ -31,7 +31,8 @@
 
 ## How to use the SDK
 
-This SDK can be used with two different pair of API keys provided by Checkout. However, using different API keys imply using specific API features. Please find in the table below the types of keys that can be used within this SDK.
+This SDK can be used with two different pair of API keys provided by Checkout. However, using different API keys imply using specific API features. </br>
+Please find in the table below the types of keys that can be used within this SDK.
 
 | Account System | Public Key (example)                    | Secret Key (example)                    |
 |----------------|-----------------------------------------| --------------------------------------- |
@@ -170,6 +171,46 @@ public class CheckoutController : ControllerBase
 ```
 Please note again that there are 2 different `ICheckoutApi` interfaces, depending on the way the SDK is built.
 
+## Custom HttpClient
+
+Sometimes you need a custom thread pool, or any custom http property, so you can provide your own httpClient configuration as follows.
+
+```c#
+// Create a custom class from IHttpClientFactory
+private class CustomClientFactory : IHttpClientFactory
+{
+    public HttpClient CreateClient()
+    {
+        var handler = new HttpClientHandler();
+        handler.DefaultProxyCredentials = CredentialCache.DefaultCredentials;
+        var httpClient = new HttpClient(handler);
+        httpClient.Timeout = TimeSpan.FromSeconds(2);
+        return httpClient;
+    }
+}
+
+ICheckoutApi api = CheckoutSdk.Builder().StaticKeys()
+    .SecretKey("secret_key")
+    .Environment(Environment.Sandbox)
+    .HttpClientFactory(new CustomClientFactory()) // optional
+    .Build();
+```
+
+## Logging
+
+The SDK supports custom LogProvider that extends from Microsoft.Extensions.Logging `ILoggerFactory`, you need to provide your configuration as follows.
+
+```c#
+var logFactory = new NLogLoggerFactory();
+_log = logFactory.CreateLogger(typeof(SandboxTestFixture));
+
+ICheckoutApi api = CheckoutSdk.Builder().StaticKeys()
+    .SecretKey("secret_key")
+    .Environment(Environment.Sandbox)
+    .LogProvider(logFactory)
+    .Build();
+```
+
 ## Exception handling
 
 All the API responses that do not fall in the 2** status codes will cause a `CheckoutApiException`. The exception encapsulates
@@ -188,8 +229,9 @@ dotnet test
 
 The execution of integration tests require the following environment variables set in your system:
 
-* For Default account systems: `CHECKOUT_DEFAULT_PUBLIC_KEY` & `CHECKOUT_DEFAULT_SECRET_KEY`
-* * For Previous account systems: `CHECKOUT_PREVIOUS_PUBLIC_KEY` & `CHECKOUT_PREVIOUS_SECRET_KEY`
+* For Default account systems (NAS): `CHECKOUT_DEFAULT_PUBLIC_KEY` & `CHECKOUT_DEFAULT_SECRET_KEY`
+* For Default account systems (OAuth): `CHECKOUT_DEFAULT_OAUTH_CLIENT_ID` & `CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET`
+* For Previous account systems (ABC): `CHECKOUT_PREVIOUS_PUBLIC_KEY` & `CHECKOUT_PREVIOUS_SECRET_KEY`
 
 ## Code of Conduct
 
