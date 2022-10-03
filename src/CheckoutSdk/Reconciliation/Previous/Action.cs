@@ -12,7 +12,7 @@ namespace Checkout.Reconciliation.Previous
 
         public DateTime? ProcessedOn { get; set; }
 
-        public long? ResponseCode { get; set; }
+        public string ResponseCode { get; set; }
 
         public string ResponseDescription { get; set; }
 
