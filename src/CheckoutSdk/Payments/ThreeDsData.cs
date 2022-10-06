@@ -7,6 +7,8 @@ namespace Checkout.Payments
         public bool? Downgraded { get; set; }
 
         public string Enrolled { get; set; }
+        
+        public string UpgradeReason { get; set; }
 
         public string SignatureValid { get; set; }
 
