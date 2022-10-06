@@ -7,5 +7,7 @@ namespace Checkout.Payments
         public bool? Downgraded { get; set; }
 
         public ThreeDsEnrollmentStatus? Enrolled { get; set; }
+        
+        public string UpgradeReason { get; set; }
     }
 }

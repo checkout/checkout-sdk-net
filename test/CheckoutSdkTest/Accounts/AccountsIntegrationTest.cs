@@ -24,7 +24,11 @@ namespace Checkout.Accounts
             OnboardEntityRequest onboardEntityRequest = new OnboardEntityRequest
             {
                 Reference = randomReference,
-                ContactDetails = new ContactDetails {Phone = new AccountPhone {Number = "2345678910"}},
+                ContactDetails = new ContactDetails
+                {
+                    Phone = new AccountPhone { Number = "2345678910" },
+                    EmailAddresses = new EntityEmailAddresses { Primary = GenerateRandomEmail() }
+                },
                 Profile =
                     new Profile
                     {
@@ -69,6 +73,8 @@ namespace Checkout.Accounts
             entityDetailsResponse.ContactDetails.Phone.ShouldNotBeNull();
             entityDetailsResponse.ContactDetails.Phone.Number.ShouldBe(onboardEntityRequest.ContactDetails.Phone
                 .Number);
+            entityDetailsResponse.ContactDetails.EmailAddresses.ShouldNotBeNull();
+            entityDetailsResponse.ContactDetails.EmailAddresses.Primary.ShouldBe(onboardEntityRequest.ContactDetails.EmailAddresses.Primary);
             entityDetailsResponse.Individual.ShouldNotBeNull();
             entityDetailsResponse.Individual.FirstName.ShouldBe(onboardEntityRequest.Individual.FirstName);
             entityDetailsResponse.Individual.LastName.ShouldBe(onboardEntityRequest.Individual.LastName);

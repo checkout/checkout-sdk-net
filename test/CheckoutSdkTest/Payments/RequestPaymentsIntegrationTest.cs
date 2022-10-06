@@ -347,5 +347,25 @@ namespace Checkout.Payments
 
             paymentResponse1.Id.ShouldBe(paymentResponse2.Id);
         }
+        
+        [Fact]
+        private async Task ShouldMakeCustomerPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestCustomerSource
+                {
+                    Id = "cus_udst2tfldj6upmye2reztkmm4i"
+                },
+                Currency = Currency.EGP,
+                Amount = 10,
+                Reference = Guid.NewGuid().ToString(),
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure"
+            };
+
+            await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
+                "customer_not_found");
+        }
     }
 }

@@ -24,6 +24,8 @@ namespace Checkout.Payments
 
         public ChallengeIndicatorType? ChallengeIndicator { get; set; }
         
+        public bool? AllowUpgrade { get; set; }
+        
         //Not available on Previous
         
         public string Status { get; set; }
