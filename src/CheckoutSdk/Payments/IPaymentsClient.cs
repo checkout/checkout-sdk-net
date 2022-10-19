@@ -17,6 +17,10 @@ namespace Checkout.Payments
             string idempotencyKey = null,
             CancellationToken cancellationToken = default);
 
+        Task<PaymentsQueryResponse> GetPaymentsList(
+            PaymentsQueryFilter queryFilter,
+            CancellationToken cancellationToken = default);
+
         Task<GetPaymentResponse> GetPaymentDetails(
             string paymentId,
             CancellationToken cancellationToken = default);
