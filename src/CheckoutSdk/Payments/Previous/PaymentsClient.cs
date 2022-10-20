@@ -40,6 +40,18 @@ namespace Checkout.Payments.Previous
                 cancellationToken,
                 idempotencyKey);
         }
+        
+        public Task<PaymentsQueryResponse> GetPaymentsList(
+            PaymentsQueryFilter queryFilter,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("queryFilter", queryFilter);
+            return ApiClient.Query<PaymentsQueryResponse>(
+                PaymentsPath,
+                SdkAuthorization(),
+                queryFilter,
+                cancellationToken);
+        }
 
         public Task<GetPaymentResponse> GetPaymentDetails(
             string paymentId,

@@ -140,6 +140,23 @@ namespace Checkout.Payments.Previous
             response.ShouldBeSameAs(paymentResponse);
         }
 
+        [Fact]
+        private async Task ShouldGetPaymentsList()
+        {
+            var query = new PaymentsQueryFilter();
+            var responsePayments = new PaymentsQueryResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Query<PaymentsQueryResponse>(PaymentsPath, _authorization, query, CancellationToken.None))
+                .ReturnsAsync(() => responsePayments);
+
+            IPaymentsClient paymentsClient = new PaymentsClient(_apiClient.Object, _configuration.Object);
+
+            var response = await paymentsClient.GetPaymentsList(query, CancellationToken.None);
+            
+            response.ShouldNotBeNull();
+            response.ShouldBeSameAs(responsePayments);
+        }
 
         [Fact]
         private async Task ShouldGetPaymentDetails()
