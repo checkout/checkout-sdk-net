@@ -6,5 +6,7 @@ namespace Checkout.Common
     {
         [EnumMember(Value = "Consumer")] Consumer,
         [EnumMember(Value = "Commercial")] Commercial,
+        [EnumMember(Value = "All")] All,
+        [EnumMember(Value = "Other")] Other,
     }
 }
