@@ -68,6 +68,7 @@ namespace Checkout
             checkoutApi.HostedPaymentsClient().ShouldNotBeNull();
             checkoutApi.BalancesClient().ShouldNotBeNull();
             checkoutApi.TransfersClient().ShouldNotBeNull();
+            checkoutApi.MetaDataCardClient().ShouldNotBeNull();
         }
     }
 }
