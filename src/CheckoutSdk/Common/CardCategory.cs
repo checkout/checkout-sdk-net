@@ -4,7 +4,9 @@ namespace Checkout.Common
 {
     public enum CardCategory
     {
-        [EnumMember(Value = "Consumer")] Consumer,
-        [EnumMember(Value = "Commercial")] Commercial,
+        [EnumMember(Value = "consumer")] Consumer,
+        [EnumMember(Value = "commercial")] Commercial,
+        [EnumMember(Value = "all")] All,
+        [EnumMember(Value = "other")] Other,
     }
 }
