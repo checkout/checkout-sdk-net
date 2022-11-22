@@ -6,6 +6,7 @@ namespace Checkout.Metadata
 {
     public interface IMetadataClient
     {
-        Task<CardMetadataResponse> RequestCardMetadata(CardMetadataRequest cardMetadataRequest, CancellationToken cancellationToken = default);
+        Task<CardMetadataResponse> RequestCardMetadata(CardMetadataRequest cardMetadataRequest,
+            CancellationToken cancellationToken = default);
     }
 }
