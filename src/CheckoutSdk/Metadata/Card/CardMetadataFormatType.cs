@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Checkout.Metadata.Card.Types
+namespace Checkout.Metadata.Card
 {
     public enum CardMetadataFormatType
     {

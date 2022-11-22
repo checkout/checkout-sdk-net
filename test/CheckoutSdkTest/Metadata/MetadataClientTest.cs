@@ -1,22 +1,21 @@
+using Checkout.Metadata.Card;
 using Moq;
 using Shouldly;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Checkout.Metadata.Card
+namespace Checkout.Metadata
 {
-    public class MetadataCardClientTest : UnitTestFixture
+    public class MetadataClientTest : UnitTestFixture
     {
-        private readonly SdkAuthorization _authorization =
-            new SdkAuthorization(PlatformType.DefaultOAuth, ValidDefaultSk);
-
+        private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.DefaultOAuth, ValidDefaultSk);
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
         private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.DefaultOAuth);
         private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
         private readonly Mock<CheckoutConfiguration> _configuration;
 
-        public MetadataCardClientTest()
+        public MetadataClientTest()
         {
             _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.OAuth))
                 .Returns(_authorization);
@@ -56,7 +55,7 @@ namespace Checkout.Metadata.Card
             IMetadataClient client = new MetadataClient(_apiClient.Object, _configuration.Object);
 
             CardMetadataResponse response = await client.RequestCardMetadata(new CardMetadataRequest());
-            
+
             response.ShouldBeNull();
         }
     }

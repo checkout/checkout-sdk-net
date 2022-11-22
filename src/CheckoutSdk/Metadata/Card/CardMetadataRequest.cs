@@ -1,10 +1,10 @@
-using Checkout.Metadata.Card.Types;
+using Checkout.Metadata.Card.Source;
 
 namespace Checkout.Metadata.Card
 {
     public class CardMetadataRequest
     {
-        public MetadataRequestSource Source { get; set; }
+        public CardMetadataRequestSource Source { get; set; }
         public CardMetadataFormatType? Format { get; set; }
     }
 }

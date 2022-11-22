@@ -14,18 +14,6 @@ namespace Checkout.Tokens
         [Fact]
         private async Task ShouldRequestCardToken()
         {
-            var phone = new Phone {CountryCode = "44", Number = "020 222333"};
-
-            var billingAddress = new Address
-            {
-                AddressLine1 = "CheckoutSdk.com",
-                AddressLine2 = "90 Tottenham Court Road",
-                City = "London",
-                State = "London",
-                Zip = "W1T 4TJ",
-                Country = CountryCode.GB
-            };
-
             var cardTokenRequest = new CardTokenRequest
             {
                 Name = TestCardSource.Visa.Name,
@@ -33,8 +21,8 @@ namespace Checkout.Tokens
                 ExpiryYear = TestCardSource.Visa.ExpiryYear,
                 ExpiryMonth = TestCardSource.Visa.ExpiryMonth,
                 Cvv = TestCardSource.Visa.Cvv,
-                BillingAddress = billingAddress,
-                Phone = phone
+                BillingAddress = GetAddress(),
+                Phone = GetPhone()
             };
 
             var cardTokenResponse = await DefaultApi.TokensClient().Request(cardTokenRequest);

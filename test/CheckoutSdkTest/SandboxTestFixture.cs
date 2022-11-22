@@ -98,6 +98,7 @@ namespace Checkout
             try
             {
                 T t = await func.Invoke();
+                throw new XunitException("Shouldn't get here");
             }
             catch (CheckoutApiException ex)
             {
