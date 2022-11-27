@@ -14,6 +14,7 @@ namespace Checkout.Accounts
         private const string EntitiesPath = "entities";
         private const string InstrumentPath = "instruments";
         private const string PayoutSchedulePath = "payout-schedules";
+        private const string PaymentInstrumentsPath = "payment-instruments";
 
         public AccountsClient(
             IApiClient apiClient,
@@ -21,6 +22,15 @@ namespace Checkout.Accounts
             CheckoutConfiguration configuration)
             : base(apiClient, filesApiClient, configuration)
         {
+        }
+
+        public async Task<IdResponse> SubmitFile(AccountsFileRequest accountsFileRequest,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("accountsFileRequest", accountsFileRequest,
+                "accountsFileRequest.purpose", accountsFileRequest.Purpose);
+            return await SubmitFileToFilesApi(accountsFileRequest.File, accountsFileRequest.Purpose.Value,
+                cancellationToken);
         }
 
         public async Task<OnboardEntityResponse> CreateEntity(OnboardEntityRequest entityRequest,
@@ -31,6 +41,16 @@ namespace Checkout.Accounts
                 BuildPath(AccountsPath, EntitiesPath),
                 SdkAuthorization(SdkAuthorizationType.OAuth),
                 entityRequest,
+                cancellationToken);
+        }
+
+        public async Task<PaymentInstrumentDetailsResponse> RetrievePaymentInstrumentDetails(string entityId,
+            string paymentInstrumentId, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("entityId", entityId, "paymentInstrumentId", paymentInstrumentId);
+            return await ApiClient.Get<PaymentInstrumentDetailsResponse>(
+                BuildPath(AccountsPath, EntitiesPath, entityId, PaymentInstrumentsPath, paymentInstrumentId),
+                SdkAuthorization(SdkAuthorizationType.OAuth),
                 cancellationToken);
         }
 
@@ -56,7 +76,8 @@ namespace Checkout.Accounts
         }
 
         public async Task<EmptyResponse> CreatePaymentInstrument(string entityId,
-            AccountsPaymentInstrument accountsPaymentInstrument, CancellationToken cancellationToken = default)
+            AccountsPaymentInstrument accountsPaymentInstrument,
+            CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("accountsPaymentInstrument", accountsPaymentInstrument, "entityId",
                 entityId);
@@ -67,12 +88,37 @@ namespace Checkout.Accounts
                 cancellationToken);
         }
 
-        public async Task<IdResponse> SubmitFile(AccountsFileRequest accountsFileRequest,
+        public async Task<IdResponse> CreatePaymentInstrument(string entityId,
+            PaymentInstrumentRequest paymentInstrumentRequest,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("accountsFileRequest", accountsFileRequest,
-                "accountsFileRequest.purpose", accountsFileRequest.Purpose);
-            return await SubmitFileToFilesApi(accountsFileRequest.File, accountsFileRequest.Purpose.Value,
+            CheckoutUtils.ValidateParams("entityId", entityId, "paymentInstrumentRequest", paymentInstrumentRequest);
+            return await ApiClient.Post<IdResponse>(
+                BuildPath(AccountsPath, EntitiesPath, entityId, PaymentInstrumentsPath),
+                SdkAuthorization(SdkAuthorizationType.OAuth),
+                paymentInstrumentRequest,
+                cancellationToken);
+        }
+
+        public async Task<PaymentInstrumentQueryResponse> QueryPaymentInstruments(string entityId,
+            PaymentInstrumentsQuery query = null,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("entityId", entityId);
+            return await ApiClient.Query<PaymentInstrumentQueryResponse>(
+                BuildPath(AccountsPath, EntitiesPath, entityId, PaymentInstrumentsPath),
+                SdkAuthorization(SdkAuthorizationType.OAuth),
+                query,
+                cancellationToken);
+        }
+
+        public async Task<GetScheduleResponse> RetrievePayoutSchedule(string entityId,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("entityId", entityId);
+            return await ApiClient.Get<GetScheduleResponse>(
+                BuildPath(AccountsPath, EntitiesPath, entityId, PayoutSchedulePath),
+                SdkAuthorization(SdkAuthorizationType.OAuth),
                 cancellationToken);
         }
 
@@ -85,17 +131,7 @@ namespace Checkout.Accounts
             return await ApiClient.Put<EmptyResponse>(
                 BuildPath(AccountsPath, EntitiesPath, entityId, PayoutSchedulePath),
                 SdkAuthorization(SdkAuthorizationType.OAuth),
-                new Dictionary<Currency, UpdateScheduleRequest>() {{currency, updateScheduleRequest}},
-                cancellationToken);
-        }
-
-        public async Task<GetScheduleResponse> RetrievePayoutSchedule(string entityId,
-            CancellationToken cancellationToken = default)
-        {
-            CheckoutUtils.ValidateParams("entityId", entityId);
-            return await ApiClient.Get<GetScheduleResponse>(
-                BuildPath(AccountsPath, EntitiesPath, entityId, PayoutSchedulePath),
-                SdkAuthorization(SdkAuthorizationType.OAuth),
+                new Dictionary<Currency, UpdateScheduleRequest>() { { currency, updateScheduleRequest } },
                 cancellationToken);
         }
     }
