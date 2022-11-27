@@ -132,7 +132,7 @@ namespace Checkout.Accounts
         }
 
         [Fact]
-        private async Task ShouldCreatePaymentInstrument()
+        private async Task ShouldCreatePaymentInstrumentDeprecated()
         {
             _apiClient
                 .Setup(x =>
@@ -236,6 +236,72 @@ namespace Checkout.Accounts
 
             var response = await _accountsClient.RetrievePayoutSchedule(
                 "entity_id");
+
+            response.ShouldNotBeNull();
+        }
+        
+        [Fact]
+        private async Task ShouldRetrievePaymentInstrumentDetails()
+        {
+            var responseAsync = new PaymentInstrumentDetailsResponse();
+
+            _apiClient
+                .Setup(x =>
+                    x.Get<PaymentInstrumentDetailsResponse>(
+                        "accounts/entities/entity_id/payment-instruments/instrument_id",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(responseAsync);
+
+            var response = await _accountsClient.RetrievePaymentInstrumentDetails(
+                "entity_id", "instrument_id");
+
+            response.ShouldNotBeNull();
+        }
+
+        [Fact]
+        private async Task ShouldCreatePaymentInstrument()
+        {
+            PaymentInstrumentRequest request = new PaymentInstrumentRequest();
+            IdResponse responseAsync = new IdResponse();
+
+            _apiClient
+                .Setup(x =>
+                    x.Post<IdResponse>(
+                        "accounts/entities/entity_id/payment-instruments",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<PaymentInstrumentRequest>(),
+                        It.IsAny<CancellationToken>(),
+                        null
+                    )
+                )
+                .ReturnsAsync(responseAsync);
+
+            var response =
+                await _accountsClient.CreatePaymentInstrument("entity_id", request);
+
+            response.ShouldNotBeNull();
+        }
+
+        [Fact]
+        private async Task ShouldQueryPaymentInstruments()
+        {
+            PaymentInstrumentsQuery request = new PaymentInstrumentsQuery();
+            PaymentInstrumentQueryResponse responseAsync = new PaymentInstrumentQueryResponse();
+
+            _apiClient
+                .Setup(x =>
+                    x.Query<PaymentInstrumentQueryResponse>(
+                        "accounts/entities/entity_id/payment-instruments",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<PaymentInstrumentsQuery>(),
+                        It.IsAny<CancellationToken>()
+                    )
+                )
+                .ReturnsAsync(responseAsync);
+
+            var response =
+                await _accountsClient.QueryPaymentInstruments("entity_id", request);
 
             response.ShouldNotBeNull();
         }

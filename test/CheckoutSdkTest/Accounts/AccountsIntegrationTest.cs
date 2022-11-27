@@ -1,4 +1,5 @@
 using Checkout.Common;
+using Checkout.Instruments;
 using Shouldly;
 using System;
 using System.Collections.Generic;
@@ -24,17 +25,8 @@ namespace Checkout.Accounts
             OnboardEntityRequest onboardEntityRequest = new OnboardEntityRequest
             {
                 Reference = randomReference,
-                ContactDetails = new ContactDetails
-                {
-                    Phone = new AccountPhone { Number = "2345678910" },
-                    EmailAddresses = new EntityEmailAddresses { Primary = GenerateRandomEmail() }
-                },
-                Profile =
-                    new Profile
-                    {
-                        Urls = new List<string> {"https://www.superheroexample.com"},
-                        Mccs = new List<string> {"0742"}
-                    },
+                ContactDetails = BuildContactDetails(),
+                Profile = BuildProfile(),
                 Individual = new Individual
                 {
                     FirstName = "Bruce",
@@ -50,8 +42,8 @@ namespace Checkout.Accounts
                         Country = CountryCode.ES
                     },
                     NationalTaxId = "TAX123456",
-                    DateOfBirth = new DateOfBirth {Day = 5, Month = 6, Year = 1996},
-                    Identification = new Identification {NationalIdNumber = "AB123456C"},
+                    DateOfBirth = new DateOfBirth { Day = 5, Month = 6, Year = 1996 },
+                    Identification = new Identification { NationalIdNumber = "AB123456C" },
                 },
             };
 
@@ -74,7 +66,8 @@ namespace Checkout.Accounts
             entityDetailsResponse.ContactDetails.Phone.Number.ShouldBe(onboardEntityRequest.ContactDetails.Phone
                 .Number);
             entityDetailsResponse.ContactDetails.EmailAddresses.ShouldNotBeNull();
-            entityDetailsResponse.ContactDetails.EmailAddresses.Primary.ShouldBe(onboardEntityRequest.ContactDetails.EmailAddresses.Primary);
+            entityDetailsResponse.ContactDetails.EmailAddresses.Primary.ShouldBe(onboardEntityRequest.ContactDetails
+                .EmailAddresses.Primary);
             entityDetailsResponse.Individual.ShouldNotBeNull();
             entityDetailsResponse.Individual.FirstName.ShouldBe(onboardEntityRequest.Individual.FirstName);
             entityDetailsResponse.Individual.LastName.ShouldBe(onboardEntityRequest.Individual.LastName);
@@ -99,18 +92,74 @@ namespace Checkout.Accounts
         [Fact]
         private async Task ShouldUploadAccountsFile()
         {
-            var fileRequest =
-                new AccountsFileRequest
+            await UploadFile();
+        }
+
+        [Fact]
+        private async Task ShouldCreateAndRetrievePaymentInstrument()
+        {
+            CheckoutApi api = GetAccountsCheckoutApi();
+
+            var entityRequest = new OnboardEntityRequest
+            {
+                Reference = RandomString(15),
+                ContactDetails = BuildContactDetails(),
+                Profile = BuildProfile(),
+                Company = new Company
                 {
-                    File = "./Resources/checkout.jpeg",
-                    ContentType = new ContentType("image/png"),
-                    Purpose = AccountsFilePurpose.Identification
-                };
+                    BusinessRegistrationNumber = "01234567",
+                    LegalName = "Super Hero Masks Inc.",
+                    TradingName = "Super Hero Masks",
+                    PrincipalAddress = GetAddress(),
+                    RegisteredAddress = GetAddress(),
+                    Representatives = new List<Representative>
+                    {
+                        new Representative
+                        {
+                            FirstName = "John",
+                            LastName = "Doe",
+                            Address = GetAddress(),
+                            Identification = new Identification { NationalIdNumber = "AB123456C", }
+                        }
+                    }
+                }
+            };
 
-            IdResponse fileResponse = await DefaultApi.AccountsClient().SubmitFile(fileRequest);
+            var entityResponse = await api.AccountsClient().CreateEntity(entityRequest);
 
-            fileResponse.ShouldNotBeNull();
-            fileResponse.Id.ShouldNotBeNull();
+            var file = await UploadFile();
+
+            var instrumentRequest = new PaymentInstrumentRequest
+            {
+                Label = "Barclays",
+                Type = InstrumentType.BankAccount,
+                Currency = Currency.GBP,
+                Country = CountryCode.GB,
+                DefaultDestination = false,
+                Document = new InstrumentDocument { Type = "bank_statement", FileId = file.Id },
+                InstrumentDetails = new InstrumentDetailsFasterPayments
+                {
+                    AccountNumber = "12334454", BankCode = "050389"
+                }
+            };
+
+            var instrumentResponse = await api.AccountsClient().CreatePaymentInstrument(entityResponse.Id, instrumentRequest);
+            instrumentResponse.ShouldNotBeNull();
+            instrumentResponse.Id.ShouldNotBeNull();
+
+            var instrumentDetails = await api.AccountsClient().RetrievePaymentInstrumentDetails(entityResponse.Id, instrumentResponse.Id);
+            instrumentDetails.ShouldNotBeNull();
+            instrumentDetails.Id.ShouldNotBeNull();
+            instrumentDetails.Status.ShouldNotBeNull();
+            instrumentDetails.Label.ShouldNotBeNull();
+            instrumentDetails.Type.ShouldNotBeNull();
+            instrumentDetails.Currency.ShouldNotBeNull();
+            instrumentDetails.Country.ShouldNotBeNull();
+            instrumentDetails.Document.ShouldNotBeNull();
+
+            var queryResponse = await api.AccountsClient().QueryPaymentInstruments(entityResponse.Id);
+            queryResponse.ShouldNotBeNull();
+            queryResponse.Data.ShouldNotBeNull();
         }
 
         private static string RandomString(int length)
@@ -118,6 +167,53 @@ namespace Checkout.Accounts
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[Random.Next(s.Length)]).ToArray());
+        }
+
+        private static ContactDetails BuildContactDetails()
+        {
+            return new ContactDetails
+            {
+                Phone = new AccountPhone { Number = "2345678910" },
+                EmailAddresses = new EntityEmailAddresses { Primary = GenerateRandomEmail() }
+            };
+        }
+
+
+        private static Profile BuildProfile()
+        {
+            return new Profile
+            {
+                Urls = new List<string> { "https://www.superheroexample.com" }, Mccs = new List<string> { "0742" }
+            };
+        }
+
+        private async Task<IdResponse> UploadFile()
+        {
+            var fileRequest =
+                new AccountsFileRequest
+                {
+                    File = "./Resources/checkout.jpeg",
+                    ContentType = new ContentType("image/png"),
+                    Purpose = AccountsFilePurpose.BankVerification
+                };
+
+            IdResponse fileResponse = await DefaultApi.AccountsClient().SubmitFile(fileRequest);
+
+            fileResponse.ShouldNotBeNull();
+            fileResponse.Id.ShouldNotBeNull();
+
+            return fileResponse;
+        }
+
+        private static CheckoutApi GetAccountsCheckoutApi()
+        {
+            return CheckoutSdk.Builder()
+                .OAuth()
+                .ClientCredentials(
+                    System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_ID"),
+                    System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_SECRET"))
+                .Scopes(OAuthScope.Accounts)
+                .Build() as CheckoutApi;
         }
     }
 }
