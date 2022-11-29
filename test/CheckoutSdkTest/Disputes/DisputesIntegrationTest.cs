@@ -50,6 +50,25 @@ namespace Checkout.Disputes
             fileDetails.UploadedOn.ShouldNotBeNull();
         }
 
+        [Fact]
+        private async Task ShouldGetDisputeSchemeFiles()
+        {
+            var query = new DisputesQueryFilter { Limit = 5 };
+            var queryResponse = await DefaultApi.DisputesClient().Query(query);
+
+            queryResponse.ShouldNotBeNull();
+            if (queryResponse.Data.Count > 0)
+            {
+                foreach (var dispute in queryResponse.Data)
+                {
+                    var disputeSchemeFiles = await DefaultApi.DisputesClient().GetDisputeSchemeFiles(dispute.Id);
+                    disputeSchemeFiles.ShouldNotBeNull();
+                    disputeSchemeFiles.Id.ShouldNotBeNull();
+                    disputeSchemeFiles.Files.Count.ShouldBeGreaterThan(0);
+                }
+            }
+        }
+
         [Fact(Timeout = 180000, Skip = "Due the time to expect the dispute, just run as needed")]
         private async Task ShouldTestFullDisputesWorkflow()
         {

@@ -9,6 +9,7 @@ namespace Checkout.Disputes
         private const string DisputesPath = "disputes";
         private const string EvidencePath = "evidence";
         private const string AcceptPath = "accept";
+        private const string Schemefiles = "schemefiles";
 
         public DisputesClient(IApiClient apiClient,
             CheckoutConfiguration configuration) : base(apiClient, null, configuration)
@@ -34,7 +35,8 @@ namespace Checkout.Disputes
         public Task<EmptyResponse> Accept(string disputeId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("disputeId", disputeId);
-            return ApiClient.Post<EmptyResponse>(BuildPath(DisputesPath, disputeId, AcceptPath), SdkAuthorization(), null,
+            return ApiClient.Post<EmptyResponse>(BuildPath(DisputesPath, disputeId, AcceptPath), SdkAuthorization(),
+                null,
                 cancellationToken, null);
         }
 
@@ -59,8 +61,17 @@ namespace Checkout.Disputes
         public Task<EmptyResponse> SubmitEvidence(string disputeId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("disputeId", disputeId);
-            return ApiClient.Post<EmptyResponse>(BuildPath(DisputesPath, disputeId, EvidencePath), SdkAuthorization(), null,
+            return ApiClient.Post<EmptyResponse>(BuildPath(DisputesPath, disputeId, EvidencePath), SdkAuthorization(),
+                null,
                 cancellationToken, null);
+        }
+
+        public Task<SchemeFileResponse> GetDisputeSchemeFiles(string disputeId,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("disputeId", disputeId);
+            return ApiClient.Get<SchemeFileResponse>(BuildPath(DisputesPath, disputeId, Schemefiles),
+                SdkAuthorization(), cancellationToken);
         }
     }
 }

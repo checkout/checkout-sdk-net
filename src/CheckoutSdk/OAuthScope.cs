@@ -21,6 +21,7 @@
         [OAuthScope("disputes:view")] DisputesView,
         [OAuthScope("disputes:provide-evidence")] DisputesProvideEvidence,
         [OAuthScope("disputes:accept")] DisputesAccept,
+        [OAuthScope("disputes:scheme-files")] DisputesSchemeFiles,
         [OAuthScope("marketplace")] Marketplace,
         [OAuthScope("accounts")] Accounts,
         [OAuthScope("transfers")] Transfers,
