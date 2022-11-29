@@ -65,7 +65,8 @@ namespace Checkout.Disputes
             const string disputeId = "dsp_s5151531";
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<EmptyResponse>($"disputes/{disputeId}/accept", _authorization, null, CancellationToken.None,
+                    apiClient.Post<EmptyResponse>($"disputes/{disputeId}/accept", _authorization, null,
+                        CancellationToken.None,
                         null))
                 .ReturnsAsync(() => new EmptyResponse());
 
@@ -127,6 +128,23 @@ namespace Checkout.Disputes
             IDisputesClient client = new DisputesClient(_apiClient.Object, _configuration.Object);
 
             var response = await client.SubmitEvidence(disputeId);
+
+            response.ShouldNotBeNull();
+        }
+
+        [Fact]
+        private async Task ShouldGetDisputeSchemeFiles()
+        {
+            const string disputeId = "dispute_id";
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Get<SchemeFileResponse>($"disputes/{disputeId}/schemefiles", _authorization,
+                        CancellationToken.None))
+                .ReturnsAsync(() => new SchemeFileResponse());
+
+            IDisputesClient client = new DisputesClient(_apiClient.Object, _configuration.Object);
+
+            var response = await client.GetDisputeSchemeFiles(disputeId);
 
             response.ShouldNotBeNull();
         }
