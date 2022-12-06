@@ -56,7 +56,9 @@ namespace Checkout.Payments.Hosted
             var recipient = new PaymentRecipient
             {
                 AccountNumber = "1234567",
+                Country = CountryCode.ES,
                 DateOfBirth = "1985-05-15",
+                FirstName = "IT",
                 LastName = "TESTING",
                 Zip = "12345"
             };
