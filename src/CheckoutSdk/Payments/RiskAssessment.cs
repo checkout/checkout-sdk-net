@@ -4,6 +4,6 @@ namespace Checkout.Payments
     {
         public bool? Flagged { get; set; }
         
-        public long Score { get; set; }
+        public long? Score { get; set; }
     }
 }
