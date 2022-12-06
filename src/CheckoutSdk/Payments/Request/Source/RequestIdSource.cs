@@ -13,5 +13,9 @@ namespace Checkout.Payments.Request.Source
         public string Cvv { get; set; }
 
         public string PaymentMethod { get; set; }
+
+        public bool? Stored { get; set; }
+
+        public bool? StoreForFutureUse { get; set; }
     }
 }
