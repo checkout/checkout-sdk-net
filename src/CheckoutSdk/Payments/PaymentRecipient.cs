@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Checkout.Common;
+using Newtonsoft.Json;
 
 namespace Checkout.Payments
 {
@@ -10,6 +11,10 @@ namespace Checkout.Payments
 
         public string Zip { get; set; }
 
+        public string FirstName { get; set; }
+
         public string LastName { get; set; }
+
+        public CountryCode? Country { get; set; }
     }
 }
