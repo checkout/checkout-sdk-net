@@ -1,13 +1,10 @@
-using System.Collections.Generic;
+using System;
 
 namespace Checkout.Workflows.Reflows
 {
-    public class ReflowResponse : HttpMetadata
+    
+    [Obsolete("This class will be removed in a future version. Use EmptyResponse instead", false)]
+    public class ReflowResponse : EmptyResponse
     {
-        public string RequestId { get; set; }
-
-        public string ErrorType { get; set; }
-
-        public IList<string> ErrorCodes { get; set; }
     }
 }
