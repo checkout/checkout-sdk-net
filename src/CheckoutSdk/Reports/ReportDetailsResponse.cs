@@ -8,9 +8,9 @@ namespace Checkout.Reports
     {
         public string Id { get; set; }
         
-        public string CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; set; }
         
-        public string LastModifiedOn { get; set; }
+        public DateTime? LastModifiedOn { get; set; }
         
         public string Type { get; set; }
         
