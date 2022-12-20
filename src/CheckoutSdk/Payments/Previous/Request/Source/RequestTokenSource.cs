@@ -13,8 +13,9 @@ namespace Checkout.Payments.Previous.Request.Source
         public Address BillingAddress { get; set; }
 
         public Phone Phone { get; set; }
-        
-        public bool? StoreForFutureUse { get; set; }
 
+        public bool? Stored { get; set; }
+
+        public bool? StoreForFutureUse { get; set; }
     }
 }

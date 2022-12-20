@@ -11,6 +11,10 @@ namespace Checkout.Payments.Previous.Request.Source
         public string Id { get; set; }
 
         public string Cvv { get; set; }
+        
+        public bool? Stored { get; set; }
+
+        public bool? StoreForFutureUse { get; set; }
                
     }
 }
