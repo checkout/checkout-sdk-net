@@ -17,6 +17,29 @@ namespace CheckoutSDK.Extensions.Configuration
         {
             CheckoutUtils.ValidateParams("serviceCollection", serviceCollection, "configuration", configuration);
             var checkoutOptions = configuration.GetCheckoutOptions();
+
+            return AddSdkFromOptions(serviceCollection, checkoutOptions, loggerFactory, httpClientFactory);
+        }
+
+        public static IServiceCollection AddCheckoutSdk(
+            this IServiceCollection serviceCollection,
+            IConfigurationSection configurationSection,
+            ILoggerFactory loggerFactory = null,
+            IHttpClientFactory httpClientFactory = null)
+        {
+            CheckoutUtils.ValidateParams(nameof(serviceCollection), serviceCollection,
+                nameof(configurationSection), configurationSection);
+            var checkoutOptions = configurationSection.GetCheckoutOptions();
+
+            return AddSdkFromOptions(serviceCollection, checkoutOptions, loggerFactory, httpClientFactory);
+        }
+
+        private static IServiceCollection AddSdkFromOptions(
+            IServiceCollection serviceCollection,
+            CheckoutOptions checkoutOptions,
+            ILoggerFactory loggerFactory = null,
+            IHttpClientFactory httpClientFactory = null)
+        {
             if (checkoutOptions == null)
             {
                 throw new CheckoutArgumentException("Checkout options was not initialized correctly");
@@ -28,7 +51,8 @@ namespace CheckoutSDK.Extensions.Configuration
                     return AddSingletonPreviousSdk(serviceCollection, checkoutOptions, loggerFactory,
                         httpClientFactory);
                 case PlatformType.Default:
-                    return AddSingletonDefaultSdk(serviceCollection, checkoutOptions, loggerFactory, httpClientFactory);
+                    return AddSingletonDefaultSdk(serviceCollection, checkoutOptions, loggerFactory,
+                        httpClientFactory);
                 case PlatformType.DefaultOAuth:
                     return AddSingletonDefaultOAuthSdk(serviceCollection, checkoutOptions, loggerFactory,
                         httpClientFactory);
