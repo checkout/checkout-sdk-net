@@ -24,7 +24,7 @@ namespace Checkout.Extensions
                 .Build();
 
             IServiceCollection services = new ServiceCollection();
-            CheckoutServiceCollection.AddCheckoutSdk(services, configuration, loggerFactoryMock.Object,
+            services.AddCheckoutSdk(configuration, loggerFactoryMock.Object,
                 httpClientFactoryMock.Object);
 
             var serviceProvider = services.BuildServiceProvider();
@@ -47,7 +47,7 @@ namespace Checkout.Extensions
                 .Build();
 
             IServiceCollection services = new ServiceCollection();
-            CheckoutServiceCollection.AddCheckoutSdk(services, configuration, loggerFactoryMock.Object,
+            services.AddCheckoutSdk(configuration, loggerFactoryMock.Object,
                 httpClientFactoryMock.Object);
 
             var serviceProvider = services.BuildServiceProvider();
@@ -76,7 +76,7 @@ namespace Checkout.Extensions
                 .AddJsonFile("./Resources/AppSettingsDefaultOAuthTest.json").Build();
 
             IServiceCollection services = new ServiceCollection();
-            CheckoutServiceCollection.AddCheckoutSdk(services, configuration, loggerFactoryMock.Object,
+            services.AddCheckoutSdk(configuration, loggerFactoryMock.Object,
                 httpClientFactory);
 
             var serviceProvider = services.BuildServiceProvider();

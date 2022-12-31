@@ -7,10 +7,10 @@ using ICheckoutApi = Checkout.Previous.ICheckoutApi;
 
 namespace CheckoutSDK.Extensions.Configuration
 {
-    public static class CheckoutServiceCollection
+    public static class CheckoutServiceCollectionExtensions
     {
         public static IServiceCollection AddCheckoutSdk(
-            IServiceCollection serviceCollection,
+            this IServiceCollection serviceCollection,
             IConfiguration configuration,
             ILoggerFactory loggerFactory = null,
             IHttpClientFactory httpClientFactory = null)
