@@ -5,8 +5,9 @@ namespace CheckoutSDK.Extensions.Configuration
     public static class CheckoutConfigurationHelper
     {
         public static CheckoutOptions GetCheckoutOptions(this IConfiguration configuration)
-        {
-            return configuration.GetSection("Checkout").Get<CheckoutOptions>();
-        }
+            => GetCheckoutOptions(configuration.GetSection("Checkout"));
+
+        public static CheckoutOptions GetCheckoutOptions(this IConfigurationSection configurationSection)
+            => configurationSection.Get<CheckoutOptions>();
     }
 }
