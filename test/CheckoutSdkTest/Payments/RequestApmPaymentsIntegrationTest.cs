@@ -517,5 +517,39 @@ namespace Checkout.Payments
             await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
                 PayeeNotOnboarded);
         }
+
+        [Fact]
+        private async Task ShouldMakeTrustlyPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestTrustlySource { BillingAddress = GetAddress() },
+                Currency = Currency.EUR,
+                Amount = 10,
+                Reference = Guid.NewGuid().ToString(),
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure"
+            };
+
+            await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
+                PayeeNotOnboarded);
+        }
+
+        [Fact]
+        private async Task ShouldMakeCvConnectPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestCvConnectSource { BillingAddress = GetAddress() },
+                Currency = Currency.EUR,
+                Amount = 10,
+                Reference = Guid.NewGuid().ToString(),
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure"
+            };
+
+            await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
+                PayeeNotOnboarded);
+        }
     }
 }
