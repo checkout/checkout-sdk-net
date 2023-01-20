@@ -6,5 +6,7 @@ namespace Checkout.Payments.Request.Source
     {
         [EnumMember(Value = "currency_account")]
         CurrencyAccount,
+        [EnumMember(Value = "entity")]
+        Entity
     }
 }
