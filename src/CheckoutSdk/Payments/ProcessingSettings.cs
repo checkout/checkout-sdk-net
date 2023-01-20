@@ -1,4 +1,5 @@
 using Checkout.Common;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Checkout.Payments
@@ -58,9 +59,14 @@ namespace Checkout.Payments
         public CountryCode? PurchaseCountry { get; set; }
 
         public IList<string> CustomPaymentMethodIds { get; set; }
+        
+        public string MerchantCallbackUrl { get; set; }
 
         public long? ShippingDelay { get; set; }
 
         public IList<ShippingInfo> ShippingInfo { get; set; }
+        
+        [JsonProperty(PropertyName = "senderInformation")]
+        public string SenderInformation { get; set; }
     }
 }
