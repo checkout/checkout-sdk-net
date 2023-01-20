@@ -284,6 +284,30 @@ namespace Checkout.Accounts
         }
 
         [Fact]
+        private async Task ShouldUpdatePaymentInstrument()
+        {
+            UpdatePaymentInstrumentRequest request = new UpdatePaymentInstrumentRequest();
+            IdResponse responseAsync = new IdResponse();
+
+            _apiClient
+                .Setup(x =>
+                    x.Patch<IdResponse>(
+                        "accounts/entities/entity_id/payment-instruments/instrument_id",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<UpdatePaymentInstrumentRequest>(),
+                        It.IsAny<CancellationToken>(),
+                        null
+                    )
+                )
+                .ReturnsAsync(responseAsync);
+
+            var response =
+                await _accountsClient.UpdatePaymentInstrument("entity_id", "instrument_id", request);
+
+            response.ShouldNotBeNull();
+        }
+
+        [Fact]
         private async Task ShouldQueryPaymentInstruments()
         {
             PaymentInstrumentsQuery request = new PaymentInstrumentsQuery();
