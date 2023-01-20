@@ -11,7 +11,7 @@ namespace Checkout.Sources.Previous
         {
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldCreateSepaSource()
         {
             var request = CreateSepaSourceRequest();
