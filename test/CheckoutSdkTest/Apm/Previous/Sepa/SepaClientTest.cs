@@ -63,7 +63,7 @@ namespace Checkout.Apm.Previous.Sepa
             var mandateResponse = new MandateResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<MandateResponse>("ppro/sepa/mandates/id", _authorization,
+                    apiClient.Get<MandateResponse>("apms/ppro/sepa/mandates/id", _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(() => mandateResponse);
 
@@ -80,7 +80,7 @@ namespace Checkout.Apm.Previous.Sepa
             var sepaResource = new SepaResource();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<SepaResource>("ppro/sepa/mandates/id/cancel", _authorization, null,
+                    apiClient.Post<SepaResource>("apms/ppro/sepa/mandates/id/cancel", _authorization, null,
                         CancellationToken.None, null))
                 .ReturnsAsync(() => sepaResource);
 

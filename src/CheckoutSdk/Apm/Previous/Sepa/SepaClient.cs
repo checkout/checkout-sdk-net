@@ -5,6 +5,7 @@ namespace Checkout.Apm.Previous.Sepa
 {
     public class SepaClient : AbstractClient, ISepaClient
     {
+        private const string APMSPath = "apms";
         private const string SepaMandatesPath = "sepa/mandates";
         private const string PproPath = "ppro";
         private const string CancelPath = "cancel";
@@ -36,7 +37,7 @@ namespace Checkout.Apm.Previous.Sepa
         public Task<MandateResponse> GetMandateViaPpro(string mandateId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("mandateId", mandateId);
-            return ApiClient.Get<MandateResponse>(BuildPath(PproPath, SepaMandatesPath, mandateId), SdkAuthorization(),
+            return ApiClient.Get<MandateResponse>(BuildPath(APMSPath, PproPath, SepaMandatesPath, mandateId), SdkAuthorization(),
                 cancellationToken);
         }
 
@@ -44,7 +45,7 @@ namespace Checkout.Apm.Previous.Sepa
         {
             CheckoutUtils.ValidateParams("mandateId", mandateId);
             return ApiClient.Post<SepaResource>(
-                BuildPath(PproPath, SepaMandatesPath, mandateId, CancelPath),
+                BuildPath(APMSPath, PproPath, SepaMandatesPath, mandateId, CancelPath),
                 SdkAuthorization(),
                 null,
                 cancellationToken,
