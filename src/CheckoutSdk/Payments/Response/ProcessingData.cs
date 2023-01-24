@@ -27,5 +27,9 @@ namespace Checkout.Payments.Response
         
         public IList<string> CustomPaymentMethodIds { get; set; }
         
+        public IList<string> PartnerErrorCodes { get; set; }
+        
+        public string PartnerReason { get; set; }
+        
     }
 }

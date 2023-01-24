@@ -281,6 +281,33 @@ namespace Checkout.Payments
             await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
                 PayeeNotOnboarded);
         }
+        
+        [Fact]
+        private async Task ShouldMakeIllicadoPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestIllicadoSource { 
+                    BillingAddress = new Address
+                    {
+                        AddressLine1 = "Cecilia Chapman",
+                        AddressLine2 = "711-2880 Nulla St.",
+                        City = "Mankato",
+                        State = "Mississippi",
+                        Zip = "96522",
+                        Country = CountryCode.SA
+                    }
+                },
+                Amount = 10L,
+                Currency = Currency.EUR,
+                Reference = "REFERENCE",
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure",
+            };
+
+            await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
+                PayeeNotOnboarded);
+        }
 
         [Fact]
         private async Task ShouldMakeGiropayPayment()
