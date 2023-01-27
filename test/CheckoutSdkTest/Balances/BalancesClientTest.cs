@@ -16,7 +16,7 @@ namespace Checkout.Balances
 
         public BalancesClientTest()
         {
-            _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.OAuth))
+            _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth))
                 .Returns(_authorization);
             Mock<CheckoutConfiguration> configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
                 Environment.Sandbox, _httpClientFactory);
