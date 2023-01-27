@@ -11,7 +11,7 @@ namespace Checkout.Sources.Previous
         {
         }
 
-        [Fact(Skip = "unavailable")]
+        [Fact(Skip = "skipping because it responds with 502 in sandbox env")]
         private async Task ShouldCreateSepaSource()
         {
             var request = CreateSepaSourceRequest();
