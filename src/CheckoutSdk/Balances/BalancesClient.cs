@@ -9,7 +9,7 @@ namespace Checkout.Balances
 
         public BalancesClient(IApiClient apiClient,
             CheckoutConfiguration configuration)
-            : base(apiClient, configuration, SdkAuthorizationType.OAuth)
+            : base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
         {
         }
 
