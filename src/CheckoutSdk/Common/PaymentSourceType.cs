@@ -29,6 +29,7 @@ namespace Checkout.Common
         [EnumMember(Value = "paypal")] PayPal,
         [EnumMember(Value = "multibanco")] Multibanco,
         [EnumMember(Value = "eps")] EPS,
+        [EnumMember(Value = "illicado")] Illicado,
         [EnumMember(Value = "poli")] Poli,
         [EnumMember(Value = "p24")] Przelewy24,
         [EnumMember(Value = "benefitpay")] BenefitPay,
