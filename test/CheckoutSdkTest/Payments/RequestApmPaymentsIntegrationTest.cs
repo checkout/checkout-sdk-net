@@ -578,5 +578,31 @@ namespace Checkout.Payments
             await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
                 PayeeNotOnboarded);
         }
+        
+        [Fact]
+        private async Task ShouldMakeSepaPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestSepaSource()
+                {
+                    Country = CountryCode.ES,
+                    Currency = Currency.EUR,
+                    AccountNumber = "HU93116000060000000012345676",
+                    BankCode = "37040044",
+                    MandateId = "man_12321233211",
+                    DateOfSignature = ("2023-01-01"),
+                    AccountHolder = GetAccountHolder()
+                },
+                Currency = Currency.EUR,
+                Amount = 10,
+                Reference = Guid.NewGuid().ToString(),
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure"
+            };
+
+            await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
+                PayeeNotOnboarded);
+        }
     }
 }
