@@ -52,6 +52,7 @@ namespace Checkout.Common
         [EnumMember(Value = "stcpay")] Stcpay,
         [EnumMember(Value = "alma")] Alma,
         [EnumMember(Value = "trustly")] Trustly,
-        [EnumMember(Value = "cvconnect")] Cvconnect
+        [EnumMember(Value = "cvconnect")] Cvconnect,
+        [EnumMember(Value = "sepa")] Sepa
     }
 }
