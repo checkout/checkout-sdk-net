@@ -15,6 +15,7 @@ namespace Checkout.Accounts
         private const string InstrumentPath = "instruments";
         private const string PayoutSchedulePath = "payout-schedules";
         private const string PaymentInstrumentsPath = "payment-instruments";
+        private const string PlatformsFilesPath = "platforms-files";
 
         public AccountsClient(
             IApiClient apiClient,
@@ -44,16 +45,6 @@ namespace Checkout.Accounts
                 cancellationToken);
         }
 
-        public async Task<PaymentInstrumentDetailsResponse> RetrievePaymentInstrumentDetails(string entityId,
-            string paymentInstrumentId, CancellationToken cancellationToken = default)
-        {
-            CheckoutUtils.ValidateParams("entityId", entityId, "paymentInstrumentId", paymentInstrumentId);
-            return await ApiClient.Get<PaymentInstrumentDetailsResponse>(
-                BuildPath(AccountsPath, EntitiesPath, entityId, PaymentInstrumentsPath, paymentInstrumentId),
-                SdkAuthorization(),
-                cancellationToken);
-        }
-
         public async Task<OnboardEntityDetailsResponse> GetEntity(string entityId,
             CancellationToken cancellationToken = default)
         {
@@ -72,6 +63,25 @@ namespace Checkout.Accounts
                 BuildPath(AccountsPath, EntitiesPath, entityId),
                 SdkAuthorization(),
                 entityRequest,
+                cancellationToken);
+        }
+        
+        public async Task<PlatformsFileUploadResponse> UploadAFile(PlatformsFileRequest fileRequest, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("fileRequest", fileRequest);
+            return await ApiClient.Post<PlatformsFileUploadResponse>(
+                BuildPath(PlatformsFilesPath),
+                SdkAuthorization(),
+                fileRequest,
+                cancellationToken);
+        }
+        
+        public async Task<PlatformsFileRetrieveResponse> RetrieveAFile(string fileId, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("fileId", fileId);
+            return await ApiClient.Get<PlatformsFileRetrieveResponse>(
+                BuildPath(PlatformsFilesPath, fileId),
+                SdkAuthorization(),
                 cancellationToken);
         }
 
@@ -97,6 +107,16 @@ namespace Checkout.Accounts
                 BuildPath(AccountsPath, EntitiesPath, entityId, PaymentInstrumentsPath),
                 SdkAuthorization(),
                 paymentInstrumentRequest,
+                cancellationToken);
+        }
+        
+        public async Task<PaymentInstrumentDetailsResponse> RetrievePaymentInstrumentDetails(string entityId,
+            string paymentInstrumentId, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("entityId", entityId, "paymentInstrumentId", paymentInstrumentId);
+            return await ApiClient.Get<PaymentInstrumentDetailsResponse>(
+                BuildPath(AccountsPath, EntitiesPath, entityId, PaymentInstrumentsPath, paymentInstrumentId),
+                SdkAuthorization(),
                 cancellationToken);
         }
 

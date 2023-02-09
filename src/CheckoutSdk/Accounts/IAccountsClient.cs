@@ -9,17 +9,13 @@ namespace Checkout.Accounts
 {
     public interface IAccountsClient
     {
+        [Obsolete("This endpoint is no longer supported officially, please check the documentation.", false)]
         Task<IdResponse> SubmitFile(
             AccountsFileRequest accountsFileRequest,
             CancellationToken cancellationToken = default);
-
+        
         Task<OnboardEntityResponse> CreateEntity(
             OnboardEntityRequest entityRequest,
-            CancellationToken cancellationToken = default);
-
-        Task<PaymentInstrumentDetailsResponse> RetrievePaymentInstrumentDetails(
-            string entityId,
-            string paymentInstrumentId,
             CancellationToken cancellationToken = default);
 
         Task<OnboardEntityDetailsResponse> GetEntity(
@@ -29,6 +25,14 @@ namespace Checkout.Accounts
         Task<OnboardEntityResponse> UpdateEntity(
             string entityId,
             OnboardEntityRequest entityRequest,
+            CancellationToken cancellationToken = default);
+        
+        Task<PlatformsFileUploadResponse> UploadAFile(
+            PlatformsFileRequest fileRequest,
+            CancellationToken cancellationToken = default);
+
+        Task<PlatformsFileRetrieveResponse> RetrieveAFile(
+            string fileId, 
             CancellationToken cancellationToken = default);
 
         [Obsolete("Use CreatePaymentInstrument for PaymentInstrumentRequest instead", false)]
@@ -40,6 +44,11 @@ namespace Checkout.Accounts
         Task<IdResponse> CreatePaymentInstrument(
             string entityId,
             PaymentInstrumentRequest paymentInstrumentRequest,
+            CancellationToken cancellationToken = default);
+        
+        Task<PaymentInstrumentDetailsResponse> RetrievePaymentInstrumentDetails(
+            string entityId,
+            string paymentInstrumentId,
             CancellationToken cancellationToken = default);
 
         Task<IdResponse> UpdatePaymentInstrument(

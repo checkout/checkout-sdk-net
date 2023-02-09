@@ -21,7 +21,10 @@ namespace Checkout.Accounts
         [Fact]
         public async Task ShouldCreateGetAndUpdateOnboardEntity()
         {
+            CheckoutApi api = GetAccountsCheckoutApi();
+            
             string randomReference = RandomString(15);
+            
             OnboardEntityRequest onboardEntityRequest = new OnboardEntityRequest
             {
                 Reference = randomReference,
@@ -47,7 +50,7 @@ namespace Checkout.Accounts
                 },
             };
 
-            OnboardEntityResponse entityResponse = await DefaultApi.AccountsClient().CreateEntity(onboardEntityRequest);
+            OnboardEntityResponse entityResponse = await api.AccountsClient().CreateEntity(onboardEntityRequest);
 
             entityResponse.ShouldNotBeNull();
 
@@ -56,7 +59,7 @@ namespace Checkout.Accounts
             entityId.ShouldNotBeNullOrEmpty();
             entityResponse.Reference.ShouldBe(randomReference);
 
-            OnboardEntityDetailsResponse entityDetailsResponse = await DefaultApi.AccountsClient().GetEntity(entityId);
+            OnboardEntityDetailsResponse entityDetailsResponse = await api.AccountsClient().GetEntity(entityId);
 
             entityDetailsResponse.ShouldNotBeNull();
             entityDetailsResponse.Id.ShouldBe(entityId);
@@ -77,22 +80,75 @@ namespace Checkout.Accounts
             onboardEntityRequest.Individual.FirstName = "John";
 
             OnboardEntityResponse updatedEntityResponse =
-                await DefaultApi.AccountsClient().UpdateEntity(entityId, onboardEntityRequest);
+                await api.AccountsClient().UpdateEntity(entityId, onboardEntityRequest);
 
             updatedEntityResponse.ShouldNotBeNull();
             updatedEntityResponse.HttpStatusCode.ShouldNotBeNull();
             updatedEntityResponse.ResponseHeaders.ShouldNotBeNull();
 
-            OnboardEntityDetailsResponse verifyUpdated = await DefaultApi.AccountsClient().GetEntity(entityId);
+            OnboardEntityDetailsResponse verifyUpdated = await api.AccountsClient().GetEntity(entityId);
 
             verifyUpdated.ShouldNotBeNull();
             onboardEntityRequest.Individual.FirstName.ShouldBe(verifyUpdated.Individual.FirstName);
         }
 
-        [Fact]
-        private async Task ShouldUploadAccountsFile()
+        [Fact(Skip = "unavailable")]
+        private async Task ShouldUploadAndRetrieveAFile()
         {
-            await UploadFile();
+            CheckoutApi api = GetAccountsCheckoutApi();
+            
+            string randomReference = RandomString(15);
+            
+            OnboardEntityRequest onboardEntityRequest = new OnboardEntityRequest
+            {
+                Reference = randomReference,
+                ContactDetails = BuildContactDetails(),
+                Profile = BuildProfile(),
+                Individual = new Individual
+                {
+                    FirstName = "Bruce",
+                    LastName = "Wayne",
+                    TradingName = "Batman's Super Hero Masks",
+                    RegisteredAddress = new Address
+                    {
+                        AddressLine1 = "Checkout.com",
+                        AddressLine2 = "90 Tottenham Court Road",
+                        City = "London",
+                        State = "London",
+                        Zip = "WIT 4TJ",
+                        Country = CountryCode.ES
+                    },
+                    NationalTaxId = "TAX123456",
+                    DateOfBirth = new DateOfBirth { Day = 5, Month = 6, Year = 1996 },
+                    Identification = new Identification
+                    {
+                        // Document = new Document
+                        // {
+                        //     Type = DocumentType.NationalIdentityCard,
+                        //     Front = "AB123456C"
+                        //     
+                        // },
+                        NationalIdNumber = "AB123456C"
+                    },
+                    PlaceOfBirth = new PlaceOfBirth
+                    {
+                        Country = CountryCode.ES
+                    }
+                },
+            };
+
+            OnboardEntityResponse entityResponse = await api.AccountsClient().CreateEntity(onboardEntityRequest);
+            
+            PlatformsFileRequest fileRequest = new PlatformsFileRequest { Purpose = "identity_verification", EntityId = entityResponse.Id };
+
+            PlatformsFileUploadResponse uploadAFileResponse = await Retriable(async () => await api.AccountsClient().UploadAFile(fileRequest));
+            
+            uploadAFileResponse.ShouldNotBeNull();
+            
+            PlatformsFileRetrieveResponse retrieveAFileResponse = await Retriable(async () => await api.AccountsClient().RetrieveAFile(uploadAFileResponse.Id));
+            
+            retrieveAFileResponse.ShouldNotBeNull();
+
         }
 
         [Fact]
@@ -185,6 +241,12 @@ namespace Checkout.Accounts
             {
                 Urls = new List<string> { "https://www.superheroexample.com" }, Mccs = new List<string> { "0742" }
             };
+        }
+        
+        [Fact(Skip = "Obsolete")]
+        private async Task ShouldUploadAccountsFile()
+        {
+            await UploadFile();
         }
 
         private async Task<IdResponse> UploadFile()

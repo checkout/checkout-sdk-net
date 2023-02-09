@@ -29,6 +29,36 @@ namespace Checkout.Accounts
             _accountsClient =
                 new AccountsClient(_apiClient.Object, _apiFilesClient.Object, configuration.Object);
         }
+        
+        [Fact(Skip = "Obsolete")]
+        private async Task ShouldSubmitFile()
+        {
+            //Arrange
+            var responseObject = new IdResponse {Id = "Id"};
+
+            _apiFilesClient
+                .Setup(x =>
+                    x.Post<IdResponse>(
+                        It.IsAny<string>(),
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<MultipartFormDataContent>(),
+                        It.IsAny<CancellationToken>(),
+                        null
+                    )
+                )
+                .ReturnsAsync(responseObject);
+
+            var response =
+                await _accountsClient.SubmitFile(new AccountsFileRequest
+                {
+                    File = "./Resources/checkout.jpeg",
+                    ContentType = null,
+                    Purpose = AccountsFilePurpose.Identification
+                });
+
+            response.ShouldNotBeNull();
+            response.ShouldBe(responseObject);
+        }
 
         [Fact]
         public async Task ShouldCreateEntity()
@@ -130,6 +160,56 @@ namespace Checkout.Accounts
             response.Id.ShouldBe(responseObject.Id);
             response.Reference.ShouldBe(responseObject.Reference);
         }
+        
+        [Fact]
+        private async Task ShouldUploadAFile()
+        {
+            var fileRequest = new PlatformsFileRequest { Purpose = "bank_verification", EntityId = "ent_5plxo2y4dlqehanhm7i2swsuda" };
+            var responseAsync = new PlatformsFileUploadResponse
+            {
+                Id = "file_6lbss42ezvoufcb2beo76rvwly",
+                Status = "created"
+            };
+
+            _apiClient
+                .Setup(x =>
+                    x.Post<PlatformsFileUploadResponse>(
+                        "platforms-files",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<object>(),
+                        It.IsAny<CancellationToken>(),
+                        It.IsAny<string>()))
+                .ReturnsAsync(responseAsync);
+
+            var response = await _accountsClient.UploadAFile(fileRequest, It.IsAny<CancellationToken>());
+
+            response.ShouldNotBeNull();
+            response.Id.ShouldBe(responseAsync.Id);
+            response.Status.ShouldBe("created");
+        }
+        
+        [Fact]
+        private async Task ShouldRetrieveAFile()
+        {
+            var responseObject = new PlatformsFileRetrieveResponse
+            {
+                Id = "file_6lbss42ezvoufcb2beo76rvwly",
+                Status = "created"
+            };
+
+            _apiClient
+                .Setup(x =>
+                    x.Get<PlatformsFileRetrieveResponse>(
+                        "platforms-files/file_6lbss42ezvoufcb2beo76rvwly",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(responseObject);
+
+            var response = await _accountsClient.RetrieveAFile(responseObject.Id);
+
+            response.ShouldNotBeNull();
+            response.ShouldBe(responseObject);
+        }
 
         [Fact]
         private async Task ShouldCreatePaymentInstrumentDeprecated()
@@ -164,78 +244,6 @@ namespace Checkout.Accounts
                         LastName = "Last"
                     }
                 });
-
-            response.ShouldNotBeNull();
-        }
-
-        [Fact]
-        private async Task ShouldSubmitFile()
-        {
-            //Arrange
-            var responseObject = new IdResponse {Id = "Id"};
-
-            _apiFilesClient
-                .Setup(x =>
-                    x.Post<IdResponse>(
-                        It.IsAny<string>(),
-                        It.IsAny<SdkAuthorization>(),
-                        It.IsAny<MultipartFormDataContent>(),
-                        It.IsAny<CancellationToken>(),
-                        null
-                    )
-                )
-                .ReturnsAsync(responseObject);
-
-            var response =
-                await _accountsClient.SubmitFile(new AccountsFileRequest
-                {
-                    File = "./Resources/checkout.jpeg",
-                    ContentType = null,
-                    Purpose = AccountsFilePurpose.Identification
-                });
-
-            response.ShouldNotBeNull();
-            response.ShouldBe(responseObject);
-        }
-
-        [Fact]
-        private async Task ShouldUpdatePayoutSchedule()
-        {
-            var responseAsync = new EmptyResponse();
-
-            _apiClient
-                .Setup(x =>
-                    x.Put<EmptyResponse>(
-                        "accounts/entities/entity_id/payout-schedules",
-                        It.IsAny<SdkAuthorization>(),
-                        It.IsAny<object>(),
-                        It.IsAny<CancellationToken>(),
-                        null
-                    )
-                )
-                .ReturnsAsync(responseAsync);
-
-            var response =
-                await _accountsClient.UpdatePayoutSchedule("entity_id", Currency.AED, new UpdateScheduleRequest());
-
-            response.ShouldNotBeNull();
-        }
-
-        [Fact]
-        private async Task ShouldRetrievePayoutSchedule()
-        {
-            var responseAsync = new GetScheduleResponse();
-
-            _apiClient
-                .Setup(x =>
-                    x.Get<GetScheduleResponse>(
-                        "accounts/entities/entity_id/payout-schedules",
-                        It.IsAny<SdkAuthorization>(),
-                        It.IsAny<CancellationToken>()))
-                .ReturnsAsync(responseAsync);
-
-            var response = await _accountsClient.RetrievePayoutSchedule(
-                "entity_id");
 
             response.ShouldNotBeNull();
         }
@@ -326,6 +334,48 @@ namespace Checkout.Accounts
 
             var response =
                 await _accountsClient.QueryPaymentInstruments("entity_id", request);
+
+            response.ShouldNotBeNull();
+        }
+        
+        [Fact]
+        private async Task ShouldUpdatePayoutSchedule()
+        {
+            var responseAsync = new EmptyResponse();
+
+            _apiClient
+                .Setup(x =>
+                    x.Put<EmptyResponse>(
+                        "accounts/entities/entity_id/payout-schedules",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<object>(),
+                        It.IsAny<CancellationToken>(),
+                        null
+                    )
+                )
+                .ReturnsAsync(responseAsync);
+
+            var response =
+                await _accountsClient.UpdatePayoutSchedule("entity_id", Currency.AED, new UpdateScheduleRequest());
+
+            response.ShouldNotBeNull();
+        }
+
+        [Fact]
+        private async Task ShouldRetrievePayoutSchedule()
+        {
+            var responseAsync = new GetScheduleResponse();
+
+            _apiClient
+                .Setup(x =>
+                    x.Get<GetScheduleResponse>(
+                        "accounts/entities/entity_id/payout-schedules",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(responseAsync);
+
+            var response = await _accountsClient.RetrievePayoutSchedule(
+                "entity_id");
 
             response.ShouldNotBeNull();
         }
