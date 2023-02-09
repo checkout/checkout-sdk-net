@@ -19,17 +19,26 @@ namespace Checkout.Payments.Response
         
         public string Locale { get; set; }
         
+        public string RetrievalReferenceNumber { get; set; }
+        
         public string PartnerOrderId { get; set; }
+        
+        public string PartnerStatus { get; set; }
+        
+        public string PartnerTransactionId { get; set; }
+        
+        public IList<string> PartnerErrorCodes { get; set; }
+        
+        public string PartnerErrorMessage { get; set; }
+        
+        public string PartnerAuthorizationCode { get; set; }
+        
+        public string PartnerAuthorizationResponseCode { get; set; }
         
         public string FraudStatus { get; set; }
         
         public ProviderAuthorizedPaymentMethod ProviderAuthorizedPaymentMethod { get; set; }
         
         public IList<string> CustomPaymentMethodIds { get; set; }
-        
-        public IList<string> PartnerErrorCodes { get; set; }
-        
-        public string PartnerErrorMessage { get; set; }
-        
     }
 }
