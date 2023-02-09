@@ -17,7 +17,7 @@ namespace Checkout.Payments
         protected const string PayeeNotOnboarded = "payee_not_onboarded";
         protected const string ApmServiceUnavailable = "apm_service_unavailable";
 
-        protected AbstractPaymentsIntegrationTest() : base(PlatformType.Default)
+        protected AbstractPaymentsIntegrationTest(PlatformType platform = PlatformType.Default) : base(platform)
         {
         }
 
@@ -63,6 +63,7 @@ namespace Checkout.Payments
                 Customer = customerRequest,
                 Sender = paymentIndividualSender,
                 CaptureOn = captureOn,
+                ProcessingChannelId = "pc_5jp2az55l3cuths25t5p3xhwru",
                 BillingDescriptor = new BillingDescriptor {Name = "name", City = "London", Reference = "reference"}
             };
 

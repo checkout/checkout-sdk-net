@@ -41,6 +41,8 @@
         [OAuthScope("middleware:merchants-public")] MiddlewareMerchantsPublic,
         [OAuthScope("reports")] Reports,
         [OAuthScope("reports:view")] ReportsView,
-        [OAuthScope("vault:card-metadata")] VaultCardMetadata
+        [OAuthScope("vault:card-metadata")] VaultCardMetadata,
+        [OAuthScope("financial-actions")] FinancialActions,
+        [OAuthScope("financial-actions:view")] FinancialActionsView
     }
 }
