@@ -2,6 +2,7 @@ using Checkout.Accounts;
 using Checkout.Balances;
 using Checkout.Customers;
 using Checkout.Disputes;
+using Checkout.Financial;
 using Checkout.Forex;
 using Checkout.Instruments;
 using Checkout.Metadata;
@@ -42,7 +43,7 @@ namespace Checkout
         IPaymentLinksClient PaymentLinksClient();
 
         IHostedPaymentsClient HostedPaymentsClient();
-        
+
         IBalancesClient BalancesClient();
 
         ITransfersClient TransfersClient();
@@ -50,5 +51,7 @@ namespace Checkout
         IReportsClient ReportsClient();
 
         IMetadataClient MetadataClient();
+
+        IFinancialClient FinancialClient();
     }
 }
