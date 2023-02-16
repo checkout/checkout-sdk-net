@@ -143,9 +143,9 @@ namespace Checkout.Extensions
             var httpClientFactory = new DefaultHttpClientFactory();
             IEnumerable<KeyValuePair<string, string>> credentials = new List<KeyValuePair<string, string>>
             {
-                new KeyValuePair<string, string>("Checkout:ClientId",
+                new KeyValuePair<string, string>($"{sectionName}:ClientId",
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_ID")),
-                new KeyValuePair<string, string>("Checkout:ClientSecret",
+                new KeyValuePair<string, string>($"{sectionName}:ClientSecret",
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET")),
             };
 
