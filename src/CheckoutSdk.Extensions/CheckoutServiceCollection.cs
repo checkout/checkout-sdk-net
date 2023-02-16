@@ -27,7 +27,7 @@ namespace CheckoutSDK.Extensions.Configuration
             ILoggerFactory loggerFactory = null,
             IHttpClientFactory httpClientFactory = null)
         {
-            CheckoutUtils.ValidateParams(nameof(serviceCollection), serviceCollection,
+            CheckoutUtils.ValidateParams("serviceCollection", serviceCollection,
                 nameof(configurationSection), configurationSection);
             var checkoutOptions = configurationSection.GetCheckoutOptions();
 
