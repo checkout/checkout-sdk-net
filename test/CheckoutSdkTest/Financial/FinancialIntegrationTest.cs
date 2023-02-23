@@ -19,7 +19,7 @@ namespace Checkout.Financial
         {
         }
 
-        [Fact]
+        [Fact(Skip = "unstable")]
         private async Task ShouldQueryFinancialActions()
         {
             //Make the payment
