@@ -113,7 +113,8 @@ namespace Checkout.Payments
                                 }
                             }
                         }
-                    }
+                    },
+                    LineOfBusiness = "Flights"
                 }
             };
 

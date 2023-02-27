@@ -61,6 +61,8 @@ namespace Checkout.Payments
         public IList<string> CustomPaymentMethodIds { get; set; }
         
         public string MerchantCallbackUrl { get; set; }
+        
+        public string LineOfBusiness { get; set; }
 
         public long? ShippingDelay { get; set; }
 
