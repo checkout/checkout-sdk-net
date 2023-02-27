@@ -40,5 +40,11 @@ namespace Checkout.Payments.Response
         public ProviderAuthorizedPaymentMethod ProviderAuthorizedPaymentMethod { get; set; }
         
         public IList<string> CustomPaymentMethodIds { get; set; }
+
+        public bool? Aft { get; set; }
+        
+        public string MerchantCategoryCode { get; set; }
+        
+        public string SchemeMerchantId { get; set; }
     }
 }
