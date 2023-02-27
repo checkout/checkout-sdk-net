@@ -1,5 +1,7 @@
+using Checkout.Common;
 using Shouldly;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -14,7 +16,8 @@ namespace Checkout.Payments
 
             var refundRequest = new RefundRequest
             {
-                Reference = Guid.NewGuid().ToString(), Amount = paymentResponse.Amount
+                Amount = paymentResponse.Amount,
+                Reference = Guid.NewGuid().ToString(), 
             };
 
             var response = await Retriable(async () =>
@@ -44,7 +47,8 @@ namespace Checkout.Payments
 
             var refundRequest = new RefundRequest
             {
-                Reference = Guid.NewGuid().ToString(), Amount = paymentResponse.Amount / 2
+                Amount = paymentResponse.Amount / 2,
+                Reference = Guid.NewGuid().ToString(), 
             };
 
             var response = await Retriable(async () =>
