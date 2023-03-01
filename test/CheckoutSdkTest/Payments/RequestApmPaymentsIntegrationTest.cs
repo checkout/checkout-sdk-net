@@ -309,12 +309,12 @@ namespace Checkout.Payments
                 PayeeNotOnboarded);
         }
 
-        [Fact]
+        [Fact(Skip = "Until it's fixed in Sandbox")]
         private async Task ShouldMakeGiropayPayment()
         {
             var request = new PaymentRequest
             {
-                Source = new RequestGiropaySource { Purpose = "CKO Giropay test", },
+                Source = new RequestGiropaySource(),
                 Amount = 10L,
                 Currency = Currency.EUR,
                 Reference = "REFERENCE",
