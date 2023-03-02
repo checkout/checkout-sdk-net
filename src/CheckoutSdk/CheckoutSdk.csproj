@@ -20,6 +20,7 @@
     <RootNamespace>Checkout</RootNamespace>
     <PackageReleaseNotes>
     </PackageReleaseNotes>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup Label="Global Package References">

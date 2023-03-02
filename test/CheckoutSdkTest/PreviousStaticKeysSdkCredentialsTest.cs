@@ -2,6 +2,7 @@ using Checkout.Previous;
 using Moq;
 using Shouldly;
 using System;
+using System.Net.Http;
 using Xunit;
 using Xunit.Sdk;
 
@@ -10,6 +11,7 @@ namespace Checkout
     public class PreviousStaticKeysSdkCredentialsTest : UnitTestFixture
     {
         private readonly Mock<IHttpClientFactory> _httpClientFactoryMock = new Mock<IHttpClientFactory>();
+        private readonly Mock<HttpClient> _httpClientMock = new Mock<HttpClient>();
 
         [Fact]
         private void shouldFailCreatingPreviousStaticKeysSdkCredentials_invalidKeys()
@@ -68,7 +70,7 @@ namespace Checkout
             try
             {
                 var credentials = new PreviousStaticKeysSdkCredentials(ValidPreviousSk, similarPreviousPk);
-                new CheckoutConfiguration(credentials, Environment.Sandbox, _httpClientFactoryMock.Object);
+                new CheckoutConfiguration(credentials, Environment.Sandbox, _httpClientFactoryMock.Object, _httpClientMock.Object);
                 throw new XunitException();
             }
             catch (Exception e)
@@ -80,7 +82,7 @@ namespace Checkout
             try
             {
                 var credentials = new PreviousStaticKeysSdkCredentials(similarPreviousSk, ValidPreviousPk);
-                new CheckoutConfiguration(credentials, Environment.Sandbox, _httpClientFactoryMock.Object);
+                new CheckoutConfiguration(credentials, Environment.Sandbox, _httpClientFactoryMock.Object, _httpClientMock.Object);
                 throw new XunitException();
             }
             catch (Exception e)

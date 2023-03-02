@@ -15,6 +15,7 @@
     <RepositoryUrl>git://github.com/checkout/checkout-sdk-net</RepositoryUrl>
     <TargetFrameworks>net6.0;net5.0;netstandard2.0</TargetFrameworks>
     <RootNamespace>CheckoutSDK.Extensions.Configuration</RootNamespace>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\CheckoutSdk\CheckoutSdk.csproj" />

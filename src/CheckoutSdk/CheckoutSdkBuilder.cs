@@ -1,6 +1,7 @@
 using Checkout.Previous;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 
 namespace Checkout
 {
@@ -67,7 +68,7 @@ namespace Checkout
                 _authorizationUri = authorizationUri;
                 return this;
             }
-
+            
             public CheckoutOAuthSdkBuilder Scopes(params OAuthScope[] scopes)
             {
                 CheckoutUtils.ValidateParams("scopes", scopes);
@@ -86,7 +87,11 @@ namespace Checkout
                     _authorizationUri = Env.GetAttribute<EnvironmentAttribute>().AuthorizationUri;
                 }
 
-                var credentials = new OAuthSdkCredentials(ClientFactory, _authorizationUri, _clientId,
+                var credentials = new OAuthSdkCredentials(
+                    ClientFactory,
+                    Client, 
+                    _authorizationUri, 
+                    _clientId,
                     _clientSecret,
                     _scopes);
 

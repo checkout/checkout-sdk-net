@@ -27,7 +27,7 @@ namespace Checkout.Payments.Hosted
                 .Returns(_authorization);
 
             _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Sandbox, _httpClientFactory.Object);
+                Environment.Sandbox, _httpClientFactory.Object, null);
 
             _hostedPaymentResponse.Reference = Reference;
             _hostedPaymentResponse.Links = new Dictionary<string, Link>();

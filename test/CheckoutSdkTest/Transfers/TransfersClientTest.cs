@@ -19,7 +19,7 @@ namespace Checkout.Transfers
             _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.OAuth))
                 .Returns(_authorization);
             Mock<CheckoutConfiguration> configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Sandbox, _httpClientFactory);
+                Environment.Sandbox, _httpClientFactory, null);
             _transfersClient =
                 new TransfersClient(_apiClient.Object, configuration.Object);
         }

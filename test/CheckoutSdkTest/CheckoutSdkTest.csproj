@@ -4,6 +4,7 @@
         <RootNamespace>Checkout</RootNamespace>
         <IsPackable>false</IsPackable>
         <TargetFrameworks>net6.0;net5.0;netcoreapp3.1</TargetFrameworks>
+        <LangVersion>8.0</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>

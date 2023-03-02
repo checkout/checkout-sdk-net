@@ -19,6 +19,7 @@ namespace Checkout
 
         public OAuthSdkCredentials(
             IHttpClientFactory httpClientFactory,
+            HttpClient httpClient,
             Uri authorizationUri,
             string clientId,
             string clientSecret,
@@ -26,15 +27,16 @@ namespace Checkout
         {
             CheckoutUtils.ValidateParams(
                 "httpClientFactory", httpClientFactory,
+                "httpClient", httpClient,
                 "authorizationUri", authorizationUri,
                 "clientId", clientId,
                 "clientSecret", clientSecret,
                 "scopes", scopes);
+            _httpClient = httpClientFactory?.CreateClient() ?? httpClient;
+            _httpClient.BaseAddress = authorizationUri;
             _clientId = clientId;
             _clientSecret = clientSecret;
             _scopes = scopes;
-            _httpClient = httpClientFactory.CreateClient();
-            _httpClient.BaseAddress = authorizationUri;
         }
 
         internal void InitAccess()

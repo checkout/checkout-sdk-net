@@ -18,14 +18,13 @@ namespace Checkout
         private readonly HttpClient _httpClient;
         private readonly ISerializer _serializer = new JsonSerializer();
 
-        public ApiClient(IHttpClientFactory httpClientFactory, Uri baseUri)
+        public ApiClient(HttpClient httpClient, Uri baseUri)
         {
-            CheckoutUtils.ValidateParams("httpClientFactory", httpClientFactory, "baseUri", baseUri);
-            var httpClient = httpClientFactory.CreateClient();
+            CheckoutUtils.ValidateParams("httpClient", httpClient, "baseUri", baseUri);
             httpClient.BaseAddress = baseUri;
             _httpClient = httpClient;
         }
-
+        
         public async Task<TResult> Get<TResult>(
             string path,
             SdkAuthorization authorization,
@@ -296,5 +295,6 @@ namespace Checkout
 
                 ((HttpMetadata)deserializedObject).ResponseHeaders = headers;
         }
+        
     }
 }

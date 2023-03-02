@@ -42,7 +42,7 @@ namespace Checkout
 
         public CheckoutApi(CheckoutConfiguration configuration)
         {
-            var baseApiClient = BaseApiClient(configuration);
+            ApiClient baseApiClient = BaseApiClient(configuration);
             _tokensClient = new TokensClient(baseApiClient, configuration);
             _customersClient = new CustomersClient(baseApiClient, configuration);
             _paymentsClient = new PaymentsClient(baseApiClient, configuration);
@@ -52,16 +52,11 @@ namespace Checkout
             _forexClient = new ForexClient(baseApiClient, configuration);
             _workflowsClient = new WorkflowsClient(baseApiClient, configuration);
             _sessionsClient = new SessionsClient(baseApiClient, configuration);
-            _accountsClient = new AccountsClient(
-                baseApiClient,
-                FilesApiClient(configuration),
-                configuration);
+            _accountsClient = new AccountsClient(baseApiClient, FilesApiClient(configuration), configuration);
             _paymentLinksClient = new PaymentLinksClient(baseApiClient, configuration);
             _hostedPaymentsClient = new HostedPaymentsClient(baseApiClient, configuration);
-            _balancesClient = new BalancesClient(BalancesApiClient(configuration),
-                configuration);
-            _transfersClient = new TransfersClient(TransfersApiClient(configuration),
-                configuration);
+            _balancesClient = new BalancesClient(BalancesApiClient(configuration), configuration);
+            _transfersClient = new TransfersClient(TransfersApiClient(configuration), configuration);
             _reportsClient = new ReportsClient(baseApiClient, configuration);
             _metadataClient = new MetadataClient(baseApiClient, configuration);
             _financialClient = new FinancialClient(baseApiClient, configuration);
@@ -70,25 +65,29 @@ namespace Checkout
 
         private static ApiClient BaseApiClient(CheckoutConfiguration configuration)
         {
-            return new ApiClient(configuration.HttpClientFactory,
+            var httpClient = configuration.HttpClientFactory?.CreateClient() ?? configuration.HttpClient;
+            return new ApiClient(httpClient,
                 configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri);
         }
 
         private static ApiClient FilesApiClient(CheckoutConfiguration configuration)
         {
-            return new ApiClient(configuration.HttpClientFactory,
+            var httpClient = configuration.HttpClientFactory?.CreateClient() ?? configuration.HttpClient;
+            return new ApiClient(httpClient,
                 configuration.Environment.GetAttribute<EnvironmentAttribute>().FilesApiUri);
         }
 
         private static ApiClient TransfersApiClient(CheckoutConfiguration configuration)
         {
-            return new ApiClient(configuration.HttpClientFactory,
+            var httpClient = configuration.HttpClientFactory?.CreateClient() ?? configuration.HttpClient;
+            return new ApiClient(httpClient,
                 configuration.Environment.GetAttribute<EnvironmentAttribute>().TransfersApiUri);
         }
 
         private static ApiClient BalancesApiClient(CheckoutConfiguration configuration)
         {
-            return new ApiClient(configuration.HttpClientFactory,
+            var httpClient = configuration.HttpClientFactory?.CreateClient() ?? configuration.HttpClient;
+            return new ApiClient(httpClient,
                 configuration.Environment.GetAttribute<EnvironmentAttribute>().BalancesApiUri);
         }
 

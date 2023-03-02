@@ -4,6 +4,7 @@ using Checkout.Payments.Request.Source;
 using Checkout.Payments.Sender;
 using Shouldly;
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Sdk;

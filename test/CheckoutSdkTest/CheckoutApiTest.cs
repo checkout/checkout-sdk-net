@@ -8,7 +8,22 @@ namespace Checkout
     public class CheckoutApiTest : UnitTestFixture
     {
         [Fact]
-        public void ShouldInstantiateAndRetrieveClientsPrevious()
+        public void ShouldInstantiateAndRetrieveClientsPreviousClientFactoryAndHttpClient()
+        {
+            //Arrange
+            var sdkCredentialsMock = new Mock<SdkCredentials>(MockBehavior.Strict, PlatformType.Previous);
+            var httpClientFactoryMock = new Mock<IHttpClientFactory>();
+            httpClientFactoryMock.Setup(mock => mock.CreateClient())
+                .Returns(new HttpClient());
+            var httpClientMock = new Mock<HttpClient>();
+            var checkoutConfiguration = new CheckoutConfiguration(sdkCredentialsMock.Object, Environment.Sandbox,
+                httpClientFactoryMock.Object, httpClientMock.Object);
+
+            CheckoutApiPreviousAssertions(checkoutConfiguration);
+        }
+
+        [Fact]
+        public void ShouldInstantiateAndRetrieveClientsPreviousClientFactory()
         {
             //Arrange
             var sdkCredentialsMock = new Mock<SdkCredentials>(MockBehavior.Strict, PlatformType.Previous);
@@ -16,8 +31,25 @@ namespace Checkout
             httpClientFactoryMock.Setup(mock => mock.CreateClient())
                 .Returns(new HttpClient());
             var checkoutConfiguration = new CheckoutConfiguration(sdkCredentialsMock.Object, Environment.Sandbox,
-                httpClientFactoryMock.Object);
+                httpClientFactoryMock.Object, null);
 
+            CheckoutApiPreviousAssertions(checkoutConfiguration);
+        }
+
+        [Fact]
+        public void ShouldInstantiateAndRetrieveClientsPreviousHttpClient()
+        {
+            //Arrange
+            var sdkCredentialsMock = new Mock<SdkCredentials>(MockBehavior.Strict, PlatformType.Previous);
+            var httpClientMock = new Mock<HttpClient>();
+            var checkoutConfiguration = new CheckoutConfiguration(sdkCredentialsMock.Object, Environment.Sandbox,
+                null, httpClientMock.Object);
+
+            CheckoutApiPreviousAssertions(checkoutConfiguration);
+        }
+        
+        private static void CheckoutApiPreviousAssertions(CheckoutConfiguration checkoutConfiguration)
+        {
             //Act
             Previous.ICheckoutApi checkoutApi = new Previous.CheckoutApi(checkoutConfiguration);
 
@@ -47,8 +79,9 @@ namespace Checkout
             var httpClientFactoryMock = new Mock<IHttpClientFactory>();
             httpClientFactoryMock.Setup(mock => mock.CreateClient())
                 .Returns(new HttpClient());
+            var httpClientMock = new Mock<HttpClient>();
             var checkoutConfiguration = new CheckoutConfiguration(sdkCredentialsMock.Object, Environment.Sandbox,
-                httpClientFactoryMock.Object);
+                httpClientFactoryMock.Object, httpClientMock.Object);
 
             //Act
             ICheckoutApi checkoutApi = new CheckoutApi(checkoutConfiguration);

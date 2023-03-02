@@ -19,7 +19,7 @@ namespace Checkout.Financial
             _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth))
                 .Returns(_authorization);
             Mock<CheckoutConfiguration> configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Sandbox, _httpClientFactory);
+                Environment.Sandbox, _httpClientFactory, null);
             _financialClient =
                 new FinancialClient(_apiClient.Object, configuration.Object);
         }

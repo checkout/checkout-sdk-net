@@ -161,5 +161,7 @@ namespace Checkout.Extensions
             var checkoutApi = serviceProvider.GetService<ICheckoutApi>();
             checkoutApi.ShouldNotBeNull();
         }
+        
+        //TODO add a test where HttpClient is provided by json config
     }
 }
