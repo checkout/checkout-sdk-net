@@ -254,6 +254,7 @@
         ZM,
         ZW,
         PS,
-        QZ
+        QZ,
+        XK
     }
 }
