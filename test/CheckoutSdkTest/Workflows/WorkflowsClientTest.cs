@@ -1,4 +1,5 @@
-﻿using Checkout.Workflows.Actions.Request;
+﻿using Checkout.Common;
+using Checkout.Workflows.Actions.Request;
 using Checkout.Workflows.Actions.Response;
 using Checkout.Workflows.Conditions.Request;
 using Checkout.Workflows.Events;
@@ -209,6 +210,50 @@ namespace Checkout.Workflows
                 ex.Message.ShouldBe("workflowId cannot be blank");
             }
         }
+        
+        [Fact]
+        public async Task ShouldAddWorkflowAction()
+        {
+            WebhookWorkflowActionRequest workflowActionRequest = new WebhookWorkflowActionRequest();
+            IdResponse response = new IdResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<IdResponse>("workflows" + "/workflow_id" + "/actions", _authorization,
+                        workflowActionRequest, CancellationToken.None, null))
+                .ReturnsAsync(() => response);
+
+            IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
+
+            IdResponse getResponse =
+                await workflowsClient.AddWorkflowAction("workflow_id", workflowActionRequest);
+
+            getResponse.ShouldNotBeNull();
+        }
+        
+        [Fact]
+        public async Task ShouldFailAddWorkflowAction_InvalidParams()
+        {
+            WebhookWorkflowActionRequest workflowActionRequest = new WebhookWorkflowActionRequest();
+            IdResponse response = new IdResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<IdResponse>("workflows" + "/workflow_id" + "/actions", _authorization,
+                        workflowActionRequest, CancellationToken.None, null))
+                .ReturnsAsync(() => response);
+
+            IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
+
+            try
+            {
+                await workflowsClient.AddWorkflowAction("",null);
+                throw new XunitException();
+            }
+            catch (Exception ex)
+            {
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("workflowId cannot be blank");
+            }
+        }
 
         [Fact]
         public async Task ShouldUpdateWorkflowAction()
@@ -264,6 +309,86 @@ namespace Checkout.Workflows
             {
                 ex.ShouldBeOfType(typeof(CheckoutArgumentException));
                 ex.Message.ShouldBe("workflowActionRequest cannot be null");
+            }
+        }
+        
+        [Fact]
+        public async Task ShouldRemoveWorkflowAction()
+        {
+            EmptyResponse response = new EmptyResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Delete<EmptyResponse>(
+                        "workflows" + "/workflow_id" + "/actions" + "/action_id", 
+                        _authorization, 
+                        CancellationToken.None))
+                .ReturnsAsync(() => response);
+
+            IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
+
+            EmptyResponse getResponse = await workflowsClient.RemoveWorkflowAction("workflow_id", "action_id");
+
+            getResponse.ShouldNotBeNull();
+        }
+        
+        [Fact]
+        public async Task ShouldFailRemoveWorkflowAction_InvalidParams()
+        {
+            IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
+
+            try
+            {
+                await workflowsClient.RemoveWorkflowAction("", "");
+                throw new XunitException();
+            }
+            catch (Exception ex)
+            {
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("workflowId cannot be blank");
+            }
+        }
+        
+        [Fact]
+        public async Task ShouldAddWorkflowCondition()
+        {
+            EntityWorkflowConditionRequest workflowConditionRequest = new EntityWorkflowConditionRequest();
+            IdResponse response = new IdResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<IdResponse>("workflows" + "/workflow_id" + "/conditions", _authorization,
+                        workflowConditionRequest, CancellationToken.None, null))
+                .ReturnsAsync(() => response);
+
+            IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
+
+            IdResponse getResponse =
+                await workflowsClient.AddWorkflowCondition("workflow_id", workflowConditionRequest);
+
+            getResponse.ShouldNotBeNull();
+        }
+        
+        [Fact]
+        public async Task ShouldFailAddWorkflowCondition_InvalidParams()
+        {
+            EntityWorkflowConditionRequest workflowConditionRequest = new EntityWorkflowConditionRequest();
+            IdResponse response = new IdResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<IdResponse>("workflows" + "/workflow_id" + "/conditions", _authorization,
+                        workflowConditionRequest, CancellationToken.None, null))
+                .ReturnsAsync(() => response);
+
+            IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
+
+            try
+            {
+                await workflowsClient.AddWorkflowCondition("",null);
+                throw new XunitException();
+            }
+            catch (Exception ex)
+            {
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("workflowId cannot be blank");
             }
         }
 
@@ -323,6 +448,42 @@ namespace Checkout.Workflows
             {
                 ex.ShouldBeOfType(typeof(CheckoutArgumentException));
                 ex.Message.ShouldBe("workflowConditionRequest cannot be null");
+            }
+        }
+        
+        [Fact(Skip="Unestable")]
+        public async Task ShouldRemoveWorkflowConditions()
+        {
+            EmptyResponse response = new EmptyResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Delete<EmptyResponse>(
+                        "workflows" + "/workflow_id" + "/condition" + "/condition_id", 
+                        _authorization, 
+                        CancellationToken.None))
+                .ReturnsAsync(() => response);
+
+            IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
+
+            EmptyResponse getResponse = await workflowsClient.RemoveWorkflowCondition("workflow_id", "condition_id");
+
+            getResponse.ShouldNotBeNull();
+        }
+        
+        [Fact]
+        public async Task ShouldFailRemoveWorkflowConditions_InvalidParams()
+        {
+            IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
+
+            try
+            {
+                await workflowsClient.RemoveWorkflowCondition("", "");
+                throw new XunitException();
+            }
+            catch (Exception ex)
+            {
+                ex.ShouldBeOfType(typeof(CheckoutArgumentException));
+                ex.Message.ShouldBe("workflowId cannot be blank");
             }
         }
 

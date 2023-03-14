@@ -318,6 +318,12 @@ namespace Checkout.Payments
                 Amount = 10L,
                 Currency = Currency.EUR,
                 Reference = "REFERENCE",
+                Description = "Description",
+                Shipping = new ShippingDetails
+                {
+                    Address = GetAddress(),
+                    Phone = GetPhone(),
+                },
                 SuccessUrl = "https://testing.checkout.com/sucess",
                 FailureUrl = "https://testing.checkout.com/failure",
             };

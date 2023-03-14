@@ -1,4 +1,5 @@
-﻿using Checkout.Workflows.Actions.Request;
+﻿using Checkout.Common;
+using Checkout.Workflows.Actions.Request;
 using Checkout.Workflows.Actions.Response;
 using Checkout.Workflows.Conditions.Request;
 using Checkout.Workflows.Events;
@@ -19,11 +20,19 @@ namespace Checkout.Workflows
 
         Task<EmptyResponse> RemoveWorkflow(string workflowId);
 
+        Task<IdResponse> AddWorkflowAction(string workflowId, WorkflowActionRequest workflowActionRequest);
+        
         Task<EmptyResponse> UpdateWorkflowAction(string workflowId, string actionId,
             WorkflowActionRequest workflowActionRequest);
+        
+        Task<EmptyResponse> RemoveWorkflowAction(string workflowId, string actionId);
+        
+        Task<IdResponse> AddWorkflowCondition(string workflowId, WorkflowConditionRequest workflowConditionRequest);
 
         Task<EmptyResponse> UpdateWorkflowCondition(string workflowId, string conditionId,
             WorkflowConditionRequest workflowConditionRequest);
+        
+        Task<EmptyResponse> RemoveWorkflowCondition(string workflowId, string conditionId);
 
         Task<ItemsResponse<EventTypesResponse>> GetEventTypes();
 

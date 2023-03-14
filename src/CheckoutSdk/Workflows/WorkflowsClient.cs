@@ -1,4 +1,5 @@
-﻿using Checkout.Workflows.Actions.Request;
+﻿using Checkout.Common;
+using Checkout.Workflows.Actions.Request;
 using Checkout.Workflows.Actions.Response;
 using Checkout.Workflows.Conditions.Request;
 using Checkout.Workflows.Events;
@@ -44,7 +45,11 @@ namespace Checkout.Workflows
         public Task<UpdateWorkflowResponse> UpdateWorkflow(string workflowId,
             UpdateWorkflowRequest updateWorkflowRequest)
         {
-            CheckoutUtils.ValidateParams(WorkflowId, workflowId, "updateWorkflowRequest", updateWorkflowRequest);
+            CheckoutUtils.ValidateParams(
+                WorkflowId, 
+                workflowId, 
+                "updateWorkflowRequest", 
+                updateWorkflowRequest);
             return ApiClient.Patch<UpdateWorkflowResponse>(BuildPath(WorkflowsPath, workflowId), SdkAuthorization(),
                 updateWorkflowRequest);
         }
@@ -55,14 +60,48 @@ namespace Checkout.Workflows
             return ApiClient.Delete<EmptyResponse>(BuildPath(WorkflowsPath, workflowId), SdkAuthorization());
         }
 
+        public Task<IdResponse> AddWorkflowAction(string workflowId, WorkflowActionRequest workflowActionRequest)
+        {
+            CheckoutUtils.ValidateParams(
+                WorkflowId, 
+                workflowId, 
+                "workflowActionRequest", 
+                workflowActionRequest);
+            return ApiClient.Post<IdResponse>(BuildPath(WorkflowsPath, workflowId, ActionsPath), 
+                SdkAuthorization(), workflowActionRequest);
+        }
+
         public Task<EmptyResponse> UpdateWorkflowAction(string workflowId, string actionId,
             WorkflowActionRequest workflowActionRequest)
         {
-            CheckoutUtils.ValidateParams(WorkflowId, workflowId, "actionId", actionId, "workflowActionRequest",
+            CheckoutUtils.ValidateParams(
+                WorkflowId, 
+                workflowId, 
+                "actionId", 
+                actionId, 
+                "workflowActionRequest",
                 workflowActionRequest);
             return ApiClient.Put<EmptyResponse>(BuildPath(WorkflowsPath, workflowId, ActionsPath, actionId),
                 SdkAuthorization(),
                 workflowActionRequest);
+        }
+        
+        public Task<EmptyResponse> RemoveWorkflowAction(string workflowId, string actionId)
+        {
+            CheckoutUtils.ValidateParams(WorkflowId, workflowId, "actionId", actionId);
+            return ApiClient.Delete<EmptyResponse>(BuildPath(WorkflowsPath, workflowId, ActionsPath, actionId),
+                SdkAuthorization());
+        }
+
+        public Task<IdResponse> AddWorkflowCondition(string workflowId, WorkflowConditionRequest workflowConditionRequest)
+        {
+            CheckoutUtils.ValidateParams(
+                WorkflowId, 
+                workflowId, 
+                "workflowActionRequest", 
+                workflowConditionRequest);
+            return ApiClient.Post<IdResponse>(BuildPath(WorkflowsPath, workflowId, ConditionsPath), 
+                SdkAuthorization(), workflowConditionRequest);
         }
 
         public Task<EmptyResponse> UpdateWorkflowCondition(string workflowId, string conditionId,
@@ -72,6 +111,13 @@ namespace Checkout.Workflows
                 "workflowConditionRequest", workflowConditionRequest);
             return ApiClient.Put<EmptyResponse>(BuildPath(WorkflowsPath, workflowId, ConditionsPath, conditionId),
                 SdkAuthorization(), workflowConditionRequest);
+        }
+
+        public Task<EmptyResponse> RemoveWorkflowCondition(string workflowId, string conditionId)
+        {
+            CheckoutUtils.ValidateParams(WorkflowId, workflowId, "conditionId", conditionId);
+            return ApiClient.Delete<EmptyResponse>(BuildPath(WorkflowsPath, workflowId, ConditionsPath, conditionId),
+                SdkAuthorization());
         }
 
         public Task<ItemsResponse<EventTypesResponse>> GetEventTypes()
