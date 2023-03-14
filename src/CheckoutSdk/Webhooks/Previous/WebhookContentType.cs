@@ -4,7 +4,6 @@ namespace Checkout.Webhooks.Previous
 {
     public enum WebhookContentType
     {
-        [EnumMember(Value = "json")] Json,
-        [EnumMember(Value = "xml")] Xml,
+        [EnumMember(Value = "json")] Json
     }
 }

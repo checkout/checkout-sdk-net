@@ -1,8 +1,11 @@
-﻿using Checkout.Payments.Response;
+﻿using Checkout.Common;
+using Checkout.Payments.Response;
 using Checkout.Workflows.Actions;
+using Checkout.Workflows.Actions.Request;
 using Checkout.Workflows.Actions.Response;
 using Checkout.Workflows.Events;
 using Shouldly;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -10,6 +13,27 @@ namespace Checkout.Workflows
 {
     public class WorkflowActionsIntegrationTest : AbstractWorkflowIntegrationTest
     {
+        [Fact]
+        public async Task ShouldAddAndRemoveWorkflowAction()
+        {
+            CreateWorkflowResponse createWorkflowResponse = await CreateWorkflow();
+            
+            WebhookWorkflowActionRequest workflowActionRequest = new WebhookWorkflowActionRequest
+            {
+                Type = WorkflowActionType.Webhook,
+                Url = "https://example.com/webhooks/checkout",
+            };
+
+            IdResponse addWorkflowAction =
+                await DefaultApi.WorkflowsClient().AddWorkflowAction(createWorkflowResponse.Id, workflowActionRequest);
+            addWorkflowAction.ShouldNotBeNull();
+            addWorkflowAction.Id.ShouldNotBeNull();
+
+            Exception exception = await Record.ExceptionAsync(() => 
+                DefaultApi.WorkflowsClient().RemoveWorkflowAction(createWorkflowResponse.Id, addWorkflowAction.Id));
+            Assert.Null(exception);
+        }
+        
         [Fact(Skip = "unstable")]
         public async Task ShouldGetActionInvocations()
         {
