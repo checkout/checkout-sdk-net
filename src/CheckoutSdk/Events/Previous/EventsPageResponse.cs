@@ -10,11 +10,7 @@ namespace Checkout.Events.Previous
         public int? Limit { get; set; }
 
         public int? Skip { get; set; }
-
-        public DateTime? From { get; set; }
-
-        public DateTime? To { get; set; }
-
+        
         public IList<EventSummaryResponse> Data { get; set; }
     }
 }
