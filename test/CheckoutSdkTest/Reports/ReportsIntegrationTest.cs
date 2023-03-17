@@ -1,4 +1,6 @@
 using Castle.Core.Internal;
+using Checkout.Common;
+using Newtonsoft.Json;
 using Shouldly;
 using System;
 using System.Threading.Tasks;
@@ -52,15 +54,40 @@ namespace Checkout.Reports
                 var reportDetails = reports.Data[0];
                 var detailsResponse = await DefaultApi.ReportsClient().GetReportDetails(reportDetails.Id);
                 
-                detailsResponse.ShouldNotBeNull();
-                detailsResponse.Id.ShouldBe(reportDetails.Id);
-                detailsResponse.CreatedOn.ShouldBe(reportDetails.CreatedOn);
-                detailsResponse.Type.ShouldBe(reportDetails.Type);
-                detailsResponse.Account.ClientId.ShouldBe(reportDetails.Account.ClientId);
-                detailsResponse.Account.EntityId.ShouldBe(reportDetails.Account.EntityId);
-                detailsResponse.From.ShouldBe(reportDetails.From);
-                detailsResponse.To.ShouldBe(reportDetails.To);
+                CheckDetailsAssertions(detailsResponse, reportDetails);
             }
+        }
+        
+        [Fact]
+        private async Task ShouldGetReportFile()
+        {
+            var reports = await DefaultApi.ReportsClient().GetAllReports(_query);
+            
+            reports.ShouldNotBeNull();
+            if (!reports.Data.IsNullOrEmpty())
+            {
+                var reportDetails = reports.Data[0];
+                var detailsResponse = await DefaultApi.ReportsClient().GetReportDetails(reportDetails.Id);
+
+                CheckDetailsAssertions(detailsResponse, reportDetails);
+
+                var fileResponse = await DefaultApi.ReportsClient().GetReportFile(reportDetails.Id, reportDetails.Files[0].Id);
+
+                fileResponse.ShouldNotBeNull();
+                fileResponse.HttpStatusCode.ShouldBe(200);
+            }
+        }
+
+        private static void CheckDetailsAssertions(ReportDetailsResponse detailsResponse, ReportDetailsResponse reportDetails)
+        {
+            detailsResponse.ShouldNotBeNull();
+            detailsResponse.Id.ShouldBe(reportDetails.Id);
+            detailsResponse.CreatedOn.ShouldBe(reportDetails.CreatedOn);
+            detailsResponse.Type.ShouldBe(reportDetails.Type);
+            detailsResponse.Account.ClientId.ShouldBe(reportDetails.Account.ClientId);
+            detailsResponse.Account.EntityId.ShouldBe(reportDetails.Account.EntityId);
+            detailsResponse.From.ShouldBe(reportDetails.From);
+            detailsResponse.To.ShouldBe(reportDetails.To);
         }
     }
 }
