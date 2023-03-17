@@ -1,3 +1,4 @@
+using Checkout.Common;
 using Moq;
 using Shouldly;
 using System.Threading;
@@ -55,6 +56,25 @@ namespace Checkout.Reports
             IReportsClient client = new ReportsClient(_apiClient.Object, _configuration.Object);
 
             var response = await client.GetReportDetails(reportId);
+
+            response.ShouldNotBeNull();
+        }
+        
+        [Fact]
+        private async Task ShouldGetReportFile()
+        {
+            const string reportId = "rpt_1234";
+            const string fileId = "file_1234";
+            var responseAsync = new ContentsResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Get<ContentsResponse>($"reports/{reportId}/files/{fileId}", _authorization,
+                        CancellationToken.None))
+                .ReturnsAsync(() => responseAsync);
+
+            IReportsClient client = new ReportsClient(_apiClient.Object, _configuration.Object);
+
+            var response = await client.GetReportFile(reportId, fileId);
 
             response.ShouldNotBeNull();
         }
