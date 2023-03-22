@@ -309,7 +309,7 @@ namespace Checkout.Payments
                 PayeeNotOnboarded);
         }
 
-        [Fact(Skip = "Until it's fixed in Sandbox")]
+        [Fact]
         private async Task ShouldMakeGiropayPayment()
         {
             var request = new PaymentRequest
@@ -328,8 +328,11 @@ namespace Checkout.Payments
                 FailureUrl = "https://testing.checkout.com/failure",
             };
 
-            await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
-                PayeeNotOnboarded);
+            var paymentResponse = await DefaultApi.PaymentsClient().RequestPayment(request);
+
+            paymentResponse.ShouldNotBeNull();
+            paymentResponse.Id.ShouldNotBeNullOrEmpty();
+            paymentResponse.Status.ShouldBe(PaymentStatus.Pending);
         }
 
         [Fact]
