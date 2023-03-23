@@ -7,6 +7,8 @@
         public string TransactionId { get; set; }
 
         public string OperatorId { get; set; }
+        
+        public string Url { get; set; }
 
         public string SignedContent { get; set; }
 
@@ -16,7 +18,7 @@
 
         public ChallengeCancelReason? ChallengeCancelReason { get; set; }
 
-        public SessionInterface? SessionInterface { get; set; }
+        public SessionInterface? Interface { get; set; }
 
         public UIElements? UiTemplate { get; set; }
 
