@@ -61,10 +61,12 @@ namespace Checkout.Sessions
         public string CardholderInfo { get; set; }
 
         public CardInfo Card { get; set; }
-        
+
         public Recurring Recurring { get; set; }
-        
+
         public Installment Installment { get; set; }
+
+        public string CustomerIp { get; set; }
 
         public DateTime? AuthenticationDate { get; set; }
 
