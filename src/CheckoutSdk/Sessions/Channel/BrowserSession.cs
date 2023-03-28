@@ -7,6 +7,8 @@
         public string AcceptHeader { get; set; }
 
         public bool? JavaEnabled { get; set; }
+        
+        public bool? JavascriptEnabled { get; set; }
 
         public string Language { get; set; }
 
