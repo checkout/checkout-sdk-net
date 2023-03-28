@@ -116,6 +116,7 @@ namespace Checkout.Sessions
             {
                 AcceptHeader = "Accept:  *.*, q=0.1",
                 JavaEnabled = true,
+                JavascriptEnabled = true,
                 Language = "FR-fr",
                 ColorDepth = "16",
                 ScreenWidth = "1920",
