@@ -33,5 +33,24 @@ namespace Checkout.Forex
             response.ExpiresOn.ShouldNotBeNull();
             response.IsSingleUse.ShouldNotBeNull();
         }
+        
+        [Fact(Skip = "Skipping because processing_channel_id is invalid")]
+        private async Task ShouldGetRates()
+        {
+            var query = new RatesQueryFilter()
+            {
+                Product = "card_payouts",
+                Source = ForexSource.Visa,
+                CurrencyPairs = "GBPEUR,USDNOK,JPNCAD",
+                ProcessChannelId = "pc_vxt6yftthv4e5flqak6w2i7rim"
+            };
+            var response = await DefaultApi.ForexClient().GetRates(query);
+
+            response.ShouldNotBeNull();
+            response.Product.ShouldNotBeNull();
+            response.Product.ShouldBe(query.Product);
+            response.Source.ShouldBe(query.Source);
+            response.Rates.ShouldNotBeNull();
+        }
     }
 }

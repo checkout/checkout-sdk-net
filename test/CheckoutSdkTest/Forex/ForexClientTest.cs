@@ -43,5 +43,34 @@ namespace Checkout.Forex
             response.ShouldNotBeNull();
             response.ShouldBeSameAs(quoteResponse);
         }
+        
+        [Fact]
+        private async Task ShouldGetRates()
+        {
+            RatesQueryFilter ratesQueryFilter = new RatesQueryFilter()
+            {
+                Product = "card_payouts",
+                Source = ForexSource.Visa,
+                CurrencyPairs = "GBPEUR,USDNOK,JPNCAD",
+                ProcessChannelId = "pc_vxt6yftthv4e5flqak6w2i7rim"
+            };
+            RatesQueryResponse ratesQueryResponse = new RatesQueryResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Query<RatesQueryResponse>(
+                        "forex/rates", 
+                        _authorization,
+                        ratesQueryFilter,
+                        CancellationToken.None))
+                .ReturnsAsync(() => ratesQueryResponse);
+
+            IForexClient client =
+                new ForexClient(_apiClient.Object, _configuration.Object);
+
+            RatesQueryResponse response = await client.GetRates(ratesQueryFilter);
+
+            response.ShouldNotBeNull();
+            response.ShouldBeSameAs(ratesQueryResponse);
+        }
     }
 }
