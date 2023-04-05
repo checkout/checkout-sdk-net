@@ -6,5 +6,6 @@ namespace Checkout.Forex
     public interface IForexClient
     {
         Task<QuoteResponse> RequestQuote(QuoteRequest quoteRequest, CancellationToken cancellationToken = default);
+        Task<RatesQueryResponse> GetRates(RatesQueryFilter ratesQueryFilter, CancellationToken cancellationToken = default);
     }
 }
