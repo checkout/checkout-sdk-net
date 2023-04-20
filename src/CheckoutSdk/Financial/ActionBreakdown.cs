@@ -19,7 +19,7 @@ namespace Checkout.Financial
 
         public Currency? TransactionCurrency { get; set; }
 
-        public double? TransactionCurrencyAccount { get; set; }
+        public double? TransactionCurrencyAmount { get; set; }
 
         public double? ProcessingToTransactionCurrencyFxRate { get; set; }
 

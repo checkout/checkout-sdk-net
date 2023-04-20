@@ -1,6 +1,7 @@
 using Checkout.Accounts.Payout.Request;
 using Checkout.Accounts.Payout.Response;
 using Checkout.Common;
+using Checkout.Instruments;
 using Moq;
 using Shouldly;
 using System.Collections.Generic;
@@ -262,7 +263,16 @@ namespace Checkout.Accounts
         [Fact]
         private async Task ShouldCreatePaymentInstrument()
         {
-            PaymentInstrumentRequest request = new PaymentInstrumentRequest();
+            PaymentInstrumentRequest request = new PaymentInstrumentRequest
+            {
+                Label = "Barclays",
+                Type = InstrumentType.CardToken,
+                Currency = Currency.GBP,
+                InstrumentDetails = new InstrumentDetailsCardToken
+                {
+                    Token = "tok_ru6xnh53uovethkr2gy3gwpl2a"
+                }
+            };
             IdResponse responseAsync = new IdResponse();
 
             _apiClient
@@ -286,7 +296,15 @@ namespace Checkout.Accounts
         [Fact]
         private async Task ShouldUpdatePaymentInstrument()
         {
-            UpdatePaymentInstrumentRequest request = new UpdatePaymentInstrumentRequest();
+            UpdatePaymentInstrumentRequest request = new UpdatePaymentInstrumentRequest
+            {
+                Label = "Batman's Personal Account",
+                DefaultDestination = true,
+                Headers = new Headers
+                {
+                    IfMatch = "Y3Y9MCZydj0w"
+                }
+            };
             IdResponse responseAsync = new IdResponse();
 
             _apiClient
