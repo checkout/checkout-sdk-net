@@ -18,7 +18,7 @@ namespace Checkout.Payments.Links
         {
             var paymentLinkRequest = new PaymentLinkRequest
             {
-                Amount = 10,
+                Amount = 100,
                 Billing = new BillingInformation { Address = GetAddress() },
                 Capture = true,
                 CaptureOn = DateTime.Now,
@@ -66,7 +66,7 @@ namespace Checkout.Payments.Links
 
             responseGet.ShouldNotBeNull();
             responseGet.Id.ShouldNotBeNull();
-            responseGet.Amount.ShouldBe(10);
+            responseGet.Amount.ShouldBe(100);
             responseGet.Billing.ShouldNotBeNull();
             responseGet.CreatedOn.ShouldNotBeNull();
             responseGet.Currency.ShouldNotBeNull();

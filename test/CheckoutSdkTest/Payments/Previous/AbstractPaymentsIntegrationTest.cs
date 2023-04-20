@@ -160,7 +160,7 @@ namespace Checkout.Payments.Previous
                 Billing = billing,
                 Recipient = recipient,
                 Processing = new ProcessingSettings {Aft = true},
-                Products = new List<Product> {new Product {Name = "Gold Necklace", Quantity = 1L, Price = 200L}},
+                Products = new List<Product> {new Product {Name = "Gold Necklace", Quantity = 1L, Price = 1000L}},
                 Risk = new RiskRequest {Enabled = false},
                 SuccessUrl = "https://example.com/payments/success",
                 CancelUrl = "https://example.com/payments/success",

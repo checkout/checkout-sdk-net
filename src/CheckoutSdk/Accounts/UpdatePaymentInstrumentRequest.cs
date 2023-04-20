@@ -8,5 +8,7 @@ namespace Checkout.Accounts
 
         [JsonProperty(PropertyName = "default")]
         public bool? DefaultDestination { get; set; }
+        
+        public Headers Headers { get; set; }
     }
 }
