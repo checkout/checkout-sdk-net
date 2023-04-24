@@ -63,11 +63,11 @@ namespace Checkout.Payments.Hosted
                 Zip = "12345"
             };
 
-            var products = new[] {new Product {Name = "Gold Necklace", Quantity = 1L, Price = 1000L}};
+            var products = new[] {new Product {Name = "Gold Necklace", Quantity = 1L, Price = 200L}};
 
             return new HostedPaymentRequest
             {
-                Amount = 1000L,
+                Amount = 200L,
                 Reference = "reference",
                 Currency = Currency.GBP,
                 Description = "Payment for Gold Necklace",

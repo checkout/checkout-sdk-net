@@ -1,0 +1,18 @@
+{
+  "id": "ctr_gp7vkmxayztufjz6top5bjcdra",
+  "target_id": "crd_fa6psq42dcdd6fdn5gifcq1491",
+  "description": "Max spend of 500€ per week for restaurants",
+  "control_type": "velocity_limit",
+  "created_date": "2021-09-09T19:41:39Z",
+  "last_modified_date": "2021-09-09T19:41:39Z",
+  "velocity_limit": {
+    "amount_limit": 5000,
+    "velocity_window": {
+      "type": "weekly"
+    },
+    "mcc_list": [
+      "4121",
+      "4582"
+    ]
+  }
+}

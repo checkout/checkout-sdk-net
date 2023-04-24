@@ -2,6 +2,12 @@ using Checkout.Accounts.Payout.Response.Util;
 using Checkout.Instruments.Create.Util;
 using Checkout.Instruments.Get.Util;
 using Checkout.Instruments.Update.Util;
+using Checkout.Issuing.Cards;
+using Checkout.Issuing.Cards.Requests;
+using Checkout.Issuing.Cards.Responses;
+using Checkout.Issuing.Controls;
+using Checkout.Issuing.Controls.Requests;
+using Checkout.Issuing.Controls.Responses;
 using Checkout.Workflows.Actions.Response.Util;
 using Checkout.Workflows.Conditions.Response.Util;
 using Newtonsoft.Json;
@@ -57,6 +63,11 @@ namespace Checkout
                     new GetScheduleResponseTypeConverter(), new ScheduleResponseTypeConverter(),
                     // Items Response
                     new ItemsResponseConverter(),
+                    // Issuing
+                    new CardTypeRequestConverter(),
+                    new CardTypeResponseConverter(),
+                    new CardControlTypeRequestConverter(),
+                    new CardControlTypeResponseConverter(),
                 }
             };
 

@@ -1,5 +1,6 @@
 using Checkout.Accounts;
 using Checkout.Balances;
+using Checkout.Issuing;
 using Checkout.Customers;
 using Checkout.Disputes;
 using Checkout.Financial;
@@ -53,5 +54,7 @@ namespace Checkout
         IMetadataClient MetadataClient();
 
         IFinancialClient FinancialClient();
+
+        IIssuingClient IssuingClient();
     }
 }

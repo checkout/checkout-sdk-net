@@ -1,4 +1,6 @@
-﻿namespace Checkout.Accounts
+﻿using Checkout.Common;
+
+namespace Checkout.Accounts
 {
     public class Document
     {

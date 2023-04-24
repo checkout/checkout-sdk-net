@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Checkout.Accounts
+namespace Checkout.Common
 {
     public enum DocumentType
     {
