@@ -1,0 +1,11 @@
+using Checkout.Common;
+using Checkout.Issuing.Cards;
+using System.Collections.Generic;
+
+namespace Checkout.Issuing.Cardholders
+{
+    public class CardholderCardsResponse : Resource
+    {
+        public IList<CardResponse> Cards { get; set; }
+    }
+}

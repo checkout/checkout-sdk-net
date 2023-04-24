@@ -151,7 +151,7 @@ namespace Checkout.Payments.Previous
 
             return new HostedPaymentRequest
             {
-                Amount = 1000L,
+                Amount = 200L,
                 Reference = reference,
                 Currency = Currency.GBP,
                 Description = "Payment for Gold Necklace",
@@ -160,7 +160,7 @@ namespace Checkout.Payments.Previous
                 Billing = billing,
                 Recipient = recipient,
                 Processing = new ProcessingSettings {Aft = true},
-                Products = new List<Product> {new Product {Name = "Gold Necklace", Quantity = 1L, Price = 1000L}},
+                Products = new List<Product> {new Product {Name = "Gold Necklace", Quantity = 1L, Price = 200L}},
                 Risk = new RiskRequest {Enabled = false},
                 SuccessUrl = "https://example.com/payments/success",
                 CancelUrl = "https://example.com/payments/success",

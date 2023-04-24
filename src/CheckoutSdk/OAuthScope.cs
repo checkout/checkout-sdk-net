@@ -43,6 +43,8 @@
         [OAuthScope("reports:view")] ReportsView,
         [OAuthScope("vault:card-metadata")] VaultCardMetadata,
         [OAuthScope("financial-actions")] FinancialActions,
-        [OAuthScope("financial-actions:view")] FinancialActionsView
+        [OAuthScope("financial-actions:view")] FinancialActionsView,
+        [OAuthScope("issuing:card-mgmt")] IssuingCard,
+        [OAuthScope("issuing:client")] IssuingClient
     }
 }
