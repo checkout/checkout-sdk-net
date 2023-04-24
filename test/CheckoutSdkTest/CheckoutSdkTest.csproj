@@ -67,6 +67,7 @@
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Apm\Previous" />
+      <Folder Include="Issuing\Cards" />
     </ItemGroup>
 
 </Project>

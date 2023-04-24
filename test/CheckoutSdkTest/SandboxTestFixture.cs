@@ -1,3 +1,4 @@
+using Checkout.Accounts;
 using Checkout.Common;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
@@ -104,6 +105,20 @@ namespace Checkout
             catch (CheckoutApiException ex)
             {
                 ((JArray)ex.ErrorDetails["error_codes"]).ToList().ShouldContain(errorItem);
+            }
+        }
+        
+        protected static async Task AssertInvalidDataSent<T>(Task<T> task)
+        {
+            try
+            {
+                await task;
+            }
+            catch (Exception ex)
+            {
+                ex.ShouldNotBeNull();
+                ex.ShouldBeAssignableTo(typeof(CheckoutApiException));
+                ex.Message.ShouldBe("The API response status code (422) does not indicate success.");
             }
         }
 

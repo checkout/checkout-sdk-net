@@ -11,7 +11,7 @@ namespace Checkout.Sessions
         IssueFingerprint,
 
         [EnumMember(Value = "challenge_cardholder")]
-        ChallengeCardHolder,
+        ChallengeCardholder,
 
         [EnumMember(Value = "redirect_cardholder")]
         RedirectCardholder,

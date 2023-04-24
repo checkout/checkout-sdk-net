@@ -611,7 +611,7 @@ namespace Checkout.Payments
             };
 
             await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
-                PayeeNotOnboarded);
+                ApmServiceUnavailable);
         }
     }
 }
