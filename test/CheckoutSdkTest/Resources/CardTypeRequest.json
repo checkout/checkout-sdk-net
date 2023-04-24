@@ -1,0 +1,13 @@
+{
+  "type": "virtual",
+  "cardholder_id": "crh_d3ozhf43pcq2xbldn2g45qnb44",
+  "lifetime": {
+    "unit": "Months",
+    "value": 6
+  },
+  "reference": "X-123456-N11",
+  "card_product_id": "pro_7syjig3jq3mezlc3vjrdpfitl4",
+  "display_name": "JOHN KENNEDY",
+  "is_single_use": false,
+  "activate_card": true
+}

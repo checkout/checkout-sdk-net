@@ -8,6 +8,7 @@ namespace Checkout
     public static class CheckoutUtils
     {
         public const string Type = "type";
+        public const string ControlType = "control_type";
         public const string Frequency = "frequency";
 
         public static string GetAssemblyVersion<T>()

@@ -5,7 +5,7 @@ namespace Checkout.Sessions
     public enum ChallengeCancelReason
     {
         [EnumMember(Value = "cardholder_cancel")]
-        CardHolderCancel,
+        CardholderCancel,
 
         [EnumMember(Value = "transaction_timed_out")]
         TransactionTimedOut,

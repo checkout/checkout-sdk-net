@@ -35,7 +35,7 @@ namespace Checkout.Sessions
             response.AuthenticationCategory.ShouldBe(category);
             response.Status.ShouldBe(SessionStatus.Challenged);
             response.NextActions.Count.ShouldBe(1);
-            response.NextActions[0].ShouldBe(NextAction.ChallengeCardHolder);
+            response.NextActions[0].ShouldBe(NextAction.ChallengeCardholder);
             response.TransactionType.ShouldBe(transactionType);
             response.ResponseCode.ShouldBe(ResponseCode.C);
             response.AuthenticationDate.ShouldNotBeNull();
@@ -60,7 +60,7 @@ namespace Checkout.Sessions
             getSessionResponse.AuthenticationCategory.ShouldBe(category);
             getSessionResponse.Status.ShouldBe(SessionStatus.Challenged);
             getSessionResponse.NextActions.Count.ShouldBe(1);
-            getSessionResponse.NextActions[0].ShouldBe(NextAction.ChallengeCardHolder);
+            getSessionResponse.NextActions[0].ShouldBe(NextAction.ChallengeCardholder);
             getSessionResponse.TransactionType.ShouldBe(transactionType);
             getSessionResponse.ResponseCode.ShouldBe(ResponseCode.C);
             response.AuthenticationDate.ShouldNotBeNull();
@@ -86,7 +86,7 @@ namespace Checkout.Sessions
             getSessionSecretSessionResponse.AuthenticationCategory.ShouldBe(category);
             getSessionSecretSessionResponse.Status.ShouldBe(SessionStatus.Challenged);
             getSessionSecretSessionResponse.NextActions.Count.ShouldBe(1);
-            getSessionSecretSessionResponse.NextActions[0].ShouldBe(NextAction.ChallengeCardHolder);
+            getSessionSecretSessionResponse.NextActions[0].ShouldBe(NextAction.ChallengeCardholder);
             getSessionSecretSessionResponse.TransactionType.ShouldBe(transactionType);
             getSessionSecretSessionResponse.ResponseCode.ShouldBe(ResponseCode.C);
 

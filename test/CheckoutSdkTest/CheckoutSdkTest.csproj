@@ -62,11 +62,28 @@
         <Content Include="Resources\checkout.jpeg">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+        <Content Update="Resources\CardControlTypeRequest.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\CardControlTypeResponse.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\CardTypeRequest.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\CardTypeResponse.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
         <None Remove="Resources\AppSettingsTest.json" />
         <None Remove="Resources\AppSettingsDefaultTest.json" />
+        <None Remove="Resources\CardControlDetailsResponse.json" />
+        <None Remove="Resources\CardControlTypeRequest.json" />
+        <Content Include="Resources\CardControlTypeRequest.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Apm\Previous" />
+      <Folder Include="Issuing\Cards" />
     </ItemGroup>
-
 </Project>
