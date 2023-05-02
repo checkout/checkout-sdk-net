@@ -1,5 +1,3 @@
-using Checkout.Common;
-
 namespace Checkout.Payments.Request.Destination
 {
     public class PaymentRequestTokenDestination : PaymentRequestDestination
@@ -9,7 +7,5 @@ namespace Checkout.Payments.Request.Destination
         }
 
         public string Token { get; set; }
-
-        public AccountHolder AccountHolder { get; set; }
     }
 }
