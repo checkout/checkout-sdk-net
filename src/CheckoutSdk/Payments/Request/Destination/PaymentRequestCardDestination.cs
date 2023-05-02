@@ -1,5 +1,3 @@
-using Checkout.Common;
-
 namespace Checkout.Payments.Request.Destination
 {
     public class PaymentRequestCardDestination : PaymentRequestDestination
@@ -13,7 +11,5 @@ namespace Checkout.Payments.Request.Destination
         public int? ExpiryMonth { get; set; }
 
         public int? ExpiryYear { get; set; }
-
-        public AccountHolder AccountHolder { get; set; }
     }
 }

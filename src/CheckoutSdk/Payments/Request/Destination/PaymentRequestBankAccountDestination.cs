@@ -24,8 +24,6 @@ namespace Checkout.Payments.Request.Destination
 
         public CountryCode? Country { get; set; }
 
-        public AccountHolder AccountHolder { get; set; }
-
         public BankDetails Bank { get; set; }
     }
 }
