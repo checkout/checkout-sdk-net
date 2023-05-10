@@ -4,6 +4,7 @@ using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using Xunit;
@@ -87,6 +88,53 @@ namespace Checkout.Accounts
 
             verifyUpdated.ShouldNotBeNull();
             onboardEntityRequest.Individual.FirstName.ShouldBe(verifyUpdated.Individual.FirstName);
+        }
+        
+        [Fact]
+        public async Task ShouldThrowConflictWhenCreatingExistingEntity()
+        {
+            string randomReference = RandomString(15);
+            OnboardEntityRequest onboardEntityRequest = new OnboardEntityRequest
+            {
+                Reference = randomReference,
+                ContactDetails = BuildContactDetails(),
+                Profile = BuildProfile(),
+                Individual = new Individual
+                {
+                    FirstName = "Bruce",
+                    LastName = "Wayne",
+                    TradingName = "Batman's Super Hero Masks",
+                    RegisteredAddress = new Address
+                    {
+                        AddressLine1 = "Checkout.com",
+                        AddressLine2 = "90 Tottenham Court Road",
+                        City = "London",
+                        State = "London",
+                        Zip = "WIT 4TJ",
+                        Country = CountryCode.ES
+                    },
+                    NationalTaxId = "TAX123456",
+                    DateOfBirth = new DateOfBirth { Day = 5, Month = 6, Year = 1996 },
+                    Identification = new Identification { NationalIdNumber = "AB123456C" },
+                },
+            };
+
+            OnboardEntityResponse entityResponse = await DefaultApi.AccountsClient().CreateEntity(onboardEntityRequest);
+
+            entityResponse.ShouldNotBeNull();
+
+            string entityId = entityResponse.Id;
+
+            entityId.ShouldNotBeNullOrEmpty();
+            entityResponse.Reference.ShouldBe(randomReference);
+
+            CheckoutApiException ex = await Assert.ThrowsAsync<CheckoutApiException>(() => 
+                DefaultApi.AccountsClient().CreateEntity(onboardEntityRequest));
+            
+            ex.HttpStatusCode.ShouldBe(HttpStatusCode.Conflict);
+            ex.ErrorDetails.ShouldNotBeNull();
+            Assert.True(ex.ErrorDetails.ContainsKey("id"));
+            ex.ErrorDetails["id"].ShouldBe(entityId);
         }
 
         [Fact]

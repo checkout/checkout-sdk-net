@@ -13,6 +13,8 @@ namespace Checkout.Payments
         public string SignatureValid { get; set; }
 
         public string AuthenticationResponse { get; set; }
+        
+        public string AuthenticationStatusReason { get; set; }
 
         public string Cryptogram { get; set; }
 
