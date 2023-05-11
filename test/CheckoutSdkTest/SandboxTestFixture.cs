@@ -1,4 +1,6 @@
 using Checkout.Common;
+using Checkout.Instruments.Create;
+using Checkout.Tokens;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using NLog.Extensions.Logging;
@@ -145,6 +147,54 @@ namespace Checkout
             {
                 FirstName = "John", LastName = "Doe", Phone = GetPhone(), BillingAddress = GetAddress()
             };
+        }
+        
+        protected async Task<CardTokenResponse> RequestToken()
+        {
+            var cardTokenRequest = new CardTokenRequest
+            {
+                Name = TestCardSource.Visa.Name,
+                Number = TestCardSource.Visa.Number,
+                ExpiryYear = TestCardSource.Visa.ExpiryYear,
+                ExpiryMonth = TestCardSource.Visa.ExpiryMonth,
+                Cvv = TestCardSource.Visa.Cvv,
+                BillingAddress = GetAddress(),
+                Phone = GetPhone()
+            };
+
+            var cardTokenResponse = await DefaultApi.TokensClient().Request(cardTokenRequest);
+            cardTokenResponse.ShouldNotBeNull();
+            return cardTokenResponse;
+        }
+        
+        protected async Task<CreateInstrumentResponse> CreateTokenInstrument(CardTokenResponse token)
+        {
+            var phone = new Phone {CountryCode = "+1", Number = "415 555 2671"};
+
+            var billingAddress = new Address
+            {
+                AddressLine1 = "CheckoutSdk.com",
+                AddressLine2 = "90 Tottenham Court Road",
+                City = "London",
+                State = "London",
+                Zip = "W1T 4TJ",
+                Country = CountryCode.GB
+            };
+
+            var accountHolder = new AccountHolder
+            {
+                FirstName = "John", LastName = "Smith", Phone = phone, BillingAddress = billingAddress
+            };
+
+            var createTokenInstrumentRequest = new CreateTokenInstrumentRequest
+            {
+                Token = token.Token, AccountHolder = accountHolder
+            };
+
+            var response = await DefaultApi.InstrumentsClient()
+                .Create(createTokenInstrumentRequest);
+            
+            return response;
         }
     }
 }

@@ -1,4 +1,5 @@
 using Checkout.Common;
+using Checkout.Instruments.Create;
 using Shouldly;
 using System.Threading.Tasks;
 using Xunit;
@@ -30,6 +31,30 @@ namespace Checkout.Customers
             customerDetails.Phone.ShouldNotBeNull();
             customerDetails.DefaultId.ShouldBeNull();
             customerDetails.Instruments.ShouldBeEmpty();
+        }
+        
+        [Fact]
+        private async Task ShouldCreateAndGetCustomerWithInstrument()
+        {
+            var cardToken = await RequestToken();
+
+            var tokenInstrument = await CreateTokenInstrument(cardToken);
+                
+            var customerRequest = new CustomerRequest
+            {
+                Email = GenerateRandomEmail(),
+                Name = "Customer",
+                Phone = new Phone {CountryCode = "1", Number = "4155552671"},
+                DefaultId = tokenInstrument.Id
+            };
+            var customerResponse = await DefaultApi.CustomersClient().Create(customerRequest);
+            
+
+            var customerDetails = await DefaultApi.CustomersClient().Get(customerResponse.Id);
+            customerDetails.ShouldNotBeNull();
+            customerDetails.DefaultId.ShouldNotBeNull();
+            customerDetails.Instruments.ShouldNotBeEmpty();
+            customerDetails.Instruments[0].Id.ShouldBe(tokenInstrument.Id);
         }
 
         [Fact]

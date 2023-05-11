@@ -144,23 +144,5 @@ namespace Checkout.Payments
             paymentResponse.ShouldNotBeNull();
             return paymentResponse;
         }
-
-        protected async Task<CardTokenResponse> RequestToken()
-        {
-            var cardTokenRequest = new CardTokenRequest
-            {
-                Name = TestCardSource.Visa.Name,
-                Number = TestCardSource.Visa.Number,
-                ExpiryYear = TestCardSource.Visa.ExpiryYear,
-                ExpiryMonth = TestCardSource.Visa.ExpiryMonth,
-                Cvv = TestCardSource.Visa.Cvv,
-                BillingAddress = GetAddress(),
-                Phone = GetPhone()
-            };
-
-            var cardTokenResponse = await DefaultApi.TokensClient().Request(cardTokenRequest);
-            cardTokenResponse.ShouldNotBeNull();
-            return cardTokenResponse;
-        }
     }
 }
