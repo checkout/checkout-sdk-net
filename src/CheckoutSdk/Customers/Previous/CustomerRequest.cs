@@ -12,9 +12,6 @@ namespace Checkout.Customers.Previous
 
         public Phone Phone { get; set; }
 
-        [JsonProperty(PropertyName = "default")]
-        public string DefaultId { get; set; }
-
         public IDictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
     }
 }
