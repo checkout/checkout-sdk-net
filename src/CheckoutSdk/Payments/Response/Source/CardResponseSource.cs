@@ -1,4 +1,6 @@
 using Checkout.Common;
+using System;
+using System.Collections.Generic;
 
 namespace Checkout.Payments.Response.Source
 {
@@ -12,7 +14,11 @@ namespace Checkout.Payments.Response.Source
 
         public string Scheme { get; set; }
         
+        [Obsolete("This property will be removed in the future, and should be used. Use LocalSchemes instead.", false)]
         public string SchemeLocal { get; set; }
+        
+        
+        public IList<string> LocalSchemes { get; set; }
 
         public string Last4 { get; set; }
 
