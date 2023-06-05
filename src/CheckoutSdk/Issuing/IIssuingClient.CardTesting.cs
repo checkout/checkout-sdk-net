@@ -9,5 +9,14 @@ namespace Checkout.Issuing
     {
         Task<CardAuthorizationResponse> SimulateAuthorization(CardAuthorizationRequest cardAuthorizationRequest,
             CancellationToken cancellationToken = default);
+        
+        Task<CardIncrementAuthorizationResponse> SimulateIncrementingAuthorization(string authorizationId, CardIncrementAuthorizationRequest cardIncrementAuthorizationRequest,
+            CancellationToken cancellationToken = default);
+        
+        Task<EmptyResponse> SimulateClearing(string authorizationId, CardClearingAuthorizationRequest cardClearingAuthorizationRequest,
+            CancellationToken cancellationToken = default);
+        
+        Task<CardReversalAuthorizationResponse> SimulateReversal(string authorizationId, CardReversalAuthorizationRequest cardReversalAuthorizationRequest,
+            CancellationToken cancellationToken = default);
     }
 }

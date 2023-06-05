@@ -13,6 +13,8 @@ namespace Checkout.Issuing
         private const string ControlsPath = "controls";
         private const string SimulatePath = "simulate";
         private const string AuthorizationPath = "authorizations";
+        private const string PresentmentsPath = "presentments";
+        private const string ReversalsPath = "reversals";
 
         public IssuingClient(IApiClient apiClient, CheckoutConfiguration configuration) :
             base(apiClient, configuration, SdkAuthorizationType.OAuth)
