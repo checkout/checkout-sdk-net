@@ -46,5 +46,79 @@ namespace Checkout.Issuing.Testing
             getResponse.ShouldNotBeNull();
             getResponse.ShouldBeSameAs(cardAuthorizationResponse);
         }
+
+        [Fact]
+        private async Task ShouldSimulateIncrementingAuthorization()
+        {
+            CardIncrementAuthorizationRequest cardIncrementAuthorizationRequest =
+                new CardIncrementAuthorizationRequest();
+            CardIncrementAuthorizationResponse cardIncrementAuthorizationResponse = new CardIncrementAuthorizationResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<CardIncrementAuthorizationResponse>(
+                        "issuing/simulate/authorizations/authorization_id/authorizations",
+                        _authorization,
+                        cardIncrementAuthorizationRequest,
+                        CancellationToken.None, null))
+                .ReturnsAsync(() => cardIncrementAuthorizationResponse);
+
+            IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
+
+            CardIncrementAuthorizationResponse getResponse = await client.SimulateIncrementingAuthorization(
+                "authorization_id",
+                cardIncrementAuthorizationRequest
+            );
+
+            getResponse.ShouldNotBeNull();
+            getResponse.ShouldBeSameAs(cardIncrementAuthorizationResponse);
+        }
+        
+        [Fact]
+        private async Task ShouldSimulateClearing()
+        {
+            CardClearingAuthorizationRequest cardClearingAuthorizationRequest = new CardClearingAuthorizationRequest();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<EmptyResponse>(
+                        "issuing/simulate/authorizations/authorization_id/presentments",
+                        _authorization,
+                        cardClearingAuthorizationRequest,
+                        CancellationToken.None, null))
+                .ReturnsAsync(() => new EmptyResponse());
+
+            IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
+
+            EmptyResponse getResponse = await client.SimulateClearing(
+                "authorization_id",
+                cardClearingAuthorizationRequest
+            );
+
+            getResponse.ShouldNotBeNull();
+        }
+
+        [Fact]
+        private async Task ShouldSimulateReversal()
+        {
+            CardReversalAuthorizationRequest cardReversalAuthorizationRequest = new CardReversalAuthorizationRequest();
+            CardReversalAuthorizationResponse cardReversalAuthorizationResponse = new CardReversalAuthorizationResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<CardReversalAuthorizationResponse>(
+                        "issuing/simulate/authorizations/authorization_id/reversals",
+                        _authorization,
+                        cardReversalAuthorizationRequest,
+                        CancellationToken.None, null))
+                .ReturnsAsync(() => cardReversalAuthorizationResponse);
+
+            IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
+
+            CardReversalAuthorizationResponse getResponse = await client.SimulateReversal(
+                "authorization_id",
+                cardReversalAuthorizationRequest
+            );
+
+            getResponse.ShouldNotBeNull();
+            getResponse.ShouldBeSameAs(cardReversalAuthorizationResponse);
+        }
     }
 }

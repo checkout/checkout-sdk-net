@@ -14,7 +14,7 @@ namespace Checkout.Payments.Response.Source
 
         public string Scheme { get; set; }
         
-        [Obsolete("This property will be removed in the future, and should be used. Use LocalSchemes instead.", false)]
+        [Obsolete("This property will be removed in the future, and should not be used. Use LocalSchemes instead.", false)]
         public string SchemeLocal { get; set; }
         
         
