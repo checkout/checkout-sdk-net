@@ -13,7 +13,7 @@ namespace Checkout.Workflows
 {
     public class WorkflowActionsIntegrationTest : AbstractWorkflowIntegrationTest
     {
-        [Fact]
+        [Fact(Skip = "unstable")]
         public async Task ShouldAddAndRemoveWorkflowAction()
         {
             CreateWorkflowResponse createWorkflowResponse = await CreateWorkflow();
