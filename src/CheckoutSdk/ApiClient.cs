@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -8,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Checkout
 {
@@ -150,17 +150,24 @@ namespace Checkout
             CancellationToken cancellationToken = default)
             where TResult : HttpMetadata
         {
-            var dictionary = new Dictionary<string, string>();
             if (request != null)
             {
                 var json = _serializer.Serialize(request);
-                dictionary =
+                var parameters =
                     (Dictionary<string, string>)_serializer.Deserialize(json, typeof(IDictionary<string, string>));
+                if (parameters.Count > 0)
+                {
+                    var queryString = string.Join("&",
+                        parameters.Select(kvp =>
+                            $"{HttpUtility.UrlEncode(kvp.Key)}={HttpUtility.UrlEncode(kvp.Value)}"));
+
+                    path = $"{path}?{queryString}";
+                }
             }
 
             var httpResponse = await SendRequestAsync(
                 HttpMethod.Get,
-                QueryHelpers.AddQueryString(path, dictionary),
+                path,
                 authorization,
                 null,
                 cancellationToken,
