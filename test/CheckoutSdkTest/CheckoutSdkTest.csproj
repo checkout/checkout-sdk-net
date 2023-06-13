@@ -81,6 +81,10 @@
         <Content Include="Resources\CardControlTypeRequest.json">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+        <None Remove="Resources\DateTimeFormats.json" />
+        <Content Include="Resources\get_financial_actions_response.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Apm\Previous" />

@@ -13,7 +13,7 @@ namespace Checkout.Disputes.Previous
         {
             var from = DateTime.UtcNow.Subtract(TimeSpan.FromHours(24));
             var to = DateTime.Now; // local timezone
-            var request = new DisputesQueryFilter {Limit = 250, To = to, From = from};
+            var request = new DisputesQueryFilter { Limit = 250, To = to, From = from };
 
             var response = await PreviousApi.DisputesClient().Query(request);
             response.ShouldNotBeNull();
@@ -55,7 +55,7 @@ namespace Checkout.Disputes.Previous
             fileDetails.Size.ShouldNotBeNull();
             fileDetails.UploadedOn.ShouldNotBeNull();
         }
-        
+
         [Fact]
         private async Task ShouldGetDisputeSchemeFiles()
         {
@@ -82,7 +82,7 @@ namespace Checkout.Disputes.Previous
             var payment = await MakeCardPayment(true, 1040L);
             payment.ShouldNotBeNull();
 
-            var query = new DisputesQueryFilter {PaymentId = payment.Id};
+            var query = new DisputesQueryFilter { PaymentId = payment.Id };
 
             //Query for dispute
             DisputesQueryResponse queryResponse = await Retriable(async () =>
