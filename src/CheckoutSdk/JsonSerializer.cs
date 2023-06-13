@@ -2,10 +2,8 @@ using Checkout.Accounts.Payout.Response.Util;
 using Checkout.Instruments.Create.Util;
 using Checkout.Instruments.Get.Util;
 using Checkout.Instruments.Update.Util;
-using Checkout.Issuing.Cards;
 using Checkout.Issuing.Cards.Requests;
 using Checkout.Issuing.Cards.Responses;
-using Checkout.Issuing.Controls;
 using Checkout.Issuing.Controls.Requests;
 using Checkout.Issuing.Controls.Responses;
 using Checkout.Workflows.Actions.Response.Util;
@@ -49,18 +47,21 @@ namespace Checkout
             var settings = new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,
-                ContractResolver = new DefaultContractResolver {NamingStrategy = new SnakeCaseNamingStrategy()},
+                ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() },
                 Converters = new JsonConverter[]
                 {
                     new StringEnumConverter(),
                     // Instruments CS2
-                    new CreateInstrumentResponseTypeConverter(), new GetInstrumentResponseTypeConverter(),
+                    new CreateInstrumentResponseTypeConverter(),
+                    new GetInstrumentResponseTypeConverter(),
                     new UpdateInstrumentResponseTypeConverter(),
                     // Workflows CS2
-                    new WorkflowActionTypeResponseConverter(), new WorkflowConditionTypeResponseConverter(),
+                    new WorkflowActionTypeResponseConverter(),
+                    new WorkflowConditionTypeResponseConverter(),
                     GetConverterDateTimeToIso(),
                     // Accounts Payout Schedules
-                    new GetScheduleResponseTypeConverter(), new ScheduleResponseTypeConverter(),
+                    new GetScheduleResponseTypeConverter(),
+                    new ScheduleResponseTypeConverter(),
                     // Items Response
                     new ItemsResponseConverter(),
                     // Issuing
