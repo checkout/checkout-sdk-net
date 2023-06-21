@@ -1,11 +1,12 @@
 using Microsoft.Extensions.Logging;
+using System.Net.Http;
 
 namespace Checkout
 {
     public abstract class AbstractCheckoutSdkBuilder<T>
     {
         protected Environment Env = Checkout.Environment.Sandbox;
-        protected IHttpClientFactory ClientFactory = new DefaultHttpClientFactory();
+        protected HttpClient Client = new HttpClient();
 
         public AbstractCheckoutSdkBuilder<T> Environment(Environment environment)
         {
@@ -19,15 +20,15 @@ namespace Checkout
             return this;
         }
 
-        public AbstractCheckoutSdkBuilder<T> HttpClientFactory(IHttpClientFactory httpClientFactory)
+        public AbstractCheckoutSdkBuilder<T> HttpClient(HttpClient httpClient)
         {
-            ClientFactory = httpClientFactory;
+            Client = httpClient;
             return this;
         }
 
         protected CheckoutConfiguration GetCheckoutConfiguration()
         {
-            return new CheckoutConfiguration(GetSdkCredentials(), Env, ClientFactory);
+            return new CheckoutConfiguration(GetSdkCredentials(), Env, Client);
         }
 
         protected abstract SdkCredentials GetSdkCredentials();

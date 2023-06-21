@@ -30,7 +30,7 @@ namespace Checkout.Previous
 
         public CheckoutApi(CheckoutConfiguration configuration) : base(configuration)
         {
-            var apiClient = new ApiClient(configuration.HttpClientFactory,
+            var apiClient = new ApiClient(configuration.HttpClient,
                 configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri);
             _tokensClient = new TokensClient(apiClient, configuration);
             _customersClient = new CustomersClient(apiClient, configuration);

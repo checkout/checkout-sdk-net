@@ -12,11 +12,9 @@ namespace Checkout
         {
             //Arrange
             var sdkCredentialsMock = new Mock<SdkCredentials>(MockBehavior.Strict, PlatformType.Previous);
-            var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(mock => mock.CreateClient())
-                .Returns(new HttpClient());
+            var httpClientMock = new Mock<HttpClient>();
             var checkoutConfiguration = new CheckoutConfiguration(sdkCredentialsMock.Object, Environment.Sandbox,
-                httpClientFactoryMock.Object);
+                httpClientMock.Object);
 
             //Act
             Previous.ICheckoutApi checkoutApi = new Previous.CheckoutApi(checkoutConfiguration);
@@ -44,11 +42,9 @@ namespace Checkout
         {
             //Arrange
             var sdkCredentialsMock = new Mock<SdkCredentials>(MockBehavior.Strict, PlatformType.Previous);
-            var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(mock => mock.CreateClient())
-                .Returns(new HttpClient());
+            var httpClientMock = new Mock<HttpClient>();
             var checkoutConfiguration = new CheckoutConfiguration(sdkCredentialsMock.Object, Environment.Sandbox,
-                httpClientFactoryMock.Object);
+                httpClientMock.Object);
 
             //Act
             ICheckoutApi checkoutApi = new CheckoutApi(checkoutConfiguration);

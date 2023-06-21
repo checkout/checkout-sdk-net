@@ -70,25 +70,25 @@ namespace Checkout
 
         private static ApiClient BaseApiClient(CheckoutConfiguration configuration)
         {
-            return new ApiClient(configuration.HttpClientFactory,
+            return new ApiClient(configuration.HttpClient,
                 configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri);
         }
 
         private static ApiClient FilesApiClient(CheckoutConfiguration configuration)
         {
-            return new ApiClient(configuration.HttpClientFactory,
+            return new ApiClient(configuration.HttpClient,
                 configuration.Environment.GetAttribute<EnvironmentAttribute>().FilesApiUri);
         }
 
         private static ApiClient TransfersApiClient(CheckoutConfiguration configuration)
         {
-            return new ApiClient(configuration.HttpClientFactory,
+            return new ApiClient(configuration.HttpClient,
                 configuration.Environment.GetAttribute<EnvironmentAttribute>().TransfersApiUri);
         }
 
         private static ApiClient BalancesApiClient(CheckoutConfiguration configuration)
         {
-            return new ApiClient(configuration.HttpClientFactory,
+            return new ApiClient(configuration.HttpClient,
                 configuration.Environment.GetAttribute<EnvironmentAttribute>().BalancesApiUri);
         }
 

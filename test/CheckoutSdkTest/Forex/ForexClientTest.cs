@@ -1,5 +1,6 @@
 using Moq;
 using Shouldly;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -11,7 +12,7 @@ namespace Checkout.Forex
         private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.DefaultOAuth, ValidDefaultSk);
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
         private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.DefaultOAuth);
-        private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
+        private readonly Mock<HttpClient> _httpClient = new Mock<HttpClient>();
         private readonly Mock<CheckoutConfiguration> _configuration;
 
         public ForexClientTest()
@@ -20,7 +21,7 @@ namespace Checkout.Forex
                 .Returns(_authorization);
 
             _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Sandbox, _httpClientFactory.Object);
+                Environment.Sandbox, _httpClient.Object);
         }
 
         [Fact]

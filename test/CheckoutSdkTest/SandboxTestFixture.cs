@@ -8,6 +8,7 @@ using NLog.Extensions.Logging;
 using Shouldly;
 using System;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit.Sdk;
 
@@ -34,7 +35,7 @@ namespace Checkout
                         .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_SECRET_KEY"))
                         .Environment(Environment.Sandbox)
                         .LogProvider(logFactory)
-                        .HttpClientFactory(new DefaultHttpClientFactory())
+                        .HttpClient(new HttpClient())
                         .Build();
                     break;
 
@@ -58,6 +59,7 @@ namespace Checkout
                             OAuthScope.TransfersView, OAuthScope.BalancesView, OAuthScope.VaultCardMetadata,
                             OAuthScope.FinancialActions)
                         .Environment(Environment.Sandbox)
+                        .HttpClient(new HttpClient())
                         .LogProvider(logFactory)
                         .Build();
                     break;

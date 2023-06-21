@@ -1,5 +1,6 @@
 using Moq;
 using Shouldly;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -11,7 +12,7 @@ namespace Checkout.Financial
         private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.Default, ValidDefaultSk);
         private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Default);
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
-        private readonly IHttpClientFactory _httpClientFactory = new DefaultHttpClientFactory();
+        private readonly HttpClient _httpClient = new HttpClient();
         private readonly FinancialClient _financialClient;
 
         public FinancialClientTest()
@@ -19,7 +20,7 @@ namespace Checkout.Financial
             _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth))
                 .Returns(_authorization);
             Mock<CheckoutConfiguration> configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Sandbox, _httpClientFactory);
+                Environment.Sandbox, _httpClient);
             _financialClient =
                 new FinancialClient(_apiClient.Object, configuration.Object);
         }

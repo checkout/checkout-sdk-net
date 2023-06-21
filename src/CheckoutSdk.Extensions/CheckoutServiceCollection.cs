@@ -3,6 +3,7 @@ using Checkout.Previous;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Net.Http;
 using ICheckoutApi = Checkout.Previous.ICheckoutApi;
 
 namespace CheckoutSDK.Extensions.Configuration
@@ -13,32 +14,32 @@ namespace CheckoutSDK.Extensions.Configuration
             this IServiceCollection serviceCollection,
             IConfiguration configuration,
             ILoggerFactory loggerFactory = null,
-            IHttpClientFactory httpClientFactory = null)
+            HttpClient httpClient = null)
         {
             CheckoutUtils.ValidateParams("serviceCollection", serviceCollection, "configuration", configuration);
             var checkoutOptions = configuration.GetCheckoutOptions();
 
-            return AddSdkFromOptions(serviceCollection, checkoutOptions, loggerFactory, httpClientFactory);
+            return AddSdkFromOptions(serviceCollection, checkoutOptions, loggerFactory, httpClient);
         }
 
         public static IServiceCollection AddCheckoutSdk(
             this IServiceCollection serviceCollection,
             IConfigurationSection configurationSection,
             ILoggerFactory loggerFactory = null,
-            IHttpClientFactory httpClientFactory = null)
+            HttpClient httpClient = null)
         {
             CheckoutUtils.ValidateParams("serviceCollection", serviceCollection,
                 nameof(configurationSection), configurationSection);
             var checkoutOptions = configurationSection.GetCheckoutOptions();
 
-            return AddSdkFromOptions(serviceCollection, checkoutOptions, loggerFactory, httpClientFactory);
+            return AddSdkFromOptions(serviceCollection, checkoutOptions, loggerFactory, httpClient);
         }
 
         private static IServiceCollection AddSdkFromOptions(
             IServiceCollection serviceCollection,
             CheckoutOptions checkoutOptions,
             ILoggerFactory loggerFactory = null,
-            IHttpClientFactory httpClientFactory = null)
+            HttpClient httpClient = null)
         {
             if (checkoutOptions == null)
             {
@@ -49,13 +50,13 @@ namespace CheckoutSDK.Extensions.Configuration
             {
                 case PlatformType.Previous:
                     return AddSingletonPreviousSdk(serviceCollection, checkoutOptions, loggerFactory,
-                        httpClientFactory);
+                        httpClient);
                 case PlatformType.Default:
                     return AddSingletonDefaultSdk(serviceCollection, checkoutOptions, loggerFactory,
-                        httpClientFactory);
+                        httpClient);
                 case PlatformType.DefaultOAuth:
                     return AddSingletonDefaultOAuthSdk(serviceCollection, checkoutOptions, loggerFactory,
-                        httpClientFactory);
+                        httpClient);
                 default:
                     throw new CheckoutArgumentException($"Unsupported PlatformType:{checkoutOptions.PlatformType}");
             }
@@ -65,7 +66,7 @@ namespace CheckoutSDK.Extensions.Configuration
             IServiceCollection serviceCollection,
             CheckoutOptions checkoutOptions,
             ILoggerFactory loggerFactory,
-            IHttpClientFactory httpClientFactory)
+            HttpClient httpClient)
         {
             var checkoutSdkBuilder = CheckoutSdk.Builder()
                 .Previous()
@@ -74,7 +75,7 @@ namespace CheckoutSDK.Extensions.Configuration
                 .PublicKey(checkoutOptions.PublicKey);
             SetCommonAttributes<CheckoutPreviousSdk.CheckoutStaticKeysSdkBuilder, ICheckoutApi>(
                 checkoutSdkBuilder,
-                checkoutOptions, loggerFactory, httpClientFactory);
+                checkoutOptions, loggerFactory, httpClient);
             return serviceCollection.AddSingleton(checkoutSdkBuilder.Build());
         }
 
@@ -82,14 +83,14 @@ namespace CheckoutSDK.Extensions.Configuration
             IServiceCollection serviceCollection,
             CheckoutOptions checkoutOptions,
             ILoggerFactory loggerFactory,
-            IHttpClientFactory httpClientFactory)
+            HttpClient httpClient)
         {
             var checkoutSdkBuilder = CheckoutSdk.Builder()
                 .StaticKeys()
                 .SecretKey(checkoutOptions.SecretKey)
                 .PublicKey(checkoutOptions.PublicKey);
             SetCommonAttributes<CheckoutSdkBuilder.CheckoutStaticKeysSdkBuilder, Checkout.ICheckoutApi>(
-                checkoutSdkBuilder, checkoutOptions, loggerFactory, httpClientFactory);
+                checkoutSdkBuilder, checkoutOptions, loggerFactory, httpClient);
             return serviceCollection.AddSingleton(checkoutSdkBuilder.Build());
         }
 
@@ -97,7 +98,7 @@ namespace CheckoutSDK.Extensions.Configuration
             IServiceCollection serviceCollection,
             CheckoutOptions checkoutOptions,
             ILoggerFactory loggerFactory,
-            IHttpClientFactory httpClientFactory)
+            HttpClient httpClient)
         {
             var checkoutSdkBuilder = CheckoutSdk.Builder()
                 .OAuth()
@@ -113,7 +114,7 @@ namespace CheckoutSDK.Extensions.Configuration
             }
 
             SetCommonAttributes<CheckoutSdkBuilder.CheckoutOAuthSdkBuilder, Checkout.ICheckoutApi>(
-                checkoutSdkBuilder, checkoutOptions, loggerFactory, httpClientFactory);
+                checkoutSdkBuilder, checkoutOptions, loggerFactory, httpClient);
             return serviceCollection.AddSingleton(checkoutSdkBuilder.Build());
         }
 
@@ -121,7 +122,7 @@ namespace CheckoutSDK.Extensions.Configuration
             TB builder,
             CheckoutOptions options,
             ILoggerFactory loggerFactory,
-            IHttpClientFactory httpClientFactory)
+            HttpClient httpClient)
             where TB : AbstractCheckoutSdkBuilder<TC>
             where TC : ICheckoutApiClient
         {
@@ -131,9 +132,9 @@ namespace CheckoutSDK.Extensions.Configuration
                 builder.LogProvider(loggerFactory);
             }
 
-            if (httpClientFactory != null)
+            if (httpClient != null)
             {
-                builder.HttpClientFactory(httpClientFactory);
+                builder.HttpClient(httpClient);
             }
         }
     }

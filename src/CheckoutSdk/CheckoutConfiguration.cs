@@ -1,3 +1,5 @@
+using System.Net.Http;
+
 namespace Checkout
 {
     public class CheckoutConfiguration
@@ -6,18 +8,18 @@ namespace Checkout
 
         public Environment Environment { get; }
 
-        public IHttpClientFactory HttpClientFactory { get; }
+        public HttpClient HttpClient { get; }
 
         public CheckoutConfiguration(
             SdkCredentials sdkCredentials,
             Environment environment,
-            IHttpClientFactory httpClientFactory)
+            HttpClient httpClient)
         {
             CheckoutUtils.ValidateParams("sdkCredentials", sdkCredentials, "environment", environment,
-                "httpClientFactory", httpClientFactory);
+                "httpClient", httpClient);
             SdkCredentials = sdkCredentials;
             Environment = environment;
-            HttpClientFactory = httpClientFactory;
+            HttpClient = httpClient;
         }
     }
 }

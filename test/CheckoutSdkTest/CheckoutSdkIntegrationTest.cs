@@ -15,6 +15,9 @@ namespace Checkout
         [Fact]
         public async Task ShouldInstantiateClientWithCustomHttpClientFactory()
         {
+            var httpClient = new HttpClient(new CustomMessageHandler());
+            httpClient.Timeout = TimeSpan.FromSeconds(2);
+
             var checkoutApi = CheckoutSdk
                 .Builder()
                 .Previous()
@@ -22,7 +25,7 @@ namespace Checkout
                 .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_PUBLIC_KEY"))
                 .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_SECRET_KEY"))
                 .Environment(Environment.Sandbox)
-                .HttpClientFactory(new TestingClientFactory())
+                .HttpClient(httpClient)
                 .Build();
 
             checkoutApi.ShouldNotBeNull();
@@ -39,17 +42,7 @@ namespace Checkout
                 ex.Message.ShouldBe("The API response status code (508) does not indicate success.");
             }
         }
-
-        private class TestingClientFactory : IHttpClientFactory
-        {
-            public HttpClient CreateClient()
-            {
-                var httpClient = new HttpClient(new CustomMessageHandler());
-                httpClient.Timeout = TimeSpan.FromSeconds(2);
-                return httpClient;
-            }
-        }
-
+        
         private class CustomMessageHandler : HttpMessageHandler
         {
             protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,

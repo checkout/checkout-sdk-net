@@ -4,6 +4,7 @@ using Checkout.Payments.Request.Source;
 using Checkout.Payments.Sender;
 using Shouldly;
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Sdk;
@@ -87,7 +88,7 @@ namespace Checkout
                     .ClientCredentials(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_ID"),
                         System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET"))
                     .AuthorizationUri(new Uri("https://test.checkout.com"))
-                    .HttpClientFactory(new DefaultHttpClientFactory())
+                    .HttpClient(new HttpClient())
                     .Build();
                 throw new XunitException();
             }

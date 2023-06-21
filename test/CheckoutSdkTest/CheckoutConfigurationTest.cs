@@ -1,5 +1,6 @@
 using Moq;
 using Shouldly;
+using System.Net.Http;
 using Xunit;
 
 namespace Checkout
@@ -10,9 +11,9 @@ namespace Checkout
         private void ShouldCreateConfiguration()
         {
             var credentials = new StaticKeysSdkCredentials(ValidDefaultSk, ValidDefaultPk);
-            var httpClientFactoryMock = new Mock<IHttpClientFactory>();
+            var httpClientMock = new Mock<HttpClient>();
             var configuration =
-                new CheckoutConfiguration(credentials, Environment.Production, httpClientFactoryMock.Object);
+                new CheckoutConfiguration(credentials, Environment.Production, httpClientMock.Object);
             configuration.Environment.ShouldBe(Environment.Production);
             configuration.SdkCredentials.ShouldBeAssignableTo(typeof(StaticKeysSdkCredentials));
         }

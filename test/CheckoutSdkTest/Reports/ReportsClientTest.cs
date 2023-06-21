@@ -1,6 +1,7 @@
 using Checkout.Common;
 using Moq;
 using Shouldly;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -12,7 +13,7 @@ namespace Checkout.Reports
         private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.Default, ValidPreviousSk);
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
         private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Default);
-        private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
+        private readonly Mock<HttpClient> _httpClient = new Mock<HttpClient>();
         private readonly Mock<CheckoutConfiguration> _configuration;
 
         public ReportsClientTest()
@@ -21,7 +22,7 @@ namespace Checkout.Reports
                 .Returns(_authorization);
 
             _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Sandbox, _httpClientFactory.Object);
+                Environment.Sandbox, _httpClient.Object);
         }
         
         [Fact]

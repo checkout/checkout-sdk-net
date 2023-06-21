@@ -86,7 +86,7 @@ namespace Checkout
                     _authorizationUri = Env.GetAttribute<EnvironmentAttribute>().AuthorizationUri;
                 }
 
-                var credentials = new OAuthSdkCredentials(ClientFactory, _authorizationUri, _clientId,
+                var credentials = new OAuthSdkCredentials(Client, _authorizationUri, _clientId,
                     _clientSecret,
                     _scopes);
 

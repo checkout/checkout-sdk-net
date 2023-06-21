@@ -73,10 +73,7 @@ namespace Checkout
         [Fact]
         public void ShouldInstantiateClientWithCustomHttpClientFactory()
         {
-            var httpClientFactory = new Mock<IHttpClientFactory>();
-
-            httpClientFactory.Setup(mock => mock.CreateClient())
-                .Returns(new HttpClient());
+            var httpClient = new Mock<HttpClient>();
 
             var checkoutApi = CheckoutSdk
                 .Builder()
@@ -84,11 +81,10 @@ namespace Checkout
                 .PublicKey(ValidDefaultPk)
                 .SecretKey(ValidDefaultSk)
                 .Environment(Environment.Sandbox)
-                .HttpClientFactory(httpClientFactory.Object)
+                .HttpClient(httpClient.Object)
                 .Build();
 
             checkoutApi.ShouldNotBeNull();
-            httpClientFactory.Verify(mock => mock.CreateClient());
         }
     }
 }

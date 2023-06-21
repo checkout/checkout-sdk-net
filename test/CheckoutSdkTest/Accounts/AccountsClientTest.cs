@@ -18,7 +18,7 @@ namespace Checkout.Accounts
         private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Default);
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
         private readonly Mock<IApiClient> _apiFilesClient = new Mock<IApiClient>();
-        private readonly IHttpClientFactory _httpClientFactory = new DefaultHttpClientFactory();
+        private readonly HttpClient _httpClient = new HttpClient();
         private readonly AccountsClient _accountsClient;
 
         public AccountsClientTest()
@@ -26,7 +26,7 @@ namespace Checkout.Accounts
             _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.OAuth))
                 .Returns(_authorization);
             Mock<CheckoutConfiguration> configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Sandbox, _httpClientFactory);
+                Environment.Sandbox, _httpClient);
             _accountsClient =
                 new AccountsClient(_apiClient.Object, _apiFilesClient.Object, configuration.Object);
         }

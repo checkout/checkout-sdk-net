@@ -11,17 +11,16 @@ using System.Web;
 
 namespace Checkout
 {
-    public class ApiClient : IApiClient
+    public class ApiClient : IApiClient, IDisposable
     {
         private readonly ILogger _log = LogProvider.GetLogger(typeof(ApiClient));
 
         private readonly HttpClient _httpClient;
         private readonly ISerializer _serializer = new JsonSerializer();
 
-        public ApiClient(IHttpClientFactory httpClientFactory, Uri baseUri)
+        public ApiClient(HttpClient httpClient, Uri baseUri)
         {
-            CheckoutUtils.ValidateParams("httpClientFactory", httpClientFactory, "baseUri", baseUri);
-            var httpClient = httpClientFactory.CreateClient();
+            CheckoutUtils.ValidateParams("httpClient", httpClient, "baseUri", baseUri);
             httpClient.BaseAddress = baseUri;
             _httpClient = httpClient;
         }
@@ -295,6 +294,11 @@ namespace Checkout
                 }
 
                 ((HttpMetadata)deserializedObject).ResponseHeaders = headers;
+        }
+
+        public void Dispose()
+        {
+            _httpClient?.Dispose();
         }
     }
 }

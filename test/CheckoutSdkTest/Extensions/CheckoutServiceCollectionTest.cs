@@ -16,53 +16,45 @@ namespace Checkout.Extensions
         private void ShouldCreateCheckoutPreviousApiSingleton()
         {
             var loggerFactoryMock = new Mock<ILoggerFactory>();
-            var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(mock => mock.CreateClient())
-                .Returns(new HttpClient());
+            var httpClientMock = new Mock<HttpClient>();
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("./Resources/AppSettingsPreviousTest.json")
                 .Build();
 
             IServiceCollection services = new ServiceCollection();
             services.AddCheckoutSdk(configuration, loggerFactoryMock.Object,
-                httpClientFactoryMock.Object);
+                httpClientMock.Object);
 
             var serviceProvider = services.BuildServiceProvider();
 
             var checkoutApi = serviceProvider.GetService<Previous.ICheckoutApi>();
             checkoutApi.ShouldNotBeNull();
-
-            httpClientFactoryMock.Verify(mock => mock.CreateClient());
         }
 
         [Fact]
         private void ShouldCreateCheckoutDefaultApiSingleton()
         {
             var loggerFactoryMock = new Mock<ILoggerFactory>();
-            var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(mock => mock.CreateClient())
-                .Returns(new HttpClient());
+            var httpClientMock = new Mock<HttpClient>();
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("./Resources/AppSettingsDefaultTest.json")
                 .Build();
 
             IServiceCollection services = new ServiceCollection();
             services.AddCheckoutSdk(configuration, loggerFactoryMock.Object,
-                httpClientFactoryMock.Object);
+                httpClientMock.Object);
 
             var serviceProvider = services.BuildServiceProvider();
 
             var checkoutApi = serviceProvider.GetService<ICheckoutApi>();
             checkoutApi.ShouldNotBeNull();
-
-            httpClientFactoryMock.Verify(mock => mock.CreateClient());
         }
 
         [Fact]
         private void ShouldCreateCheckoutDefaultOAuthApiSingleton()
         {
             var loggerFactoryMock = new Mock<ILoggerFactory>();
-            var httpClientFactory = new DefaultHttpClientFactory();
+            var httpClient = new HttpClient();
             IEnumerable<KeyValuePair<string, string>> credentials = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("Checkout:ClientId",
@@ -77,7 +69,7 @@ namespace Checkout.Extensions
 
             IServiceCollection services = new ServiceCollection();
             services.AddCheckoutSdk(configuration, loggerFactoryMock.Object,
-                httpClientFactory);
+                httpClient);
 
             var serviceProvider = services.BuildServiceProvider();
             var checkoutApi = serviceProvider.GetService<ICheckoutApi>();
@@ -90,23 +82,19 @@ namespace Checkout.Extensions
         private void ShouldCreateCheckoutPreviousApiSingleton_NamedSection(string sectionName)
         {
             var loggerFactoryMock = new Mock<ILoggerFactory>();
-            var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(mock => mock.CreateClient())
-                .Returns(new HttpClient());
+            var httpClientMock = new Mock<HttpClient>();
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("./Resources/AppSettingsPreviousTest.json")
                 .Build();
 
             IServiceCollection services = new ServiceCollection();
             services.AddCheckoutSdk(configuration.GetRequiredSection(sectionName), loggerFactoryMock.Object,
-                httpClientFactoryMock.Object);
+                httpClientMock.Object);
 
             var serviceProvider = services.BuildServiceProvider();
 
             var checkoutApi = serviceProvider.GetService<Previous.ICheckoutApi>();
             checkoutApi.ShouldNotBeNull();
-
-            httpClientFactoryMock.Verify(mock => mock.CreateClient());
         }
 
         [Theory]
@@ -115,23 +103,19 @@ namespace Checkout.Extensions
         private void ShouldCreateCheckoutDefaultApiSingleton_NamedSection(string sectionName)
         {
             var loggerFactoryMock = new Mock<ILoggerFactory>();
-            var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(mock => mock.CreateClient())
-                .Returns(new HttpClient());
+            var httpClientMock = new Mock<HttpClient>();
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("./Resources/AppSettingsDefaultTest.json")
                 .Build();
 
             IServiceCollection services = new ServiceCollection();
             services.AddCheckoutSdk(configuration.GetRequiredSection(sectionName), loggerFactoryMock.Object,
-                httpClientFactoryMock.Object);
+                httpClientMock.Object);
 
             var serviceProvider = services.BuildServiceProvider();
 
             var checkoutApi = serviceProvider.GetService<ICheckoutApi>();
             checkoutApi.ShouldNotBeNull();
-
-            httpClientFactoryMock.Verify(mock => mock.CreateClient());
         }
 
         [Theory]
@@ -140,7 +124,7 @@ namespace Checkout.Extensions
         private void ShouldCreateCheckoutDefaultOAuthApiSingleton_NamedSection(string sectionName)
         {
             var loggerFactoryMock = new Mock<ILoggerFactory>();
-            var httpClientFactory = new DefaultHttpClientFactory();
+            var httpClient = new HttpClient();
             IEnumerable<KeyValuePair<string, string>> credentials = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>($"{sectionName}:ClientId",
@@ -155,7 +139,7 @@ namespace Checkout.Extensions
 
             IServiceCollection services = new ServiceCollection();
             services.AddCheckoutSdk(configuration.GetRequiredSection(sectionName), loggerFactoryMock.Object,
-                httpClientFactory);
+                httpClient);
 
             var serviceProvider = services.BuildServiceProvider();
             var checkoutApi = serviceProvider.GetService<ICheckoutApi>();

@@ -18,14 +18,14 @@ namespace Checkout
         private OAuthAccessToken _accessToken;
 
         public OAuthSdkCredentials(
-            IHttpClientFactory httpClientFactory,
+            HttpClient httpClient,
             Uri authorizationUri,
             string clientId,
             string clientSecret,
             ISet<OAuthScope> scopes) : base(PlatformType.DefaultOAuth)
         {
             CheckoutUtils.ValidateParams(
-                "httpClientFactory", httpClientFactory,
+                "httpClient", httpClient,
                 "authorizationUri", authorizationUri,
                 "clientId", clientId,
                 "clientSecret", clientSecret,
@@ -33,7 +33,7 @@ namespace Checkout
             _clientId = clientId;
             _clientSecret = clientSecret;
             _scopes = scopes;
-            _httpClient = httpClientFactory.CreateClient();
+            _httpClient = new HttpClient();
             _httpClient.BaseAddress = authorizationUri;
         }
 

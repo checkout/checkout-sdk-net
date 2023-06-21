@@ -4,6 +4,7 @@ using Checkout.Payments.Previous.Request.Source;
 using Checkout.Payments.Previous.Response;
 using Moq;
 using Shouldly;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -17,7 +18,7 @@ namespace Checkout.Payments.Previous
         private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.Previous, ValidPreviousSk);
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
         private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Previous);
-        private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
+        private readonly Mock<HttpClient> _httpClient = new Mock<HttpClient>();
         private readonly Mock<CheckoutConfiguration> _configuration;
 
         public PaymentsClientTest()
@@ -26,7 +27,7 @@ namespace Checkout.Payments.Previous
                 .Returns(_authorization);
 
             _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Production, _httpClientFactory.Object);
+                Environment.Production, _httpClient.Object);
         }
 
         [Fact]

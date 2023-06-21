@@ -3,6 +3,7 @@ using Moq;
 using Shouldly;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -14,7 +15,7 @@ namespace Checkout.Reconciliation.Previous
         private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.Previous, ValidPreviousSk);
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
         private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Previous);
-        private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
+        private readonly Mock<HttpClient> _httpClient = new Mock<HttpClient>();
         private readonly ReconciliationClient _reconciliationClient;
 
         private readonly DateTime _from = new DateTime(2019, 2, 22, 12, 31, 44, 0, DateTimeKind.Utc);
@@ -28,7 +29,7 @@ namespace Checkout.Reconciliation.Previous
                 .Returns(_authorization);
 
             Mock<CheckoutConfiguration> configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
-                Environment.Sandbox, _httpClientFactory.Object);
+                Environment.Sandbox, _httpClient.Object);
 
             _reconciliationClient = new ReconciliationClient(_apiClient.Object, configuration.Object);
         }

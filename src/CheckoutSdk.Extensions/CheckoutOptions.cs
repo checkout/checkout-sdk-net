@@ -1,5 +1,6 @@
 using Checkout;
 using System;
+using System.Net.Http;
 using Environment = Checkout.Environment;
 
 namespace CheckoutSDK.Extensions.Configuration
@@ -22,7 +23,7 @@ namespace CheckoutSDK.Extensions.Configuration
 
         public PlatformType? PlatformType { get; set; }
 
-        public IHttpClientFactory HttpClientFactory { get; set; }
+        public HttpClient HttpClient { get; set; }
         
     }
 }
