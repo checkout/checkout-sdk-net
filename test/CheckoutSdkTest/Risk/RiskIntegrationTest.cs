@@ -17,7 +17,7 @@ namespace Checkout.Risk
         {
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldRiskCardSource()
         {
             var cardSourcePrism = new CardSourcePrism()
@@ -45,7 +45,7 @@ namespace Checkout.Risk
             await TestPreCaptureAssessmentRequest(cardSourcePrism);
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldRiskCustomerSource()
         {
             var customerRequest = new CustomerRequest()

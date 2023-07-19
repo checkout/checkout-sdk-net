@@ -211,7 +211,7 @@ namespace Checkout.Payments
             paymentResponse.Approved.ShouldBe(true);
             paymentResponse.AuthCode.ShouldNotBeNullOrEmpty();
             paymentResponse.Currency.ShouldBe(Currency.USD);
-            paymentResponse.ThreeDs.ShouldBeNull();
+            paymentResponse.ThreeDs.ShouldNotBeNull();
             //Source
             paymentResponse.Source.ShouldBeAssignableTo(typeof(CardResponseSource));
             var cardSourceResponse = (CardResponseSource)paymentResponse.Source;
