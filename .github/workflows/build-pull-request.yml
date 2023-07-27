@@ -36,31 +36,7 @@ jobs:
             6.0.x
       - id: list-installed-runtimes
         run: dotnet --list-runtimes
-      - id: cache-sonarcloud-packages
-        uses: actions/cache@v1
-        with:
-          path: ~\sonar\cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - id: cache-sonar-scanner
-        uses: actions/cache@v1
-        with:
-          path: .\.sonar\scanner
-          key: ${{ runner.os }}-sonar-scanner
-          restore-keys: ${{ runner.os }}-sonar-scanner
-      - id: install-sonar-scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        shell: powershell
-        run: |
-          New-Item -Path .\.sonar\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-      - id: install-report-generator
-        shell: powershell
-        run: dotnet tool install --global dotnet-reportgenerator-globaltool
-      - id: begin-sonar-scan
-        shell: powershell
-        run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"checkout_checkout-sdk-net" /o:"checkout-ltd" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths=".\sonarqubecoverage\SonarQube.xml"
-      - id: build-and-analyse
+      - id: build-and-test
         env:
           CHECKOUT_PREVIOUS_SECRET_KEY: ${{ secrets.IT_CHECKOUT_PREVIOUS_SECRET_KEY }}
           CHECKOUT_PREVIOUS_PUBLIC_KEY: ${{ secrets.IT_CHECKOUT_PREVIOUS_PUBLIC_KEY }}
@@ -77,11 +53,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
-        run:
-          dotnet test --collect:"XPlat Code Coverage" -f ${{ matrix.framework }}
-      - id: generate-report
-        shell: powershell
-        run: reportgenerator "-reports:test\*\TestResults\*\coverage.cobertura.xml" "-targetdir:sonarqubecoverage" "-reporttypes:SonarQube"
-      - id: end-sonar-scan
-        shell: powershell
-        run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        run: |
+          dotnet test
