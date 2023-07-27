@@ -1,11 +1,13 @@
 # Checkout.com .NET SDK
 
-[![build-status](https://github.com/checkout/checkout-sdk-net/actions/workflows/build-master.yml/badge.svg?branch=master)](https://github.com/checkout/checkout-sdk-net/actions/workflows/build-master.yml)
-[![GitHub license](https://img.shields.io/github/license/checkout/checkout-sdk-net.svg)](https://github.com/checkout/checkout-sdk-net/blob/master/LICENSE)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=checkout_checkout-sdk-net&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=checkout_checkout-sdk-net)
+[![build-status](https://github.com/checkout/checkout-sdk-net/workflows/build-master/badge.svg)](https://github.com/checkout/checkout-sdk-net/actions/workflows/build-master.yml)
+![CodeQL](https://github.com/checkout/checkout-sdk-net/workflows/CodeQL/badge.svg)
+
+[![build-status](https://github.com/checkout/checkout-sdk-net/workflows/build-release/badge.svg)](https://github.com/checkout/checkout-sdk-net/actions/workflows/build-release.yml)
 [![GitHub release](https://img.shields.io/github/release/checkout/checkout-sdk-net.svg)](https://GitHub.com/checkout/checkout-sdk-net/releases/)
 [![NuGet](https://img.shields.io/nuget/v/CheckoutSDK.svg)](https://www.nuget.org/packages/CheckoutSDK)
 
+[![GitHub license](https://img.shields.io/github/license/checkout/checkout-sdk-net.svg)](https://github.com/checkout/checkout-sdk-net/blob/master/LICENSE.md)
 
 ## Getting started
 
