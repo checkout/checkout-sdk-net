@@ -8,5 +8,6 @@ namespace Checkout.Common
         [EnumMember(Value = "commercial")] Commercial,
         [EnumMember(Value = "all")] All,
         [EnumMember(Value = "other")] Other,
+        [EnumMember(Value = "NotSet")] NotSet,
     }
 }
