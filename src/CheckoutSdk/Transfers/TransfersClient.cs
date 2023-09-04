@@ -19,7 +19,7 @@ namespace Checkout.Transfers
         {
             CheckoutUtils.ValidateParams("createTransferRequest", createTransferRequest);
             return await ApiClient.Post<CreateTransferResponse>(TransfersPath,
-                SdkAuthorization(SdkAuthorizationType.OAuth),
+                SdkAuthorization(),
                 createTransferRequest,
                 cancellationToken,
                 idempotencyKey);
@@ -30,7 +30,7 @@ namespace Checkout.Transfers
         {
             CheckoutUtils.ValidateParams("transferId", transferId);
             return await ApiClient.Get<TransferDetailsResponse>(BuildPath(TransfersPath, transferId),
-                SdkAuthorization(SdkAuthorizationType.OAuth),
+                SdkAuthorization(),
                 cancellationToken);
         }
     }
