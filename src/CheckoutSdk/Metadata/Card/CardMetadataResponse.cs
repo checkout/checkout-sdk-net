@@ -10,7 +10,7 @@ namespace Checkout.Metadata.Card
 
         public SchemeLocalType? SchemeLocal { get; set; }
 
-        public CardType? CardType { get; set; }
+        public CardMetadataType? CardType { get; set; }
 
         public CardCategory? CardCategory { get; set; }
 
