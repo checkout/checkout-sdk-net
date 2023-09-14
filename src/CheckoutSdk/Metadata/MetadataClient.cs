@@ -7,7 +7,7 @@ namespace Checkout.Metadata
     public class MetadataClient : AbstractClient, IMetadataClient
     {
         public MetadataClient(IApiClient apiClient, CheckoutConfiguration configuration) : base(apiClient,
-            configuration, SdkAuthorizationType.OAuth)
+            configuration, SdkAuthorizationType.SecretKeyOrOAuth)
         {
         }
 
