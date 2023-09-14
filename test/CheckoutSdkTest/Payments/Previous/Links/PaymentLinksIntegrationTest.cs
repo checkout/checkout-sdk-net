@@ -68,7 +68,7 @@ namespace Checkout.Payments.Previous.Links
             response.Reference.ShouldNotBeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldRetrievePaymentLinks()
         {
             var address = new Address
