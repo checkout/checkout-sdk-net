@@ -58,7 +58,7 @@ namespace Checkout.Metadata
             response.ShouldNotBeNull();
             response.Bin.ShouldBe(BinNumberConstant);
             response.Scheme.ShouldNotBeNull();
-            response.CardType.ShouldBeOfType<CardType>();
+            response.CardType.ShouldBeOfType<CardMetadataType>();
             response.CardCategory.ShouldBeOfType<CardCategory>();
             response.IssuerCountry.ShouldBeOfType<CountryCode>();
             response.IssuerCountryName.ShouldNotBeNull();
