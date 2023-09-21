@@ -1,3 +1,4 @@
+#if (NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER)
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
@@ -29,3 +30,4 @@ namespace Checkout
         }
     }
 }
+#endif

@@ -16,7 +16,7 @@
     <PackageTags>Checkout.com;payments;gateway;sdk</PackageTags>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>git://github.com/checkout/checkout-sdk-net</RepositoryUrl>
-    <TargetFrameworks>net6.0;net5.0;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net5.0;net45;netstandard2.0</TargetFrameworks>
     <RootNamespace>Checkout</RootNamespace>
     <PackageReleaseNotes>
     </PackageReleaseNotes>
@@ -25,6 +25,7 @@
   <ItemGroup Label="Global Package References">
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
 
   <ItemGroup Label="NET Standard Package References" Condition=" '$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netcoreapp3.1'">
