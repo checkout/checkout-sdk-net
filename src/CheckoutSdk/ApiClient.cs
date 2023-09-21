@@ -1,4 +1,7 @@
+#if (NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER)
 using Microsoft.Extensions.Logging;
+using System.Web;
+#endif
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +10,14 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Checkout
 {
     public class ApiClient : IApiClient
     {
+#if (NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER)
         private readonly ILogger _log = LogProvider.GetLogger(typeof(ApiClient));
+#endif
 
         private readonly HttpClient _httpClient;
         private readonly ISerializer _serializer = new JsonSerializer();
@@ -64,7 +68,7 @@ namespace Checkout
         }
 
         public async Task<TResult> Post<TResult>(
-            string path, 
+            string path,
             SdkAuthorization authorization,
             IDictionary<int, Type> resultTypeMappings,
             object request = null, CancellationToken cancellationToken = default, string idempotencyKey = null)
@@ -159,9 +163,13 @@ namespace Checkout
                 {
                     var queryString = string.Join("&",
                         parameters.Select(kvp =>
+#if (NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER)
                             $"{HttpUtility.UrlEncode(kvp.Key)}={HttpUtility.UrlEncode(kvp.Value)}"));
+#else
+                            $"{WebUtility.UrlEncode(kvp.Key)}={WebUtility.UrlEncode(kvp.Value)}"));
+#endif
 
-                    path = $"{path}?{queryString}";
+                            path = $"{path}?{queryString}";
                 }
             }
 
@@ -222,8 +230,10 @@ namespace Checkout
             string idempotencyKey)
         {
             CheckoutUtils.ValidateParams("httpMethod", httpMethod, "authorization", authorization);
-            var httpRequest = new HttpRequestMessage(httpMethod, path) {Content = httpContent};
+            var httpRequest = new HttpRequestMessage(httpMethod, path) { Content = httpContent };
+#if (NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER)
             _log.LogInformation(@"{HttpMethod}: {Path}", httpMethod, path);
+#endif
 
             httpRequest.Headers.UserAgent.ParseAdd(
                 "checkout-sdk-net/" + CheckoutUtils.GetAssemblyVersion<CheckoutSdk>());
@@ -271,7 +281,7 @@ namespace Checkout
             }
             else if (resultType == typeof(ContentsResponse))
             {
-                deserializedObject = new ContentsResponse {Content = await GetContent<string>(httpResponse)};
+                deserializedObject = new ContentsResponse { Content = await GetContent<string>(httpResponse) };
             }
             else
             {
@@ -286,15 +296,15 @@ namespace Checkout
 
         private static async Task SetHttpMetadata(HttpResponseMessage httpResponse, dynamic deserializedObject)
         {
-                ((HttpMetadata)deserializedObject).Body = await httpResponse.Content.ReadAsStringAsync();
-                ((HttpMetadata)deserializedObject).HttpStatusCode = (int)httpResponse.StatusCode;
-                IDictionary<string, string> headers = new Dictionary<string, string>();
-                foreach (var header in httpResponse.Headers)
-                {
-                    headers.Add(header.Key, header.Value.First());
-                }
+            ((HttpMetadata)deserializedObject).Body = await httpResponse.Content.ReadAsStringAsync();
+            ((HttpMetadata)deserializedObject).HttpStatusCode = (int)httpResponse.StatusCode;
+            IDictionary<string, string> headers = new Dictionary<string, string>();
+            foreach (var header in httpResponse.Headers)
+            {
+                headers.Add(header.Key, header.Value.First());
+            }
 
-                ((HttpMetadata)deserializedObject).ResponseHeaders = headers;
+            ((HttpMetadata)deserializedObject).ResponseHeaders = headers;
         }
     }
 }

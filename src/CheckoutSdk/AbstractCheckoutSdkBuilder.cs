@@ -1,4 +1,6 @@
+#if (NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER)
 using Microsoft.Extensions.Logging;
+#endif
 
 namespace Checkout
 {
@@ -13,11 +15,13 @@ namespace Checkout
             return this;
         }
 
+#if (NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER)
         public AbstractCheckoutSdkBuilder<T> LogProvider(ILoggerFactory loggerFactory)
         {
             Checkout.LogProvider.SetLogFactory(loggerFactory);
             return this;
         }
+#endif
 
         public AbstractCheckoutSdkBuilder<T> HttpClientFactory(IHttpClientFactory httpClientFactory)
         {
