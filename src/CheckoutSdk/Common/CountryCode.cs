@@ -240,6 +240,7 @@
         UA,
         AE,
         GB,
+        UK,
         US,
         UY,
         UZ,
