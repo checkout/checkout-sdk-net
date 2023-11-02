@@ -61,7 +61,7 @@ namespace Checkout.Sessions
             updated.GetLink("redirect_url").ShouldBeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "Unavailable")]
         private async Task ShouldUpdateCardSession()
         {
             var createSessionResponse = await CreateHostedSession();
