@@ -31,7 +31,7 @@ namespace Checkout.Payments.Previous
 
         Task<CaptureResponse> CapturePayment(
             string paymentId,
-            CaptureRequest captureRequest,
+            CaptureRequest captureRequest = null,
             string idempotencyKey = null,
             CancellationToken cancellationToken = default);
 

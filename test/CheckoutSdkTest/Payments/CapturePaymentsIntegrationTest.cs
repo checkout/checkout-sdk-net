@@ -139,6 +139,28 @@ namespace Checkout.Payments
             payment.Balances.AvailableToVoid.ShouldBe(0);
         }
 
+        [Fact]
+        private async Task ShouldFullCaptureCardPaymentWithoutRequest()
+        {
+            var paymentResponse = await MakeCardPayment();
+            
+            var response = await DefaultApi.PaymentsClient().CapturePayment(paymentResponse.Id);
+
+            response.ShouldNotBeNull();
+
+            var payment = await Retriable(async () =>
+                await DefaultApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id), TotalCapturedIs10);
+
+            //Balances
+            payment.Balances.TotalAuthorized.ShouldBe(paymentResponse.Amount);
+            payment.Balances.TotalCaptured.ShouldBe(paymentResponse.Amount);
+            payment.Balances.TotalRefunded.ShouldBe(0);
+            payment.Balances.TotalVoided.ShouldBe(0);
+            payment.Balances.AvailableToCapture.ShouldBe(0);
+            payment.Balances.AvailableToRefund.ShouldBe(paymentResponse.Amount);
+            payment.Balances.AvailableToVoid.ShouldBe(0);
+        }
+
         private static bool TotalCapturedIs10(GetPaymentResponse obj)
         {
             return obj.Balances.TotalCaptured == 10;

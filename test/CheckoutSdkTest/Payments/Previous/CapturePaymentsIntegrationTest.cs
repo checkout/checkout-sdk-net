@@ -40,6 +40,17 @@ namespace Checkout.Payments.Previous
             response.Reference.ShouldNotBeNullOrEmpty();
             response.ActionId.ShouldNotBeNullOrEmpty();
         }
+        
+        [Fact]
+        private async Task ShouldFullCaptureCardPaymentWithoutRequest()
+        {
+            var paymentResponse = await MakeCardPayment();
+
+            var response = await Retriable(async () =>
+                await PreviousApi.PaymentsClient().CapturePayment(paymentResponse.Id));
+
+            response.ShouldNotBeNull();
+        }
 
         [Fact]
         private async Task ShouldCaptureCardPaymentIdempotently()
