@@ -517,9 +517,12 @@ namespace Checkout.Payments
                 SuccessUrl = "https://testing.checkout.com/sucess",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
-
-            await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
-                PayeeNotOnboarded);
+            
+            var response = await DefaultApi.PaymentsClient().RequestPayment(request);
+            
+            response.Id.ShouldNotBeNull();
+            response.Status.ShouldBe(PaymentStatus.Pending);
+            response.Reference.ShouldNotBeNull();
         }
 
         [Fact]
