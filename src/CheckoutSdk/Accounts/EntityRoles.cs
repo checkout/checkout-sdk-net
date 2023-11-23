@@ -6,5 +6,7 @@ namespace Checkout.Accounts
     {
         [EnumMember(Value = "ubo")] Ubo,
         [EnumMember(Value = "legal_representative")] LegalRepresentative,
+        [EnumMember(Value = "authorised_signatory")] AuthorisedSignatory,
+        [EnumMember(Value = "control_person")] ControlPerson,
     }
 }
