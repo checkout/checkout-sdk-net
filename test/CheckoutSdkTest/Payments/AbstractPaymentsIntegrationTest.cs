@@ -63,7 +63,7 @@ namespace Checkout.Payments
                 Customer = customerRequest,
                 Sender = paymentIndividualSender,
                 CaptureOn = captureOn,
-                ProcessingChannelId = "pc_5jp2az55l3cuths25t5p3xhwru",
+                ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
                 BillingDescriptor = new BillingDescriptor {Name = "name", City = "London", Reference = "reference"}
             };
 

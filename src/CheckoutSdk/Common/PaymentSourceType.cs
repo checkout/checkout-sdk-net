@@ -12,8 +12,7 @@ namespace Checkout.Common
         [EnumMember(Value = "provider_token")] ProviderToken,
         [EnumMember(Value = "dLocal")] DLocal,
 
-        [EnumMember(Value = "currency_account")]
-        CurrencyAccount,
+        [EnumMember(Value = "currency_account")] CurrencyAccount,
         [EnumMember(Value = "boleto")] Boleto,
         [EnumMember(Value = "fawry")] Fawry,
         [EnumMember(Value = "giropay")] Giropay,

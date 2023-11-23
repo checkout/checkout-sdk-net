@@ -17,7 +17,7 @@ namespace Checkout.Workflows
     public abstract class AbstractWorkflowIntegrationTest : SandboxTestFixture, IDisposable
     {
         private const string WorkflowEntityId = "ent_kidtcgc3ge5unf4a5i6enhnr5m";
-        private const string ProcessingChannelId = "pc_5jp2az55l3cuths25t5p3xhwru";
+        private static readonly string ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID");
         protected const string WorkflowName = "testing-net";
 
         private readonly HashSet<string> _workflows = new HashSet<string>();
@@ -132,7 +132,7 @@ namespace Checkout.Workflows
                 Reference = Guid.NewGuid().ToString(),
                 Amount = amount,
                 Currency = Currency.GBP,
-                ProcessingChannelId = "pc_5jp2az55l3cuths25t5p3xhwru",
+                ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
                 Marketplace = new MarketplaceData {SubEntityId = "ent_ocw5i74vowfg2edpy66izhts2u"},
             };
 

@@ -30,7 +30,7 @@ namespace Checkout.Payments
                 Source = source,
                 Amount = 10L,
                 Currency = Currency.EUR,
-                ProcessingChannelId = "pc_5jp2az55l3cuths25t5p3xhwru",
+                ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
                 SuccessUrl = "https://testing.checkout.com/sucess",
                 FailureUrl = "https://testing.checkout.com/failure",
             };
@@ -196,7 +196,7 @@ namespace Checkout.Payments
                 Source = new RequestAfterPaySource { AccountHolder = new AccountHolder() },
                 Amount = 10L,
                 Currency = Currency.EUR,
-                ProcessingChannelId = "pc_5jp2az55l3cuths25t5p3xhwru",
+                ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
                 SuccessUrl = "https://testing.checkout.com/sucess",
                 FailureUrl = "https://testing.checkout.com/failure",
             };
@@ -392,9 +392,12 @@ namespace Checkout.Payments
                 SuccessUrl = "https://testing.checkout.com/sucess",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
-
-            await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
-                PayeeNotOnboarded);
+            
+            var response = await DefaultApi.PaymentsClient().RequestPayment(request);
+            
+            response.Id.ShouldNotBeNull();
+            response.Status.ShouldBe(PaymentStatus.Pending);
+            response.Reference.ShouldNotBeNull();
         }
 
         [Fact]
@@ -479,7 +482,7 @@ namespace Checkout.Payments
                 PayeeNotOnboarded);
         }
 
-        [Fact]
+        [Fact(Skip = "Unavailable")]
         private async Task ShouldMakeKlarnaPayment()
         {
             var request = new PaymentRequest

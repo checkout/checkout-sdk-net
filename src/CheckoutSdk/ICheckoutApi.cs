@@ -8,6 +8,7 @@ using Checkout.Forex;
 using Checkout.Instruments;
 using Checkout.Metadata;
 using Checkout.Payments;
+using Checkout.Payments.Contexts;
 using Checkout.Payments.Hosted;
 using Checkout.Payments.Links;
 using Checkout.Reports;
@@ -56,5 +57,7 @@ namespace Checkout
         IFinancialClient FinancialClient();
 
         IIssuingClient IssuingClient();
+
+        IPaymentContextsClient PaymentContextsClient();
     }
 }
