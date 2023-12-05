@@ -8,6 +8,7 @@ using Checkout.Forex;
 using Checkout.Instruments;
 using Checkout.Metadata;
 using Checkout.Payments;
+using Checkout.Payments.Contexts;
 using Checkout.Payments.Hosted;
 using Checkout.Payments.Links;
 using Checkout.Reports;
@@ -39,6 +40,7 @@ namespace Checkout
         private readonly IMetadataClient _metadataClient;
         private readonly IFinancialClient _financialClient;
         private readonly IIssuingClient _issuingClient;
+        private readonly IPaymentContextsClient _paymentContextsClient;
 
         public CheckoutApi(CheckoutConfiguration configuration)
         {
@@ -66,6 +68,7 @@ namespace Checkout
             _metadataClient = new MetadataClient(baseApiClient, configuration);
             _financialClient = new FinancialClient(baseApiClient, configuration);
             _issuingClient = new IssuingClient(baseApiClient, configuration);
+            _paymentContextsClient = new PaymentContextsClient(baseApiClient, configuration);
         }
 
         private static ApiClient BaseApiClient(CheckoutConfiguration configuration)
@@ -181,6 +184,11 @@ namespace Checkout
         public IIssuingClient IssuingClient()
         {
             return _issuingClient;
+        }
+        
+        public IPaymentContextsClient PaymentContextsClient()
+        {
+            return _paymentContextsClient;
         }
     }
 }

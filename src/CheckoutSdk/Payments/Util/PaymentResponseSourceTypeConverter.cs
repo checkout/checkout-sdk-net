@@ -1,5 +1,6 @@
 ﻿using Checkout.Common;
 using Checkout.Payments.Response.Source;
+using Checkout.Payments.Response.Source.Contexts;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -57,6 +58,11 @@ namespace Checkout.Payments.Util
             if (CheckoutUtils.GetEnumMemberValue(PaymentSourceType.CurrencyAccount).Equals(sourceType))
             {
                 return new CurrencyAccountResponseSource();
+            }
+            
+            if (CheckoutUtils.GetEnumMemberValue(PaymentSourceType.PayPal).Equals(sourceType))
+            {
+                return new PaymentContextsPayPayResponseSource();
             }
 
             return new AlternativePaymentSourceResponse();
