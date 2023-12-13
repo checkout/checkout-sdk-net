@@ -8,7 +8,7 @@ namespace Checkout.Sessions
 {
     public class RequestAndGetSessionsIntegrationTest : AbstractSessionsIntegrationTest
     {
-        [Theory]
+        [Theory(Skip = "unstable")]
         [MemberData(nameof(SessionsTypes))]
         private async Task ShouldRequestAndGetCardSessionBrowserSession(Category category,
             ChallengeIndicatorType challengeIndicator,

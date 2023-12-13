@@ -56,5 +56,7 @@ namespace Checkout.Payments.Links
         public string ProcessingChannelId { get; set; }
         
         public IList<AmountAllocations> AmountAllocations { get; set; }
+        
+        public string DisplayName { get; set; }
     }
 }
