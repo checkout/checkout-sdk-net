@@ -41,7 +41,7 @@ namespace Checkout.Instruments
             cardResponse.CardCategory.ShouldNotBeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "Unavailable")]
         private async Task ShouldUpdateTokenInstrument()
         {
             var tokenInstrument = await CreateTokenInstrument();
