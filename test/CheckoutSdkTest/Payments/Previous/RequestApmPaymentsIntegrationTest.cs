@@ -178,7 +178,7 @@ namespace Checkout.Payments.Previous
             source.Type().ShouldBe(PaymentSourceType.Boleto);
         }
         
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakeEpsPayment()
         {
             var paymentRequest = new PaymentRequest
@@ -640,7 +640,7 @@ namespace Checkout.Payments.Previous
             source.Type().ShouldBe(PaymentSourceType.Poli);
         }
         
-        [Fact]
+        [Fact(Skip = "Unavailable")]
         private async Task ShouldMakeBancontactPayment()
         {
             var paymentRequest = new PaymentRequest

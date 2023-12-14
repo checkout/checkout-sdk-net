@@ -499,7 +499,7 @@ namespace Checkout.Payments
                 ApmServiceUnavailable);
         }
 
-        [Fact]
+        [Fact(Skip = "Unavailable")]
         private async Task ShouldMakePayPalPayment()
         {
             var request = new PaymentRequest

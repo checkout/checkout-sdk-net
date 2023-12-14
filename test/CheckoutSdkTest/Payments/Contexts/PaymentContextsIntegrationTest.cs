@@ -14,7 +14,7 @@ namespace Checkout.Payments.Contexts
         {
         }
 
-        [Fact]
+        [Fact(Skip = "Unavailable")]
         private async Task ShouldMakeAPaymentContextRequest()
         {
             var paymentContextsRequest = new PaymentContextsRequest
@@ -46,7 +46,7 @@ namespace Checkout.Payments.Contexts
             response.Links.ShouldNotBeNull();
         }
         
-        [Fact]
+        [Fact(Skip = "Unavailable")]
         private async Task ShouldGetAPaymentContext()
         {
             var paymentContextsRequest = new PaymentContextsRequest
