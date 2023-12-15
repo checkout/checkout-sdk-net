@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments.Contexts
 {
-    public class PaymentContextsRequestResponse : Resource
+    public class PaymentContextsRequestResponse : HttpMetadata
     {
         public string Id { get; set; }
 

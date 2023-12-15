@@ -14,7 +14,7 @@ namespace Checkout.Payments.Contexts
         {
         }
 
-        [Fact(Skip = "Unavailable")]
+        [Fact]
         private async Task ShouldMakeAPaymentContextRequest()
         {
             var paymentContextsRequest = new PaymentContextsRequest
@@ -43,10 +43,9 @@ namespace Checkout.Payments.Contexts
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNull();
             response.PartnerMetadata.OrderId.ShouldNotBeNull();
-            response.Links.ShouldNotBeNull();
         }
         
-        [Fact(Skip = "Unavailable")]
+        [Fact]
         private async Task ShouldGetAPaymentContext()
         {
             var paymentContextsRequest = new PaymentContextsRequest
