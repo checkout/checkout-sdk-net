@@ -18,7 +18,7 @@ namespace Checkout.Payments
 
         public string FromAddressZip { get; set; }
 
-        public DeliveryTimeframe? TimeFrame { get; set; }
+        public DeliveryTimeframe? Timeframe { get; set; }
 
         public PaymentContextsShippingMethod? Method { get; set; }
 
