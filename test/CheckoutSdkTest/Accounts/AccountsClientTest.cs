@@ -1,5 +1,6 @@
 using Checkout.Accounts.Payout.Request;
 using Checkout.Accounts.Payout.Response;
+using Checkout.Accounts.Regional.US;
 using Checkout.Common;
 using Checkout.Instruments;
 using Moq;
@@ -78,6 +79,73 @@ namespace Checkout.Accounts
                 {
                     BusinessRegistrationNumber = "123",
                     BusinessType = BusinessType.UnincorporatedAssociation,
+                    LegalName = "LEGAL",
+                    TradingName = "TRADING",
+                    PrincipalAddress = new Address(),
+                    RegisteredAddress = new Address(),
+                    Representatives = new List<Representative>
+                    {
+                        new Representative
+                        {
+                            Id = "1203",
+                            FirstName = "first",
+                            LastName = "last",
+                            Address = new Address(),
+                            Identification = new Identification(),
+                            Phone = new AccountPhone(),
+                            DateOfBirth = new DateOfBirth {Day = 1, Month = 1, Year = 2000},
+                            PlaceOfBirth = new PlaceOfBirth {Country = CountryCode.AF},
+                            Roles = new List<EntityRoles> {EntityRoles.Ubo}
+                        }
+                    },
+                    Document = new EntityDocument(),
+                    FinancialDetails = new EntityFinancialDetails
+                    {
+                        AnnualProcessingVolume = 1,
+                        AverageTransactionValue = 1,
+                        HighestTransactionValue = 1,
+                        Documents = new EntityFinancialDocuments
+                        {
+                            BankStatement = new EntityDocument(),
+                            FinancialStatement = new EntityDocument()
+                        }
+                    }
+                },
+                Individual = null
+            };
+
+            _apiClient
+                .Setup(x =>
+                    x.Put<OnboardEntityResponse>(
+                        "accounts/entities/entity_id",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<object>(),
+                        It.IsAny<CancellationToken>(),
+                        It.IsAny<string>()))
+                .ReturnsAsync(responseObject);
+
+            var response = await _accountsClient.UpdateEntity(
+                responseObject.Id,
+                request);
+
+            response.ShouldNotBeNull();
+            response.Id.ShouldBe(responseObject.Id);
+            response.Reference.ShouldBe(responseObject.Reference);
+        }
+        
+        [Fact]
+        private async Task ShouldUpdateEntityUsCompany()
+        {
+            var responseObject = new OnboardEntityResponse {Id = "entity_id", Reference = "A"};
+            var request = new OnboardEntityRequest
+            {
+                Reference = "123",
+                ContactDetails = new ContactDetails {Phone = new AccountPhone()},
+                Profile = new Profile(),
+                Company = new USCompany
+                {
+                    BusinessRegistrationNumber = "123",
+                    BusinessType = USBusinessType.PrivateCorporation,
                     LegalName = "LEGAL",
                     TradingName = "TRADING",
                     PrincipalAddress = new Address(),
