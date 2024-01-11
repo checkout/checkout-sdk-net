@@ -28,7 +28,7 @@ namespace Checkout.Metadata
             await MakeCardMetadataRequest(request);
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldRequestCardMetadataForBinNumber()
         {
             CardMetadataRequest request = new CardMetadataRequest
