@@ -155,6 +155,15 @@ namespace Checkout
                 Country = CountryCode.GB
             };
         }
+        
+        protected static CustomerRequest GetCustomer()
+        {
+            return new CustomerRequest
+            {
+                Email = GenerateRandomEmail(),
+                Name = "John"
+            };
+        }
 
         protected static AccountHolder GetAccountHolder()
         {

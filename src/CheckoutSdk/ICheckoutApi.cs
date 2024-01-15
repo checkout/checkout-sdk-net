@@ -11,6 +11,7 @@ using Checkout.Payments;
 using Checkout.Payments.Contexts;
 using Checkout.Payments.Hosted;
 using Checkout.Payments.Links;
+using Checkout.Payments.Sessions;
 using Checkout.Reports;
 using Checkout.Risk;
 using Checkout.Sessions;
@@ -59,5 +60,7 @@ namespace Checkout
         IIssuingClient IssuingClient();
 
         IPaymentContextsClient PaymentContextsClient();
+        
+        IPaymentSessionsClient PaymentSessionsClient();
     }
 }

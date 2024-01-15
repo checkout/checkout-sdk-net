@@ -11,6 +11,7 @@ using Checkout.Payments;
 using Checkout.Payments.Contexts;
 using Checkout.Payments.Hosted;
 using Checkout.Payments.Links;
+using Checkout.Payments.Sessions;
 using Checkout.Reports;
 using Checkout.Risk;
 using Checkout.Sessions;
@@ -41,6 +42,7 @@ namespace Checkout
         private readonly IFinancialClient _financialClient;
         private readonly IIssuingClient _issuingClient;
         private readonly IPaymentContextsClient _paymentContextsClient;
+        private readonly IPaymentSessionsClient _paymentSessionsClient;
 
         public CheckoutApi(CheckoutConfiguration configuration)
         {
@@ -69,6 +71,7 @@ namespace Checkout
             _financialClient = new FinancialClient(baseApiClient, configuration);
             _issuingClient = new IssuingClient(baseApiClient, configuration);
             _paymentContextsClient = new PaymentContextsClient(baseApiClient, configuration);
+            _paymentSessionsClient = new PaymentSessionsClient(baseApiClient, configuration);
         }
 
         private static ApiClient BaseApiClient(CheckoutConfiguration configuration)
@@ -189,6 +192,11 @@ namespace Checkout
         public IPaymentContextsClient PaymentContextsClient()
         {
             return _paymentContextsClient;
+        }
+        
+        public IPaymentSessionsClient PaymentSessionsClient()
+        {
+            return _paymentSessionsClient;
         }
     }
 }
