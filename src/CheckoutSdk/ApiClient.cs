@@ -20,13 +20,14 @@ namespace Checkout
 #endif
 
         private readonly HttpClient _httpClient;
+        private readonly Uri _baseUri;
         private readonly ISerializer _serializer = new JsonSerializer();
 
         public ApiClient(IHttpClientFactory httpClientFactory, Uri baseUri)
         {
             CheckoutUtils.ValidateParams("httpClientFactory", httpClientFactory, "baseUri", baseUri);
             var httpClient = httpClientFactory.CreateClient();
-            httpClient.BaseAddress = baseUri;
+            _baseUri = baseUri;
             _httpClient = httpClient;
         }
 
@@ -230,7 +231,9 @@ namespace Checkout
             string idempotencyKey)
         {
             CheckoutUtils.ValidateParams("httpMethod", httpMethod, "authorization", authorization);
-            var httpRequest = new HttpRequestMessage(httpMethod, path) { Content = httpContent };
+
+            var pathUri = new Uri(_baseUri, path);
+            var httpRequest = new HttpRequestMessage(httpMethod, pathUri) { Content = httpContent };
 #if (NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER)
             _log.LogInformation(@"{HttpMethod}: {Path}", httpMethod, path);
 #endif
