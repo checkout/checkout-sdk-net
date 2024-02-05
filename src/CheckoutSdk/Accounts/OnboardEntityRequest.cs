@@ -11,5 +11,7 @@
         public Company Company { get; set; }
 
         public Individual Individual { get; set; }
+
+        public OnboardSubEntityDocuments Documents { get; set; }
     }
 }

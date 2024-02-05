@@ -9,9 +9,9 @@ namespace Checkout.Accounts
 
         public string Reference { get; set; }
 
-        public Capabilities Capabilities { get; set; }
-
         public OnboardingStatus? Status { get; set; }
+        
+        public Capabilities Capabilities { get; set; }
 
         public IList<RequirementsDue> RequirementsDue { get; set; }
     }
