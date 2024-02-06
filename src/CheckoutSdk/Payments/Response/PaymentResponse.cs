@@ -1,4 +1,5 @@
 using Checkout.Common;
+using Checkout.Payments.Request;
 using Checkout.Payments.Response.Source;
 using Checkout.Payments.Util;
 using Newtonsoft.Json;
@@ -48,5 +49,7 @@ namespace Checkout.Payments.Response
         public string Eci { get; set; }
 
         public string SchemeId { get; set; }
+
+        public PaymentRetryResponse Retry { get; set; }
     }
 }

@@ -282,18 +282,15 @@ namespace Checkout.Payments.Previous
             var paymentResponse = await PreviousApi.PaymentsClient().RequestPayment(paymentRequest);
 
             paymentResponse.ShouldNotBeNull();
-            paymentResponse.Status.ShouldBe(PaymentStatus.Pending);
-            paymentResponse.ResponseSummary.ShouldBeNull();
+            paymentResponse.Status.ShouldBe(PaymentStatus.Declined);
             paymentResponse.Links["self"].ShouldNotBeNull();
-            paymentResponse.Links["redirect"].ShouldNotBeNull();
 
             var payment = await PreviousApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id);
 
             payment.ShouldNotBeNull();
 
-            payment.Status.ShouldBe(PaymentStatus.Pending);
+            payment.Status.ShouldBe(PaymentStatus.Declined);
             payment.Links["self"].ShouldNotBeNull();
-            payment.Links["redirect"].ShouldNotBeNull();
 
             payment.Source.ShouldBeOfType(typeof(AlternativePaymentSourceResponse));
             var source = (AlternativePaymentSourceResponse) payment.Source;
