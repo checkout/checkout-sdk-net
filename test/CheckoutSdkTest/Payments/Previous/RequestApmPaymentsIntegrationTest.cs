@@ -541,7 +541,7 @@ namespace Checkout.Payments.Previous
             source.Type().ShouldBe(PaymentSourceType.KNet);
         }
         
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakePrzelewy24Payment()
         {
             var paymentRequest = new PaymentRequest

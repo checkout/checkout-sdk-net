@@ -397,11 +397,8 @@ namespace Checkout.Payments
                 FailureUrl = "https://testing.checkout.com/failure"
             };
             
-            var response = await DefaultApi.PaymentsClient().RequestPayment(request);
-            
-            response.Id.ShouldNotBeNull();
-            response.Status.ShouldBe(PaymentStatus.Pending);
-            response.Reference.ShouldNotBeNull();
+            await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
+                ApmServiceUnavailable);
         }
 
         [Fact]

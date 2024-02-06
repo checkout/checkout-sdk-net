@@ -7,7 +7,5 @@ namespace Checkout.Payments.Contexts
         public PaymentContextsResponse PaymentRequest { get; set; }
 
         public PaymentContextsPartnerMetadata PartnerMetadata { get; set; }
-
-        public object Customer { get; set; }
     }
 }
