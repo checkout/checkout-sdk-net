@@ -77,7 +77,9 @@ namespace Checkout
         private static ApiClient BaseApiClient(CheckoutConfiguration configuration)
         {
             return new ApiClient(configuration.HttpClientFactory,
-                configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri);
+                configuration.EnvironmentSubdomain != null
+                    ? configuration.EnvironmentSubdomain.ApiUri
+                    : configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri);
         }
 
         private static ApiClient FilesApiClient(CheckoutConfiguration configuration)
@@ -158,7 +160,7 @@ namespace Checkout
         {
             return _hostedPaymentsClient;
         }
-        
+
         public IBalancesClient BalancesClient()
         {
             return _balancesClient;
@@ -173,12 +175,12 @@ namespace Checkout
         {
             return _reportsClient;
         }
-        
+
         public IMetadataClient MetadataClient()
         {
             return _metadataClient;
         }
-        
+
         public IFinancialClient FinancialClient()
         {
             return _financialClient;
@@ -188,12 +190,12 @@ namespace Checkout
         {
             return _issuingClient;
         }
-        
+
         public IPaymentContextsClient PaymentContextsClient()
         {
             return _paymentContextsClient;
         }
-        
+
         public IPaymentSessionsClient PaymentSessionsClient()
         {
             return _paymentSessionsClient;

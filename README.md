@@ -73,6 +73,7 @@ ICheckoutApi api = CheckoutSdk.Builder().OAuth()
     .AuthorizationUri(new Uri("https://access.sandbox.checkout.com/connect/token")) // custom authorization URI, optional
     .Scopes(OAuthScope.Files, OAuthScope.Flow) // array of scopes, optional
     .Environment(Environment.Sandbox)
+    .EnvironmentSubdomain("subdomain") // optional, Merchant-specific DNS name
     .LogProvider(logFactory) // optional
     .HttpClientFactory(httpClientFactory) // optional
     .Build();
@@ -89,6 +90,7 @@ Checkout.Previous.ICheckoutApi api = CheckoutSdk.Builder()
     .PublicKey("public_key") // optional, only required for operations related with tokens
     .SecretKey("secret_key")
     .Environment(Environment.Sandbox)
+    .EnvironmentSubdomain("subdomain") // optional, Merchant-specific DNS name
     .LogProvider(logFactory) // optional
     .HttpClientFactory(httpClientFactory) // optional
     .Build();

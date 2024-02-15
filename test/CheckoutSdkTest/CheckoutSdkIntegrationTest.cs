@@ -32,7 +32,36 @@ namespace Checkout
                 await checkoutApi.EventsClient().RetrieveAllEventTypes();
                 throw new XunitException();
             }
-            catch (Exception ex)
+            catch (CheckoutApiException ex)
+            {
+                ex.ShouldNotBeNull();
+                ex.ShouldBeAssignableTo(typeof(CheckoutApiException));
+                ex.Message.ShouldBe("The API response status code (508) does not indicate success.");
+            }
+        }
+        
+        [Fact]
+        public async Task ShouldInstantiateClientWithSubdomainFactory()
+        {
+            var checkoutApi = CheckoutSdk
+                .Builder()
+                .Previous()
+                .StaticKeys()
+                .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_PUBLIC_KEY"))
+                .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_SECRET_KEY"))
+                .Environment(Environment.Sandbox)
+                .EnvironmentSubdomain(System.Environment.GetEnvironmentVariable("CHECKOUT_MERCHANT_SUBDOMAIN"))
+                .HttpClientFactory(new TestingClientFactory())
+                .Build();
+
+            checkoutApi.ShouldNotBeNull();
+
+            try
+            {
+                await checkoutApi.EventsClient().RetrieveAllEventTypes();
+                throw new XunitException();
+            }
+            catch (CheckoutApiException ex)
             {
                 ex.ShouldNotBeNull();
                 ex.ShouldBeAssignableTo(typeof(CheckoutApiException));
