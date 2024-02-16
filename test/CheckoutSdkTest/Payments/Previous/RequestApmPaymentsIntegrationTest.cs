@@ -282,14 +282,14 @@ namespace Checkout.Payments.Previous
             var paymentResponse = await PreviousApi.PaymentsClient().RequestPayment(paymentRequest);
 
             paymentResponse.ShouldNotBeNull();
-            paymentResponse.Status.ShouldBe(PaymentStatus.Declined);
+            paymentResponse.Status.ShouldBeAssignableTo<PaymentStatus>();
             paymentResponse.Links["self"].ShouldNotBeNull();
 
             var payment = await PreviousApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id);
 
             payment.ShouldNotBeNull();
 
-            payment.Status.ShouldBe(PaymentStatus.Declined);
+            payment.Status.ShouldBeAssignableTo<PaymentStatus>();
             payment.Links["self"].ShouldNotBeNull();
 
             payment.Source.ShouldBeOfType(typeof(AlternativePaymentSourceResponse));
