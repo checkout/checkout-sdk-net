@@ -4,8 +4,8 @@ namespace Checkout.Accounts
     {
         public Document IdentityVerification { get; set; }
 
-        public CompanyVerificationType? CompanyVerification { get; set; }
+        public CompanyVerification CompanyVerification { get; set; }
 
-        public TaxVerificationType? TaxVerification { get; set; }
+        public TaxVerification TaxVerification { get; set; }
     }
 }
