@@ -211,7 +211,7 @@ namespace Checkout.Payments
             }
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakeBenefitPayment()
         {
             var request = new PaymentRequest
