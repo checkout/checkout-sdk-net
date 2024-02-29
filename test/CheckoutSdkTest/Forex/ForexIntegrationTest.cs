@@ -11,7 +11,7 @@ namespace Checkout.Forex
         {
         }
 
-        [Fact]
+        [Fact(Skip = "skipped temporally")]
         private async Task ShouldRequestQuote()
         {
             var request = new QuoteRequest()

@@ -1,3 +1,6 @@
+using System;
+using System.Text.RegularExpressions;
+
 namespace Checkout
 {
     public enum Environment
@@ -15,5 +18,35 @@ namespace Checkout
             "https://transfers.checkout.com/",
             "https://balances.checkout.com/")]
         Production
+    }
+
+    public class EnvironmentSubdomain
+    {
+        public Uri ApiUri { get; }
+
+        public EnvironmentSubdomain(Environment environment, string subdomain)
+        {
+            ApiUri = AddSubdomainToApiUrlEnvironment(environment, subdomain);
+        }
+        
+        private static Uri AddSubdomainToApiUrlEnvironment(Environment environment, string subdomain)
+        {
+            Uri apiUrl = environment.GetAttribute<EnvironmentAttribute>().ApiUri;
+            
+            Uri newEnvironment = new Uri(apiUrl.ToString());
+            
+            Regex regex = new Regex(@"^[0-9a-z]{8}$");
+            if (regex.IsMatch(subdomain))
+            {
+                UriBuilder merchantApiUrl = new UriBuilder(apiUrl.Host);
+                merchantApiUrl.Host = subdomain + "." + merchantApiUrl.Host;
+                merchantApiUrl.Scheme = apiUrl.Scheme;
+                merchantApiUrl.Port = apiUrl.Port;
+
+                newEnvironment = new Uri(merchantApiUrl.ToString());
+            }
+
+            return newEnvironment;
+        }
     }
 }

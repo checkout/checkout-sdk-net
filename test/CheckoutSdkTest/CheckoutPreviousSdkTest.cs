@@ -94,5 +94,32 @@ namespace Checkout
             checkoutApi.ShouldNotBeNull();
             httpClientFactory.Verify(mock => mock.CreateClient());
         }
+        
+        [Fact]
+        private void ShouldCreateCheckoutSdksWithSubdomain()
+        {
+            var checkoutApi1 = CheckoutSdk
+                .Builder()
+                .Previous()
+                .StaticKeys()
+                .PublicKey(ValidPreviousPk)
+                .SecretKey(ValidPreviousSk)
+                .Environment(Environment.Sandbox)
+                .EnvironmentSubdomain("1234doma")
+                .Build();
+
+            checkoutApi1.ShouldNotBeNull();
+
+            var checkoutApi2 = CheckoutSdk
+                .Builder()
+                .Previous()
+                .StaticKeys()
+                .SecretKey(ValidPreviousSk)
+                .Environment(Environment.Sandbox)
+                .EnvironmentSubdomain("1234doma")
+                .Build();
+
+            checkoutApi2.ShouldNotBeNull();
+        }
     }
 }

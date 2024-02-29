@@ -15,7 +15,7 @@ namespace Checkout
             var httpClientFactoryMock = new Mock<IHttpClientFactory>();
             httpClientFactoryMock.Setup(mock => mock.CreateClient())
                 .Returns(new HttpClient());
-            var checkoutConfiguration = new CheckoutConfiguration(sdkCredentialsMock.Object, Environment.Sandbox,
+            var checkoutConfiguration = new CheckoutConfiguration(sdkCredentialsMock.Object, Environment.Sandbox, null,
                 httpClientFactoryMock.Object);
 
             //Act
@@ -47,7 +47,7 @@ namespace Checkout
             var httpClientFactoryMock = new Mock<IHttpClientFactory>();
             httpClientFactoryMock.Setup(mock => mock.CreateClient())
                 .Returns(new HttpClient());
-            var checkoutConfiguration = new CheckoutConfiguration(sdkCredentialsMock.Object, Environment.Sandbox,
+            var checkoutConfiguration = new CheckoutConfiguration(sdkCredentialsMock.Object, Environment.Sandbox, null,
                 httpClientFactoryMock.Object);
 
             //Act

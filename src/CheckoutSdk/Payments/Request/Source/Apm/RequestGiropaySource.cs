@@ -16,6 +16,8 @@ namespace Checkout.Payments.Request.Source.Apm
         [Obsolete("GiroPay doesn't support this field anymore, will be removed in the future", false)]
         public IList<InfoField> InfoFields { get; set; }
 
+        public AccountHolder AccountHolder { get; set; }
+
         public class InfoField
         {
             public string Label { get; set; }

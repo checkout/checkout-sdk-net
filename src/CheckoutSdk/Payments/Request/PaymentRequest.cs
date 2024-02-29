@@ -9,6 +9,8 @@ namespace Checkout.Payments.Request
 {
     public class PaymentRequest
     {
+        public string PaymentContextId { get; set; }
+        
         public AbstractRequestSource Source { get; set; }
 
         public long? Amount { get; set; }
@@ -34,6 +36,8 @@ namespace Checkout.Payments.Request
         public BillingDescriptor BillingDescriptor { get; set; }
 
         public ShippingDetails Shipping { get; set; }
+        
+        public PaymentSegment Segment { get; set; }
 
         [JsonProperty(PropertyName = "3ds")] public ThreeDsRequest ThreeDs { get; set; }
 
@@ -61,6 +65,8 @@ namespace Checkout.Payments.Request
         public ProcessingSettings Processing { get; set; }
 
         public IList<Product> Items { get; set; }
+
+        public PaymentRetryRequest Retry { get; set; }
 
         public IDictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
     }

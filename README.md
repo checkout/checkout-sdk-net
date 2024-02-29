@@ -57,6 +57,7 @@ ICheckoutApi api = CheckoutSdk.Builder().StaticKeys()
     .PublicKey("public_key") // optional, only required for operations related with tokens
     .SecretKey("secret_key")
     .Environment(Environment.Sandbox)
+    .EnvironmentSubdomain("subdomain") // optional, Merchant-specific DNS name
     .LogProvider(logFactory) // optional
     .HttpClientFactory(httpClientFactory) // optional
     .Build();
@@ -73,6 +74,7 @@ ICheckoutApi api = CheckoutSdk.Builder().OAuth()
     .AuthorizationUri(new Uri("https://access.sandbox.checkout.com/connect/token")) // custom authorization URI, optional
     .Scopes(OAuthScope.Files, OAuthScope.Flow) // array of scopes, optional
     .Environment(Environment.Sandbox)
+    .EnvironmentSubdomain("subdomain") // optional, Merchant-specific DNS name
     .LogProvider(logFactory) // optional
     .HttpClientFactory(httpClientFactory) // optional
     .Build();
@@ -89,6 +91,7 @@ Checkout.Previous.ICheckoutApi api = CheckoutSdk.Builder()
     .PublicKey("public_key") // optional, only required for operations related with tokens
     .SecretKey("secret_key")
     .Environment(Environment.Sandbox)
+    .EnvironmentSubdomain("subdomain") // optional, Merchant-specific DNS name
     .LogProvider(logFactory) // optional
     .HttpClientFactory(httpClientFactory) // optional
     .Build();
@@ -194,6 +197,7 @@ private class CustomClientFactory : IHttpClientFactory
 ICheckoutApi api = CheckoutSdk.Builder().StaticKeys()
     .SecretKey("secret_key")
     .Environment(Environment.Sandbox)
+    .EnvironmentSubdomain("subdomain") // optional, Merchant-specific DNS name
     .HttpClientFactory(new CustomClientFactory()) // optional
     .Build();
 ```
@@ -209,6 +213,7 @@ _log = logFactory.CreateLogger(typeof(SandboxTestFixture));
 ICheckoutApi api = CheckoutSdk.Builder().StaticKeys()
     .SecretKey("secret_key")
     .Environment(Environment.Sandbox)
+    .EnvironmentSubdomain("subdomain") // optional, Merchant-specific DNS name
     .LogProvider(logFactory)
     .Build();
 ```

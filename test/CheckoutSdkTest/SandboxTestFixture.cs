@@ -1,4 +1,3 @@
-using Checkout.Accounts;
 using Checkout.Common;
 using Checkout.Instruments.Create;
 using Checkout.Tokens;

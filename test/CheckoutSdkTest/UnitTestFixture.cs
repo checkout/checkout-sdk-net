@@ -10,7 +10,7 @@ namespace Checkout
 
         // Default
         protected const string ValidDefaultSk = "sk_sbox_m73dzbpy7cf3gfd46xr4yj5xo4e";
-        protected const string ValidDefaultPk = "pk_sbox_pkhpdtvmkgf7hdnpwnbhw7r2uic";
+        protected const string ValidDefaultPk = "pk_sbox_sderftvmkgf7hdnpwnbhw7r2uic";
         protected const string InvalidDefaultSk = "sk_sbox_m73dzbpy7c-f3gfd46xr4yj5xo4e";
         protected const string InvalidDefaultPk = "pk_sbox_pkh";
     }

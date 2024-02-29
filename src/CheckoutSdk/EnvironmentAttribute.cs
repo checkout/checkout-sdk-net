@@ -11,7 +11,8 @@ namespace Checkout
 
         public Uri BalancesApiUri { get; }
 
-        public EnvironmentAttribute(string apiUri,
+        public EnvironmentAttribute(
+            string apiUri,
             string authorizationUri,
             string filesApiUri,
             string transfersApiUri,

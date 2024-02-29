@@ -9,6 +9,12 @@ namespace Checkout.Payments
         public string AcquirerTransactionId { get; set; }
 
         public string RecommendationCode { get; set; }
+
+        public string Scheme { get; set; }
+
+        public string PartnerMerchantAdviceCode { get; set; }
+
+        public string PartnerResponseCode { get; set; }
         
         public string PartnerOrderId { get; set; }
         
@@ -32,6 +38,8 @@ namespace Checkout.Payments
         public string PartnerAuthorizationCode { get; set; }
         
         public string PartnerAuthorizationResponseCode { get; set; }
+
+        public long? SurchargeAmount { get; set; }
 
     }
 }

@@ -44,6 +44,8 @@ namespace Checkout.Payments.Response.Source
 
         public string PaymentAccountReference { get; set; }
 
+        public string EncryptedCardNumber { get; set; }
+
         public new PaymentSourceType? Type()
         {
             return base.Type;
