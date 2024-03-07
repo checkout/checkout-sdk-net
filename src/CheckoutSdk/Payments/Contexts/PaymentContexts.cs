@@ -11,7 +11,11 @@ namespace Checkout.Payments.Contexts
 
         public PaymentType? PaymentType { get; set; }
 
+        public string AuthorizationType { get; set; }
+        
         public bool? Capture { get; set; }
+
+        public CustomerRequest Customer { get; set; }
 
         public ShippingDetails Shipping { get; set; }
 
