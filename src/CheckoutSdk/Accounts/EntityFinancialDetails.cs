@@ -1,3 +1,5 @@
+using Checkout.Common;
+
 namespace Checkout.Accounts
 {
     public class EntityFinancialDetails
@@ -9,5 +11,7 @@ namespace Checkout.Accounts
         public long? HighestTransactionValue { get; set; }
 
         public EntityFinancialDocuments Documents { get; set; }
+        
+        public Currency? Currency { get; set; }
     }
 }

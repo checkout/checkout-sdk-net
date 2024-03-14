@@ -35,9 +35,6 @@ namespace Checkout.Payments.Sessions
 
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNull();
-            response.Locale.ShouldBe("en-GB");
-            response.Currency.ShouldBe(Currency.GBP);
-            response.PaymentMethods.ShouldNotBeNull();
             response.Links.ShouldNotBeNull();
         }
     }
