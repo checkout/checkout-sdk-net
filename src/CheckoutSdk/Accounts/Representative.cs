@@ -22,5 +22,7 @@ namespace Checkout.Accounts
         public PlaceOfBirth PlaceOfBirth { get; set; }
         
         public IList<EntityRoles> Roles { get; set; }
+        
+        public OnboardSubEntityDocuments Documents { get; set; }
     }
 }

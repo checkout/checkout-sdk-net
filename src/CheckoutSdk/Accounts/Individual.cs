@@ -23,5 +23,7 @@ namespace Checkout.Accounts
         public PlaceOfBirth PlaceOfBirth { get; set; }
 
         public Identification Identification { get; set; }
+
+        public EntityFinancialDetails FinancialDetails { get; set; }
     }
 }
