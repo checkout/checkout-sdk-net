@@ -32,6 +32,7 @@ namespace Checkout
                         .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_PUBLIC_KEY"))
                         .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_SECRET_KEY"))
                         .Environment(Environment.Sandbox)
+                        //.EnvironmentSubdomain(System.Environment.GetEnvironmentVariable("CHECKOUT_MERCHANT_SUBDOMAIN"))
                         .LogProvider(logFactory)
                         .HttpClientFactory(new DefaultHttpClientFactory())
                         .Build();
@@ -42,6 +43,7 @@ namespace Checkout
                         .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PUBLIC_KEY"))
                         .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_SECRET_KEY"))
                         .Environment(Environment.Sandbox)
+                        //.EnvironmentSubdomain(System.Environment.GetEnvironmentVariable("CHECKOUT_MERCHANT_SUBDOMAIN"))
                         .LogProvider(logFactory)
                         .Build();
                     break;
@@ -57,6 +59,7 @@ namespace Checkout
                             OAuthScope.TransfersView, OAuthScope.BalancesView, OAuthScope.VaultCardMetadata,
                             OAuthScope.FinancialActions)
                         .Environment(Environment.Sandbox)
+                        //.EnvironmentSubdomain(System.Environment.GetEnvironmentVariable("CHECKOUT_MERCHANT_SUBDOMAIN"))
                         .LogProvider(logFactory)
                         .Build();
                     break;

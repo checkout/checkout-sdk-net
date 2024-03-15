@@ -92,7 +92,7 @@ namespace Checkout
         }
         
         [Fact]
-        private void ShouldCreateStaticKeysWithSubdomainCheckoutSdks()
+        private async void ShouldCreateStaticKeysWithSubdomainCheckoutSdks()
         {
             var checkoutApi1 = CheckoutSdk
                 .Builder()
@@ -104,7 +104,7 @@ namespace Checkout
                 .Build();
 
             checkoutApi1.ShouldNotBeNull();
-
+            
             var checkoutApi2 = CheckoutSdk
                 .Builder()
                 .StaticKeys()
