@@ -8,6 +8,7 @@ namespace Checkout.Disputes
     {
         private const string DisputesPath = "disputes";
         private const string EvidencePath = "evidence";
+        private const string SubmittedPath = "submitted";
         private const string AcceptPath = "accept";
         private const string Schemefiles = "schemefiles";
 
@@ -64,6 +65,14 @@ namespace Checkout.Disputes
             return ApiClient.Post<EmptyResponse>(BuildPath(DisputesPath, disputeId, EvidencePath), SdkAuthorization(),
                 null,
                 cancellationToken, null);
+        }
+        
+        public Task<DisputeCompiledSubmittedEvidenceResponse> GetCompiledSubmittedEvidence(string disputeId,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("disputeId", disputeId);
+            return ApiClient.Get<DisputeCompiledSubmittedEvidenceResponse>(BuildPath(DisputesPath, disputeId, EvidencePath, SubmittedPath),
+                SdkAuthorization(), cancellationToken);
         }
 
         public Task<SchemeFileResponse> GetDisputeSchemeFiles(string disputeId,

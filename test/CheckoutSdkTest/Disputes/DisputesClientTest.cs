@@ -131,6 +131,23 @@ namespace Checkout.Disputes
 
             response.ShouldNotBeNull();
         }
+        
+        [Fact]
+        private async Task ShouldGetCompiledSubmittedEvidence()
+        {
+            const string disputeId = "dispute_id";
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Get<DisputeCompiledSubmittedEvidenceResponse>($"disputes/{disputeId}/evidence/submitted", _authorization,
+                        CancellationToken.None))
+                .ReturnsAsync(() => new DisputeCompiledSubmittedEvidenceResponse());
+
+            IDisputesClient client = new DisputesClient(_apiClient.Object, _configuration.Object);
+
+            var response = await client.GetCompiledSubmittedEvidence(disputeId);
+
+            response.ShouldNotBeNull();
+        }
 
         [Fact]
         private async Task ShouldGetDisputeSchemeFiles()

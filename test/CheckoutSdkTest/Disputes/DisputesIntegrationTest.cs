@@ -1,5 +1,6 @@
 using Checkout.Payments;
 using Shouldly;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -118,6 +119,12 @@ namespace Checkout.Disputes
 
             //Submit the dispute
             await DefaultApi.DisputesClient().SubmitEvidence(disputeId);
+            
+            //Get compiled submitted evidence
+            var compiledSubmittedEvidenceResponse = await DefaultApi.DisputesClient().GetCompiledSubmittedEvidence(disputeId);
+            compiledSubmittedEvidenceResponse.ShouldNotBeNull();
+            compiledSubmittedEvidenceResponse.FileId.ShouldNotBeNull();
+            
         }
 
         private static bool HasItems(DisputesQueryResponse obj)
