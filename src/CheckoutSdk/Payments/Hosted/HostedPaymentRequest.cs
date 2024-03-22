@@ -52,9 +52,11 @@ namespace Checkout.Payments.Hosted
         public DateTime? CaptureOn { get; set; }
 
         public IList<PaymentSourceType> AllowPaymentMethods { get; set; }
-
+        
         //Not available on Previous
-
+        
+        public IList<PaymentSourceType> DisabledPaymentMethods { get; set; }
+        
         public string ProcessingChannelId { get; set; }
         
         public IList<AmountAllocations> AmountAllocations { get; set; }

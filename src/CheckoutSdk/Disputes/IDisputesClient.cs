@@ -19,6 +19,9 @@ namespace Checkout.Disputes
 
         Task<EmptyResponse> SubmitEvidence(string disputeId, CancellationToken cancellationToken = default);
 
+        Task<DisputeCompiledSubmittedEvidenceResponse> GetCompiledSubmittedEvidence(string disputeId,
+            CancellationToken cancellationToken = default);
+
         Task<SchemeFileResponse> GetDisputeSchemeFiles(string disputeId, CancellationToken cancellationToken = default);
     }
 }
