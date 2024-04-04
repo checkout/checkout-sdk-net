@@ -10,5 +10,7 @@ namespace Checkout.Accounts
         public IList<string> Mccs { get; set; }
 
         public Currency? DefaultHoldingCurrency { get; set; }
+
+        public IList<Currency> HoldingCurrencies { get; set; }
     }
 }
