@@ -40,6 +40,47 @@ namespace Checkout.Instruments
             cardResponse.CardType.ShouldNotBeNull();
             cardResponse.CardCategory.ShouldNotBeNull();
         }
+        
+        [Fact]
+        private async Task ShouldCreateInstrumentSepa()
+        {
+            var request = new CreateSepaInstrumentRequest
+            {
+                Type = InstrumentType.Sepa,
+                InstrumentData = new InstrumentData
+                {
+                    AccountNumber = "FR7630006000011234567890189",
+                    Country = CountryCode.FR,
+                    Currency = Currency.EUR,
+                    PaymentType = PaymentType.Recurring,
+                },
+                AccountHolder = new AccountHolder
+                {
+                    Type = AccountHolderType.Individual,
+                    FirstName = "Ali",
+                    LastName = "Farid",
+                    DateOfBirth = "1986-01-01T00:00:00.000Z",
+                    BillingAddress = new Address
+                    {
+                        AddressLine1 = "Rue Exemple",
+                        AddressLine2 = "1",
+                        City = "Paris",
+                        Zip = "1234",
+                        Country = CountryCode.FR
+                    },
+                    Phone = new Phone
+                    {
+                        CountryCode = "33",
+                        Number = "123456789"
+                    }
+                }
+            };
+            
+            var response = await DefaultApi.InstrumentsClient().Create(request);
+            response.ShouldNotBeNull();
+            response.Id.ShouldNotBeNull();
+            response.Fingerprint.ShouldNotBeNull();
+        }
 
         [Fact(Skip = "Unavailable")]
         private async Task ShouldUpdateTokenInstrument()

@@ -69,5 +69,7 @@ namespace Checkout.Payments.Request
         public PaymentRetryRequest Retry { get; set; }
 
         public IDictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
+        
+        public PaymentInstruction Instruction { get; set; }
     }
 }

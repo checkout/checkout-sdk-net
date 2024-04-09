@@ -150,7 +150,7 @@ namespace Checkout
             return new Address
             {
                 AddressLine1 = "CheckoutSdk.com",
-                AddressLine2 = "90 Tottenham Court Road",
+                AddressLine2 = "Road",
                 City = "London",
                 State = "London",
                 Zip = "W1T 4TJ",
