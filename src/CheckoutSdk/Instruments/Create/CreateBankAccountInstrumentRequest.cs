@@ -29,8 +29,10 @@ namespace Checkout.Instruments.Create
         public string ProcessingChannelId { get; set; }
 
         public AccountHolder AccountHolder { get; set; }
-
+        
         public BankDetails BankDetails { get; set; }
+
+        public BankDetails Bank{ get; set; }
 
         public CreateCustomerInstrumentRequest Customer { get; set; }
     }

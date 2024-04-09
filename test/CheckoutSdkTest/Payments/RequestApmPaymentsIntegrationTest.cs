@@ -598,7 +598,7 @@ namespace Checkout.Payments
                 PayeeNotOnboarded);
         }
         
-        [Fact(Skip = "unstable")]
+        [Fact]
         private async Task ShouldMakeSepaPayment()
         {
             var request = new PaymentRequest

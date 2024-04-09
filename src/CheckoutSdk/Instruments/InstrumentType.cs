@@ -8,5 +8,6 @@ namespace Checkout.Instruments
         [EnumMember(Value = "token")] Token,
         [EnumMember(Value = "card")] Card,
         [EnumMember(Value = "card_token")] CardToken,
+        [EnumMember(Value = "sepa")] Sepa,
     }
 }

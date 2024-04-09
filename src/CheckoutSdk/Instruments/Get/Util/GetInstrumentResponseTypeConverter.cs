@@ -56,6 +56,11 @@ namespace Checkout.Instruments.Get.Util
             {
                 return new GetCardInstrumentResponse();
             }
+            
+            if (CheckoutUtils.GetEnumMemberValue(InstrumentType.Sepa).Equals(type))
+            {
+                return new GetSepaInstrumentResponse();
+            }
 
             return new GetInstrumentResponse(
                 CheckoutUtils.GetEnumFromStringMemberValue<InstrumentType>(type));

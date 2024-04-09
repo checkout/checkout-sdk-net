@@ -56,6 +56,11 @@ namespace Checkout.Instruments.Create.Util
             {
                 return new CreateTokenInstrumentResponse();
             }
+            
+            if (CheckoutUtils.GetEnumMemberValue(InstrumentType.Sepa).Equals(type))
+            {
+                return new CreateSepaInstrumentResponse();
+            }
 
             return new CreateInstrumentResponse(
                 CheckoutUtils.GetEnumFromStringMemberValue<InstrumentType>(type));
