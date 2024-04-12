@@ -1,5 +1,6 @@
 ﻿using Checkout.Common;
 using System;
+using System.Collections.Generic;
 
 namespace Checkout.Metadata.Card
 {
@@ -12,7 +13,7 @@ namespace Checkout.Metadata.Card
         [Obsolete("This property will be removed in the future, and should not be used. Use LocalSchemes instead.", false)]
         public SchemeLocalType? SchemeLocal { get; set; }
 
-        public SchemeLocalType? LocalSchemes { get; set; }
+        public IList<SchemeLocalType> LocalSchemes { get; set; }
 
         public CardMetadataType? CardType { get; set; }
 
