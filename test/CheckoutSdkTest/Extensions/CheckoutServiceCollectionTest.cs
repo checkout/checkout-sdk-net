@@ -62,6 +62,9 @@ namespace Checkout.Extensions
         private void ShouldCreateCheckoutDefaultOAuthApiSingleton()
         {
             var loggerFactoryMock = new Mock<ILoggerFactory>();
+            var loggerMock = new Mock<ILogger>();
+            loggerFactoryMock.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(loggerMock.Object);
+            
             var httpClientFactory = new DefaultHttpClientFactory();
             IEnumerable<KeyValuePair<string, string>> credentials = new List<KeyValuePair<string, string>>
             {
@@ -140,6 +143,9 @@ namespace Checkout.Extensions
         private void ShouldCreateCheckoutDefaultOAuthApiSingleton_NamedSection(string sectionName)
         {
             var loggerFactoryMock = new Mock<ILoggerFactory>();
+            var loggerMock = new Mock<ILogger>();
+            loggerFactoryMock.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(loggerMock.Object);
+
             var httpClientFactory = new DefaultHttpClientFactory();
             IEnumerable<KeyValuePair<string, string>> credentials = new List<KeyValuePair<string, string>>
             {
