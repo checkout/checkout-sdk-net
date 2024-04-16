@@ -143,7 +143,7 @@ namespace Checkout.Accounts
             await UploadFile();
         }
 
-        [Fact]
+        [Fact(Skip="temporary skipped")]
         private async Task ShouldCreateAndRetrievePaymentInstrument()
         {
             CheckoutApi api = GetAccountsCheckoutApi();

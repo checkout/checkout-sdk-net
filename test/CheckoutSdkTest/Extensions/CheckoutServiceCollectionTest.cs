@@ -10,12 +10,18 @@ using Xunit;
 
 namespace Checkout.Extensions
 {
-    public class CheckoutServiceCollectionTest
+    public sealed class CheckoutServiceCollectionTest
     {
+        private readonly ILoggerFactory _loggerFactory;
+        
+        public CheckoutServiceCollectionTest()
+        {
+            _loggerFactory = new LoggerFactory();
+        }
+        
         [Fact]
         private void ShouldCreateCheckoutPreviousApiSingleton()
         {
-            var loggerFactoryMock = new Mock<ILoggerFactory>();
             var httpClientFactoryMock = new Mock<IHttpClientFactory>();
             httpClientFactoryMock.Setup(mock => mock.CreateClient())
                 .Returns(new HttpClient());
@@ -24,7 +30,7 @@ namespace Checkout.Extensions
                 .Build();
 
             IServiceCollection services = new ServiceCollection();
-            services.AddCheckoutSdk(configuration, loggerFactoryMock.Object,
+            services.AddCheckoutSdk(configuration, _loggerFactory,
                 httpClientFactoryMock.Object);
 
             var serviceProvider = services.BuildServiceProvider();
@@ -61,7 +67,7 @@ namespace Checkout.Extensions
         [Fact]
         private void ShouldCreateCheckoutDefaultOAuthApiSingleton()
         {
-            var loggerFactoryMock = new Mock<ILoggerFactory>();
+            
             var httpClientFactory = new DefaultHttpClientFactory();
             IEnumerable<KeyValuePair<string, string>> credentials = new List<KeyValuePair<string, string>>
             {
@@ -76,7 +82,7 @@ namespace Checkout.Extensions
                 .AddJsonFile("./Resources/AppSettingsDefaultOAuthTest.json").Build();
 
             IServiceCollection services = new ServiceCollection();
-            services.AddCheckoutSdk(configuration, loggerFactoryMock.Object,
+            services.AddCheckoutSdk(configuration, _loggerFactory,
                 httpClientFactory);
 
             var serviceProvider = services.BuildServiceProvider();
@@ -89,7 +95,6 @@ namespace Checkout.Extensions
         [InlineData("NamedSection")]
         private void ShouldCreateCheckoutPreviousApiSingleton_NamedSection(string sectionName)
         {
-            var loggerFactoryMock = new Mock<ILoggerFactory>();
             var httpClientFactoryMock = new Mock<IHttpClientFactory>();
             httpClientFactoryMock.Setup(mock => mock.CreateClient())
                 .Returns(new HttpClient());
@@ -98,7 +103,7 @@ namespace Checkout.Extensions
                 .Build();
 
             IServiceCollection services = new ServiceCollection();
-            services.AddCheckoutSdk(configuration.GetRequiredSection(sectionName), loggerFactoryMock.Object,
+            services.AddCheckoutSdk(configuration.GetRequiredSection(sectionName), _loggerFactory,
                 httpClientFactoryMock.Object);
 
             var serviceProvider = services.BuildServiceProvider();
@@ -114,7 +119,6 @@ namespace Checkout.Extensions
         [InlineData("NamedSection")]
         private void ShouldCreateCheckoutDefaultApiSingleton_NamedSection(string sectionName)
         {
-            var loggerFactoryMock = new Mock<ILoggerFactory>();
             var httpClientFactoryMock = new Mock<IHttpClientFactory>();
             httpClientFactoryMock.Setup(mock => mock.CreateClient())
                 .Returns(new HttpClient());
@@ -123,7 +127,7 @@ namespace Checkout.Extensions
                 .Build();
 
             IServiceCollection services = new ServiceCollection();
-            services.AddCheckoutSdk(configuration.GetRequiredSection(sectionName), loggerFactoryMock.Object,
+            services.AddCheckoutSdk(configuration.GetRequiredSection(sectionName), _loggerFactory,
                 httpClientFactoryMock.Object);
 
             var serviceProvider = services.BuildServiceProvider();
@@ -139,7 +143,6 @@ namespace Checkout.Extensions
         [InlineData("NamedSection")]
         private void ShouldCreateCheckoutDefaultOAuthApiSingleton_NamedSection(string sectionName)
         {
-            var loggerFactoryMock = new Mock<ILoggerFactory>();
             var httpClientFactory = new DefaultHttpClientFactory();
             IEnumerable<KeyValuePair<string, string>> credentials = new List<KeyValuePair<string, string>>
             {
@@ -154,7 +157,7 @@ namespace Checkout.Extensions
                 .AddJsonFile("./Resources/AppSettingsDefaultOAuthTest.json").Build();
 
             IServiceCollection services = new ServiceCollection();
-            services.AddCheckoutSdk(configuration.GetRequiredSection(sectionName), loggerFactoryMock.Object,
+            services.AddCheckoutSdk(configuration.GetRequiredSection(sectionName), _loggerFactory,
                 httpClientFactory);
 
             var serviceProvider = services.BuildServiceProvider();
