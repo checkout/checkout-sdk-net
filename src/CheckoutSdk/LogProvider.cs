@@ -15,7 +15,7 @@ namespace Checkout
     }
     public static ILogger GetLogger(Type loggerType)
     {
-        return  _loggerFactory.CreateLogger(loggerType);
+        return loggerType is null ? NullLogger.Instance : _loggerFactory.CreateLogger(loggerType.FullName);
     }
   }
 }
