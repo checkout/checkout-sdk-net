@@ -15,7 +15,7 @@ namespace Checkout.Payments.Sessions
         [Fact]
         private async Task ShouldMakeAPaymentSessionsRequest()
         {
-            var billing = new Billing
+            var billing = new BillingInformation()
             {
                 Address = GetAddress()
             };
@@ -26,7 +26,6 @@ namespace Checkout.Payments.Sessions
                 Currency = Currency.GBP,
                 Reference = "ORD-123A",
                 Billing = billing,
-                Customer = GetCustomer(),
                 SuccessUrl = "https://example.com/payments/success",
                 FailureUrl = "https://example.com/payments/fail",
             };
@@ -35,6 +34,7 @@ namespace Checkout.Payments.Sessions
 
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNull();
+            response.PaymentSessionToken.ShouldNotBeNull();
             response.Links.ShouldNotBeNull();
         }
     }
