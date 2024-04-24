@@ -8,7 +8,6 @@ using Xunit;
 
 namespace Checkout.Payments.Contexts
 {
-
     public class PaymentContextsIntegrationTest : SandboxTestFixture
     {
         public PaymentContextsIntegrationTest() : base(PlatformType.DefaultOAuth)
@@ -16,12 +15,12 @@ namespace Checkout.Payments.Contexts
         }
 
         [Fact]
-        private async Task ShouldMakeAPaymentContextRequest()
+        private async Task ShouldMakeAPaypalPaymentContextRequest()
         {
             var paymentContextsRequest = new PaymentContextsRequest
             {
                 Source = new PaymentContextsPaypalSource(),
-                Amount = 2000,
+                Amount = 1000,
                 Currency = Currency.EUR,
                 PaymentType = PaymentType.Regular,
                 Capture = true,
@@ -30,12 +29,7 @@ namespace Checkout.Payments.Contexts
                 FailureUrl = "https://example.com/payments/fail",
                 Items = new List<PaymentContextsItems>
                 {
-                    new PaymentContextsItems
-                    {
-                        Name = "mask",
-                        Quantity = 1,
-                        UnitPrice = 2000
-                    }
+                    new PaymentContextsItems { Name = "mask", Quantity = 1, UnitPrice = 1000, TotalAmount = 1000 }
                 },
             };
 
@@ -45,7 +39,41 @@ namespace Checkout.Payments.Contexts
             response.Id.ShouldNotBeNull();
             response.PartnerMetadata.OrderId.ShouldNotBeNull();
         }
-        
+
+        [Fact]
+        private async Task ShouldMakeAKlarnaPaymentContextRequest()
+        {
+            var source = new PaymentContextsKlarnaSource
+            {
+                AccountHolder = new AccountHolder { BillingAddress = new Address { Country = CountryCode.DE } }
+            };
+
+            var paymentContextsRequest = new PaymentContextsRequest
+            {
+                Source = source,
+                Amount = 1000,
+                Currency = Currency.EUR,
+                PaymentType = PaymentType.Regular,
+                ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
+                Items = new List<PaymentContextsItems>
+                {
+                    new PaymentContextsItems
+                    {
+                        Name = "mask",
+                        Quantity = 1,
+                        UnitPrice = 1000,
+                        TotalAmount = 1000,
+                        Reference = "BA67A"
+                    }
+                },
+                Processing = new PaymentContextsProcessing { Locale = "en-GB" }
+            };
+
+            await CheckErrorItem(
+                async () => await DefaultApi.PaymentContextsClient().RequestPaymentContexts(paymentContextsRequest),
+                "apm_service_unavailable");
+        }
+
         [Fact]
         private async Task ShouldGetAPaymentContext()
         {
@@ -69,23 +97,18 @@ namespace Checkout.Payments.Contexts
                     Method = PaymentContextsShippingMethod.Digital,
                     Delay = 0
                 },
-                
                 ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
                 SuccessUrl = "https://example.com/payments/success",
                 FailureUrl = "https://example.com/payments/fail",
                 Items = new List<PaymentContextsItems>
                 {
-                    new PaymentContextsItems
-                    {
-                        Name = "mask",
-                        Quantity = 1,
-                        UnitPrice = 2000
-                    }
+                    new PaymentContextsItems { Name = "mask", Quantity = 1, UnitPrice = 2000 }
                 }
             };
 
-            var paymentContextResponse = await DefaultApi.PaymentContextsClient().RequestPaymentContexts(paymentContextsRequest);
-            
+            var paymentContextResponse =
+                await DefaultApi.PaymentContextsClient().RequestPaymentContexts(paymentContextsRequest);
+
             var response = await DefaultApi.PaymentContextsClient().GetPaymentContextDetails(paymentContextResponse.Id);
 
             response.ShouldNotBeNull();
