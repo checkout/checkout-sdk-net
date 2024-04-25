@@ -2,6 +2,7 @@ using Checkout.Common;
 using Checkout.Payments.Request.Destination;
 using Checkout.Payments.Request.Source;
 using Checkout.Payments.Sender;
+using System.Collections.Generic;
 
 namespace Checkout.Payments.Request
 {
@@ -24,6 +25,10 @@ namespace Checkout.Payments.Request
         public PaymentInstruction Instruction { get; set; }
 
         public string ProcessingChannelId { get; set; }
+
+        public IDictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
+        
+        public PaymentSegment Segment { get; set; }
                
     }
 }
