@@ -1,0 +1,69 @@
+{
+  "id": "ent_saf19jffasdf",
+  "contact_details": {
+    "phone": {
+      "number": "2345678910"
+    },
+    "email_addresses": {
+      "primary": "admin@superhero1234.com"
+    }
+  },
+  "profile": {
+    "urls": [
+      "https://www.superheroexample.com"
+    ],
+    "mccs": [
+      "5311"
+    ],
+    "default_holding_currency": "GBP",
+    "holding_currencies": [
+      "GBP"
+    ]
+  },
+  "company": {
+    "business_registration_number": "12345678",
+    "business_type": "public_limited_company",
+    "legal_name": "Acme Corporation Inc.",
+    "trading_name": "Acme Corporation",
+    "principal_address": {
+      "address_line1": "Flat 456",
+      "city": "London",
+      "zip": "SW1A 1AA",
+      "country": "GB"
+    },
+    "registered_address": {
+      "address_line1": "Flat 456",
+      "city": "London",
+      "zip": "SW1A 1AA",
+      "country": "GB"
+    },
+    "representatives": [
+      {
+        "id": "rep_1d1j98j1h991dlkjdajsjd",
+        "first_name": "John",
+        "last_name": "Smith",
+        "address": {
+          "address_line1": "Flat 456",
+          "city": "London",
+          "zip": "SW1A 1AA",
+          "country": "GB"
+        },
+        "identification": {
+          "national_id_number": "AB123456C",
+          "document": {
+            "type": "driving_license",
+            "front": "file_wxglze3wwywujg4nna5fb7ldli",
+            "back": "file_adglze3wwywujg4nna5fb7l1sg"
+          }
+        },
+        "phone": {
+          "number": "2345678910"
+        },
+        "roles": [
+          "authorised_signatory",
+          "ubo"
+        ]
+      }
+    ]
+  }
+}

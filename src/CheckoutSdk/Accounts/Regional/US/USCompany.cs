@@ -1,4 +1,6 @@
-﻿namespace Checkout.Accounts.Regional.US
+﻿using Newtonsoft.Json;
+
+namespace Checkout.Accounts.Regional.US
 {
     public class USCompany : Company
     {

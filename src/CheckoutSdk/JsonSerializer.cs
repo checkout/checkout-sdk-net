@@ -1,4 +1,5 @@
 using Checkout.Accounts.Payout.Response.Util;
+using Checkout.Accounts.Regional;
 using Checkout.Instruments.Create.Util;
 using Checkout.Instruments.Get.Util;
 using Checkout.Instruments.Update.Util;
@@ -50,6 +51,7 @@ namespace Checkout
                 ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() },
                 Converters = new JsonConverter[]
                 {
+                    new CompanyTypeConverter(),
                     new StringEnumConverter(),
                     // Instruments CS2
                     new CreateInstrumentResponseTypeConverter(),

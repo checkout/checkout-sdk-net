@@ -1,0 +1,96 @@
+{
+  "id": "ent_saf19jffasdf",
+  "contact_details": {
+    "phone": {
+      "number": "2345678910"
+    },
+    "email_addresses": {
+      "primary": "admin@superhero1234.com"
+    }
+  },
+  "profile": {
+    "urls": [
+      "https://www.superheroexample.com"
+    ],
+    "mccs": [
+      "5311"
+    ],
+    "default_holding_currency": "USD",
+    "holding_currencies": [
+      "GBP",
+      "USD"
+    ]
+  },
+  "company": {
+    "business_registration_number": "123456789",
+    "business_type": "private_corporation",
+    "legal_name": "Acme Corporation Inc.",
+    "trading_name": "Acme Corporation",
+    "principal_address": {
+      "address_line1": "Fulton Street",
+      "city": "Houston",
+      "state": "TX",
+      "zip": "12345",
+      "country": "US"
+    },
+    "registered_address": {
+      "address_line1": "Fulton Street",
+      "city": "Houston",
+      "state": "TX",
+      "zip": "12345",
+      "country": "US"
+    },
+    "representatives": [
+      {
+        "id": "rep_1d1j98j1h991dlkjdajsjd",
+        "first_name": "John",
+        "last_name": "Smith",
+        "address": {
+          "address_line1": "Fulton Street",
+          "city": "Houston",
+          "state": "TX",
+          "zip": "12345",
+          "country": "US"
+        },
+        "identification": {
+          "national_id_number": "123456789"
+        },
+        "phone": {
+          "number": "2345678910"
+        },
+        "date_of_birth": {
+          "day": 5,
+          "month": 6,
+          "year": 1995
+        },
+        "roles": [
+          "ubo",
+          "authorised_signatory"
+        ],
+        "documents": {
+          "identity_verification": {
+            "type": "driving_license",
+            "front": "file_wxglze3wwywujg4nna5fb7ldli",
+            "back": "file_adglze3wwywujg4nna5fb7l1sg"
+          }
+        }
+      }
+    ],
+    "financial_details": {
+      "annual_processing_volume": 120000,
+      "average_transaction_value": 10000,
+      "highest_transaction_value": 2500,
+      "currency": "USD"
+    }
+  },
+  "documents": {
+    "company_verification": {
+      "type": "incorporation_document",
+      "front": "file_aaz5pemp6326zbuvevp6qroqu4"
+    },
+    "tax_verification": {
+      "type": "ein_letter",
+      "front": "file_aaz5pemp6326zbuvevp6qroqu4"
+    }
+  }
+}

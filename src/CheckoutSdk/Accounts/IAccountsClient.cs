@@ -1,5 +1,6 @@
 ﻿using Checkout.Accounts.Payout.Request;
 using Checkout.Accounts.Payout.Response;
+using Checkout.Accounts.Regional.US;
 using Checkout.Common;
 using System;
 using System.Threading;
