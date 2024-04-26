@@ -298,7 +298,7 @@ namespace Checkout.Payments.Previous
             source.Type().ShouldBe(PaymentSourceType.Giropay);
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakeIdealPayment()
         {
             var idealSource = new RequestIdealSource
