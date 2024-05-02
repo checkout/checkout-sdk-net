@@ -15,11 +15,11 @@ namespace Checkout.Payments.Contexts
         }
 
         [Fact]
-        private async Task ShouldMakeAPaypalPaymentContextRequest()
+        private async Task ShouldMakeAPayPalPaymentContextRequest()
         {
             var paymentContextsRequest = new PaymentContextsRequest
             {
-                Source = new PaymentContextsPaypalSource(),
+                Source = new PaymentContextsPayPalSource(),
                 Amount = 1000,
                 Currency = Currency.EUR,
                 PaymentType = PaymentType.Regular,
@@ -79,7 +79,7 @@ namespace Checkout.Payments.Contexts
         {
             var paymentContextsRequest = new PaymentContextsRequest
             {
-                Source = new PaymentContextsPaypalSource(),
+                Source = new PaymentContextsPayPalSource(),
                 Amount = 2000,
                 Currency = Currency.USD,
                 PaymentType = PaymentType.Regular,

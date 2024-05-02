@@ -2,7 +2,7 @@ using Checkout.Common;
 
 namespace Checkout.Payments.Response.Source.Contexts
 {
-    public class PaymentContextsPaypalResponseSource : AbstractPaymentContextsResponseSource, IResponseSource
+    public class PaymentContextsPayPalResponseSource : AbstractPaymentContextsResponseSource, IResponseSource
     {
         public new PaymentSourceType? Type()
         {
