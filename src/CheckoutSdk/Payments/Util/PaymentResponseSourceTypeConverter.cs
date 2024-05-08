@@ -64,6 +64,11 @@ namespace Checkout.Payments.Util
             {
                 return new PaymentContextsPayPalResponseSource();
             }
+            
+            if (CheckoutUtils.GetEnumMemberValue(PaymentSourceType.Klarna).Equals(sourceType))
+            {
+                return new PaymentContextsKlarnaResponseSource();
+            }
 
             return new AlternativePaymentSourceResponse();
         }
