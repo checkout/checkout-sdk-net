@@ -45,10 +45,10 @@ namespace Checkout.Payments
             }
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakeIdealPayment()
         {
-            var idealSource = new RequestIdealSource { Bic = "INGBNL2A", Description = "ORD50234E89", Language = "nl" };
+            var idealSource = new RequestIdealSource { Description = "ORD50234E89", Language = "nl" };
 
             var paymentRequest = new PaymentRequest
             {
