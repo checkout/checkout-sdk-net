@@ -62,7 +62,7 @@ namespace Checkout.Payments.Util
             
             if (CheckoutUtils.GetEnumMemberValue(PaymentSourceType.PayPal).Equals(sourceType))
             {
-                return new PaymentContextsPayPayResponseSource();
+                return new PaymentContextsPayPalResponseSource();
             }
 
             return new AlternativePaymentSourceResponse();
