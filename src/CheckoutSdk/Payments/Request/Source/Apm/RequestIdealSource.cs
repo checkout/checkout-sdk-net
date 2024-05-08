@@ -8,8 +8,6 @@ namespace Checkout.Payments.Request.Source.Apm
         {
         }
 
-        public string Bic { get; set; }
-
         public string Description { get; set; }
 
         public string Language { get; set; }
