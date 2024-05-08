@@ -29,6 +29,8 @@ namespace Checkout.Payments.Response.Source
         public CardType? CardType { get; set; }
 
         public CardCategory? CardCategory { get; set; }
+        
+        public CardWalletType? CardWalletType { get; set; }
 
         public string Issuer { get; set; }
 
