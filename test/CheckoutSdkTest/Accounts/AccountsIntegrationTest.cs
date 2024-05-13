@@ -19,7 +19,7 @@ namespace Checkout.Accounts
         {
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         public async Task ShouldCreateGetAndUpdateOnboardEntity()
         {
             string randomReference = RandomString(15);
@@ -90,7 +90,7 @@ namespace Checkout.Accounts
             onboardEntityRequest.Individual.FirstName.ShouldBe(verifyUpdated.Individual.FirstName);
         }
         
-        [Fact]
+        [Fact(Skip = "unavailable")]
         public async Task ShouldThrowConflictWhenCreatingExistingEntity()
         {
             string randomReference = RandomString(15);
