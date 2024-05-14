@@ -45,7 +45,7 @@ namespace Checkout.Payments
             }
         }
 
-        [Fact(Skip = "unavailable")]
+        [Fact]
         private async Task ShouldMakeIdealPayment()
         {
             var idealSource = new RequestIdealSource { Description = "ORD50234E89", Language = "nl" };
@@ -53,6 +53,7 @@ namespace Checkout.Payments
             var paymentRequest = new PaymentRequest
             {
                 Source = idealSource,
+                Reference = "REFERENCE",
                 Currency = Currency.EUR,
                 Amount = 1000,
                 Capture = true,
@@ -64,7 +65,7 @@ namespace Checkout.Payments
 
             paymentResponse.ShouldNotBeNull();
             paymentResponse.Status.ShouldNotBeNull();
-            paymentResponse.ResponseSummary.ShouldNotBeNull();
+            paymentResponse.Reference.ShouldBe("REFERENCE");
             paymentResponse.Links.ShouldNotBeNull();
 
             var payment = await DefaultApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id);

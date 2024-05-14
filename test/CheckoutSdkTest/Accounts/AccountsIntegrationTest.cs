@@ -21,72 +21,6 @@ namespace Checkout.Accounts
         }
 
         [Fact(Skip = "unavailable")]
-        public async Task ShouldCreateAndGetEntityUSCompany()
-        {
-            string randomReference = RandomString(15);
-            
-            var onboardEntityRequest = new OnboardEntityRequest
-            {
-                Reference = randomReference,
-                ContactDetails = new ContactDetails
-                {
-                    Phone = new AccountPhone
-                    {
-                        Number = "12345678"
-                    },
-                    EmailAddresses = new EntityEmailAddresses
-                    {
-                        Primary = "admin@superhero1234.com"
-                    }
-                },
-                Profile = new Profile
-                {
-                    Urls = new List<string>
-                    {
-                        {"https://www.superheroexample.com"}
-                    },
-                    Mccs = new List<string>
-                    {
-                        {"5311"}
-                    },
-                    DefaultHoldingCurrency = Currency.USD,
-                    HoldingCurrencies = new List<Currency>
-                    {
-                        Currency.GBP,
-                        Currency.USD
-                    }
-
-                },
-                Company = new USCompany
-                {
-                    BusinessRegistrationNumber = "12345678",
-                    BusinessType = USBusinessType.PrivateCorporation,
-                    LegalName = "UsCompany",
-                    TradingName = "UsCompany",
-                    PrincipalAddress = new Address
-                    {
-                        AddressLine1 = "123 Main St",
-                        AddressLine2 = "Apt 101",
-                        City = "New York",
-                        State = "NY",
-                        Zip = "10001",
-                        Country = CountryCode.US
-                    },
-                },
-                
-            };
-            
-            OnboardEntityResponse entityResponse = await DefaultApi.AccountsClient().CreateEntity(onboardEntityRequest);
-            
-            entityResponse.ShouldNotBeNull();
-
-            var entityDetailsResponse = await DefaultApi.AccountsClient().GetEntity(entityResponse.Id);
-            
-            entityDetailsResponse.ShouldNotBeNull();
-            entityDetailsResponse.Company.BusinessType.ShouldBeOfType<USBusinessType>();
-        }
-
-        [Fact (Skip = "Not available")]
         public async Task ShouldCreateGetAndUpdateOnboardEntity()
         {
             string randomReference = RandomString(15);
@@ -156,8 +90,8 @@ namespace Checkout.Accounts
             verifyUpdated.ShouldNotBeNull();
             onboardEntityRequest.Individual.FirstName.ShouldBe(verifyUpdated.Individual.FirstName);
         }
-        
-        [Fact (Skip = "Not available")]
+
+        [Fact(Skip = "unavailable")]
         public async Task ShouldThrowConflictWhenCreatingExistingEntity()
         {
             string randomReference = RandomString(15);
