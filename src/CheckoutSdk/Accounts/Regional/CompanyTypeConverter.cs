@@ -12,7 +12,6 @@ namespace Checkout.Accounts.Regional
         
         public override bool CanConvert(Type objectType)
         {
-            //return objectType == typeof(BusinessType) || objectType == typeof(USBusinessType);
             return typeof(OnboardEntityDetailsResponse).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo());
         }
         
