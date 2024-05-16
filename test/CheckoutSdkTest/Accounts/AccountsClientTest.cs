@@ -198,6 +198,7 @@ namespace Checkout.Accounts
             response.ShouldNotBeNull();
             response.Id.ShouldBe(responseObject.Id);
             response.Reference.ShouldBe(responseObject.Reference);
+         
         }
 
         [Fact]

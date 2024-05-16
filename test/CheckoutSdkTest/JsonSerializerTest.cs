@@ -1,3 +1,5 @@
+using Checkout.Accounts;
+using Checkout.Accounts.Regional.US;
 using Checkout.Financial;
 using Checkout.Issuing.Cards;
 using Checkout.Issuing.Cards.Requests.Create;
@@ -125,6 +127,28 @@ namespace Checkout
                     typeof(FinancialActionsQueryResponse));
             financialActionsQueryResponse.ShouldNotBeNull();
             financialActionsQueryResponse.Data[0].ProcessedOn.ShouldNotBeNull();
+        }
+        
+        [Fact]
+        public void ShouldSerializeOnBoardSubEntityCompanyFromJson()
+        {
+            var fileContent = GetJsonFileContent("./Resources/OnBoardSubEntityCompanyResponse.json");
+            OnboardEntityDetailsResponse onboardEntityDetailsResponse =
+                (OnboardEntityDetailsResponse)new JsonSerializer().Deserialize(fileContent,
+                    typeof(OnboardEntityDetailsResponse));
+            onboardEntityDetailsResponse.ShouldNotBeNull();
+            onboardEntityDetailsResponse.Company.BusinessType.ShouldBeOfType<BusinessType>();
+        }
+        
+        [Fact]
+        public void ShouldSerializeOnBoardSubEntityUSCompanyFromJson()
+        {
+            var fileContent = GetJsonFileContent("./Resources/OnBoardSubEntityUSCompanyResponse.json");
+            OnboardEntityDetailsUSCompanyResponse onboardEntityDetailsResponse =
+                (OnboardEntityDetailsUSCompanyResponse)new JsonSerializer().Deserialize(fileContent,
+                    typeof(OnboardEntityDetailsUSCompanyResponse));
+            onboardEntityDetailsResponse.ShouldNotBeNull();
+            onboardEntityDetailsResponse.Company.BusinessType.ShouldBeOfType<USBusinessType>();
         }
 
         [Fact]

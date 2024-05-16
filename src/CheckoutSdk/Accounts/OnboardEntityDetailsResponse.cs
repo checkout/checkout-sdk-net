@@ -1,4 +1,6 @@
-﻿using Checkout.Common;
+﻿using Checkout.Accounts.Regional;
+using Checkout.Common;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Checkout.Accounts
@@ -18,7 +20,7 @@ namespace Checkout.Accounts
         public ContactDetails ContactDetails { get; set; }
 
         public Profile Profile { get; set; }
-
+        
         public Company Company { get; set; }
 
         public Individual Individual { get; set; }

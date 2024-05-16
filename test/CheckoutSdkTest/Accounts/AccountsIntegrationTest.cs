@@ -1,3 +1,4 @@
+using Checkout.Accounts.Regional.US;
 using Checkout.Common;
 using Checkout.Instruments;
 using Shouldly;
@@ -89,7 +90,7 @@ namespace Checkout.Accounts
             verifyUpdated.ShouldNotBeNull();
             onboardEntityRequest.Individual.FirstName.ShouldBe(verifyUpdated.Individual.FirstName);
         }
-        
+
         [Fact(Skip = "unavailable")]
         public async Task ShouldThrowConflictWhenCreatingExistingEntity()
         {
@@ -209,6 +210,82 @@ namespace Checkout.Accounts
             queryResponse.ShouldNotBeNull();
             queryResponse.Data.ShouldNotBeNull();
         }
+        
+        
+        [Fact]
+        private async Task ShouldCreateAndRetrievePaymentInstrumentUSCompany()
+        {
+            CheckoutApi api = GetAccountsCheckoutApi();
+
+            var entityRequest = new OnboardEntityRequest
+            {
+                Reference = RandomString(15),
+                ContactDetails = BuildContactDetails(),
+                Profile = BuildProfile(),
+                Company = new USCompany()
+                {
+                    BusinessRegistrationNumber = "01234567",
+                    BusinessType = USBusinessType.PrivateCorporation,
+                    LegalName = "Super Hero Masks Inc.",
+                    TradingName = "Super Hero Masks",
+                    PrincipalAddress = GetAddress(),
+                    RegisteredAddress = GetAddress(),
+                    Representatives = new List<Representative>
+                    {
+                        new Representative
+                        {
+                            FirstName = "John",
+                            LastName = "Doe",
+                            Address = GetAddress(),
+                            Identification = new Identification { NationalIdNumber = "AB123456C", }
+                        }
+                    }
+                }
+            };
+
+            var entityResponse = await api.AccountsClient().CreateEntity(entityRequest);
+
+            var entityDetailsResponse = await api.AccountsClient().GetEntity(entityResponse.Id);
+
+            var file = await UploadFile();
+
+            var instrumentRequest = new PaymentInstrumentRequest
+            {
+                Label = "Barclays",
+                Type = InstrumentType.BankAccount,
+                Currency = Currency.GBP,
+                Country = CountryCode.GB,
+                DefaultDestination = false,
+                Document = new InstrumentDocument { Type = "bank_statement", FileId = file.Id },
+                InstrumentDetails = new InstrumentDetailsFasterPayments
+                {
+                    AccountNumber = "12334454", BankCode = "050389"
+                }
+            };
+
+            var instrumentResponse = await api.AccountsClient().CreatePaymentInstrument(entityResponse.Id, instrumentRequest);
+            instrumentResponse.ShouldNotBeNull();
+            instrumentResponse.Id.ShouldNotBeNull();
+            
+            entityDetailsResponse.ShouldNotBeNull();
+
+            var instrumentDetails = await api.AccountsClient().RetrievePaymentInstrumentDetails(entityResponse.Id, instrumentResponse.Id);
+            instrumentDetails.ShouldNotBeNull();
+            instrumentDetails.Id.ShouldNotBeNull();
+            instrumentDetails.Status.ShouldNotBeNull();
+            instrumentDetails.Label.ShouldNotBeNull();
+            instrumentDetails.Type.ShouldNotBeNull();
+            instrumentDetails.Currency.ShouldNotBeNull();
+            instrumentDetails.Country.ShouldNotBeNull();
+            instrumentDetails.Document.ShouldNotBeNull();
+
+            var queryResponse = await api.AccountsClient().QueryPaymentInstruments(entityResponse.Id);
+            queryResponse.ShouldNotBeNull();
+            queryResponse.Data.ShouldNotBeNull();
+        }
+        
+        
+        
 
         private static string RandomString(int length)
         {

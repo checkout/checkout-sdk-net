@@ -85,6 +85,17 @@
         <Content Include="Resources\get_financial_actions_response.json">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+        <None Remove="Resources\OnBoardSubEntityCompanyResponse.json" />
+        <Content Include="Resources\OnBoardSubEntityCompanyResponse.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <None Remove="Resources\OnBoardSubEntityUSCompanyResponse.json" />
+        <Content Include="Resources\OnBoardSubEntityUSCompanyResponse.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Update="Resources\OnBoardSubEntityCompanyResponse.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Apm\Previous" />
