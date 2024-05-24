@@ -1,4 +1,5 @@
 using Checkout.Common;
+using Checkout.Payments.Request;
 using Shouldly;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,13 @@ namespace Checkout.Payments
         private async Task ShouldRefundCardPayment()
         {
             var paymentResponse = await MakeCardPayment(true);
+            var order = new Order() { Name = "OrderTest", TotalAmount = 99, Quantity = 88 };
 
             var refundRequest = new RefundRequest
             {
                 Amount = paymentResponse.Amount,
                 Reference = Guid.NewGuid().ToString(), 
+                Items = new List<Order>(){order}
             };
 
             var response = await Retriable(async () =>

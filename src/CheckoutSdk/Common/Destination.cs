@@ -2,7 +2,7 @@
 {
     public class Destination
     {
-        public AccountType AccountType { get; set; }
+        public AccountType? AccountType { get; set; }
         
         public string AccountNumber { get; set; }
         
@@ -16,7 +16,7 @@
         
         public string SwiftBic { get; set; }
         
-        public CountryCode Country { get; set; }
+        public CountryCode? Country { get; set; }
         
         public AccountHolder AccountHolder { get; set; }
         
