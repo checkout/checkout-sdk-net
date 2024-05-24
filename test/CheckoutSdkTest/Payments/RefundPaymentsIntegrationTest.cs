@@ -20,7 +20,8 @@ namespace Checkout.Payments
             {
                 Amount = paymentResponse.Amount,
                 Reference = Guid.NewGuid().ToString(), 
-                Items = new List<Order>(){order}
+                Items = new List<Order>(){order},
+                Destination = new Destination(){ Bban = "BBAN", AccountType = AccountType.Savings, Country = CountryCode.GB}
             };
 
             var response = await Retriable(async () =>

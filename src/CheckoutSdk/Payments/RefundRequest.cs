@@ -12,7 +12,7 @@ namespace Checkout.Payments
         public IList<AmountAllocations> AmountAllocations { get; set; }
 
         public string CaptureActionId { get; set; }
-        
+        public Destination Destination { get; set; }
         public IList<Order> Items { get; set; }
         public string Reference { get; set; }
 
