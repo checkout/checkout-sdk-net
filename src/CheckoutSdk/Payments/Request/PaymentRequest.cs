@@ -27,6 +27,8 @@ namespace Checkout.Payments.Request
 
         public AuthorizationType? AuthorizationType { get; set; }
 
+        public PartialAuthorization PartialAuthorization { get; set; }
+
         public bool? Capture { get; set; }
 
         public DateTime? CaptureOn { get; set; }

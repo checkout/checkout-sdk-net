@@ -94,7 +94,11 @@ namespace Checkout.Payments
                 Amount = 10L,
                 Currency = Currency.USD,
                 Sender = paymentIndividualSender,
-                AuthorizationType = AuthorizationType.Estimated
+                AuthorizationType = AuthorizationType.Estimated,
+                PartialAuthorization = new PartialAuthorization
+                {
+                    Enabled = true
+                }
             };
 
             var paymentResponse = await DefaultApi.PaymentsClient().RequestPayment(paymentRequest);
