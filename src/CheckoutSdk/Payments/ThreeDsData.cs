@@ -27,5 +27,8 @@ namespace Checkout.Payments
         public string ExemptionApplied { get; set; }
         
         public bool? Challenged { get; set; }
+
+        public TrustedListing TrustedListing { get; set; }
+        
     }
 }

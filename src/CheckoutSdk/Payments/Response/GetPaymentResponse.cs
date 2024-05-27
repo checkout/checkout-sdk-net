@@ -1,4 +1,5 @@
 ﻿using Checkout.Common;
+using Checkout.Payments.Request;
 using Checkout.Payments.Response.Destination;
 using Checkout.Payments.Response.Source;
 using Checkout.Payments.Sender;
@@ -6,6 +7,7 @@ using Checkout.Payments.Util;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using Product = Checkout.Common.Product;
 
 namespace Checkout.Payments.Response
 {
@@ -25,6 +27,8 @@ namespace Checkout.Payments.Response
         public ISender Sender { get; set; }
 
         public long? Amount { get; set; }
+        
+        public long? AmountRequested { get; set; }
 
         public Currency? Currency { get; set; }
 
@@ -73,6 +77,14 @@ namespace Checkout.Payments.Response
 
         public IList<PaymentActionSummary> Actions { get; set; }
         
+        public PaymentRetryResponse Retry { get; set; }
+        
+        public string PanTypeProcessed { get; set; }
+        
+        public bool? CkoNetworkTokenAvailable { get; set; }
+        
         public string ProcessedOn { get; set; }
+
+        public PaymentInstruction Instruction { get; set; }
     }
 }
