@@ -15,13 +15,27 @@ namespace Checkout.Payments
         {
             var paymentResponse = await MakeCardPayment(true);
             var order = new Order() { Name = "OrderTest", TotalAmount = 99, Quantity = 88 };
+            var bank = new BankDetails { Name = "Lloyds TSB", Branch = "Bournemouth", Address = GetAddress() };
+            var destination = new Destination
+            {
+                AccountType = AccountType.Savings,
+                AccountNumber = "13654567455",
+                BankCode = "23-456",
+                BranchCode = "6443",
+                Iban = "HU93116000060000000012345676",
+                Bban = "3704 0044 0532 0130 00",
+                SwiftBic = "37040044",
+                Country = CountryCode.GB,
+                AccountHolder = GetAccountHolder(),
+                Bank = bank
+            };
 
             var refundRequest = new RefundRequest
             {
                 Amount = paymentResponse.Amount,
-                Reference = Guid.NewGuid().ToString(), 
-                Items = new List<Order>(){order},
-                Destination = new Destination(){ Bban = "BBAN", AccountType = AccountType.Savings, Country = CountryCode.GB}
+                Reference = Guid.NewGuid().ToString(),
+                Items = new List<Order> { order },
+                Destination = destination
             };
 
             var response = await Retriable(async () =>
@@ -51,8 +65,7 @@ namespace Checkout.Payments
 
             var refundRequest = new RefundRequest
             {
-                Amount = paymentResponse.Amount / 2,
-                Reference = Guid.NewGuid().ToString(), 
+                Amount = paymentResponse.Amount / 2, Reference = Guid.NewGuid().ToString(),
             };
 
             var response = await Retriable(async () =>
