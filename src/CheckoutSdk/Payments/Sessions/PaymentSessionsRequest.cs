@@ -38,9 +38,9 @@ namespace Checkout.Payments.Sessions
 
         public PaymentMethodConfiguration PaymentMethodConfiguration { get; set; }
         
-        public PaymentMethodsType? EnabledPaymentMethods { get; set; }
+        public IList<PaymentMethodsType> EnabledPaymentMethods { get; set; }
         
-        public PaymentMethodsType? DisabledPaymentMethods { get; set; }
+        public IList<PaymentMethodsType> DisabledPaymentMethods { get; set; }
 
         public IList<Product> Items { get; set; }
 
