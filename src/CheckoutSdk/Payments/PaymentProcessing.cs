@@ -21,7 +21,10 @@ namespace Checkout.Payments
         public string PartnerSessionId { get; set; }
         
         public string PartnerClientToken { get; set; }
+        
         public string PartnerPaymentId { get; set; }
+        
+        public PanProcessedType? PanTypeProcessed { get; set; }
 
         public string ContinuationPayload { get; set; }
         
@@ -40,6 +43,10 @@ namespace Checkout.Payments
         public string PartnerAuthorizationResponseCode { get; set; }
 
         public long? SurchargeAmount { get; set; }
+        
+        public bool? CkoNetworkTokenAvailable { get; set; }
+        
+        public string MerchantCategoryCode { get; set; }
 
     }
 }

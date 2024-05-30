@@ -79,7 +79,7 @@ namespace Checkout.Payments.Response
         
         public PaymentRetryResponse Retry { get; set; }
         
-        public string PanTypeProcessed { get; set; }
+        public PanProcessedType? PanTypeProcessed { get; set; }
         
         public bool? CkoNetworkTokenAvailable { get; set; }
         
