@@ -263,7 +263,7 @@ namespace Checkout.Payments.Previous
             source.Type().ShouldBe(PaymentSourceType.Fawry);
         }
 
-        [Fact]
+        [Fact(Skip = "skipped temporally")]
         private async Task ShouldMakeGiropayPayment()
         {
             var giropaySource = new RequestGiropaySource

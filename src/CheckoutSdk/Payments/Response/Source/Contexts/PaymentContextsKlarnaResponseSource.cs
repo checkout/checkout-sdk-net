@@ -8,7 +8,5 @@ namespace Checkout.Payments.Response.Source.Contexts
         {
             return base.Type;
         }
-
-        public AccountHolder AccountHolder { get; set; }
     }
 }
