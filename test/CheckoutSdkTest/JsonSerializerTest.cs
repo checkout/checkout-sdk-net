@@ -1,19 +1,19 @@
 using Checkout.Accounts;
 using Checkout.Accounts.Regional.US;
 using Checkout.Financial;
-using Checkout.Issuing.Cards;
 using Checkout.Issuing.Cards.Requests.Create;
 using Checkout.Issuing.Cards.Responses;
 using Checkout.Issuing.Controls;
 using Checkout.Issuing.Controls.Requests.Create;
 using Checkout.Issuing.Controls.Responses.Create;
+using Checkout.Payments.Contexts;
 using Checkout.Payments.Response;
+using Checkout.Payments.Response.Source.Contexts;
 using Checkout.Payments.Sender;
 using Shouldly;
 using System;
-using System.Globalization;
 using Xunit;
-using Xunit.Abstractions;
+using CardType = Checkout.Issuing.Cards.CardType;
 
 namespace Checkout
 {
@@ -149,6 +149,17 @@ namespace Checkout
                     typeof(OnboardEntityDetailsUSCompanyResponse));
             onboardEntityDetailsResponse.ShouldNotBeNull();
             onboardEntityDetailsResponse.Company.BusinessType.ShouldBeOfType<USBusinessType>();
+        }
+        
+        [Fact]
+        public void ShouldSerializePaymentContextsPayPalDetailsResponseFromJson()
+        {
+            var fileContent = GetJsonFileContent("./Resources/PaymentContextsPayPalDetailsResponse.json");
+            PaymentContextDetailsResponse paymentContextsPayPalResponseSource =
+                (PaymentContextDetailsResponse)new JsonSerializer().Deserialize(fileContent,
+                    typeof(PaymentContextDetailsResponse));
+            paymentContextsPayPalResponseSource.ShouldNotBeNull();
+            paymentContextsPayPalResponseSource.PaymentRequest.Source.ShouldBeOfType<PaymentContextsPayPalResponseSource>();
         }
 
         [Fact]

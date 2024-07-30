@@ -35,6 +35,9 @@
     </ItemGroup>
     <ItemGroup>
         <None Update="nlog.config" CopyToOutputDirectory="Always" />
+        <None Update="Resources\PaymentContextsPayPalDetailsResponse.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
     <ItemGroup>
         <Content Include="Resources\AppSettingsPreviousTest.json">
