@@ -2,13 +2,13 @@
 {
     public enum ResponseCode
     {
-        Y,
-        N,
-        U,
         A,
         C,
         D,
+        I,
+        N,
         R,
-        I
+        U,
+        Y
     }
 }

@@ -34,6 +34,10 @@ namespace Checkout.Sessions
         public bool? Approved { get; set; }
 
         public string ProtocolVersion { get; set; }
+        
+        public CardholderAccountInfo AccountInfo { get; set; }
+
+        public MerchantRiskInfo MerchantRiskInfo { get; set; }
 
         public string Reference { get; set; }
 

@@ -154,6 +154,11 @@ namespace Checkout.Sessions
             return appSession;
         }
 
+        protected static ChannelData MerchantInitiatedSession()
+        {
+            return new MerchantInitiatedSession { RequestType = RequestType.RecurringTransaction };
+        }
+
         private static bool HasSessionAccepted(SessionResponse obj)
         {
             return obj.Accepted != null &&

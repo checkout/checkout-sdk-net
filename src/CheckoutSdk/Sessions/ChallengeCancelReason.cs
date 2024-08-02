@@ -7,15 +7,19 @@ namespace Checkout.Sessions
         [EnumMember(Value = "cardholder_cancel")]
         CardholderCancel,
 
-        [EnumMember(Value = "transaction_timed_out")]
-        TransactionTimedOut,
-
         [EnumMember(Value = "challenge_timed_out")]
         ChallengeTimedOut,
+        
+        [EnumMember(Value = "sdk_timed_out")]
+        SdkTimedOut,
 
         [EnumMember(Value = "transaction_error")]
         TransactionError,
-        [EnumMember(Value = "sdk_timed_out")] SdkTimedOut,
-        [EnumMember(Value = "unknown")] Unknown
+
+        [EnumMember(Value = "transaction_timed_out")]
+        TransactionTimedOut,
+        
+        [EnumMember(Value = "unknown")]
+        Unknown
     }
 }

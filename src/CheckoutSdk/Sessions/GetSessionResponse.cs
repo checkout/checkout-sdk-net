@@ -35,6 +35,10 @@ namespace Checkout.Sessions
         public bool? Approved { get; set; }
 
         public string ProtocolVersion { get; set; }
+        
+        public CardholderAccountInfo AccountInfo { get; set; }
+
+        public MerchantRiskInfo MerchantRiskInfo { get; set; }
 
         public string Reference { get; set; }
 
@@ -65,6 +69,8 @@ namespace Checkout.Sessions
         public Recurring Recurring { get; set; }
 
         public Installment Installment { get; set; }
+        
+        public InitialTransaction InitialTransaction { get; set; }
 
         public string CustomerIp { get; set; }
 
@@ -75,6 +81,8 @@ namespace Checkout.Sessions
         public ThreeDSFlowType? FlowType { get; set; }
 
         public ChallengeIndicatorType? ChallengeIndicator { get; set; }
+        
+        public Optimization Optimization { get; set; }
 
         public SchemeInfo SchemeInfo { get; set; }
     }

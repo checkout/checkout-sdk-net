@@ -10,7 +10,7 @@
 
         public string Name { get; set; }
 
-        public bool? Stored { get; set; }
+        public bool? Stored { get; set; } = false;
         
         public bool? StoreForFutureUse { get; set; }
 
