@@ -8,6 +8,6 @@ namespace Checkout.Sessions
 
         public string Fingerprint { get; set; }
 
-        public IDictionary<string, string> Metadata { get; set; }
+        public SessionsCardMetadataResponse Metadata { get; set; }
     }
 }

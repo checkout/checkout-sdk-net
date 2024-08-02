@@ -2,12 +2,13 @@
 {
     public class BrowserSession : ChannelData
     {
-        public ThreeDsMethodCompletion? ThreeDsMethodCompletion { get; set; }
+        public ThreeDsMethodCompletion? ThreeDsMethodCompletion { get; set; } =
+            Sessions.Channel.ThreeDsMethodCompletion.U;
 
         public string AcceptHeader { get; set; }
 
         public bool? JavaEnabled { get; set; }
-        
+
         public bool? JavascriptEnabled { get; set; }
 
         public string Language { get; set; }

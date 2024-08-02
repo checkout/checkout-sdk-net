@@ -4,10 +4,10 @@ namespace Checkout.Common
 {
     public enum CardCategory
     {
-        [EnumMember(Value = "consumer")] Consumer,
-        [EnumMember(Value = "commercial")] Commercial,
         [EnumMember(Value = "all")] All,
-        [EnumMember(Value = "other")] Other,
+        [EnumMember(Value = "commercial")] Commercial,
+        [EnumMember(Value = "consumer")] Consumer,
         [EnumMember(Value = "NotSet")] NotSet,
+        [EnumMember(Value = "other")] Other
     }
 }

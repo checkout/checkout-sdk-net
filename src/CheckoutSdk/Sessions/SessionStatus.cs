@@ -4,17 +4,18 @@ namespace Checkout.Sessions
 {
     public enum SessionStatus
     {
-        [EnumMember(Value = "pending")] Pending,
-        [EnumMember(Value = "processing")] Processing,
-        [EnumMember(Value = "challenged")] Challenged,
+        [EnumMember(Value = "approved")] Approved,
+        [EnumMember(Value = "attempted")] Attempted,
 
         [EnumMember(Value = "challenge_abandoned")]
         ChallengeAbandoned,
-        [EnumMember(Value = "expired")] Expired,
-        [EnumMember(Value = "approved")] Approved,
-        [EnumMember(Value = "attempted")] Attempted,
-        [EnumMember(Value = "unavailable")] Unavailable,
+        
+        [EnumMember(Value = "challenged")] Challenged,
         [EnumMember(Value = "declined")] Declined,
-        [EnumMember(Value = "rejected")] Rejected
+        [EnumMember(Value = "expired")] Expired,
+        [EnumMember(Value = "pending")] Pending,
+        [EnumMember(Value = "processing")] Processing,
+        [EnumMember(Value = "rejected")] Rejected,
+        [EnumMember(Value = "unavailable")] Unavailable
     }
 }

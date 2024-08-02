@@ -4,11 +4,14 @@ namespace Checkout.Sessions
 {
     public enum SessionScheme
     {
-        [EnumMember(Value = "visa")] Visa,
-        [EnumMember(Value = "mastercard")] Mastercard,
-        [EnumMember(Value = "jcb")] Jcb,
         [EnumMember(Value = "amex")] Amex,
+
+        [EnumMember(Value = "cartes_bancaires")]
+        CartesBancaires,
+        
         [EnumMember(Value = "diners")] Diners,
-        [EnumMember(Value = "cartes_bancaires")] CartesBancaires
+        [EnumMember(Value = "jcb")] Jcb,
+        [EnumMember(Value = "mastercard")] Mastercard,
+        [EnumMember(Value = "visa")] Visa
     }
 }
