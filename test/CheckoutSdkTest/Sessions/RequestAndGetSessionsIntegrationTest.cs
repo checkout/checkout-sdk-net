@@ -8,7 +8,7 @@ namespace Checkout.Sessions
 {
     public class RequestAndGetSessionsIntegrationTest : AbstractSessionsIntegrationTest
     {
-        [Theory(Skip = "unstable")]
+        [Theory]
         [MemberData(nameof(SessionsTypes))]
         private async Task ShouldRequestAndGetCardSessionBrowserSession(Category category,
             ChallengeIndicatorType challengeIndicator,
@@ -95,7 +95,7 @@ namespace Checkout.Sessions
             getSessionResponse.Completed.ShouldBe(false);
         }
 
-        [Theory(Skip = "unstable")]
+        [Theory]
         [MemberData(nameof(SessionsTypes))]
         private async Task ShouldRequestAndGetCardSessionAppSession(Category category,
             ChallengeIndicatorType challengeIndicator,
@@ -120,9 +120,9 @@ namespace Checkout.Sessions
 
             response.AuthenticationType.ShouldBe(AuthenticationType.Regular);
             response.AuthenticationCategory.ShouldBe(category);
-            response.Status.ShouldBe(SessionStatus.Challenged);
+            response.Status.ShouldBe(SessionStatus.Unavailable);
             response.NextActions.Count.ShouldBe(1);
-            response.NextActions[0].ShouldBe(NextAction.Authenticate);
+            response.NextActions[0].ShouldBe(NextAction.Complete);
             response.TransactionType.ShouldBe(transactionType);
 
             response.GetSelfLink().ShouldNotBeNull();
@@ -144,41 +144,77 @@ namespace Checkout.Sessions
 
             getSessionResponse.AuthenticationType.ShouldBe(AuthenticationType.Regular);
             getSessionResponse.AuthenticationCategory.ShouldBe(category);
-            getSessionResponse.Status.ShouldBe(SessionStatus.Challenged);
+            getSessionResponse.Status.ShouldBe(SessionStatus.Unavailable);
             getSessionResponse.NextActions.Count.ShouldBe(1);
-            getSessionResponse.NextActions[0].ShouldBe(NextAction.Authenticate);
+            getSessionResponse.NextActions[0].ShouldBe(NextAction.Complete);
             getSessionResponse.TransactionType.ShouldBe(transactionType);
-            getSessionResponse.ResponseCode.ShouldBeNull();
+            getSessionResponse.ResponseCode.ShouldBe(ResponseCode.U);
             getSessionResponse.AuthenticationDate.ShouldNotBeNull();
 
             getSessionResponse.GetSelfLink().ShouldNotBeNull();
             getSessionResponse.GetLink("callback_url").ShouldNotBeNull();
             getSessionResponse.Completed.ShouldBe(false);
+        }
+        
+        [Theory(Skip = "unstable")]
+        [MemberData(nameof(SessionsTypes))]
+        private async Task ShouldRequestAndGetCardSessionMerchantInitiatedSession(Category category,
+            ChallengeIndicatorType challengeIndicator,
+            TransactionType transactionType)
+        {
+            var merchantInitiatedSession = MerchantInitiatedSession();
 
-            var getSessionSecretSessionResponse =
-                await DefaultApi.SessionsClient().GetSessionDetails(response.SessionSecret, response.Id);
+            var sessionResponse =
+                await CreateNonHostedSession(merchantInitiatedSession, category, challengeIndicator, transactionType);
 
-            getSessionSecretSessionResponse.Certificates.ShouldBeNull();
-            getSessionSecretSessionResponse.SessionSecret.ShouldBeNull();
+            sessionResponse.ShouldNotBeNull();
+            sessionResponse.Created.ShouldNotBeNull();
 
-            getSessionSecretSessionResponse.Id.ShouldNotBeNull();
-            getSessionSecretSessionResponse.TransactionId.ShouldNotBeNull();
-            getSessionSecretSessionResponse.Amount.ShouldNotBeNull();
-            getSessionSecretSessionResponse.Ds.ShouldNotBeNull();
-            getSessionSecretSessionResponse.Acs.ShouldBeNull();
-            getSessionSecretSessionResponse.Card.ShouldNotBeNull();
+            var response = sessionResponse.Created;
+            response.Id.ShouldNotBeNull();
+            response.SessionSecret.ShouldNotBeNull();
+            response.TransactionId.ShouldNotBeNull();
+            response.Amount.ShouldNotBeNull();
+            response.Certificates.ShouldNotBeNull();
+            response.Ds.ShouldNotBeNull();
+            response.Card.ShouldNotBeNull();
 
-            getSessionSecretSessionResponse.AuthenticationType.ShouldBe(AuthenticationType.Regular);
-            getSessionSecretSessionResponse.AuthenticationCategory.ShouldBe(category);
-            getSessionSecretSessionResponse.Status.ShouldBe(SessionStatus.Challenged);
-            getSessionSecretSessionResponse.NextActions.Count.ShouldBe(1);
-            getSessionSecretSessionResponse.NextActions[0].ShouldBe(NextAction.Authenticate);
-            getSessionSecretSessionResponse.TransactionType.ShouldBe(transactionType);
-            getSessionSecretSessionResponse.ResponseCode.ShouldBeNull();
+            response.AuthenticationType.ShouldBe(AuthenticationType.Regular);
+            response.AuthenticationCategory.ShouldBe(category);
+            response.Status.ShouldBe(SessionStatus.Unavailable);
+            response.NextActions.Count.ShouldBe(1);
+            response.NextActions[0].ShouldBe(NextAction.Complete);
+            response.TransactionType.ShouldBe(transactionType);
 
-            getSessionSecretSessionResponse.GetSelfLink().ShouldNotBeNull();
-            getSessionSecretSessionResponse.GetLink("callback_url").ShouldNotBeNull();
-            getSessionSecretSessionResponse.Completed.ShouldBe(false);
+            response.GetSelfLink().ShouldNotBeNull();
+            response.GetLink("callback_url").ShouldNotBeNull();
+            response.Completed.ShouldBe(false);
+
+            var getSessionResponse = await DefaultApi.SessionsClient().GetSessionDetails(response.Id);
+
+            getSessionResponse.ShouldNotBeNull();
+
+            getSessionResponse.Id.ShouldNotBeNull();
+            getSessionResponse.SessionSecret.ShouldNotBeNull();
+            getSessionResponse.TransactionId.ShouldNotBeNull();
+            getSessionResponse.Amount.ShouldNotBeNull();
+            getSessionResponse.Certificates.ShouldNotBeNull();
+            getSessionResponse.Ds.ShouldNotBeNull();
+            getSessionResponse.Acs.ShouldBeNull();
+            getSessionResponse.Card.ShouldNotBeNull();
+
+            getSessionResponse.AuthenticationType.ShouldBe(AuthenticationType.Regular);
+            getSessionResponse.AuthenticationCategory.ShouldBe(category);
+            getSessionResponse.Status.ShouldBe(SessionStatus.Unavailable);
+            getSessionResponse.NextActions.Count.ShouldBe(1);
+            getSessionResponse.NextActions[0].ShouldBe(NextAction.Complete);
+            getSessionResponse.TransactionType.ShouldBe(transactionType);
+            getSessionResponse.ResponseCode.ShouldBe(ResponseCode.U);
+            getSessionResponse.AuthenticationDate.ShouldNotBeNull();
+
+            getSessionResponse.GetSelfLink().ShouldNotBeNull();
+            getSessionResponse.GetLink("callback_url").ShouldNotBeNull();
+            getSessionResponse.Completed.ShouldBe(false);
         }
 
         public static IEnumerable<object[]> SessionsTypes =>

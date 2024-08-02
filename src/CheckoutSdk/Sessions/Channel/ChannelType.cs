@@ -4,7 +4,8 @@ namespace Checkout.Sessions.Channel
 {
     public enum ChannelType
     {
+        [EnumMember(Value = "app")] App,
         [EnumMember(Value = "browser")] Browser,
-        [EnumMember(Value = "app")] App
+        [EnumMember(Value = "merchant_initiated")] MerchantInitiated
     }
 }
