@@ -7,7 +7,7 @@ namespace Checkout.Sessions
 {
     public class SessionRequest
     {
-        public SessionSource Source { get; set; }
+        public SessionSource Source { get; set; } = new SessionCardSource();
 
         public long? Amount { get; set; }
 
@@ -17,13 +17,13 @@ namespace Checkout.Sessions
 
         public SessionMarketplaceData Marketplace { get; set; }
 
-        public AuthenticationType? AuthenticationType { get; set; }
+        public AuthenticationType? AuthenticationType { get; set; } = Sessions.AuthenticationType.Regular;
 
-        public Category? AuthenticationCategory { get; set; }
+        public Category? AuthenticationCategory { get; set; } = Category.Payment;
 
         public CardholderAccountInfo AccountInfo { get; set; }
 
-        public ChallengeIndicatorType? ChallengeIndicator { get; set; }
+        public ChallengeIndicatorType? ChallengeIndicator { get; set; } = ChallengeIndicatorType.NoPreference;
 
         public SessionsBillingDescriptor BillingDescriptor { get; set; }
 
@@ -33,7 +33,7 @@ namespace Checkout.Sessions
 
         public string PriorTransactionReference { get; set; }
 
-        public TransactionType? TransactionType { get; set; }
+        public TransactionType? TransactionType { get; set; } = Sessions.TransactionType.GoodsService;
 
         public SessionAddress ShippingAddress { get; set; }
 
@@ -46,5 +46,9 @@ namespace Checkout.Sessions
         public Recurring Recurring { get; set; }
         
         public Installment Installment { get; set; }
+
+        public Optimization Optimization { get; set; }
+
+        public InitialTransaction InitialTransaction { get; set; }
     }
 }

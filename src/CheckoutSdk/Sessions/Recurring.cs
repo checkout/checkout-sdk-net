@@ -2,8 +2,8 @@ namespace Checkout.Sessions
 {
     public class Recurring
     {
-        public long? DaysBetweenPayments { get; set; }
+        public long? DaysBetweenPayments { get; set; } = 1L;
 
-        public string Expiry { get; set; }
+        public string Expiry { get; set; } = "99991231";
     }
 }
