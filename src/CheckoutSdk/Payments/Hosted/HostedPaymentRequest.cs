@@ -1,7 +1,10 @@
 ﻿using Checkout.Common;
+using Checkout.Payments.Request;
+using Checkout.Payments.Sender;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using Product = Checkout.Common.Product;
 
 namespace Checkout.Payments.Hosted
 {
@@ -20,6 +23,8 @@ namespace Checkout.Payments.Hosted
         public string Reference { get; set; }
 
         public string Description { get; set; }
+        
+        public string DisplayName { get; set; }
 
         public CustomerRequest Customer { get; set; }
 
@@ -34,6 +39,10 @@ namespace Checkout.Payments.Hosted
         public IList<Product> Products { get; set; }
 
         public RiskRequest Risk { get; set; }
+        
+        public PaymentRetryRequest CustomerRetry { get; set; }
+        
+        public PaymentSender Sender { get; set; }
 
         public string SuccessUrl { get; set; }
 
