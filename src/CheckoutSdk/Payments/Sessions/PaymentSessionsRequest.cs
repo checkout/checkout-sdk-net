@@ -66,6 +66,8 @@ namespace Checkout.Payments.Sessions
         public PaymentSender Sender { get; set; }
         
         public bool? Capture { get; set; }
+        
+        public DateTime? CaptureOn { get; set; }
 
         public string IpAddress { get; set; }
 
