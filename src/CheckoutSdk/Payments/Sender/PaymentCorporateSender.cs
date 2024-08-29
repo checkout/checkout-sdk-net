@@ -11,5 +11,9 @@ namespace Checkout.Payments.Sender
         public string CompanyName { get; set; }
 
         public Address Address { get; set; }
+        
+        public string ReferenceType { get; set; }
+        
+        public SourceOfFunds? SourceOfFunds { get; set; }
     }
 }
