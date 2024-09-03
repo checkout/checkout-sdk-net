@@ -69,9 +69,7 @@ namespace Checkout.Sessions
                 ChannelData = channelData
             };
 
-            return await Retriable(
-                async () => await DefaultApi.SessionsClient().RequestSession(sessionRequest, CancellationToken.None),
-                HasSessionCreated);
+            return await DefaultApi.SessionsClient().RequestSession(sessionRequest, CancellationToken.None);
         }
 
         protected async Task<SessionResponse> CreateHostedSession()
