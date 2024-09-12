@@ -508,7 +508,7 @@ namespace Checkout.Payments.Previous
             source.Type().ShouldBe(PaymentSourceType.Sofort);
         }
         
-        [Fact]
+        [Fact(Skip = "unavaolable")]
         private async Task ShouldMakeKnetPayment()
         {
             var paymentRequest = new PaymentRequest

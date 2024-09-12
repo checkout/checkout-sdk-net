@@ -20,7 +20,7 @@ namespace Checkout.Accounts
         {
         }
 
-        [Fact(Skip = "unavailable")]
+        [Fact]
         public async Task ShouldCreateGetAndUpdateOnboardEntity()
         {
             string randomReference = RandomString(15);
@@ -40,8 +40,8 @@ namespace Checkout.Accounts
                         AddressLine2 = "90 Tottenham Court Road",
                         City = "London",
                         State = "London",
-                        Zip = "WIT 4TJ",
-                        Country = CountryCode.ES
+                        Zip = "W1T 4TJ",
+                        Country = CountryCode.GB
                     },
                     NationalTaxId = "TAX123456",
                     DateOfBirth = new DateOfBirth { Day = 5, Month = 6, Year = 1996 },
@@ -91,7 +91,7 @@ namespace Checkout.Accounts
             onboardEntityRequest.Individual.FirstName.ShouldBe(verifyUpdated.Individual.FirstName);
         }
 
-        [Fact(Skip = "unavailable")]
+        [Fact]
         public async Task ShouldThrowConflictWhenCreatingExistingEntity()
         {
             string randomReference = RandomString(15);
@@ -111,8 +111,8 @@ namespace Checkout.Accounts
                         AddressLine2 = "90 Tottenham Court Road",
                         City = "London",
                         State = "London",
-                        Zip = "WIT 4TJ",
-                        Country = CountryCode.ES
+                        Zip = "W1T 4TJ",
+                        Country = CountryCode.GB
                     },
                     NationalTaxId = "TAX123456",
                     DateOfBirth = new DateOfBirth { Day = 5, Month = 6, Year = 1996 },
