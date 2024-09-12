@@ -57,6 +57,12 @@ namespace Checkout.Accounts.Regional
                         return target;
                     }
                 }
+                else
+                {
+                    var target = new OnboardEntityDetailsResponse();
+                    serializer.Populate(jObject.CreateReader(), target);
+                    return target;
+                }
             }
             
             throw new JsonSerializationException($"Unexpected token or value when parsing enum. Token: {reader.TokenType}, Value: {jObject}");
