@@ -368,7 +368,16 @@ namespace Checkout.Payments
         {
             var request = new PaymentRequest
             {
-                Source = new RequestKnetSource { Language = "en", },
+                Source = new RequestKnetSource
+                {
+                    Language = "en",
+                    PaymentMethodsDetails = new PaymentMethodsDetails
+                    {
+                        DisplayName = "name",
+                        Type = "type",
+                        Network = "card_network"
+                    }
+                },
                 Currency = Currency.KWD,
                 Amount = 100,
                 Reference = Guid.NewGuid().ToString(),
@@ -377,7 +386,7 @@ namespace Checkout.Payments
             };
 
             await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
-                ApmServiceUnavailable);
+                PayeeNotOnboarded);
         }
 
         [Fact]

@@ -33,6 +33,8 @@ namespace Checkout.Workflows
             WorkflowConditionRequest workflowConditionRequest);
         
         Task<EmptyResponse> RemoveWorkflowCondition(string workflowId, string conditionId);
+        
+        Task<EmptyResponse> TestWorkflow(string workflowId, EventTypesRequest eventTypesRequest);
 
         Task<ItemsResponse<EventTypesResponse>> GetEventTypes();
 

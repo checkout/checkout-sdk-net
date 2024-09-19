@@ -486,6 +486,24 @@ namespace Checkout.Workflows
                 ex.Message.ShouldBe("workflowId cannot be blank");
             }
         }
+        
+        [Fact]
+        public async Task ShouldTestWorkflow()
+        {
+            EventTypesRequest eventTypesRequest = new EventTypesRequest();
+            EmptyResponse createWorkflowResponse = new EmptyResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<EmptyResponse>("workflows/workflow_id/test", _authorization,
+                        eventTypesRequest, CancellationToken.None, null))
+                .ReturnsAsync(() => createWorkflowResponse);
+
+            IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
+
+            var response = await workflowsClient.TestWorkflow("workflow_id", eventTypesRequest);
+
+            response.ShouldNotBeNull();
+        }
 
         [Fact]
         public async Task ShouldGetEventTypes()

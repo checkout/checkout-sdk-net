@@ -74,7 +74,7 @@ namespace Checkout.Workflows
                 actionInvocationsActionInvocation.Succeeded.ShouldNotBeNull();
                 actionInvocationsActionInvocation.Timestamp.ShouldNotBeNull();
                 actionInvocationsActionInvocation.InvocationId.ShouldNotBeNullOrEmpty();
-                actionInvocationsActionInvocation.Result.ShouldNotBeEmpty();
+                actionInvocationsActionInvocation.ResultDetails.ShouldNotBeEmpty();
             }
         }
     }

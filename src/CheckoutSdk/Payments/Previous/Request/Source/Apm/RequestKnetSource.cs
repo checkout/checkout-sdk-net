@@ -1,4 +1,5 @@
 using Checkout.Common;
+using Checkout.Tokens;
 
 namespace Checkout.Payments.Previous.Request.Source.Apm
 {
@@ -19,6 +20,12 @@ namespace Checkout.Payments.Previous.Request.Source.Apm
         public string CardToken { get; set; }
 
         public string Ptlf { get; set; }
+
+        public string TokenType { get; set; }
+
+        public ApplePayTokenData TokenData { get; set; }
+
+        public PaymentMethodsDetails PaymentMethodsDetails { get; set; }
 
         public RequestKnetSource() : base(PaymentSourceType.KNet)
         {
