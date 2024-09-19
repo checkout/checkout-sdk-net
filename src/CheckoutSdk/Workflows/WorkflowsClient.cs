@@ -19,6 +19,7 @@ namespace Checkout.Workflows
         private const string ReflowPath = "reflow";
         private const string SubjectPath = "subject";
         private const string WorkflowId = "workflowId";
+        private const string TestPath = "test";
 
         public WorkflowsClient(IApiClient apiClient, CheckoutConfiguration configuration) :
             base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
@@ -118,6 +119,17 @@ namespace Checkout.Workflows
             CheckoutUtils.ValidateParams(WorkflowId, workflowId, "conditionId", conditionId);
             return ApiClient.Delete<EmptyResponse>(BuildPath(WorkflowsPath, workflowId, ConditionsPath, conditionId),
                 SdkAuthorization());
+        }
+
+        public Task<EmptyResponse> TestWorkflow(string workflowId, EventTypesRequest eventTypesRequest)
+        {
+            CheckoutUtils.ValidateParams(
+                WorkflowId, 
+                workflowId, 
+                "eventTypesRequest", 
+                eventTypesRequest);
+            return ApiClient.Post<EmptyResponse>(BuildPath(WorkflowsPath, workflowId, TestPath), 
+                SdkAuthorization(), eventTypesRequest);
         }
 
         public Task<ItemsResponse<EventTypesResponse>> GetEventTypes()

@@ -4,6 +4,7 @@ using Checkout.Workflows.Actions.Response;
 using Checkout.Workflows.Conditions;
 using Checkout.Workflows.Conditions.Request;
 using Checkout.Workflows.Conditions.Response;
+using Checkout.Workflows.Events;
 using Shouldly;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,8 @@ namespace Checkout.Workflows
         {
             var createdWorkflow = await CreateWorkflow();
 
-            GetWorkflowResponse getWorkflowResponse = await DefaultApi.WorkflowsClient().GetWorkflow(createdWorkflow.Id);
+            GetWorkflowResponse getWorkflowResponse =
+                await DefaultApi.WorkflowsClient().GetWorkflow(createdWorkflow.Id);
 
             getWorkflowResponse.ShouldNotBeNull();
             getWorkflowResponse.Id.ShouldNotBeNullOrEmpty();
@@ -52,7 +54,7 @@ namespace Checkout.Workflows
                     eventCondition.Events.ShouldNotBeEmpty();
                 }
                 else if (workflowConditionResponse is ProcessingChannelWorkflowConditionResponse
-                    processingChannelCondition)
+                         processingChannelCondition)
                 {
                     processingChannelCondition.Type.ShouldBe(WorkflowConditionType.ProcessingChannel);
                     processingChannelCondition.ProcessingChannels.ShouldNotBeEmpty();
@@ -81,7 +83,7 @@ namespace Checkout.Workflows
         {
             var workflow = await CreateWorkflow();
 
-            UpdateWorkflowRequest request = new UpdateWorkflowRequest {Name = "testing_2", Active = false};
+            UpdateWorkflowRequest request = new UpdateWorkflowRequest { Name = "testing_2", Active = false };
 
             UpdateWorkflowResponse updateWorkflowResponse =
                 await DefaultApi.WorkflowsClient().UpdateWorkflow(workflow.Id, request);
@@ -102,7 +104,8 @@ namespace Checkout.Workflows
             createdWorkflow.ShouldNotBeNull();
             createdWorkflow.Id.ShouldNotBeNull();
 
-            GetWorkflowResponse getWorkflowResponse = await DefaultApi.WorkflowsClient().GetWorkflow(createdWorkflow.Id);
+            GetWorkflowResponse getWorkflowResponse =
+                await DefaultApi.WorkflowsClient().GetWorkflow(createdWorkflow.Id);
 
             getWorkflowResponse.ShouldNotBeNull();
             getWorkflowResponse.Id.ShouldNotBeNullOrEmpty();
@@ -116,10 +119,11 @@ namespace Checkout.Workflows
                 {
                     Url = "https://google.com/fail/fake",
                     Headers = new Dictionary<string, string>(),
-                    Signature = new WebhookSignature {Key = "8V8x0dLK%AyD*DNS8JJr", Method = "HMACSHA256"}
+                    Signature = new WebhookSignature { Key = "8V8x0dLK%AyD*DNS8JJr", Method = "HMACSHA256" }
                 };
 
-            var emptyResponse = await DefaultApi.WorkflowsClient().UpdateWorkflowAction(getWorkflowResponse.Id, actionId, updateAction);
+            var emptyResponse = await DefaultApi.WorkflowsClient()
+                .UpdateWorkflowAction(getWorkflowResponse.Id, actionId, updateAction);
             emptyResponse.ShouldNotBeNull();
             emptyResponse.HttpStatusCode.ShouldNotBeNull();
             emptyResponse.ResponseHeaders.ShouldNotBeNull();
@@ -142,7 +146,8 @@ namespace Checkout.Workflows
             createdWorkflow.ShouldNotBeNull();
             createdWorkflow.Id.ShouldNotBeNull();
 
-            GetWorkflowResponse getWorkflowResponse = await DefaultApi.WorkflowsClient().GetWorkflow(createdWorkflow.Id);
+            GetWorkflowResponse getWorkflowResponse =
+                await DefaultApi.WorkflowsClient().GetWorkflow(createdWorkflow.Id);
 
             getWorkflowResponse.ShouldNotBeNull();
             getWorkflowResponse.Id.ShouldNotBeNullOrEmpty();
@@ -191,7 +196,8 @@ namespace Checkout.Workflows
             await DefaultApi.WorkflowsClient().UpdateWorkflowCondition(getWorkflowResponse.Id,
                 eventWorkflowConditionResponse.Id, updateEventCondition);
 
-            GetWorkflowResponse getWorkflowResponse2 = await DefaultApi.WorkflowsClient().GetWorkflow(createdWorkflow.Id);
+            GetWorkflowResponse getWorkflowResponse2 =
+                await DefaultApi.WorkflowsClient().GetWorkflow(createdWorkflow.Id);
 
             getWorkflowResponse2.ShouldNotBeNull();
             getWorkflowResponse2.Conditions.ShouldNotBeNull();
@@ -203,6 +209,42 @@ namespace Checkout.Workflows
             updatedEventConditionResponse.ShouldNotBeNull();
             updatedEventConditionResponse.Id.ShouldNotBeNull();
             updatedEventConditionResponse.Type.ShouldNotBeNull();
+        }
+
+        [Fact(Skip = "unstable")]
+        public async Task ShouldCreateAndTestWorkflows()
+        {
+            var createdWorkflow = await CreateWorkflow();
+
+            var eventTypesRequest = new EventTypesRequest
+            {
+                EventTypes = new List<string>
+                {
+                    "payment_approved",
+                    "payment_declined",
+                    "card_verification_declined",
+                    "card_verified",
+                    "payment_authorization_incremented",
+                    "payment_authorization_increment_declined",
+                    "payment_capture_declined",
+                    "payment_captured",
+                    "payment_refund_declined",
+                    "payment_refunded",
+                    "payment_void_declined",
+                    "payment_voided",
+                    "dispute_canceled",
+                    "dispute_evidence_required",
+                    "dispute_expired",
+                    "dispute_lost",
+                    "dispute_resolved",
+                    "dispute_won"
+                }
+            };
+
+            EmptyResponse getWorkflowResponse =
+                await DefaultApi.WorkflowsClient().TestWorkflow(createdWorkflow.Id, eventTypesRequest);
+
+            getWorkflowResponse.ShouldNotBeNull();
         }
     }
 }

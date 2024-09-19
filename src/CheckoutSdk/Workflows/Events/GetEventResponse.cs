@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Checkout.Common;
+using Checkout.Workflows.Actions.Response;
+using System.Collections.Generic;
 
 namespace Checkout.Workflows.Events
 {
-    public class GetEventResponse : HttpMetadata
+    public class GetEventResponse : Resource
     {
         public string Id { get; set; }
 
@@ -15,5 +17,7 @@ namespace Checkout.Workflows.Events
         public string Version { get; set; }
 
         public IDictionary<string, object> Data { get; set; }
+
+        public IList<WorkflowActionInvocation> ActionInvocations { get; set; }
     }
 }

@@ -508,7 +508,7 @@ namespace Checkout.Payments.Previous
             source.Type().ShouldBe(PaymentSourceType.Sofort);
         }
         
-        [Fact(Skip = "unavaolable")]
+        [Fact]
         private async Task ShouldMakeKnetPayment()
         {
             var paymentRequest = new PaymentRequest
@@ -516,6 +516,12 @@ namespace Checkout.Payments.Previous
                 Source = new RequestKnetSource
                 {
                     Language = "en",
+                    PaymentMethodsDetails = new PaymentMethodsDetails
+                    {
+                        DisplayName = "name",
+                        Type = "type",
+                        Network = "card_network"
+                    }
                 },
                 Currency = Currency.KWD,
                 Amount = 100,
