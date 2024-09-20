@@ -25,7 +25,7 @@ namespace Checkout.Payments.Previous.Request.Source.Apm
 
         public ApplePayTokenData TokenData { get; set; }
 
-        public PaymentMethodsDetails PaymentMethodsDetails { get; set; }
+        public PaymentMethodDetails PaymentMethodDetails { get; set; }
 
         public RequestKnetSource() : base(PaymentSourceType.KNet)
         {

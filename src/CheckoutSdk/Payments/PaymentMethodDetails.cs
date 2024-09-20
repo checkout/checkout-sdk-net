@@ -1,6 +1,6 @@
 namespace Checkout.Payments
 {
-    public class PaymentMethodsDetails
+    public class PaymentMethodDetails
     {
         public string DisplayName { get; set; }
 

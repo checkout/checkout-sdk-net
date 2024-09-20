@@ -371,7 +371,7 @@ namespace Checkout.Payments
                 Source = new RequestKnetSource
                 {
                     Language = "en",
-                    PaymentMethodsDetails = new PaymentMethodsDetails
+                    PaymentMethodDetails = new PaymentMethodDetails
                     {
                         DisplayName = "name",
                         Type = "type",
