@@ -18,6 +18,6 @@ namespace Checkout.Workflows.Events
 
         public IDictionary<string, object> Data { get; set; }
 
-        public IList<WorkflowActionInvocation> ActionInvocations { get; set; }
+        public IList<EventActionInvocation> ActionInvocations { get; set; }
     }
 }
