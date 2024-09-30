@@ -6,7 +6,7 @@ namespace Checkout.Metadata.Card
     {
         [EnumMember(Value = "not_supported")] NotSupported,
         [EnumMember(Value = "standard")] Standard,
-        [EnumMember(Value = "fast_founds")] FastFounds,
+        [EnumMember(Value = "fast_funds")] FastFunds,
         [EnumMember(Value = "unknown")] Unknown,
     }
 }
