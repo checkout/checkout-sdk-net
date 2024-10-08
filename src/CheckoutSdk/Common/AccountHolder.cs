@@ -32,5 +32,7 @@
 
         public AccountHolderIdentification Identification { get; set; }
 
+        public bool AccountNameInquiry { get; set; }
+
     }
 }

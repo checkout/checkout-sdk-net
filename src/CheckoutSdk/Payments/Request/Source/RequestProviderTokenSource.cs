@@ -13,5 +13,6 @@ namespace Checkout.Payments.Request.Source
         public string Token { get; set; }
 
         public AccountHolder AccountHolder { get; set; }
+        
     }
 }

@@ -21,5 +21,6 @@ namespace Checkout.Payments.Request.Source.Apm
         public string DateOfSignature { get; set; }
 
         public AccountHolder AccountHolder { get; set; }
+        
     }
 }

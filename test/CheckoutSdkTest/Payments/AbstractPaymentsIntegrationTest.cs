@@ -16,6 +16,7 @@ namespace Checkout.Payments
         protected const string IdempotencyKey = "test.net";
         protected const string PayeeNotOnboarded = "payee_not_onboarded";
         protected const string ApmServiceUnavailable = "apm_service_unavailable";
+        protected const string ApmCurrencyNotSupported = "currency_not_supported";
 
         protected AbstractPaymentsIntegrationTest(PlatformType platform = PlatformType.Default) : base(platform)
         {
@@ -37,7 +38,8 @@ namespace Checkout.Payments
                 ExpiryMonth = TestCardSource.Visa.ExpiryMonth,
                 Cvv = TestCardSource.Visa.Cvv,
                 BillingAddress = GetAddress(),
-                Phone = GetPhone()
+                Phone = GetPhone(),
+                AccountHolder = GetAccountHolder()
             };
 
             var customerRequest = new CustomerRequest {Email = GenerateRandomEmail(), Name = "Customer"};

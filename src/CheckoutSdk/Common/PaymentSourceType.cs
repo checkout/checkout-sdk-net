@@ -8,6 +8,7 @@ namespace Checkout.Common
         [EnumMember(Value = "id")] Id,
         [EnumMember(Value = "network_token")] NetworkToken,
         [EnumMember(Value = "token")] Token,
+        [EnumMember(Value = "ach")] Ach,
         [EnumMember(Value = "customer")] Customer,
         [EnumMember(Value = "provider_token")] ProviderToken,
         [EnumMember(Value = "dLocal")] DLocal,
@@ -26,11 +27,14 @@ namespace Checkout.Common
         [EnumMember(Value = "alipay")] Alipay,
         [EnumMember(Value = "paypal")] PayPal,
         [EnumMember(Value = "multibanco")] Multibanco,
+        [EnumMember(Value = "octopus")] Octopus,
+        [EnumMember(Value = "plaid")] Plaid,
         [EnumMember(Value = "eps")] EPS,
         [EnumMember(Value = "illicado")] Illicado,
         [EnumMember(Value = "poli")] Poli,
         [EnumMember(Value = "p24")] Przelewy24,
         [EnumMember(Value = "benefitpay")] BenefitPay,
+        [EnumMember(Value = "bizum")] Bizum,
         [EnumMember(Value = "bancontact")] Bancontact,
         [EnumMember(Value = "tamara")] Tamara,
         [EnumMember(Value = "bank_account")] BankAccount,
@@ -51,6 +55,7 @@ namespace Checkout.Common
         [EnumMember(Value = "alma")] Alma,
         [EnumMember(Value = "trustly")] Trustly,
         [EnumMember(Value = "cvconnect")] Cvconnect,
-        [EnumMember(Value = "sepa")] Sepa
+        [EnumMember(Value = "sepa")] Sepa,
+        [EnumMember(Value = "sequra")] Sequra
     }
 }

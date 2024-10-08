@@ -9,6 +9,8 @@ namespace Checkout.Payments.Request.Source
         }
 
         public string Id { get; set; }
+        
+        public AccountHolder AccountHolder { get; set; }
       
     }
 }

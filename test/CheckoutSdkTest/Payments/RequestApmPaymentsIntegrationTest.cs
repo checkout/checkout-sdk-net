@@ -271,7 +271,7 @@ namespace Checkout.Payments
         {
             var request = new PaymentRequest
             {
-                Source = new RequestEpsSource { Purpose = "Mens black t-shirt L" },
+                Source = new RequestEpsSource { AccountHolder = GetAccountHolder(), Purpose = "Mens black t-shirt L" },
                 Amount = 10L,
                 Currency = Currency.EUR,
                 Reference = "REFERENCE",
@@ -282,13 +282,14 @@ namespace Checkout.Payments
             await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
                 PayeeNotOnboarded);
         }
-        
+
         [Fact]
         private async Task ShouldMakeIllicadoPayment()
         {
             var request = new PaymentRequest
             {
-                Source = new RequestIllicadoSource { 
+                Source = new RequestIllicadoSource
+                {
                     BillingAddress = new Address
                     {
                         AddressLine1 = "Cecilia Chapman",
@@ -314,11 +315,8 @@ namespace Checkout.Payments
         private async Task ShouldMakeGiropayPayment()
         {
             var accountHolder = new AccountHolder { FirstName = "Firstname", LastName = "Lastname" };
-            
-            var source = new RequestGiropaySource
-            {
-                AccountHolder = accountHolder,
-            };
+
+            var source = new RequestGiropaySource { AccountHolder = accountHolder, };
 
             var request = new PaymentRequest
             {
@@ -327,11 +325,7 @@ namespace Checkout.Payments
                 Currency = Currency.EUR,
                 Reference = "REFERENCE",
                 Description = "Description",
-                Shipping = new ShippingDetails
-                {
-                    Address = GetAddress(),
-                    Phone = GetPhone(),
-                },
+                Shipping = new ShippingDetails { Address = GetAddress(), Phone = GetPhone(), },
                 SuccessUrl = "https://testing.checkout.com/sucess",
                 FailureUrl = "https://testing.checkout.com/failure",
             };
@@ -371,12 +365,11 @@ namespace Checkout.Payments
                 Source = new RequestKnetSource
                 {
                     Language = "en",
-                    PaymentMethodDetails = new PaymentMethodDetails
-                    {
-                        DisplayName = "name",
-                        Type = "type",
-                        Network = "card_network"
-                    }
+                    PaymentMethodDetails =
+                        new PaymentMethodDetails
+                        {
+                            DisplayName = "name", Type = "type", Network = "card_network"
+                        }
                 },
                 Currency = Currency.KWD,
                 Amount = 100,
@@ -406,9 +399,9 @@ namespace Checkout.Payments
                 SuccessUrl = "https://testing.checkout.com/sucess",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
-            
+
             var response = await DefaultApi.PaymentsClient().RequestPayment(request);
-            
+
             response.Id.ShouldNotBeNull();
             response.Status.ShouldBe(PaymentStatus.Pending);
             response.Reference.ShouldNotBeNull();
@@ -534,9 +527,9 @@ namespace Checkout.Payments
                 SuccessUrl = "https://testing.checkout.com/sucess",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
-            
+
             var response = await DefaultApi.PaymentsClient().RequestPayment(request);
-            
+
             response.Id.ShouldNotBeNull();
             response.Status.ShouldBe(PaymentStatus.Pending);
             response.Reference.ShouldNotBeNull();
@@ -607,7 +600,7 @@ namespace Checkout.Payments
             await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
                 PayeeNotOnboarded);
         }
-        
+
         [Fact]
         private async Task ShouldMakeSepaPayment()
         {
@@ -632,6 +625,116 @@ namespace Checkout.Payments
 
             await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
                 ApmServiceUnavailable);
+        }
+
+        [Fact]
+        private async Task ShouldMakeAchPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestAchSource
+                {
+                    AccountType = AccountType.Savings,
+                    Country = CountryCode.GB,
+                    AccountNumber = "8784738748973829",
+                    BankCode = "BANK",
+                    AccountHolder = GetAccountHolder()
+                },
+                Amount = 10L,
+                Currency = Currency.EUR,
+                ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure",
+            };
+
+            var response = await DefaultApi.PaymentsClient().RequestPayment(request);
+
+            response.Id.ShouldNotBeNull();
+            response.Status.ShouldBe(PaymentStatus.Pending);
+            var source = response.Source as AlternativePaymentSourceResponse;
+            source.ShouldNotBeNull();
+            source.Type().ShouldBe(PaymentSourceType.Ach);
+        }
+
+        [Fact]
+        private async Task ShouldMakeBizumPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestBizumSource { MobileNumber = "+447700900986", },
+                Amount = 10L,
+                Currency = Currency.EUR,
+                ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure",
+            };
+
+            await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
+                ApmServiceUnavailable);
+        }
+
+        [Fact]
+        private async Task ShouldMakeOctopusPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestOctopusSource(),
+                Amount = 10L,
+                Currency = Currency.USD,
+                ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure",
+            };
+
+            await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
+                ApmCurrencyNotSupported);
+        }
+
+        [Fact]
+        private async Task ShouldMakePlaidPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestPlaidSource
+                {
+                    Token = "token",
+                    AccountHolder =
+                        new AccountHolder
+                        {
+                            FirstName = "John",
+                            LastName = "Doe",
+                            Phone = GetPhone(),
+                            BillingAddress = GetAddress(),
+                            Type = AccountHolderType.Individual,
+                            AccountNameInquiry = false
+                        }
+                },
+                Amount = 10L,
+                Currency = Currency.USD,
+                ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure",
+            };
+
+            await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
+                PayeeNotOnboarded);
+        }
+        
+        [Fact]
+        private async Task ShouldMakeSequraPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestSequraSource { BillingAddress = GetAddress() },
+                Currency = Currency.EUR,
+                Amount = 10,
+                Reference = Guid.NewGuid().ToString(),
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure"
+            };
+
+            await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
+                PayeeNotOnboarded);
         }
     }
 }

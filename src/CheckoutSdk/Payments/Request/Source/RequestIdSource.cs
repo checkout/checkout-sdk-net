@@ -17,5 +17,8 @@ namespace Checkout.Payments.Request.Source
         public bool? Stored { get; set; }
 
         public bool? StoreForFutureUse { get; set; }
+        
+        public AccountHolder AccountHolder { get; set; }
+        
     }
 }
