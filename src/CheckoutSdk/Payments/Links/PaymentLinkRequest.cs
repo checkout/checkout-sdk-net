@@ -51,6 +51,8 @@ namespace Checkout.Payments.Links
 
         public IList<PaymentSourceType> AllowPaymentMethods { get; set; }
 
+        public IList<PaymentSourceType> DisallowedPaymentMethods { get; set; }
+
         //Not available on Previous
 
         public string ProcessingChannelId { get; set; }
