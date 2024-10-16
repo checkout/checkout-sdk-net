@@ -28,6 +28,9 @@ namespace Checkout.Common
         TransactionRiskAssessment,
 
         [EnumMember(Value = "trusted_listing")]
-        TrustedListing
+        TrustedListing,
+        
+        [EnumMember(Value = "trusted_listing_prompt")]
+        TrustedListingPrompt
     }
 }

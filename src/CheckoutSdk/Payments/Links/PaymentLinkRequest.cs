@@ -1,7 +1,10 @@
 ﻿using Checkout.Common;
+using Checkout.Payments.Request;
+using Checkout.Payments.Sender;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using Product = Checkout.Common.Product;
 
 namespace Checkout.Payments.Links
 {
@@ -35,6 +38,10 @@ namespace Checkout.Payments.Links
 
         public RiskRequest Risk { get; set; }
 
+        public PaymentRetryRequest CustomerRetry { get; set; }
+
+        public PaymentSender Sender { get; set; }
+
         public string ReturnUrl { get; set; }
 
         public string Locale { get; set; }
@@ -50,6 +57,8 @@ namespace Checkout.Payments.Links
         public BillingDescriptor BillingDescriptor { get; set; }
 
         public IList<PaymentSourceType> AllowPaymentMethods { get; set; }
+        
+        public IList<PaymentSourceType> DisabledPaymentMethods { get; set; }
 
         //Not available on Previous
 
