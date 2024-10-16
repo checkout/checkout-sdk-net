@@ -1,10 +1,12 @@
+using System.Collections.Generic;
+
 namespace Checkout.Metadata.Card
 {
     public class SchemeMetadata
     {
-        public PinlessDebitSchemeMetadata Accel { get; set; }
-        public PinlessDebitSchemeMetadata Pulse { get; set; }
-        public PinlessDebitSchemeMetadata Nyce { get; set; }
-        public PinlessDebitSchemeMetadata Star { get; set; }
+        public IList<PinlessDebitSchemeMetadata> Accel { get; set; }
+        public IList<PinlessDebitSchemeMetadata> Pulse { get; set; }
+        public IList<PinlessDebitSchemeMetadata> Nyce { get; set; }
+        public IList<PinlessDebitSchemeMetadata> Star { get; set; }
     }
 }
