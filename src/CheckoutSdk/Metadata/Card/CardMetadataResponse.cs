@@ -40,5 +40,7 @@ namespace Checkout.Metadata.Card
         public CardMetadataPayouts CardPayouts { get; set; }
 
         public SchemeMetadata SchemeMetadata { get; set; }
+
+        public AccountFundingTransaction AccountFundingTransaction { get; set; }
     }
 }
