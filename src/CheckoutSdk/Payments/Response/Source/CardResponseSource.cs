@@ -48,6 +48,10 @@ namespace Checkout.Payments.Response.Source
 
         public string EncryptedCardNumber { get; set; }
 
+        public AccountUpdateStatus? AccountUpdateStatus { get; set; }
+        
+        public AccountHolder AccountHolder { get; set; }
+
         public new PaymentSourceType? Type()
         {
             return base.Type;

@@ -1,4 +1,5 @@
 using Checkout.Common;
+using Checkout.Payments.Request.Source.Apm;
 using Checkout.Payments.Request.Source.Contexts;
 using Checkout.Sessions;
 using Shouldly;
@@ -72,6 +73,54 @@ namespace Checkout.Payments.Contexts
             await CheckErrorItem(
                 async () => await DefaultApi.PaymentContextsClient().RequestPaymentContexts(paymentContextsRequest),
                 "apm_service_unavailable");
+        }
+        
+        [Fact(Skip = "unavailable")]
+        private async Task ShouldMakeAStcpayPaymentContextRequest()
+        {
+            var paymentContextsRequest = new PaymentContextsRequest
+            {
+                Source = new PaymentContextsStcpaySource(),
+                Amount = 1000,
+                Currency = Currency.EUR,
+                PaymentType = PaymentType.Regular,
+                Capture = true,
+                ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
+                SuccessUrl = "https://example.com/payments/success",
+                FailureUrl = "https://example.com/payments/fail",
+                Items = new List<PaymentContextsItems>
+                {
+                    new PaymentContextsItems { Name = "mask", Quantity = 1, UnitPrice = 1000, TotalAmount = 1000 }
+                },
+            };
+
+            await CheckErrorItem(
+                async () => await DefaultApi.PaymentContextsClient().RequestPaymentContexts(paymentContextsRequest),
+                "apm_not_supported");
+        }
+        
+        [Fact]
+        private async Task ShouldMakeATabbyPaymentContextRequest()
+        {
+            var paymentContextsRequest = new PaymentContextsRequest
+            {
+                Source = new PaymentContextsTabbySource(),
+                Amount = 1000,
+                Currency = Currency.EUR,
+                PaymentType = PaymentType.Regular,
+                Capture = true,
+                ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
+                SuccessUrl = "https://example.com/payments/success",
+                FailureUrl = "https://example.com/payments/fail",
+                Items = new List<PaymentContextsItems>
+                {
+                    new PaymentContextsItems { Name = "mask", Quantity = 1, UnitPrice = 1000, TotalAmount = 1000 }
+                },
+            };
+
+            await CheckErrorItem(
+                async () => await DefaultApi.PaymentContextsClient().RequestPaymentContexts(paymentContextsRequest),
+                "currency_not_supported");
         }
 
         [Fact]
