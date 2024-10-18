@@ -17,36 +17,42 @@ namespace Checkout.Payments.Response
 
         public DateTime? RequestedOn { get; set; }
 
+        public string ProcessedOn { get; set; }
+        
         [JsonConverter(typeof(PaymentResponseSourceTypeConverter))]
         public IResponseSource Source { get; set; }
 
         [JsonConverter(typeof(PaymentResponseDestinationTypeConverter))]
         public IPaymentResponseDestination Destination { get; set; }
 
-        [JsonConverter(typeof(PaymentResponseSenderTypeConverter))]
-        public ISender Sender { get; set; }
-
         public long? Amount { get; set; }
         
         public long? AmountRequested { get; set; }
-
+        
+        [JsonConverter(typeof(PaymentResponseSenderTypeConverter))]
+        public ISender Sender { get; set; }
+        
         public Currency? Currency { get; set; }
 
         public PaymentType? PaymentType { get; set; }
 
+        public PaymentPlan PaymentPlan { get; set; }
+
         public string Reference { get; set; }
-
+        
         public string Description { get; set; }
-
+        
         public bool? Approved { get; set; }
-
+        
         public DateTime? ExpiresOn { get; set; }
-
+        
         public PaymentStatus? Status { get; set; }
-
+        
         public PaymentResponseBalances Balances { get; set; }
-
-        [JsonProperty(PropertyName = "3ds")] public ThreeDsData ThreeDs { get; set; }
+        
+        
+        [JsonProperty(PropertyName = "3ds")] 
+        public ThreeDsData ThreeDs { get; set; }
 
         public RiskAssessment Risk { get; set; }
 
@@ -83,8 +89,8 @@ namespace Checkout.Payments.Response
         
         public bool? CkoNetworkTokenAvailable { get; set; }
         
-        public string ProcessedOn { get; set; }
-
         public PaymentInstruction Instruction { get; set; }
+        
+
     }
 }

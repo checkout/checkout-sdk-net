@@ -69,6 +69,16 @@ namespace Checkout.Payments.Util
             {
                 return new PaymentContextsKlarnaResponseSource();
             }
+            
+            if (CheckoutUtils.GetEnumMemberValue(PaymentSourceType.Stcpay).Equals(sourceType))
+            {
+                return new PaymentContextsStcpayResponseSource();
+            }
+            
+            if (CheckoutUtils.GetEnumMemberValue(PaymentSourceType.Tabby).Equals(sourceType))
+            {
+                return new PaymentContextsTabbyResponseSource();
+            }
 
             return new AlternativePaymentSourceResponse();
         }

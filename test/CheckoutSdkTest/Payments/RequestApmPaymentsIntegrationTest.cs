@@ -690,7 +690,7 @@ namespace Checkout.Payments
                 ApmCurrencyNotSupported);
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakePlaidPayment()
         {
             var request = new PaymentRequest
