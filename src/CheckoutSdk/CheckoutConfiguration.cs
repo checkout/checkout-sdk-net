@@ -10,7 +10,7 @@ namespace Checkout
 
         public IHttpClientFactory HttpClientFactory { get; }
 
-        public bool RecordTelemetry {get;}
+        public bool RecordTelemetry { get; }
 
         public CheckoutConfiguration(
             SdkCredentials sdkCredentials,
