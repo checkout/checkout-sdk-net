@@ -79,25 +79,29 @@ namespace Checkout
             return new ApiClient(configuration.HttpClientFactory,
                 configuration.EnvironmentSubdomain != null
                     ? configuration.EnvironmentSubdomain.ApiUri
-                    : configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri);
+                    : configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri,
+                    configuration.RecordTelemetry);
         }
 
         private static ApiClient FilesApiClient(CheckoutConfiguration configuration)
         {
             return new ApiClient(configuration.HttpClientFactory,
-                configuration.Environment.GetAttribute<EnvironmentAttribute>().FilesApiUri);
+                configuration.Environment.GetAttribute<EnvironmentAttribute>().FilesApiUri,
+                configuration.RecordTelemetry);
         }
 
         private static ApiClient TransfersApiClient(CheckoutConfiguration configuration)
         {
             return new ApiClient(configuration.HttpClientFactory,
-                configuration.Environment.GetAttribute<EnvironmentAttribute>().TransfersApiUri);
+                configuration.Environment.GetAttribute<EnvironmentAttribute>().TransfersApiUri,
+                configuration.RecordTelemetry);
         }
 
         private static ApiClient BalancesApiClient(CheckoutConfiguration configuration)
         {
             return new ApiClient(configuration.HttpClientFactory,
-                configuration.Environment.GetAttribute<EnvironmentAttribute>().BalancesApiUri);
+                configuration.Environment.GetAttribute<EnvironmentAttribute>().BalancesApiUri,
+                configuration.RecordTelemetry);
         }
 
 

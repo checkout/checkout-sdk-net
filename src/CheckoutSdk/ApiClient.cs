@@ -3,7 +3,9 @@ using Microsoft.Extensions.Logging;
 using System.Web;
 #endif
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -19,16 +21,21 @@ namespace Checkout
         private readonly ILogger _log = LogProvider.GetLogger(typeof(ApiClient));
 #endif
 
+        private static string sdkTelemetryHeader = "cko-sdk-telemetry";
+        private static int maxCountInTelemetryQueue = 10;
         private readonly HttpClient _httpClient;
         private readonly Uri _baseUri;
         private readonly ISerializer _serializer = new JsonSerializer();
+        private ConcurrentQueue<RequestMetrics> requestMetricsQueue = new ConcurrentQueue<RequestMetrics>();
+        private readonly bool _enableTelemetry;
 
-        public ApiClient(IHttpClientFactory httpClientFactory, Uri baseUri)
+        public ApiClient(IHttpClientFactory httpClientFactory, Uri baseUri, bool enableTelemetry)
         {
             CheckoutUtils.ValidateParams("httpClientFactory", httpClientFactory, "baseUri", baseUri);
             var httpClient = httpClientFactory.CreateClient();
             _baseUri = baseUri;
             _httpClient = httpClient;
+            _enableTelemetry = enableTelemetry;
         }
 
         public async Task<TResult> Get<TResult>(
@@ -170,7 +177,7 @@ namespace Checkout
                             $"{WebUtility.UrlEncode(kvp.Key)}={WebUtility.UrlEncode(kvp.Value)}"));
 #endif
 
-                            path = $"{path}?{queryString}";
+                    path = $"{path}?{queryString}";
                 }
             }
 
@@ -246,8 +253,37 @@ namespace Checkout
             {
                 httpRequest.Headers.Add("Cko-Idempotency-Key", idempotencyKey);
             }
+            
+            if (_enableTelemetry)
+            {
+                var currentRequestId = Guid.NewGuid().ToString();
+                if (requestMetricsQueue.TryDequeue(out var lastRequestMetric))
+                {
+                    lastRequestMetric.RequestId = currentRequestId;
+                    httpRequest.Headers.TryAddWithoutValidation(sdkTelemetryHeader, _serializer.Serialize(lastRequestMetric));
+                }
 
-            return await _httpClient.SendAsync(httpRequest, cancellationToken);
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+                var result = await _httpClient.SendAsync(httpRequest, cancellationToken);
+                stopwatch.Stop();
+
+                if (requestMetricsQueue.Count < maxCountInTelemetryQueue)
+                {
+                    lastRequestMetric.PrevRequestDuration = stopwatch.ElapsedMilliseconds;
+                    requestMetricsQueue.Enqueue(new RequestMetrics()
+                    {
+                        PrevRequestDuration = stopwatch.ElapsedMilliseconds,
+                        PrevRequestId = currentRequestId
+                    });
+                }
+
+                return result;
+            }
+            else
+            {
+                return await _httpClient.SendAsync(httpRequest, cancellationToken);
+            }
         }
 
         private async Task ValidateResponseAsync(HttpResponseMessage httpResponse)

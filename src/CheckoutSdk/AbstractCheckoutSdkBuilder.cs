@@ -9,6 +9,8 @@ namespace Checkout
     public abstract class AbstractCheckoutSdkBuilder<T>
     {
         protected Environment Env = Checkout.Environment.Sandbox;
+
+        private bool _recordTelemetry = true;
         private EnvironmentSubdomain _envSubdomain;
         protected IHttpClientFactory ClientFactory = new DefaultHttpClientFactory();
 
@@ -21,6 +23,12 @@ namespace Checkout
         public AbstractCheckoutSdkBuilder<T> EnvironmentSubdomain(string subdomain)
         {
             _envSubdomain = new EnvironmentSubdomain(Env, subdomain);
+            return this;
+        }
+
+        public AbstractCheckoutSdkBuilder<T> RecordTelemetry(bool recordTelemetry)
+        {
+            _recordTelemetry = recordTelemetry;
             return this;
         }
 
@@ -40,7 +48,7 @@ namespace Checkout
 
         protected CheckoutConfiguration GetCheckoutConfiguration()
         {
-            return new CheckoutConfiguration(GetSdkCredentials(), Env, _envSubdomain, ClientFactory);
+            return new CheckoutConfiguration(GetSdkCredentials(), Env, _envSubdomain, ClientFactory, _recordTelemetry);
         }
 
         protected abstract SdkCredentials GetSdkCredentials();

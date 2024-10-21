@@ -33,7 +33,8 @@ namespace Checkout.Previous
             var apiClient = new ApiClient(configuration.HttpClientFactory,
                 configuration.EnvironmentSubdomain != null
                     ? configuration.EnvironmentSubdomain.ApiUri
-                    : configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri);
+                    : configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri,
+                    configuration.RecordTelemetry);
             _tokensClient = new TokensClient(apiClient, configuration);
             _customersClient = new CustomersClient(apiClient, configuration);
             _sourcesClient = new SourcesClient(apiClient, configuration);

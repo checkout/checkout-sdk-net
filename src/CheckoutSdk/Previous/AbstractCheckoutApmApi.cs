@@ -15,7 +15,8 @@ namespace Checkout.Previous
             var apiClient = new ApiClient(configuration.HttpClientFactory,
                 configuration.EnvironmentSubdomain != null
                     ? configuration.EnvironmentSubdomain.ApiUri
-                    : configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri);
+                    : configuration.Environment.GetAttribute<EnvironmentAttribute>().ApiUri,
+                    configuration.RecordTelemetry);
             _idealClient = new IdealClient(apiClient, configuration);
             _klarnaClient = new KlarnaClient(apiClient, configuration);
             _sepaClient = new SepaClient(apiClient, configuration);
