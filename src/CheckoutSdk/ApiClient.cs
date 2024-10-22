@@ -21,8 +21,8 @@ namespace Checkout
         private readonly ILogger _log = LogProvider.GetLogger(typeof(ApiClient));
 #endif
 
-        private readonly string sdkTelemetryHeader = "cko-sdk-telemetry";
-        private readonly int maxCountInTelemetryQueue = 10;
+        private const string sdkTelemetryHeader = "cko-sdk-telemetry";
+        private const int maxCountInTelemetryQueue = 10;
         private readonly HttpClient _httpClient;
         private readonly Uri _baseUri;
         private readonly ISerializer _serializer = new JsonSerializer();
