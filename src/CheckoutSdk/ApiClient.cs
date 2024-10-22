@@ -21,12 +21,12 @@ namespace Checkout
         private readonly ILogger _log = LogProvider.GetLogger(typeof(ApiClient));
 #endif
 
-        private static string sdkTelemetryHeader = "cko-sdk-telemetry";
-        private static int maxCountInTelemetryQueue = 10;
+        private readonly string sdkTelemetryHeader = "cko-sdk-telemetry";
+        private readonly int maxCountInTelemetryQueue = 10;
         private readonly HttpClient _httpClient;
         private readonly Uri _baseUri;
         private readonly ISerializer _serializer = new JsonSerializer();
-        private ConcurrentQueue<RequestMetrics> requestMetricsQueue = new ConcurrentQueue<RequestMetrics>();
+        private readonly ConcurrentQueue<RequestMetrics> requestMetricsQueue = new ConcurrentQueue<RequestMetrics>();
         private readonly bool _enableTelemetry;
 
         public ApiClient(IHttpClientFactory httpClientFactory, Uri baseUri, bool enableTelemetry)
