@@ -241,7 +241,7 @@ The execution of integration tests require the following environment variables s
 * For Previous account systems (ABC): `CHECKOUT_PREVIOUS_PUBLIC_KEY` & `CHECKOUT_PREVIOUS_SECRET_KEY`
 
 ## Telemetry
-Request telementry is enabled by default in the .NET SDK. Request latency is included in the telemetry data. Recording the request latency allows Checkout.com to continuously monitor and imporove the merchant experience.
+Request telemetry is enabled by default in the .NET SDK. Request latency is included in the telemetry data. Recording the request latency allows Checkout.com to continuously monitor and improve the merchant experience.
 
 Request telemetry can be disabled by opting out during CheckoutSdk builder step:
 ```
