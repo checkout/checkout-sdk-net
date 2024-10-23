@@ -135,6 +135,7 @@ namespace CheckoutSDK.Extensions.Configuration
             {
                 builder.HttpClientFactory(httpClientFactory);
             }
+            builder.RecordTelemetry(options.RecordTelemetry);
         }
     }
 }

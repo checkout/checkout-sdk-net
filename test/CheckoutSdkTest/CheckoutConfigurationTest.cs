@@ -13,7 +13,7 @@ namespace Checkout
             var credentials = new StaticKeysSdkCredentials(ValidDefaultSk, ValidDefaultPk);
             var httpClientFactoryMock = new Mock<IHttpClientFactory>();
             var configuration =
-                new CheckoutConfiguration(credentials, Environment.Production, null, httpClientFactoryMock.Object);
+                new CheckoutConfiguration(credentials, Environment.Production, null, httpClientFactoryMock.Object, false);
             configuration.Environment.ShouldBe(Environment.Production);
             configuration.SdkCredentials.ShouldBeAssignableTo(typeof(StaticKeysSdkCredentials));
         }
@@ -30,7 +30,7 @@ namespace Checkout
             var httpClientFactoryMock = new Mock<IHttpClientFactory>();
             var environmentSubdomain = new EnvironmentSubdomain(Environment.Sandbox, subdomain);
             var configuration = new CheckoutConfiguration(credentials, Environment.Sandbox, environmentSubdomain,
-                httpClientFactoryMock.Object);
+                httpClientFactoryMock.Object, false);
 
             configuration.Environment.ShouldBe(Environment.Sandbox);
             configuration.EnvironmentSubdomain.ApiUri.ToString().ShouldBe(expectedUri);
@@ -50,7 +50,7 @@ namespace Checkout
             var httpClientFactoryMock = new Mock<IHttpClientFactory>();
             var environmentSubdomain = new EnvironmentSubdomain(Environment.Sandbox, subdomain);
             var configuration = new CheckoutConfiguration(credentials, Environment.Sandbox, environmentSubdomain,
-                httpClientFactoryMock.Object);
+                httpClientFactoryMock.Object, false);
 
             configuration.Environment.ShouldBe(Environment.Sandbox);
             configuration.EnvironmentSubdomain.ApiUri.ToString().ShouldBe(expectedUri);

@@ -10,6 +10,8 @@ namespace Checkout
 
         public IHttpClientFactory HttpClientFactory { get; }
 
+        public bool RecordTelemetry { get; }
+
         public CheckoutConfiguration(
             SdkCredentials sdkCredentials,
             Environment environment,
@@ -28,7 +30,8 @@ namespace Checkout
             SdkCredentials sdkCredentials,
             Environment environment,
             EnvironmentSubdomain environmentSubdomain,
-            IHttpClientFactory httpClientFactory)
+            IHttpClientFactory httpClientFactory,
+            bool recordTelemetry)
         {
             CheckoutUtils.ValidateParams(
                 "sdkCredentials", sdkCredentials, 
@@ -38,6 +41,7 @@ namespace Checkout
             Environment = environment;
             EnvironmentSubdomain = environmentSubdomain;
             HttpClientFactory = httpClientFactory;
+            RecordTelemetry = recordTelemetry;
         }
     }
 }

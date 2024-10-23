@@ -240,6 +240,29 @@ The execution of integration tests require the following environment variables s
 * For Default account systems (OAuth): `CHECKOUT_DEFAULT_OAUTH_CLIENT_ID` & `CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET`
 * For Previous account systems (ABC): `CHECKOUT_PREVIOUS_PUBLIC_KEY` & `CHECKOUT_PREVIOUS_SECRET_KEY`
 
+## Telemetry
+Request telemetry is enabled by default in the .NET SDK. Request latency is included in the telemetry data. Recording the request latency allows Checkout.com to continuously monitor and improve the merchant experience.
+
+Request telemetry can be disabled by opting out during CheckoutSdk builder step:
+```
+ICheckoutApi api = CheckoutSdk.Builder().StaticKeys()
+    .SecretKey("secret_key")
+    .RecordTelemetry(false)
+    .Environment(Environment.Sandbox)
+    .Build();
+```
+
+Or when using `CheckoutSDK.Extensions.Microsoft`:
+```
+{
+  "Checkout": {
+    ...
+    "RecordTelemetry": false,
+    ...
+  }
+}
+```
+
 ## Code of Conduct
 
 Please refer to [Code of Conduct](CODE_OF_CONDUCT.md)
