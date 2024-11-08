@@ -1,5 +1,4 @@
 using Checkout.Common;
-using Checkout.Payments.Request;
 using Checkout.Payments.Response.Source;
 using Checkout.Payments.Util;
 using Newtonsoft.Json;

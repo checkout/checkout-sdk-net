@@ -70,9 +70,13 @@ namespace Checkout.Payments.Contexts
                 Processing = new PaymentContextsProcessing { Locale = "en-GB" }
             };
 
-            await CheckErrorItem(
-                async () => await DefaultApi.PaymentContextsClient().RequestPaymentContexts(paymentContextsRequest),
-                "apm_service_unavailable");
+            var response = await DefaultApi.PaymentContextsClient().RequestPaymentContexts(paymentContextsRequest);
+
+            response.ShouldNotBeNull();
+            response.Id.ShouldNotBeNull();
+            response.PartnerMetadata.SessionId.ShouldNotBeNull();
+            response.PartnerMetadata.ClientToken.ShouldNotBeNull();
+            response.Links.ShouldNotBeNull();
         }
         
         [Fact(Skip = "unavailable")]
@@ -93,10 +97,10 @@ namespace Checkout.Payments.Contexts
                     new PaymentContextsItems { Name = "mask", Quantity = 1, UnitPrice = 1000, TotalAmount = 1000 }
                 },
             };
+            
+            var response = await DefaultApi.PaymentContextsClient().RequestPaymentContexts(paymentContextsRequest);
 
-            await CheckErrorItem(
-                async () => await DefaultApi.PaymentContextsClient().RequestPaymentContexts(paymentContextsRequest),
-                "apm_not_supported");
+            response.ShouldNotBeNull();
         }
         
         [Fact]

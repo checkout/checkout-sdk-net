@@ -48,5 +48,9 @@ namespace Checkout.Payments
         
         public string MerchantCategoryCode { get; set; }
 
+        public long? SchemeMerchantId { get; set; }
+
+        public bool? Aft { get; set; }
+
     }
 }
