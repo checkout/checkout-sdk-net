@@ -17,7 +17,9 @@ namespace Checkout.Payments.Request
 
         public Currency? Currency { get; set; }
 
-        public PaymentType? PaymentType { get; set; }
+        public PaymentType? PaymentType { get; set; } = Payments.PaymentType.Regular;
+        
+        public PaymentPlan PaymentPlan { get; set; }
 
         public bool? MerchantInitiated { get; set; }
 

@@ -10,6 +10,10 @@ namespace Checkout.Payments.Response
     {
         public string Id { get; set; }
         
+        public PaymentType? PaymentType { get; set; }
+        
+        public PaymentPlan PaymentPlan { get; set; }
+        
         public string ActionId { get; set; }
 
         public long? Amount { get; set; }
