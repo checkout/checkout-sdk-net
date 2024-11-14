@@ -9,6 +9,7 @@ namespace Checkout.Disputes
         private const string DisputesPath = "disputes";
         private const string EvidencePath = "evidence";
         private const string SubmittedPath = "submitted";
+        private const string ArbitrationPath = "arbitration";
         private const string AcceptPath = "accept";
         private const string Schemefiles = "schemefiles";
 
@@ -67,11 +68,27 @@ namespace Checkout.Disputes
                 cancellationToken, null);
         }
         
+        public Task<EmptyResponse> SubmitArbitrationEvidence(string disputeId, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("disputeId", disputeId);
+            return ApiClient.Post<EmptyResponse>(BuildPath(DisputesPath, disputeId, EvidencePath, ArbitrationPath), SdkAuthorization(),
+                null,
+                cancellationToken, null);
+        }
+        
         public Task<DisputeCompiledSubmittedEvidenceResponse> GetCompiledSubmittedEvidence(string disputeId,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("disputeId", disputeId);
             return ApiClient.Get<DisputeCompiledSubmittedEvidenceResponse>(BuildPath(DisputesPath, disputeId, EvidencePath, SubmittedPath),
+                SdkAuthorization(), cancellationToken);
+        }
+        
+        public Task<DisputeCompiledSubmittedEvidenceResponse> GetCompiledSubmittedArbitrationEvidence(string disputeId,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("disputeId", disputeId);
+            return ApiClient.Get<DisputeCompiledSubmittedEvidenceResponse>(BuildPath(DisputesPath, disputeId, EvidencePath, ArbitrationPath, SubmittedPath),
                 SdkAuthorization(), cancellationToken);
         }
 

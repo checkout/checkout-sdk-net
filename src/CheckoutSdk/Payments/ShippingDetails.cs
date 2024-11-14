@@ -22,6 +22,6 @@ namespace Checkout.Payments
 
         public PaymentContextsShippingMethod? Method { get; set; }
 
-        public int Delay { get; set; }
+        public int? Delay { get; set; }
     }
 }

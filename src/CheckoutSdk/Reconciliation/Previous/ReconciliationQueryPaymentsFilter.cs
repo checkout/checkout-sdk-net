@@ -4,7 +4,7 @@ namespace Checkout.Reconciliation.Previous
 {
     public class ReconciliationQueryPaymentsFilter
     {
-        public int Limit { get; set; } = 500;
+        public int? Limit { get; set; } = 500;
 
         public string Reference { get; set; }
 

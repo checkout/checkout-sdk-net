@@ -490,23 +490,6 @@ namespace Checkout.Payments
         }
 
         [Fact(Skip = "Unavailable")]
-        private async Task ShouldMakeKlarnaPayment()
-        {
-            var request = new PaymentRequest
-            {
-                Source = new RequestKlarnaSource { AccountHolder = GetAccountHolder() },
-                Currency = Currency.QAR,
-                Amount = 10,
-                Reference = Guid.NewGuid().ToString(),
-                SuccessUrl = "https://testing.checkout.com/sucess",
-                FailureUrl = "https://testing.checkout.com/failure"
-            };
-
-            await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
-                ApmServiceUnavailable);
-        }
-
-        [Fact(Skip = "Unavailable")]
         private async Task ShouldMakePayPalPayment()
         {
             var request = new PaymentRequest

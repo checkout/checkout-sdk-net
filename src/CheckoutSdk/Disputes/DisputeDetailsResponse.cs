@@ -7,6 +7,8 @@ namespace Checkout.Disputes
     public class DisputeDetailsResponse : HttpMetadata
     {
         public string Id { get; set; }
+        
+        public string Reference { get; set; }
 
         public DisputeCategory? Category { get; set; }
 
@@ -27,14 +29,21 @@ namespace Checkout.Disputes
         public DateTime? ReceivedOn { get; set; }
 
         public DateTime? LastUpdate { get; set; }
+        
+        public bool? IsCeCandidate { get; set; }
 
         public PaymentDispute Payment { get; set; }
+        
+        public IList<EvidenceList> EvidenceList { get; set; }
+        
+        public IList<EvidenceBundle> EvidenceBundle { get; set; }
+        
+        public string SegmentId { get; set; }
         
         //Not available on Previous
 
         public string EntityId { get; set; }
 
         public string SubEntityId { get; set; }
-
     }
 }

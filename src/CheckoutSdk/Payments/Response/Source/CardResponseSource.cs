@@ -50,7 +50,7 @@ namespace Checkout.Payments.Response.Source
 
         public AccountUpdateStatus? AccountUpdateStatus { get; set; }
         
-        public AccountHolder AccountHolder { get; set; }
+        public AccountHolderResponse AccountHolder { get; set; }
 
         public new PaymentSourceType? Type()
         {

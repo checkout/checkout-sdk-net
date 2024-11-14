@@ -4,12 +4,23 @@ namespace Checkout.Disputes
 {
     public enum DisputeStatus
     {
-        [EnumMember(Value = "won")] Won,
-        [EnumMember(Value = "lost")] Lost,
-        [EnumMember(Value = "expired")] Expired,
-        [EnumMember(Value = "accepted")] Accepted,
-        [EnumMember(Value = "canceled")] Canceled,
-        [EnumMember(Value = "resolved")] Resolved,
+        [EnumMember(Value = "won")]
+        Won,
+        
+        [EnumMember(Value = "lost")]
+        Lost,
+        
+        [EnumMember(Value = "expired")]
+        Expired,
+        
+        [EnumMember(Value = "accepted")]
+        Accepted,
+        
+        [EnumMember(Value = "canceled")]
+        Canceled,
+        
+        [EnumMember(Value = "resolved")]
+        Resolved,
 
         [EnumMember(Value = "arbitration_won")]
         ArbitrationWon,
@@ -25,5 +36,8 @@ namespace Checkout.Disputes
 
         [EnumMember(Value = "arbitration_under_review")]
         ArbitrationUnderReview,
+        
+        [EnumMember(Value = "arb_evidence_submitted")]
+        ArbitrationEvidenceSubmitted,
     }
 }

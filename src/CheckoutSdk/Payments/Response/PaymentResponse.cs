@@ -1,5 +1,4 @@
 using Checkout.Common;
-using Checkout.Payments.Request;
 using Checkout.Payments.Response.Source;
 using Checkout.Payments.Util;
 using Newtonsoft.Json;
@@ -10,6 +9,10 @@ namespace Checkout.Payments.Response
     public class PaymentResponse : Resource
     {
         public string Id { get; set; }
+        
+        public PaymentType? PaymentType { get; set; }
+        
+        public PaymentPlan PaymentPlan { get; set; }
         
         public string ActionId { get; set; }
 

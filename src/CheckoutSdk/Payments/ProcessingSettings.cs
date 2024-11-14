@@ -68,6 +68,8 @@ namespace Checkout.Payments
 
         public IList<ShippingInfo> ShippingInfo { get; set; }
         
+        public PanProcessedType? PanPreference { get; set; }
+        
         [JsonProperty(PropertyName = "senderInformation")]
         public string SenderInformation { get; set; }
     }

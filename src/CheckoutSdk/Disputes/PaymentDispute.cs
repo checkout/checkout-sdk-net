@@ -11,6 +11,8 @@ namespace Checkout.Disputes
         public long? Amount { get; set; }
 
         public Currency? Currency { get; set; }
+        
+        public string Reference { get; set; }
 
         public string Method { get; set; }
 

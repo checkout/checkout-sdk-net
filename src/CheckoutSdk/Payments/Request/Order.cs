@@ -19,6 +19,8 @@ namespace Checkout.Payments.Request
         public long? TotalAmount { get; set; }
 
         public long? TaxAmount { get; set; }
+        
+        public long? TaxRate { get; set; }
 
         public long? DiscountAmount { get; set; }
         

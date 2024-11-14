@@ -1,9 +1,9 @@
-using Checkout.Common;
-
 namespace Checkout.Payments.Sessions
 {
     public class PaymentMethodConfiguration
     {
-        public Card card { get; set; }
+        public Applepay Applepay { get; set; }
+        public Card Card { get; set; }
+        public Googlepay Googlepay { get; set; }
     }
 }
