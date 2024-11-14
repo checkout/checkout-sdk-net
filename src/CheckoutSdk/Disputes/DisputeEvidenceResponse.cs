@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Checkout.Disputes
 {
     public class DisputeEvidenceResponse : HttpMetadata
@@ -33,5 +35,15 @@ namespace Checkout.Disputes
         public string ProofOfDeliveryOrServiceDateFile { get; set; }
 
         public string ProofOfDeliveryOrServiceDateText { get; set; }
+        
+        public string ArbitrationNoReviewText { get; set; }
+        
+        public List<string> ArbitrationNoReviewFiles { get; set; }
+        
+        public string ArbitrationReviewRequiredText { get; set; }
+        
+        public List<string> ArbitrationReviewRequiredFiles { get; set; }
+        
+        public CompellingEvidence CompellingEvidence { get; set; }
     }
 }

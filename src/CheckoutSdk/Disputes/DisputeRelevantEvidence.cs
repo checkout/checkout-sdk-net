@@ -23,6 +23,12 @@ namespace Checkout.Disputes
         RecurringTransactionAgreement,
 
         [EnumMember(Value = "additional_evidence")]
-        AdditionalEvidence
+        AdditionalEvidence,
+        
+        [EnumMember(Value = "arbitration_no_review")]
+        ArbitrationNoReview,
+        
+        [EnumMember(Value = "arbitration_review_required")]
+        ArbitrationReviewRequired
     }
 }

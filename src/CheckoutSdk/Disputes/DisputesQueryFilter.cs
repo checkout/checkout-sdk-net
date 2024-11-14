@@ -31,6 +31,9 @@ namespace Checkout.Disputes
         public string SubEntityIds { get; set; }
 
         public string PaymentMcc { get; set; }
-
+        
+        public string ProcessingChannelIds { get; set; }
+        
+        public string SegmentIds { get; set; }
     }
 }
