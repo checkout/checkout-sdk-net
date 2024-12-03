@@ -5,6 +5,7 @@ using Checkout.Payments.Response;
 using Checkout.Payments.Sender;
 using Shouldly;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -98,7 +99,15 @@ namespace Checkout.Payments
                 PartialAuthorization = new PartialAuthorization
                 {
                     Enabled = true
+                },
+                Authentication = new Authentication
+                {
+                    PreferredExperiences = new List<PreferredExperiences>
+                    {
+                        PreferredExperiences.GoogleSpa
+                    }
                 }
+                
             };
 
             var paymentResponse = await DefaultApi.PaymentsClient().RequestPayment(paymentRequest);

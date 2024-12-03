@@ -26,6 +26,8 @@ namespace Checkout.Payments.Request
         public string Reference { get; set; }
 
         public string Description { get; set; }
+        
+        public Authentication Authentication { get; set; }
 
         public AuthorizationType? AuthorizationType { get; set; }
 
