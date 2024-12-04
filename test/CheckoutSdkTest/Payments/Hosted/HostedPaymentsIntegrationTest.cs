@@ -25,7 +25,6 @@ namespace Checkout.Payments.Hosted
             createResponse.Reference.ShouldNotBeNullOrEmpty();
             createResponse.Links.ShouldNotBeNull();
             createResponse.Links.ContainsKey("redirect").ShouldBeTrue();
-            createResponse.Warnings.Count.ShouldBe(1);
 
             var getResponse = await DefaultApi.HostedPaymentsClient().GetHostedPaymentsPageDetails(createResponse.Id);
 

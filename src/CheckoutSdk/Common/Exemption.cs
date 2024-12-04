@@ -4,14 +4,20 @@ namespace Checkout.Common
 {
     public enum Exemption
     {
-        [EnumMember(Value = "3ds_outage")] ThreeDsOutage,
+        [EnumMember(Value = "3ds_outage")]
+        ThreeDsOutage,
 
         [EnumMember(Value = "low_risk_program")]
         LowRiskProgram,
         
-        [EnumMember(Value = "low_value")] LowValue,
-        [EnumMember(Value = "none")] None,
-        [EnumMember(Value = "other")] Other,
+        [EnumMember(Value = "low_value")]
+        LowValue,
+        
+        [EnumMember(Value = "none")]
+        None,
+        
+        [EnumMember(Value = "other")]
+        Other,
 
         [EnumMember(Value = "out_of_sca_scope")]
         OutOfScaScope,
@@ -19,7 +25,11 @@ namespace Checkout.Common
         [EnumMember(Value = "recurring_operation")]
         RecurringOperation,
         
-        [EnumMember(Value = "sca_delegation")] ScaDelegation,
+        [EnumMember(Value = "data_share")]
+        DataShare,
+        
+        [EnumMember(Value = "sca_delegation")]
+        ScaDelegation,
 
         [EnumMember(Value = "secure_corporate_payment")]
         SecureCorporatePayment,

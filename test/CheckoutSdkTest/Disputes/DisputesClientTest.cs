@@ -133,6 +133,24 @@ namespace Checkout.Disputes
         }
         
         [Fact]
+        private async Task ShouldSubmitArbitrationEvidence()
+        {
+            const string disputeId = "dsp_s5151531";
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<EmptyResponse>($"disputes/{disputeId}/evidence/arbitration", _authorization, null,
+                        CancellationToken.None,
+                        null))
+                .ReturnsAsync(() => new EmptyResponse());
+
+            IDisputesClient client = new DisputesClient(_apiClient.Object, _configuration.Object);
+
+            var response = await client.SubmitArbitrationEvidence(disputeId);
+
+            response.ShouldNotBeNull();
+        }
+        
+        [Fact]
         private async Task ShouldGetCompiledSubmittedEvidence()
         {
             const string disputeId = "dispute_id";
@@ -145,6 +163,23 @@ namespace Checkout.Disputes
             IDisputesClient client = new DisputesClient(_apiClient.Object, _configuration.Object);
 
             var response = await client.GetCompiledSubmittedEvidence(disputeId);
+
+            response.ShouldNotBeNull();
+        }
+        
+        [Fact]
+        private async Task ShouldGetCompiledSubmittedArbitrationEvidence()
+        {
+            const string disputeId = "dispute_id";
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Get<DisputeCompiledSubmittedEvidenceResponse>($"disputes/{disputeId}/evidence/arbitration/submitted", _authorization,
+                        CancellationToken.None))
+                .ReturnsAsync(() => new DisputeCompiledSubmittedEvidenceResponse());
+
+            IDisputesClient client = new DisputesClient(_apiClient.Object, _configuration.Object);
+
+            var response = await client.GetCompiledSubmittedArbitrationEvidence(disputeId);
 
             response.ShouldNotBeNull();
         }

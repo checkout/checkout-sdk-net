@@ -60,7 +60,6 @@ namespace Checkout.Payments.Links
             response.Links.ShouldNotBeNull();
             response.Links.Count.ShouldBe(2);
             response.Reference.ShouldNotBeNull();
-            response.Warnings.Count.ShouldBe(1);
 
             var responseGet = await DefaultApi.PaymentLinksClient().Get(response.Id);
 

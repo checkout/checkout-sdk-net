@@ -81,7 +81,7 @@ namespace Checkout.Payments
             source.Type().ShouldBe(PaymentSourceType.Ideal);
         }
 
-        [Fact]
+        [Fact(Skip = "payment method not supported")]
         private async Task ShouldMakeSofortPayment()
         {
             var sofortSource = new RequestSofortSource();
