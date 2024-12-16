@@ -11,7 +11,7 @@ namespace Checkout.Tokens.Previous
         {
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldRequestCardToken()
         {
             var phone = new Phone {CountryCode = "44", Number = "020 222333"};

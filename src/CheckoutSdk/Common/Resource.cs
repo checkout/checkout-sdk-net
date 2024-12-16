@@ -17,7 +17,12 @@ namespace Checkout.Common
         {
             return GetLink("self");
         }
-
+        
+        public Link GetUploadLink()
+        {
+            return GetLink("upload");
+        }
+        
         public bool HasLink(string relation)
         {
             return Links.ContainsKey(relation);

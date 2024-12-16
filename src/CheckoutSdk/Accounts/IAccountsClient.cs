@@ -1,7 +1,9 @@
-﻿using Checkout.Accounts.Payout.Request;
+﻿using Checkout.Accounts.Entities.Request;
+using Checkout.Accounts.Entities.Response;
+using Checkout.Accounts.Payout.Request;
 using Checkout.Accounts.Payout.Response;
-using Checkout.Accounts.Regional.US;
 using Checkout.Common;
+using Checkout.Files;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,18 +11,19 @@ using System.Threading.Tasks;
 namespace Checkout.Accounts
 {
     public interface IAccountsClient
-    {
-        Task<IdResponse> SubmitFile(
-            AccountsFileRequest accountsFileRequest,
-            CancellationToken cancellationToken = default);
-
+    { 
         Task<OnboardEntityResponse> CreateEntity(
             OnboardEntityRequest entityRequest,
             CancellationToken cancellationToken = default);
-
-        Task<PaymentInstrumentDetailsResponse> RetrievePaymentInstrumentDetails(
+        
+        Task<OnboardSubEntityDetailsResponse> GetSubEntityMembers(
             string entityId,
-            string paymentInstrumentId,
+            CancellationToken cancellationToken = default);
+        
+        Task<OnboardSubEntityResponse> ReinviteSubEntityMember(
+            string entityId,
+            string userId,
+            OnboardSubEntityRequest subEntityRequest,
             CancellationToken cancellationToken = default);
 
         Task<OnboardEntityDetailsResponse> GetEntity(
@@ -42,6 +45,11 @@ namespace Checkout.Accounts
             string entityId,
             PaymentInstrumentRequest paymentInstrumentRequest,
             CancellationToken cancellationToken = default);
+        
+        Task<PaymentInstrumentDetailsResponse> RetrievePaymentInstrumentDetails(
+            string entityId,
+            string paymentInstrumentId,
+            CancellationToken cancellationToken = default);
 
         Task<IdResponse> UpdatePaymentInstrument(
             string entityId,
@@ -62,6 +70,20 @@ namespace Checkout.Accounts
             string entityId,
             Currency currency,
             UpdateScheduleRequest updateScheduleRequest,
+            CancellationToken cancellationToken = default);
+        
+        Task<IdResponse> SubmitFile(
+            AccountsFileRequest accountsFileRequest,
+            CancellationToken cancellationToken = default);
+        
+        Task<UploadFileResponse> UploadFile(
+            string entityId,
+            AccountsFileRequest accountsFileRequest,
+            CancellationToken cancellationToken = default);
+        
+        Task<FileDetailsResponse> RetrieveFile(
+            string entityId,
+            string fileId,
             CancellationToken cancellationToken = default);
     }
 }

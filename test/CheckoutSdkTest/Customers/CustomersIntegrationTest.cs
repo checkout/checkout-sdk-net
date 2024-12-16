@@ -19,7 +19,7 @@ namespace Checkout.Customers
             {
                 Email = GenerateRandomEmail(),
                 Name = "Customer",
-                Phone = new Phone {CountryCode = "1", Number = "4155552671"}
+                Phone = new Phone {CountryCode = "+1", Number = "4155552671"}
             };
             var customerResponse = await DefaultApi.CustomersClient().Create(request);
             customerResponse.ShouldNotBeNull();

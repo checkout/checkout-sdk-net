@@ -238,7 +238,7 @@ namespace Checkout.Payments.Previous
             paymentResponse.HasLink("void").ShouldBeTrue();
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldTokenPayment()
         {
             var paymentResponse = await MakeTokenPayment();
