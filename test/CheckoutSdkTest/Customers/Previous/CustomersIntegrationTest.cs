@@ -14,7 +14,7 @@ namespace Checkout.Customers.Previous
         {
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldCreateAndGetCustomer()
         {
             var request = new CustomerRequest
@@ -39,7 +39,7 @@ namespace Checkout.Customers.Previous
             customerDetails.Instruments.ShouldBeEmpty();
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldCreateAndUpdateCustomer()
         {
             //Create Customer
@@ -68,7 +68,7 @@ namespace Checkout.Customers.Previous
             customerDetails.Name.ShouldBe(request.Name);
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldCreateAndDeleteCustomer()
         {
             var request = new CustomerRequest
@@ -92,7 +92,7 @@ namespace Checkout.Customers.Previous
             await AssertNotFound(PreviousApi.CustomersClient().Get(customerId));
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldGetCustomerDetailsWithInstrument()
         {
             var cardTokenResponse = await PreviousApi.TokensClient().Request(GetCardTokenRequest());

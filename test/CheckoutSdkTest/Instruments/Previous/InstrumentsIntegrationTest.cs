@@ -12,7 +12,7 @@ namespace Checkout.Instruments.Previous
         {
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldCreateAndGetInstrument()
         {
             var createInstrumentResponse = await CreateTokenInstrument();
@@ -62,7 +62,7 @@ namespace Checkout.Instruments.Previous
             retrieveInstrumentResponse.Type.ShouldBe(InstrumentType.Card);
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldCreateAndUpdateInstrument()
         {
             var createInstrumentResponse = await CreateTokenInstrument();
@@ -87,7 +87,7 @@ namespace Checkout.Instruments.Previous
             retrieveInstrumentResponse.ExpiryYear.ShouldBe(2026);
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldCreateAndDeleteInstrument()
         {
             var createInstrumentResponse = await CreateTokenInstrument();

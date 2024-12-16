@@ -13,7 +13,7 @@ namespace Checkout.Payments.Previous.Links
         {
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldCreatePaymentLink()
         {
             var address = new Address

@@ -1,5 +1,5 @@
-using Checkout.Accounts;
-using Checkout.Accounts.Regional.US;
+using Checkout.Accounts.Entities.Common.Company;
+using Checkout.Accounts.Entities.Response;
 using Checkout.Financial;
 using Checkout.Issuing.Cards.Requests.Create;
 using Checkout.Issuing.Cards.Responses;
@@ -138,17 +138,6 @@ namespace Checkout
                     typeof(OnboardEntityDetailsResponse));
             onboardEntityDetailsResponse.ShouldNotBeNull();
             onboardEntityDetailsResponse.Company.BusinessType.ShouldBeOfType<BusinessType>();
-        }
-        
-        [Fact]
-        public void ShouldSerializeOnBoardSubEntityUSCompanyFromJson()
-        {
-            var fileContent = GetJsonFileContent("./Resources/OnBoardSubEntityUSCompanyResponse.json");
-            OnboardEntityDetailsUSCompanyResponse onboardEntityDetailsResponse =
-                (OnboardEntityDetailsUSCompanyResponse)new JsonSerializer().Deserialize(fileContent,
-                    typeof(OnboardEntityDetailsUSCompanyResponse));
-            onboardEntityDetailsResponse.ShouldNotBeNull();
-            onboardEntityDetailsResponse.Company.BusinessType.ShouldBeOfType<USBusinessType>();
         }
         
         [Fact]

@@ -1,7 +1,11 @@
+using Checkout.Accounts.Entities.Common.Company;
+using Checkout.Accounts.Entities.Common.ContactDetails;
+using Checkout.Accounts.Entities.Request;
+using Checkout.Accounts.Entities.Response;
 using Checkout.Accounts.Payout.Request;
 using Checkout.Accounts.Payout.Response;
-using Checkout.Accounts.Regional.US;
 using Checkout.Common;
+using Checkout.Files;
 using Checkout.Instruments;
 using Moq;
 using Shouldly;
@@ -46,6 +50,61 @@ namespace Checkout.Accounts
             response.ShouldNotBeNull();
             response.ShouldBe(onboardEntityResponse);
         }
+        
+        [Fact]
+        private async Task ShouldGetSubEntityMembers()
+        {
+            var responseObject = new OnboardSubEntityDetailsResponse { /* Mock properties as needed */ };
+
+            _apiClient
+                .Setup(x =>
+                    x.Get<OnboardSubEntityDetailsResponse>(
+                        "accounts/entities/entity_id/members",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(responseObject);
+
+            var response = await _accountsClient.GetSubEntityMembers("entity_id");
+
+            response.ShouldNotBeNull();
+            response.ShouldBe(responseObject);
+        }
+        
+        [Fact]
+        private async Task ShouldReinviteSubEntityMember()
+        {
+            var request = new OnboardSubEntityRequest();
+            var responseObject = new OnboardSubEntityResponse
+            {
+                Response = new Dictionary<string, object>
+                {
+                    { "custom_field_1", "value_1" },
+                    { "custom_field_2", 12345 }
+                }
+            };
+
+            _apiClient
+                .Setup(x =>
+                    x.Put<OnboardSubEntityResponse>(
+                        "accounts/entities/entity_id/members/user_id",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<object>(),
+                        It.IsAny<CancellationToken>(),
+                        null))
+                .ReturnsAsync(responseObject);
+
+            var response = await _accountsClient.ReinviteSubEntityMember(
+                "entity_id", 
+                "user_id", 
+                request);
+            
+            response.ShouldNotBeNull();
+            response.Response.ShouldNotBeNull();
+            response.Response.ContainsKey("custom_field_1").ShouldBeTrue();
+            response.Response["custom_field_1"].ShouldBe("value_1");
+            response.Response.ContainsKey("custom_field_2").ShouldBeTrue();
+            response.Response["custom_field_2"].ShouldBe(12345);
+        }
 
         [Fact]
         private async Task ShouldGetEntity()
@@ -73,7 +132,7 @@ namespace Checkout.Accounts
             var request = new OnboardEntityRequest
             {
                 Reference = "123",
-                ContactDetails = new ContactDetails {Phone = new AccountPhone()},
+                ContactDetails = new ContactDetails {Phone = new Phone()},
                 Profile = new Profile(),
                 Company = new Company
                 {
@@ -91,20 +150,19 @@ namespace Checkout.Accounts
                             FirstName = "first",
                             LastName = "last",
                             Address = new Address(),
-                            Identification = new Identification(),
-                            Phone = new AccountPhone(),
+                            Phone = new Phone(),
                             DateOfBirth = new DateOfBirth {Day = 1, Month = 1, Year = 2000},
                             PlaceOfBirth = new PlaceOfBirth {Country = CountryCode.AF},
                             Roles = new List<EntityRoles> {EntityRoles.Ubo}
                         }
                     },
                     Document = new EntityDocument(),
-                    FinancialDetails = new EntityFinancialDetails
+                    FinancialDetails = new FinancialDetails
                     {
                         AnnualProcessingVolume = 1,
                         AverageTransactionValue = 1,
                         HighestTransactionValue = 1,
-                        Documents = new EntityFinancialDocuments
+                        Documents = new FinancialDocuments
                         {
                             BankStatement = new EntityDocument(),
                             FinancialStatement = new EntityDocument()
@@ -140,12 +198,12 @@ namespace Checkout.Accounts
             var request = new OnboardEntityRequest
             {
                 Reference = "123",
-                ContactDetails = new ContactDetails {Phone = new AccountPhone()},
+                ContactDetails = new ContactDetails {Phone = new Phone()},
                 Profile = new Profile(),
-                Company = new USCompany
+                Company = new Company
                 {
                     BusinessRegistrationNumber = "123",
-                    BusinessType = USBusinessType.PrivateCorporation,
+                    BusinessType = BusinessType.PrivateCorporation,
                     LegalName = "LEGAL",
                     TradingName = "TRADING",
                     PrincipalAddress = new Address(),
@@ -158,20 +216,19 @@ namespace Checkout.Accounts
                             FirstName = "first",
                             LastName = "last",
                             Address = new Address(),
-                            Identification = new Identification(),
-                            Phone = new AccountPhone(),
+                            Phone = new Phone(),
                             DateOfBirth = new DateOfBirth {Day = 1, Month = 1, Year = 2000},
                             PlaceOfBirth = new PlaceOfBirth {Country = CountryCode.AF},
                             Roles = new List<EntityRoles> {EntityRoles.Ubo}
                         }
                     },
                     Document = new EntityDocument(),
-                    FinancialDetails = new EntityFinancialDetails
+                    FinancialDetails = new FinancialDetails
                     {
                         AnnualProcessingVolume = 1,
                         AverageTransactionValue = 1,
                         HighestTransactionValue = 1,
-                        Documents = new EntityFinancialDocuments
+                        Documents = new FinancialDocuments
                         {
                             BankStatement = new EntityDocument(),
                             FinancialStatement = new EntityDocument()
@@ -200,7 +257,26 @@ namespace Checkout.Accounts
             response.Reference.ShouldBe(responseObject.Reference);
          
         }
+        
+        [Fact]
+        private async Task ShouldRetrievePaymentInstrumentDetails()
+        {
+            var responseAsync = new PaymentInstrumentDetailsResponse();
 
+            _apiClient
+                .Setup(x =>
+                    x.Get<PaymentInstrumentDetailsResponse>(
+                        "accounts/entities/entity_id/payment-instruments/instrument_id",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(responseAsync);
+
+            var response = await _accountsClient.RetrievePaymentInstrumentDetails(
+                "entity_id", "instrument_id");
+
+            response.ShouldNotBeNull();
+        }
+        
         [Fact]
         private async Task ShouldCreatePaymentInstrumentDeprecated()
         {
@@ -227,7 +303,7 @@ namespace Checkout.Accounts
                         CountryOfBirth = CountryCode.AC,
                         ResidentialStatus = "status",
                         BillingAddress = new Address(),
-                        Phone = new AccountPhone(),
+                        Phone = new Phone(),
                         Identification = new AccountHolderIdentification(),
                         Email = "account@checkout.com",
                         FirstName = "First",
@@ -237,94 +313,23 @@ namespace Checkout.Accounts
 
             response.ShouldNotBeNull();
         }
-
+        
         [Fact]
-        private async Task ShouldSubmitFile()
+        private async Task ShouldCreatePaymentInstrumentDeprecatedWithEmptyResponse()
         {
-            //Arrange
-            var responseObject = new IdResponse {Id = "Id"};
-
-            _apiFilesClient
-                .Setup(x =>
-                    x.Post<IdResponse>(
-                        It.IsAny<string>(),
-                        It.IsAny<SdkAuthorization>(),
-                        It.IsAny<MultipartFormDataContent>(),
-                        It.IsAny<CancellationToken>(),
-                        null
-                    )
-                )
-                .ReturnsAsync(responseObject);
-
-            var response =
-                await _accountsClient.SubmitFile(new AccountsFileRequest
-                {
-                    File = "./Resources/checkout.jpeg",
-                    ContentType = null,
-                    Purpose = AccountsFilePurpose.Identification
-                });
-
-            response.ShouldNotBeNull();
-            response.ShouldBe(responseObject);
-        }
-
-        [Fact]
-        private async Task ShouldUpdatePayoutSchedule()
-        {
-            var responseAsync = new EmptyResponse();
+            var request = new AccountsPaymentInstrument();
 
             _apiClient
                 .Setup(x =>
-                    x.Put<EmptyResponse>(
-                        "accounts/entities/entity_id/payout-schedules",
+                    x.Post<EmptyResponse>(
+                        "accounts/entities/entity_id/instruments",
                         It.IsAny<SdkAuthorization>(),
                         It.IsAny<object>(),
                         It.IsAny<CancellationToken>(),
-                        null
-                    )
-                )
-                .ReturnsAsync(responseAsync);
+                        null))
+                .ReturnsAsync(new EmptyResponse());
 
-            var response =
-                await _accountsClient.UpdatePayoutSchedule("entity_id", Currency.AED, new UpdateScheduleRequest());
-
-            response.ShouldNotBeNull();
-        }
-
-        [Fact]
-        private async Task ShouldRetrievePayoutSchedule()
-        {
-            var responseAsync = new GetScheduleResponse();
-
-            _apiClient
-                .Setup(x =>
-                    x.Get<GetScheduleResponse>(
-                        "accounts/entities/entity_id/payout-schedules",
-                        It.IsAny<SdkAuthorization>(),
-                        It.IsAny<CancellationToken>()))
-                .ReturnsAsync(responseAsync);
-
-            var response = await _accountsClient.RetrievePayoutSchedule(
-                "entity_id");
-
-            response.ShouldNotBeNull();
-        }
-        
-        [Fact]
-        private async Task ShouldRetrievePaymentInstrumentDetails()
-        {
-            var responseAsync = new PaymentInstrumentDetailsResponse();
-
-            _apiClient
-                .Setup(x =>
-                    x.Get<PaymentInstrumentDetailsResponse>(
-                        "accounts/entities/entity_id/payment-instruments/instrument_id",
-                        It.IsAny<SdkAuthorization>(),
-                        It.IsAny<CancellationToken>()))
-                .ReturnsAsync(responseAsync);
-
-            var response = await _accountsClient.RetrievePaymentInstrumentDetails(
-                "entity_id", "instrument_id");
+            var response = await _accountsClient.CreatePaymentInstrument("entity_id", request);
 
             response.ShouldNotBeNull();
         }
@@ -415,6 +420,119 @@ namespace Checkout.Accounts
                 await _accountsClient.QueryPaymentInstruments("entity_id", request);
 
             response.ShouldNotBeNull();
+        }
+        
+        [Fact]
+        private async Task ShouldUpdatePayoutSchedule()
+        {
+            var responseAsync = new EmptyResponse();
+
+            _apiClient
+                .Setup(x =>
+                    x.Put<EmptyResponse>(
+                        "accounts/entities/entity_id/payout-schedules",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<object>(),
+                        It.IsAny<CancellationToken>(),
+                        null
+                    )
+                )
+                .ReturnsAsync(responseAsync);
+
+            var response =
+                await _accountsClient.UpdatePayoutSchedule("entity_id", Currency.AED, new UpdateScheduleRequest());
+
+            response.ShouldNotBeNull();
+        }
+
+        [Fact]
+        private async Task ShouldRetrievePayoutSchedule()
+        {
+            var responseAsync = new GetScheduleResponse();
+
+            _apiClient
+                .Setup(x =>
+                    x.Get<GetScheduleResponse>(
+                        "accounts/entities/entity_id/payout-schedules",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(responseAsync);
+
+            var response = await _accountsClient.RetrievePayoutSchedule(
+                "entity_id");
+
+            response.ShouldNotBeNull();
+        }
+        
+        [Fact]
+        private async Task ShouldSubmitFile()
+        {
+            //Arrange
+            var responseObject = new IdResponse {Id = "Id"};
+
+            _apiFilesClient
+                .Setup(x =>
+                    x.Post<IdResponse>(
+                        It.IsAny<string>(),
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<MultipartFormDataContent>(),
+                        It.IsAny<CancellationToken>(),
+                        null
+                    )
+                )
+                .ReturnsAsync(responseObject);
+
+            var response =
+                await _accountsClient.SubmitFile(new AccountsFileRequest
+                {
+                    File = "./Resources/checkout.jpeg",
+                    ContentType = null,
+                    Purpose = AccountsFilePurpose.Identification
+                });
+
+            response.ShouldNotBeNull();
+            response.ShouldBe(responseObject);
+        }
+        
+        [Fact]
+        private async Task ShouldUploadFile()
+        {
+            var request = new AccountsFileRequest();
+            var responseObject = new UploadFileResponse { Id = "file_id" };
+
+            _apiClient
+                .Setup(x =>
+                    x.Post<UploadFileResponse>(
+                        "accounts/entity_id/files",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<object>(),
+                        It.IsAny<CancellationToken>(),
+                        null))
+                .ReturnsAsync(responseObject);
+
+            var response = await _accountsClient.UploadFile("entity_id", request);
+
+            response.ShouldNotBeNull();
+            response.ShouldBe(responseObject);
+        }
+        
+        [Fact]
+        private async Task ShouldRetrieveFile()
+        {
+            var responseObject = new FileDetailsResponse { Id = "file_id" };
+
+            _apiClient
+                .Setup(x =>
+                    x.Get<FileDetailsResponse>(
+                        "accounts/entity_id/files/file_id",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(responseObject);
+
+            var response = await _accountsClient.RetrieveFile("entity_id", "file_id");
+
+            response.ShouldNotBeNull();
+            response.ShouldBe(responseObject);
         }
     }
 }
