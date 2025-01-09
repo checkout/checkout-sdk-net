@@ -7,7 +7,7 @@ namespace Checkout.Payments.Previous
 {
     public class RefundPaymentsIntegrationTest : AbstractPaymentsIntegrationTest
     {
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldRefundCardPayment()
         {
             var paymentResponse = await MakeCardPayment(true);
@@ -23,7 +23,7 @@ namespace Checkout.Payments.Previous
             response.GetLink("payment").ShouldNotBeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldRefundCardPayment_Idempotently()
         {
             var paymentResponse = await MakeCardPayment(true);

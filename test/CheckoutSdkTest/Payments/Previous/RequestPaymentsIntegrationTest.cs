@@ -159,7 +159,7 @@ namespace Checkout.Payments.Previous
             paymentResponse.HasLink("void").ShouldBeFalse();
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakeCard3dsPayment()
         {
             var paymentResponse = await Make3dsCardPayment();
