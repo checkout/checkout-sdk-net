@@ -9,5 +9,8 @@ namespace Checkout.Payments.Contexts
         
         [EnumMember(Value = "digital")]
         Digital,
+        
+        [EnumMember(Value = "discount")]
+        Discount,
     }
 }
