@@ -114,7 +114,7 @@ namespace Checkout.Instruments
             var updateCardInstrument = new UpdateCardInstrumentRequest
             {
                 ExpiryMonth = 12,
-                ExpiryYear = 2024,
+                ExpiryYear = 2030,
                 Name = "John Doe",
                 Customer = new UpdateCustomerRequest {Id = tokenInstrument.Customer.Id, Default = true},
                 AccountHolder = new AccountHolder
@@ -148,7 +148,7 @@ namespace Checkout.Instruments
             cardResponse.Id.ShouldNotBeNull();
             cardResponse.Fingerprint.ShouldNotBeNull();
             cardResponse.ExpiryMonth.ShouldBe(12);
-            cardResponse.ExpiryYear.ShouldBe(2024);
+            cardResponse.ExpiryYear.ShouldBe(2030);
             cardResponse.Customer.Default.ShouldBeTrue();
             cardResponse.AccountHolder.FirstName.ShouldBe("John");
             cardResponse.AccountHolder.LastName.ShouldBe("Doe");

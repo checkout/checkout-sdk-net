@@ -135,7 +135,7 @@ namespace Checkout.Payments
                     Stored = false,
                     BillingAddress = new Address(),
                     ExpiryMonth = 12,
-                    ExpiryYear = 2024,
+                    ExpiryYear = 2030,
                     TokenType = NetworkTokenType.Vts
                 }
             };

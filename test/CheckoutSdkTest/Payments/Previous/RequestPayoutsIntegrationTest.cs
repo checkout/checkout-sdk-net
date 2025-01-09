@@ -11,7 +11,7 @@ namespace Checkout.Payments.Previous
 {
     public class RequestPayoutsIntegrationTest : AbstractPaymentsIntegrationTest
     {
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldRequestPayout()
         {
             var phone = new Phone {CountryCode = "44", Number = "020 222333"};

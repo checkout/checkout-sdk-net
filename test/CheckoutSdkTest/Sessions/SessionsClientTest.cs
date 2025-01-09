@@ -56,7 +56,7 @@ namespace Checkout.Sessions
             {
                 Source = new SessionNetworkTokenSource
                 {
-                    Token = "token", ExpiryMonth = 12, ExpiryYear = 2024, Name = "name"
+                    Token = "token", ExpiryMonth = 12, ExpiryYear = 2030, Name = "name"
                 }
             };
             var response = new CreateSessionOkResponse

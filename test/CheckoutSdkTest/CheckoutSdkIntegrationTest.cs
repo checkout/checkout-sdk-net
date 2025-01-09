@@ -17,10 +17,9 @@ namespace Checkout
         {
             var checkoutApi = CheckoutSdk
                 .Builder()
-                .Previous()
                 .StaticKeys()
-                .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_PUBLIC_KEY"))
-                .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_SECRET_KEY"))
+                .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PUBLIC_KEY"))
+                .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_SECRET_KEY"))
                 .Environment(Environment.Sandbox)
                 .HttpClientFactory(new TestingClientFactory())
                 .Build();
@@ -29,7 +28,7 @@ namespace Checkout
 
             try
             {
-                await checkoutApi.EventsClient().RetrieveAllEventTypes();
+                await checkoutApi.WorkflowsClient().GetWorkflows();
                 throw new XunitException();
             }
             catch (CheckoutApiException ex)
@@ -45,10 +44,9 @@ namespace Checkout
         {
             var checkoutApi = CheckoutSdk
                 .Builder()
-                .Previous()
                 .StaticKeys()
-                .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_PUBLIC_KEY"))
-                .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_SECRET_KEY"))
+                .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PUBLIC_KEY"))
+                .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_SECRET_KEY"))
                 .Environment(Environment.Sandbox)
                 .EnvironmentSubdomain(System.Environment.GetEnvironmentVariable("CHECKOUT_MERCHANT_SUBDOMAIN"))
                 .HttpClientFactory(new TestingClientFactory())
@@ -58,7 +56,7 @@ namespace Checkout
 
             try
             {
-                await checkoutApi.EventsClient().RetrieveAllEventTypes();
+                await checkoutApi.WorkflowsClient().GetWorkflows();
                 throw new XunitException();
             }
             catch (CheckoutApiException ex)
