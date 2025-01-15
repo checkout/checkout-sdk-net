@@ -34,6 +34,12 @@ namespace Checkout.Accounts.Entities.Common.Documents
         
         public TaxVerification TaxVerification { get; set; }
         
+        // EEA Sole Trader (3.0) Representatives
+        
+        public ProofOfResidentialAddress ProofOfResidentialAddress { get; set; }
+        
+        public ProofOfRegistration ProofOfRegistration { get; set; }
+        
         // Unknown
         
         public FinancialVerification FinancialVerification { get; set; }
