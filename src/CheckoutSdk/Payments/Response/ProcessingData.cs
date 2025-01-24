@@ -46,5 +46,9 @@ namespace Checkout.Payments.Response
         public string MerchantCategoryCode { get; set; }
         
         public string SchemeMerchantId { get; set; }
+        
+        public PanProcessedType? PanTypeProcessed { get; set; }
+        
+        public bool? CkoNetworkTokenAvailable { get; set; }
     }
 }

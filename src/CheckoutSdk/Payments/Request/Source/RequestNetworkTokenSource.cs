@@ -21,6 +21,8 @@ namespace Checkout.Payments.Request.Source
         public string Eci { get; set; }
 
         public bool? Stored { get; set; }
+        
+        public bool? StoreForFutureUse { get; set; }
 
         public string Name { get; set; }
 

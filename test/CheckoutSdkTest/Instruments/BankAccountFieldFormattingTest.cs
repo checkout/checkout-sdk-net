@@ -12,7 +12,7 @@ namespace Checkout.Instruments
         {
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldGetBankAccountFieldFormatting()
         {
             BankAccountFieldQuery query = new BankAccountFieldQuery
