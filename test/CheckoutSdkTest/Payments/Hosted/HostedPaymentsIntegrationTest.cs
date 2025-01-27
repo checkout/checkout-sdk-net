@@ -70,6 +70,7 @@ namespace Checkout.Payments.Hosted
                 Reference = "reference",
                 Currency = Currency.GBP,
                 Description = "Payment for Gold Necklace",
+                DisplayName = "Gold Necklace",
                 Customer = customer,
                 Shipping = shippingDetails,
                 Billing = billing,
