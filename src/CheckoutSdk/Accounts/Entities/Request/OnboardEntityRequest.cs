@@ -19,8 +19,9 @@ namespace Checkout.Accounts.Entities.Request
 
         public ProcessingDetails ProcessingDetails { get; set; }
 
-        public bool Draft { get; set; }
-        public bool IsDraft { get; set; }
+        public bool? Draft { get; set; }
+        
+        public bool? IsDraft { get; set; }
         
         public Individual Individual { get; set; }
         

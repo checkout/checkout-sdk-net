@@ -7,6 +7,8 @@ using NLog.Extensions.Logging;
 using Shouldly;
 using System;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit.Sdk;
 
@@ -23,6 +25,7 @@ namespace Checkout
         {
             var logFactory = new NLogLoggerFactory();
             _log = logFactory.CreateLogger(typeof(SandboxTestFixture));
+            
             switch (platformType)
             {
                 case PlatformType.Previous:
@@ -59,6 +62,7 @@ namespace Checkout
                             OAuthScope.TransfersView, OAuthScope.BalancesView, OAuthScope.VaultCardMetadata,
                             OAuthScope.FinancialActions)
                         .Environment(Environment.Sandbox)
+                        //.HttpClientFactory(new CustomClientFactory("3.0"))
                         //.EnvironmentSubdomain(System.Environment.GetEnvironmentVariable("CHECKOUT_MERCHANT_SUBDOMAIN"))
                         .LogProvider(logFactory)
                         .Build();
@@ -68,6 +72,50 @@ namespace Checkout
                     throw new ArgumentOutOfRangeException(nameof(platformType), platformType, null);
             }
         }
+        
+        protected class CustomClientFactory : IHttpClientFactory
+        {
+            private readonly string _schemaVersion;
+
+            public CustomClientFactory(string schemaVersion)
+            {
+                _schemaVersion = schemaVersion;
+            }
+
+            public HttpClient CreateClient()
+            {
+                var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Add("Accept", $"application/json;schema_version={_schemaVersion}");
+                return httpClient;
+            }
+        }
+        
+        protected static string RandomString(int length, string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
+        {
+            var random = new Random();
+            var sb = new StringBuilder(length);
+            for (int i = 0; i < length; i++) sb.Append(chars[random.Next(chars.Length)]);
+            return sb.ToString();
+        }
+        
+        protected static string RandomBusinessRegistrationNumber()
+        {
+            var random = new Random();
+            string[] gbPrefixes = { "OC", "LP", "SC", "AC", "CE", "GS" };
+            
+            return random.Next(2) == 0
+                ? RandomDigits(8)  
+                : gbPrefixes[random.Next(gbPrefixes.Length)] + RandomDigits(6);
+        }
+        
+        protected static string RandomIdentifier(int length, string prefix)
+        {
+            const string validChars = "abcdefghijklmnopqrstuvwxyz234567";
+            return prefix + RandomString(length, validChars);
+        }
+    
+        protected static string RandomDigits(int length) => RandomString(length, "0123456789");
+        protected static string RandomAlphanumeric(int length) => RandomString(length, "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
 
         protected static string GenerateRandomEmail()
         {

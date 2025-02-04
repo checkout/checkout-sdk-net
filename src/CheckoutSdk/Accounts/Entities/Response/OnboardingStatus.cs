@@ -4,6 +4,9 @@ namespace Checkout.Accounts.Entities.Response
 {
     public enum OnboardingStatus
     {
+        [EnumMember(Value = "draft")]
+        Draft,
+        
         [EnumMember(Value = "active")]
         Active,
 
