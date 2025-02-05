@@ -6,12 +6,9 @@ using Checkout.Accounts.Entities.Response;
 using Checkout.Common;
 using Checkout.Instruments;
 using Shouldly;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Mime;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -19,21 +16,19 @@ namespace Checkout.Accounts
 {
     public class AccountsIntegrationTest : SandboxTestFixture
     {
-        private static readonly Random Random = new Random();
-
         public AccountsIntegrationTest() : base(PlatformType.DefaultOAuth)
         {
         }
 
-        [Fact(Skip = "beta")]
+        [Fact]
         public async Task ShouldCreateHostedOnboardingInvitationRequest()
         {
             string randomReference = RandomString(15);
             var entityRequest = new OnboardEntityRequest
             {
                 Reference = randomReference,
-                IsDraft = false,
-                ContactDetails = new ContactDetails { Invitee = new Invitee { Email = "admin@superhero1234.com" } }
+                IsDraft = true,
+                ContactDetails = new ContactDetails { Invitee = new Invitee { Email = GenerateRandomEmail() } }
             };
 
             var response = await DefaultApi.AccountsClient().CreateEntity(entityRequest);
@@ -44,62 +39,170 @@ namespace Checkout.Accounts
         }
 
         [Fact]
-        public async Task ShouldCreateCompany()
+        public async Task ShouldCreateCompanyV2()
         {
             string randomReference = RandomString(15);
-            var entityRequest = new OnboardEntityRequest
+            var request = new OnboardEntityRequest
             {
                 Reference = randomReference,
-                Draft = true,
-                Profile =
-                    new Profile
-                    {
-                        Urls = new List<string> { "http://example.com" },
-                        Mccs = new List<string> { "4814" },
-                        HoldingCurrencies = new List<Currency> { Currency.GBP }
-                    },
-                ContactDetails =
-                    new ContactDetails
-                    {
-                        Phone = new Phone { CountryCode = "GI", Number = "656453654" },
-                        EmailAddresses = new EmailAddresses { Primary = null },
-                        Invitee = new Invitee { Email = null }
-                    },
                 Company =
                     new Company
                     {
-                        LegalName = "string",
-                        TradingName = "string",
-                        BusinessRegistrationNumber = "AC123456",
+                        LegalName = "Company " + RandomString(3),
+                        TradingName = "Trading " + RandomString(3),
+                        PrincipalAddress = GetAddress(),
+                        RegisteredAddress = GetAddress(),
+                        Representatives =
+                            new List<Representative>
+                            {
+                                new Representative
+                                {
+                                    FirstName = RandomString(5),
+                                    LastName = RandomString(5),
+                                    Address = GetAddress(),
+                                    Roles = new List<EntityRoles> { EntityRoles.Ubo },
+                                    DateOfBirth = new DateOfBirth { Day = 1, Month = 1, Year = 1980 },
+                                },
+                            },
+                        BusinessRegistrationNumber = RandomBusinessRegistrationNumber(),
+                        DateOfIncorporation = new DateOfIncorporation { Day = 1, Month = 1, Year = 2001 },
+
+                    },
+                ContactDetails = new ContactDetails
+                {
+                    Phone = new Phone { CountryCode = "GB", Number = RandomDigits(9) },
+                    EmailAddresses = new EmailAddresses { Primary = GenerateRandomEmail() },
+                    Invitee = new Invitee { Email = GenerateRandomEmail() }
+                },
+                Profile = new Profile
+                {
+                    Urls = new List<string> { "http://example.com" },
+                    Mccs = new List<string> { "4814" },
+                    DefaultHoldingCurrency = Currency.GBP,
+                    HoldingCurrencies = new List<Currency> { Currency.GBP }
+                },
+                IsDraft = true
+            };
+            
+            var api = CheckoutSdk.Builder().OAuth()
+                .ClientCredentials(
+                    System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_ID"),
+                    System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET"))
+                .Scopes(OAuthScope.Accounts)
+                .Environment(Environment.Sandbox)
+                .HttpClientFactory(new CustomClientFactory("2.0"))
+                .Build();
+            
+            var response = await api.AccountsClient().CreateEntity(request);
+
+            response.ShouldNotBeNull();
+            response.Id.ShouldNotBeNullOrEmpty();
+            response.Reference.ShouldBe(randomReference);
+        }
+
+        [Fact(Skip = "temporarily unavailable")]
+        public async Task ShouldCreateCompanyV3()
+        {
+            string randomReference = RandomString(15);
+            var request = new OnboardEntityRequest
+            {
+                Reference = randomReference,
+                Company =
+                    new Company
+                    {
+                        LegalName = "Company " + RandomString(3),
+                        TradingName = "Trading " + RandomString(3),
+                        BusinessRegistrationNumber = RandomBusinessRegistrationNumber(),
                         DateOfIncorporation = new DateOfIncorporation { Day = 1, Month = 1, Year = 2001 },
                         PrincipalAddress = GetAddress(),
                         RegisteredAddress = GetAddress(),
-                        BusinessType = BusinessType.IndividualOrSoleProprietorship
+                        Representatives =
+                            new List<Representative>
+                            {
+                                new Representative
+                                {
+                                    Company = new Company
+                                        {
+                                            LegalName = "Company " + RandomString(3),
+                                            TradingName = "Trading " + RandomString(3),
+                                            RegisteredAddress = GetAddress()
+                                        },
+                                    OwnershipPercentage = 100,
+                                },
+                                new Representative
+                                {
+                                    Individual = new Individual
+                                    {
+                                        FirstName = "FirstName " + RandomString(3),
+                                        LastName = "LastName " + RandomString(3),
+                                        DateOfBirth = new DateOfBirth { Day = 1, Month = 1, Year = 1980 },
+                                        PlaceOfBirth = new PlaceOfBirth { Country = CountryCode.GB},
+                                        Address = GetAddress(),
+                                        EmailAddress = GenerateRandomEmail(),
+                                    },
+                                    Roles = new List<EntityRoles> { EntityRoles.AuthorisedSignatory, EntityRoles.Director },
+                                    Documents = new Documents
+                                    {
+                                        IdentityVerification = new IdentityVerification()
+                                        {
+                                            Type = IdentityVerificationType.Passport,
+                                            Front = "file_bonwzndueqrlwvv3kfcokug5iu"
+                                        }
+                                    },
+                                },
+                            },
+                        BusinessType = BusinessType.PublicLimitedCompany
                     },
-                ProcessingDetails =
-                    new ProcessingDetails
-                    {
-                        SettlementCountry = "GB",
-                        TargetCountries = new List<string> { "GB" },
-                        Currency = Currency.GBP
-                    },
-                Documents = new Documents
+                Profile = new Profile
+                {
+                    Urls = new List<string> { "http://example.com" },
+                    Mccs = new List<string> { "4814" },
+                    DefaultHoldingCurrency = Currency.GBP,
+                    HoldingCurrencies = new List<Currency> { Currency.GBP }
+                },
+                ContactDetails = new ContactDetails
+                {
+                    Phone = new Phone { CountryCode = "GB", Number = RandomDigits(9) },
+                    EmailAddresses = new EmailAddresses { Primary = GenerateRandomEmail() },
+                    Invitee = new Invitee { Email = GenerateRandomEmail() }
+                },
+                Documents = new Documents()
                 {
                     ArticlesOfAssociation =
                         new ArticlesOfAssociation()
                         {
                             Type = ArticlesOfAssociationType.ArticlesOfAssociation,
-                            Front = "stringstringstringstringstrings"
+                            Front = "file_aacb27em7gmj6e7dhxabazucqi"
                         },
-                    ShareholderStructure = new ShareholderStructure()
-                    {
-                        Type = ShareholderStructureType.CertifiedShareholderStructure,
-                        Front = "stringstringstringstringstrings"
-                    },
-                }
+                    ShareholderStructure =
+                        new ShareholderStructure()
+                        {
+                            Type = ShareholderStructureType.CertifiedShareholderStructure,
+                            Front = "file_bpme2tii3lsgshx4ghj3i4672q"
+                        },
+                },
+                ProcessingDetails = new ProcessingDetails
+                {
+                    SettlementCountry = "GB",
+                    TargetCountries = new List<string> { "GB" },
+                    AnnualProcessingVolume = 0,
+                    AverageTransactionValue = 0,
+                    HighestTransactionValue = 0,
+                    Currency = Currency.GBP
+                },
+                IsDraft = false
             };
 
-            var response = await DefaultApi.AccountsClient().CreateEntity(entityRequest);
+            var api = CheckoutSdk.Builder().OAuth()
+                .ClientCredentials(
+                    System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_ID"),
+                    System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET"))
+                .Scopes(OAuthScope.Accounts)
+                .Environment(Environment.Sandbox)
+                .HttpClientFactory(new CustomClientFactory("3.0"))
+                .Build();
+            
+            var response = await api.AccountsClient().CreateEntity(request);
 
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNullOrEmpty();
@@ -410,13 +513,6 @@ namespace Checkout.Accounts
             var queryResponse = await api.AccountsClient().QueryPaymentInstruments(entityResponse.Id);
             queryResponse.ShouldNotBeNull();
             queryResponse.Data.ShouldNotBeNull();
-        }
-
-        private static string RandomString(int length)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[Random.Next(s.Length)]).ToArray());
         }
 
         private static ContactDetails BuildContactDetails()

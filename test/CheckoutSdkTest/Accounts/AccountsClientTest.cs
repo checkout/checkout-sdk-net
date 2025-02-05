@@ -78,8 +78,8 @@ namespace Checkout.Accounts
             {
                 Response = new Dictionary<string, object>
                 {
-                    { "custom_field_1", "value_1" },
-                    { "custom_field_2", 12345 }
+                    { "Id", "sub_entity_id" },
+                    { "custom_field_1", 12345 }
                 }
             };
 
@@ -100,10 +100,10 @@ namespace Checkout.Accounts
             
             response.ShouldNotBeNull();
             response.Response.ShouldNotBeNull();
+            response.Response.ContainsKey("Id").ShouldBeTrue();
+            response.Response["Id"].ShouldBe("sub_entity_id");
             response.Response.ContainsKey("custom_field_1").ShouldBeTrue();
-            response.Response["custom_field_1"].ShouldBe("value_1");
-            response.Response.ContainsKey("custom_field_2").ShouldBeTrue();
-            response.Response["custom_field_2"].ShouldBe(12345);
+            response.Response["custom_field_1"].ShouldBe(12345);
         }
 
         [Fact]
