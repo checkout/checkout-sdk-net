@@ -2,7 +2,7 @@
 
 namespace Checkout.Payments.Request
 {
-    public class Order
+    public class RefundOrder
     {
         public string Name { get; set; }
 

@@ -26,8 +26,6 @@ namespace Checkout.Payments
         
         public bool? AllowUpgrade { get; set; }
         
-        //Not available on Previous
-        
         public string Status { get; set; }
         
         public DateTime? AuthenticationDate { get; set; }

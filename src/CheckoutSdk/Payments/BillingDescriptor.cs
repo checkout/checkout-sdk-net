@@ -6,8 +6,6 @@ namespace Checkout.Payments
 
         public string City { get; set; }
 
-        //Not available on Previous
-
         public string Reference { get; set; }
     }
 }

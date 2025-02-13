@@ -14,7 +14,7 @@ namespace Checkout.Payments
         private async Task ShouldRefundCardPayment()
         {
             var paymentResponse = await MakeCardPayment(true);
-            var order = new Order() { Name = "OrderTest", TotalAmount = 99, Quantity = 88 };
+            var order = new RefundOrder() { Name = "OrderTest", TotalAmount = 99, Quantity = 88 };
             var bank = new BankDetails { Name = "Lloyds TSB", Branch = "Bournemouth", Address = GetAddress() };
             var destination = new Destination
             {
@@ -34,7 +34,7 @@ namespace Checkout.Payments
             {
                 Amount = paymentResponse.Amount,
                 Reference = Guid.NewGuid().ToString(),
-                Items = new List<Order> { order },
+                Items = new List<RefundOrder> { order },
                 Destination = destination
             };
 

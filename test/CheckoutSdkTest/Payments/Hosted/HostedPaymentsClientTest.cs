@@ -119,7 +119,7 @@ namespace Checkout.Payments.Hosted
                 SuccessUrl = "https://example.com/payments/success",
                 CancelUrl = "https://example.com/payments/success",
                 FailureUrl = "https://example.com/payments/success",
-                Locale = "en-GB",
+                Locale = Locale.EnGb,
                 ThreeDs = new ThreeDsRequest {Enabled = false, AttemptN3D = false},
                 Capture = true,
                 CaptureOn = DateTime.UtcNow

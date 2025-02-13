@@ -57,6 +57,8 @@ namespace Checkout.Common
         [EnumMember(Value = "cvconnect")] Cvconnect,
         [EnumMember(Value = "sepa")] Sepa,
         [EnumMember(Value = "sequra")] Sequra,
-        [EnumMember(Value = "tabby")] Tabby
+        [EnumMember(Value = "tabby")] Tabby,
+        [EnumMember(Value = "applepay")] Applepay,
+        [EnumMember(Value = "googlepay")] Googlepay
     }
 }

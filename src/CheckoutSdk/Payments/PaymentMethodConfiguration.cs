@@ -1,4 +1,4 @@
-namespace Checkout.Payments.Sessions
+namespace Checkout.Payments
 {
     public class PaymentMethodConfiguration
     {

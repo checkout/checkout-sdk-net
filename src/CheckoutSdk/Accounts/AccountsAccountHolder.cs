@@ -23,5 +23,10 @@ namespace Checkout.Accounts
         public AccountHolderIdentification Identification { get; set; }
 
         public string Email { get; set; }
+        
+        protected AccountsAccountHolder(AccountHolderType type)
+        {
+            Type = type;
+        }
     }
 }

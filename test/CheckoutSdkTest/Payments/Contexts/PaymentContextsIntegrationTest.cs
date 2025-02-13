@@ -136,7 +136,12 @@ namespace Checkout.Payments.Contexts
                 Amount = 2000,
                 Currency = Currency.USD,
                 PaymentType = PaymentType.Regular,
-                Customer = GetCustomer(),
+                Customer = new PaymentContextsCustomerRequest
+                {
+                    Email = GenerateRandomEmail(),
+                    EmailVerified = true,
+                    Name = "John Smith",
+                },
                 Capture = true,
                 Shipping = new ShippingDetails
                 {

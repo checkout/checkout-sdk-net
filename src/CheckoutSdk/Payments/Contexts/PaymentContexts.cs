@@ -15,7 +15,7 @@ namespace Checkout.Payments.Contexts
         
         public bool? Capture { get; set; }
 
-        public CustomerRequest Customer { get; set; }
+        public PaymentContextsCustomerRequest Customer { get; set; }
 
         public ShippingDetails Shipping { get; set; }
 
