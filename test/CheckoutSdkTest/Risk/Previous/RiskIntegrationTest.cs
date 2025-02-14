@@ -74,7 +74,6 @@ namespace Checkout.Risk.Previous
                 Source = requestSource,
                 Customer = new Common.CustomerRequest()
                 {
-                    Id = "Id",
                     Email = GenerateRandomEmail(),
                     Name = "name"
                 },
@@ -130,7 +129,6 @@ namespace Checkout.Risk.Previous
                 Source = requestSource,
                 Customer = new Common.CustomerRequest()
                 {
-                    Id = "Id",
                     Email = GenerateRandomEmail(),
                     Name = "name"
                 },

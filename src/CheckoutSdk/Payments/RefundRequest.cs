@@ -19,7 +19,7 @@ namespace Checkout.Payments
         
         public Destination Destination { get; set; }
         
-        public IList<Order> Items { get; set; }
+        public IList<RefundOrder> Items { get; set; }
 
     }
 }

@@ -38,7 +38,6 @@ namespace Checkout.Payments.Previous.Links
                 Currency = Currency.GBP,
                 Customer = new CustomerRequest
                 {
-                    Id = "Id",
                     Email = GenerateRandomEmail(),
                     Name = "name"
                 },
@@ -93,7 +92,6 @@ namespace Checkout.Payments.Previous.Links
                 Currency = Currency.GBP,
                 Customer = new CustomerRequest
                 {
-                    Id = "Id",
                     Email = GenerateRandomEmail(),
                     Name = "name"
                 },

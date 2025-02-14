@@ -23,7 +23,7 @@ namespace Checkout.Payments.Links
                 Capture = true,
                 CaptureOn = DateTime.Now,
                 Currency = Currency.GBP,
-                Customer = new CustomerRequest { Id = "Id", Email = GenerateRandomEmail(), Name = "name" },
+                Customer = new CustomerRequest { Email = GenerateRandomEmail(), Name = "name" },
                 Description = "description",
                 ExpiresIn = 1,
                 Locale = "locale",

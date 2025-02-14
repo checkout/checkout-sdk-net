@@ -1,9 +1,13 @@
 ﻿using Checkout.Common;
+using Checkout.Instruments.Previous;
+using Checkout.Payments.Request;
+using Checkout.Payments.Sender;
 using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
+using Product = Checkout.Common.Product;
 
 namespace Checkout.Payments.Hosted
 {
@@ -46,47 +50,146 @@ namespace Checkout.Payments.Hosted
 
         protected static HostedPaymentRequest CreateHostedPaymentRequest()
         {
-            var customer = new CustomerRequest {Name = "Jack Napier", Email = GenerateRandomEmail()};
-
-            var shippingDetails = new ShippingDetails {Address = GetAddress(), Phone = GetPhone()};
-
-            var billing = new BillingInformation {Address = GetAddress(), Phone = GetPhone()};
-
-            var recipient = new PaymentRecipient
-            {
-                AccountNumber = "1234567",
-                Country = CountryCode.ES,
-                DateOfBirth = "1985-05-15",
-                FirstName = "IT",
-                LastName = "TESTING",
-                Zip = "12345"
-            };
-
-            var products = new[] {new Product {Name = "Gold Necklace", Quantity = 1L, Price = 200L}};
-
             return new HostedPaymentRequest
             {
-                Amount = 200L,
-                Reference = "reference",
+                Amount = 1000L,
                 Currency = Currency.GBP,
+                PaymentType = PaymentType.Regular,
+                PaymentIp = "192.168.0.1",
+                BillingDescriptor = new BillingDescriptor
+                {
+                    Name = "The Jewelry Shop",
+                    City = "London",
+                    Reference = "ORD-123A"
+                },
+                Reference = "reference",
                 Description = "Payment for Gold Necklace",
-                DisplayName = "Gold Necklace",
-                Customer = customer,
-                Shipping = shippingDetails,
-                Billing = billing,
-                Recipient = recipient,
-                Processing = new ProcessingSettings {Aft = true},
-                Products = products,
-                Risk = new RiskRequest {Enabled = false},
+                DisplayName = "The Jewelry Shop",
+                ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
+                AmountAllocations = new List<AmountAllocations>
+                {
+                    new AmountAllocations
+                    {
+                        Id = "ent_w4jelhppmfiufdnatam37wrfc4",
+                        Amount = 1000L,
+                        Reference = "ORD-5023-4E89",
+                        Commission = new Commission
+                        {
+                            Amount = 1000L,
+                            Percentage = 1.125
+                        }
+                    }
+                },
+                Customer = new InstrumentCustomerRequest
+                {
+                    Email = "brucewayne@email.com",
+                    Name = "Bruce Wayne"
+                },
+                Shipping = new ShippingDetails
+                {
+                    Address = GetAddress(),
+                    Phone = GetPhone()
+                },
+                Billing = new BillingInformation
+                {
+                    Address = GetAddress(),
+                    Phone = GetPhone()
+                },
+                Recipient = new PaymentRecipient
+                {
+                    DateOfBirth = "1985-05-15",
+                    AccountNumber = "5555554444",
+                    Address = GetAddress(),
+                    Zip = "SW1A",
+                    FirstName = "John",
+                    LastName = "Jones"
+                },
+                Processing = new ProcessingSettings
+                {
+                    Aft = true
+                },
+                AllowPaymentMethods = new List<PaymentSourceType>
+                {
+                    PaymentSourceType.Card,
+                    PaymentSourceType.Googlepay,
+                    PaymentSourceType.Applepay
+                },
+                DisabledPaymentMethods = new List<PaymentSourceType>
+                {
+                    PaymentSourceType.EPS,
+                    PaymentSourceType.Ideal,
+                    PaymentSourceType.KNet
+                },
+                Products = new List<Product>
+                {
+                    new Product
+                    {
+                        Reference = "string",
+                        Name = "Gold Necklace",
+                        Quantity = 1L,
+                        Price = 1000L
+                    }
+                },
+                Risk = new RiskRequest
+                {
+                    Enabled = false
+                },
+                CustomerRetry = new PaymentRetryRequest
+                {
+                    MaxAttempts = 2
+                },
+                Sender = new PaymentInstrumentSender
+                {
+                    Reference = "8285282045818"
+                },
                 SuccessUrl = "https://example.com/payments/success",
-                CancelUrl = "https://example.com/payments/success",
-                FailureUrl = "https://example.com/payments/success",
-                Locale = "en-GB",
-                ThreeDs = new ThreeDsRequest {Enabled = false, AttemptN3D = false},
+                CancelUrl = "https://example.com/payments/cancel",
+                FailureUrl = "https://example.com/payments/failure",
+                Locale = Locale.Ar,
+                ThreeDs = new ThreeDsRequest
+                {
+                    Enabled = false,
+                    AttemptN3D = false,
+                    ChallengeIndicator = ChallengeIndicatorType.NoPreference,
+                    AllowUpgrade = true,
+                    Exemption = Exemption.LowValue
+                },
                 Capture = true,
                 CaptureOn = DateTime.UtcNow,
-                AllowPaymentMethods =
-                    new List<PaymentSourceType> {PaymentSourceType.Card, PaymentSourceType.Ideal}
+                Instruction = new HostedPaymentInstruction
+                {
+                    Purpose = PaymentPurposeType.Donations
+                },
+                PaymentMethodConfiguration = new PaymentMethodConfiguration
+                {
+                    Applepay = new Applepay
+                    {
+                        AccountHolder = new AccountHolder
+                        {
+                            FirstName = "John",
+                            LastName = "Jones",
+                            Type = AccountHolderType.Individual
+                        }
+                    },
+                    Card = new Card
+                    {
+                        AccountHolder = new AccountHolder
+                        {
+                            FirstName = "John",
+                            LastName = "Jones",
+                            Type = AccountHolderType.Individual
+                        }
+                    },
+                    Googlepay = new Googlepay
+                    {
+                        AccountHolder = new AccountHolder
+                        {
+                            FirstName = "John",
+                            LastName = "Jones",
+                            Type = AccountHolderType.Individual
+                        }
+                    }
+                }
             };
         }
     }
