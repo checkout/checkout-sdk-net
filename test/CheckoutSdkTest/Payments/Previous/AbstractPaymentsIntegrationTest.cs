@@ -165,7 +165,7 @@ namespace Checkout.Payments.Previous
                 SuccessUrl = "https://example.com/payments/success",
                 CancelUrl = "https://example.com/payments/success",
                 FailureUrl = "https://example.com/payments/success",
-                Locale = Locale.EnGb,
+                Locale = LocaleType.EnGb,
                 ThreeDs = new ThreeDsRequest {Enabled = false, AttemptN3D = false},
                 Capture = true,
                 CaptureOn = DateTime.UtcNow

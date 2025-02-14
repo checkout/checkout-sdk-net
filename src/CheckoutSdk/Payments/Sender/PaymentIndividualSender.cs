@@ -1,4 +1,5 @@
 ﻿using Checkout.Common;
+using Newtonsoft.Json;
 
 namespace Checkout.Payments.Sender
 {
@@ -18,7 +19,7 @@ namespace Checkout.Payments.Sender
 
         public Address Address { get; set; }
 
-        public AccountHolderIdentification AccountHolderIdentification { get; set; }
+        [JsonProperty(PropertyName = "identification")]  public AccountHolderIdentification AccountHolderIdentification { get; set; }
         
         public string ReferenceType { get; set; }
 

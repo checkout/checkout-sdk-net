@@ -2,7 +2,7 @@ using System.Runtime.Serialization;
 
 namespace Checkout.Payments
 {
-    public enum Locale
+    public enum LocaleType
     {
         [EnumMember(Value = "ar")]
         Ar,

@@ -145,7 +145,7 @@ namespace Checkout.Payments.Hosted
                 SuccessUrl = "https://example.com/payments/success",
                 CancelUrl = "https://example.com/payments/cancel",
                 FailureUrl = "https://example.com/payments/failure",
-                Locale = Locale.Ar,
+                Locale = LocaleType.Ar,
                 ThreeDs = new ThreeDsRequest
                 {
                     Enabled = false,
@@ -156,7 +156,7 @@ namespace Checkout.Payments.Hosted
                 },
                 Capture = true,
                 CaptureOn = DateTime.UtcNow,
-                Instruction = new HostedPaymentInstruction
+                Instruction = new PaymentInstruction
                 {
                     Purpose = PaymentPurposeType.Donations
                 },

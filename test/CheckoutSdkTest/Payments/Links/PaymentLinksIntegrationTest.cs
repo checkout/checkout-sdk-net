@@ -1,9 +1,13 @@
 ﻿using Checkout.Common;
+using Checkout.Payments.Hosted;
+using Checkout.Payments.Request;
+using Checkout.Payments.Sender;
 using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
+using Product = Checkout.Common.Product;
 
 namespace Checkout.Payments.Links
 {
@@ -19,15 +23,58 @@ namespace Checkout.Payments.Links
             var paymentLinkRequest = new PaymentLinkRequest
             {
                 Amount = 100,
-                Billing = new BillingInformation { Address = GetAddress() },
-                Capture = true,
-                CaptureOn = DateTime.Now,
                 Currency = Currency.GBP,
-                Customer = new CustomerRequest { Email = GenerateRandomEmail(), Name = "name" },
-                Description = "description",
+                Billing = new BillingInformation { Address = GetAddress() },
+                PaymentType = PaymentType.Regular,
+                PaymentIp = "192.168.0.1",
+                BillingDescriptor = new BillingDescriptor { Name = "name", City = "London", Reference = "reference" },
+                Reference = "Reference",
+                Description = "Description",
+                DisplayName = "DisplayName",
+                ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
+                AmountAllocations = new List<AmountAllocations>
+                {
+                    new AmountAllocations
+                    {
+                        Id = "ent_sdioy6bajpzxyl3utftdp7legq",
+                        Amount = 100,
+                        Reference = Guid.NewGuid().ToString(),
+                        Commission = new Commission { Amount = 1, Percentage = 0.1 }
+                    }
+                },
                 ExpiresIn = 1,
-                Locale = "locale",
-                Reference = "referene",
+                Customer = new CustomerRequest { Email = GenerateRandomEmail(), Name = "name" },
+                Shipping = new ShippingDetails { Address = GetAddress(), Phone = GetPhone() },
+                Recipient = new PaymentRecipient
+                {
+                    AccountNumber = "1234567",
+                    Country = CountryCode.ES,
+                    DateOfBirth = "1985-05-15",
+                    FirstName = "IT",
+                    LastName = "TESTING",
+                    Zip = "12345"
+                },
+                Processing = new ProcessingSettings { Aft = true },
+                AllowPaymentMethods =
+                    new List<PaymentSourceType> { PaymentSourceType.Card, PaymentSourceType.Ideal },
+                DisabledPaymentMethods = 
+                    new List<PaymentSourceType> { PaymentSourceType.EPS, PaymentSourceType.Ideal, PaymentSourceType.KNet },
+                Products = new List<Product>
+                {
+                    new Product
+                    {
+                        Name = "Gold Necklace",
+                        Quantity = 1,
+                        Price = 10,
+                        Reference = "some description about item",
+                    }
+                },
+                Metadata = new Dictionary<string, object>
+                {
+                    {"VoucherCode", "loyalty_10"},
+                    {"discountApplied", "10"},
+                    {"customer_id", "2190EF321"},
+                },
                 ThreeDs = new ThreeDsRequest
                 {
                     Enabled = true,
@@ -38,17 +85,53 @@ namespace Checkout.Payments.Links
                     Version = "2.0.1",
                     ChallengeIndicator = ChallengeIndicatorType.NoPreference
                 },
-                PaymentType = PaymentType.Regular,
-                AllowPaymentMethods =
-                    new List<PaymentSourceType> { PaymentSourceType.Card, PaymentSourceType.Ideal },
-                AmountAllocations = new List<AmountAllocations>
+                Risk = new RiskRequest
                 {
-                    new AmountAllocations
+                    Enabled = false
+                },
+                CustomerRetry = new PaymentRetryRequest
+                {
+                    MaxAttempts = 2
+                },
+                Sender = new PaymentInstrumentSender
+                {
+                    Reference = "8285282045818"
+                },
+                Locale = LocaleType.EnGb,
+                Capture = true,
+                CaptureOn = DateTime.Now,
+                Instruction = new PaymentInstruction
+                {
+                    Purpose = PaymentPurposeType.Pension
+                },
+                PaymentMethodConfiguration = new PaymentMethodConfiguration
+                {
+                    Applepay = new Applepay
                     {
-                        Id = "ent_sdioy6bajpzxyl3utftdp7legq",
-                        Amount = 100,
-                        Reference = Guid.NewGuid().ToString(),
-                        Commission = new Commission { Amount = 1, Percentage = 0.1 }
+                        AccountHolder = new AccountHolder
+                        {
+                            FirstName = "John",
+                            LastName = "Jones",
+                            Type = AccountHolderType.Individual
+                        }
+                    },
+                    Card = new Card
+                    {
+                        AccountHolder = new AccountHolder
+                        {
+                            FirstName = "John",
+                            LastName = "Jones",
+                            Type = AccountHolderType.Individual
+                        }
+                    },
+                    Googlepay = new Googlepay
+                    {
+                        AccountHolder = new AccountHolder
+                        {
+                            FirstName = "John",
+                            LastName = "Jones",
+                            Type = AccountHolderType.Individual
+                        }
                     }
                 }
             };
@@ -77,7 +160,8 @@ namespace Checkout.Payments.Links
             responseGet.Links.Count.ShouldBe(2);
             responseGet.Reference.ShouldNotBeNull();
             responseGet.Metadata.ShouldNotBeNull();
-            responseGet.Metadata.Count.ShouldBe(0);
+            responseGet.Metadata.Count.ShouldBe(3);
+            responseGet.Locale.ShouldBe(LocaleType.EnGb);
         }
     }
 }

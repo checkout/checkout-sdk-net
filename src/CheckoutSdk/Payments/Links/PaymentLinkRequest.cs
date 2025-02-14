@@ -13,10 +13,24 @@ namespace Checkout.Payments.Links
         public long? Amount { get; set; }
 
         public Currency? Currency { get; set; }
+        
+        public BillingInformation Billing { get; set; }
+        
+        public PaymentType? PaymentType { get; set; }
+        
+        public string PaymentIp { get; set; }
+        
+        public BillingDescriptor BillingDescriptor { get; set; }
 
         public string Reference { get; set; }
 
         public string Description { get; set; }
+        
+        public string DisplayName { get; set; }
+        
+        public string ProcessingChannelId { get; set; }
+        
+        public IList<AmountAllocations> AmountAllocations { get; set; }
 
         public int? ExpiresIn { get; set; }
 
@@ -24,11 +38,13 @@ namespace Checkout.Payments.Links
 
         public ShippingDetails Shipping { get; set; }
 
-        public BillingInformation Billing { get; set; }
-
         public PaymentRecipient Recipient { get; set; }
 
         public ProcessingSettings Processing { get; set; }
+        
+        public IList<PaymentSourceType> AllowPaymentMethods { get; set; }
+        
+        public IList<PaymentSourceType> DisabledPaymentMethods { get; set; }
 
         public IList<Product> Products { get; set; }
 
@@ -44,28 +60,14 @@ namespace Checkout.Payments.Links
 
         public string ReturnUrl { get; set; }
 
-        public string Locale { get; set; }
+        public LocaleType Locale { get; set; }
 
         public bool? Capture { get; set; }
 
         public DateTime? CaptureOn { get; set; }
-
-        public PaymentType? PaymentType { get; set; }
-
-        public string PaymentIp { get; set; }
-
-        public BillingDescriptor BillingDescriptor { get; set; }
-
-        public IList<PaymentSourceType> AllowPaymentMethods { get; set; }
         
-        public IList<PaymentSourceType> DisabledPaymentMethods { get; set; }
+        public PaymentInstruction Instruction { get; set; }
 
-        //Not available on Previous
-
-        public string ProcessingChannelId { get; set; }
-        
-        public IList<AmountAllocations> AmountAllocations { get; set; }
-        
-        public string DisplayName { get; set; }
+        public PaymentMethodConfiguration PaymentMethodConfiguration { get; set; }
     }
 }
