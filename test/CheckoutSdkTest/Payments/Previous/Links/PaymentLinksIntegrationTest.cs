@@ -43,7 +43,7 @@ namespace Checkout.Payments.Previous.Links
                 },
                 Description = "description",
                 ExpiresIn = 1,
-                Locale = "loc",
+                Locale = LocaleType.EnGb,
                 Reference = "ORD-123A",
                 ThreeDs = new ThreeDsRequest
                 {
@@ -97,7 +97,7 @@ namespace Checkout.Payments.Previous.Links
                 },
                 Description = "description",
                 ExpiresIn = 1,
-                Locale = "loc",
+                Locale = LocaleType.EnGb,
                 Reference = "ORD-123A",
                 ThreeDs = new ThreeDsRequest
                 {

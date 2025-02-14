@@ -76,7 +76,7 @@ namespace Checkout.Payments
                     DateOfBirth = "1939-05-05",
                     SourceOfFunds = SourceOfFunds.Credit,
                 },
-                Instruction = new PaymentInstruction
+                Instruction = new Request.PaymentInstruction
                 {
                     Purpose = "pension", FundsTransferType = "C07", Mvv = "0123456789"
                 },

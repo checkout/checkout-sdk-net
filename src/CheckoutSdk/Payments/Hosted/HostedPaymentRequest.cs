@@ -60,15 +60,15 @@ namespace Checkout.Payments.Hosted
 
         public IDictionary<string, object> Metadata { get; set; }
 
-        public Locale Locale { get; set; }
+        public LocaleType? Locale { get; set; }
 
         [JsonProperty(PropertyName = "3ds")] public ThreeDsRequest ThreeDs { get; set; }
 
-        public bool Capture { get; set; }
+        public bool? Capture { get; set; }
 
         public DateTime? CaptureOn { get; set; }
         
-        public HostedPaymentInstruction Instruction { get; set; }
+        public PaymentInstruction Instruction { get; set; }
 
         public PaymentMethodConfiguration PaymentMethodConfiguration { get; set; }
         
