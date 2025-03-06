@@ -23,7 +23,7 @@ namespace Checkout.Apm.Ideal
             idealInfo.Links.Curies.Count.ShouldBePositive();
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldGetIssuers()
         {
             var idealInfo = await PreviousApi.IdealClient().GetIssuers();

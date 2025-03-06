@@ -60,7 +60,7 @@ namespace Checkout.Payments.Links
 
         public string ReturnUrl { get; set; }
 
-        public LocaleType Locale { get; set; }
+        public LocaleType? Locale { get; set; }
 
         public bool? Capture { get; set; }
 

@@ -11,7 +11,7 @@ namespace Checkout.Payments.Previous
 {
     public class RequestPaymentsIntegrationTest : AbstractPaymentsIntegrationTest
     {
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakeCardPayment()
         {
             var paymentResponse = await MakeCardPayment(true, captureOn: DateTime.Now.AddDays(1));
@@ -69,7 +69,7 @@ namespace Checkout.Payments.Previous
             paymentResponse.HasLink("void").ShouldBeTrue();
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakeCardVerification()
         {
             var phone = new Phone {CountryCode = "44", Number = "020 222333"};
@@ -181,7 +181,7 @@ namespace Checkout.Payments.Previous
             paymentResponse.HasLink("redirect").ShouldBeTrue();
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakeCard3dsPayment_N3d()
         {
             var paymentResponse = await Make3dsCardPayment(true);
@@ -295,7 +295,7 @@ namespace Checkout.Payments.Previous
             paymentResponse.HasLink("void").ShouldBeTrue();
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakePaymentsIdempotently()
         {
             var phone = new Phone {CountryCode = "44", Number = "020 222333"};

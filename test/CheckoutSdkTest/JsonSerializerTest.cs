@@ -119,7 +119,7 @@ namespace Checkout
         }
 
         [Fact]
-        public void ShouldSerializeDateTimeFormatsFromJson()
+        public void ShouldDeserializeDateTimeFormatsFromJson()
         {
             var fileContent = GetJsonFileContent("./Resources/get_financial_actions_response.json");
             FinancialActionsQueryResponse financialActionsQueryResponse =
@@ -130,7 +130,7 @@ namespace Checkout
         }
         
         [Fact]
-        public void ShouldSerializeOnBoardSubEntityCompanyFromJson()
+        public void ShouldDeserializeOnBoardSubEntityCompanyFromJson()
         {
             var fileContent = GetJsonFileContent("./Resources/OnBoardSubEntityCompanyResponse.json");
             OnboardEntityDetailsResponse onboardEntityDetailsResponse =
@@ -141,7 +141,29 @@ namespace Checkout
         }
         
         [Fact]
-        public void ShouldSerializePaymentContextsPayPalDetailsResponseFromJson()
+        public void ShouldDeserializeOnBoardSubEntityGBCompany30FromJson()
+        {
+            var fileContent = GetJsonFileContent("./Resources/OnBoardSubEntityGBCompany30Response.json");
+            OnboardEntityDetailsResponse onboardEntityDetailsResponse =
+                (OnboardEntityDetailsResponse)new JsonSerializer().Deserialize(fileContent,
+                    typeof(OnboardEntityDetailsResponse));
+            onboardEntityDetailsResponse.ShouldNotBeNull();
+            onboardEntityDetailsResponse.Company.BusinessType.ShouldBeOfType<BusinessType>();
+        }
+        
+        [Fact]
+        public void ShouldDeserializeOnBoardSubEntityEEACompany30FromJson()
+        {
+            var fileContent = GetJsonFileContent("./Resources/OnBoardSubEntityEEACompany30Response.json");
+            OnboardEntityDetailsResponse onboardEntityDetailsResponse =
+                (OnboardEntityDetailsResponse)new JsonSerializer().Deserialize(fileContent,
+                    typeof(OnboardEntityDetailsResponse));
+            onboardEntityDetailsResponse.ShouldNotBeNull();
+            onboardEntityDetailsResponse.Company.BusinessType.ShouldBeOfType<BusinessType>();
+        }
+        
+        [Fact]
+        public void ShouldDeserializePaymentContextsPayPalDetailsResponseFromJson()
         {
             var fileContent = GetJsonFileContent("./Resources/PaymentContextsPayPalDetailsResponse.json");
             PaymentContextDetailsResponse paymentContextsPayPalResponseSource =

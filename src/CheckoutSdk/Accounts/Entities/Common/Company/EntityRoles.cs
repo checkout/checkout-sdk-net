@@ -17,6 +17,6 @@ namespace Checkout.Accounts.Entities.Common.Company
         ControlPerson,
         
         [EnumMember(Value = "legal_representative")]
-        LegalRepresentative,
+        LegalRepresentative
     }
 }

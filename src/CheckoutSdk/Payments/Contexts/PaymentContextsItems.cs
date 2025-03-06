@@ -3,6 +3,7 @@ namespace Checkout.Payments.Contexts
     public class PaymentContextsItems
     {
         public PaymentContextItemType? Type { get; set; }
+        
         public string Name { get; set; }
 
         public int? Quantity { get; set; }

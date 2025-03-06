@@ -12,7 +12,6 @@ namespace Checkout.Payments
         
         public IDictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
         
-        // Not available on Previous
         public IList<AmountAllocations> AmountAllocations { get; set; }
 
         public string CaptureActionId { get; set; }

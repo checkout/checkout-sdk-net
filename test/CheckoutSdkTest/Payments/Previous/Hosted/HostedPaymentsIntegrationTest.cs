@@ -8,7 +8,7 @@ namespace Checkout.Payments.Previous.Hosted
 {
     public class HostedPaymentsIntegrationTest : AbstractPaymentsIntegrationTest
     {
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldCreateAndGetHostedPayment()
         {
             var hostedPaymentRequest = CreateHostedPaymentRequest("ORD-123A");

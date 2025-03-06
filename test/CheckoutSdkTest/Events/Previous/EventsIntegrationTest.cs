@@ -29,7 +29,7 @@ namespace Checkout.Events.Previous
             "payment_voided",
         };
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldRetrieveDefaultEventTypes()
         {
             var allEventTypesWrapper = await PreviousApi.EventsClient().RetrieveAllEventTypes();
