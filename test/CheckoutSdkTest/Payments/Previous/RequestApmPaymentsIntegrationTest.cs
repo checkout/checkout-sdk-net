@@ -23,7 +23,7 @@ namespace Checkout.Payments.Previous
 {
     public class RequestApmPaymentsIntegrationTest : AbstractPaymentsIntegrationTest
     {
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakeAliPayPayment()
         {
             var paymentRequest = new PaymentRequest
@@ -211,7 +211,7 @@ namespace Checkout.Payments.Previous
             source.Type().ShouldBe(PaymentSourceType.EPS);
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakeFawryPayment()
         {
             var fawrySource = new RequestFawrySource
@@ -470,7 +470,7 @@ namespace Checkout.Payments.Previous
             source.Type().ShouldBe(PaymentSourceType.RapiPago);
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakeSofortPayment()
         {
             var sofortSource = new RequestSofortSource
@@ -508,7 +508,7 @@ namespace Checkout.Payments.Previous
             source.Type().ShouldBe(PaymentSourceType.Sofort);
         }
         
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakeKnetPayment()
         {
             var paymentRequest = new PaymentRequest
@@ -583,7 +583,7 @@ namespace Checkout.Payments.Previous
             source.Type().ShouldBe(PaymentSourceType.Przelewy24);
         }
         
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakePayPalPayment()
         {
             var paymentRequest = new PaymentRequest
@@ -614,7 +614,7 @@ namespace Checkout.Payments.Previous
             source.Type().ShouldBe(PaymentSourceType.PayPal);
         }
         
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakePoliPayment()
         {
             var paymentRequest = new PaymentRequest
@@ -678,7 +678,7 @@ namespace Checkout.Payments.Previous
             source.Type().ShouldBe(PaymentSourceType.Bancontact);
         }
         
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakeQPayPayment()
         {
             var paymentRequest = new PaymentRequest

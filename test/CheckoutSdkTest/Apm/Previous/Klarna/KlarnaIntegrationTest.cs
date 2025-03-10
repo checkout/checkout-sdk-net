@@ -12,7 +12,7 @@ namespace Checkout.Apm.Previous.Klarna
         {
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldCreateAndGetKlarnaSession()
         {
             var creditSessionRequest = new CreditSessionRequest()

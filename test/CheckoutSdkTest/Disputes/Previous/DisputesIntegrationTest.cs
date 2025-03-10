@@ -8,7 +8,7 @@ namespace Checkout.Disputes.Previous
 {
     public class DisputesIntegrationTest : AbstractPaymentsIntegrationTest
     {
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldQueryDisputes()
         {
             var from = DateTime.UtcNow.Subtract(TimeSpan.FromHours(24));
@@ -38,7 +38,7 @@ namespace Checkout.Disputes.Previous
             }
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldCreateAndRetrieveFile()
         {
             const string filePath = "./Resources/checkout.jpeg";
@@ -56,7 +56,7 @@ namespace Checkout.Disputes.Previous
             fileDetails.UploadedOn.ShouldNotBeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldGetDisputeSchemeFiles()
         {
             var query = new DisputesQueryFilter { Limit = 5 };

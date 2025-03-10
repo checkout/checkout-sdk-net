@@ -7,7 +7,7 @@ namespace Checkout.Payments.Previous
 {
     public class CapturePaymentsIntegrationTest : AbstractPaymentsIntegrationTest
     {
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldFullCaptureCardPayment()
         {
             var paymentResponse = await MakeCardPayment();
@@ -24,7 +24,7 @@ namespace Checkout.Payments.Previous
             response.ActionId.ShouldNotBeNullOrEmpty();
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldPartiallyCaptureCardPayment()
         {
             var paymentResponse = await MakeCardPayment();
@@ -41,7 +41,7 @@ namespace Checkout.Payments.Previous
             response.ActionId.ShouldNotBeNullOrEmpty();
         }
         
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldFullCaptureCardPaymentWithoutRequest()
         {
             var paymentResponse = await MakeCardPayment();
@@ -52,7 +52,7 @@ namespace Checkout.Payments.Previous
             response.ShouldNotBeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldCaptureCardPaymentIdempotently()
         {
             var paymentResponse = await MakeCardPayment();

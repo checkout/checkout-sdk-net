@@ -4,6 +4,6 @@ namespace Checkout.Payments
 {
     public class PaymentInstruction
     {
-        public PaymentPurposeType Purpose { get; set; }
+        public PaymentPurposeType? Purpose { get; set; }
     }
 }

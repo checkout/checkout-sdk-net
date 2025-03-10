@@ -20,6 +20,7 @@ namespace Checkout.Payments.Hosted
         public string CancelUrl { get; set; }
 
         public string FailureUrl { get; set; }
+        
         public long? Amount { get; set; }
         
         public PaymentType? PaymentType { get; set; }

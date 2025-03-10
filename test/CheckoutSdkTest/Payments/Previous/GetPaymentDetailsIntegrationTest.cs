@@ -8,7 +8,7 @@ namespace Checkout.Payments.Previous
 {
     public class GetPaymentDetailsIntegrationTest : AbstractPaymentsIntegrationTest
     {
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldGetPaymentDetails()
         {
             var paymentResponse = await MakeCardPayment(true);

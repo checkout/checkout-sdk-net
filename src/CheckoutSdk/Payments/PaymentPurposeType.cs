@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Checkout.Payments.Hosted
+namespace Checkout.Payments
 {
     public enum PaymentPurposeType
     {

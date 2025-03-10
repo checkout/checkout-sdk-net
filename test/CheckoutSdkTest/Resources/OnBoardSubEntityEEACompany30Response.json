@@ -1,0 +1,157 @@
+{
+  "reference": "string",
+  "status": "string",
+  "profile": {
+    "urls": [
+      "http://example.com"
+    ],
+    "mccs": [
+      "string"
+    ],
+    "default_holding_currency": null,
+    "holding_currencies": [
+      "EUR"
+    ]
+  },
+  "contact_details": {
+    "phone": {
+      "country_code": "GR",
+      "number": "string"
+    },
+    "email_addresses": {
+      "primary": null
+    },
+    "invitee": {
+      "email": null
+    }
+  },
+  "capabilities": {},
+  "requirements_due": [
+    {
+      "field": "string",
+      "reason": "string",
+      "message": "string"
+    }
+  ],
+  "company": {
+    "legal_name": "string",
+    "trading_name": "string",
+    "business_registration_number": "stringstringst",
+    "date_of_incorporation": {
+      "day": 1,
+      "month": 1,
+      "year": 1500
+    },
+    "regulatory_licence_number": "string",
+    "principal_address": {
+      "address_line1": "string",
+      "address_line2": "string",
+      "city": "string",
+      "state": "string",
+      "zip": "string",
+      "country": "st"
+    },
+    "registered_address": {
+      "address_line1": "string",
+      "address_line2": "string",
+      "city": "string",
+      "state": "string",
+      "zip": "strin",
+      "country": "st"
+    },
+    "representatives": [
+      {
+        "id": "stringstringstringstringstring",
+        "individual": {
+          "first_name": "string",
+          "middle_name": "string",
+          "last_name": "string",
+          "date_of_birth": {
+            "day": 1,
+            "month": 1,
+            "year": 1900
+          },
+          "place_of_birth": {
+            "country": "st"
+          },
+          "national_id_number": "stringstr",
+          "email_address": null,
+          "phone": {
+            "country_code": "AF",
+            "number": "string"
+          },
+          "address": {
+            "address_line1": "string",
+            "address_line2": "string",
+            "city": "string",
+            "state": "string",
+            "zip": "string",
+            "country": "st"
+          }
+        },
+        "company_position": "ceo",
+        "roles": [
+          "ubo", "legal_representative", "authorised_signatory", "control_person"
+        ],
+        "ownership_percentage": 25,
+        "documents": {
+          "identity_verification": {
+            "type": "passport",
+            "front": "stringstringstringstringstrings",
+            "back": "stringstringstringstringstrings"
+          },
+          "certified_authorised_signatory": {
+            "type": "power_of_attorney",
+            "front": "stringstringstringstringstrings"
+          }
+        }
+      }
+    ],
+    "business_type": "individual_or_sole_proprietorship"
+  },
+  "processing_details": {
+    "settlement_country": "st",
+    "target_countries": [
+      "st"
+    ],
+    "annual_processing_volume": 0,
+    "average_transaction_value": 0,
+    "highest_transaction_value": 0,
+    "currency": "EUR"
+  },
+  "documents": {
+    "company_verification": {
+      "type": "incorporation_document",
+      "front": "stringstringstringstringstrings"
+    },
+    "articles_of_association": {
+      "type": "memorandum_of_association",
+      "front": "stringstringstringstringstrings"
+    },
+    "bank_verification": {
+      "type": "bank_statement",
+      "front": "stringstringstringstringstrings"
+    },
+    "shareholder_structure": {
+      "type": "certified_shareholder_structure",
+      "front": "stringstringstringstringstrings"
+    },
+    "proof_of_legality": {
+      "type": "proof_of_legality",
+      "front": "stringstringstringstringstrings"
+    },
+    "proof_of_principal_address": {
+      "type": "proof_of_address",
+      "front": "stringstringstringstringstrings"
+    },
+    "additional_document1": {
+      "front": "stringstringstringstringstrings"
+    },
+    "additional_document2": {
+      "front": "stringstringstringstringstrings"
+    },
+    "additional_document3": {
+      "front": "stringstringstringstringstrings"
+    }
+  }
+}

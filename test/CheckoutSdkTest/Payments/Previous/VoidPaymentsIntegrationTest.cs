@@ -7,7 +7,7 @@ namespace Checkout.Payments.Previous
 {
     public class VoidPaymentsIntegrationTest : AbstractPaymentsIntegrationTest
     {
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldVoidCardPayment()
         {
             var paymentResponse = await MakeCardPayment();
@@ -22,7 +22,7 @@ namespace Checkout.Payments.Previous
             response.GetLink("payment").ShouldNotBeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldVoidCardPaymentIdempotently()
         {
             var paymentResponse = await MakeCardPayment();
