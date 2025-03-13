@@ -22,8 +22,8 @@ namespace Checkout.Payments.Hosted
         public string FailureUrl { get; set; }
         
         public long? Amount { get; set; }
-        
-        public PaymentType? PaymentType { get; set; }
+
+        public PaymentType PaymentType { get; set; } = PaymentType.Regular;
 
         public string PaymentIp { get; set; }
 
