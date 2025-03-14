@@ -314,7 +314,9 @@ namespace Checkout
         private async Task<dynamic> DeserializeResponseAsync(HttpResponseMessage httpResponse, Type resultType)
         {
             dynamic deserializedObject;
-            if (httpResponse.StatusCode == HttpStatusCode.NoContent || httpResponse.Content.Headers.ContentLength == 0)
+            if (httpResponse.StatusCode == HttpStatusCode.NoContent ||
+                httpResponse.Content == null ||
+                (httpResponse.Content.Headers.ContentLength.HasValue && httpResponse.Content.Headers.ContentLength.Value == 0))
             {
                 deserializedObject = Activator.CreateInstance(resultType);
             }
@@ -328,7 +330,10 @@ namespace Checkout
                 deserializedObject = _serializer.Deserialize(json, resultType);
             }
 
-            await SetHttpMetadata(httpResponse, deserializedObject);
+            if (deserializedObject != null)
+            {
+                await SetHttpMetadata(httpResponse, deserializedObject);
+            }
 
             return deserializedObject;
         }

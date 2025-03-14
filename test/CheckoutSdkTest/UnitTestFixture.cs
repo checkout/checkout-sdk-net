@@ -3,15 +3,15 @@ namespace Checkout
     public abstract class UnitTestFixture
     {
         // Previous
-        protected const string ValidPreviousSk = "sk_test_fde517a8-3f01-41ef-b4bd-4282384b0a64";
-        protected const string ValidPreviousPk = "pk_test_fe70ff27-7c32-4ce1-ae90-5691a188ee7b";
-        protected const string InvalidPreviousSk = "sk_test_asdsad3q4dq";
+        protected static readonly string ValidPreviousPk = System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_PUBLIC_KEY");
+        protected static readonly string ValidPreviousSk = System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_SECRET_KEY");
         protected const string InvalidPreviousPk = "pk_test_q414dasds";
+        protected const string InvalidPreviousSk = "sk_test_asdsad3q4dq";
 
         // Default
-        protected const string ValidDefaultSk = "sk_sbox_m73dzbpy7cf3gfd46xr4yj5xo4e";
-        protected const string ValidDefaultPk = "pk_sbox_sderftvmkgf7hdnpwnbhw7r2uic";
-        protected const string InvalidDefaultSk = "sk_sbox_m73dzbpy7c-f3gfd46xr4yj5xo4e";
+        protected static readonly string ValidDefaultPk = System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PUBLIC_KEY");
+        protected static readonly string ValidDefaultSk = System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_SECRET_KEY");
         protected const string InvalidDefaultPk = "pk_sbox_pkh";
+        protected const string InvalidDefaultSk = "sk_sbox_m73dzbpy7c-f3gfd46xr4yj5xo4e";
     }
 }
