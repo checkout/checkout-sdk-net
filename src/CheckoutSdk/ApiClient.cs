@@ -313,10 +313,18 @@ namespace Checkout
 
         private async Task<dynamic> DeserializeResponseAsync(HttpResponseMessage httpResponse, Type resultType)
         {
-            dynamic deserializedObject;
-            if (httpResponse.StatusCode == HttpStatusCode.NoContent || httpResponse.Content.Headers.ContentLength == 0)
+            dynamic deserializedObject = null;
+
+            if (httpResponse.StatusCode == HttpStatusCode.NoContent ||
+                httpResponse.Content == null ||
+                (httpResponse.Content.Headers.ContentLength.HasValue && httpResponse.Content.Headers.ContentLength.Value == 0))
             {
                 deserializedObject = Activator.CreateInstance(resultType);
+                
+                if (deserializedObject == null)
+                {
+                    deserializedObject = new DefaultHttpMetadata();
+                }
             }
             else if (resultType == typeof(ContentsResponse))
             {
@@ -327,23 +335,34 @@ namespace Checkout
                 var json = await httpResponse.Content.ReadAsStringAsync();
                 deserializedObject = _serializer.Deserialize(json, resultType);
             }
-
-            await SetHttpMetadata(httpResponse, deserializedObject);
+            
+            if (deserializedObject is HttpMetadata metadata)
+            {
+                metadata.Body = metadata.Body ?? string.Empty;
+                metadata.HttpStatusCode = metadata.HttpStatusCode == null ? 0 : (int)httpResponse.StatusCode;
+                metadata.ResponseHeaders = metadata.ResponseHeaders ?? new Dictionary<string, string>();
+            }
+            
+            if (deserializedObject != null)
+            {
+                await SetHttpMetadata(httpResponse, deserializedObject);
+            }
 
             return deserializedObject;
         }
 
+
         private static async Task SetHttpMetadata(HttpResponseMessage httpResponse, dynamic deserializedObject)
         {
-            ((HttpMetadata)deserializedObject).Body = await httpResponse.Content.ReadAsStringAsync();
-            ((HttpMetadata)deserializedObject).HttpStatusCode = (int)httpResponse.StatusCode;
-            IDictionary<string, string> headers = new Dictionary<string, string>();
-            foreach (var header in httpResponse.Headers)
+            if (deserializedObject is HttpMetadata metadata)
             {
-                headers.Add(header.Key, header.Value.First());
+                metadata.Body = await (httpResponse.Content?.ReadAsStringAsync() ?? Task.FromResult(string.Empty));
+                metadata.HttpStatusCode = (int)httpResponse.StatusCode;
+                metadata.ResponseHeaders = httpResponse.Headers?.ToDictionary(
+                    h => h.Key,
+                    h => h.Value.FirstOrDefault() ?? string.Empty
+                ) ?? new Dictionary<string, string>();
             }
-
-            ((HttpMetadata)deserializedObject).ResponseHeaders = headers;
         }
     }
 }
