@@ -13,7 +13,6 @@ namespace Checkout
 #if (NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER)
         private readonly ILogger _log = LogProvider.GetLogger(typeof(OAuthSdkCredentials));
 #endif
-
         private readonly string _clientId;
         private readonly string _clientSecret;
         private readonly JsonSerializer _serializer = new JsonSerializer();
@@ -80,9 +79,9 @@ namespace Checkout
                 var httpRequest = new HttpRequestMessage(HttpMethod.Post, string.Empty);
                 var data = new List<KeyValuePair<string, string>>
                 {
+                    new KeyValuePair<string, string>("grant_type", "client_credentials"),
                     new KeyValuePair<string, string>("client_id", _clientId),
                     new KeyValuePair<string, string>("client_secret", _clientSecret),
-                    new KeyValuePair<string, string>("grant_type", "client_credentials"),
                     new KeyValuePair<string, string>("scope", GetScopes())
                 };
                 httpRequest.Content = new FormUrlEncodedContent(data);
