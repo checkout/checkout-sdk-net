@@ -16,6 +16,9 @@ namespace Checkout.Issuing
         private const string PresentmentsPath = "presentments";
         private const string ReversalsPath = "reversals";
         private const string TransactionsPath = "transactions";
+        private const string ControlProfilesPath = "control-profiles";
+        private const string AddPath = "add";
+        private const string RemovePath = "remove";
 
         public IssuingClient(IApiClient apiClient, CheckoutConfiguration configuration) :
             base(apiClient, configuration, SdkAuthorizationType.OAuth)
