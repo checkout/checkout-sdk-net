@@ -123,7 +123,7 @@ namespace Checkout.Issuing
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_ID"),
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_SECRET"))
                 .Scopes(OAuthScope.IssuingCard, OAuthScope.IssuingControlRead, OAuthScope.IssuingControlWrite,
-                    OAuthScope.IssuingClient, OAuthScope.Vault)
+                    OAuthScope.IssuingClient, OAuthScope.IssuingTransactionsRead, OAuthScope.Vault)
                 .Environment(Environment.Sandbox)
                 .Build() as CheckoutApi;
         }

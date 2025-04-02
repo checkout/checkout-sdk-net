@@ -7,6 +7,8 @@ namespace Checkout.Payments
         public string IssueDate { get; set; }
 
         public string IssuingCarrierCode { get; set; }
+        
+        public string TravelPackageIndicator { get; set; }
 
         public string TravelAgencyName { get; set; }
 

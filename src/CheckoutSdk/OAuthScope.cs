@@ -48,6 +48,7 @@
         [OAuthScope("issuing:client")] IssuingClient,
         [OAuthScope("issuing:controls-read")] IssuingControlRead,
         [OAuthScope("issuing:controls-write")] IssuingControlWrite,
+        [OAuthScope("issuing:transactions-read")] IssuingTransactionsRead,
         [OAuthScope("Payment Context")] PaymentContext,
     }
 }
