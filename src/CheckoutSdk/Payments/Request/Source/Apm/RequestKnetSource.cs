@@ -27,7 +27,7 @@ namespace Checkout.Payments.Request.Source.Apm
 
         public PaymentMethodDetails PaymentMethodDetails { get; set; }
 
-        public RequestKnetSource() : base(PaymentSourceType.KNet)
+        public RequestKnetSource() : base(PaymentSourceType.Knet)
         {
         }
     }

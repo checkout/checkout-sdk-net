@@ -48,5 +48,8 @@ namespace Checkout.Payments
         
         [EnumMember(Value = "Returned")]
         Returned,
+        
+        [EnumMember(Value = "Retry Scheduled")]
+        RetryScheduled,
     }
 }

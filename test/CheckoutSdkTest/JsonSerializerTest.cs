@@ -8,6 +8,7 @@ using Checkout.Issuing.Controls.Requests.Create;
 using Checkout.Issuing.Controls.Responses.Create;
 using Checkout.Payments.Contexts;
 using Checkout.Payments.Response;
+using Checkout.Payments.Response.Source;
 using Checkout.Payments.Response.Source.Contexts;
 using Checkout.Payments.Sender;
 using Shouldly;
@@ -116,6 +117,17 @@ namespace Checkout
                     typeof(CardDetailsResponse));
             cardDetailsResponse.ShouldNotBeNull();
             cardDetailsResponse.Type.ShouldBe(CardType.Physical);
+        }
+        
+        [Fact]
+        public void ShouldDeserializeKnetResponse()
+        {
+            var fileContent = GetJsonFileContent("./Resources/KnetResponse.json");
+            var paymentResponse =
+                (PaymentResponse)new JsonSerializer().Deserialize(fileContent,
+                    typeof(PaymentResponse));
+            paymentResponse.ShouldNotBeNull();
+            paymentResponse.Source.ShouldBeOfType(typeof(KnetResponseSource));
         }
 
         [Fact]

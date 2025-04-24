@@ -58,7 +58,7 @@ namespace Checkout.Payments.Links
                 AllowPaymentMethods =
                     new List<PaymentSourceType> { PaymentSourceType.Card, PaymentSourceType.Ideal },
                 DisabledPaymentMethods = 
-                    new List<PaymentSourceType> { PaymentSourceType.EPS, PaymentSourceType.Ideal, PaymentSourceType.KNet },
+                    new List<PaymentSourceType> { PaymentSourceType.EPS, PaymentSourceType.Ideal, PaymentSourceType.Knet },
                 Products = new List<Product>
                 {
                     new Product
