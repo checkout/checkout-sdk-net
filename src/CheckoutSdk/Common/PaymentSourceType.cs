@@ -22,7 +22,7 @@ namespace Checkout.Common
         [EnumMember(Value = "rapipago")] RapiPago,
         [EnumMember(Value = "klarna")] Klarna,
         [EnumMember(Value = "sofort")] Sofort,
-        [EnumMember(Value = "knet")] KNet,
+        [EnumMember(Value = "knet")] Knet,
         [EnumMember(Value = "qpay")] QPay,
         [EnumMember(Value = "alipay")] Alipay,
         [EnumMember(Value = "paypal")] PayPal,

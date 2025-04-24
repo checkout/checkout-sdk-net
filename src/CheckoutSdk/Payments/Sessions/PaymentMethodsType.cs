@@ -19,7 +19,7 @@ namespace Checkout.Payments.Sessions
         [EnumMember(Value = "ideal")] Ideal,
         [EnumMember(Value = "kakaopay")] KakaoPay,
         [EnumMember(Value = "klarna")] Klarna,
-        [EnumMember(Value = "knet")] KNet,
+        [EnumMember(Value = "knet")] Knet,
         [EnumMember(Value = "mbway")] MBWay,
         [EnumMember(Value = "multibanco")] Multibanco,
         [EnumMember(Value = "p24")] Przelewy24,

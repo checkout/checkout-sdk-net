@@ -544,7 +544,7 @@ namespace Checkout.Payments.Previous
             payment.Source.ShouldBeOfType(typeof(AlternativePaymentSourceResponse));
             var source = (AlternativePaymentSourceResponse)payment.Source;
             source.Count.ShouldBePositive();
-            source.Type().ShouldBe(PaymentSourceType.KNet);
+            source.Type().ShouldBe(PaymentSourceType.Knet);
         }
         
         [Fact(Skip = "unavailable")]

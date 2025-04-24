@@ -10,6 +10,12 @@ namespace Checkout.Payments.Response.Source
 
         public int? ExpiryYear { get; set; }
 
+        public string Last4 { get; set; }
+        
+        public string Fingerprint { get; set; }
+        
+        public string Bin { get; set; }
+        
         public string Name { get; set; }
 
         public string Scheme { get; set; }
@@ -19,12 +25,6 @@ namespace Checkout.Payments.Response.Source
         
         
         public IList<string> LocalSchemes { get; set; }
-
-        public string Last4 { get; set; }
-
-        public string Fingerprint { get; set; }
-
-        public string Bin { get; set; }
 
         public CardType? CardType { get; set; }
 

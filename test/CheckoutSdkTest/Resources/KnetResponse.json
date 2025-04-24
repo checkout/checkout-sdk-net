@@ -1,0 +1,39 @@
+{
+  "id": "pay_4gubyq2w335upc54dx7a4257lq",
+  "requested_on": "2024-05-23T17:04:05Z",
+  "source": {
+    "type": "knet",
+    "language": "en",
+    "user_defined_field1": "first user defined field",
+    "user_defined_field2": "second user defined field",
+    "user_defined_field4": "fourth user defined field",
+    "card_token": "01234567",
+    "ptlf": "96033587c7b5",
+    "knet_payment_id": "100201914315601265",
+    "knet_result": "Captured",
+    "bank_reference": "914310000349",
+    "knet_transaction_id": "201914384388126",
+    "auth_code": "B00775",
+    "post_date": "0524",
+    "avr": "N"
+  },
+  "amount": 1000,
+  "currency": "KWD",
+  "payment_type": "Regular",
+  "status": "Captured",
+  "approved": true,
+  "risk": {
+    "flagged": false
+  },
+  "customer": {
+    "id": "cus_kx75h5tcegyednxeyvtn6vy3sq"
+  },
+  "_links": {
+    "self": {
+      "href": "https://api.sandbox.checkout.com/payments/pay_c2ynk5nnjacuxia3r4matf5wmu"
+    },
+    "actions": {
+      "href": "https://api.sandbox.checkout.com/payments/pay_c2ynk5nnjacuxia3r4matf5wmu/actions"
+    }
+  }
+}

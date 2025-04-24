@@ -118,7 +118,7 @@ namespace Checkout.Payments.Hosted
                 {
                     PaymentSourceType.EPS,
                     PaymentSourceType.Ideal,
-                    PaymentSourceType.KNet
+                    PaymentSourceType.Knet
                 },
                 Products = new List<Product>
                 {

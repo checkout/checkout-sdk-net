@@ -60,6 +60,11 @@ namespace Checkout.Payments.Util
                 return new CurrencyAccountResponseSource();
             }
             
+            if (CheckoutUtils.GetEnumMemberValue(PaymentSourceType.Knet).Equals(sourceType))
+            {
+                return new KnetResponseSource();
+            }
+            
             if (CheckoutUtils.GetEnumMemberValue(PaymentSourceType.PayPal).Equals(sourceType))
             {
                 return new PaymentContextsPayPalResponseSource();
