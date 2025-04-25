@@ -41,6 +41,9 @@
         <None Update="Resources\KnetResponse.json">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="Resources\IssuingTransactionsDeclinedReason.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
     <ItemGroup>
         <Content Include="Resources\AppSettingsPreviousTest.json">
