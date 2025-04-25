@@ -6,6 +6,7 @@ using Checkout.Issuing.Cards.Responses;
 using Checkout.Issuing.Controls;
 using Checkout.Issuing.Controls.Requests.Create;
 using Checkout.Issuing.Controls.Responses.Create;
+using Checkout.Issuing.Transactions.Responses;
 using Checkout.Payments.Contexts;
 using Checkout.Payments.Response;
 using Checkout.Payments.Response.Source;
@@ -117,6 +118,17 @@ namespace Checkout
                     typeof(CardDetailsResponse));
             cardDetailsResponse.ShouldNotBeNull();
             cardDetailsResponse.Type.ShouldBe(CardType.Physical);
+        }
+        
+        [Fact]
+        public void ShouldDeserializeIssuingTransactionsDeclinedReasonResponse()
+        {
+            var fileContent = GetJsonFileContent("./Resources/IssuingTransactionsDeclinedReason.json");
+            Messages messages =
+                (Messages)new JsonSerializer().Deserialize(fileContent,
+                    typeof(Messages));
+            messages.ShouldNotBeNull();
+            messages.DeclineReason.ShouldBe("velocity_reached");
         }
         
         [Fact]

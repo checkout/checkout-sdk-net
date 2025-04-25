@@ -25,18 +25,8 @@ namespace Checkout.Metadata
                 Source = new CardMetadataCardSource { Number = CardNumberConstant },
                 Format = CardMetadataFormatType.Basic
             };
-            CardMetadataResponse response = await DefaultApi.MetadataClient().RequestCardMetadata(request);
 
-            response.ShouldNotBeNull();
-            response.Bin.ShouldBe(TestCardSource.Visa.Number[..11]);
-            response.Scheme.ShouldNotBeNull();
-            response.CardType.ShouldBeOfType<CardMetadataType>();
-            response.CardCategory.ShouldBeOfType<CardCategory>();
-            response.IssuerCountry.ShouldBeOfType<CountryCode>();
-            response.IssuerCountryName.ShouldNotBeNull();
-            response.ProductId.ShouldNotBeNull();
-            response.ProductType.ShouldNotBeNull();
-            response.HttpStatusCode.ShouldBe(200);
+            await MakeCardMetadataRequest(request);
         }
 
         [Fact(Skip = "unavailable")]

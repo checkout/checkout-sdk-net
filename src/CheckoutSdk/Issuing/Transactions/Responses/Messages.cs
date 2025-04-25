@@ -17,7 +17,7 @@ namespace Checkout.Issuing.Transactions.Responses
         
         public IndicatorType? Indicator { get; set; }
         
-        public string DeclinedReason { get; set; }
+        public string DeclineReason { get; set; }
         
         public long? BillingAmount { get; set; }
         

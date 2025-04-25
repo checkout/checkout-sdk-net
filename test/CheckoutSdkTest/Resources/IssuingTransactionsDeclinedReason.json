@@ -1,0 +1,12 @@
+{
+  "id": "msg_abatreternbygkaeqqter6gs4de",
+  "initiator": "cardholder",
+  "type": "authorization",
+  "result": "declined",
+  "is_relayed": false,
+  "indicator": "normal_authorization",
+  "decline_reason": "velocity_reached",
+  "billing_amount": 1000056,
+  "billing_currency": "GBP",
+  "created_on": "2025-04-07T11:48:57.0000000Z"
+}
