@@ -1,6 +1,6 @@
-namespace Checkout.Payments.Contexts
+namespace Checkout.Payments
 {
-    public class PaymentContextsPartnerCustomerRiskData
+    public class PartnerCustomerRiskData
     {
         public string Key { get; set; }
 

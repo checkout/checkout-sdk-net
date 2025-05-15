@@ -22,7 +22,7 @@ namespace Checkout.Payments.Sessions
 
         public PaymentSessionsClientTest()
         {
-            _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.SecretKey))
+            _sdkCredentials.Setup(credentials => credentials.GetSdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth))
                 .Returns(_authorization);
 
             _configuration = new Mock<CheckoutConfiguration>(_sdkCredentials.Object,
@@ -33,14 +33,14 @@ namespace Checkout.Payments.Sessions
         private async Task ShouldRequestAPaymentSessions()
         {
             PaymentSessionsRequest paymentSessionsRequest = new PaymentSessionsRequest();
-            PaymentSessionsResponse paymentSessionsRequestResponse = new PaymentSessionsResponse();
+            PaymentSessionsResponse paymentSessionsResponse = new PaymentSessionsResponse();
 
             _apiClient.Setup(apiClient =>
                     apiClient.Post<PaymentSessionsResponse>(PaymentSessions, _authorization,
                         paymentSessionsRequest,
                         CancellationToken.None,
                         null))
-                .ReturnsAsync(() => paymentSessionsRequestResponse);
+                .ReturnsAsync(() => paymentSessionsResponse);
 
             PaymentSessionsClient client = new PaymentSessionsClient(_apiClient.Object, _configuration.Object);
             PaymentSessionsResponse response =

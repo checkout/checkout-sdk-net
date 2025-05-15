@@ -14,9 +14,14 @@ namespace Checkout.Payments.Sessions
 
         public Currency? Currency { get; set; }
 
+        public BillingInformation Billing { get; set; }
+        
+        public string SuccessUrl { get; set; }
+
+        public string FailureUrl { get; set; }
+        
         public PaymentType? PaymentType { get; set; }
 
-        public BillingInformation Billing { get; set; }
 
         public BillingDescriptor BillingDescriptor { get; set; }
 
@@ -31,6 +36,8 @@ namespace Checkout.Payments.Sessions
         public PaymentRecipient Recipient { get; set; }
 
         public ProcessingSettings Processing { get; set; }
+        
+        public PaymentInstruction Instruction { get; set; }
 
         public string ProcessingChannelId { get; set; }
 
@@ -52,13 +59,10 @@ namespace Checkout.Payments.Sessions
 
         public string DisplayName { get; set; }
 
-        public string SuccessUrl { get; set; }
-
-        public string FailureUrl { get; set; }
         
         public IDictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
 
-        public string Locale { get; set; }
+        public LocaleType? Locale { get; set; }
         
         [JsonProperty(PropertyName = "3ds")] 
         public ThreeDsRequest ThreeDs { get; set; }

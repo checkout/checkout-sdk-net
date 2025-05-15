@@ -158,7 +158,7 @@ namespace Checkout.Payments.Hosted
                 CaptureOn = DateTime.UtcNow,
                 Instruction = new PaymentInstruction
                 {
-                    Purpose = PaymentPurposeType.Donations
+                    Purpose = PaymentPurposeType.Donations,
                 },
                 PaymentMethodConfiguration = new PaymentMethodConfiguration
                 {

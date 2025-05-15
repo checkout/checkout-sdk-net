@@ -1,4 +1,3 @@
-using Checkout.Payments.Request.Source.Contexts;
 using System.Collections.Generic;
 
 namespace Checkout.Payments.Contexts
@@ -23,12 +22,12 @@ namespace Checkout.Payments.Contexts
 
         public UserAction? UserAction { get; set; }
 
-        public PaymentContextsPartnerCustomerRiskData PartnerCustomerRiskData { get; set; }
+        public PartnerCustomerRiskData PartnerCustomerRiskData { get; set; }
         
         public IList<string> CustomPaymentMethodIds { get; set; }
 
         public IList<PaymentContextsAirlineData> AirlineData { get; set; }
         
-        public IList<PaymentContextsAccommodationData> AccommodationData { get; set; }
+        public IList<AccommodationData> AccommodationData { get; set; }
     }
 }

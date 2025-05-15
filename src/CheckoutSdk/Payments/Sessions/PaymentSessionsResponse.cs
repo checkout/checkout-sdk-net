@@ -8,5 +8,8 @@ namespace Checkout.Payments.Sessions
         public string Id { get; set; }
 
         public string PaymentSessionToken { get; set; }
+        
+        public string PaymentSessionSecret { get; set; }
+        
     }
 }
