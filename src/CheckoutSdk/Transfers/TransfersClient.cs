@@ -14,10 +14,10 @@ namespace Checkout.Transfers
         }
 
         public async Task<CreateTransferResponse> InitiateTransferOfFunds(CreateTransferRequest createTransferRequest,
-            string idempotencyKey = null,
+            string idempotencyKey,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("createTransferRequest", createTransferRequest);
+            CheckoutUtils.ValidateParams("createTransferRequest", createTransferRequest, "idempotencyKey", idempotencyKey);
             return await ApiClient.Post<CreateTransferResponse>(TransfersPath,
                 SdkAuthorization(),
                 createTransferRequest,

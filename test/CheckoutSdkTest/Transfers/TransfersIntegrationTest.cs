@@ -1,3 +1,4 @@
+using Checkout.Common;
 using Shouldly;
 using System;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace Checkout.Transfers
             var createTransferRequest =
                 new CreateTransferRequest
                 {
-                    Source = new TransferSourceRequest {Amount = 200, Id = "ent_kidtcgc3ge5unf4a5i6enhnr5m"},
+                    Source = new TransferSourceRequest {Amount = 200, Id = "ent_kidtcgc3ge5unf4a5i6enhnr5m", Currency = Currency.GBP},
                     Destination = new TransferDestinationRequest {Id = "ent_w4jelhppmfiufdnatam37wrfc4"},
                     TransferType = TransferType.Commission
                 };
@@ -40,6 +41,8 @@ namespace Checkout.Transfers
             transferDetailsResponse.RequestedOn.ShouldNotBeNull();
             transferDetailsResponse.Source.ShouldNotBeNull();
             transferDetailsResponse.Source.EntityId.ShouldNotBeNull();
+            transferDetailsResponse.Source.Amount.ShouldBe(200);
+            transferDetailsResponse.Source.Currency.ShouldBe(Currency.GBP);
             transferDetailsResponse.Destination.ShouldNotBeNull();
             transferDetailsResponse.Destination.EntityId.ShouldNotBeNull();
         }
@@ -50,7 +53,7 @@ namespace Checkout.Transfers
             var createTransferRequest =
                 new CreateTransferRequest
                 {
-                    Source = new TransferSourceRequest {Amount = 100, Id = "ent_kidtcgc3ge5unf4a5i6enhnr5m"},
+                    Source = new TransferSourceRequest {Amount = 100, Id = "ent_kidtcgc3ge5unf4a5i6enhnr5m", Currency = Currency.GBP},
                     Destination = new TransferDestinationRequest {Id = "ent_w4jelhppmfiufdnatam37wrfc4"},
                     TransferType = TransferType.Commission
                 };
