@@ -35,7 +35,7 @@ namespace Checkout.Transfers
                     createTransferRequest, It.IsAny<CancellationToken>(), It.IsAny<string>()))
                 .ReturnsAsync(createTransferResponse);
 
-            var response = await _transfersClient.InitiateTransferOfFunds(createTransferRequest);
+            var response = await _transfersClient.InitiateTransferOfFunds(createTransferRequest, "idempotency-key");
 
             response.ShouldNotBeNull();
             response.ShouldBe(createTransferResponse);
