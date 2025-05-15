@@ -11,18 +11,18 @@ namespace Checkout.Issuing
 {
     public partial interface IIssuingClient
     {
-        Task<CardControlResponse> CreateCardControl(
-            CardControlRequest cardControlRequest,
+        Task<AbstractCardControlResponse> CreateCardControl(
+            AbstractCardControlRequest abstractCardControlRequest,
             CancellationToken cancellationToken = default);
 
         Task<CardControlsQueryResponse> GetCardControls(CardControlQueryTarget query,
             CancellationToken cancellationToken = default);
 
-        Task<CardControlResponse> GetCardControlDetails(string controlId,
+        Task<AbstractCardControlResponse> GetCardControlDetails(string controlId,
             CancellationToken cancellationToken = default);
 
-        Task<CardControlResponse> UpdateCardControl(string controlId,
-            UpdateCardControlRequest updateCardControlRequest,
+        Task<AbstractCardControlResponse> UpdateCardControl(string controlId,
+            AbstractCardControlUpdate cardControlUpdate,
             CancellationToken cancellationToken = default);
 
         Task<IdResponse> RemoveCardControl(string controlId,

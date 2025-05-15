@@ -1,5 +1,4 @@
 using Checkout.Issuing.Transactions.Responses;
-using Checkout.Issuing.Transactions.Responses.Query;
 using System;
 
 namespace Checkout.Issuing.Transactions.Requests.Query
@@ -13,6 +12,8 @@ namespace Checkout.Issuing.Transactions.Requests.Query
         public string CardholderId { get; set; }
 
         public string CardId { get; set; }
+        
+        public string EntityId { get; set; }
 
         public TransactionStatusType? Status { get; set; }
 

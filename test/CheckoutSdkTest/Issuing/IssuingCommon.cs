@@ -1,6 +1,8 @@
 using Checkout.Common;
-using Checkout.Issuing.Cardholders;
+using Checkout.Issuing.Cardholders.Requests;
+using Checkout.Issuing.Cardholders.Responses;
 using Checkout.Issuing.Cards.Requests.Create;
+using Checkout.Issuing.Common;
 using System.Threading.Tasks;
 
 namespace Checkout.Issuing
@@ -16,9 +18,9 @@ namespace Checkout.Issuing
             Api = IssuingCheckoutApi();
         }
 
-        protected Task<CardRequest> CreateVirtualCard(string cardholderId)
+        protected Task<AbstractCardCreateRequest> CreateVirtualCard(string cardholderId)
         {
-            CardRequest cardRequest = new CardVirtualRequest
+            AbstractCardCreateRequest abstractCardCreateRequest = new VirtualCardCreateRequest
             {
                 CardholderId = cardholderId,
                 Lifetime = new CardLifetime { Unit = LifetimeUnit.Months, Value = 6 },
@@ -27,13 +29,21 @@ namespace Checkout.Issuing
                 DisplayName = "JOHN KENNEDY",
                 ActivateCard = false,
                 IsSingleUse = false,
+                Metadata = new CardMetadata
+                {
+                    Udf1 = "UDF1",
+                    Udf2 = "UDF2",
+                    Udf3 = "UDF3",
+                    Udf4 = "UDF4",
+                    Udf5 = "UDF5",
+                }
             };
-            return Task.FromResult(cardRequest);
+            return Task.FromResult(abstractCardCreateRequest);
         }
 
-        protected Task<CardRequest> CardBadRequest(string cardholderId)
+        protected Task<AbstractCardCreateRequest> CardBadRequest(string cardholderId)
         {
-            CardRequest cardRequest = new CardPhysicalRequest()
+            AbstractCardCreateRequest abstractCardCreateRequest = new PhysicalCardCreateRequest()
             {
                 CardholderId = cardholderId,
                 Lifetime = new CardLifetime { Unit = LifetimeUnit.Months, Value = 6 },
@@ -46,7 +56,7 @@ namespace Checkout.Issuing
                 },
                 ActivateCard = false
             };
-            return Task.FromResult(cardRequest);
+            return Task.FromResult(abstractCardCreateRequest);
         }
 
         protected static CardholderRequest CardholderRequest()

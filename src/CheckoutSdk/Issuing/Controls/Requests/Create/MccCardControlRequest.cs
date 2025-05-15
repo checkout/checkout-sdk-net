@@ -1,8 +1,10 @@
+using Checkout.Issuing.Common;
+
 namespace Checkout.Issuing.Controls.Requests.Create
 {
-    public class MccCardControlRequest : CardControlRequest
+    public class MccCardControlRequest : AbstractCardControlRequest
     {
-        public MccCardControlRequest() : base(Controls.ControlType.MccLimit)
+        public MccCardControlRequest() : base(IssuingControlType.MccLimit)
         {
         }
 

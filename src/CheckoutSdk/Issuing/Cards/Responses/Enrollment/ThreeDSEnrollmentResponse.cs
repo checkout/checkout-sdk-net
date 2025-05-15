@@ -3,8 +3,7 @@ using System;
 
 namespace Checkout.Issuing.Cards.Responses.Enrollment
 {
-    public class ThreeDSEnrollmentResponse : Resource
+    public class ThreeDsEnrollmentResponse : Resource
     {
-        public DateTime? CreatedDate { get; set; }
     }
 }

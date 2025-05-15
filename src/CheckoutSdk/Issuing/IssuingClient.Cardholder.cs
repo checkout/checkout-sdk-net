@@ -1,4 +1,6 @@
-using Checkout.Issuing.Cardholders;
+using Checkout.Issuing.Cardholders.Requests;
+using Checkout.Issuing.Cardholders.Responses;
+using Checkout.Issuing.Common.Responses;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,6 +32,20 @@ namespace Checkout.Issuing
                 BuildPath(IssuingPath, CardholdersPath, cardholderId),
                 SdkAuthorization(),
                 cancellationToken);
+        }
+        
+        public Task<UpdateResponse> UpdateCardholder(string cardholderId,
+            CardholderRequest cardholderRequest,
+            CancellationToken cancellationToken = default
+        )
+        {
+            CheckoutUtils.ValidateParams("cardholderId", cardholderId, "cardholderRequest", cardholderRequest);
+            return ApiClient.Patch<UpdateResponse>(
+                BuildPath(IssuingPath, CardholdersPath, cardholderId),
+                SdkAuthorization(),
+                cardholderRequest,
+                cancellationToken
+            );
         }
 
         public Task<CardholderCardsResponse> GetCardholdersCards(

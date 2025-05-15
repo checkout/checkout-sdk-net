@@ -51,6 +51,21 @@ namespace Checkout.Issuing
             );
         }
 
+        public Task<EmptyResponse> SimulateRefund(
+            string authorizationId,
+            CardRefundAuthorizationRequest cardRefundAuthorizationRequest,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("authorizationId", authorizationId, "cardRefundAuthorizationRequest",
+                cardRefundAuthorizationRequest);
+            return ApiClient.Post<EmptyResponse>(
+                BuildPath(IssuingPath, SimulatePath, AuthorizationPath, authorizationId, RefundsPath),
+                SdkAuthorization(),
+                cardRefundAuthorizationRequest,
+                cancellationToken
+            );
+        }
+
         public Task<CardReversalAuthorizationResponse> SimulateReversal(
             string authorizationId,
             CardReversalAuthorizationRequest cardReversalAuthorizationRequest,

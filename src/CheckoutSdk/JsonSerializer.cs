@@ -2,9 +2,7 @@ using Checkout.Accounts.Payout.Response.Util;
 using Checkout.Instruments.Create.Util;
 using Checkout.Instruments.Get.Util;
 using Checkout.Instruments.Update.Util;
-using Checkout.Issuing.Cards.Requests;
-using Checkout.Issuing.Cards.Responses;
-using Checkout.Issuing.Controls.Requests;
+using Checkout.Issuing.Cards.Responses.Create;
 using Checkout.Issuing.Controls.Responses;
 using Checkout.Workflows.Actions.Response.Util;
 using Checkout.Workflows.Conditions.Response.Util;
@@ -13,6 +11,7 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using CardTypeResponseConverter = Checkout.Issuing.Common.Responses.CardTypeResponseConverter;
 
 namespace Checkout
 {
@@ -65,9 +64,9 @@ namespace Checkout
                     // Items Response
                     new ItemsResponseConverter(),
                     // Issuing
-                    new CardTypeRequestConverter(),
                     new CardTypeResponseConverter(),
-                    new CardControlTypeRequestConverter(),
+                    new CardControlsResponseConverter(),
+                    new CardCreateResponseConverter(),
                     new CardControlTypeResponseConverter(),
                 }
             };

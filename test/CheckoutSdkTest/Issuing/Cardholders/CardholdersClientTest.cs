@@ -1,3 +1,6 @@
+using Checkout.Issuing.Cardholders.Requests;
+using Checkout.Issuing.Cardholders.Responses;
+using Checkout.Issuing.Common.Responses;
 using Moq;
 using Shouldly;
 using System.Threading;
@@ -65,6 +68,29 @@ namespace Checkout.Issuing.Cardholders
 
             response.ShouldNotBeNull();
             response.ShouldBeSameAs(cardholderDetailsesResponse);
+        }
+
+        [Fact]
+        private async Task ShouldUpdateCardHolder()
+        {
+            UpdateResponse updateResponse = new UpdateResponse();
+            CardholderRequest cardholderRequest = new CardholderRequest();
+            
+            _apiClient.Setup(apiClient =>
+                    apiClient.Patch<UpdateResponse>(
+                        "issuing/cardholders/cardholder_id",
+                        _authorization,
+                        cardholderRequest,
+                        CancellationToken.None, 
+                        null))
+                .ReturnsAsync(() => updateResponse);
+            
+            IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
+            
+            UpdateResponse response =
+                await client.UpdateCardholder("cardholder_id", cardholderRequest, CancellationToken.None);
+            
+            response.ShouldNotBeNull();
         }
 
         [Fact]

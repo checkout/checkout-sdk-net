@@ -1,5 +1,5 @@
 using Checkout.Common;
-using Checkout.Issuing.Cardholders;
+using Checkout.Issuing.Cardholders.Responses;
 using Checkout.Issuing.Cards.Requests.Create;
 using Checkout.Issuing.ControlProfiles.Requests;
 using Checkout.Issuing.ControlProfiles.Responses;
@@ -84,8 +84,8 @@ namespace Checkout.Issuing.ControlProfiles
         private async Task ShouldAddTargetToControlProfile()
         {
             CardholderResponse cardholderResponse = await CreateCardholder();
-            CardRequest cardRequest = await CreateVirtualCard(cardholderResponse.Id);
-            var card = await Api.IssuingClient().CreateCard(cardRequest);
+            AbstractCardCreateRequest abstractCardCreateRequest = await CreateVirtualCard(cardholderResponse.Id);
+            var card = await Api.IssuingClient().CreateCard(abstractCardCreateRequest);
 
             await Api.IssuingClient().ActivateCard(card.Id);
             Resource response =

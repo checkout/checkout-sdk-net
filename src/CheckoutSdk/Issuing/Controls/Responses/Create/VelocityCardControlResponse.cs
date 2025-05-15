@@ -1,10 +1,10 @@
-using Checkout.Issuing.Controls.Requests;
+using Checkout.Issuing.Common;
 
 namespace Checkout.Issuing.Controls.Responses.Create
 {
-    public class VelocityCardControlResponse : CardControlResponse
+    public class VelocityCardControlResponse : AbstractCardControlResponse
     {
-        public VelocityCardControlResponse() : base(Controls.ControlType.VelocityLimit)
+        public VelocityCardControlResponse() : base(IssuingControlType.VelocityLimit)
         {
         }
 

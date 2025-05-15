@@ -5,6 +5,6 @@ namespace Checkout.Issuing.Controls.Responses.Query
 {
     public class CardControlsQueryResponse : HttpMetadata
     {
-        public IList<CardControlResponse> Controls { get; set; }
+        public IList<AbstractCardControlResponse> Controls { get; set; }
     }
 }

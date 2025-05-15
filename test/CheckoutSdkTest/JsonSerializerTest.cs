@@ -2,8 +2,8 @@ using Checkout.Accounts.Entities.Common.Company;
 using Checkout.Accounts.Entities.Response;
 using Checkout.Financial;
 using Checkout.Issuing.Cards.Requests.Create;
-using Checkout.Issuing.Cards.Responses;
-using Checkout.Issuing.Controls;
+using Checkout.Issuing.Common;
+using Checkout.Issuing.Common.Responses;
 using Checkout.Issuing.Controls.Requests.Create;
 using Checkout.Issuing.Controls.Responses.Create;
 using Checkout.Issuing.Transactions.Responses;
@@ -15,7 +15,6 @@ using Checkout.Payments.Sender;
 using Shouldly;
 using System;
 using Xunit;
-using CardType = Checkout.Issuing.Cards.CardType;
 
 namespace Checkout
 {
@@ -80,11 +79,11 @@ namespace Checkout
         public void ShouldDeserializeDefaultCardControlTypeRequest()
         {
             var fileContent = GetJsonFileContent("./Resources/CardControlTypeRequest.json");
-            CardControlRequest cardControlRequest =
-                (CardControlRequest)new JsonSerializer().Deserialize(fileContent,
-                    typeof(CardControlRequest));
-            cardControlRequest.ShouldNotBeNull();
-            cardControlRequest.ControlType.ShouldBe(ControlType.VelocityLimit);
+            VelocityCardControlRequest abstractCardControlRequest =
+                (VelocityCardControlRequest)new JsonSerializer().Deserialize(fileContent,
+                    typeof(VelocityCardControlRequest));
+            abstractCardControlRequest.ShouldNotBeNull();
+            abstractCardControlRequest.ControlType.ShouldBe(IssuingControlType.VelocityLimit);
         }
 
         [Fact]
@@ -95,29 +94,29 @@ namespace Checkout
                 (VelocityCardControlResponse)new JsonSerializer().Deserialize(fileContent,
                     typeof(VelocityCardControlResponse));
             cardControlResponse.ShouldNotBeNull();
-            cardControlResponse.ControlType.ShouldBe(ControlType.VelocityLimit);
+            cardControlResponse.ControlType.ShouldBe(IssuingControlType.VelocityLimit);
         }
 
         [Fact]
         public void ShouldDeserializeDefaultCardCTypeRequest()
         {
             var fileContent = GetJsonFileContent("./Resources/CardTypeRequest.json");
-            CardRequest cardRequest =
-                (CardRequest)new JsonSerializer().Deserialize(fileContent,
-                    typeof(CardRequest));
-            cardRequest.ShouldNotBeNull();
-            cardRequest.Type.ShouldBe(CardType.Virtual);
+            AbstractCardCreateRequest abstractCardCreateRequest =
+                (AbstractCardCreateRequest)new JsonSerializer().Deserialize(fileContent,
+                    typeof(VirtualCardCreateRequest));
+            abstractCardCreateRequest.ShouldNotBeNull();
+            abstractCardCreateRequest.Type.ShouldBe(IssuingCardType.Virtual);
         }
 
         [Fact]
         public void ShouldDeserializeDefaultCardCTypeResponse()
         {
             var fileContent = GetJsonFileContent("./Resources/CardTypeResponse.json");
-            CardDetailsResponse cardDetailsResponse =
-                (CardDetailsResponse)new JsonSerializer().Deserialize(fileContent,
-                    typeof(CardDetailsResponse));
+            AbstractCardResponse cardDetailsResponse =
+                (AbstractCardResponse)new JsonSerializer().Deserialize(fileContent,
+                    typeof(AbstractCardResponse));
             cardDetailsResponse.ShouldNotBeNull();
-            cardDetailsResponse.Type.ShouldBe(CardType.Physical);
+            cardDetailsResponse.Type.ShouldBe(IssuingCardType.Physical);
         }
         
         [Fact]

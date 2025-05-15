@@ -1,4 +1,4 @@
-using Checkout.Issuing.Controls.Requests;
+using Checkout.Issuing.Common;
 using Checkout.Issuing.Controls.Responses.Create;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -13,7 +13,7 @@ namespace Checkout.Issuing.Controls.Responses
 
         public override bool CanConvert(Type objectType)
         {
-            return typeof(CardControlResponse).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo());
+            return typeof(AbstractCardControlResponse).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo());
         }
 
         public override object ReadJson(
@@ -40,23 +40,28 @@ namespace Checkout.Issuing.Controls.Responses
             throw new NotImplementedException();
         }
 
-        private static CardControlResponse Create(JToken jToken)
+        private static AbstractCardControlResponse Create(JToken jToken)
         {
             CheckoutUtils.ValidateParams("jToken", jToken);
             var sourceType = GetSourceType(jToken);
             return Create(sourceType);
         }
 
-        private static CardControlResponse Create(string controlType)
+        private static AbstractCardControlResponse Create(string controlType)
         {
-            if (CheckoutUtils.GetEnumMemberValue(ControlType.VelocityLimit).Equals(controlType))
+            if (CheckoutUtils.GetEnumMemberValue(IssuingControlType.VelocityLimit).Equals(controlType))
             {
                 return new VelocityCardControlResponse();
             }
 
-            if (CheckoutUtils.GetEnumMemberValue(ControlType.MccLimit).Equals(controlType))
+            if (CheckoutUtils.GetEnumMemberValue(IssuingControlType.MccLimit).Equals(controlType))
             {
                 return new MccCardControlResponse();
+            }
+            
+            if (CheckoutUtils.GetEnumMemberValue(IssuingControlType.MidLimit).Equals(controlType))
+            {
+                return new MidCardControlResponse();
             }
 
             throw new Exception();

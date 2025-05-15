@@ -1,13 +1,17 @@
 using Checkout.Common;
-using Checkout.Issuing.Cardholders;
+using Checkout.Issuing.Cardholders.Responses;
 using Checkout.Issuing.Cards.Requests.Create;
 using Checkout.Issuing.Cards.Requests.Credentials;
 using Checkout.Issuing.Cards.Requests.Enrollment;
+using Checkout.Issuing.Cards.Requests.Renew;
 using Checkout.Issuing.Cards.Requests.Revoke;
 using Checkout.Issuing.Cards.Requests.Suspend;
-using Checkout.Issuing.Cards.Responses;
+using Checkout.Issuing.Cards.Requests.Update;
+using Checkout.Issuing.Cards.Responses.Create;
 using Checkout.Issuing.Cards.Responses.Credentials;
 using Checkout.Issuing.Cards.Responses.Enrollment;
+using Checkout.Issuing.Common;
+using Checkout.Issuing.Common.Responses;
 using Shouldly;
 using System.Threading.Tasks;
 using Xunit;
@@ -16,13 +20,13 @@ namespace Checkout.Issuing.Cards
 {
     public class CardIntegrationTest : IssuingCommon, IAsyncLifetime
     {
-        private CardResponse _cardRequest;
+        private AbstractCardCreateResponse _abstractCardRequest;
 
         public async Task InitializeAsync()
         {
             CardholderResponse cardholderResponse = await CreateCardholder();
-            CardRequest cardRequest = await CreateVirtualCard(cardholderResponse.Id);
-            _cardRequest = await Api.IssuingClient().CreateCard(cardRequest);
+            AbstractCardCreateRequest abstractCardCreateRequest = await CreateVirtualCard(cardholderResponse.Id);
+            _abstractCardRequest = await Api.IssuingClient().CreateCard(abstractCardCreateRequest);
         }
 
         public Task DisposeAsync()
@@ -33,7 +37,7 @@ namespace Checkout.Issuing.Cards
         [Fact(Skip = "Avoid creating cards all the time")]
         private void ShouldCreateCard()
         {
-            CardResponse response = _cardRequest;
+            AbstractCardCreateResponse response = _abstractCardRequest;
 
             response.ShouldNotBeNull();
             response.HttpStatusCode.ShouldBe(201);
@@ -55,23 +59,23 @@ namespace Checkout.Issuing.Cards
         private async Task ShouldThrowErrorInvalidData()
         {
             CardholderResponse cardholderResponse = await CreateCardholder();
-            CardRequest request = await CardBadRequest(cardholderResponse.Id);
+            AbstractCardCreateRequest createRequest = await CardBadRequest(cardholderResponse.Id);
 
-            await AssertInvalidDataSent(Api.IssuingClient().CreateCard(request));
+            await AssertInvalidDataSent(Api.IssuingClient().CreateCard(createRequest));
         }
 
         [Fact(Skip = "Avoid creating cards all the time")]
         private async Task ShouldGetCard()
         {
-            CardResponse card = _cardRequest;
+            AbstractCardCreateResponse abstractCard = _abstractCardRequest;
 
-            CardDetailsResponse response = await Api.IssuingClient().GetCardDetails(card.Id);
+            AbstractCardResponse response = await Api.IssuingClient().GetCardDetails(abstractCard.Id);
 
             response.HttpStatusCode.ShouldBe(200);
             response.Body.ShouldNotBeNull();
             response.ResponseHeaders.ShouldNotBeNull();
             response.Links.ShouldNotBeNull();
-            response.Id.ShouldBe(card.Id);
+            response.Id.ShouldBe(abstractCard.Id);
             response.CardholderId.ShouldNotBeNull();
             response.CardProductId.ShouldBe(ProductIdOk);
             response.ClientId.ShouldNotBeNull();
@@ -83,6 +87,7 @@ namespace Checkout.Issuing.Cards
             response.BillingCurrency.ShouldNotBeNull();
             response.IssuingCountry.ShouldNotBeNull();
             response.Reference.ShouldNotBeNull();
+            response.Metadata.ShouldNotBeNull();
             response.CreatedDate.ShouldNotBeNull();
             response.LastModifiedDate.ShouldNotBeNull();
         }
@@ -96,9 +101,9 @@ namespace Checkout.Issuing.Cards
         [Fact(Skip = "Avoid creating cards all the time")]
         private async Task ShouldGetCardDetails()
         {
-            CardResponse card = _cardRequest;
+            AbstractCardCreateResponse abstractCard = _abstractCardRequest;
 
-            CardDetailsResponse response = await Api.IssuingClient().GetCardDetails(card.Id);
+            AbstractCardResponse response = await Api.IssuingClient().GetCardDetails(abstractCard.Id);
 
             response.HttpStatusCode.ShouldBe(200);
             response.Body.ShouldNotBeNull();
@@ -116,6 +121,7 @@ namespace Checkout.Issuing.Cards
             response.BillingCurrency.ShouldNotBeNull();
             response.IssuingCountry.ShouldNotBeNull();
             response.Reference.ShouldNotBeNull();
+            response.Metadata.ShouldNotBeNull();
             response.CreatedDate.ShouldNotBeNull();
             response.LastModifiedDate.ShouldNotBeNull();
         }
@@ -129,75 +135,73 @@ namespace Checkout.Issuing.Cards
         [Fact(Skip = "Client id must be configured for 3ds")]
         private async Task ShouldErrollCardThreeDSPassword()
         {
-            CardResponse card = _cardRequest;
+            AbstractCardCreateResponse abstractCard = _abstractCardRequest;
 
-            PasswordThreeDSEnrollmentRequest cardEnrollThreeDSRequest = new PasswordThreeDSEnrollmentRequest()
+            PasswordThreeDsEnrollmentRequest cardEnrollThreeDsRequest = new PasswordThreeDsEnrollmentRequest()
             {
-                Locale = "en-US", PhoneNumber = GetPhone(), Password = "Xtui43FvfiZ"
+                Locale = "en-US",
+                PhoneNumber = GetPhone(),
+                Password = "Xtui43FvfiZ"
             };
 
-            ThreeDSEnrollmentResponse response =
-                await Api.IssuingClient().EnrollCardThreeDS(card.Id, cardEnrollThreeDSRequest);
+            ThreeDsEnrollmentResponse response =
+                await Api.IssuingClient().EnrollCardThreeDS(abstractCard.Id, cardEnrollThreeDsRequest);
 
             response.HttpStatusCode.ShouldBe(202);
             response.Body.ShouldNotBeNull();
             response.ResponseHeaders.ShouldNotBeNull();
             response.Links.ShouldNotBeNull();
-            response.CreatedDate.ShouldNotBeNull();
         }
 
         [Fact(Skip = "Client id must be configured for 3ds")]
         private async Task ShouldErrollCardThreeDSSecurityQuestion()
         {
-            CardResponse card = _cardRequest;
+            AbstractCardCreateResponse abstractCard = _abstractCardRequest;
 
-            SecurityQuestionThreeDSEnrollmentRequest cardEnrollThreeDSRequest =
-                new SecurityQuestionThreeDSEnrollmentRequest
+            SecurityQuestionThreeDsEnrollmentRequest cardEnrollThreeDsRequest =
+                new SecurityQuestionThreeDsEnrollmentRequest
                 {
                     Locale = "en-US",
                     PhoneNumber = GetPhone(),
                     SecurityPair = new SecurityPair { Question = "Who are you?", Answer = "Bond. James Bond." }
                 };
 
-            ThreeDSEnrollmentResponse response =
-                await Api.IssuingClient().EnrollCardThreeDS(card.Id, cardEnrollThreeDSRequest);
+            ThreeDsEnrollmentResponse response =
+                await Api.IssuingClient().EnrollCardThreeDS(abstractCard.Id, cardEnrollThreeDsRequest);
 
             response.HttpStatusCode.ShouldBe(202);
             response.Body.ShouldNotBeNull();
             response.ResponseHeaders.ShouldNotBeNull();
             response.Links.ShouldNotBeNull();
-            response.CreatedDate.ShouldNotBeNull();
         }
 
         [Fact(Skip = "Client id must be configured for 3ds")]
         private async Task ShouldUpdatErrollCardThreeDS()
         {
-            CardResponse card = _cardRequest;
+            AbstractCardCreateResponse abstractCard = _abstractCardRequest;
 
-            ThreeDSUpdateRequest cardEnrollThreeDSDetailsRequest = new ThreeDSUpdateRequest
+            SecurityQuestionThreeDsUpdateRequest cardEnrollSecurityQuestionThreeDsDetailsRequest = new SecurityQuestionThreeDsUpdateRequest
             {
                 Locale = "en-US",
                 PhoneNumber = GetPhone(),
                 SecurityPair = new SecurityPair { Question = "Who are you?", Answer = "Bond. James Bond." },
-                Password = "Xtui43FvfiZ",
             };
 
-            ThreeDSUpdateResponse getResponse =
-                await Api.IssuingClient().UpdateCardThreeDSDetails(card.Id, cardEnrollThreeDSDetailsRequest);
+            ThreeDsEnrollmentUpdateResponse getResponse =
+                await Api.IssuingClient().UpdateCardThreeDSDetails(abstractCard.Id, cardEnrollSecurityQuestionThreeDsDetailsRequest);
 
             getResponse.HttpStatusCode.ShouldBe(202);
             getResponse.Body.ShouldNotBeNull();
             getResponse.ResponseHeaders.ShouldNotBeNull();
             getResponse.Links.ShouldNotBeNull();
-            getResponse.LastModifiedDate.ShouldNotBeNull();
         }
 
         [Fact(Skip = "Client id must be configured for 3ds")]
         private async Task ShouldGetErrollCardThreeDS()
         {
-            CardResponse card = _cardRequest;
+            AbstractCardCreateResponse abstractCard = _abstractCardRequest;
 
-            ThreeDSEnrollmentDetailsResponse response = await Api.IssuingClient().GetCardThreeDSDetails(card.Id);
+            ThreeDsEnrollmentDetailsResponse response = await Api.IssuingClient().GetCardThreeDSDetails(abstractCard.Id);
 
             response.HttpStatusCode.ShouldBe(200);
             response.Body.ShouldNotBeNull();
@@ -213,18 +217,18 @@ namespace Checkout.Issuing.Cards
         [Fact(Skip = "Avoid creating cards all the time")]
         private async Task ShouldActivateCard()
         {
-            CardResponse card = _cardRequest;
+            AbstractCardCreateResponse abstractCard = _abstractCardRequest;
 
-            Resource getResponse = await Api.IssuingClient().ActivateCard(card.Id);
+            Resource getResponse = await Api.IssuingClient().ActivateCard(abstractCard.Id);
 
             getResponse.HttpStatusCode.ShouldBe(200);
             getResponse.Body.ShouldNotBeNull();
             getResponse.ResponseHeaders.ShouldNotBeNull();
             getResponse.Links.ShouldNotBeNull();
 
-            CardDetailsResponse carDetailsResponse = await Api.IssuingClient().GetCardDetails(card.Id);
+            AbstractCardResponse carDetailsResponse = await Api.IssuingClient().GetCardDetails(abstractCard.Id);
 
-            carDetailsResponse.Id.ShouldBe(card.Id);
+            carDetailsResponse.Id.ShouldBe(abstractCard.Id);
             carDetailsResponse.Status.ShouldBe(CardStatus.Active);
         }
 
@@ -233,9 +237,9 @@ namespace Checkout.Issuing.Cards
         {
             CardCredentialsQuery query = new CardCredentialsQuery { Credentials = "number,cvc2" };
 
-            CardResponse card = _cardRequest;
+            AbstractCardCreateResponse abstractCard = _abstractCardRequest;
 
-            CardCredentialsResponse getResponse = await Api.IssuingClient().GetCardCredentials(card.Id, query);
+            CardCredentialsResponse getResponse = await Api.IssuingClient().GetCardCredentials(abstractCard.Id, query);
 
             getResponse.HttpStatusCode.ShouldBe(200);
             getResponse.Body.ShouldNotBeNull();
@@ -245,51 +249,128 @@ namespace Checkout.Issuing.Cards
         }
 
         [Fact(Skip = "Avoid creating cards all the time")]
-        private async Task ShouldSuspendCard()
+        private async Task ShouldUpdateCardDetails()
         {
-            CardholderResponse cardholderResponse = await CreateCardholder();
-            CardRequest request = await CreateVirtualCard(cardholderResponse.Id);
+            AbstractCardCreateResponse abstractCard = _abstractCardRequest;
 
-            CardResponse card = await Api.IssuingClient().CreateCard(request);
+            var updateRequest = new CardsUpdateRequest
+            {
+                Reference = "UPDATED-REF-123",
+                Metadata = new CardMetadata
+                {
+                    Udf1 = "UDF1",
+                    Udf2 = "UDF2",
+                    Udf3 = "UDF3",
+                    Udf4 = "UDF4",
+                    Udf5 = "UDF5"
+                },
+                ExpiryMonth = 12,
+                ExpiryYear = 2030
+            };
 
-            await Api.IssuingClient().ActivateCard(card.Id);
+            var updateResponse = await Api.IssuingClient().UpdateCardDetails(abstractCard.Id, updateRequest);
 
-            SuspendCardRequest cardReasonRequest = new SuspendCardRequest() { Reason = SuspendReason.SuspectedLost };
+            updateResponse.HttpStatusCode.ShouldBe(200);
+            updateResponse.Body.ShouldNotBeNull();
+            updateResponse.ResponseHeaders.ShouldNotBeNull();
+            updateResponse.Links.ShouldNotBeNull();
+        }
 
-            Resource getResponse = await Api.IssuingClient().SuspendCard(card.Id, cardReasonRequest);
+        [Fact(Skip = "Avoid creating cards all the time")]
+        private async Task ShouldRenewCard()
+        {
+            AbstractCardCreateResponse abstractCard = _abstractCardRequest;
 
-            getResponse.HttpStatusCode.ShouldBe(200);
-            getResponse.Body.ShouldNotBeNull();
-            getResponse.ResponseHeaders.ShouldNotBeNull();
-            getResponse.Links.ShouldNotBeNull();
+            var renewRequest = new VirtualCardRenewRequest
+            {
+                Reference = "RENEW-REF-123"
+            };
 
-            CardDetailsResponse carDetailsResponse = await Api.IssuingClient().GetCardDetails(card.Id);
+            var renewResponse = await Api.IssuingClient().RenewCard(abstractCard.Id, renewRequest);
 
-            carDetailsResponse.Id.ShouldBe(card.Id);
-            carDetailsResponse.Status.ShouldBe(CardStatus.Suspended);
+            renewResponse.HttpStatusCode.ShouldBe(201);
+            renewResponse.Body.ShouldNotBeNull();
+            renewResponse.ResponseHeaders.ShouldNotBeNull();
+            renewResponse.Links.ShouldNotBeNull();
+            renewResponse.Id.ShouldNotBeNull();
         }
 
         [Fact(Skip = "Avoid creating cards all the time")]
         private async Task ShouldRevokeCard()
         {
             CardholderResponse cardholderResponse = await CreateCardholder();
-            CardRequest request = await CreateVirtualCard(cardholderResponse.Id);
+            AbstractCardCreateRequest createRequest = await CreateVirtualCard(cardholderResponse.Id);
 
-            CardResponse card = await Api.IssuingClient().CreateCard(request);
+            AbstractCardCreateResponse abstractCard = await Api.IssuingClient().CreateCard(createRequest);
 
             RevokeCardRequest cardReasonRequest = new RevokeCardRequest { Reason = RevokeReason.ReportedLost };
 
-            Resource getResponse = await Api.IssuingClient().RevokeCard(card.Id, cardReasonRequest);
+            Resource getResponse = await Api.IssuingClient().RevokeCard(abstractCard.Id, cardReasonRequest);
 
             getResponse.HttpStatusCode.ShouldBe(200);
             getResponse.Body.ShouldNotBeNull();
             getResponse.ResponseHeaders.ShouldNotBeNull();
             getResponse.Links.ShouldNotBeNull();
 
-            CardDetailsResponse carDetailsResponse = await Api.IssuingClient().GetCardDetails(card.Id);
+            AbstractCardResponse carDetailsResponse = await Api.IssuingClient().GetCardDetails(abstractCard.Id);
 
-            carDetailsResponse.Id.ShouldBe(card.Id);
+            carDetailsResponse.Id.ShouldBe(abstractCard.Id);
             carDetailsResponse.Status.ShouldBe(CardStatus.Revoked);
         }
+
+        [Fact(Skip = "Avoid creating cards all the time")]
+        private async Task ShouldScheduleCardRevocation()
+        {
+            var scheduleRequest = new ScheduleCardRevocationRequest
+            {
+                RevocationDate = System.DateTime.UtcNow.AddDays(7).ToString("yyyy-MM-dd")
+            };
+
+            var resourceResponse = await Api.IssuingClient().ScheduleCardRevocation(scheduleRequest);
+
+            resourceResponse.HttpStatusCode.ShouldBe(200);
+            resourceResponse.Body.ShouldNotBeNull();
+            resourceResponse.ResponseHeaders.ShouldNotBeNull();
+            resourceResponse.Links.ShouldNotBeNull();
+        }
+
+        [Fact(Skip = "Avoid creating cards all the time")]
+        private async Task ShouldDeleteScheduledRevocation()
+        {
+            AbstractCardCreateResponse abstractCard = _abstractCardRequest;
+
+            var resourceResponse = await Api.IssuingClient().DeleteScheduledRevocation(abstractCard.Id);
+
+            resourceResponse.HttpStatusCode.ShouldBe(200);
+            resourceResponse.Body.ShouldNotBeNull();
+            resourceResponse.ResponseHeaders.ShouldNotBeNull();
+            resourceResponse.Links.ShouldNotBeNull();
+        }
+        
+        [Fact(Skip = "Avoid creating cards all the time")]
+        private async Task ShouldSuspendCard()
+        {
+            CardholderResponse cardholderResponse = await CreateCardholder();
+            AbstractCardCreateRequest createRequest = await CreateVirtualCard(cardholderResponse.Id);
+
+            AbstractCardCreateResponse abstractCard = await Api.IssuingClient().CreateCard(createRequest);
+
+            await Api.IssuingClient().ActivateCard(abstractCard.Id);
+
+            SuspendCardRequest cardReasonRequest = new SuspendCardRequest() { Reason = SuspendReason.SuspectedLost };
+
+            Resource getResponse = await Api.IssuingClient().SuspendCard(abstractCard.Id, cardReasonRequest);
+
+            getResponse.HttpStatusCode.ShouldBe(200);
+            getResponse.Body.ShouldNotBeNull();
+            getResponse.ResponseHeaders.ShouldNotBeNull();
+            getResponse.Links.ShouldNotBeNull();
+
+            AbstractCardResponse carDetailsResponse = await Api.IssuingClient().GetCardDetails(abstractCard.Id);
+
+            carDetailsResponse.Id.ShouldBe(abstractCard.Id);
+            carDetailsResponse.Status.ShouldBe(CardStatus.Suspended);
+        }
+
     }
 }
