@@ -88,7 +88,7 @@ namespace Checkout.Payments.Response
         
         public bool? CkoNetworkTokenAvailable { get; set; }
         
-        public Request.PaymentInstruction Instruction { get; set; }
+        public PaymentInstruction Instruction { get; set; }
         
 
     }

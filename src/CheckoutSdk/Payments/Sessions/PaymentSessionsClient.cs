@@ -8,7 +8,7 @@ namespace Checkout.Payments.Sessions
         private const string PaymentSessionsPath = "payment-sessions";
 
         public PaymentSessionsClient(IApiClient apiClient, CheckoutConfiguration configuration) : base(apiClient,
-            configuration, SdkAuthorizationType.SecretKey)
+            configuration, SdkAuthorizationType.SecretKeyOrOAuth)
         {
         }
 

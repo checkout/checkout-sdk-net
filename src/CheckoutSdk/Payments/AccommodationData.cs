@@ -1,10 +1,11 @@
 using Checkout.Common;
+using Checkout.Payments.Contexts;
 using System;
 using System.Collections.Generic;
 
-namespace Checkout.Payments.Contexts
+namespace Checkout.Payments
 {
-    public class PaymentContextsAccommodationData
+    public class AccommodationData
     {
         public string Name { get; set; }
 
