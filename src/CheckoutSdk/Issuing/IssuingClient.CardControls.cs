@@ -11,15 +11,15 @@ namespace Checkout.Issuing
 {
     public partial class IssuingClient
     {
-        public Task<CardControlResponse> CreateCardControl(
-            CardControlRequest cardControlRequest,
+        public Task<AbstractCardControlResponse> CreateCardControl(
+            AbstractCardControlRequest abstractCardControlRequest,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("cardControlRequest", cardControlRequest);
-            return ApiClient.Post<CardControlResponse>(
+            CheckoutUtils.ValidateParams("cardControlRequest", abstractCardControlRequest);
+            return ApiClient.Post<AbstractCardControlResponse>(
                 BuildPath(IssuingPath, ControlsPath),
                 SdkAuthorization(),
-                cardControlRequest,
+                abstractCardControlRequest,
                 cancellationToken
             );
         }
@@ -36,26 +36,26 @@ namespace Checkout.Issuing
             );
         }
 
-        public Task<CardControlResponse> GetCardControlDetails(string controlId,
+        public Task<AbstractCardControlResponse> GetCardControlDetails(string controlId,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("controlId", controlId);
-            return ApiClient.Get<CardControlResponse>(
+            return ApiClient.Get<AbstractCardControlResponse>(
                 BuildPath(IssuingPath, ControlsPath, controlId),
                 SdkAuthorization(),
                 cancellationToken
             );
         }
 
-        public Task<CardControlResponse> UpdateCardControl(string controlId,
-            UpdateCardControlRequest updateCardControlRequest,
+        public Task<AbstractCardControlResponse> UpdateCardControl(string controlId,
+            AbstractCardControlUpdate cardControlUpdate,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("controlId", controlId, "updateCardControlRequest", updateCardControlRequest);
-            return ApiClient.Put<CardControlResponse>(
+            CheckoutUtils.ValidateParams("controlId", controlId, "updateCardControlRequest", cardControlUpdate);
+            return ApiClient.Put<AbstractCardControlResponse>(
                 BuildPath(IssuingPath, ControlsPath, controlId),
                 SdkAuthorization(),
-                updateCardControlRequest,
+                cardControlUpdate,
                 cancellationToken
             );
         }

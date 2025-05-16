@@ -34,44 +34,44 @@ namespace Checkout.Issuing.Controls
         [Fact]
         private async Task ShouldCreateCardVelocityLimitControl()
         {
-            CardControlRequest cardControlRequest = new VelocityCardControlRequest();
-            CardControlResponse cardControlVelocityLimitResponse =
+            AbstractCardControlRequest abstractCardControlRequest = new VelocityCardControlRequest();
+            AbstractCardControlResponse abstractCardControlVelocityLimitResponse =
                 new VelocityCardControlResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<CardControlResponse>("issuing/controls", _authorization,
-                        cardControlRequest,
+                    apiClient.Post<AbstractCardControlResponse>("issuing/controls", _authorization,
+                        abstractCardControlRequest,
                         CancellationToken.None, null))
-                .ReturnsAsync(() => cardControlVelocityLimitResponse);
+                .ReturnsAsync(() => abstractCardControlVelocityLimitResponse);
 
             IIssuingClient client =
                 new IssuingClient(_apiClient.Object, _configuration.Object);
 
-            CardControlResponse response = await client.CreateCardControl(cardControlRequest);
+            AbstractCardControlResponse response = await client.CreateCardControl(abstractCardControlRequest);
 
             response.ShouldNotBeNull();
-            response.ShouldBeSameAs(cardControlVelocityLimitResponse);
+            response.ShouldBeSameAs(abstractCardControlVelocityLimitResponse);
         }
 
         [Fact]
         private async Task ShouldCreateCardMccLimitControl()
         {
-            CardControlRequest cardControlRequest = new MccCardControlRequest();
-            CardControlResponse cardControlMccLimitResponse = new MccCardControlResponse();
+            AbstractCardControlRequest abstractCardControlRequest = new MccCardControlRequest();
+            AbstractCardControlResponse abstractCardControlMccLimitResponse = new MccCardControlResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<CardControlResponse>("issuing/controls", _authorization,
-                        cardControlRequest,
+                    apiClient.Post<AbstractCardControlResponse>("issuing/controls", _authorization,
+                        abstractCardControlRequest,
                         CancellationToken.None, null))
-                .ReturnsAsync(() => cardControlMccLimitResponse);
+                .ReturnsAsync(() => abstractCardControlMccLimitResponse);
 
             IIssuingClient client =
                 new IssuingClient(_apiClient.Object, _configuration.Object);
 
-            CardControlResponse response = await client.CreateCardControl(cardControlRequest);
+            AbstractCardControlResponse response = await client.CreateCardControl(abstractCardControlRequest);
 
             response.ShouldNotBeNull();
-            response.ShouldBeSameAs(cardControlMccLimitResponse);
+            response.ShouldBeSameAs(abstractCardControlMccLimitResponse);
         }
 
         [Fact]
@@ -99,44 +99,44 @@ namespace Checkout.Issuing.Controls
         [Fact]
         private async Task ShouldGetCardControlDetails()
         {
-            CardControlResponse cardControlResponse = new VelocityCardControlResponse();
+            AbstractCardControlResponse abstractCardControlResponse = new VelocityCardControlResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<CardControlResponse>("issuing/controls/control_id",
+                    apiClient.Get<AbstractCardControlResponse>("issuing/controls/control_id",
                         _authorization,
                         CancellationToken.None))
-                .ReturnsAsync(() => cardControlResponse);
+                .ReturnsAsync(() => abstractCardControlResponse);
 
             IIssuingClient client =
                 new IssuingClient(_apiClient.Object, _configuration.Object);
 
-            CardControlResponse response = await client.GetCardControlDetails("control_id");
+            AbstractCardControlResponse response = await client.GetCardControlDetails("control_id");
 
             response.ShouldNotBeNull();
-            response.ShouldBeSameAs(cardControlResponse);
+            response.ShouldBeSameAs(abstractCardControlResponse);
         }
 
         [Fact]
         private async Task ShouldUpdateCardControl()
         {
-            UpdateCardControlRequest updateCardControlRequest = new UpdateCardControlRequest();
-            CardControlResponse cardControlResponse = new VelocityCardControlResponse();
+            AbstractCardControlUpdate cardControlUpdate = new VelocityCardControlUpdate();
+            AbstractCardControlResponse abstractCardControlResponse = new VelocityCardControlResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Put<CardControlResponse>("issuing/controls/control_id",
+                    apiClient.Put<AbstractCardControlResponse>("issuing/controls/control_id",
                         _authorization,
-                        updateCardControlRequest,
+                        cardControlUpdate,
                         CancellationToken.None,
                         null))
-                .ReturnsAsync(() => cardControlResponse);
+                .ReturnsAsync(() => abstractCardControlResponse);
 
             IIssuingClient client =
                 new IssuingClient(_apiClient.Object, _configuration.Object);
 
-            CardControlResponse response = await client.UpdateCardControl("control_id", updateCardControlRequest);
+            AbstractCardControlResponse response = await client.UpdateCardControl("control_id", cardControlUpdate);
 
             response.ShouldNotBeNull();
-            response.ShouldBeSameAs(cardControlResponse);
+            response.ShouldBeSameAs(abstractCardControlResponse);
         }
 
         [Fact]

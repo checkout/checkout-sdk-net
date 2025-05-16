@@ -1,7 +1,7 @@
 using Checkout.Common;
-using Checkout.Issuing.Cardholders;
-using Checkout.Issuing.Cards;
+using Checkout.Issuing.Cardholders.Responses;
 using Checkout.Issuing.Cards.Requests.Create;
+using Checkout.Issuing.Cards.Responses.Create;
 using Checkout.Issuing.Testing.Requests;
 using Checkout.Issuing.Testing.Responses;
 using Shouldly;
@@ -12,14 +12,14 @@ namespace Checkout.Issuing.Testing
 {
     public class CardTestingIntegrationTest : IssuingCommon, IAsyncLifetime
     {
-        private CardResponse _cardRequest;
+        private AbstractCardCreateResponse _cardRequest;
         private CardAuthorizationResponse _transaction;
 
         public async Task InitializeAsync()
         {
             CardholderResponse cardholderResponse = await CreateCardholder();
-            CardRequest cardRequest = await CreateVirtualCard(cardholderResponse.Id);
-            _cardRequest = await Api.IssuingClient().CreateCard(cardRequest);
+            AbstractCardCreateRequest abstractCardCreateRequest = await CreateVirtualCard(cardholderResponse.Id);
+            _cardRequest = await Api.IssuingClient().CreateCard(abstractCardCreateRequest);
             await Api.IssuingClient().ActivateCard(_cardRequest.Id);
             CardAuthorizationResponse _transaction = await CardAuthorizationResponse();
         }
@@ -87,6 +87,21 @@ namespace Checkout.Issuing.Testing
             response.Body.ShouldNotBeNull();
             response.ResponseHeaders.ShouldNotBeNull();
             response.Status.ShouldBe(ReversalStatus.Reversed);
+        }
+
+        [Fact(Skip = "Avoid creating cards all the time")]
+        private async Task ShouldSimulateRefund()
+        {
+            CardRefundAuthorizationRequest cardRefundAuthorizationRequest = new CardRefundAuthorizationRequest
+            {
+                Amount = 1
+            };
+
+            EmptyResponse response =
+                await Api.IssuingClient().SimulateRefund(_transaction.Id, cardRefundAuthorizationRequest);
+
+            response.HttpStatusCode.ShouldBe(202);
+            response.ResponseHeaders.ShouldNotBeNull();
         }
         
         private async Task<CardAuthorizationResponse> CardAuthorizationResponse()

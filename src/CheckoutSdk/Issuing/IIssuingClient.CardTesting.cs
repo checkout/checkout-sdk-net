@@ -16,6 +16,9 @@ namespace Checkout.Issuing
         Task<EmptyResponse> SimulateClearing(string authorizationId, CardClearingAuthorizationRequest cardClearingAuthorizationRequest,
             CancellationToken cancellationToken = default);
         
+        Task<EmptyResponse> SimulateRefund(string authorizationId, CardRefundAuthorizationRequest cardRefundAuthorizationRequest,
+            CancellationToken cancellationToken = default);
+        
         Task<CardReversalAuthorizationResponse> SimulateReversal(string authorizationId, CardReversalAuthorizationRequest cardReversalAuthorizationRequest,
             CancellationToken cancellationToken = default);
     }

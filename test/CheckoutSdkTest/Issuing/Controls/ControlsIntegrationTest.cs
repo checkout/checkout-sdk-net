@@ -1,8 +1,8 @@
 using Checkout.Common;
-using Checkout.Issuing.Cardholders;
-using Checkout.Issuing.Cards;
+using Checkout.Issuing.Cardholders.Responses;
 using Checkout.Issuing.Cards.Requests.Create;
-using Checkout.Issuing.Controls.Requests;
+using Checkout.Issuing.Cards.Responses.Create;
+using Checkout.Issuing.Common;
 using Checkout.Issuing.Controls.Requests.Create;
 using Checkout.Issuing.Controls.Requests.Query;
 using Checkout.Issuing.Controls.Requests.Update;
@@ -17,18 +17,18 @@ namespace Checkout.Issuing.Controls
 {
     public class CardControlsIntegrationTest : IssuingCommon, IAsyncLifetime
     {
-        private CardResponse _cardRequest;
-        private CardControlResponse _cardControl;
+        private AbstractCardCreateResponse _cardRequest;
+        private AbstractCardControlResponse _abstractCardControl;
 
         public async Task InitializeAsync()
         {
             CardholderResponse cardholderResponse = await CreateCardholder();
-            CardRequest cardRequest = await CreateVirtualCard(cardholderResponse.Id);
-            _cardRequest = await Api.IssuingClient().CreateCard(cardRequest);
+            AbstractCardCreateRequest abstractCardCreateRequest = await CreateVirtualCard(cardholderResponse.Id);
+            _cardRequest = await Api.IssuingClient().CreateCard(abstractCardCreateRequest);
 
             await Api.IssuingClient().ActivateCard(_cardRequest.Id);
 
-            CardControlRequest cardControlRequest = new VelocityCardControlRequest
+            AbstractCardControlRequest abstractCardControlRequest = new VelocityCardControlRequest
             {
                 Description = "Max spend of 500€ per week for restaurants",
                 TargetId = _cardRequest.Id,
@@ -40,7 +40,7 @@ namespace Checkout.Issuing.Controls
                 }
             };
 
-            _cardControl = await Api.IssuingClient().CreateCardControl(cardControlRequest);
+            _abstractCardControl = await Api.IssuingClient().CreateCardControl(abstractCardControlRequest);
         }
 
         public Task DisposeAsync()
@@ -51,11 +51,11 @@ namespace Checkout.Issuing.Controls
         [Fact(Skip = "Avoid creating cards all the time")]
         private void ShouldCreateCardControl()
         {
-            CardControlResponse response = _cardControl;
+            AbstractCardControlResponse response = _abstractCardControl;
 
             response.ShouldNotBeNull();
             response.TargetId.ShouldBe(_cardRequest.Id);
-            response.ControlType.ShouldBe(ControlType.VelocityLimit);
+            response.ControlType.ShouldBe(IssuingControlType.VelocityLimit);
         }
 
         [Fact(Skip = "Avoid creating cards all the time")]
@@ -67,7 +67,7 @@ namespace Checkout.Issuing.Controls
 
             response.ShouldNotBeNull();
             response.Controls.ShouldNotBeNull();
-            foreach (CardControlResponse control in response.Controls)
+            foreach (AbstractCardControlResponse control in response.Controls)
             {
                 control.TargetId.ShouldBe(_cardRequest.Id);
             }
@@ -76,19 +76,19 @@ namespace Checkout.Issuing.Controls
         [Fact(Skip = "Avoid creating cards all the time")]
         private async Task ShouldGetControlDetails()
         {
-            CardControlResponse response = await Api.IssuingClient().GetCardControlDetails(_cardControl.Id);
+            AbstractCardControlResponse response = await Api.IssuingClient().GetCardControlDetails(_abstractCardControl.Id);
 
             response.ShouldNotBeNull();
             response.TargetId.ShouldBe(_cardRequest.Id);
-            response.Id.ShouldBe(_cardControl.Id);
-            response.ControlType.ShouldBe(ControlType.VelocityLimit);
+            response.Id.ShouldBe(_abstractCardControl.Id);
+            response.ControlType.ShouldBe(IssuingControlType.VelocityLimit);
         }
 
         [Fact(Skip = "Avoid creating cards all the time")]
         private async Task ShouldUpdateControl()
         {
             const string description = "New max spend of 1000€ per month for restaurants";
-            UpdateCardControlRequest updateCardControlRequest = new UpdateCardControlRequest
+            AbstractCardControlUpdate cardControlUpdate = new VelocityCardControlUpdate
             {
                 Description = description,
                 VelocityLimit = new VelocityLimit
@@ -96,25 +96,24 @@ namespace Checkout.Issuing.Controls
                     AmountLimit = 1000,
                     VelocityWindow = new VelocityWindow { Type = VelocityWindowType.Monthly }
                 },
-                MccLimit = null
             };
 
-            CardControlResponse response =
-                await Api.IssuingClient().UpdateCardControl(_cardControl.Id, updateCardControlRequest);
+            AbstractCardControlResponse response =
+                await Api.IssuingClient().UpdateCardControl(_abstractCardControl.Id, cardControlUpdate);
 
             response.ShouldNotBeNull();
-            response.Id.ShouldBe(_cardControl.Id);
+            response.Id.ShouldBe(_abstractCardControl.Id);
             response.Description.ShouldBe(description);
-            response.ControlType.ShouldBe(ControlType.VelocityLimit);
+            response.ControlType.ShouldBe(IssuingControlType.VelocityLimit);
         }
 
         [Fact(Skip = "Avoid creating cards all the time")]
         private async Task ShouldRemoveControl()
         {
-            IdResponse response = await Api.IssuingClient().RemoveCardControl(_cardControl.Id);
+            IdResponse response = await Api.IssuingClient().RemoveCardControl(_abstractCardControl.Id);
 
             response.ShouldNotBeNull();
-            response.Id.ShouldBe(_cardControl.Id);
+            response.Id.ShouldBe(_abstractCardControl.Id);
         }
     }
 }

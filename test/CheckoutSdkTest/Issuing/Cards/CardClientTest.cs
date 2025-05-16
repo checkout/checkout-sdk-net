@@ -4,9 +4,13 @@ using Checkout.Issuing.Cards.Requests.Credentials;
 using Checkout.Issuing.Cards.Requests.Enrollment;
 using Checkout.Issuing.Cards.Requests.Revoke;
 using Checkout.Issuing.Cards.Requests.Suspend;
-using Checkout.Issuing.Cards.Responses;
+using Checkout.Issuing.Cards.Requests.Update;
+using Checkout.Issuing.Cards.Requests.Renew;
+using Checkout.Issuing.Cards.Responses.Create;
 using Checkout.Issuing.Cards.Responses.Credentials;
 using Checkout.Issuing.Cards.Responses.Enrollment;
+using Checkout.Issuing.Cards.Responses.Renew;
+using Checkout.Issuing.Common.Responses;
 using Moq;
 using Shouldly;
 using System.Threading;
@@ -37,30 +41,30 @@ namespace Checkout.Issuing.Cards
         [Fact]
         private async Task ShouldCreateCard()
         {
-            CardVirtualRequest cardRequest = new CardVirtualRequest();
-            CardResponse cardResponse = new CardResponse();
+            VirtualCardCreateRequest abstractCardCreateRequest = new VirtualCardCreateRequest();
+            AbstractCardCreateResponse abstractCardResponse = new VirtualCardCreateResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<CardResponse>("issuing/cards", _authorization,
-                        cardRequest,
+                    apiClient.Post<AbstractCardCreateResponse>("issuing/cards", _authorization,
+                        abstractCardCreateRequest,
                         CancellationToken.None, null))
-                .ReturnsAsync(() => cardResponse);
+                .ReturnsAsync(() => abstractCardResponse);
 
             IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
 
-            CardResponse getResponse = await client.CreateCard(cardRequest);
+            AbstractCardCreateResponse getResponse = await client.CreateCard(abstractCardCreateRequest);
 
             getResponse.ShouldNotBeNull();
-            getResponse.ShouldBeSameAs(cardResponse);
+            getResponse.ShouldBeSameAs(abstractCardResponse);
         }
 
         [Fact]
         private async Task ShouldGetCardDetails()
         {
-            CardDetailsResponse cardDetailsResponse = new VirtualCardDetailsResponse();
+            AbstractCardResponse cardDetailsResponse = new VirtualCardResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<CardDetailsResponse>(
+                    apiClient.Get<AbstractCardResponse>(
                         "issuing/cards/card_id",
                         _authorization,
                         CancellationToken.None))
@@ -68,7 +72,7 @@ namespace Checkout.Issuing.Cards
 
             IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
 
-            CardDetailsResponse getResponse = await client.GetCardDetails("card_id", CancellationToken.None);
+            AbstractCardResponse getResponse = await client.GetCardDetails("card_id", CancellationToken.None);
 
             getResponse.ShouldNotBeNull();
             getResponse.ShouldBeSameAs(cardDetailsResponse);
@@ -77,19 +81,19 @@ namespace Checkout.Issuing.Cards
         [Fact]
         private async Task ShouldEnrollCardThreeDS()
         {
-            PasswordThreeDSEnrollmentRequest cardEnrollThreeDSPasswordRequest = new PasswordThreeDSEnrollmentRequest();
-            ThreeDSEnrollmentResponse cardEnrollThreeDSResponse = new ThreeDSEnrollmentResponse();
+            PasswordThreeDsEnrollmentRequest cardEnrollThreeDsPasswordRequest = new PasswordThreeDsEnrollmentRequest();
+            ThreeDsEnrollmentResponse cardEnrollThreeDSResponse = new ThreeDsEnrollmentResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<ThreeDSEnrollmentResponse>("issuing/cards/card_id/3ds-enrollment", _authorization,
-                        cardEnrollThreeDSPasswordRequest,
+                    apiClient.Post<ThreeDsEnrollmentResponse>("issuing/cards/card_id/3ds-enrollment", _authorization,
+                        cardEnrollThreeDsPasswordRequest,
                         CancellationToken.None, null))
                 .ReturnsAsync(() => cardEnrollThreeDSResponse);
 
             IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
 
-            ThreeDSEnrollmentResponse getResponse =
-                await client.EnrollCardThreeDS("card_id", cardEnrollThreeDSPasswordRequest);
+            ThreeDsEnrollmentResponse getResponse =
+                await client.EnrollCardThreeDS("card_id", cardEnrollThreeDsPasswordRequest);
 
             getResponse.ShouldNotBeNull();
             getResponse.ShouldBeSameAs(cardEnrollThreeDSResponse);
@@ -98,41 +102,41 @@ namespace Checkout.Issuing.Cards
         [Fact]
         private async Task ShouldUpdateEnrollCardThreeDS()
         {
-            ThreeDSUpdateRequest cardEnrollThreeDsDetailsRequest = new ThreeDSUpdateRequest();
-            ThreeDSUpdateResponse threeDsUpdateResponse =
-                new ThreeDSUpdateResponse();
+            SecurityQuestionThreeDsUpdateRequest cardEnrollSecurityQuestionThreeDsDetailsRequest = new SecurityQuestionThreeDsUpdateRequest();
+            ThreeDsEnrollmentUpdateResponse threeDsEnrollmentUpdateResponse =
+                new ThreeDsEnrollmentUpdateResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Patch<ThreeDSUpdateResponse>("issuing/cards/card_id/3ds-enrollment",
+                    apiClient.Patch<ThreeDsEnrollmentUpdateResponse>("issuing/cards/card_id/3ds-enrollment",
                         _authorization,
-                        cardEnrollThreeDsDetailsRequest,
+                        cardEnrollSecurityQuestionThreeDsDetailsRequest,
                         CancellationToken.None, null))
-                .ReturnsAsync(() => threeDsUpdateResponse);
+                .ReturnsAsync(() => threeDsEnrollmentUpdateResponse);
 
             IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
 
-            ThreeDSUpdateResponse getResponse =
-                await client.UpdateCardThreeDSDetails("card_id", cardEnrollThreeDsDetailsRequest);
+            ThreeDsEnrollmentUpdateResponse getResponse =
+                await client.UpdateCardThreeDSDetails("card_id", cardEnrollSecurityQuestionThreeDsDetailsRequest);
 
             getResponse.ShouldNotBeNull();
-            getResponse.ShouldBeSameAs(threeDsUpdateResponse);
+            getResponse.ShouldBeSameAs(threeDsEnrollmentUpdateResponse);
         }
 
         [Fact]
         private async Task ShouldGetEnrollCardThreeDS()
         {
-            ThreeDSEnrollmentDetailsResponse threeDsEnrollmentDetailsResponse =
-                new ThreeDSEnrollmentDetailsResponse();
+            ThreeDsEnrollmentDetailsResponse threeDsEnrollmentDetailsResponse =
+                new ThreeDsEnrollmentDetailsResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<ThreeDSEnrollmentDetailsResponse>("issuing/cards/card_id/3ds-enrollment",
+                    apiClient.Get<ThreeDsEnrollmentDetailsResponse>("issuing/cards/card_id/3ds-enrollment",
                         _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(() => threeDsEnrollmentDetailsResponse);
 
             IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
 
-            ThreeDSEnrollmentDetailsResponse response =
+            ThreeDsEnrollmentDetailsResponse response =
                 await client.GetCardThreeDSDetails("card_id");
 
             response.ShouldNotBeNull();
@@ -224,6 +228,95 @@ namespace Checkout.Issuing.Cards
 
             getResponse.ShouldNotBeNull();
             getResponse.ShouldBeSameAs(resourceResponse);
+        }
+
+        [Fact]
+        private async Task ShouldUpdateCardDetails()
+        {
+            var cardUpdateRequest = new CardsUpdateRequest();
+            var updateResponse = new UpdateResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Patch<UpdateResponse>(
+                        "issuing/cards/card_id",
+                        _authorization,
+                        cardUpdateRequest,
+                        CancellationToken.None,
+                        null))
+                .ReturnsAsync(() => updateResponse);
+
+            IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
+
+            UpdateResponse response = await client.UpdateCardDetails("card_id", cardUpdateRequest, CancellationToken.None);
+
+            response.ShouldNotBeNull();
+            response.ShouldBeSameAs(updateResponse);
+        }
+
+        [Fact]
+        private async Task ShouldRenewCard()
+        {
+            var renewRequest = new VirtualCardRenewRequest();
+            var renewResponse = new RenewCardResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<RenewCardResponse>(
+                        "issuing/cards/card_id/renew",
+                        _authorization,
+                        renewRequest,
+                        CancellationToken.None,
+                        null))
+                .ReturnsAsync(() => renewResponse);
+
+            IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
+
+            RenewCardResponse response = await client.RenewCard("card_id", renewRequest, CancellationToken.None);
+
+            response.ShouldNotBeNull();
+            response.ShouldBeSameAs(renewResponse);
+        }
+
+        [Fact]
+        private async Task ShouldScheduleCardRevocation()
+        {
+            var scheduleRequest = new ScheduleCardRevocationRequest();
+            var resourceResponse = new Resource();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<Resource>(
+                        "issuing/cards/schedule-revocation",
+                        _authorization,
+                        scheduleRequest,
+                        CancellationToken.None,
+                        null))
+                .ReturnsAsync(() => resourceResponse);
+
+            IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
+
+            Resource response = await client.ScheduleCardRevocation(scheduleRequest, CancellationToken.None);
+
+            response.ShouldNotBeNull();
+            response.ShouldBeSameAs(resourceResponse);
+        }
+
+        [Fact]
+        private async Task ShouldDeleteScheduledRevocation()
+        {
+            var resourceResponse = new Resource();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Delete<Resource>(
+                        "issuing/cards/card_id/schedule-revocation",
+                        _authorization,
+                        CancellationToken.None))
+                .ReturnsAsync(() => resourceResponse);
+
+            IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
+
+            Resource response = await client.DeleteScheduledRevocation("card_id", CancellationToken.None);
+
+            response.ShouldNotBeNull();
+            response.ShouldBeSameAs(resourceResponse);
         }
     }
 }

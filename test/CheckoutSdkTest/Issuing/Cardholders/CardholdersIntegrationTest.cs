@@ -1,4 +1,6 @@
-using Checkout.Issuing.Cards;
+using Checkout.Issuing.Cardholders.Requests;
+using Checkout.Issuing.Cardholders.Responses;
+using Checkout.Issuing.Common.Responses;
 using Shouldly;
 using System.Threading.Tasks;
 using Xunit;
@@ -84,7 +86,7 @@ namespace Checkout.Issuing.Cardholders
             response.Body.ShouldNotBeNull();
             response.ResponseHeaders.ShouldNotBeNull();
             response.Cards.ShouldNotBeNull();
-            foreach (CardResponse card in response.Cards)
+            foreach (AbstractCardResponse card in response.Cards)
             {
                 card.Id.ShouldBe(cardholder.Id);
             }
@@ -94,6 +96,35 @@ namespace Checkout.Issuing.Cardholders
         private async Task ShouldThrowErrorNotFoundCardholderCards()
         {
             await AssertNotFound(Api.IssuingClient().GetCardholdersCards("not_found"));
+        }
+
+        [Fact]
+        private async Task ShouldUpdateCardholder()
+        {
+            CardholderRequest createRequest = CardholderRequest();
+            CardholderResponse created = await Api.IssuingClient().CreateCardholder(createRequest);
+
+            CardholderRequest updateRequest = CardholderRequest();
+            updateRequest.FirstName = "UpdatedName";
+
+            var updateResponse = await Api.IssuingClient().UpdateCardholder(created.Id, updateRequest);
+
+            updateResponse.ShouldNotBeNull();
+            updateResponse.HttpStatusCode.ShouldBe(200);
+            updateResponse.Body.ShouldNotBeNull();
+            updateResponse.ResponseHeaders.ShouldNotBeNull();
+            updateResponse.Links.ShouldNotBeNull();
+
+            CardholderDetailsResponse details = await Api.IssuingClient().GetCardholderDetails(created.Id);
+            details.FirstName.ShouldBe("UpdatedName");
+        }
+
+        [Fact]
+        private async Task ShouldThrowErrorInvalidUpdateCardholder()
+        {
+            CardholderRequest badRequest = CardholderBadRequest();
+            
+            await AssertInvalidDataSent(Api.IssuingClient().UpdateCardholder("not_found", badRequest));
         }
     }
 }

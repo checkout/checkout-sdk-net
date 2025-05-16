@@ -120,5 +120,28 @@ namespace Checkout.Issuing.Testing
             getResponse.ShouldNotBeNull();
             getResponse.ShouldBeSameAs(cardReversalAuthorizationResponse);
         }
+
+        [Fact]
+        private async Task ShouldSimulateRefund()
+        {
+            CardRefundAuthorizationRequest cardRefundAuthorizationRequest = new CardRefundAuthorizationRequest();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<EmptyResponse>(
+                        "issuing/simulate/authorizations/authorization_id/refunds",
+                        _authorization,
+                        cardRefundAuthorizationRequest,
+                        CancellationToken.None, null))
+                .ReturnsAsync(() => new EmptyResponse());
+
+            IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
+
+            EmptyResponse getResponse = await client.SimulateRefund(
+                "authorization_id",
+                cardRefundAuthorizationRequest
+            );
+
+            getResponse.ShouldNotBeNull();
+        }
     }
 }

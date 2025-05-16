@@ -48,4 +48,22 @@
       <_Parameter1>CheckoutSdkTest</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Issuing\Cardholders\CardholderCardsResponse.cs" />
+    <Compile Remove="Issuing\Cards\Requests\Create\CardRequest.cs" />
+    <Compile Remove="Issuing\Cards\Responses\CardResponse.cs" />
+    <Compile Remove="Issuing\Cards\Responses\PhysicalCardDetailsResponse.cs" />
+    <Compile Remove="Issuing\Cards\Requests\Create\PhysicalCardRequest.cs" />
+    <Compile Remove="Issuing\Cards\Responses\VirtualCardDetailsResponse.cs" />
+    <Compile Remove="Issuing\Cards\Requests\Create\VirtualCardRequest.cs" />
+    <Compile Remove="Issuing\Cardholders\CardholderDetailsResponse.cs" />
+    <Compile Remove="Issuing\Cardholders\CardholderRequest.cs" />
+    <Compile Remove="Issuing\Cardholders\CardholderDocument.cs" />
+    <Compile Remove="Issuing\Cardholders\CardholderStatus.cs" />
+    <Compile Remove="Issuing\Controls\Requests\VelocityLimit.cs" />
+    <Compile Remove="Issuing\Controls\Requests\VelocityWindow.cs" />
+    <Compile Remove="Issuing\Controls\Requests\MccLimit.cs" />
+    <Compile Remove="Issuing\Controls\Requests\VelocityWindowType.cs" />
+  </ItemGroup>
 </Project>

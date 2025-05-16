@@ -1,13 +1,16 @@
 using Checkout.Common;
-using Checkout.Issuing.Cards;
 using Checkout.Issuing.Cards.Requests.Create;
 using Checkout.Issuing.Cards.Requests.Credentials;
 using Checkout.Issuing.Cards.Requests.Enrollment;
+using Checkout.Issuing.Cards.Requests.Renew;
 using Checkout.Issuing.Cards.Requests.Revoke;
 using Checkout.Issuing.Cards.Requests.Suspend;
-using Checkout.Issuing.Cards.Responses;
+using Checkout.Issuing.Cards.Requests.Update;
+using Checkout.Issuing.Cards.Responses.Create;
 using Checkout.Issuing.Cards.Responses.Credentials;
 using Checkout.Issuing.Cards.Responses.Enrollment;
+using Checkout.Issuing.Cards.Responses.Renew;
+using Checkout.Issuing.Common.Responses;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,47 +18,60 @@ namespace Checkout.Issuing
 {
     public partial class IssuingClient
     {
-        public Task<CardResponse> CreateCard(CardRequest cardRequest,
+        public Task<AbstractCardCreateResponse> CreateCard(AbstractCardCreateRequest abstractCardCreateRequest,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("cardRequest", cardRequest);
-            return ApiClient.Post<CardResponse>(
+            CheckoutUtils.ValidateParams("cardRequest", abstractCardCreateRequest);
+            return ApiClient.Post<AbstractCardCreateResponse>(
                 BuildPath(IssuingPath, CardsPath),
                 SdkAuthorization(),
-                cardRequest,
+                abstractCardCreateRequest,
                 cancellationToken
             );
         }
 
-        public Task<CardDetailsResponse> GetCardDetails(string cardId, CancellationToken cancellationToken = default)
+        public Task<AbstractCardResponse> GetCardDetails(string cardId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("cardId", cardId);
-            return ApiClient.Get<CardDetailsResponse>(
+            return ApiClient.Get<AbstractCardResponse>(
                 BuildPath(IssuingPath, CardsPath, cardId),
                 SdkAuthorization(),
                 cancellationToken
             );
         }
-
-        public Task<ThreeDSEnrollmentResponse> EnrollCardThreeDS(string cardId,
-            ThreeDSEnrollmentRequest threeDsEnrollmentRequest, CancellationToken cancellationToken = default)
+        
+        public Task<UpdateResponse> UpdateCardDetails(string cardId,
+            CardsUpdateRequest cardUpdateRequest,
+            CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("cardId", cardId, "threeDsEnrollmentRequest", threeDsEnrollmentRequest);
-            return ApiClient.Post<ThreeDSEnrollmentResponse>(
-                BuildPath(IssuingPath, CardsPath, cardId, ThreeDSEnrollmentPath),
+            CheckoutUtils.ValidateParams("cardId", cardId, "cardUpdateRequest", cardUpdateRequest);
+            return ApiClient.Patch<UpdateResponse>(
+                BuildPath(IssuingPath, CardsPath, cardId),
                 SdkAuthorization(),
-                threeDsEnrollmentRequest,
+                cardUpdateRequest,
                 cancellationToken
             );
         }
 
-        public Task<ThreeDSUpdateResponse> UpdateCardThreeDSDetails(string cardId,
-            ThreeDSUpdateRequest threeDsUpdateRequest,
+        public Task<ThreeDsEnrollmentResponse> EnrollCardThreeDS(string cardId,
+            AbstractThreeDsEnrollmentRequest abstractThreeDsEnrollmentRequest, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("cardId", cardId, "threeDsEnrollmentRequest", abstractThreeDsEnrollmentRequest);
+            return ApiClient.Post<ThreeDsEnrollmentResponse>(
+                BuildPath(IssuingPath, CardsPath, cardId, ThreeDSEnrollmentPath),
+                SdkAuthorization(),
+                abstractThreeDsEnrollmentRequest,
+                cancellationToken
+            );
+        }
+
+        public Task<ThreeDsEnrollmentUpdateResponse> UpdateCardThreeDSDetails(string cardId,
+            AbstractThreeDsEnrollmentRequest threeDsUpdateRequest,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("cardId", cardId, "threeDsUpdateRequest",
                 threeDsUpdateRequest);
-            return ApiClient.Patch<ThreeDSUpdateResponse>(
+            return ApiClient.Patch<ThreeDsEnrollmentUpdateResponse>(
                 BuildPath(IssuingPath, CardsPath, cardId, ThreeDSEnrollmentPath),
                 SdkAuthorization(),
                 threeDsUpdateRequest,
@@ -63,11 +79,11 @@ namespace Checkout.Issuing
             );
         }
 
-        public Task<ThreeDSEnrollmentDetailsResponse> GetCardThreeDSDetails(string cardId,
+        public Task<ThreeDsEnrollmentDetailsResponse> GetCardThreeDSDetails(string cardId,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("cardId", cardId);
-            return ApiClient.Get<ThreeDSEnrollmentDetailsResponse>(
+            return ApiClient.Get<ThreeDsEnrollmentDetailsResponse>(
                 BuildPath(IssuingPath, CardsPath, cardId, ThreeDSEnrollmentPath),
                 SdkAuthorization(),
                 cancellationToken
@@ -99,6 +115,18 @@ namespace Checkout.Issuing
             );
         }
 
+        public Task<RenewCardResponse> RenewCard(string cardId, AbstractRenewCardRequest abstractRenewCardRequest,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("cardId", cardId, "abstractRenewCardRequest", abstractRenewCardRequest);
+            return ApiClient.Post<RenewCardResponse>(
+                BuildPath(IssuingPath, CardsPath, cardId, Renew),
+                SdkAuthorization(),
+                abstractRenewCardRequest,
+                cancellationToken
+            );
+        }
+
         public Task<Resource> RevokeCard(string cardId, RevokeCardRequest revokeCardRequest,
             CancellationToken cancellationToken = default)
         {
@@ -107,6 +135,29 @@ namespace Checkout.Issuing
                 BuildPath(IssuingPath, CardsPath, cardId, Revoke),
                 SdkAuthorization(),
                 revokeCardRequest,
+                cancellationToken
+            );
+        }
+
+        public Task<Resource> ScheduleCardRevocation(
+            ScheduleCardRevocationRequest scheduleCardRevocationRequest,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("scheduleCardRevocationRequest", scheduleCardRevocationRequest);
+            return ApiClient.Post<Resource>(
+                BuildPath(IssuingPath, CardsPath, ScheduleRevocation),
+                SdkAuthorization(),
+                scheduleCardRevocationRequest,
+                cancellationToken
+            );
+        }
+
+        public Task<Resource> DeleteScheduledRevocation(string cardId, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("cardId", cardId);
+            return ApiClient.Delete<Resource>(
+                BuildPath(IssuingPath, CardsPath, cardId, ScheduleRevocation),
+                SdkAuthorization(),
                 cancellationToken
             );
         }
