@@ -50,5 +50,6 @@
         [OAuthScope("issuing:controls-write")] IssuingControlWrite,
         [OAuthScope("issuing:transactions-read")] IssuingTransactionsRead,
         [OAuthScope("Payment Context")] PaymentContext,
+        [OAuthScope("forward")] Forward,
     }
 }

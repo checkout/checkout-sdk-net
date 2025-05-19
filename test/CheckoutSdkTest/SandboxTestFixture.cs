@@ -60,7 +60,7 @@ namespace Checkout
                             OAuthScope.Accounts, OAuthScope.SessionsApp, OAuthScope.SessionsBrowser,
                             OAuthScope.Vault, OAuthScope.PayoutsBankDetails, OAuthScope.TransfersCreate,
                             OAuthScope.TransfersView, OAuthScope.BalancesView, OAuthScope.VaultCardMetadata,
-                            OAuthScope.FinancialActions)
+                            OAuthScope.FinancialActions, OAuthScope.Forward)
                         .Environment(Environment.Sandbox)
                         //.HttpClientFactory(new CustomClientFactory("3.0"))
                         //.EnvironmentSubdomain(System.Environment.GetEnvironmentVariable("CHECKOUT_MERCHANT_SUBDOMAIN"))

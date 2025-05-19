@@ -5,6 +5,7 @@ using Checkout.Customers;
 using Checkout.Disputes;
 using Checkout.Financial;
 using Checkout.Forex;
+using Checkout.Forward;
 using Checkout.Instruments;
 using Checkout.Metadata;
 using Checkout.Payments;
@@ -62,5 +63,7 @@ namespace Checkout
         IPaymentContextsClient PaymentContextsClient();
         
         IPaymentSessionsClient PaymentSessionsClient();
+        
+        IForwardClient ForwardClient();
     }
 }
