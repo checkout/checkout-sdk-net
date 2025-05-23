@@ -5,6 +5,7 @@ using Checkout.Customers;
 using Checkout.Disputes;
 using Checkout.Financial;
 using Checkout.Forex;
+using Checkout.Forward;
 using Checkout.Instruments;
 using Checkout.Metadata;
 using Checkout.Payments;
@@ -43,6 +44,7 @@ namespace Checkout
         private readonly IIssuingClient _issuingClient;
         private readonly IPaymentContextsClient _paymentContextsClient;
         private readonly IPaymentSessionsClient _paymentSessionsClient;
+        private readonly IForwardClient _forwardClient;
 
         public CheckoutApi(CheckoutConfiguration configuration)
         {
@@ -72,6 +74,7 @@ namespace Checkout
             _issuingClient = new IssuingClient(baseApiClient, configuration);
             _paymentContextsClient = new PaymentContextsClient(baseApiClient, configuration);
             _paymentSessionsClient = new PaymentSessionsClient(baseApiClient, configuration);
+            _forwardClient = new ForwardClient(baseApiClient, configuration);
         }
 
         private static ApiClient BaseApiClient(CheckoutConfiguration configuration)
@@ -203,6 +206,11 @@ namespace Checkout
         public IPaymentSessionsClient PaymentSessionsClient()
         {
             return _paymentSessionsClient;
+        }
+
+        public IForwardClient ForwardClient()
+        {
+            return _forwardClient;
         }
     }
 }
