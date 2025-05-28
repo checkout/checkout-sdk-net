@@ -13,9 +13,7 @@ namespace Checkout.Forward.Responses
         /// <summary> The parameters of the HTTP request forwarded to the destination (Required) </summary>
         public DestinationRequest DestinationRequest { get; set; }
 
-        /// <summary>
-        ///     The date and time the forward request was created, in UTC (Required)
-        /// </summary>
+        /// <summary> The date and time the forward request was created, in UTC (Required) </summary>
         public DateTime? CreatedOn { get; set; }
 
         /// <summary> The unique reference for the forward request (Optional) </summary>
