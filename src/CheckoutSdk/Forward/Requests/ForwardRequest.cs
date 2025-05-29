@@ -14,8 +14,7 @@ namespace Checkout.Forward.Requests
         /// <summary> The parameters of the forward request (Required) </summary>
         public DestinationRequest DestinationRequest { get; set; }
 
-        /// <summary>
-        ///     The unique reference for the forward request (Optional, max 80 characters) </summary>
+        /// <summary> The unique reference for the forward request (Optional, max 80 characters) </summary>
         public string Reference { get; set; }
 
         /// <summary>

@@ -2,7 +2,7 @@ namespace Checkout.Forward.Requests.Sources
 {
     public class IdSource : AbstractSource
     {
-        /// <summary>Initializes a new instance of the IdSource class.</summary>
+        /// <summary> Initializes a new instance of the IdSource class. </summary>
         public IdSource() : base(SourceType.Id) { }
 
         /// <summary> The unique identifier of the payment instrument (Required, pattern ^(src)_(\w{26})$) </summary>

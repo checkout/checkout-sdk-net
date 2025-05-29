@@ -22,7 +22,7 @@ namespace Checkout.Payments.Contexts
 
         public UserAction? UserAction { get; set; }
 
-        public PartnerCustomerRiskData PartnerCustomerRiskData { get; set; }
+        public IList<PartnerCustomerRiskData> PartnerCustomerRiskData { get; set; }
         
         public IList<string> CustomPaymentMethodIds { get; set; }
 
