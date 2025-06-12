@@ -72,7 +72,7 @@ namespace Checkout.Payments.Request
 
         public IList<Product> Items { get; set; }
 
-        public PaymentRetryRequest Retry { get; set; }
+        public RetryRequest Retry { get; set; }
 
         public IDictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
         
