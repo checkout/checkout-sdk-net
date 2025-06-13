@@ -21,9 +21,15 @@ namespace Checkout.Disputes
 
         [EnumMember(Value = "recurring_transaction_agreement")]
         RecurringTransactionAgreement,
+        
+        [EnumMember(Value = "proof_of_delivery_or_service_date")]
+        ProofOfDeliveryOrServiceDate,
 
         [EnumMember(Value = "additional_evidence")]
         AdditionalEvidence,
+        
+        [EnumMember(Value = "compelling_evidence")]
+        CompellingEvidence,
         
         [EnumMember(Value = "arbitration_no_review")]
         ArbitrationNoReview,
