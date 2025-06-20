@@ -1,3 +1,5 @@
+using Checkout.Forward.Requests.Signatures;
+
 namespace Checkout.Forward.Requests
 {
     public class DestinationRequest
@@ -17,5 +19,10 @@ namespace Checkout.Forward.Requests
         ///     payment instrument you specified. For example, {{card_number}} (Required, max 16384 characters)
         /// </summary>
         public string Body { get; set; }
+        
+        /// <summary>
+        ///     Optional configuration to add a signature to the forwarded HTTP request (Optional).
+        /// </summary>
+        public AbstractSignature Signature { get; set; }
     }
 }
