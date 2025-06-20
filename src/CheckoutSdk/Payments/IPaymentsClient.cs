@@ -29,6 +29,12 @@ namespace Checkout.Payments
             string paymentId,
             CancellationToken cancellationToken = default);
 
+        Task<CancelAScheduledRetryResponse> CancelAScheduledRetry(
+            string paymentId,
+            CancelAScheduledRetryRequest cancelAScheduledRetryRequest,
+            string idempotencyKey = null,
+            CancellationToken cancellationToken = default);
+
         Task<CaptureResponse> CapturePayment(
             string paymentId,
             CaptureRequest captureRequest = null,

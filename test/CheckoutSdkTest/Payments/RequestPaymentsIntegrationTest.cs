@@ -249,6 +249,23 @@ namespace Checkout.Payments
             paymentResponse.HasLink("void").ShouldBeTrue();
         }
 
+        [Fact(Skip = "Use on demand")]
+        private async Task ShouldCancelAScheduleRetry()
+        {
+            var paymentResponse = await MakeCardPayment();
+            
+            var request = new CancelAScheduledRetryRequest
+            {
+                Reference = paymentResponse.Reference,
+            };
+
+            var response = await DefaultApi.PaymentsClient().CancelAScheduledRetry(paymentResponse.Id, request);
+
+            response.ShouldNotBeNull();
+            response.ActionId.ShouldNotBeNullOrEmpty();
+            response.Reference.ShouldNotBeNullOrEmpty();
+        }
+
         [Fact]
         private async Task ShouldTokenPayment()
         {

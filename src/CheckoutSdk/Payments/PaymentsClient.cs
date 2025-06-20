@@ -8,6 +8,7 @@ namespace Checkout.Payments
     public class PaymentsClient : AbstractClient, IPaymentsClient
     {
         private const string PaymentsPath = "payments";
+        private const string CancelAScheduledRetryPath = "cancellations";
 
         public PaymentsClient(
             IApiClient apiClient,
@@ -71,6 +72,19 @@ namespace Checkout.Payments
             return ApiClient.Get<ItemsResponse<PaymentAction>>(BuildPath(PaymentsPath, paymentId, "actions"),
                 SdkAuthorization(),
                 cancellationToken);
+        }
+        
+        public Task<CancelAScheduledRetryResponse> CancelAScheduledRetry(string paymentId, CancelAScheduledRetryRequest cancelAScheduledRetryRequest,
+            string idempotencyKey = null,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("paymentId",paymentId,"cancelAScheduledRetryRequest", cancelAScheduledRetryRequest);
+            return ApiClient.Post<CancelAScheduledRetryResponse>(
+                BuildPath(PaymentsPath, paymentId, CancelAScheduledRetryPath),
+                SdkAuthorization(),
+                cancelAScheduledRetryRequest,
+                cancellationToken,
+                idempotencyKey);
         }
 
         public Task<CaptureResponse> CapturePayment(
