@@ -1,4 +1,5 @@
 ﻿using Checkout.Forward.Requests;
+using Checkout.Forward.Requests.Signatures;
 using Checkout.Forward.Requests.Sources;
 using Shouldly;
 using System.Collections.Generic;
@@ -67,7 +68,14 @@ namespace Checkout.Forward
                                 }
                         },
                     Body =
-                        "{\"amount\": 1000, \"currency\": \"USD\", \"reference\": \"some_reference\", \"source\": {\"type\": \"card\", \"number\": \"{{card_number}}\", \"expiry_month\": \"{{card_expiry_month}}\", \"expiry_year\": \"{{card_expiry_year_yyyy}}\", \"name\": \"Ali Farid\"}, \"payment_type\": \"Regular\", \"authorization_type\": \"Final\", \"capture\": true, \"processing_channel_id\": \"pc_xxxxxxxxxxx\", \"risk\": {\"enabled\": false}, \"merchant_initiated\": true}"
+                        "{\"amount\": 1000, \"currency\": \"USD\", \"reference\": \"some_reference\", \"source\": {\"type\": \"card\", \"number\": \"{{card_number}}\", \"expiry_month\": \"{{card_expiry_month}}\", \"expiry_year\": \"{{card_expiry_year_yyyy}}\", \"name\": \"Ali Farid\"}, \"payment_type\": \"Regular\", \"authorization_type\": \"Final\", \"capture\": true, \"processing_channel_id\": \"pc_xxxxxxxxxxx\", \"risk\": {\"enabled\": false}, \"merchant_initiated\": true}",
+                    Signature = new DlocalSignature
+                    {
+                        DlocalParameters = new DlocalParameters
+                        {
+                            SecretKey = "9f439fe1a9f96e67b047d3c1a28c33a2e"
+                        }
+                    }
                 }
             };
         }
