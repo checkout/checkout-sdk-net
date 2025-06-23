@@ -21,7 +21,7 @@ namespace Checkout.Forward.Requests
         public string Body { get; set; }
         
         /// <summary>
-        ///     Optional configuration to add a signature to the forwarded HTTP request (Optional).
+        ///     Optional configuration to add a signature to the forwarded HTTP request. (Optional)
         /// </summary>
         public AbstractSignature Signature { get; set; }
     }
