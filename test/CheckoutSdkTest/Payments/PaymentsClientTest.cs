@@ -17,6 +17,7 @@ namespace Checkout.Payments
     public class PaymentsClientTest : UnitTestFixture
     {
         private const string PaymentsPath = "payments";
+        private const string CancelAScheduledRetryPath = "cancellations";
 
         private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.Default, ValidDefaultSk);
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
@@ -260,6 +261,29 @@ namespace Checkout.Payments
             response.ShouldNotBeNull();
             response.ShouldBeSameAs(paymentActions);
         }
+        
+        [Fact]
+        private async Task ShouldCancelAScheduledRetry()
+        {
+            var cancelAScheduledRetryRequest = new CancelAScheduledRetryRequest();
+            var cancelAScheduledRetryResponse = new CancelAScheduledRetryResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<CancelAScheduledRetryResponse>(
+                        PaymentsPath + "/payment_id/" + CancelAScheduledRetryPath,
+                        _authorization,
+                        cancelAScheduledRetryRequest,
+                        CancellationToken.None,
+                        "test"))
+                .ReturnsAsync(() => cancelAScheduledRetryResponse);
+
+            IPaymentsClient paymentsClient = new PaymentsClient(_apiClient.Object, _configuration.Object);
+
+            var response = await paymentsClient.CancelAScheduledRetry("payment_id", cancelAScheduledRetryRequest, "test");
+
+            response.ShouldNotBeNull();
+            response.ShouldBeSameAs(cancelAScheduledRetryResponse);
+        }
 
         [Fact]
         private async Task ShouldCapturePayment_Id()
@@ -304,7 +328,8 @@ namespace Checkout.Payments
             var captureResponse = new CaptureResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<CaptureResponse>(PaymentsPath + "/payment_id/captures", _authorization,
+                    apiClient.Post<CaptureResponse>(PaymentsPath + "/payment_id/captures", 
+                        _authorization,
                         captureRequest,
                         CancellationToken.None, "test"))
                 .ReturnsAsync(() => captureResponse);
