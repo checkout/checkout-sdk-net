@@ -8,6 +8,7 @@ using Checkout.Forex;
 using Checkout.Forward;
 using Checkout.Instruments;
 using Checkout.Metadata;
+using Checkout.NetworkTokens;
 using Checkout.Payments;
 using Checkout.Payments.Contexts;
 using Checkout.Payments.Hosted;
@@ -65,5 +66,7 @@ namespace Checkout
         IPaymentSessionsClient PaymentSessionsClient();
         
         IForwardClient ForwardClient();
+        
+        INetworkTokensClient NetworkTokensClient();
     }
 }

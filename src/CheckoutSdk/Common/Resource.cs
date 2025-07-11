@@ -23,6 +23,11 @@ namespace Checkout.Common
             return GetLink("upload");
         }
         
+        public Link GetCryptogramLink()
+        {
+            return GetLink("cryptogram");
+        }
+        
         public bool HasLink(string relation)
         {
             return Links.ContainsKey(relation);
