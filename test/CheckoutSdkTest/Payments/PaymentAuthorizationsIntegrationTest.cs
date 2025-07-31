@@ -100,7 +100,7 @@ namespace Checkout.Payments
                 {
                     Enabled = true
                 },
-                Authentication = new Authentication
+                Authentication = new Request.Authentication
                 {
                     PreferredExperiences = new List<PreferredExperiences>
                     {

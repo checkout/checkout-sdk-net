@@ -1,7 +1,8 @@
-﻿using Checkout.Common;
-using Checkout.Sessions;
+﻿using Checkout.Authentication.Standalone.Common.Responses;
+using Checkout.Common;
 using Newtonsoft.Json;
 using System;
+using ChallengeIndicatorType = Checkout.Common.ChallengeIndicatorType;
 
 namespace Checkout.Payments
 {
@@ -32,7 +33,7 @@ namespace Checkout.Payments
 
         public long? AuthenticationAmount { get; set; }
         
-        public ThreeDSFlowType? FlowType { get; set; }
+        public FlowType? FlowType { get; set; }
         
         public string StatusReasonCode { get; set; }
         
