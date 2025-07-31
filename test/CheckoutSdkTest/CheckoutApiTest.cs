@@ -62,7 +62,7 @@ namespace Checkout
             checkoutApi.RiskClient().ShouldNotBeNull();
             checkoutApi.ForexClient().ShouldNotBeNull();
             checkoutApi.WorkflowsClient().ShouldNotBeNull();
-            checkoutApi.SessionsClient().ShouldNotBeNull();
+            checkoutApi.AuthenticationClient().ShouldNotBeNull();
             checkoutApi.AccountsClient().ShouldNotBeNull();
             checkoutApi.PaymentLinksClient().ShouldNotBeNull();
             checkoutApi.HostedPaymentsClient().ShouldNotBeNull();

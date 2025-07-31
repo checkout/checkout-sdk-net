@@ -1,6 +1,7 @@
+using Checkout.Authentication.Standalone.Common.MerchantRiskInfo;
 using Checkout.Common;
 using Checkout.Payments.Contexts;
-using Checkout.Sessions;
+
 
 namespace Checkout.Payments
 {
@@ -18,7 +19,7 @@ namespace Checkout.Payments
 
         public string FromAddressZip { get; set; }
 
-        public DeliveryTimeframe? Timeframe { get; set; }
+        public DeliveryTimeframeType? Timeframe { get; set; }
 
         public PaymentContextsShippingMethod? Method { get; set; }
 

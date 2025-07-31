@@ -1,4 +1,5 @@
 using Checkout.Accounts;
+using Checkout.Authentication;
 using Checkout.Balances;
 using Checkout.Issuing;
 using Checkout.Customers;
@@ -16,7 +17,6 @@ using Checkout.Payments.Links;
 using Checkout.Payments.Sessions;
 using Checkout.Reports;
 using Checkout.Risk;
-using Checkout.Sessions;
 using Checkout.Tokens;
 using Checkout.Transfers;
 using Checkout.Workflows;
@@ -41,7 +41,7 @@ namespace Checkout
 
         IWorkflowsClient WorkflowsClient();
 
-        ISessionsClient SessionsClient();
+        IAuthenticationClient AuthenticationClient();
 
         IAccountsClient AccountsClient();
 
