@@ -1,7 +1,6 @@
+using Checkout.Authentication.Standalone.Common.MerchantRiskInfo;
 using Checkout.Common;
-using Checkout.Payments.Request.Source.Apm;
 using Checkout.Payments.Request.Source.Contexts;
-using Checkout.Sessions;
 using Shouldly;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -151,7 +150,7 @@ namespace Checkout.Payments.Contexts
                     Address = GetAddress(),
                     Phone = GetPhone(),
                     FromAddressZip = "43434",
-                    Timeframe = DeliveryTimeframe.ElectronicDelivery,
+                    Timeframe = DeliveryTimeframeType.ElectronicDelivery,
                     Method = PaymentContextsShippingMethod.Digital,
                     Delay = 0
                 },

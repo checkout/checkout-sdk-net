@@ -1,4 +1,5 @@
 using Checkout.Accounts;
+using Checkout.Authentication;
 using Checkout.Balances;
 using Checkout.Issuing;
 using Checkout.Customers;
@@ -16,7 +17,6 @@ using Checkout.Payments.Links;
 using Checkout.Payments.Sessions;
 using Checkout.Reports;
 using Checkout.Risk;
-using Checkout.Sessions;
 using Checkout.Tokens;
 using Checkout.Transfers;
 using Checkout.Workflows;
@@ -33,7 +33,7 @@ namespace Checkout
         private readonly IRiskClient _riskClient;
         private readonly IForexClient _forexClient;
         private readonly IWorkflowsClient _workflowsClient;
-        private readonly ISessionsClient _sessionsClient;
+        private readonly IAuthenticationClient _authenticationClient;
         private readonly IAccountsClient _accountsClient;
         private readonly IPaymentLinksClient _paymentLinksClient;
         private readonly IHostedPaymentsClient _hostedPaymentsClient;
@@ -59,7 +59,7 @@ namespace Checkout
             _riskClient = new RiskClient(baseApiClient, configuration);
             _forexClient = new ForexClient(baseApiClient, configuration);
             _workflowsClient = new WorkflowsClient(baseApiClient, configuration);
-            _sessionsClient = new SessionsClient(baseApiClient, configuration);
+            _authenticationClient = new AuthenticationClient(baseApiClient, configuration);
             _accountsClient = new AccountsClient(
                 baseApiClient,
                 FilesApiClient(configuration),
@@ -151,9 +151,9 @@ namespace Checkout
             return _workflowsClient;
         }
 
-        public ISessionsClient SessionsClient()
+        public IAuthenticationClient AuthenticationClient()
         {
-            return _sessionsClient;
+            return _authenticationClient;
         }
 
         public IAccountsClient AccountsClient()
