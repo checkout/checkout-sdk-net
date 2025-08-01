@@ -53,5 +53,11 @@ namespace Checkout.Sessions
         public ChallengeIndicatorType? ChallengeIndicator { get; set; }
 
         public Optimization Optimization { get; set; }
+        
+        public Ds Ds { get; set; }
+        
+        public DsPublicKeys Certificates { get; set; }
+        
+        public TransactionType? TransactionType { get; set; }
     }
 }
