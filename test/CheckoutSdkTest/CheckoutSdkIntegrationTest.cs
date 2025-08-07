@@ -72,7 +72,7 @@ namespace Checkout
             public HttpClient CreateClient()
             {
                 var httpClient = new HttpClient(new CustomMessageHandler());
-                httpClient.Timeout = TimeSpan.FromSeconds(2);
+                httpClient.Timeout = TimeSpan.FromSeconds(60);
                 return httpClient;
             }
         }
