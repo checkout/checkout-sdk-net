@@ -6,9 +6,13 @@ using Xunit;
 
 namespace Checkout
 {
+    [Collection("NonParallel")]
     public sealed class LogProviderTests : IDisposable
     {
         private readonly ILoggerFactory _loggerFactory;
+        
+        private static readonly object RandLock = new object();
+        private static readonly Random Random = new Random();
 
         public LogProviderTests()
         {
@@ -25,14 +29,20 @@ namespace Checkout
         public async Task ShouldCreateASingleLoggerInstanceForMultipleConcurrentRequests()
         {
             LogProvider.SetLogFactory(_loggerFactory);
-            Type[] loggerTypes = new[] { typeof(LogProviderTests), typeof(AnotherTestClass), typeof(NoInitializedType) };
+            Type[] loggerTypes = { typeof(LogProviderTests), typeof(AnotherTestClass), typeof(NoInitializedType) };
+
             Task<ILogger>[] createLoggerTasks = Enumerable.Range(1, 50)
                 .Select(async index =>
                 {
-                    int randomDelayMs = new Random().Next(1, 5);
-                    await Task.Delay(randomDelayMs);
+                    int delay;
+                    lock (RandLock)
+                    {
+                        delay = Random.Next(1, 5);
+                    }
+                    await Task.Delay(delay);
                     return await Task.FromResult(LogProvider.GetLogger(loggerTypes[index % loggerTypes.Length]));
                 }).ToArray();
+
             ILogger[] loggers = await Task.WhenAll(createLoggerTasks);
             Assert.Equal(loggerTypes.Length, loggers.Distinct().Count());
         }
@@ -53,6 +63,66 @@ namespace Checkout
         public void ShouldNotThrowExceptionWhenSetLogFactoryWithNullParameter()
         {
             Assert.Null(Record.Exception(() => LogProvider.SetLogFactory(null)));
+        }
+        
+        [Fact]
+        public void ShouldReplaceLoggerFactoryCorrectly()
+        {
+            var loggerBefore = LogProvider.GetLogger(typeof(LogProviderTests));
+
+            var newFactory = LoggerFactory.Create(builder => builder.AddFilter(_ => false));
+            LogProvider.SetLogFactory(newFactory);
+
+            var loggerAfter = LogProvider.GetLogger(typeof(LogProviderTests));
+
+            Assert.NotSame(loggerBefore, loggerAfter);
+        }
+        
+        [Fact]
+        public void ShouldClearLoggersWhenFactoryChanges()
+        {
+            LogProvider.SetLogFactory(_loggerFactory);
+            var logger1 = LogProvider.GetLogger(typeof(LogProviderTests));
+
+            var newFactory = new LoggerFactory();
+            LogProvider.SetLogFactory(newFactory);
+            var logger2 = LogProvider.GetLogger(typeof(LogProviderTests));
+
+            Assert.NotSame(logger1, logger2);
+        }
+        
+        [Fact]
+        public void ShouldReturnSameLoggerOnMultipleCalls()
+        {
+            LogProvider.SetLogFactory(_loggerFactory);
+
+            var logger1 = LogProvider.GetLogger(typeof(LogProviderTests));
+            var logger2 = LogProvider.GetLogger(typeof(LogProviderTests));
+
+            Assert.Same(logger1, logger2);
+        }
+        
+        [Fact]
+        public async Task ShouldNotThrowWhenCallingSetLogFactoryConcurrently()
+        {
+            var tasks = Enumerable.Range(0, 10).Select(_ => Task.Run(() =>
+            {
+                LogProvider.SetLogFactory(new LoggerFactory());
+            }));
+
+            var exception = await Record.ExceptionAsync(async () => await Task.WhenAll(tasks));
+
+            Assert.Null(exception);
+        }
+        
+        [Fact]
+        public void ShouldAllowMultipleNullLoggerFactoryAssignments()
+        {
+            LogProvider.SetLogFactory(null);
+            LogProvider.SetLogFactory(null);
+            var logger = LogProvider.GetLogger(typeof(LogProviderTests));
+    
+            Assert.NotNull(logger);
         }
 
         public void Dispose()
