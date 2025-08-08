@@ -61,7 +61,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Responses.RequestASess
         /// [Required]
         /// [ 0 .. 9223372036854776000 ]
         /// </summary>
-        public int Amount { get; set; }
+        public long Amount { get; set; }
 
         /// <summary>
         /// The three-letter ISO currency code
@@ -120,7 +120,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Responses.RequestASess
         /// Specifies if the session was completed.
         /// [Optional]
         /// </summary>
-        public bool Completed { get; set; }
+        public bool? Completed { get; set; }
 
         /// <summary>
         /// Additional information about the Cardholder's account.
@@ -147,7 +147,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Responses.RequestASess
         /// [Optional]
         /// <= 50
         /// </summary>
-        public TransactionType TransactionType { get; set; } = TransactionType.GoodsService;
+        public TransactionType? TransactionType { get; set; } = Common.TransactionType.GoodsService;
 
         /// <summary>
         /// Details related to the Session source. This property should always be in the response, unless a card source

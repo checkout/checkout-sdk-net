@@ -13,7 +13,7 @@ namespace Checkout.Authentication.Standalone.Common.AccountInfo
         /// [Optional]
         /// [ 0 .. 9999 ]
         /// </summary>
-        public double PurchaseCount { get; set; }
+        public long? PurchaseCount { get; set; }
 
         /// <summary>
         /// The length of time that the payment account was enrolled in the cardholder's account.
@@ -26,7 +26,7 @@ namespace Checkout.Authentication.Standalone.Common.AccountInfo
         /// [Optional]
         /// [ 0 .. 999 ]
         /// </summary>
-        public double AddCardAttempts { get; set; }
+        public long? AddCardAttempts { get; set; }
 
         /// <summary>
         /// Indicates when the shipping address used for this transaction was first used.
@@ -38,13 +38,13 @@ namespace Checkout.Authentication.Standalone.Common.AccountInfo
         /// Indicates if the Cardholder Name on the account is identical to the shipping Name used for this transaction.
         /// [Optional]
         /// </summary>
-        public bool AccountNameMatchesShippingName { get; set; }
+        public bool? AccountNameMatchesShippingName { get; set; }
 
         /// <summary>
         /// Indicates whether suspicious activity on the cardholder account has been observed.
         /// [Optional]
         /// </summary>
-        public bool SuspiciousAccountActivity { get; set; }
+        public bool? SuspiciousAccountActivity { get; set; }
 
         /// <summary>
         /// The number of transactions (successful and abandoned) for the cardholder account across all payment accounts
@@ -52,7 +52,7 @@ namespace Checkout.Authentication.Standalone.Common.AccountInfo
         /// [Optional]
         /// [ 0 .. 999 ]
         /// </summary>
-        public double TransactionsToday { get; set; }
+        public long? TransactionsToday { get; set; }
 
         /// <summary>
         /// [DEPRECATED]
@@ -77,7 +77,7 @@ namespace Checkout.Authentication.Standalone.Common.AccountInfo
         /// [Optional]
         /// <date-time>
         /// </summary>
-        public DateTime AccountChange { get; set; }
+        public DateTime? AccountChange { get; set; }
 
         /// <summary>
         /// The amount of time since the cardholder’s account information with the 3DS Requestor was last changed.
@@ -94,7 +94,7 @@ namespace Checkout.Authentication.Standalone.Common.AccountInfo
         /// [Optional]
         /// <date-time>
         /// </summary>
-        public DateTime AccountDate { get; set; }
+        public DateTime? AccountDate { get; set; }
 
         /// <summary>
         /// The UTC date and time the cardholder’s account with the 3DS Requestor was last reset or had a password
@@ -102,7 +102,7 @@ namespace Checkout.Authentication.Standalone.Common.AccountInfo
         /// [Optional]
         /// <date-time>
         /// </summary>
-        public DateTime AccountPasswordChange { get; set; }
+        public DateTime? AccountPasswordChange { get; set; }
 
         /// <summary>
         /// The amount of time since the cardholder’s account with the 3DS Requestor was last reset or had a password
@@ -119,7 +119,7 @@ namespace Checkout.Authentication.Standalone.Common.AccountInfo
         /// <= 3
         /// <= 999
         /// </summary>
-        public int TransactionsPerYear { get; set; }
+        public long? TransactionsPerYear { get; set; }
 
         /// <summary>
         /// The UTC date and time the payment account was enrolled in the cardholder’s account with the 3DS Requestor,
@@ -127,7 +127,7 @@ namespace Checkout.Authentication.Standalone.Common.AccountInfo
         /// [Optional]
         /// <date-time>
         /// </summary>
-        public DateTime PaymentAccountAge { get; set; }
+        public DateTime? PaymentAccountAge { get; set; }
 
         /// <summary>
         /// The UTC date and time the shipping address used for the transaction was first used with the 3DS Requestor,
@@ -135,7 +135,7 @@ namespace Checkout.Authentication.Standalone.Common.AccountInfo
         /// [Optional]
         /// <date-time>
         /// </summary>
-        public DateTime ShippingAddressUsage { get; set; }
+        public DateTime? ShippingAddressUsage { get; set; }
 
         /// <summary>
         /// The type of account, in the case of a card product with multiple accounts.

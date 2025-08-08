@@ -1,3 +1,5 @@
+using Checkout.Common;
+
 namespace Checkout.Authentication.Standalone.Common.Responses.Card.Metadata
 {
     /// <summary>
@@ -28,7 +30,7 @@ namespace Checkout.Authentication.Standalone.Common.Responses.Card.Metadata
         /// The two letter alpha country code of the card issuer.
         /// [Optional]
         /// </summary>
-        public string IssuerCountry { get; set; }
+        public CountryCode? IssuerCountry { get; set; }
 
         /// <summary>
         /// The issuer/card scheme product identifier.

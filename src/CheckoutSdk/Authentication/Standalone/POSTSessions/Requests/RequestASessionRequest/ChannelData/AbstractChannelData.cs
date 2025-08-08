@@ -10,7 +10,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// Default: "browser" Indicates the type of channel interface being used to initiate the transaction.
         /// [Required]
         /// </summary>
-        public ChannelDataType? Channel;
+        public ChannelDataType Channel;
 
         protected AbstractChannelData(ChannelDataType channel)
         {

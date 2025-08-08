@@ -16,6 +16,6 @@ namespace Checkout.Authentication.Standalone.PUTSessionsIdCollectData.Requests.M
         /// <summary>
         /// [Required]
         /// </summary>
-        public RequestType? RequestType { get; set; }
+        public RequestType RequestType { get; set; }
     }
 }

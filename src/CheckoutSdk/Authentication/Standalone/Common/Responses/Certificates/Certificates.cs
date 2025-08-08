@@ -31,6 +31,6 @@ namespace Checkout.Authentication.Standalone.Common.Responses.Certificates
         /// server (ACS). Each array element is a Base64 URL-encoded DER-encoded X.509 certificate.
         /// [Optional]
         /// </summary>
-        public IList<object> CaPublicAll { get; set; }
+        public IList<string> CaPublicAll { get; set; }
     }
 }

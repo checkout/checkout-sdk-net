@@ -59,14 +59,14 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Responses.RequestASess
         /// Indicates the scheme this authentication is carried out against
         /// [Required]
         /// </summary>
-        public SchemeType? Scheme { get; set; }
+        public SchemeType Scheme { get; set; }
 
         /// <summary>
         /// The amount in the minor currency.
         /// [Required]
         /// [ 0 .. 9223372036854776000 ]
         /// </summary>
-        public int Amount { get; set; }
+        public long Amount { get; set; }
 
         /// <summary>
         /// The three-letter ISO currency code
@@ -111,14 +111,14 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Responses.RequestASess
         /// Indicates whether this session has been completed
         /// [Optional]
         /// </summary>
-        public bool Completed { get; set; }
+        public bool? Completed { get; set; }
 
         /// <summary>
         /// Indicates whether this session involved a challenge. This will only be set after communication with the
         /// scheme is finished.
         /// [Optional]
         /// </summary>
-        public bool Challenged { get; set; }
+        public bool? Challenged { get; set; }
 
         /// <summary>
         /// Public certificates specific to a Directory Server (DS) for encrypting device data and verifying ACS signed
@@ -143,7 +143,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Responses.RequestASess
         /// Whether the authentication was successful. This will only be set if the Session is in a final state
         /// [Optional]
         /// </summary>
-        public bool Approved { get; set; }
+        public bool? Approved { get; set; }
 
         /// <summary>
         /// Additional information about the Cardholder's account.
@@ -166,11 +166,11 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Responses.RequestASess
         public string Reference { get; set; }
 
         /// <summary>
-        /// Default:  "goods_service" Identifies the type of transaction being authenticated
+        /// Default: "goods_service" Identifies the type of transaction being authenticated
         /// [Optional]
         /// <= 50
         /// </summary>
-        public TransactionType TransactionType { get; set; } = TransactionType.GoodsService;
+        public TransactionType? TransactionType { get; set; } = Common.TransactionType.GoodsService;
 
         /// <summary>
         /// Specifies which action to take in order to complete the session.
@@ -287,7 +287,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Responses.RequestASess
         /// [Optional]
         /// <date-time>
         /// </summary>
-        public DateTime AuthenticationDate { get; set; }
+        public DateTime? AuthenticationDate { get; set; }
 
         /// <summary>
         /// Details related to exemption present in 3DS flow

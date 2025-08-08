@@ -42,14 +42,14 @@ namespace Checkout.Authentication.Standalone.PUTSessionsIdIssuerFingerprint.Resp
         /// Indicates the scheme this authentication is carried out against
         /// [Required]
         /// </summary>
-        public SchemeType? Scheme { get; set; }
+        public SchemeType Scheme { get; set; }
 
         /// <summary>
         /// The amount in the minor currency.
         /// [Required]
         /// [ 0 .. 9223372036854776000 ]
         /// </summary>
-        public int Amount { get; set; }
+        public long Amount { get; set; }
 
         /// <summary>
         /// The three-letter ISO currency code
@@ -74,7 +74,7 @@ namespace Checkout.Authentication.Standalone.PUTSessionsIdIssuerFingerprint.Resp
         /// Indicates the status of the session
         /// [Required]
         /// </summary>
-        public StatusType? Status { get; set; }
+        public StatusType Status { get; set; }
 
         /// <summary>
         /// The protocol version number of the specification used by the API for authentication
@@ -97,14 +97,14 @@ namespace Checkout.Authentication.Standalone.PUTSessionsIdIssuerFingerprint.Resp
         /// Indicates whether this session has been completed
         /// [Optional]
         /// </summary>
-        public bool Completed { get; set; }
+        public bool? Completed { get; set; }
 
         /// <summary>
         /// Indicates whether this session involved a challenge. This will only be set after communication with the
         /// scheme is finished.
         /// [Optional]
         /// </summary>
-        public bool Challenged { get; set; }
+        public bool? Challenged { get; set; }
 
         /// <summary>
         /// When the Session is unavailable this will point to the reason it is so.
@@ -122,7 +122,7 @@ namespace Checkout.Authentication.Standalone.PUTSessionsIdIssuerFingerprint.Resp
         /// Whether the authentication was successful. This will only be set if the Session is in a final state
         /// [Optional]
         /// </summary>
-        public bool Approved { get; set; }
+        public bool? Approved { get; set; }
 
         /// <summary>
         /// Additional information about the Cardholder's account.
@@ -149,7 +149,7 @@ namespace Checkout.Authentication.Standalone.PUTSessionsIdIssuerFingerprint.Resp
         /// [Optional]
         /// <= 50
         /// </summary>
-        public TransactionType TransactionType { get; set; } = TransactionType.GoodsService;
+        public TransactionType? TransactionType { get; set; } = Common.TransactionType.GoodsService;
 
         /// <summary>
         /// Details of a previous transaction

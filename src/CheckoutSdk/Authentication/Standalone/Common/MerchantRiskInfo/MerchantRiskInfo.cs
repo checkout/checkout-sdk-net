@@ -1,3 +1,4 @@
+using Checkout.Common;
 using System;
 
 namespace Checkout.Authentication.Standalone.Common.MerchantRiskInfo
@@ -26,13 +27,13 @@ namespace Checkout.Authentication.Standalone.Common.MerchantRiskInfo
         /// date.
         /// [Optional]
         /// </summary>
-        public bool IsPreorder { get; set; }
+        public bool? IsPreorder { get; set; }
 
         /// <summary>
         /// Indicates whether the cardholder is reordering previously purchased merchandise.
         /// [Optional]
         /// </summary>
-        public bool IsReorder { get; set; }
+        public bool? IsReorder { get; set; }
 
         /// <summary>
         /// Indicates the shipping method chosen for the transaction. Please choose an option that accurately describes
@@ -59,7 +60,7 @@ namespace Checkout.Authentication.Standalone.Common.MerchantRiskInfo
         /// [Optional]
         /// <date-time>
         /// </summary>
-        public DateTime PreOrderDate { get; set; }
+        public DateTime? PreOrderDate { get; set; }
 
         /// <summary>
         /// The total purchase amount, in major units. For example, the major unit amount for a gift card purchase of
@@ -75,7 +76,7 @@ namespace Checkout.Authentication.Standalone.Common.MerchantRiskInfo
         /// [Optional]
         /// 3 characters
         /// </summary>
-        public string GiftCardCurrency { get; set; }
+        public Currency? GiftCardCurrency { get; set; }
 
         /// <summary>
         /// The total number of individual prepaid cards, gift cards, or gift codes purchased. Only applicable for

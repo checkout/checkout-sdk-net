@@ -81,14 +81,13 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// The name of the cardholder. Any special characters will be replaced.
         /// [Optional]
         /// [ 2 .. 45 ] characters
-        /// [ 2 .. 45 ]
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Default:  false This must be set to true for authentications that use stored card details
+        /// Default: false This must be set to true for authentications that use stored card details
         /// [Optional]
         /// </summary>
-        public bool Stored { get; set; } = false;
+        public bool? Stored { get; set; } = false;
     }
 }
