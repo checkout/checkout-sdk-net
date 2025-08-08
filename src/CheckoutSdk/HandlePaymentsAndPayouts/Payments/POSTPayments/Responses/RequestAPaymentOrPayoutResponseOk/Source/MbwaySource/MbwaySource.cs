@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.MbwaySource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    MbwaySource
 {
     /// <summary>
     /// mbway source Class
@@ -6,13 +7,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class MbwaySource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the MbwaySource class.
         /// </summary>
         public MbwaySource() : base(SourceType.Mbway)
         {
         }
-
     }
 }

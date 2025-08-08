@@ -1,4 +1,4 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source
 {
     /// <summary>
     /// Abstract source Class
@@ -6,13 +6,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public abstract class AbstractSource
     {
+        public SourceType? Type;
 
-        public AbstractSourceType? Type;
-
-        protected AbstractSource(AbstractSourceType type)
+        protected AbstractSource(SourceType type)
         {
             Type = type;
         }
-
     }
 }

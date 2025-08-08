@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.OctopusSource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    OctopusSource
 {
     /// <summary>
     /// octopus source Class
@@ -6,13 +7,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class OctopusSource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the OctopusSource class.
         /// </summary>
         public OctopusSource() : base(SourceType.Octopus)
         {
         }
-
     }
 }

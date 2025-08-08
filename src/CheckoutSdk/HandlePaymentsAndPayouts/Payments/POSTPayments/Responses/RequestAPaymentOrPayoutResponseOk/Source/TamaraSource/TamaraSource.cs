@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.TamaraSource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    TamaraSource
 {
     /// <summary>
     /// tamara source Class
@@ -6,13 +7,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class TamaraSource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the TamaraSource class.
         /// </summary>
         public TamaraSource() : base(SourceType.Tamara)
         {
         }
-
     }
 }

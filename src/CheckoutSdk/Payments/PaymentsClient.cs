@@ -1,3 +1,4 @@
+using Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.UnreferencedRefundRequest;
 using Checkout.Payments.Request;
 using Checkout.Payments.Response;
 using System.Threading;
@@ -17,6 +18,19 @@ namespace Checkout.Payments
         }
 
         public Task<PaymentResponse> RequestPayment(PaymentRequest paymentRequest,
+            string idempotencyKey = null,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("paymentRequest", paymentRequest);
+            return ApiClient.Post<PaymentResponse>(
+                PaymentsPath,
+                SdkAuthorization(),
+                paymentRequest,
+                cancellationToken,
+                idempotencyKey);
+        }
+        
+        public Task<PaymentResponse> RequestPayment(UnreferencedRefundRequest paymentRequest,
             string idempotencyKey = null,
             CancellationToken cancellationToken = default)
         {

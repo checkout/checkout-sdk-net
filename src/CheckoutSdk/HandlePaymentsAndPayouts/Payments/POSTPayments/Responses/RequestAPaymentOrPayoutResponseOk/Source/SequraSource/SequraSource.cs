@@ -1,4 +1,4 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.SequraSource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.SequraSource
 {
     /// <summary>
     /// sequra source Class

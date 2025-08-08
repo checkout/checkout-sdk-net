@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.StcpaySource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    StcpaySource
 {
     /// <summary>
     /// stcpay source Class
@@ -6,13 +7,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class StcpaySource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the StcpaySource class.
         /// </summary>
         public StcpaySource() : base(SourceType.Stcpay)
         {
         }
-
     }
 }

@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.FawrySource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    FawrySource
 {
     /// <summary>
     /// fawry source Class
@@ -6,7 +7,6 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class FawrySource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the FawrySource class.
         /// </summary>
@@ -26,6 +26,5 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// [Optional]
         /// </summary>
         public string ReferenceNumber { get; set; }
-
     }
 }

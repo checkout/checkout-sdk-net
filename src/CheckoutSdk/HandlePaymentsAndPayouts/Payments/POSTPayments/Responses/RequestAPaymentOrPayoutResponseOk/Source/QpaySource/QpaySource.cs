@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.QpaySource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    QpaySource
 {
     /// <summary>
     /// qpay source Class
@@ -6,7 +7,6 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class QpaySource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the QpaySource class.
         /// </summary>
@@ -43,6 +43,5 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// [Optional]
         /// </summary>
         public string ConfirmationId { get; set; }
-
     }
 }

@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk
 {
     public enum StatusType
     {
@@ -18,6 +18,5 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
 
         [EnumMember(Value = "Retry Scheduled")]
         RetryScheduled,
-
     }
 }

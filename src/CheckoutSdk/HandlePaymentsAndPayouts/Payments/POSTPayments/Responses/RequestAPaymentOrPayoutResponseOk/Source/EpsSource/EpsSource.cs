@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.EpsSource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    EpsSource
 {
     /// <summary>
     /// eps source Class
@@ -6,7 +7,6 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class EpsSource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the EpsSource class.
         /// </summary>
@@ -47,7 +47,6 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// The account holder details
         /// [Optional]
         /// </summary>
-        public AccountHolder AccountHolder { get; set; }
-
+        public RequestAPaymentOrPayoutResponse201.Source.EpsSource.AccountHolder AccountHolder { get; set; }
     }
 }

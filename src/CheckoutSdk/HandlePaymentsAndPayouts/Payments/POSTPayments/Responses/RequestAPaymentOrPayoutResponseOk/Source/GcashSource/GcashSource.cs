@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.GcashSource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    GcashSource
 {
     /// <summary>
     /// gcash source Class
@@ -6,13 +7,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class GcashSource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the GcashSource class.
         /// </summary>
         public GcashSource() : base(SourceType.Gcash)
         {
         }
-
     }
 }

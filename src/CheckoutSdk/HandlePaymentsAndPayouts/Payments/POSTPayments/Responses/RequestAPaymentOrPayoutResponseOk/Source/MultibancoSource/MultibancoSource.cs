@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.MultibancoSource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    MultibancoSource
 {
     /// <summary>
     /// multibanco source Class
@@ -6,7 +7,6 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class MultibancoSource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the MultibancoSource class.
         /// </summary>
@@ -25,6 +25,5 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// [Optional]
         /// </summary>
         public string ServiceSupplierId { get; set; }
-
     }
 }

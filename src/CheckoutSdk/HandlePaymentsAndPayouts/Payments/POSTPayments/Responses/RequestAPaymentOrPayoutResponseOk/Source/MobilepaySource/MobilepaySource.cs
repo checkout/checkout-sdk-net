@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.MobilepaySource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    MobilepaySource
 {
     /// <summary>
     /// mobilepay source Class
@@ -6,13 +7,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class MobilepaySource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the MobilepaySource class.
         /// </summary>
         public MobilepaySource() : base(SourceType.Mobilepay)
         {
         }
-
     }
 }

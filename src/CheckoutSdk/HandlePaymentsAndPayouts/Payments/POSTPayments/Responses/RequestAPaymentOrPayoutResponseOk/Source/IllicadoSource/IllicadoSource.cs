@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.IllicadoSource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    IllicadoSource
 {
     /// <summary>
     /// illicado source Class
@@ -6,13 +7,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class IllicadoSource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the IllicadoSource class.
         /// </summary>
         public IllicadoSource() : base(SourceType.Illicado)
         {
         }
-
     }
 }

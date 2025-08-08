@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.IdealSource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    IdealSource
 {
     /// <summary>
     /// ideal source Class
@@ -6,7 +7,6 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class IdealSource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the IdealSource class.
         /// </summary>
@@ -44,6 +44,5 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// [Optional]
         /// </summary>
         public string AccountHolder { get; set; }
-
     }
 }

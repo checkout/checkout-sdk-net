@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Subscription
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.
+    Subscription
 {
     /// <summary>
     /// subscription
@@ -6,13 +7,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class Subscription
     {
-
         /// <summary>
         /// The ID or reference linking a series of recurring payments together.
         /// [Optional]
         /// <= 50
         /// </summary>
         public string Id { get; set; }
-
     }
 }

@@ -4,7 +4,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// Request a payment or payout Response 202
     /// Payment asynchronous or further action required
     /// </summary>
-    public class RequestAPaymentOrPayoutResponse202
+    public class RequestAPaymentOrPayoutResponse
     {
 
     }

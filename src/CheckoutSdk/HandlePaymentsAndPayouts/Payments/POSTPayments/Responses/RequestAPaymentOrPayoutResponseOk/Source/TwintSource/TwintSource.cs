@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.TwintSource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    TwintSource
 {
     /// <summary>
     /// twint source Class
@@ -6,13 +7,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class TwintSource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the TwintSource class.
         /// </summary>
         public TwintSource() : base(SourceType.Twint)
         {
         }
-
     }
 }

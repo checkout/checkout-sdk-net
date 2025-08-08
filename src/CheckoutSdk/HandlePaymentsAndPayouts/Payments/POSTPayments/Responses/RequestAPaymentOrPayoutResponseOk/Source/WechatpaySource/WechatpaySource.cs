@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.WechatpaySource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    WechatpaySource
 {
     /// <summary>
     /// wechatpay source Class
@@ -6,13 +7,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class WechatpaySource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the WechatpaySource class.
         /// </summary>
         public WechatpaySource() : base(SourceType.Wechatpay)
         {
         }
-
     }
 }

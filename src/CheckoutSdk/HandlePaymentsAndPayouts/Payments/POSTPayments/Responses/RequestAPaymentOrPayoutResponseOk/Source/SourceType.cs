@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source
 {
     public enum SourceType
     {
@@ -80,7 +80,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         Postfinance,
 
         [EnumMember(Value = "p24")]
-        PTwoFour,
+        P24,
 
         [EnumMember(Value = "qpay")]
         Qpay,
@@ -126,6 +126,5 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
 
         [EnumMember(Value = "PaymentResponseSource")]
         PaymentResponseSource,
-
     }
 }

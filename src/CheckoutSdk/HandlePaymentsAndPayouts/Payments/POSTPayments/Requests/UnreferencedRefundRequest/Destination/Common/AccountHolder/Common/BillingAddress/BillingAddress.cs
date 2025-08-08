@@ -36,7 +36,6 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.Unref
         /// The address state.
         /// [Optional]
         /// [ 2 .. 3 ] characters
-        /// [ 2 .. 3 ]
         /// </summary>
         public string State { get; set; }
 

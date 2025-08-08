@@ -27,8 +27,6 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.Unref
         /// The network token's expiration month.
         /// [Required]
         /// [ 1 .. 2 ] characters  >= 1
-        /// [ 1 .. 2 ] characters
-        /// [ 1 .. 2 ]
         /// >= 1
         /// </summary>
         public int ExpiryMonth { get; set; }

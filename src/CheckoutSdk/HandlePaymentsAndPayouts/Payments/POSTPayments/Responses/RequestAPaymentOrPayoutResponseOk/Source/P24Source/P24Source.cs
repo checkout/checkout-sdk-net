@@ -1,23 +1,24 @@
 namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
-    SepaSource
+    P24Source
 {
     /// <summary>
-    /// sepa source Class
+    /// p24 source Class
     /// The source of the payment
     /// </summary>
-    public class SepaSource : AbstractSource
+    public class P24Source : AbstractSource
     {
         /// <summary>
         /// Initializes a new instance of the SepaSource class.
         /// </summary>
-        public SepaSource() : base(SourceType.Sepa)
+        public P24Source() : base(SourceType.P24)
         {
         }
 
         /// <summary>
-        /// The instrument ID
-        /// [Required]
+        /// P24-generated payment descriptor, which contains the requested billing descriptor or the merchant's default
+        /// descriptor (subject to truncation).
+        /// [Optional]
         /// </summary>
-        public string Id { get; set; }
+        public string P24Descriptor { get; set; }
     }
 }

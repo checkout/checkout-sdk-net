@@ -27,7 +27,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.Unref
         /// <summary>
         /// The card's expiration month.
         /// [Required]
-        /// [ 1 .. 2 ] characters
+        /// [ 1 .. 2 ] characters [ 1 .. 12 ]
         /// </summary>
         public int ExpiryMonth { get; set; }
 

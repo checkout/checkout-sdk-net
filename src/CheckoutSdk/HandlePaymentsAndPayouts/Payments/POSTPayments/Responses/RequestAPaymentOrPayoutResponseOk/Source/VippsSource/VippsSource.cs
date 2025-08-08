@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.VippsSource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    VippsSource
 {
     /// <summary>
     /// vipps source Class
@@ -6,13 +7,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class VippsSource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the VippsSource class.
         /// </summary>
         public VippsSource() : base(SourceType.Vipps)
         {
         }
-
     }
 }

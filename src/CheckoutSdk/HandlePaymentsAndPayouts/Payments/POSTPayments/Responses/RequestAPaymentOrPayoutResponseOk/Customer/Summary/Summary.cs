@@ -1,3 +1,5 @@
+using System;
+
 namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Customer.
     Summary
 {
@@ -12,33 +14,33 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// [Optional]
         /// <date>
         /// </summary>
-        public string RegistrationDate { get; set; }
+        public DateTime? RegistrationDate { get; set; }
 
         /// <summary>
         /// The date of the customer's first transaction.
         /// [Optional]
         /// <date>
         /// </summary>
-        public string FirstTransactionDate { get; set; }
+        public DateTime? FirstTransactionDate { get; set; }
 
         /// <summary>
         /// The date of the customer's last payment.
         /// [Optional]
         /// <date>
         /// </summary>
-        public string LastPaymentDate { get; set; }
+        public DateTime? LastPaymentDate { get; set; }
 
         /// <summary>
         /// The total number of orders made by the customer.
         /// [Optional]
         /// </summary>
-        public int TotalOrderCount { get; set; }
+        public int? TotalOrderCount { get; set; }
 
         /// <summary>
         /// The amount of the customer's last payment.
         /// [Optional]
         /// </summary>
-        public double LastPaymentAmount { get; set; }
+        public long? LastPaymentAmount { get; set; }
 
         /// <summary>
         /// Specifies whether the customer is a premium customer.
@@ -62,6 +64,6 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// The lifetime value is an indicator of how valuable the relationship with the customer is to your company.
         /// [Optional]
         /// </summary>
-        public double LifetimeValue { get; set; }
+        public long? LifetimeValue { get; set; }
     }
 }

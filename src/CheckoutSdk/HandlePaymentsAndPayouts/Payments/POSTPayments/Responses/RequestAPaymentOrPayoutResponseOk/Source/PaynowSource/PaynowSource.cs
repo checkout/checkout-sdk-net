@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.PaynowSource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    PaynowSource
 {
     /// <summary>
     /// paynow source Class
@@ -6,13 +7,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class PaynowSource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the PaynowSource class.
         /// </summary>
         public PaynowSource() : base(SourceType.Paynow)
         {
         }
-
     }
 }

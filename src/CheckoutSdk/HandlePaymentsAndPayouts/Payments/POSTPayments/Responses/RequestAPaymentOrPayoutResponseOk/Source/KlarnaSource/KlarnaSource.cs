@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.KlarnaSource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    KlarnaSource
 {
     /// <summary>
     /// klarna source Class
@@ -6,13 +7,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class KlarnaSource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the KlarnaSource class.
         /// </summary>
         public KlarnaSource() : base(SourceType.Klarna)
         {
         }
-
     }
 }

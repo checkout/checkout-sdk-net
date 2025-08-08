@@ -1,4 +1,6 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Retry
+using System;
+
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Retry
 {
     /// <summary>
     /// retry
@@ -6,10 +8,8 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class Retry
     {
-
         /// <summary>
         /// Default:  6 The maximum number of authorization retry attempts, excluding the initial authorization.
-        /// [Optional]
         /// [ 1 .. 15 ]
         /// </summary>
         public int MaxAttempts { get; set; } = 6;
@@ -19,14 +19,13 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// [Optional]
         /// <date-time>
         /// </summary>
-        public DateTime EndsOn { get; set; }
+        public DateTime? EndsOn { get; set; }
 
         /// <summary>
         /// A timestamp of the date on which the next authorization attempt will take place, in ISO 8601 format.
         /// [Optional]
         /// <date-time>
         /// </summary>
-        public DateTime NextAttemptOn { get; set; }
-
+        public DateTime? NextAttemptOn { get; set; }
     }
 }

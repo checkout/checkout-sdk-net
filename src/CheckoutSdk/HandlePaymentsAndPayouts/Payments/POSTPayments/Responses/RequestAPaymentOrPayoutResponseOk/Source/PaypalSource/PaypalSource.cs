@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.PaypalSource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    PaypalSource
 {
     /// <summary>
     /// paypal source Class
@@ -6,13 +7,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class PaypalSource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the PaypalSource class.
         /// </summary>
         public PaypalSource() : base(SourceType.Paypal)
         {
         }
-
     }
 }

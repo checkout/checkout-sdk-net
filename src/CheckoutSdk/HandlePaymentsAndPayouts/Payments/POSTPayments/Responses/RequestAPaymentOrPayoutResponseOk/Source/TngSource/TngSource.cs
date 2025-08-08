@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.TngSource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    TngSource
 {
     /// <summary>
     /// tng source Class
@@ -6,13 +7,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class TngSource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the TngSource class.
         /// </summary>
         public TngSource() : base(SourceType.Tng)
         {
         }
-
     }
 }

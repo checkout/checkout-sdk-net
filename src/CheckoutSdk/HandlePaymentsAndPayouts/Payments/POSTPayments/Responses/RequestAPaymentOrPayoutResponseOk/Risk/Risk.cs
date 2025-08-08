@@ -1,4 +1,4 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Risk
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Risk
 {
     /// <summary>
     /// risk
@@ -6,19 +6,17 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class Risk
     {
-
         /// <summary>
         /// Default:  false Whether or not the payment was flagged by a risk check
         /// [Optional]
         /// </summary>
-        public bool Flagged { get; set; } = false;
+        public bool? Flagged { get; set; } = false;
 
         /// <summary>
         /// The risk score calculated by our Fraud Detection engine. Absent if not enough data provided.
         /// [Optional]
         /// [ 0 .. 100 ]
         /// </summary>
-        public int Score { get; set; }
-
+        public int? Score { get; set; }
     }
 }

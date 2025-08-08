@@ -1,4 +1,4 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Threeds
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Threeds
 {
     /// <summary>
     /// 3ds
@@ -6,12 +6,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class Threeds
     {
-
         /// <summary>
         /// Indicates whether this was a 3D Secure payment downgraded to non-3D-Secure (when attempt_n3d is specified)
         /// [Optional]
         /// </summary>
-        public bool Downgraded { get; set; }
+        public bool? Downgraded { get; set; }
 
         /// <summary>
         /// Indicates the 3D Secure enrollment status of the issuer
@@ -27,6 +26,5 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// [Optional]
         /// </summary>
         public string UpgradeReason { get; set; }
-
     }
 }

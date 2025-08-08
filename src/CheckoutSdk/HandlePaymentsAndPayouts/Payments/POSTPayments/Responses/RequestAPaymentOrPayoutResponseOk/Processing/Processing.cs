@@ -82,7 +82,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// Error codes provided by partner
         /// [Optional]
         /// </summary>
-        public IList<object> PartnerErrorCodes { get; set; }
+        public IList<string> PartnerErrorCodes { get; set; }
 
         /// <summary>
         /// Error description provided by partner
@@ -107,7 +107,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// [Optional]
         /// >= 0
         /// </summary>
-        public int SurchargeAmount { get; set; }
+        public int? SurchargeAmount { get; set; }
 
         /// <summary>
         /// The type of Primary Account Number (PAN) used for the payment. DPAN indicates network token was used, FPAN
@@ -120,6 +120,6 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// The flag indicating if Checkout Network Token was available for the payment
         /// [Optional]
         /// </summary>
-        public bool CkoNetworkTokenAvailable { get; set; }
+        public bool? CkoNetworkTokenAvailable { get; set; }
     }
 }

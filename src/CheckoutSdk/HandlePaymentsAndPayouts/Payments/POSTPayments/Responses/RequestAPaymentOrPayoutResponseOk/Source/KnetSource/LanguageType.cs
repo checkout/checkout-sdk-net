@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.KnetSource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.KnetSource
 {
     public enum LanguageType
     {
@@ -9,6 +9,5 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
 
         [EnumMember(Value = "en")]
         En,
-
     }
 }

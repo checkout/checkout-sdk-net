@@ -1,4 +1,5 @@
-namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.PostfinanceSource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseOk.Source.
+    PostfinanceSource
 {
     /// <summary>
     /// postfinance source Class
@@ -6,13 +7,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     /// </summary>
     public class PostfinanceSource : AbstractSource
     {
-
         /// <summary>
         /// Initializes a new instance of the PostfinanceSource class.
         /// </summary>
         public PostfinanceSource() : base(SourceType.Postfinance)
         {
         }
-
     }
 }
