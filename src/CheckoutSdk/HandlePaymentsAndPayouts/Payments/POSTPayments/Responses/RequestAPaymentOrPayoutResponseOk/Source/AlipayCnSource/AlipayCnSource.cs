@@ -1,0 +1,18 @@
+namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponse201.Source.AlipayCnSource
+{
+    /// <summary>
+    /// alipay_cn source Class
+    /// The source of the payment
+    /// </summary>
+    public class AlipayCnSource : AbstractSource
+    {
+
+        /// <summary>
+        /// Initializes a new instance of the AlipayCnSource class.
+        /// </summary>
+        public AlipayCnSource() : base(CnSourceType.Alipay)
+        {
+        }
+
+    }
+}

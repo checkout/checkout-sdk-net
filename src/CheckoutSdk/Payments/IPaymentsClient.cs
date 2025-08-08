@@ -1,4 +1,5 @@
-﻿using Checkout.Payments.Request;
+﻿using Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.UnreferencedRefundRequest;
+using Checkout.Payments.Request;
 using Checkout.Payments.Response;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,6 +10,11 @@ namespace Checkout.Payments
     {
         Task<PaymentResponse> RequestPayment(
             PaymentRequest paymentRequest,
+            string idempotencyKey = null,
+            CancellationToken cancellationToken = default);
+        
+        Task<PaymentResponse> RequestPayment(
+            UnreferencedRefundRequest paymentRequest,
             string idempotencyKey = null,
             CancellationToken cancellationToken = default);
 
