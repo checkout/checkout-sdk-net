@@ -50,7 +50,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// <= 48
         /// >= 0
         /// </summary>
-        public long Amount { get; set; }
+        public long? Amount { get; set; }
 
         /// <summary>
         /// The processing channel to be used for the session. Required if this was not set in the request for the OAuth
@@ -71,13 +71,13 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// installment consists of two ls.
         /// [Optional]
         /// </summary>
-        public AuthenticationType AuthenticationType { get; set; } = AuthenticationType.Regular;
+        public AuthenticationType? AuthenticationType { get; set; } = Common.AuthenticationType.Regular;
 
         /// <summary>
         /// Default: "payment" Indicates the category of the authentication request
         /// [Optional]
         /// </summary>
-        public AuthenticationCategoryType AuthenticationCategory { get; set; } = AuthenticationCategoryType.Payment;
+        public AuthenticationCategoryType? AuthenticationCategory { get; set; } = AuthenticationCategoryType.Payment;
 
         /// <summary>
         /// Additional information about the Cardholder's account.
@@ -87,13 +87,13 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
 
         /// <summary>
         /// Default: "no_preference" Indicates whether a challenge is requested for this session.  The following are
-        /// requests for exemption:  • low_value  • trusted_listing  • trusted_listing_prompt  •
+        /// requests for exemption: • low_value • trusted_listing • trusted_listing_prompt •
         /// transaction_risk_assessment
         /// If an exemption cannot be applied, then the value no_challenge_requested will be used instead.
         /// [Optional]
         /// <= 50
         /// </summary>
-        public ChallengeIndicatorType ChallengeIndicator { get; set; } = ChallengeIndicatorType.NoPreference;
+        public ChallengeIndicatorType? ChallengeIndicator { get; set; } = ChallengeIndicatorType.NoPreference;
 
         /// <summary>
         /// An optional dynamic billing descriptor.
@@ -117,10 +117,9 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
 
         /// <summary>
         /// Default: "goods_service" Identifies the type of transaction being authenticated
-        /// [Optional]
         /// <= 50
         /// </summary>
-        public TransactionType TransactionType { get; set; } = TransactionType.GoodsService;
+        public TransactionType? TransactionType { get; set; } = Common.TransactionType.GoodsService;
 
         /// <summary>
         /// The shipping address. Any special characters will be replaced.
@@ -132,7 +131,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// Indicates whether the cardholder shipping address and billing address are the same.
         /// [Optional]
         /// </summary>
-        public bool ShippingAddressMatchesBilling { get; set; }
+        public bool? ShippingAddressMatchesBilling { get; set; }
 
         /// <summary>
         /// The information gathered from the environment used to initiate the session

@@ -17,14 +17,14 @@ namespace Checkout.Authentication.Standalone.Common.Installment
         public int NumberOfPayments { get; set; }
 
         /// <summary>
-        /// Default:  1 Indicates the minimum number of days between authorisations. If no value is specified for an
+        /// Default: 1 Indicates the minimum number of days between authorisations. If no value is specified for an
         /// installment authentication type the default value will be used.
         /// [Optional]
         /// </summary>
-        public int DaysBetweenPayments { get; set; } = 1;
+        public int? DaysBetweenPayments { get; set; } = 1;
 
         /// <summary>
-        /// Default:  99991231 Date after which no further authorisations are performed in the format yyyyMMdd. If no
+        /// Default: 99991231 Date after which no further authorisations are performed in the format yyyyMMdd. If no
         /// value is specified for an installment authentication type the default value will be used.
         /// [Optional]
         /// </summary>

@@ -43,14 +43,14 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// [Optional]
         /// [ 1 .. 2 ] characters [ 1 .. 12 ]
         /// </summary>
-        public int ExpiryMonth { get; set; }
+        public int? ExpiryMonth { get; set; }
 
         /// <summary>
         /// The expiry year of the card.
         /// [Optional]
         /// 4 characters
         /// </summary>
-        public int ExpiryYear { get; set; }
+        public int? ExpiryYear { get; set; }
 
         /// <summary>
         /// The customer's billing address. Any special characters will be replaced.

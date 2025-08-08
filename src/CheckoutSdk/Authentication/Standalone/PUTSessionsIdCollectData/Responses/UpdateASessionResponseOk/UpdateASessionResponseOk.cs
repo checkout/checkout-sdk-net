@@ -56,7 +56,7 @@ namespace Checkout.Authentication.Standalone.PUTSessionsIdCollectData.Responses.
         /// [Required]
         /// [ 0 .. 9223372036854776000 ]
         /// </summary>
-        public int Amount { get; set; }
+        public long Amount { get; set; }
 
         /// <summary>
         /// The three-letter ISO currency code
@@ -72,7 +72,7 @@ namespace Checkout.Authentication.Standalone.PUTSessionsIdCollectData.Responses.
         public AuthenticationType AuthenticationType { get; set; } = AuthenticationType.Regular;
 
         /// <summary>
-        /// Default:  "payment" Indicates the category of the authentication request
+        /// Default: "payment" Indicates the category of the authentication request
         /// [Required]
         /// </summary>
         public AuthenticationCategoryType AuthenticationCategory { get; set; } = AuthenticationCategoryType.Payment;
@@ -111,14 +111,14 @@ namespace Checkout.Authentication.Standalone.PUTSessionsIdCollectData.Responses.
         /// Indicates whether this session has been completed
         /// [Optional]
         /// </summary>
-        public bool Completed { get; set; }
+        public bool? Completed { get; set; }
 
         /// <summary>
         /// Indicates whether this session involved a challenge. This will only be set after communication with the
         /// scheme is finished.
         /// [Optional]
         /// </summary>
-        public bool Challenged { get; set; }
+        public bool? Challenged { get; set; }
 
         /// <summary>
         /// Public certificates specific to a Directory Server (DS) for encrypting device data and verifying ACS signed
@@ -143,7 +143,7 @@ namespace Checkout.Authentication.Standalone.PUTSessionsIdCollectData.Responses.
         /// Whether the authentication was successful. This will only be set if the Session is in a final state
         /// [Optional]
         /// </summary>
-        public bool Approved { get; set; }
+        public bool? Approved { get; set; }
 
         /// <summary>
         /// Additional information about the Cardholder's account.
@@ -170,7 +170,7 @@ namespace Checkout.Authentication.Standalone.PUTSessionsIdCollectData.Responses.
         /// [Optional]
         /// <= 50
         /// </summary>
-        public TransactionType TransactionType { get; set; } = TransactionType.GoodsService;
+        public TransactionType? TransactionType { get; set; } = Common.TransactionType.GoodsService;
 
         /// <summary>
         /// Specifies which action to take in order to complete the session.

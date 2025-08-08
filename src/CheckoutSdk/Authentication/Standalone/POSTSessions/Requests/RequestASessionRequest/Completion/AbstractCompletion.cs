@@ -6,7 +6,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
     /// </summary>
     public abstract class AbstractCompletion
     {
-        public CompletionType? Type;
+        public CompletionType Type;
 
         protected AbstractCompletion(CompletionType type)
         {

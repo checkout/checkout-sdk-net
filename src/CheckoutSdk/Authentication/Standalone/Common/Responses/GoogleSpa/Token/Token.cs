@@ -16,12 +16,12 @@ namespace Checkout.Authentication.Standalone.Common.Responses.GoogleSpa.Token
         /// Expiry month of the token
         /// [Optional]
         /// </summary>
-        public double ExpiryMonth { get; set; }
+        public int? ExpiryMonth { get; set; }
 
         /// <summary>
         /// Expiry year of the token
         /// [Optional]
         /// </summary>
-        public double ExpiryYear { get; set; }
+        public int? ExpiryYear { get; set; }
     }
 }

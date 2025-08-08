@@ -6,7 +6,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
     /// </summary>
     public abstract class AbstractSource
     {
-        public SourceType? Type;
+        public SourceType Type;
 
         protected AbstractSource(SourceType type)
         {

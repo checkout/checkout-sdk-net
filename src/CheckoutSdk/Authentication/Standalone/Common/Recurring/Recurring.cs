@@ -8,14 +8,14 @@ namespace Checkout.Authentication.Standalone.Common.Recurring
     public class Recurring
     {
         /// <summary>
-        /// Default:  1 Indicates the minimum number of days between authorisations. If no value is specified for a
+        /// Default: 1 Indicates the minimum number of days between authorisations. If no value is specified for a
         /// recurring authentication type the default value will be used.
         /// [Optional]
         /// </summary>
-        public int DaysBetweenPayments { get; set; } = 1;
+        public int? DaysBetweenPayments { get; set; } = 1;
 
         /// <summary>
-        /// Default:  99991231 Date after which no further authorisations are performed in the format yyyyMMdd. If no
+        /// Default: 99991231 Date after which no further authorisations are performed in the format yyyyMMdd. If no
         /// value is specified for a recurring authentication type the default value will be used.
         /// [Optional]
         /// </summary>

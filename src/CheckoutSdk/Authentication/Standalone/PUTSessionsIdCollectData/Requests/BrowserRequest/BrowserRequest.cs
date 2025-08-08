@@ -30,7 +30,7 @@ namespace Checkout.Authentication.Standalone.PUTSessionsIdCollectData.Requests.B
         public bool JavaEnabled { get; set; }
 
         /// <summary>
-        /// Default:  true Boolean that represents the ability of the cardholder's browser to execute Javascript. Value
+        /// Default: true Boolean that represents the ability of the cardholder's browser to execute Javascript. Value
         /// is returned from the navigator.javascriptEnabled property. *only applicable/required for authentication
         /// performed using 3DS 2.2. If authentications results in processing on 2.1 or lower, this field will be
         /// disregarded.
@@ -93,17 +93,17 @@ namespace Checkout.Authentication.Standalone.PUTSessionsIdCollectData.Requests.B
         /// Default: "U" Indicates whether the 3DS Method successfully completed • Y = Successfully completed • N =
         /// Did not successfully complete • U = Unavailable (3DS Method URL was not present in the preperation response
         /// (PRes) message data for the card range associated with the cardholder's account number)
-        /// [Optional]
         /// 1 characters
+        /// [Optional]
         /// </summary>
-        public ThreeDsMethodCompletionType ThreeDsMethodCompletion { get; set; } = ThreeDsMethodCompletionType.U;
+        public ThreeDsMethodCompletionType? ThreeDsMethodCompletion { get; set; } = ThreeDsMethodCompletionType.U;
 
         /// <summary>
         /// Whether the Payment API is enabled for all parent frames. This is required for Google SPA support in hosted
         /// sessions.
         /// [Optional]
         /// </summary>
-        public bool IframePaymentAllowed { get; set; }
+        public bool? IframePaymentAllowed { get; set; }
 
         /// <summary>
         /// The raw Sec-CH-UA header value. This can improve Google SPA support.

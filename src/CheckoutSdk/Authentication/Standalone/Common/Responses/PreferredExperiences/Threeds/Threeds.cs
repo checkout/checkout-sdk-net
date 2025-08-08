@@ -17,6 +17,6 @@ namespace Checkout.Authentication.Standalone.Common.Responses.PreferredExperienc
         /// Reason(s) why processing the experience was unsuccessful.
         /// [Optional]
         /// </summary>
-        public IList<object> Reason { get; set; }
+        public IList<string> Reason { get; set; }
     }
 }

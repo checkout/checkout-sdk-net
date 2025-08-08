@@ -12,7 +12,7 @@ namespace Checkout.Authentication.Standalone.Common.Responses.Optimization
         /// Indicates if any optimization has been applied
         /// [Optional]
         /// </summary>
-        public bool Optimized { get; set; }
+        public bool? Optimized { get; set; }
 
         /// <summary>
         /// The optimization framework applied

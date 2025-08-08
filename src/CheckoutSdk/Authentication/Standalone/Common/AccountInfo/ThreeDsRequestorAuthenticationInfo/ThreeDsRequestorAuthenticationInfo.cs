@@ -19,7 +19,7 @@ namespace Checkout.Authentication.Standalone.Common.AccountInfo.ThreeDsRequestor
         /// [Optional]
         /// <date-time>
         /// </summary>
-        public DateTime ThreeDsReqAuthTimestamp { get; set; }
+        public DateTime? ThreeDsReqAuthTimestamp { get; set; }
 
         /// <summary>
         /// Data that documents and supports a specific authentication process.
