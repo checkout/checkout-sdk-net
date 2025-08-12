@@ -1,5 +1,11 @@
+using Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.UnreferencedRefundRequest;
+using Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses;
+using Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseAccepted;
+using Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseCreated;
 using Checkout.Payments.Request;
 using Checkout.Payments.Response;
+using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,9 +16,18 @@ namespace Checkout.Payments
         private const string PaymentsPath = "payments";
         private const string CancelAScheduledRetryPath = "cancellations";
 
+        private static readonly IDictionary<int, Type> RequestASessionResponseMappings = new Dictionary<int, Type>();
+
+        static PaymentsClient()
+        {
+            RequestASessionResponseMappings[201] = typeof(RequestAPaymentOrPayoutResponseCreated);
+            RequestASessionResponseMappings[202] = typeof(RequestAPaymentOrPayoutResponseAccepted);
+        }
+
         public PaymentsClient(
             IApiClient apiClient,
-            CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
+            CheckoutConfiguration configuration)
+            : base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
         {
         }
 
@@ -27,6 +42,29 @@ namespace Checkout.Payments
                 paymentRequest,
                 cancellationToken,
                 idempotencyKey);
+        }
+
+        public async Task<RequestAPaymentOrPayoutResponse> RequestPayment(UnreferencedRefundRequest paymentRequest,
+            string idempotencyKey = null,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("paymentRequest", paymentRequest);
+            var resource = await ApiClient.Post<HttpMetadata>(PaymentsPath, SdkAuthorization(),
+                RequestASessionResponseMappings,
+                paymentRequest, cancellationToken,
+                idempotencyKey);
+
+            switch (resource)
+            {
+                case RequestAPaymentOrPayoutResponseCreated requestAPaymentOrPayoutResponseCreated:
+                    return new RequestAPaymentOrPayoutResponse(requestAPaymentOrPayoutResponseCreated);
+
+                case RequestAPaymentOrPayoutResponseAccepted requestAPaymentOrPayoutResponseAccepted:
+                    return new RequestAPaymentOrPayoutResponse(requestAPaymentOrPayoutResponseAccepted);
+
+                default:
+                    throw new InvalidOperationException("Unexpected mapping type " + resource.GetType());
+            }
         }
 
         public Task<PayoutResponse> RequestPayout(PayoutRequest payoutRequest,
@@ -73,12 +111,14 @@ namespace Checkout.Payments
                 SdkAuthorization(),
                 cancellationToken);
         }
-        
-        public Task<CancelAScheduledRetryResponse> CancelAScheduledRetry(string paymentId, CancelAScheduledRetryRequest cancelAScheduledRetryRequest,
+
+        public Task<CancelAScheduledRetryResponse> CancelAScheduledRetry(string paymentId,
+            CancelAScheduledRetryRequest cancelAScheduledRetryRequest,
             string idempotencyKey = null,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("paymentId",paymentId,"cancelAScheduledRetryRequest", cancelAScheduledRetryRequest);
+            CheckoutUtils.ValidateParams("paymentId", paymentId, "cancelAScheduledRetryRequest",
+                cancelAScheduledRetryRequest);
             return ApiClient.Post<CancelAScheduledRetryResponse>(
                 BuildPath(PaymentsPath, paymentId, CancelAScheduledRetryPath),
                 SdkAuthorization(),

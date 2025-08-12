@@ -1,4 +1,5 @@
 using Checkout.Accounts.Payout.Response.Util;
+using Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.Util;
 using Checkout.Instruments.Create.Util;
 using Checkout.Instruments.Get.Util;
 using Checkout.Instruments.Update.Util;
@@ -51,23 +52,20 @@ namespace Checkout
                 {
                     new StringEnumConverter(),
                     // Instruments CS2
-                    new CreateInstrumentResponseTypeConverter(),
-                    new GetInstrumentResponseTypeConverter(),
+                    new CreateInstrumentResponseTypeConverter(), new GetInstrumentResponseTypeConverter(),
                     new UpdateInstrumentResponseTypeConverter(),
                     // Workflows CS2
-                    new WorkflowActionTypeResponseConverter(),
-                    new WorkflowConditionTypeResponseConverter(),
+                    new WorkflowActionTypeResponseConverter(), new WorkflowConditionTypeResponseConverter(),
                     GetConverterDateTimeToIso(),
                     // Accounts Payout Schedules
-                    new GetScheduleResponseTypeConverter(),
-                    new ScheduleResponseTypeConverter(),
+                    new GetScheduleResponseTypeConverter(), new ScheduleResponseTypeConverter(),
                     // Items Response
                     new ItemsResponseConverter(),
                     // Issuing
-                    new CardTypeResponseConverter(),
-                    new CardControlsResponseConverter(),
-                    new CardCreateResponseConverter(),
-                    new CardControlTypeResponseConverter(),
+                    new CardTypeResponseConverter(), new CardControlsResponseConverter(),
+                    new CardCreateResponseConverter(), new CardControlTypeResponseConverter(),
+                    // HandlePaymentsAndPayouts Sources
+                    new RequestAPaymentOrPayoutResponseCreatedSourceTypeConverter(),
                 }
             };
 
