@@ -13,6 +13,7 @@
         [OAuthScope("gateway:payment-voids")] GatewayPaymentVoids,
         [OAuthScope("gateway:payment-captures")] GatewayPaymentCaptures,
         [OAuthScope("gateway:payment-refunds")] GatewayPaymentRefunds,
+        [OAuthScope("gateway:payment-cancellations")] GatewayPaymentCancellations,
         [OAuthScope("fx")] Fx,
         [OAuthScope("payouts:bank-details")] PayoutsBankDetails,
         [OAuthScope("sessions:app")] SessionsApp,

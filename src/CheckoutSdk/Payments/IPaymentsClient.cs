@@ -1,5 +1,7 @@
 ﻿using Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.UnreferencedRefundRequest;
 using Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses;
+using Checkout.HandlePaymentsAndPayouts.Payments.POSTPaymentsIdReversals.Requests.ReverseAPaymentRequest;
+using Checkout.HandlePaymentsAndPayouts.Payments.POSTPaymentsIdReversals.Responses.ReverseAPaymentResponse;
 using Checkout.Payments.Request;
 using Checkout.Payments.Response;
 using System.Threading;
@@ -51,6 +53,12 @@ namespace Checkout.Payments
         Task<RefundResponse> RefundPayment(
             string paymentId,
             RefundRequest refundRequest = null,
+            string idempotencyKey = null,
+            CancellationToken cancellationToken = default);
+        
+        Task<ReverseAPaymentResponse> ReverseAPayment(
+            string paymentId,
+            ReverseAPaymentRequest reverseAPaymentRequest = null,
             string idempotencyKey = null,
             CancellationToken cancellationToken = default);
 
