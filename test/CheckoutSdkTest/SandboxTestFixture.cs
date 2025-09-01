@@ -211,7 +211,8 @@ namespace Checkout
             return new CustomerRequest
             {
                 Email = GenerateRandomEmail(),
-                Name = "John"
+                Name = "John",
+                Phone = GetPhone(),
             };
         }
 

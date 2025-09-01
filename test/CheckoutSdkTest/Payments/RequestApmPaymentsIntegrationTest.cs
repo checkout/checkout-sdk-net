@@ -648,6 +648,7 @@ namespace Checkout.Payments
                 Source = new RequestBizumSource { MobileNumber = "+447700900986", },
                 Amount = 10L,
                 Currency = Currency.EUR,
+                Customer = GetCustomer(),
                 ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
                 SuccessUrl = "https://testing.checkout.com/sucess",
                 FailureUrl = "https://testing.checkout.com/failure",

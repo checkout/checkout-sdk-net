@@ -2,6 +2,8 @@ using Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.Unreferen
 using Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses;
 using Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseAccepted;
 using Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseCreated;
+using Checkout.HandlePaymentsAndPayouts.Payments.POSTPaymentsIdReversals.Requests.ReverseAPaymentRequest;
+using Checkout.HandlePaymentsAndPayouts.Payments.POSTPaymentsIdReversals.Responses.ReverseAPaymentResponse;
 using Checkout.Payments.Request;
 using Checkout.Payments.Response;
 using System;
@@ -151,6 +153,18 @@ namespace Checkout.Payments
             return ApiClient.Post<RefundResponse>(BuildPath(PaymentsPath, paymentId, "refunds"),
                 SdkAuthorization(),
                 refundRequest,
+                cancellationToken,
+                idempotencyKey);
+        }
+
+        public Task<ReverseAPaymentResponse> ReverseAPayment(string paymentId,
+            ReverseAPaymentRequest reverseAPaymentRequest = null,
+            string idempotencyKey = null, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("paymentId", paymentId);
+            return ApiClient.Post<ReverseAPaymentResponse>(BuildPath(PaymentsPath, paymentId, "reversals"),
+                SdkAuthorization(),
+                reverseAPaymentRequest,
                 cancellationToken,
                 idempotencyKey);
         }
