@@ -27,12 +27,12 @@ namespace Checkout.Agentic
         }
 
         [Fact]
-        public async Task CreateAgenticCommerce_Should_Call_ApiClient_Post()
+        public async Task CreateAgentic_Should_Call_ApiClient_Post()
         {
             // Arrange
-            var request = new CreateAgenticCommerceRequest
+            var request = new CreateAgenticRequest
             {
-                Name = "Test Agentic Commerce",
+                Name = "Test Agentic",
                 Description = "Test Description",
                 Configuration = new AgenticConfiguration
                 {
@@ -46,10 +46,10 @@ namespace Checkout.Agentic
                 WebhookEndpoints = new List<string> { "https://example.com/webhook" }
             };
 
-            var response = new CreateAgenticCommerceResponse();
+            var response = new CreateAgenticResponse();
 
             _apiClient.Setup(apiClient => 
-                    apiClient.Post<CreateAgenticCommerceResponse>(
+                    apiClient.Post<CreateAgenticResponse>(
                     "agentic/commerce",
                     _authorization,
                     request,
@@ -60,7 +60,7 @@ namespace Checkout.Agentic
             var client = new AgenticClient(_apiClient.Object, _configuration.Object);
 
             // Act
-            var result = await client.CreateAgenticCommerce(request);
+            var result = await client.CreateAgentic(request);
 
             // Assert
             result.ShouldNotBeNull();
@@ -68,14 +68,14 @@ namespace Checkout.Agentic
         }
 
         [Fact]
-        public async Task GetAgenticCommerce_Should_Call_ApiClient_Get()
+        public async Task GetAgentic_Should_Call_ApiClient_Get()
         {
             // Arrange
-            const string agenticCommerceId = "agentic_commerce_id";
-            var response = new GetAgenticCommerceResponse();
+            const string agenticId = "agentic_commerce_id";
+            var response = new GetAgenticResponse();
 
             _apiClient.Setup(apiClient => 
-                    apiClient.Get<GetAgenticCommerceResponse>(
+                    apiClient.Get<GetAgenticResponse>(
                     "agentic/commerce/agentic_commerce_id",
                     _authorization,
                     CancellationToken.None))
@@ -84,7 +84,7 @@ namespace Checkout.Agentic
             var client = new AgenticClient(_apiClient.Object, _configuration.Object);
 
             // Act
-            var result = await client.GetAgenticCommerce(agenticCommerceId);
+            var result = await client.GetAgentic(agenticId);
 
             // Assert
             result.ShouldNotBeNull();
@@ -92,13 +92,13 @@ namespace Checkout.Agentic
         }
 
         [Fact]
-        public async Task UpdateAgenticCommerce_Should_Call_ApiClient_Patch()
+        public async Task UpdateAgentic_Should_Call_ApiClient_Patch()
         {
             // Arrange
-            const string agenticCommerceId = "agentic_commerce_id";
-            var request = new UpdateAgenticCommerceRequest
+            const string agenticId = "agentic_commerce_id";
+            var request = new UpdateAgenticRequest
             {
-                Name = "Updated Test Agentic Commerce",
+                Name = "Updated Test Agentic",
                 Description = "Updated Description",
                 Configuration = new AgenticConfiguration
                 {
@@ -111,10 +111,10 @@ namespace Checkout.Agentic
                 IsActive = true
             };
 
-            var response = new UpdateAgenticCommerceResponse();
+            var response = new UpdateAgenticResponse();
 
             _apiClient.Setup(apiClient => 
-                    apiClient.Patch<UpdateAgenticCommerceResponse>(
+                    apiClient.Patch<UpdateAgenticResponse>(
                     "agentic/commerce/agentic_commerce_id",
                     _authorization,
                     request,
@@ -125,7 +125,7 @@ namespace Checkout.Agentic
             var client = new AgenticClient(_apiClient.Object, _configuration.Object);
 
             // Act
-            var result = await client.UpdateAgenticCommerce(agenticCommerceId, request);
+            var result = await client.UpdateAgentic(agenticId, request);
 
             // Assert
             result.ShouldNotBeNull();
@@ -133,14 +133,14 @@ namespace Checkout.Agentic
         }
 
         [Fact]
-        public async Task DeleteAgenticCommerce_Should_Call_ApiClient_Delete()
+        public async Task DeleteAgentic_Should_Call_ApiClient_Delete()
         {
             // Arrange
-            const string agenticCommerceId = "agentic_commerce_id";
-            var response = new DeleteAgenticCommerceResponse();
+            const string agenticId = "agentic_commerce_id";
+            var response = new DeleteAgenticResponse();
 
             _apiClient.Setup(apiClient => 
-                    apiClient.Delete<DeleteAgenticCommerceResponse>(
+                    apiClient.Delete<DeleteAgenticResponse>(
                     "agentic/commerce/agentic_commerce_id",
                     _authorization,
                     CancellationToken.None))
@@ -149,7 +149,7 @@ namespace Checkout.Agentic
             var client = new AgenticClient(_apiClient.Object, _configuration.Object);
 
             // Act
-            var result = await client.DeleteAgenticCommerce(agenticCommerceId);
+            var result = await client.DeleteAgentic(agenticId);
 
             // Assert
             result.ShouldNotBeNull();
@@ -157,10 +157,10 @@ namespace Checkout.Agentic
         }
 
         [Fact]
-        public async Task ListAgenticCommerce_Should_Call_ApiClient_Query()
+        public async Task GetAgentics_Should_Call_ApiClient_Query()
         {
             // Arrange
-            var request = new ListAgenticCommerceRequest
+            var request = new GetAgenticsRequest
             {
                 Skip = 0,
                 Limit = 10,
@@ -171,10 +171,10 @@ namespace Checkout.Agentic
                 SortDirection = "desc"
             };
 
-            var response = new ListAgenticCommerceResponse();
+            var response = new GetAgenticsResponse();
 
             _apiClient.Setup(apiClient => 
-                    apiClient.Query<ListAgenticCommerceResponse>(
+                    apiClient.Query<GetAgenticsResponse>(
                     "agentic/commerce",
                     _authorization,
                     request,
@@ -184,7 +184,7 @@ namespace Checkout.Agentic
             var client = new AgenticClient(_apiClient.Object, _configuration.Object);
 
             // Act
-            var result = await client.ListAgenticCommerce(request);
+            var result = await client.GetAgentics(request);
 
             // Assert
             result.ShouldNotBeNull();
@@ -192,13 +192,13 @@ namespace Checkout.Agentic
         }
 
         [Fact]
-        public async Task ListAgenticCommerce_Without_Request_Should_Call_ApiClient_Query()
+        public async Task GetAgentics_Without_Request_Should_Call_ApiClient_Query()
         {
             // Arrange
-            var response = new ListAgenticCommerceResponse();
+            var response = new GetAgenticsResponse();
 
             _apiClient.Setup(apiClient => 
-                    apiClient.Query<ListAgenticCommerceResponse>(
+                    apiClient.Query<GetAgenticsResponse>(
                     "agentic/commerce",
                     _authorization,
                     null,
@@ -208,7 +208,7 @@ namespace Checkout.Agentic
             var client = new AgenticClient(_apiClient.Object, _configuration.Object);
 
             // Act
-            var result = await client.ListAgenticCommerce();
+            var result = await client.GetAgentics();
 
             // Assert
             result.ShouldNotBeNull();
@@ -216,54 +216,54 @@ namespace Checkout.Agentic
         }
 
         [Fact]
-        public void CreateAgenticCommerce_Should_Throw_Exception_When_Request_Is_Null()
+        public void CreateAgentic_Should_Throw_Exception_When_Request_Is_Null()
         {
             // Arrange
             var client = new AgenticClient(_apiClient.Object, _configuration.Object);
 
             // Act & Assert
-            Should.Throw<CheckoutArgumentException>(() => client.CreateAgenticCommerce(null));
+            Should.Throw<CheckoutArgumentException>(() => client.CreateAgentic(null));
         }
 
         [Fact]
-        public void GetAgenticCommerce_Should_Throw_Exception_When_Id_Is_Null()
+        public void GetAgentic_Should_Throw_Exception_When_Id_Is_Null()
         {
             // Arrange
             var client = new AgenticClient(_apiClient.Object, _configuration.Object);
 
             // Act & Assert
-            Should.Throw<CheckoutArgumentException>(() => client.GetAgenticCommerce(null));
+            Should.Throw<CheckoutArgumentException>(() => client.GetAgentic(null));
         }
 
         [Fact]
-        public void UpdateAgenticCommerce_Should_Throw_Exception_When_Id_Is_Null()
+        public void UpdateAgentic_Should_Throw_Exception_When_Id_Is_Null()
         {
             // Arrange
             var client = new AgenticClient(_apiClient.Object, _configuration.Object);
-            var request = new UpdateAgenticCommerceRequest();
+            var request = new UpdateAgenticRequest();
 
             // Act & Assert
-            Should.Throw<CheckoutArgumentException>(() => client.UpdateAgenticCommerce(null, request));
+            Should.Throw<CheckoutArgumentException>(() => client.UpdateAgentic(null, request));
         }
 
         [Fact]
-        public void UpdateAgenticCommerce_Should_Throw_Exception_When_Request_Is_Null()
+        public void UpdateAgentic_Should_Throw_Exception_When_Request_Is_Null()
         {
             // Arrange
             var client = new AgenticClient(_apiClient.Object, _configuration.Object);
 
             // Act & Assert
-            Should.Throw<CheckoutArgumentException>(() => client.UpdateAgenticCommerce("id", null));
+            Should.Throw<CheckoutArgumentException>(() => client.UpdateAgentic("id", null));
         }
 
         [Fact]
-        public void DeleteAgenticCommerce_Should_Throw_Exception_When_Id_Is_Null()
+        public void DeleteAgentic_Should_Throw_Exception_When_Id_Is_Null()
         {
             // Arrange
             var client = new AgenticClient(_apiClient.Object, _configuration.Object);
 
             // Act & Assert
-            Should.Throw<CheckoutArgumentException>(() => client.DeleteAgenticCommerce(null));
+            Should.Throw<CheckoutArgumentException>(() => client.DeleteAgentic(null));
         }
     }
 }

@@ -14,13 +14,13 @@ namespace Checkout.Agentic
         }
 
         [Fact(Skip = "This test requires live API endpoint implementation")]
-        private async Task ShouldCreateAgenticCommerce()
+        private async Task ShouldCreateAgentic()
         {
             // Arrange
-            var createRequest = CreateValidAgenticCommerceRequest();
+            var createRequest = CreateValidAgenticRequest();
 
             // Act
-            var createResponse = await DefaultApi.AgenticClient().CreateAgenticCommerce(createRequest);
+            var createResponse = await DefaultApi.AgenticClient().CreateAgentic(createRequest);
 
             // Assert
             createResponse.ShouldNotBeNull();
@@ -32,14 +32,14 @@ namespace Checkout.Agentic
         }
 
         [Fact(Skip = "This test requires live API endpoint implementation")]
-        private async Task ShouldGetAgenticCommerce()
+        private async Task ShouldGetAgentic()
         {
             // Arrange
-            var createRequest = CreateValidAgenticCommerceRequest();
-            var createResponse = await DefaultApi.AgenticClient().CreateAgenticCommerce(createRequest);
+            var createRequest = CreateValidAgenticRequest();
+            var createResponse = await DefaultApi.AgenticClient().CreateAgentic(createRequest);
 
             // Act
-            var getResponse = await DefaultApi.AgenticClient().GetAgenticCommerce(createResponse.Id);
+            var getResponse = await DefaultApi.AgenticClient().GetAgentic(createResponse.Id);
 
             // Assert
             getResponse.ShouldNotBeNull();
@@ -57,15 +57,15 @@ namespace Checkout.Agentic
         }
 
         [Fact(Skip = "This test requires live API endpoint implementation")]
-        private async Task ShouldUpdateAgenticCommerce()
+        private async Task ShouldUpdateAgentic()
         {
             // Arrange
-            var createRequest = CreateValidAgenticCommerceRequest();
-            var createResponse = await DefaultApi.AgenticClient().CreateAgenticCommerce(createRequest);
+            var createRequest = CreateValidAgenticRequest();
+            var createResponse = await DefaultApi.AgenticClient().CreateAgentic(createRequest);
 
-            var updateRequest = new UpdateAgenticCommerceRequest
+            var updateRequest = new UpdateAgenticRequest
             {
-                Name = "Updated Agentic Commerce",
+                Name = "Updated Agentic",
                 Description = "Updated description for testing",
                 Configuration = new AgenticConfiguration
                 {
@@ -79,7 +79,7 @@ namespace Checkout.Agentic
             };
 
             // Act
-            var updateResponse = await DefaultApi.AgenticClient().UpdateAgenticCommerce(createResponse.Id, updateRequest);
+            var updateResponse = await DefaultApi.AgenticClient().UpdateAgentic(createResponse.Id, updateRequest);
 
             // Assert
             updateResponse.ShouldNotBeNull();
@@ -89,7 +89,7 @@ namespace Checkout.Agentic
             updateResponse.Links.ShouldNotBeNull();
 
             // Verify the update by getting the updated record
-            var getResponse = await DefaultApi.AgenticClient().GetAgenticCommerce(createResponse.Id);
+            var getResponse = await DefaultApi.AgenticClient().GetAgentic(createResponse.Id);
             getResponse.Name.ShouldBe(updateRequest.Name);
             getResponse.Description.ShouldBe(updateRequest.Description);
             getResponse.Configuration.AiModel.ShouldBe(updateRequest.Configuration.AiModel);
@@ -98,16 +98,16 @@ namespace Checkout.Agentic
         }
 
         [Fact(Skip = "This test requires live API endpoint implementation")]
-        private async Task ShouldListAgenticCommerce()
+        private async Task ShouldGetAgentics()
         {
             // Arrange
-            var createRequest1 = CreateValidAgenticCommerceRequest("Test Commerce 1");
-            var createRequest2 = CreateValidAgenticCommerceRequest("Test Commerce 2");
+            var createRequest1 = CreateValidAgenticRequest("Test Commerce 1");
+            var createRequest2 = CreateValidAgenticRequest("Test Commerce 2");
             
-            await DefaultApi.AgenticClient().CreateAgenticCommerce(createRequest1);
-            await DefaultApi.AgenticClient().CreateAgenticCommerce(createRequest2);
+            await DefaultApi.AgenticClient().CreateAgentic(createRequest1);
+            await DefaultApi.AgenticClient().CreateAgentic(createRequest2);
 
-            var listRequest = new ListAgenticCommerceRequest
+            var listRequest = new GetAgenticsRequest
             {
                 Skip = 0,
                 Limit = 10,
@@ -117,7 +117,7 @@ namespace Checkout.Agentic
             };
 
             // Act
-            var listResponse = await DefaultApi.AgenticClient().ListAgenticCommerce(listRequest);
+            var listResponse = await DefaultApi.AgenticClient().GetAgentics(listRequest);
 
             // Assert
             listResponse.ShouldNotBeNull();
@@ -144,13 +144,13 @@ namespace Checkout.Agentic
         }
 
         [Fact(Skip = "This test requires live API endpoint implementation")]
-        private async Task ShouldListAgenticCommerceWithFilters()
+        private async Task ShouldGetAgenticsWithFilters()
         {
             // Arrange
-            var createRequest = CreateValidAgenticCommerceRequest("Filtered Test Commerce");
-            await DefaultApi.AgenticClient().CreateAgenticCommerce(createRequest);
+            var createRequest = CreateValidAgenticRequest("Filtered Test Commerce");
+            await DefaultApi.AgenticClient().CreateAgentic(createRequest);
 
-            var listRequest = new ListAgenticCommerceRequest
+            var listRequest = new GetAgenticsRequest
             {
                 Skip = 0,
                 Limit = 5,
@@ -162,7 +162,7 @@ namespace Checkout.Agentic
             };
 
             // Act
-            var listResponse = await DefaultApi.AgenticClient().ListAgenticCommerce(listRequest);
+            var listResponse = await DefaultApi.AgenticClient().GetAgentics(listRequest);
 
             // Assert
             listResponse.ShouldNotBeNull();
@@ -178,14 +178,14 @@ namespace Checkout.Agentic
         }
 
         [Fact(Skip = "This test requires live API endpoint implementation")]
-        private async Task ShouldDeleteAgenticCommerce()
+        private async Task ShouldDeleteAgentic()
         {
             // Arrange
-            var createRequest = CreateValidAgenticCommerceRequest();
-            var createResponse = await DefaultApi.AgenticClient().CreateAgenticCommerce(createRequest);
+            var createRequest = CreateValidAgenticRequest();
+            var createResponse = await DefaultApi.AgenticClient().CreateAgentic(createRequest);
 
             // Act
-            var deleteResponse = await DefaultApi.AgenticClient().DeleteAgenticCommerce(createResponse.Id);
+            var deleteResponse = await DefaultApi.AgenticClient().DeleteAgentic(createResponse.Id);
 
             // Assert
             deleteResponse.ShouldNotBeNull();
@@ -196,15 +196,15 @@ namespace Checkout.Agentic
 
             // Verify the record is deleted by trying to get it
             Should.Throw<CheckoutApiException>(async () => 
-                await DefaultApi.AgenticClient().GetAgenticCommerce(createResponse.Id));
+                await DefaultApi.AgenticClient().GetAgentic(createResponse.Id));
         }
 
-        private CreateAgenticCommerceRequest CreateValidAgenticCommerceRequest(string name = null)
+        private CreateAgenticRequest CreateValidAgenticRequest(string name = null)
         {
-            return new CreateAgenticCommerceRequest
+            return new CreateAgenticRequest
             {
-                Name = name ?? "Test Agentic Commerce",
-                Description = "Test agentic commerce for integration testing",
+                Name = name ?? "Test Agentic",
+                Description = "Test agentic for integration testing",
                 Configuration = new AgenticConfiguration
                 {
                     AiModel = "gpt-4",
