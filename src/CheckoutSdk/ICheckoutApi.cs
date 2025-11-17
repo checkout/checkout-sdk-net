@@ -1,4 +1,5 @@
 using Checkout.Accounts;
+using Checkout.Agentic;
 using Checkout.Authentication;
 using Checkout.Balances;
 using Checkout.Issuing;
@@ -68,5 +69,7 @@ namespace Checkout
         IForwardClient ForwardClient();
         
         INetworkTokensClient NetworkTokensClient();
+        
+        IAgenticClient AgenticClient();
     }
 }
