@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
-using Checkout.Agentic.Requests;
 using Checkout.Common;
 
 namespace Checkout.Agentic.Responses
 {
     /// <summary>
-    /// Get Agentic Commerce Response
+    /// Agentic Commerce Item (summary view)
     /// </summary>
-    public class GetAgenticCommerceResponse : HttpMetadata
+    public class AgenticCommerceItem
     {
         /// <summary>
         /// The unique identifier of the agentic commerce
@@ -36,19 +35,9 @@ namespace Checkout.Agentic.Responses
         public bool IsActive { get; set; }
 
         /// <summary>
-        /// The configuration settings for the agentic commerce
+        /// The AI model being used
         /// </summary>
-        public AgenticConfiguration Configuration { get; set; }
-
-        /// <summary>
-        /// The metadata associated with the agentic commerce
-        /// </summary>
-        public Dictionary<string, object> Metadata { get; set; }
-
-        /// <summary>
-        /// The webhook endpoints for the agentic commerce
-        /// </summary>
-        public List<string> WebhookEndpoints { get; set; }
+        public string AiModel { get; set; }
 
         /// <summary>
         /// The timestamp when the agentic commerce was created
@@ -61,12 +50,12 @@ namespace Checkout.Agentic.Responses
         public DateTime UpdatedAt { get; set; }
 
         /// <summary>
-        /// Statistics about the agentic commerce performance
+        /// Basic statistics summary
         /// </summary>
-        public AgenticStatistics Statistics { get; set; }
+        public AgenticStatisticsSummary StatisticsSummary { get; set; }
 
         /// <summary>
-        /// Links for further actions
+        /// Links for further actions on this specific item
         /// </summary>
         public Dictionary<string, Link> Links { get; set; }
     }
