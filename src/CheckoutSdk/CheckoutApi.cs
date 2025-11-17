@@ -1,4 +1,5 @@
 using Checkout.Accounts;
+using Checkout.Agentic;
 using Checkout.Authentication;
 using Checkout.Balances;
 using Checkout.Issuing;
@@ -47,6 +48,7 @@ namespace Checkout
         private readonly IPaymentSessionsClient _paymentSessionsClient;
         private readonly IForwardClient _forwardClient;
         private readonly INetworkTokensClient _networkTokensClient;
+        private readonly IAgenticClient _agenticClient;
 
         public CheckoutApi(CheckoutConfiguration configuration)
         {
@@ -78,6 +80,7 @@ namespace Checkout
             _paymentSessionsClient = new PaymentSessionsClient(baseApiClient, configuration);
             _forwardClient = new ForwardClient(baseApiClient, configuration);
             _networkTokensClient = new NetworkTokensClient(baseApiClient, configuration);
+            _agenticClient = new AgenticClient(baseApiClient, configuration);
         }
 
         private static ApiClient BaseApiClient(CheckoutConfiguration configuration)
@@ -219,6 +222,11 @@ namespace Checkout
         public INetworkTokensClient NetworkTokensClient()
         {
             return _networkTokensClient;
+        }
+
+        public IAgenticClient AgenticClient()
+        {
+            return _agenticClient;
         }
         
     }
