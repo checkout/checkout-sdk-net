@@ -6,9 +6,9 @@ using Checkout.Common;
 namespace Checkout.Agentic.Responses
 {
     /// <summary>
-    /// Get Agentic Commerce Response
+    /// Get Agentic Response
     /// </summary>
-    public class GetAgenticCommerceResponse : HttpMetadata
+    public class GetAgenticResponse : HttpMetadata
     {
         /// <summary>
         /// The unique identifier of the agentic commerce

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 namespace Checkout.Agentic.Requests
 {
     /// <summary>
-    /// Create Agentic Commerce Request
+    /// Update Agentic Request
     /// </summary>
-    public class CreateAgenticCommerceRequest
+    public class UpdateAgenticRequest
     {
         /// <summary>
         /// The name of the agentic commerce
@@ -31,5 +31,10 @@ namespace Checkout.Agentic.Requests
         /// The webhook endpoints for the agentic commerce
         /// </summary>
         public List<string> WebhookEndpoints { get; set; }
+
+        /// <summary>
+        /// Whether the agentic commerce is active
+        /// </summary>
+        public bool? IsActive { get; set; }
     }
 }

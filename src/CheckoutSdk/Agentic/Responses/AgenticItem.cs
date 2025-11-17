@@ -5,9 +5,9 @@ using Checkout.Common;
 namespace Checkout.Agentic.Responses
 {
     /// <summary>
-    /// Agentic Commerce Item (summary view)
+    /// Agentic Item (summary view)
     /// </summary>
-    public class AgenticCommerceItem
+    public class AgenticItem
     {
         /// <summary>
         /// The unique identifier of the agentic commerce

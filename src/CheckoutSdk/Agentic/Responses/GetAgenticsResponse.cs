@@ -4,14 +4,14 @@ using Checkout.Common;
 namespace Checkout.Agentic.Responses
 {
     /// <summary>
-    /// List Agentic Commerce Response
+    /// Get Agentics Response
     /// </summary>
-    public class ListAgenticCommerceResponse : HttpMetadata
+    public class GetAgenticsResponse : HttpMetadata
     {
         /// <summary>
-        /// The list of agentic commerce items
+        /// The list of agentic items
         /// </summary>
-        public List<AgenticCommerceItem> Items { get; set; }
+        public List<AgenticItem> Items { get; set; }
 
         /// <summary>
         /// Total number of items available
