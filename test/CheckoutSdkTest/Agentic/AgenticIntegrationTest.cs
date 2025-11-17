@@ -148,7 +148,7 @@ namespace Checkout.Agentic
         {
             // Arrange
             var createRequest = CreateValidAgenticCommerceRequest("Filtered Test Commerce");
-            var createResponse = await DefaultApi.AgenticClient().CreateAgenticCommerce(createRequest);
+            await DefaultApi.AgenticClient().CreateAgenticCommerce(createRequest);
 
             var listRequest = new ListAgenticCommerceRequest
             {
