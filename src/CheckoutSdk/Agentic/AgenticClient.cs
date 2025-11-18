@@ -14,7 +14,7 @@ namespace Checkout.Agentic
         private const string EnrollPath = "enroll";
 
         public AgenticClient(IApiClient apiClient, CheckoutConfiguration configuration) :
-            base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
+            base(apiClient, configuration, SdkAuthorizationType.OAuth)
         {
         }
 
