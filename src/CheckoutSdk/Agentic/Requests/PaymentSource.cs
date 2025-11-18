@@ -1,5 +1,5 @@
-using Checkout.Common;
 using Newtonsoft.Json;
+using Checkout.Common;
 
 namespace Checkout.Agentic.Requests
 {

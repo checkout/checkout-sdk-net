@@ -1,8 +1,7 @@
-using Checkout.Agentic.Requests;
-using Checkout.Agentic.Responses;
-using Checkout.Common;
 using System.Threading;
 using System.Threading.Tasks;
+using Checkout.Agentic.Requests;
+using Checkout.Agentic.Responses;
 
 namespace Checkout.Agentic
 {
