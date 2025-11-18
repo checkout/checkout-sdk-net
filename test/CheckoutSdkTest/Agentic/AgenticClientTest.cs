@@ -152,7 +152,7 @@ namespace Checkout.Agentic
         [Fact]
         private async Task CreatePurchaseIntentShouldCreatePurchaseIntent()
         {
-            var createPurchaseIntentRequest = new AgenticCreatePurchaseIntentRequest
+            var createPurchaseIntentRequest = new AgenticPurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
                 Device = new DeviceInfo
@@ -179,7 +179,7 @@ namespace Checkout.Agentic
                 }
             };
 
-            var expectedResponse = new AgenticCreatePurchaseIntentResponse
+            var expectedResponse = new AgenticPurchaseIntentResponse
             {
                 Id = "pi_f3egwppx6rde3hg6itlqzp3h7e",
                 Scheme = "visa",
@@ -217,7 +217,7 @@ namespace Checkout.Agentic
             };
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<AgenticCreatePurchaseIntentResponse>("agentic/purchase-intent", _authorization, createPurchaseIntentRequest,
+                    apiClient.Post<AgenticPurchaseIntentResponse>("agentic/purchase-intent", _authorization, createPurchaseIntentRequest,
                         CancellationToken.None, null))
                 .ReturnsAsync(() => expectedResponse);
 
@@ -243,13 +243,13 @@ namespace Checkout.Agentic
             var exception = await Should.ThrowAsync<CheckoutArgumentException>(
                 async () => await client.CreatePurchaseIntent(null, CancellationToken.None));
 
-            exception.Message.ShouldContain("agenticCreatePurchaseIntentRequest");
+            exception.Message.ShouldContain("agenticPurchaseIntentCreateRequest");
         }
 
         [Fact]
         private async Task CreatePurchaseIntentShouldCallCorrectCreatePurchaseIntentEndpoint()
         {
-            var createPurchaseIntentRequest = new AgenticCreatePurchaseIntentRequest
+            var createPurchaseIntentRequest = new AgenticPurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_test_123",
                 Device = new DeviceInfo
@@ -269,23 +269,23 @@ namespace Checkout.Agentic
             };
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<AgenticCreatePurchaseIntentResponse>("agentic/purchase-intent", _authorization, createPurchaseIntentRequest,
+                    apiClient.Post<AgenticPurchaseIntentResponse>("agentic/purchase-intent", _authorization, createPurchaseIntentRequest,
                         CancellationToken.None, null))
-                .ReturnsAsync(() => new AgenticCreatePurchaseIntentResponse());
+                .ReturnsAsync(() => new AgenticPurchaseIntentResponse());
 
             IAgenticClient client = new AgenticClient(_apiClient.Object, _configuration.Object);
 
             await client.CreatePurchaseIntent(createPurchaseIntentRequest, CancellationToken.None);
 
             _apiClient.Verify(apiClient =>
-                apiClient.Post<AgenticCreatePurchaseIntentResponse>("agentic/purchase-intent", _authorization, createPurchaseIntentRequest,
+                apiClient.Post<AgenticPurchaseIntentResponse>("agentic/purchase-intent", _authorization, createPurchaseIntentRequest,
                     CancellationToken.None, null), Times.Once);
         }
 
         [Fact]
         private async Task CreatePurchaseIntentShouldUseCorrectAuthorizationForCreatePurchaseIntent()
         {
-            var createPurchaseIntentRequest = new AgenticCreatePurchaseIntentRequest
+            var createPurchaseIntentRequest = new AgenticPurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_test_123",
                 Device = new DeviceInfo(),
@@ -293,17 +293,17 @@ namespace Checkout.Agentic
             };
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<AgenticCreatePurchaseIntentResponse>(It.IsAny<string>(), It.IsAny<SdkAuthorization>(), 
-                        It.IsAny<AgenticCreatePurchaseIntentRequest>(), It.IsAny<CancellationToken>(), It.IsAny<string>()))
-                .ReturnsAsync(() => new AgenticCreatePurchaseIntentResponse());
+                    apiClient.Post<AgenticPurchaseIntentResponse>(It.IsAny<string>(), It.IsAny<SdkAuthorization>(), 
+                        It.IsAny<AgenticPurchaseIntentCreateRequest>(), It.IsAny<CancellationToken>(), It.IsAny<string>()))
+                .ReturnsAsync(() => new AgenticPurchaseIntentResponse());
 
             IAgenticClient client = new AgenticClient(_apiClient.Object, _configuration.Object);
 
             await client.CreatePurchaseIntent(createPurchaseIntentRequest, CancellationToken.None);
 
             _apiClient.Verify(apiClient =>
-                apiClient.Post<AgenticCreatePurchaseIntentResponse>(It.IsAny<string>(), _authorization, 
-                    It.IsAny<AgenticCreatePurchaseIntentRequest>(), It.IsAny<CancellationToken>(), It.IsAny<string>()), Times.Once);
+                apiClient.Post<AgenticPurchaseIntentResponse>(It.IsAny<string>(), _authorization, 
+                    It.IsAny<AgenticPurchaseIntentCreateRequest>(), It.IsAny<CancellationToken>(), It.IsAny<string>()), Times.Once);
         }
     }
 }
