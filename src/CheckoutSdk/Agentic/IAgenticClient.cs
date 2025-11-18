@@ -27,6 +27,14 @@ namespace Checkout.Agentic
             CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Create a purchase intent credentials
+        /// Create credentials for an agentic commerce purchase intent.
+        /// </summary>
+        Task<AgenticPurchaseIntentResponse> CreatePurchaseIntentCredentials(string id,
+            AgenticPurchaseIntentCredentialsCreateRequest agenticPurchaseIntentCredentialsCreateRequest,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Update a purchase intent
         /// Updates a purchase intent for agentic commerce
         /// </summary>

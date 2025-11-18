@@ -204,7 +204,7 @@ namespace Checkout.Agentic
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 100,
-                            CurrencyCode = "USD"
+                            CurrencyCode = Currency.USD
                         },
                         Description = "Purchase running shoes in size 10.",
                         ExpirationDate = DateTime.Parse("2026-08-31T23:59:59.000Z")
@@ -276,7 +276,7 @@ namespace Checkout.Agentic
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 500,
-                            CurrencyCode = "USD"
+                            CurrencyCode = Currency.USD
                         },
                         Description = "Electronics purchase",
                         ExpirationDate = DateTime.Parse("2026-12-31T23:59:59.000Z")
@@ -306,7 +306,7 @@ namespace Checkout.Agentic
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 200,
-                            CurrencyCode = "USD"
+                            CurrencyCode = Currency.USD
                         },
                         Description = "Clothing purchase",
                         ExpirationDate = DateTime.Parse("2026-06-30T23:59:59.000Z")
@@ -317,7 +317,7 @@ namespace Checkout.Agentic
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 100,
-                            CurrencyCode = "USD"
+                            CurrencyCode = Currency.USD
                         },
                         Description = "Accessories purchase",
                         ExpirationDate = DateTime.Parse("2026-09-30T23:59:59.000Z")
@@ -353,7 +353,7 @@ namespace Checkout.Agentic
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 150,
-                            CurrencyCode = "EUR"
+                            CurrencyCode = Currency.EUR
                         },
                         Description = "Compra de zapatos deportivos",
                         ExpirationDate = DateTime.Parse("2026-08-31T23:59:59.000Z")
@@ -367,7 +367,7 @@ namespace Checkout.Agentic
             response.Status.ShouldBe("active");
             response.Id.ShouldStartWith("pi_");
             response.Mandates.ShouldNotBeNull();
-            response.Mandates[0].PurchaseThreshold.CurrencyCode.ShouldBe("EUR");
+            response.Mandates[0].PurchaseThreshold.CurrencyCode.ShouldBe(Currency.EUR);
         }
     }
 }

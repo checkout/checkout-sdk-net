@@ -3,17 +3,17 @@ using Checkout.Common;
 namespace Checkout.Agentic.Requests
 {
     /// <summary>
-    /// Purchase threshold configuration
+    /// Represents transaction amount information for agentic commerce
     /// </summary>
-    public class PurchaseThreshold
+    public class TransactionAmount
     {
         /// <summary>
-        /// The threshold amount
+        /// Transaction amount
         /// </summary>
         public int Amount { get; set; }
 
         /// <summary>
-        /// The currency for the threshold
+        /// Currency for the transaction
         /// </summary>
         public Currency? CurrencyCode { get; set; }
     }

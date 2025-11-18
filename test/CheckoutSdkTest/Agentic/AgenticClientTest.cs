@@ -171,7 +171,7 @@ namespace Checkout.Agentic
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 100,
-                            CurrencyCode = "USD"
+                            CurrencyCode = Currency.USD
                         },
                         Description = "Purchase running shoes in size 10.",
                         ExpirationDate = System.DateTime.Parse("2026-08-31T23:59:59.000Z")
@@ -201,7 +201,7 @@ namespace Checkout.Agentic
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 100,
-                            CurrencyCode = "USD"
+                            CurrencyCode = Currency.USD
                         },
                         Description = "Purchase Nike Air Max 270 running shoes in size 10",
                         ExpirationDate = System.DateTime.Parse("2026-08-31T23:59:59.000Z")
