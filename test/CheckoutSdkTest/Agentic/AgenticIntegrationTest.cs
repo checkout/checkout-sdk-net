@@ -34,11 +34,11 @@ namespace Checkout.Agentic
                     DeviceBrand = "Chrome",
                     DeviceType = "desktop"
                 },
-                Customer = new CustomerRequest
+                Customer = new AgenticCustomer
                 {
                     Email = GenerateRandomEmail(),
-                    Name = "Agentic Test Customer",
-                    Phone = new Phone { CountryCode = "+1", Number = "4155552671" }
+                    CountryCode = CountryCode.US,
+                    LanguageCode = "en"
                 }
             };
 
@@ -73,9 +73,11 @@ namespace Checkout.Agentic
                 {
                     IpAddress = "10.0.0.1"
                 },
-                Customer = new CustomerRequest
+                Customer = new AgenticCustomer
                 {
-                    Email = GenerateRandomEmail()
+                    Email = GenerateRandomEmail(),
+                    CountryCode = CountryCode.US,
+                    LanguageCode = "en"
                 }
             };
 
@@ -105,10 +107,11 @@ namespace Checkout.Agentic
                     IpAddress = "203.0.113.195",
                     UserAgent = "Test Agent"
                 },
-                Customer = new CustomerRequest
+                Customer = new AgenticCustomer
                 {
                     Email = GenerateRandomEmail(),
-                    Name = "Visa Test Customer"
+                    CountryCode = CountryCode.US,
+                    LanguageCode = "en"
                 }
             };
 
@@ -131,10 +134,11 @@ namespace Checkout.Agentic
                 {
                     IpAddress = "198.51.100.42"
                 },
-                Customer = new CustomerRequest
+                Customer = new AgenticCustomer
                 {
                     Email = GenerateRandomEmail(),
-                    Name = "Mastercard Test Customer"
+                    CountryCode = CountryCode.US,
+                    LanguageCode = "en"
                 }
             };
 
@@ -163,11 +167,11 @@ namespace Checkout.Agentic
                     DeviceBrand = "Safari",
                     DeviceType = "mobile"
                 },
-                Customer = new CustomerRequest
+                Customer = new AgenticCustomer
                 {
                     Email = GenerateRandomEmail(),
-                    Name = "José María García-López",
-                    Phone = new Phone { CountryCode = "+34", Number = "612345678" }
+                    CountryCode = CountryCode.ES,
+                    LanguageCode = "es"
                 }
             };
 
