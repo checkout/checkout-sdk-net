@@ -10,11 +10,11 @@ namespace Checkout.Agentic
 {
     public class AgenticIntegrationTest : SandboxTestFixture
     {
-        public AgenticIntegrationTest() : base(PlatformType.Default)
+        public AgenticIntegrationTest() : base(PlatformType.DefaultOAuth)
         {
         }
 
-        [Fact]
+        [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
         private async Task ShouldEnrollInAgenticServices()
         {
             var agenticEnrollRequest = new AgenticEnrollRequest
@@ -56,7 +56,7 @@ namespace Checkout.Agentic
             response.Status.ShouldBe("enrolled");
         }
 
-        [Fact]
+        [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
         private async Task ShouldEnrollWithMinimalData()
         {
             var agenticEnrollRequest = new AgenticEnrollRequest
@@ -88,7 +88,7 @@ namespace Checkout.Agentic
             response.Status.ShouldBe("enrolled");
         }
 
-        [Fact]
+        [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
         private async Task ShouldHandleDifferentCardTypes()
         {
             // Test with Visa card
@@ -147,7 +147,7 @@ namespace Checkout.Agentic
             mastercardResponse.Status.ShouldBe("enrolled");
         }
 
-        [Fact]
+        [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
         private async Task ShouldHandleInternationalCustomers()
         {
             var internationalRequest = new AgenticEnrollRequest
