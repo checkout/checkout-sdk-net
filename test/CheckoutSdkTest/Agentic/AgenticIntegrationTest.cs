@@ -185,7 +185,7 @@ namespace Checkout.Agentic
         [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
         private async Task CreatePurchaseIntentShouldCreatePurchaseIntent()
         {
-            var createPurchaseIntentRequest = new AgenticCreatePurchaseIntentRequest
+            var createPurchaseIntentRequest = new AgenticPurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
                 Device = new DeviceInfo
@@ -235,7 +235,7 @@ namespace Checkout.Agentic
         [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
         private async Task CreatePurchaseIntentShouldCreatePurchaseIntentWithMinimalData()
         {
-            var createPurchaseIntentRequest = new AgenticCreatePurchaseIntentRequest
+            var createPurchaseIntentRequest = new AgenticPurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
                 Device = new DeviceInfo
@@ -257,7 +257,7 @@ namespace Checkout.Agentic
         private async Task CreatePurchaseIntentShouldHandleDifferentMandateTypes()
         {
             // Test with single mandate
-            var singleMandateRequest = new AgenticCreatePurchaseIntentRequest
+            var singleMandateRequest = new AgenticPurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
                 Device = new DeviceInfo
@@ -290,7 +290,7 @@ namespace Checkout.Agentic
             singleResponse.Mandates.Length.ShouldBe(1);
 
             // Test with multiple mandates
-            var multipleMandateRequest = new AgenticCreatePurchaseIntentRequest
+            var multipleMandateRequest = new AgenticPurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
                 Device = new DeviceInfo
@@ -334,7 +334,7 @@ namespace Checkout.Agentic
         [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
         private async Task CreatePurchaseIntentShouldHandleInternationalCurrencies()
         {
-            var internationalRequest = new AgenticCreatePurchaseIntentRequest
+            var internationalRequest = new AgenticPurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
                 Device = new DeviceInfo

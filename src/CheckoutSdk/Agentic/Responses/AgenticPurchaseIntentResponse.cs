@@ -6,7 +6,7 @@ namespace Checkout.Agentic.Responses
     /// <summary>
     /// Response from purchase intent creation
     /// </summary>
-    public class AgenticCreatePurchaseIntentResponse : HttpMetadata
+    public class AgenticPurchaseIntentResponse : HttpMetadata
     {
         /// <summary>
         /// The purchase intent ID

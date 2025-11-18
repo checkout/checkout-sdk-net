@@ -22,8 +22,16 @@ namespace Checkout.Agentic
         /// Create a purchase intent
         /// Creates a new purchase intent for agentic commerce
         /// </summary>
-        Task<AgenticCreatePurchaseIntentResponse> CreatePurchaseIntent(
-            AgenticCreatePurchaseIntentRequest agenticCreatePurchaseIntentRequest,
+        Task<AgenticPurchaseIntentResponse> CreatePurchaseIntent(
+            AgenticPurchaseIntentCreateRequest agenticPurchaseIntentCreateRequest,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Update a purchase intent
+        /// Updates a purchase intent for agentic commerce
+        /// </summary>
+        Task<AgenticPurchaseIntentResponse> UpdatePurchaseIntent(
+            AgenticPurchaseIntentUpdateRequest agenticPurchaseIntentUpdateRequest,
             CancellationToken cancellationToken = default);
     }
 }
