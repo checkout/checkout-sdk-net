@@ -55,6 +55,24 @@ namespace Checkout.Agentic
         }
 
         /// <summary>
+        /// Create a purchase intent
+        /// Creates a new purchase intent for agentic commerce
+        /// </summary>
+        public Task<AgenticPurchaseIntentResponse> CreatePurchaseIntentCredentials(string id,
+            AgenticPurchaseIntentCredentialsCreateRequest agenticPurchaseIntentCredentialsCreateRequest,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("id", id,"agenticPurchaseIntentCredentialsCreateRequest", 
+            agenticPurchaseIntentCredentialsCreateRequest);
+            return ApiClient.Post<AgenticPurchaseIntentResponse>(
+                BuildPath(AgenticPath, PurchaseIntentPath, id, CredentialsPath),
+                SdkAuthorization(),
+                agenticPurchaseIntentCredentialsCreateRequest,
+                cancellationToken
+            );
+        }
+
+        /// <summary>
         /// Update a purchase intent
         /// Updates a new purchase intent for agentic commerce
         /// </summary>
