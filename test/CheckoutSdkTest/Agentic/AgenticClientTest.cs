@@ -44,10 +44,11 @@ namespace Checkout.Agentic
                     IpAddress = "192.168.1.1",
                     UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
                 },
-                Customer = new CustomerRequest
+                Customer = new AgenticCustomer
                 {
                     Email = "test@example.com",
-                    Name = "Test Customer"
+                    CountryCode = CountryCode.US,
+                    LanguageCode = "en"
                 }
             };
 
@@ -102,9 +103,11 @@ namespace Checkout.Agentic
                     IpAddress = "192.168.1.1",
                     UserAgent = "Mozilla/5.0 Test"
                 },
-                Customer = new CustomerRequest
+                Customer = new AgenticCustomer
                 {
-                    Email = "test@example.com"
+                    Email = "test@example.com",
+                    CountryCode = CountryCode.US,
+                    LanguageCode = "en"
                 }
             };
 
@@ -129,7 +132,7 @@ namespace Checkout.Agentic
             {
                 Source = new PaymentSource { Type = PaymentSourceType.Card },
                 Device = new DeviceInfo(),
-                Customer = new CustomerRequest()
+                Customer = new AgenticCustomer { Email = "test@example.com", CountryCode = CountryCode.US, LanguageCode = "en" }
             };
 
             _apiClient.Setup(apiClient =>
