@@ -12,6 +12,8 @@ namespace Checkout.Agentic
     {
         private const string AgenticPath = "agentic";
         private const string EnrollPath = "enroll";
+        private const string PurchaseIntentPath = "purchase-intent";
+        private const string CredentialsPath = "credentials";
 
         public AgenticClient(IApiClient apiClient, CheckoutConfiguration configuration) :
             base(apiClient, configuration, SdkAuthorizationType.OAuth)
@@ -31,6 +33,23 @@ namespace Checkout.Agentic
                 BuildPath(AgenticPath, EnrollPath),
                 SdkAuthorization(),
                 agenticEnrollRequest,
+                cancellationToken
+            );
+        }
+
+        /// <summary>
+        /// Create a purchase intent
+        /// Creates a new purchase intent for agentic commerce
+        /// </summary>
+        public Task<AgenticCreatePurchaseIntentResponse> CreatePurchaseIntent(
+            AgenticCreatePurchaseIntentRequest agenticCreatePurchaseIntentRequest,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("agenticCreatePurchaseIntentRequest", agenticCreatePurchaseIntentRequest);
+            return ApiClient.Post<AgenticCreatePurchaseIntentResponse>(
+                BuildPath(AgenticPath, PurchaseIntentPath),
+                SdkAuthorization(),
+                agenticCreatePurchaseIntentRequest,
                 cancellationToken
             );
         }

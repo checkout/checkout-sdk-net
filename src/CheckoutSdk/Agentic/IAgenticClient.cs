@@ -17,5 +17,13 @@ namespace Checkout.Agentic
         Task<AgenticEnrollResponse> Enroll(
             AgenticEnrollRequest agenticEnrollRequest,
             CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Create a purchase intent
+        /// Creates a new purchase intent for agentic commerce
+        /// </summary>
+        Task<AgenticCreatePurchaseIntentResponse> CreatePurchaseIntent(
+            AgenticCreatePurchaseIntentRequest agenticCreatePurchaseIntentRequest,
+            CancellationToken cancellationToken = default);
     }
 }
