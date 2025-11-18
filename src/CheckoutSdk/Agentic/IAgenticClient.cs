@@ -30,8 +30,15 @@ namespace Checkout.Agentic
         /// Update a purchase intent
         /// Updates a purchase intent for agentic commerce
         /// </summary>
-        Task<AgenticPurchaseIntentResponse> UpdatePurchaseIntent(
+        Task<AgenticPurchaseIntentResponse> UpdatePurchaseIntent(string id,
             AgenticPurchaseIntentUpdateRequest agenticPurchaseIntentUpdateRequest,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Delete a purchase intent
+        /// Deletes a purchase intent for agentic commerce
+        /// </summary>
+        Task<EmptyResponse> DeletePurchaseIntent(string id,
             CancellationToken cancellationToken = default);
     }
 }

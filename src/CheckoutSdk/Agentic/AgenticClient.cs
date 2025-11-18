@@ -58,15 +58,30 @@ namespace Checkout.Agentic
         /// Update a purchase intent
         /// Updates a new purchase intent for agentic commerce
         /// </summary>
-        public Task<AgenticPurchaseIntentResponse> UpdatePurchaseIntent(
+        public Task<AgenticPurchaseIntentResponse> UpdatePurchaseIntent(string id,
             AgenticPurchaseIntentUpdateRequest agenticPurchaseIntentUpdateRequest,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("agenticPurchaseIntentUpdateRequest", agenticPurchaseIntentUpdateRequest);
+            CheckoutUtils.ValidateParams("id", id, "agenticPurchaseIntentUpdateRequest", agenticPurchaseIntentUpdateRequest);
             return ApiClient.Put<AgenticPurchaseIntentResponse>(
-                BuildPath(AgenticPath, PurchaseIntentPath),
+                BuildPath(AgenticPath, PurchaseIntentPath, id),
                 SdkAuthorization(),
                 agenticPurchaseIntentUpdateRequest,
+                cancellationToken
+            );
+        }
+
+        /// <summary>
+        /// Delete a purchase intent
+        /// Deletes a purchase intent for agentic commerce
+        /// </summary>
+        public Task<EmptyResponse> DeletePurchaseIntent(string id,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("id", id);
+            return ApiClient.Delete<EmptyResponse>(
+                BuildPath(AgenticPath, PurchaseIntentPath, id),
+                SdkAuthorization(),
                 cancellationToken
             );
         }
