@@ -12,9 +12,9 @@ namespace Checkout.Agentic
 {
     public class AgenticClientTest : UnitTestFixture
     {
-        private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.Default, ValidDefaultSk);
+        private readonly SdkAuthorization _authorization = new SdkAuthorization(PlatformType.DefaultOAuth, ValidDefaultSk);
         private readonly Mock<IApiClient> _apiClient = new Mock<IApiClient>();
-        private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.Default);
+        private readonly Mock<SdkCredentials> _sdkCredentials = new Mock<SdkCredentials>(PlatformType.DefaultOAuth);
         private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
         private readonly Mock<CheckoutConfiguration> _configuration;
 
