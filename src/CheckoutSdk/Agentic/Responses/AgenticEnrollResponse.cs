@@ -1,11 +1,12 @@
 using System;
+using Checkout.Common;
 
 namespace Checkout.Agentic.Responses
 {
     /// <summary>
     /// Agentic Enroll Response
     /// </summary>
-    public class AgenticEnrollResponse : HttpMetadata
+    public class AgenticEnrollResponse : Resource
     {
         /// <summary>
         /// The unique token identifier for the enrolled agentic service
