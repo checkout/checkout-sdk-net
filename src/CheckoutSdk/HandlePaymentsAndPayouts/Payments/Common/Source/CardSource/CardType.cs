@@ -1,7 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.
-    CardSource
+namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.CardSource
 {
     public enum CardType
     {
