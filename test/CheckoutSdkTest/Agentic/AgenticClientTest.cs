@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
@@ -207,12 +208,12 @@ namespace Checkout.Agentic
                         ExpirationDate = System.DateTime.Parse("2026-08-31T23:59:59.000Z")
                     }
                 },
-                Links = new AgenticLinks
+                Links = new Dictionary<string, Link>
                 {
-                    Self = "https://api.example.com/agentic/purchase-intents/intent_123",
-                    CreateCredentials = "https://api.example.com/agentic/purchase-intents/intent_123/credentials",
-                    Update = "https://api.example.com/agentic/purchase-intents/intent_123",
-                    Cancel = "https://api.example.com/agentic/purchase-intents/intent_123/cancel"
+                    { "self", new Link { Href = "https://api.example.com/agentic/purchase-intents/intent_789" } },
+                    { "create-credentials", new Link { Href = "https://api.example.com/agentic/purchase-intents/intent_789/credentials" } },
+                    { "update", new Link { Href = "https://api.example.com/agentic/purchase-intents/intent_789" } },
+                    { "cancel", new Link { Href = "https://api.example.com/agentic/purchase-intents/intent_789/cancel" } }
                 }
             };
 
@@ -232,7 +233,7 @@ namespace Checkout.Agentic
             response.TokenId.ShouldBe(expectedResponse.TokenId);
             response.CustomerPrompt.ShouldBe(expectedResponse.CustomerPrompt);
             response.Links.ShouldNotBeNull();
-            response.Links.Self.ShouldBe(expectedResponse.Links.Self);
+            response.Links["self"].Href.ShouldBe(expectedResponse.Links["self"].Href);
         }
 
         [Fact]
@@ -357,12 +358,12 @@ namespace Checkout.Agentic
                         ExpirationDate = System.DateTime.Parse("2026-08-31T23:59:59.000Z")
                     }
                 },
-                Links = new AgenticLinks
+                Links = new Dictionary<string, Link>
                 {
-                    Self = "https://api.example.com/agentic/purchase-intents/pi_f3egwppx6rde3hg6itlqzp3h7e",
-                    CreateCredentials = "https://api.example.com/agentic/purchase-intents/pi_f3egwppx6rde3hg6itlqzp3h7e/credentials",
-                    Update = "https://api.example.com/agentic/purchase-intents/pi_f3egwppx6rde3hg6itlqzp3h7e",
-                    Cancel = "https://api.example.com/agentic/purchase-intents/pi_f3egwppx6rde3hg6itlqzp3h7e/cancel"
+                    { "self", new Link { Href = "https://api.example.com/agentic/purchase-intents/pi_f3egwppx6rde3hg6itlqzp3h7e" } },
+                    { "create-credentials", new Link { Href = "https://api.example.com/agentic/purchase-intents/pi_f3egwppx6rde3hg6itlqzp3h7e/credentials" } },
+                    { "update", new Link { Href = "https://api.example.com/agentic/purchase-intents/pi_f3egwppx6rde3hg6itlqzp3h7e" } },
+                    { "cancel", new Link { Href = "https://api.example.com/agentic/purchase-intents/pi_f3egwppx6rde3hg6itlqzp3h7e/cancel" } }
                 }
             };
 
@@ -382,7 +383,7 @@ namespace Checkout.Agentic
             response.TokenId.ShouldBe(expectedResponse.TokenId);
             response.CustomerPrompt.ShouldBe(expectedResponse.CustomerPrompt);
             response.Links.ShouldNotBeNull();
-            response.Links.Self.ShouldBe(expectedResponse.Links.Self);
+            response.Links["self"].Href.ShouldBe(expectedResponse.Links["self"].Href);
         }
 
         [Fact]
@@ -595,12 +596,12 @@ namespace Checkout.Agentic
                         ExpirationDate = System.DateTime.Parse("2026-12-31T23:59:59.000Z")
                     }
                 },
-                Links = new AgenticLinks
+                Links = new Dictionary<string, Link>
                 {
-                    Self = "https://api.example.com/agentic/purchase-intents/pi_f3egwppx6rde3hg6itlqzp3h7e",
-                    CreateCredentials = "https://api.example.com/agentic/purchase-intents/pi_f3egwppx6rde3hg6itlqzp3h7e/credentials",
-                    Update = "https://api.example.com/agentic/purchase-intents/pi_f3egwppx6rde3hg6itlqzp3h7e",
-                    Cancel = "https://api.example.com/agentic/purchase-intents/pi_f3egwppx6rde3hg6itlqzp3h7e/cancel"
+                    { "self", new Link { Href = "https://api.example.com/agentic/purchase-intents/pi_f3egwppx6rde3hg6itlqzp3h7e" } },
+                    { "create-credentials", new Link { Href = "https://api.example.com/agentic/purchase-intents/pi_f3egwppx6rde3hg6itlqzp3h7e/credentials" } },
+                    { "update", new Link { Href = "https://api.example.com/agentic/purchase-intents/pi_f3egwppx6rde3hg6itlqzp3h7e" } },
+                    { "cancel", new Link { Href = "https://api.example.com/agentic/purchase-intents/pi_f3egwppx6rde3hg6itlqzp3h7e/cancel" } }
                 }
             };
 
@@ -620,7 +621,7 @@ namespace Checkout.Agentic
             response.TokenId.ShouldBe(expectedResponse.TokenId);
             response.CustomerPrompt.ShouldBe(expectedResponse.CustomerPrompt);
             response.Links.ShouldNotBeNull();
-            response.Links.Self.ShouldBe(expectedResponse.Links.Self);
+            response.Links["self"].Href.ShouldBe(expectedResponse.Links["self"].Href);
         }
 
         [Fact]

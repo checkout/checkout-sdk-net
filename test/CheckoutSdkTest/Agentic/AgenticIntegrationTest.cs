@@ -229,8 +229,8 @@ namespace Checkout.Agentic
             
             // Validate links are present
             response.Links.ShouldNotBeNull();
-            response.Links.Self.ShouldNotBeNullOrEmpty();
-            response.Links.CreateCredentials.ShouldNotBeNullOrEmpty();
+            response.Links["self"].Href.ShouldNotBeNullOrEmpty();
+            response.Links["create-credentials"].Href.ShouldNotBeNullOrEmpty();
         }
 
         [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
@@ -437,8 +437,8 @@ namespace Checkout.Agentic
             
             // Validate links are present and updated
             credentialsResponse.Links.ShouldNotBeNull();
-            credentialsResponse.Links.Self.ShouldNotBeNullOrEmpty();
-            credentialsResponse.Links.CreateCredentials.ShouldNotBeNullOrEmpty();
+            credentialsResponse.Links["self"].Href.ShouldNotBeNullOrEmpty();
+            credentialsResponse.Links["create-credentials"].Href.ShouldNotBeNullOrEmpty();
         }
 
         [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
@@ -593,7 +593,7 @@ namespace Checkout.Agentic
             // Validate international handling
             credentialsResponse.Id.ShouldStartWith("pi_");
             credentialsResponse.Links.ShouldNotBeNull();
-            credentialsResponse.Links.Self.ShouldContain(purchaseIntentResponse.Id);
+            credentialsResponse.Links["self"].Href.ShouldContain(purchaseIntentResponse.Id);
         }
 
         [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]

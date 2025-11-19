@@ -1,4 +1,5 @@
 using Checkout.Agentic.Requests;
+using Checkout.Common;
 using Newtonsoft.Json;
 
 namespace Checkout.Agentic.Responses
@@ -6,7 +7,7 @@ namespace Checkout.Agentic.Responses
     /// <summary>
     /// Response from purchase intent creation
     /// </summary>
-    public class AgenticPurchaseIntentResponse : HttpMetadata
+    public class AgenticPurchaseIntentResponse : Resource
     {
         /// <summary>
         /// The purchase intent ID
@@ -42,11 +43,5 @@ namespace Checkout.Agentic.Responses
         /// List of mandates for the purchase intent
         /// </summary>
         public Mandate[] Mandates { get; set; }
-
-        /// <summary>
-        /// Links for related operations
-        /// </summary>
-        [JsonProperty("_links")]
-        public AgenticLinks Links { get; set; }
     }
 }
