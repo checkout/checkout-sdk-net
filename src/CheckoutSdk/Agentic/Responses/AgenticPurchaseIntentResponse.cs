@@ -1,6 +1,5 @@
-using Checkout.Agentic.Requests;
 using Checkout.Common;
-using Newtonsoft.Json;
+using Checkout.Agentic.Entities;
 
 namespace Checkout.Agentic.Responses
 {

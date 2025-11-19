@@ -1,6 +1,6 @@
 using Checkout.Common;
 
-namespace Checkout.Agentic.Requests
+namespace Checkout.Agentic.Entities
 {
     /// <summary>
     /// Represents transaction amount information for agentic commerce

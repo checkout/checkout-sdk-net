@@ -1,6 +1,6 @@
 using System;
 
-namespace Checkout.Agentic.Requests
+namespace Checkout.Agentic.Entities
 {
     /// <summary>
     /// Mandate configuration for purchase intents

@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Checkout.Agentic.Requests
+namespace Checkout.Agentic.Entities
 {
     /// <summary>
     /// Device Information
