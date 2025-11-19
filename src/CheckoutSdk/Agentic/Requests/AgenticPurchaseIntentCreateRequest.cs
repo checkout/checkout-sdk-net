@@ -1,3 +1,5 @@
+using Checkout.Agentic.Entities;
+
 namespace Checkout.Agentic.Requests
 {
     /// <summary>

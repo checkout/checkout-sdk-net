@@ -3,7 +3,8 @@ using System.Net;
 using System.Threading.Tasks;
 using Shouldly;
 using Xunit;
-using Checkout.Agentic;
+
+using Checkout.Agentic.Entities;
 using Checkout.Agentic.Requests;
 using Checkout.Common;
 

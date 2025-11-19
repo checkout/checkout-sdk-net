@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Moq;
 using Shouldly;
 using Xunit;
+
+using Checkout.Agentic.Entities;
 using Checkout.Agentic.Requests;
 using Checkout.Agentic.Responses;
 using Checkout.Common;

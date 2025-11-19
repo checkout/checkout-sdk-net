@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using Checkout.Common;
 
-namespace Checkout.Agentic.Requests
+namespace Checkout.Agentic.Entities
 {
     /// <summary>
     /// Payment Source for Agentic Enrollment
