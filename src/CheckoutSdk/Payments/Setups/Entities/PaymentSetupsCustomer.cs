@@ -12,23 +12,6 @@ namespace Checkout.Payments.Setups.Entities
 
         public PaymentSetupsCustomerDevice Device { get; set; }
 
-        public PaymentSetupsCustomerMerchantAccount MerchantAccount { get; set; }
-    }
-
-    public class PaymentSetupsCustomerEmail
-    {
-        public string Address { get; set; }
-
-        public bool? Verified { get; set; }
-    }
-
-    public class PaymentSetupsCustomerDevice
-    {
-        public string Locale { get; set; }
-    }
-
-    public class PaymentSetupsCustomerMerchantAccount
-    {
-        public string Id { get; set; }
+        public PaymentSetupMerchantAccount MerchantAccount { get; set; }
     }
 }

@@ -12,18 +12,4 @@ namespace Checkout.Payments.Setups.Entities
 
         public PaymentSetupsTabbyOptions PaymentMethodOptions { get; set; }
     }
-
-    public class PaymentSetupsTabbyOptions
-    {
-        public PaymentSetupsTabbyInstallments Installments { get; set; }
-    }
-
-    public class PaymentSetupsTabbyInstallments
-    {
-        public string Id { get; set; }
-
-        public string Status { get; set; }
-
-        public IList<string> Flags { get; set; }
-    }
 }

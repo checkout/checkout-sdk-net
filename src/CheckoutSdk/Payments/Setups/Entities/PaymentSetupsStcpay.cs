@@ -14,25 +14,4 @@ namespace Checkout.Payments.Setups.Entities
 
         public PaymentSetupsStcpayOptions PaymentMethodOptions { get; set; }
     }
-
-    public class PaymentSetupsStcpayOptions
-    {
-        public PaymentSetupsStcpayPayInFull PayInFull { get; set; }
-    }
-
-    public class PaymentSetupsStcpayPayInFull
-    {
-        public string Id { get; set; }
-
-        public string Status { get; set; }
-
-        public IList<string> Flags { get; set; }
-
-        public PaymentSetupsStcpayAction Action { get; set; }
-    }
-
-    public class PaymentSetupsStcpayAction
-    {
-        public string Type { get; set; }
-    }
 }

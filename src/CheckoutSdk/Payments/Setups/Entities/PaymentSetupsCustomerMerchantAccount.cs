@@ -1,6 +1,6 @@
-namespace Checkout.Payments.Setups.Requests.Entities
+namespace Checkout.Payments.Setups.Entities
 {
-    public class PaymentSetupsCustomerMerchantAccount
+    public class PaymentSetupMerchantAccount
     {
         public string Id { get; set; }
 

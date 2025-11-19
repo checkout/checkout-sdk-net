@@ -1,13 +1,13 @@
-namespace Checkout.Payments.Setups.Requests.Entities
+namespace Checkout.Payments.Setups.Entities
 {
     public class PaymentSetupsOrderSubMerchant
     {
         public string Id { get; set; }
 
-        public string ProductCategory { get; set; }
+        public string Name { get; set; }
 
-        public int? NumberOfTrades { get; set; }
+        public long? Amount { get; set; }
 
-        public string RegistrationDate { get; set; }
+        public string Reference { get; set; }
     }
 }

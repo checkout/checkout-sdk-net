@@ -1,4 +1,4 @@
-namespace Checkout.Payments.Setups.Requests.Entities
+namespace Checkout.Payments.Setups.Entities
 {
     public class PaymentSetupsCustomerEmail
     {
