@@ -2,6 +2,9 @@
 {
     public class Product
     {
+        public ItemType Type { get; set; }
+        
+        public ItemSubType SubType { get; set; }
         public string Name { get; set; }
 
         public long? Quantity { get; set; }
