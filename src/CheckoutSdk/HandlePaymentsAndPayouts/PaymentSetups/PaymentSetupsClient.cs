@@ -5,7 +5,7 @@ namespace Checkout.Payments.Setups
 {
     public class PaymentSetupsClient : AbstractClient, IPaymentSetupsClient
     {
-        private const string PaymentSetupPath = "payment-setups";
+        private const string PaymentsPath = "payments";
         private const string SetupsPath = "setups";
 
         public PaymentSetupsClient(IApiClient apiClient, CheckoutConfiguration configuration)
@@ -22,7 +22,7 @@ namespace Checkout.Payments.Setups
         {
             CheckoutUtils.ValidateParams("paymentSetupsCreatePaymentSetupRequest", paymentSetupsCreatePaymentSetupRequest);
             return ApiClient.Post<PaymentSetupsResponse>(
-                BuildPath(PaymentSetupPath, SetupsPath),
+                BuildPath(PaymentsPath, SetupsPath),
                 SdkAuthorization(),
                 paymentSetupsCreatePaymentSetupRequest,
                 cancellationToken
