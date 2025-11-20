@@ -3,7 +3,7 @@ using Checkout.Payments.Setups.Entities;
 
 namespace Checkout.Payments.Setups
 {
-    public class PaymentSetupsCreateRequest
+    public class PaymentSetupsRequest
     {
         public string ProcessingChannelId { get; set; }
 

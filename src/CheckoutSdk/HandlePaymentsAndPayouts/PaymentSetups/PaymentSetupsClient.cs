@@ -8,6 +8,8 @@ namespace Checkout.Payments.Setups
         private const string PaymentsPath = "payments";
         private const string SetupsPath = "setups";
 
+        private const string ConfirmPath = "confirm";
+
         public PaymentSetupsClient(IApiClient apiClient, CheckoutConfiguration configuration)
                       : base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
         {
@@ -17,16 +19,64 @@ namespace Checkout.Payments.Setups
         /// Creates a Payment Setup
         /// </summary>
         public Task<PaymentSetupsResponse> CreatePaymentSetup(
-            PaymentSetupsCreateRequest paymentSetupsCreatePaymentSetupRequest,
+            PaymentSetupsRequest paymentSetupsCreateRequest,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("paymentSetupsCreatePaymentSetupRequest", paymentSetupsCreatePaymentSetupRequest);
+            CheckoutUtils.ValidateParams("paymentSetupsCreateRequest", paymentSetupsCreateRequest);
             return ApiClient.Post<PaymentSetupsResponse>(
                 BuildPath(PaymentsPath, SetupsPath),
                 SdkAuthorization(),
-                paymentSetupsCreatePaymentSetupRequest,
+                paymentSetupsCreateRequest,
                 cancellationToken
             );
+        }
+
+        /// <summary>
+        /// Updates a Payment Setup
+        /// </summary>
+        public Task<PaymentSetupsResponse> UpdatePaymentSetup(
+            string id,
+            PaymentSetupsRequest paymentSetupsUpdateRequest,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("id", id, "paymentSetupsUpdateRequest", paymentSetupsUpdateRequest);
+            return ApiClient.Put<PaymentSetupsResponse>(
+                BuildPath(PaymentsPath, SetupsPath, id),
+                SdkAuthorization(),
+                paymentSetupsUpdateRequest,
+                cancellationToken
+            );
+        }
+
+        /// <summary>
+        /// Gets a Payment Setup
+        /// </summary>
+        public Task<PaymentSetupsResponse> GetPaymentSetup(
+            string id,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("id", id);
+            return ApiClient.Get<PaymentSetupsResponse>(
+                BuildPath(PaymentsPath, SetupsPath, id),
+                SdkAuthorization(),
+                cancellationToken
+            );  
+        }
+
+        /// <summary>
+        /// Confirms a Payment Setup
+        /// </summary>
+        public Task<PaymentSetupsConfirmResponse> ConfirmPaymentSetup(
+            string id, 
+            string PaymentMethodOptionId,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("id", id);
+            return ApiClient.Post<PaymentSetupsConfirmResponse>(
+                BuildPath(PaymentsPath, SetupsPath, id, ConfirmPath, PaymentMethodOptionId),
+                SdkAuthorization(),
+                cancellationToken
+            );  
         }
     }
 }

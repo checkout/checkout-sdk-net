@@ -5,6 +5,8 @@ namespace Checkout.Payments.Setups
 {
     public class PaymentSetupsResponse : Resource
     {
+        public string Id { get; set; }
+
         public string ProcessingChannelId { get; set; }
 
         public long? Amount { get; set; }
