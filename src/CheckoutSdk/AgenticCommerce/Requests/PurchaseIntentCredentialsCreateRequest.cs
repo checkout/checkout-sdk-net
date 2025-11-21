@@ -1,15 +1,15 @@
-using Checkout.Agentic.Entities;
+using System.Collections.Generic;
 
-namespace Checkout.Agentic.Requests
+namespace Checkout.AgenticCommerce.Requests
 {
     /// <summary>
     /// Request to create a purchase intent credentials for agentic commerce
     /// </summary>
-    public class AgenticPurchaseIntentCredentialsCreateRequest
+    public class PurchaseIntentCredentialsCreateRequest
     {
         /// <summary>
         /// Array of transaction data for the purchase intent credentials
         /// </summary>
-        public TransactionData[] TransactionData { get; set; }
+        public IList<TransactionData> TransactionData { get; set; }
     }
 }
