@@ -16,7 +16,6 @@ namespace Checkout.Payments.Setups
         /// <summary>
         /// Updates a Payment Setup
         /// </summary>
-        /// <returns></returns>
         Task<PaymentSetupsResponse> UpdatePaymentSetup(
             string id,
             PaymentSetupsRequest paymentSetupsUpdateRequest,
