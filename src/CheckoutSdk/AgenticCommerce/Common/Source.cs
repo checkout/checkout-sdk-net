@@ -1,9 +1,9 @@
-namespace Checkout.AgenticCommerce.Requests
+namespace Checkout.AgenticCommerce.Common
 {
     /// <summary>
     /// The payment source to enroll
     /// </summary>
-    public class AgenticSource
+    public class Source
     {
         /// <summary>
         /// The full card number, without separators

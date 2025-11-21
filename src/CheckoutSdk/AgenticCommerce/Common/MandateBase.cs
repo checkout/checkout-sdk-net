@@ -1,19 +1,12 @@
-using Checkout.AgenticCommerce.Common;
 using System;
 
-namespace Checkout.AgenticCommerce.Responses.Common
+namespace Checkout.AgenticCommerce.Common
 {
     /// <summary>
     /// Mandate configuration for purchase intents
     /// </summary>
-    public class AgenticMandateResponse: AgenticMandateBase
+    public class MandateBase
     {
-        /// <summary>
-        /// The unique identifier for the mandate
-        /// [Required]
-        /// </summary>
-        public string Id { get; set; }
-
         /// <summary>
         /// Purchase threshold configuration
         /// </summary>

@@ -1,16 +1,15 @@
-using Checkout.AgenticCommerce.Common;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using Shouldly;
 using Xunit;
+
+using Checkout.AgenticCommerce.Common;
 using Checkout.AgenticCommerce.Requests;
-using Checkout.AgenticCommerce.Requests.Common;
 using Checkout.AgenticCommerce.Responses;
-using Checkout.AgenticCommerce.Responses.Common;
 using Checkout.Common;
-using System;
 
 namespace Checkout.AgenticCommerce
 {
@@ -36,7 +35,7 @@ namespace Checkout.AgenticCommerce
         {
             var agenticEnrollRequest = new EnrollACardRequest
             {
-                Source = new AgenticSource
+                Source = new Source
                 {
                     Number = "4242424242424242",
                     ExpiryMonth = 12,
@@ -44,12 +43,12 @@ namespace Checkout.AgenticCommerce
                     Cvv = "123",
                     Type = "Card"
                 },
-                Device = new AgenticDevice
+                Device = new Device
                 {
                     IpAddress = "192.168.1.1",
                     UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
                 },
-                Customer = new AgenticCustomer
+                Customer = new Customer
                 {
                     Email = "test@example.com",
                     CountryCode = CountryCode.US,
@@ -95,7 +94,7 @@ namespace Checkout.AgenticCommerce
         {
             var agenticEnrollRequest = new EnrollACardRequest
             {
-                Source = new AgenticSource
+                Source = new Source
                 {
                     Number = "4242424242424242",
                     ExpiryMonth = 12,
@@ -103,12 +102,12 @@ namespace Checkout.AgenticCommerce
                     Cvv = "123",
                     Type = "card"
                 },
-                Device = new AgenticDevice
+                Device = new Device
                 {
                     IpAddress = "192.168.1.1",
                     UserAgent = "Mozilla/5.0 Test"
                 },
-                Customer = new AgenticCustomer
+                Customer = new Customer
                 {
                     Email = "test@example.com",
                     CountryCode = CountryCode.US,
@@ -135,9 +134,9 @@ namespace Checkout.AgenticCommerce
         {
             var agenticEnrollRequest = new EnrollACardRequest
             {
-                Source = new AgenticSource { Type = "card" },
-                Device = new AgenticDevice(),
-                Customer = new AgenticCustomer { Email = "test@example.com", CountryCode = CountryCode.US, LanguageCode = "en" }
+                Source = new Source { Type = "card" },
+                Device = new Device(),
+                Customer = new Customer { Email = "test@example.com", CountryCode = CountryCode.US, LanguageCode = "en" }
             };
 
             _apiClient.Setup(apiClient =>
@@ -160,7 +159,7 @@ namespace Checkout.AgenticCommerce
             var createPurchaseIntentRequest = new PurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                Device = new AgenticDevice
+                Device = new Device
                 {
                     IpAddress = "192.168.1.100",
                     UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
@@ -168,9 +167,9 @@ namespace Checkout.AgenticCommerce
                     DeviceType = "tablet"
                 },
                 CustomerPrompt = "I'm looking for running shoes in a size 10, for under $150.",
-                Mandates = new List<AgenticMandateRequest>
+                Mandates = new List<Mandate>
                 {
-                    new AgenticMandateRequest
+                    new Mandate
                     {
                         PurchaseThreshold = new PurchaseThreshold
                         {
@@ -189,7 +188,7 @@ namespace Checkout.AgenticCommerce
                 Scheme = "visa",
                 Status = PurchaseIntentStatusType.Created,
                 TokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                DeviceData = new AgenticDevice
+                DeviceData = new Device
                 {
                     IpAddress = "192.168.1.100",
                     UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
@@ -197,9 +196,9 @@ namespace Checkout.AgenticCommerce
                     DeviceType = "tablet"
                 },
                 CustomerPrompt = "Hey AI, I need Nike running shoes in size 10 under $130.00",
-                Mandates = new List<AgenticMandateResponse>
+                Mandates = new List<MandateExtended>
                 {
-                    new AgenticMandateResponse
+                    new MandateExtended
                     {
                         Id = "mandate_123",
                         PurchaseThreshold = new PurchaseThreshold
@@ -256,15 +255,15 @@ namespace Checkout.AgenticCommerce
             var createPurchaseIntentRequest = new PurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_test_123",
-                Device = new AgenticDevice
+                Device = new Device
                 {
                     IpAddress = "192.168.1.100",
                     UserAgent = "Mozilla/5.0 Test"
                 },
                 CustomerPrompt = "Test prompt",
-                Mandates = new List<AgenticMandateRequest>
+                Mandates = new List<Mandate>
                 {
-                    new AgenticMandateRequest
+                    new Mandate
                     {
                         Description = "Test mandate"
                     }
@@ -291,7 +290,7 @@ namespace Checkout.AgenticCommerce
             var createPurchaseIntentRequest = new PurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_test_123",
-                Device = new AgenticDevice(),
+                Device = new Device(),
                 CustomerPrompt = "Test prompt"
             };
 
@@ -338,7 +337,7 @@ namespace Checkout.AgenticCommerce
                 Scheme = "visa",
                 Status = PurchaseIntentStatusType.Created,
                 TokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                DeviceData = new AgenticDevice
+                DeviceData = new Device
                 {
                     IpAddress = "192.168.1.100",
                     UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
@@ -348,7 +347,7 @@ namespace Checkout.AgenticCommerce
                 CustomerPrompt = "Hey AI, I need Nike running shoes in size 10 under $130.00",
                 Mandates = new[]
                 {
-                    new AgenticMandateResponse
+                    new MandateExtended
                     {
                         Id = "mandate_123",
                         PurchaseThreshold = new PurchaseThreshold
@@ -554,9 +553,9 @@ namespace Checkout.AgenticCommerce
             var updatePurchaseIntentRequest = new PurchaseIntentUpdateRequest
             {
                 CustomerPrompt = "Updated prompt: I'm looking for Nike running shoes in size 10.5, for under $200.",
-                Mandates = new List<AgenticMandateRequest>()
+                Mandates = new List<Mandate>()
                 {
-                    new AgenticMandateRequest
+                    new Mandate
                     {
                         PurchaseThreshold = new PurchaseThreshold
                         {
@@ -575,7 +574,7 @@ namespace Checkout.AgenticCommerce
                 Scheme = "visa",
                 Status = PurchaseIntentStatusType.Active,
                 TokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                DeviceData = new AgenticDevice
+                DeviceData = new Device
                 {
                     IpAddress = "192.168.1.100",
                     UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
@@ -585,7 +584,7 @@ namespace Checkout.AgenticCommerce
                 CustomerPrompt = "Updated prompt: I'm looking for Nike running shoes in size 10.5, for under $200.",
                 Mandates = new[]
                 {
-                    new AgenticMandateResponse
+                    new MandateExtended
                     {
                         Id = "mandate_updated_123",
                         PurchaseThreshold = new PurchaseThreshold
@@ -631,9 +630,9 @@ namespace Checkout.AgenticCommerce
             var updatePurchaseIntentRequest = new PurchaseIntentUpdateRequest
             {
                 CustomerPrompt = "Test prompt",
-                Mandates = new List<AgenticMandateRequest>()
+                Mandates = new List<Mandate>()
                 {
-                    new AgenticMandateRequest
+                    new Mandate
                     {
                         Description = "Test mandate"
                     }
@@ -684,9 +683,9 @@ namespace Checkout.AgenticCommerce
             var updatePurchaseIntentRequest = new PurchaseIntentUpdateRequest
             {
                 CustomerPrompt = "Test update prompt",
-                Mandates = new List<AgenticMandateRequest>()
+                Mandates = new List<Mandate>()
                 {
-                    new AgenticMandateRequest
+                    new Mandate
                     {
                         PurchaseThreshold = new PurchaseThreshold
                         {
@@ -719,9 +718,9 @@ namespace Checkout.AgenticCommerce
             var updatePurchaseIntentRequest = new PurchaseIntentUpdateRequest
             {
                 CustomerPrompt = "Auth test prompt",
-                Mandates = new List<AgenticMandateRequest>
+                Mandates = new List<Mandate>
                 {
-                    new AgenticMandateRequest
+                    new Mandate
                     {
                         Description = "Auth test mandate",
                         PurchaseThreshold = new PurchaseThreshold

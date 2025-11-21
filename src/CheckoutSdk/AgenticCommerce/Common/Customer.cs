@@ -1,11 +1,11 @@
 using Checkout.Common;
 
-namespace Checkout.AgenticCommerce.Requests
+namespace Checkout.AgenticCommerce.Common
 {
     /// <summary>
     /// The customer's details
     /// </summary>
-    public class AgenticCustomer
+    public class Customer
     {
         /// <summary>
         /// The customer's email address

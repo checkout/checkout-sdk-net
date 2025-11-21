@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Checkout.AgenticCommerce.Common;
 
 namespace Checkout.AgenticCommerce.Requests
 {
