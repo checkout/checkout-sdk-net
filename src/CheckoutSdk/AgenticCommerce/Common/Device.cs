@@ -1,9 +1,9 @@
-namespace Checkout.AgenticCommerce.Requests
+namespace Checkout.AgenticCommerce.Common
 {
     /// <summary>
     /// The user's device
     /// </summary>
-    public class AgenticDevice
+    public class Device
     {
         /// <summary>
         /// The device's IP address

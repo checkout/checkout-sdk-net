@@ -1,3 +1,5 @@
+using Checkout.AgenticCommerce.Common;
+
 namespace Checkout.AgenticCommerce.Requests
 {
     /// <summary>
@@ -15,6 +17,6 @@ namespace Checkout.AgenticCommerce.Requests
         /// The user's device
         /// [Required]
         /// </summary>
-        public AgenticDevice Device { get; set; }
+        public Device Device { get; set; }
     }
 }

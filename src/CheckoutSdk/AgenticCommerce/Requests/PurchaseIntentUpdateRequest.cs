@@ -1,5 +1,5 @@
-using Checkout.AgenticCommerce.Requests.Common;
 using System.Collections.Generic;
+using Checkout.AgenticCommerce.Common;
 
 namespace Checkout.AgenticCommerce.Requests
 {
@@ -11,7 +11,7 @@ namespace Checkout.AgenticCommerce.Requests
         /// <summary>
         /// A list of mandates associated with the purchase intent
         /// </summary>
-        public IList<AgenticMandateRequest> Mandates { get; set; }
+        public IList<Mandate> Mandates { get; set; }
         
         /// <summary>
         /// A prompt or message for the customer. You can display this during the purchase process to provide additional

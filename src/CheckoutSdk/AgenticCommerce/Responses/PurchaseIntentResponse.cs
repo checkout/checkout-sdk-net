@@ -1,7 +1,6 @@
-using Checkout.AgenticCommerce.Requests;
-using Checkout.AgenticCommerce.Responses.Common;
-using Checkout.Common;
 using System.Collections.Generic;
+using Checkout.AgenticCommerce.Common;
+using Checkout.Common;
 
 namespace Checkout.AgenticCommerce.Responses
 {
@@ -33,7 +32,7 @@ namespace Checkout.AgenticCommerce.Responses
         /// <summary>
         /// The device information of the purchase intent
         /// </summary>
-        public AgenticDevice DeviceData { get; set; }
+        public Device DeviceData { get; set; }
 
         /// <summary>
         /// The customer prompt of the purchase intent
@@ -43,6 +42,6 @@ namespace Checkout.AgenticCommerce.Responses
         /// <summary>
         /// List of mandates for the purchase intent
         /// </summary>
-        public IList<AgenticMandateResponse> Mandates { get; set; }
+        public IList<MandateExtended> Mandates { get; set; }
     }
 }

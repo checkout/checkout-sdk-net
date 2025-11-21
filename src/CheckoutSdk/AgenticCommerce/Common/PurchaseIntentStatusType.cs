@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Checkout.AgenticCommerce.Responses.Common
+namespace Checkout.AgenticCommerce.Common
 {
     public enum PurchaseIntentStatusType
     {

@@ -1,3 +1,5 @@
+using Checkout.AgenticCommerce.Common;
+
 namespace Checkout.AgenticCommerce.Requests
 {
     /// <summary>
@@ -8,16 +10,16 @@ namespace Checkout.AgenticCommerce.Requests
         /// <summary>
         /// The payment source to enroll
         /// </summary>
-        public AgenticSource Source { get; set; }
+        public Source Source { get; set; }
 
         /// <summary>
         /// The user's device
         /// </summary>
-        public AgenticDevice Device { get; set; }
+        public Device Device { get; set; }
 
         /// <summary>
         /// The customer's details
         /// </summary>
-        public AgenticCustomer Customer { get; set; }
+        public Customer Customer { get; set; }
     }
 }

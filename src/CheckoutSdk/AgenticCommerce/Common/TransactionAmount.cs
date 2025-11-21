@@ -1,6 +1,6 @@
 using Checkout.Common;
 
-namespace Checkout.AgenticCommerce.Requests
+namespace Checkout.AgenticCommerce.Common
 {
     /// <summary>
     /// Transaction amount information
