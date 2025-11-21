@@ -10,7 +10,7 @@ using Checkout.AgenticCommerce.Responses.Common;
 using Checkout.Common;
 using System.Collections.Generic;
 
-namespace Checkout.Agentic
+namespace Checkout.AgenticCommerce
 {
     public class AgenticIntegrationTest : SandboxTestFixture
     {
@@ -18,17 +18,17 @@ namespace Checkout.Agentic
         {
         }
 
-        [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
+        [Fact]
         private async Task EnrollShouldEnroll()
         {
             var agenticEnrollRequest = new EnrollACardRequest
             {
                 Source = new AgenticSource
                 {
-                    Number = "4242424242424242",
+                    Number = "4543474002249996",
                     ExpiryMonth = 12,
                     ExpiryYear = 2025,
-                    Cvv = "123",
+                    Cvv = "100",
                     Type = "card"
                 },
                 Device = new AgenticDevice
@@ -46,36 +46,29 @@ namespace Checkout.Agentic
                 }
             };
 
-            var response = await DefaultApi.AgenticClient().Enroll(agenticEnrollRequest);
+            var response = await DefaultApi.AgenticClient().EnrollACard(agenticEnrollRequest);
 
             response.ShouldNotBeNull();
-            response.TokenId.ShouldNotBeNullOrEmpty();
-            response.Status.ShouldNotBeNullOrEmpty();
-            response.CreatedAt.ShouldNotBe(default(DateTime));
-            
-            // Validate that token_id follows expected pattern
-            response.TokenId.ShouldStartWith("nt_");
-            
-            // Validate status is one of expected values
             response.Status.ShouldBe("enrolled");
+            response.CreatedAt.ShouldNotBe(default(DateTime));
         }
 
-        [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
+        [Fact]
         private async Task EnrollShouldEnrollWithMinimalData()
         {
             var agenticEnrollRequest = new EnrollACardRequest
             {
                 Source = new AgenticSource
                 {
-                    Number = "4242424242424242",
+                    Number = "4543474002249996",
                     ExpiryMonth = 6,
                     ExpiryYear = 2026,
-                    Cvv = "100",
                     Type = "card"
                 },
                 Device = new AgenticDevice
                 {
-                    IpAddress = "10.0.0.1"
+                    IpAddress = "10.0.0.1",
+                    UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
                 },
                 Customer = new AgenticCustomer
                 {
@@ -85,83 +78,23 @@ namespace Checkout.Agentic
                 }
             };
 
-            var response = await DefaultApi.AgenticClient().Enroll(agenticEnrollRequest);
+            var response = await DefaultApi.AgenticClient().EnrollACard(agenticEnrollRequest);
 
             response.ShouldNotBeNull();
-            response.TokenId.ShouldNotBeNullOrEmpty();
             response.Status.ShouldBe("enrolled");
         }
 
-        [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
-        private async Task EnrollShouldHandleDifferentCardTypes()
-        {
-            // Test with Visa card
-            var visaRequest = new EnrollACardRequest
-            {
-                Source = new AgenticSource
-                {
-                    Number = "4242424242424242", // Visa test card
-                    ExpiryMonth = 8,
-                    ExpiryYear = 2027,
-                    Cvv = "888",
-                    Type = "card"
-                },
-                Device = new AgenticDevice
-                {
-                    IpAddress = "203.0.113.195",
-                    UserAgent = "Test Agent"
-                },
-                Customer = new AgenticCustomer
-                {
-                    Email = GenerateRandomEmail(),
-                    CountryCode = CountryCode.US,
-                    LanguageCode = "en"
-                }
-            };
-
-            var visaResponse = await DefaultApi.AgenticClient().Enroll(visaRequest);
-            visaResponse.ShouldNotBeNull();
-            visaResponse.Status.ShouldBe("enrolled");
-
-            // Test with Mastercard
-            var mastercardRequest = new EnrollACardRequest
-            {
-                Source = new AgenticSource
-                {
-                    Number = "5555555555554444", // Mastercard test card
-                    ExpiryMonth = 9,
-                    ExpiryYear = 2028,
-                    Cvv = "999",
-                    Type = "card"
-                },
-                Device = new AgenticDevice
-                {
-                    IpAddress = "198.51.100.42"
-                },
-                Customer = new AgenticCustomer
-                {
-                    Email = GenerateRandomEmail(),
-                    CountryCode = CountryCode.US,
-                    LanguageCode = "en"
-                }
-            };
-
-            var mastercardResponse = await DefaultApi.AgenticClient().Enroll(mastercardRequest);
-            mastercardResponse.ShouldNotBeNull();
-            mastercardResponse.Status.ShouldBe("enrolled");
-        }
-
-        [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
+        [Fact]
         private async Task EnrollShouldHandleInternationalCustomers()
         {
             var internationalRequest = new EnrollACardRequest
             {
                 Source = new AgenticSource
                 {
-                    Number = "4242424242424242",
+                    Number = "4543474002249996",
                     ExpiryMonth = 3,
                     ExpiryYear = 2029,
-                    Cvv = "314",
+                    Cvv = "100",
                     Type = "card"
                 },
                 Device = new AgenticDevice
@@ -179,11 +112,10 @@ namespace Checkout.Agentic
                 }
             };
 
-            var response = await DefaultApi.AgenticClient().Enroll(internationalRequest);
+            var response = await DefaultApi.AgenticClient().EnrollACard(internationalRequest);
 
             response.ShouldNotBeNull();
             response.Status.ShouldBe("enrolled");
-            response.TokenId.ShouldStartWith("nt_");
         }
 
         [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]

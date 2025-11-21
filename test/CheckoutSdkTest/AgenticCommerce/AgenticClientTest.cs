@@ -12,7 +12,7 @@ using Checkout.AgenticCommerce.Responses.Common;
 using Checkout.Common;
 using System;
 
-namespace Checkout.Agentic
+namespace Checkout.AgenticCommerce
 {
     public class AgenticClientTest : UnitTestFixture
     {
@@ -71,7 +71,7 @@ namespace Checkout.Agentic
 
             IAgenticClient client = new AgenticClient(_apiClient.Object, _configuration.Object);
 
-            var response = await client.Enroll(agenticEnrollRequest, CancellationToken.None);
+            var response = await client.EnrollACard(agenticEnrollRequest, CancellationToken.None);
 
             response.ShouldNotBeNull();
             response.TokenId.ShouldBe(expectedResponse.TokenId);
@@ -85,7 +85,7 @@ namespace Checkout.Agentic
             IAgenticClient client = new AgenticClient(_apiClient.Object, _configuration.Object);
 
             var exception = await Should.ThrowAsync<CheckoutArgumentException>(
-                async () => await client.Enroll(null, CancellationToken.None));
+                async () => await client.EnrollACard(null, CancellationToken.None));
 
             exception.Message.ShouldContain("agenticEnrollRequest");
         }
@@ -123,7 +123,7 @@ namespace Checkout.Agentic
 
             IAgenticClient client = new AgenticClient(_apiClient.Object, _configuration.Object);
 
-            await client.Enroll(agenticEnrollRequest, CancellationToken.None);
+            await client.EnrollACard(agenticEnrollRequest, CancellationToken.None);
 
             _apiClient.Verify(apiClient =>
                 apiClient.Post<EnrollACardResponse>("agentic/enroll", _authorization, agenticEnrollRequest,
@@ -147,7 +147,7 @@ namespace Checkout.Agentic
 
             IAgenticClient client = new AgenticClient(_apiClient.Object, _configuration.Object);
 
-            await client.Enroll(agenticEnrollRequest, CancellationToken.None);
+            await client.EnrollACard(agenticEnrollRequest, CancellationToken.None);
 
             _apiClient.Verify(apiClient =>
                 apiClient.Post<EnrollACardResponse>(It.IsAny<string>(), _authorization, 

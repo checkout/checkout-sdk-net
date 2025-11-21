@@ -1,5 +1,5 @@
 using Checkout.Accounts;
-using Checkout.Agentic;
+using Checkout.AgenticCommerce;
 using Checkout.Authentication;
 using Checkout.Balances;
 using Checkout.Issuing;

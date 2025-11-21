@@ -12,6 +12,12 @@ namespace Checkout.AgenticCommerce.Responses
         /// [Required]
         /// </summary>
         public string TokenId { get; set; }
+        
+        /// <summary>
+        /// The unique identifier for the provisioned token
+        /// [Required]
+        /// </summary>
+        public string NetworkTokenId { get; set; }
 
         /// <summary>
         /// The status of the enrollment
