@@ -3,10 +3,12 @@ using System.Net;
 using System.Threading.Tasks;
 using Shouldly;
 using Xunit;
-
-using Checkout.Agentic.Entities;
-using Checkout.Agentic.Requests;
+using Checkout.AgenticCommerce.Common;
+using Checkout.AgenticCommerce.Requests;
+using Checkout.AgenticCommerce.Requests.Common;
+using Checkout.AgenticCommerce.Responses.Common;
 using Checkout.Common;
+using System.Collections.Generic;
 
 namespace Checkout.Agentic
 {
@@ -19,17 +21,17 @@ namespace Checkout.Agentic
         [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
         private async Task EnrollShouldEnroll()
         {
-            var agenticEnrollRequest = new AgenticEnrollRequest
+            var agenticEnrollRequest = new EnrollACardRequest
             {
-                Source = new PaymentSource
+                Source = new AgenticSource
                 {
                     Number = "4242424242424242",
                     ExpiryMonth = 12,
                     ExpiryYear = 2025,
                     Cvv = "123",
-                    Type = PaymentSourceType.Card
+                    Type = "card"
                 },
-                Device = new DeviceInfo
+                Device = new AgenticDevice
                 {
                     IpAddress = "192.168.1.100",
                     UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -61,17 +63,17 @@ namespace Checkout.Agentic
         [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
         private async Task EnrollShouldEnrollWithMinimalData()
         {
-            var agenticEnrollRequest = new AgenticEnrollRequest
+            var agenticEnrollRequest = new EnrollACardRequest
             {
-                Source = new PaymentSource
+                Source = new AgenticSource
                 {
                     Number = "4242424242424242",
                     ExpiryMonth = 6,
                     ExpiryYear = 2026,
                     Cvv = "100",
-                    Type = PaymentSourceType.Card
+                    Type = "card"
                 },
-                Device = new DeviceInfo
+                Device = new AgenticDevice
                 {
                     IpAddress = "10.0.0.1"
                 },
@@ -94,17 +96,17 @@ namespace Checkout.Agentic
         private async Task EnrollShouldHandleDifferentCardTypes()
         {
             // Test with Visa card
-            var visaRequest = new AgenticEnrollRequest
+            var visaRequest = new EnrollACardRequest
             {
-                Source = new PaymentSource
+                Source = new AgenticSource
                 {
                     Number = "4242424242424242", // Visa test card
                     ExpiryMonth = 8,
                     ExpiryYear = 2027,
                     Cvv = "888",
-                    Type = PaymentSourceType.Card
+                    Type = "card"
                 },
-                Device = new DeviceInfo
+                Device = new AgenticDevice
                 {
                     IpAddress = "203.0.113.195",
                     UserAgent = "Test Agent"
@@ -122,17 +124,17 @@ namespace Checkout.Agentic
             visaResponse.Status.ShouldBe("enrolled");
 
             // Test with Mastercard
-            var mastercardRequest = new AgenticEnrollRequest
+            var mastercardRequest = new EnrollACardRequest
             {
-                Source = new PaymentSource
+                Source = new AgenticSource
                 {
                     Number = "5555555555554444", // Mastercard test card
                     ExpiryMonth = 9,
                     ExpiryYear = 2028,
                     Cvv = "999",
-                    Type = PaymentSourceType.Card
+                    Type = "card"
                 },
-                Device = new DeviceInfo
+                Device = new AgenticDevice
                 {
                     IpAddress = "198.51.100.42"
                 },
@@ -152,17 +154,17 @@ namespace Checkout.Agentic
         [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
         private async Task EnrollShouldHandleInternationalCustomers()
         {
-            var internationalRequest = new AgenticEnrollRequest
+            var internationalRequest = new EnrollACardRequest
             {
-                Source = new PaymentSource
+                Source = new AgenticSource
                 {
                     Number = "4242424242424242",
                     ExpiryMonth = 3,
                     ExpiryYear = 2029,
                     Cvv = "314",
-                    Type = PaymentSourceType.Card
+                    Type = "card"
                 },
-                Device = new DeviceInfo
+                Device = new AgenticDevice
                 {
                     IpAddress = "80.112.12.34", // European IP
                     UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
@@ -187,10 +189,10 @@ namespace Checkout.Agentic
         [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
         private async Task CreatePurchaseIntentShouldCreatePurchaseIntent()
         {
-            var createPurchaseIntentRequest = new AgenticPurchaseIntentCreateRequest
+            var createPurchaseIntentRequest = new PurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                Device = new DeviceInfo
+                Device = new AgenticDevice
                 {
                     IpAddress = "192.168.1.100",
                     UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -198,11 +200,10 @@ namespace Checkout.Agentic
                     DeviceType = "tablet"
                 },
                 CustomerPrompt = "I'm looking for running shoes in a size 10, for under $150.",
-                Mandates = new[]
+                Mandates = new List<AgenticMandateRequest>
                 {
-                    new Mandate
+                    new AgenticMandateRequest
                     {
-                        Id = "mandate_123",
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 100,
@@ -218,7 +219,7 @@ namespace Checkout.Agentic
 
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNullOrEmpty();
-            response.Status.ShouldNotBeNullOrEmpty();
+            response.Status.ShouldNotBeNull();
             response.TokenId.ShouldNotBeNullOrEmpty();
             response.CustomerPrompt.ShouldNotBeNullOrEmpty();
             
@@ -226,7 +227,7 @@ namespace Checkout.Agentic
             response.Id.ShouldStartWith("pi_");
             
             // Validate status is one of expected values
-            response.Status.ShouldBe("active");
+            response.Status.ShouldBe(PurchaseIntentStatusType.Active);
             
             // Validate links are present
             response.Links.ShouldNotBeNull();
@@ -237,10 +238,10 @@ namespace Checkout.Agentic
         [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
         private async Task CreatePurchaseIntentShouldCreatePurchaseIntentWithMinimalData()
         {
-            var createPurchaseIntentRequest = new AgenticPurchaseIntentCreateRequest
+            var createPurchaseIntentRequest = new PurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                Device = new DeviceInfo
+                Device = new AgenticDevice
                 {
                     IpAddress = "10.0.0.1"
                 },
@@ -251,7 +252,7 @@ namespace Checkout.Agentic
 
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNullOrEmpty();
-            response.Status.ShouldBe("active");
+            response.Status.ShouldBe(PurchaseIntentStatusType.Active);
             response.TokenId.ShouldNotBeNullOrEmpty();
         }
 
@@ -259,10 +260,10 @@ namespace Checkout.Agentic
         private async Task CreatePurchaseIntentShouldHandleDifferentMandateTypes()
         {
             // Test with single mandate
-            var singleMandateRequest = new AgenticPurchaseIntentCreateRequest
+            var singleMandateRequest = new PurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                Device = new DeviceInfo
+                Device = new AgenticDevice
                 {
                     IpAddress = "203.0.113.195",
                     UserAgent = "Test Agent",
@@ -270,11 +271,10 @@ namespace Checkout.Agentic
                     DeviceType = "desktop"
                 },
                 CustomerPrompt = "Looking for electronics under $500",
-                Mandates = new[]
+                Mandates = new List<AgenticMandateRequest>
                 {
-                    new Mandate
+                    new AgenticMandateRequest
                     {
-                        Id = "mandate_single",
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 500,
@@ -288,23 +288,22 @@ namespace Checkout.Agentic
 
             var singleResponse = await DefaultApi.AgenticClient().CreatePurchaseIntent(singleMandateRequest);
             singleResponse.ShouldNotBeNull();
-            singleResponse.Status.ShouldBe("active");
-            singleResponse.Mandates.Length.ShouldBe(1);
+            singleResponse.Status.ShouldBe(PurchaseIntentStatusType.Active);
+            singleResponse.Mandates.Count.ShouldBe(1);
 
             // Test with multiple mandates
-            var multipleMandateRequest = new AgenticPurchaseIntentCreateRequest
+            var multipleMandateRequest = new PurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                Device = new DeviceInfo
+                Device = new AgenticDevice
                 {
                     IpAddress = "198.51.100.42"
                 },
                 CustomerPrompt = "Shopping for clothing and accessories",
-                Mandates = new[]
+                Mandates = new List<AgenticMandateRequest>
                 {
-                    new Mandate
+                    new AgenticMandateRequest
                     {
-                        Id = "mandate_clothing",
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 200,
@@ -313,9 +312,8 @@ namespace Checkout.Agentic
                         Description = "Clothing purchase",
                         ExpirationDate = DateTime.Parse("2026-06-30T23:59:59.000Z")
                     },
-                    new Mandate
+                    new AgenticMandateRequest
                     {
-                        Id = "mandate_accessories",
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 100,
@@ -329,17 +327,17 @@ namespace Checkout.Agentic
 
             var multipleResponse = await DefaultApi.AgenticClient().CreatePurchaseIntent(multipleMandateRequest);
             multipleResponse.ShouldNotBeNull();
-            multipleResponse.Status.ShouldBe("active");
-            multipleResponse.Mandates.Length.ShouldBe(2);
+            multipleResponse.Status.ShouldBe(PurchaseIntentStatusType.Active);
+            multipleResponse.Mandates.Count.ShouldBe(2);
         }
 
         [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
         private async Task CreatePurchaseIntentShouldHandleInternationalCurrencies()
         {
-            var internationalRequest = new AgenticPurchaseIntentCreateRequest
+            var internationalRequest = new PurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                Device = new DeviceInfo
+                Device = new AgenticDevice
                 {
                     IpAddress = "80.112.12.34", // European IP
                     UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
@@ -347,11 +345,10 @@ namespace Checkout.Agentic
                     DeviceType = "mobile"
                 },
                 CustomerPrompt = "Buscando zapatos deportivos en talla 42",
-                Mandates = new[]
+                Mandates = new List<AgenticMandateRequest>
                 {
-                    new Mandate
+                    new AgenticMandateRequest
                     {
-                        Id = "mandate_eur",
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 150,
@@ -366,7 +363,7 @@ namespace Checkout.Agentic
             var response = await DefaultApi.AgenticClient().CreatePurchaseIntent(internationalRequest);
 
             response.ShouldNotBeNull();
-            response.Status.ShouldBe("active");
+            response.Status.ShouldBe(PurchaseIntentStatusType.Active);
             response.Id.ShouldStartWith("pi_");
             response.Mandates.ShouldNotBeNull();
             response.Mandates[0].PurchaseThreshold.CurrencyCode.ShouldBe(Currency.EUR);
@@ -376,20 +373,19 @@ namespace Checkout.Agentic
         private async Task CreatePurchaseIntentCredentialsShouldCreateCredentials()
         {
             // First create a purchase intent to get an ID
-            var createPurchaseIntentRequest = new AgenticPurchaseIntentCreateRequest
+            var createPurchaseIntentRequest = new PurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                Device = new DeviceInfo
+                Device = new AgenticDevice
                 {
                     IpAddress = "192.168.1.100",
                     UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
                 },
                 CustomerPrompt = "I need running shoes in size 10, under $150.",
-                Mandates = new[]
+                Mandates = new List<AgenticMandateRequest>
                 {
-                    new Mandate
+                    new AgenticMandateRequest
                     {
-                        Id = "mandate_credentials_test",
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 15000,
@@ -406,7 +402,7 @@ namespace Checkout.Agentic
             purchaseIntentResponse.Id.ShouldNotBeNullOrEmpty();
 
             // Now create credentials for this purchase intent  
-            var createCredentialsRequest = new AgenticPurchaseIntentCredentialsCreateRequest
+            var createCredentialsRequest = new PurchaseIntentCredentialsCreateRequest
             {
                 TransactionData = new[]
                 {
@@ -430,7 +426,7 @@ namespace Checkout.Agentic
 
             credentialsResponse.ShouldNotBeNull();
             credentialsResponse.Id.ShouldBe(purchaseIntentResponse.Id);
-            credentialsResponse.Status.ShouldNotBeNullOrEmpty();
+            credentialsResponse.Status.ShouldNotBeNull();
             credentialsResponse.TokenId.ShouldNotBeNullOrEmpty();
             
             // Validate that the purchase intent ID follows expected pattern
@@ -446,20 +442,19 @@ namespace Checkout.Agentic
         private async Task CreatePurchaseIntentCredentialsShouldHandleMultipleTransactionData()
         {
             // First create a purchase intent
-            var createPurchaseIntentRequest = new AgenticPurchaseIntentCreateRequest
+            var createPurchaseIntentRequest = new PurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                Device = new DeviceInfo
+                Device = new AgenticDevice
                 {
                     IpAddress = "203.0.113.195",
                     UserAgent = "Test Agent Multi Transaction"
                 },
                 CustomerPrompt = "I need multiple items: electronics and clothing.",
-                Mandates = new[]
+                Mandates = new List<AgenticMandateRequest>
                 {
-                    new Mandate
+                    new AgenticMandateRequest
                     {
-                        Id = "mandate_multi_transaction",
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 100000,
@@ -475,7 +470,7 @@ namespace Checkout.Agentic
             purchaseIntentResponse.ShouldNotBeNull();
 
             // Create credentials with multiple transaction data
-            var createCredentialsRequest = new AgenticPurchaseIntentCredentialsCreateRequest
+            var createCredentialsRequest = new PurchaseIntentCredentialsCreateRequest
             {
                 TransactionData = new[]
                 {
@@ -511,7 +506,7 @@ namespace Checkout.Agentic
 
             credentialsResponse.ShouldNotBeNull();
             credentialsResponse.Id.ShouldBe(purchaseIntentResponse.Id);
-            credentialsResponse.Status.ShouldNotBeNullOrEmpty();
+            credentialsResponse.Status.ShouldNotBeNull();
             credentialsResponse.TokenId.ShouldNotBeNullOrEmpty();
             
             // Validate response structure
@@ -523,20 +518,19 @@ namespace Checkout.Agentic
         private async Task CreatePurchaseIntentCredentialsShouldHandleInternationalTransactions()
         {
             // Create purchase intent
-            var createPurchaseIntentRequest = new AgenticPurchaseIntentCreateRequest
+            var createPurchaseIntentRequest = new PurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                Device = new DeviceInfo
+                Device = new AgenticDevice
                 {
                     IpAddress = "80.112.12.34", // European IP
                     UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
                 },
                 CustomerPrompt = "Looking for luxury items in different currencies.",
-                Mandates = new[]
+                Mandates = new List<AgenticMandateRequest>
                 {
-                    new Mandate
+                    new AgenticMandateRequest
                     {
-                        Id = "mandate_international",
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 200000,
@@ -552,7 +546,7 @@ namespace Checkout.Agentic
             purchaseIntentResponse.ShouldNotBeNull();
 
             // Create credentials with international transaction data
-            var createCredentialsRequest = new AgenticPurchaseIntentCredentialsCreateRequest
+            var createCredentialsRequest = new PurchaseIntentCredentialsCreateRequest
             {
                 TransactionData = new[]
                 {
@@ -588,7 +582,7 @@ namespace Checkout.Agentic
 
             credentialsResponse.ShouldNotBeNull();
             credentialsResponse.Id.ShouldBe(purchaseIntentResponse.Id);
-            credentialsResponse.Status.ShouldNotBeNullOrEmpty();
+            credentialsResponse.Status.ShouldNotBeNull();
             credentialsResponse.TokenId.ShouldNotBeNullOrEmpty();
             
             // Validate international handling
@@ -601,10 +595,10 @@ namespace Checkout.Agentic
         private async Task CreatePurchaseIntentCredentialsShouldHandleMinimalTransactionData()
         {
             // Create purchase intent first
-            var createPurchaseIntentRequest = new AgenticPurchaseIntentCreateRequest
+            var createPurchaseIntentRequest = new PurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                Device = new DeviceInfo
+                Device = new AgenticDevice
                 {
                     IpAddress = "10.0.0.1"
                 },
@@ -615,7 +609,7 @@ namespace Checkout.Agentic
             purchaseIntentResponse.ShouldNotBeNull();
 
             // Create credentials with minimal transaction data
-            var createCredentialsRequest = new AgenticPurchaseIntentCredentialsCreateRequest
+            var createCredentialsRequest = new PurchaseIntentCredentialsCreateRequest
             {
                 TransactionData = new[]
                 {
@@ -636,7 +630,7 @@ namespace Checkout.Agentic
 
             credentialsResponse.ShouldNotBeNull();
             credentialsResponse.Id.ShouldBe(purchaseIntentResponse.Id);
-            credentialsResponse.Status.ShouldNotBeNullOrEmpty();
+            credentialsResponse.Status.ShouldNotBeNull();
             credentialsResponse.TokenId.ShouldNotBeNullOrEmpty();
             credentialsResponse.Id.ShouldStartWith("pi_");
         }
@@ -645,10 +639,10 @@ namespace Checkout.Agentic
         private async Task UpdatePurchaseIntentShouldUpdatePurchaseIntent()
         {
             // First create a purchase intent to update
-            var createPurchaseIntentRequest = new AgenticPurchaseIntentCreateRequest
+            var createPurchaseIntentRequest = new PurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                Device = new DeviceInfo
+                Device = new AgenticDevice
                 {
                     IpAddress = "192.168.1.100",
                     UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
@@ -656,11 +650,10 @@ namespace Checkout.Agentic
                     DeviceType = "tablet"
                 },
                 CustomerPrompt = "I'm looking for running shoes in a size 10, for under $150.",
-                Mandates = new[]
+                Mandates = new List<AgenticMandateRequest>
                 {
-                    new Mandate
+                    new AgenticMandateRequest
                     {
-                        Id = "mandate_original_123",
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 15000,
@@ -678,14 +671,13 @@ namespace Checkout.Agentic
             purchaseIntentResponse.Id.ShouldNotBeNullOrEmpty();
 
             // Now update the purchase intent
-            var updatePurchaseIntentRequest = new AgenticPurchaseIntentUpdateRequest
+            var updatePurchaseIntentRequest = new PurchaseIntentUpdateRequest
             {
                 CustomerPrompt = "Updated: I'm looking for Nike running shoes in size 10.5, for under $200.",
-                Mandates = new[]
+                Mandates = new List<AgenticMandateRequest>
                 {
-                    new Mandate
+                    new AgenticMandateRequest
                     {
-                        Id = "mandate_updated_123",
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 20000,
@@ -702,14 +694,14 @@ namespace Checkout.Agentic
             updateResponse.ShouldNotBeNull();
             updateResponse.Id.ShouldBe(purchaseIntentResponse.Id);
             updateResponse.CustomerPrompt.ShouldBe(updatePurchaseIntentRequest.CustomerPrompt);
-            updateResponse.Status.ShouldNotBeNullOrEmpty();
+            updateResponse.Status.ShouldNotBeNull();
         }
 
         [Fact(Skip = "This test is unsupported currently, not ready to test in the sandbox")]
         private async Task UpdatePurchaseIntentShouldHandleNonExistentPurchaseIntent()
         {
             var nonExistentId = "pi_nonexistent_123456";
-            var updatePurchaseIntentRequest = new AgenticPurchaseIntentUpdateRequest
+            var updatePurchaseIntentRequest = new PurchaseIntentUpdateRequest
             {
                 CustomerPrompt = "This should fail"
             };
@@ -724,7 +716,7 @@ namespace Checkout.Agentic
         private async Task UpdatePurchaseIntentShouldValidateInputParameters()
         {
             // Test with null ID
-            var updateRequest = new AgenticPurchaseIntentUpdateRequest
+            var updateRequest = new PurchaseIntentUpdateRequest
             {
                 CustomerPrompt = "Valid prompt"
             };
@@ -746,20 +738,19 @@ namespace Checkout.Agentic
         private async Task UpdatePurchaseIntentShouldHandlePartialUpdates()
         {
             // First create a purchase intent
-            var createPurchaseIntentRequest = new AgenticPurchaseIntentCreateRequest
+            var createPurchaseIntentRequest = new PurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                Device = new DeviceInfo
+                Device = new AgenticDevice
                 {
                     IpAddress = "192.168.1.100",
                     UserAgent = "Mozilla/5.0 Test Browser"
                 },
                 CustomerPrompt = "Original prompt",
-                Mandates = new[]
+                Mandates = new List<AgenticMandateRequest>
                 {
-                    new Mandate
+                    new AgenticMandateRequest
                     {
-                        Id = "mandate_original",
                         Description = "Original mandate"
                     }
                 }
@@ -768,7 +759,7 @@ namespace Checkout.Agentic
             var purchaseIntentResponse = await DefaultApi.AgenticClient().CreatePurchaseIntent(createPurchaseIntentRequest);
 
             // Update only the customer prompt (partial update)
-            var partialUpdateRequest = new AgenticPurchaseIntentUpdateRequest
+            var partialUpdateRequest = new PurchaseIntentUpdateRequest
             {
                 CustomerPrompt = "Updated prompt only"
                 // Mandates is null - testing partial update
@@ -786,20 +777,19 @@ namespace Checkout.Agentic
         private async Task UpdatePurchaseIntentShouldHandleDifferentPurchaseIntentStates()
         {
             // Create purchase intent
-            var createRequest = new AgenticPurchaseIntentCreateRequest
+            var createRequest = new PurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                Device = new DeviceInfo
+                Device = new AgenticDevice
                 {
                     IpAddress = "192.168.1.100",
                     UserAgent = "Mozilla/5.0 State Test"
                 },
                 CustomerPrompt = "Test different states",
-                Mandates = new[]
+                Mandates = new List<AgenticMandateRequest>
                 {
-                    new Mandate
+                    new AgenticMandateRequest
                     {
-                        Id = "mandate_state_test",
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 10000,
@@ -813,14 +803,13 @@ namespace Checkout.Agentic
             var purchaseIntentResponse = await DefaultApi.AgenticClient().CreatePurchaseIntent(createRequest);
 
             // Try to update the purchase intent regardless of its current state
-            var updateRequest = new AgenticPurchaseIntentUpdateRequest
+            var updateRequest = new PurchaseIntentUpdateRequest
             {
                 CustomerPrompt = "Updated for state testing",
-                Mandates = new[]
+                Mandates = new List<AgenticMandateRequest>
                 {
-                    new Mandate
+                    new AgenticMandateRequest
                     {
-                        Id = "mandate_updated_state",
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 12000,
@@ -843,20 +832,19 @@ namespace Checkout.Agentic
         private async Task DeletePurchaseIntentShouldDeletePurchaseIntent()
         {
             // First create a purchase intent to delete
-            var createPurchaseIntentRequest = new AgenticPurchaseIntentCreateRequest
+            var createPurchaseIntentRequest = new PurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                Device = new DeviceInfo
+                Device = new AgenticDevice
                 {
                     IpAddress = "192.168.1.100",
                     UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
                 },
                 CustomerPrompt = "I need running shoes for deletion test.",
-                Mandates = new[]
+                Mandates = new List<AgenticMandateRequest>
                 {
-                    new Mandate
+                    new AgenticMandateRequest
                     {
-                        Id = "mandate_delete_test",
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 10000,
@@ -899,20 +887,19 @@ namespace Checkout.Agentic
         private async Task DeletePurchaseIntentShouldHandleAlreadyDeletedPurchaseIntent()
         {
             // First create a purchase intent
-            var createPurchaseIntentRequest = new AgenticPurchaseIntentCreateRequest
+            var createPurchaseIntentRequest = new PurchaseIntentCreateRequest
             {
                 NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                Device = new DeviceInfo
+                Device = new AgenticDevice
                 {
                     IpAddress = "203.0.113.195",
                     UserAgent = "Test Agent Double Delete"
                 },
                 CustomerPrompt = "Purchase intent for double deletion test.",
-                Mandates = new[]
+                Mandates = new List<AgenticMandateRequest>
                 {
-                    new Mandate
+                    new AgenticMandateRequest
                     {
-                        Id = "mandate_double_delete",
                         PurchaseThreshold = new PurchaseThreshold
                         {
                             Amount = 5000,
@@ -952,20 +939,19 @@ namespace Checkout.Agentic
             foreach (var testCase in testCases)
             {
                 // Create purchase intent
-                var createRequest = new AgenticPurchaseIntentCreateRequest
+                var createRequest = new PurchaseIntentCreateRequest
                 {
                     NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                    Device = new DeviceInfo
+                    Device = new AgenticDevice
                     {
                         IpAddress = "10.0.0.1",
                         UserAgent = "Test Agent States"
                     },
                     CustomerPrompt = testCase.CustomerPrompt,
-                    Mandates = new[]
+                    Mandates = new List<AgenticMandateRequest>
                     {
-                        new Mandate
+                        new AgenticMandateRequest
                         {
-                            Id = $"mandate_states_{testCase.Description.Replace(" ", "_").ToLower()}",
                             PurchaseThreshold = new PurchaseThreshold
                             {
                                 Amount = 7500,

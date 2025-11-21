@@ -1,29 +1,31 @@
-using Newtonsoft.Json;
-
-namespace Checkout.Agentic.Entities
+namespace Checkout.AgenticCommerce.Requests
 {
     /// <summary>
-    /// Device Information
+    /// The user's device
     /// </summary>
-    public class DeviceInfo
+    public class AgenticDevice
     {
         /// <summary>
-        /// IP address of the device
+        /// The device's IP address
+        /// [Required]
         /// </summary>
         public string IpAddress { get; set; }
 
         /// <summary>
-        /// User agent string from the browser
+        /// The device's user agent
+        /// [Required]
         /// </summary>
         public string UserAgent { get; set; }
 
         /// <summary>
-        /// Device brand (e.g., "apple", "samsung")
+        /// The device brand
+        /// [Optional]
         /// </summary>
         public string DeviceBrand { get; set; }
 
         /// <summary>
-        /// Device type (e.g., "tablet", "mobile", "desktop")
+        /// The device type
+        /// [Optional]
         /// </summary>
         public string DeviceType { get; set; }
     }

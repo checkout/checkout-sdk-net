@@ -1,12 +1,12 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Checkout.Agentic.Requests;
-using Checkout.Agentic.Responses;
+using Checkout.AgenticCommerce.Requests;
+using Checkout.AgenticCommerce.Responses;
 
 namespace Checkout.Agentic
 {
     /// <summary>
-    /// Agentic API Client
+    /// Agentic Commerce API Client
     /// </summary>
     public class AgenticClient : AbstractClient, IAgenticClient
     {
@@ -19,72 +19,78 @@ namespace Checkout.Agentic
             base(apiClient, configuration, SdkAuthorizationType.OAuth)
         {
         }
+        
+        // Agentic Commerce enrollment
+        // ----------------------------------------------------------------
 
         /// <summary>
-        /// Enroll in agentic services
-        /// Enrolls a card for use with agentic commerce.
+        /// Enroll a card for use with agentic commerce
+        /// [BETA]
         /// </summary>
-        public Task<AgenticEnrollResponse> Enroll(
-            AgenticEnrollRequest agenticEnrollRequest,
+        public Task<EnrollACardResponse> Enroll(
+            EnrollACardRequest enrollACardRequest,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("agenticEnrollRequest", agenticEnrollRequest);
-            return ApiClient.Post<AgenticEnrollResponse>(
+            CheckoutUtils.ValidateParams("agenticEnrollRequest", enrollACardRequest);
+            return ApiClient.Post<EnrollACardResponse>(
                 BuildPath(AgenticPath, EnrollPath),
                 SdkAuthorization(),
-                agenticEnrollRequest,
+                enrollACardRequest,
                 cancellationToken
             );
         }
+        
+        // Purchase intents
+        // ----------------------------------------------------------------
 
         /// <summary>
-        /// Create a purchase intent
-        /// Creates a new purchase intent for agentic commerce
+        /// Create an agentic commerce purchase intent
+        /// [BETA]
         /// </summary>
-        public Task<AgenticPurchaseIntentResponse> CreatePurchaseIntent(
-            AgenticPurchaseIntentCreateRequest agenticPurchaseIntentCreateRequest,
+        public Task<PurchaseIntentResponse> CreatePurchaseIntent(
+            PurchaseIntentCreateRequest purchaseIntentCreateRequest,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("agenticPurchaseIntentCreateRequest", agenticPurchaseIntentCreateRequest);
-            return ApiClient.Post<AgenticPurchaseIntentResponse>(
+            CheckoutUtils.ValidateParams("agenticPurchaseIntentCreateRequest", purchaseIntentCreateRequest);
+            return ApiClient.Post<PurchaseIntentResponse>(
                 BuildPath(AgenticPath, PurchaseIntentPath),
                 SdkAuthorization(),
-                agenticPurchaseIntentCreateRequest,
+                purchaseIntentCreateRequest,
                 cancellationToken
             );
         }
 
         /// <summary>
-        /// Create a purchase intent
-        /// Creates a new purchase intent for agentic commerce
+        /// Create credentials for an agentic commerce purchase intent.
+        /// [BETA]
         /// </summary>
-        public Task<AgenticPurchaseIntentResponse> CreatePurchaseIntentCredentials(string id,
-            AgenticPurchaseIntentCredentialsCreateRequest agenticPurchaseIntentCredentialsCreateRequest,
+        public Task<PurchaseIntentResponse> CreatePurchaseIntentCredentials(string id,
+            PurchaseIntentCredentialsCreateRequest purchaseIntentCredentialsCreateRequest,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("id", id,"agenticPurchaseIntentCredentialsCreateRequest", 
-            agenticPurchaseIntentCredentialsCreateRequest);
-            return ApiClient.Post<AgenticPurchaseIntentResponse>(
+            purchaseIntentCredentialsCreateRequest);
+            return ApiClient.Post<PurchaseIntentResponse>(
                 BuildPath(AgenticPath, PurchaseIntentPath, id, CredentialsPath),
                 SdkAuthorization(),
-                agenticPurchaseIntentCredentialsCreateRequest,
+                purchaseIntentCredentialsCreateRequest,
                 cancellationToken
             );
         }
 
         /// <summary>
-        /// Update a purchase intent
-        /// Updates a new purchase intent for agentic commerce
+        /// Update an agentic commerce purchase intent
+        /// [BETA]
         /// </summary>
-        public Task<AgenticPurchaseIntentResponse> UpdatePurchaseIntent(string id,
-            AgenticPurchaseIntentUpdateRequest agenticPurchaseIntentUpdateRequest,
+        public Task<PurchaseIntentResponse> UpdatePurchaseIntent(string id,
+            PurchaseIntentUpdateRequest purchaseIntentUpdateRequest,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("id", id, "agenticPurchaseIntentUpdateRequest", agenticPurchaseIntentUpdateRequest);
-            return ApiClient.Put<AgenticPurchaseIntentResponse>(
+            CheckoutUtils.ValidateParams("id", id, "agenticPurchaseIntentUpdateRequest", purchaseIntentUpdateRequest);
+            return ApiClient.Put<PurchaseIntentResponse>(
                 BuildPath(AgenticPath, PurchaseIntentPath, id),
                 SdkAuthorization(),
-                agenticPurchaseIntentUpdateRequest,
+                purchaseIntentUpdateRequest,
                 cancellationToken
             );
         }
