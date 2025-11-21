@@ -10,6 +10,7 @@ namespace Checkout.Payments.Setups.Entities
         public CustomerEmail Email { get; set; }
 
         /// <summary>
+        /// <= 100 characters
         /// The customer's full name
         /// </summary>
         public string Name { get; set; }
@@ -25,7 +26,7 @@ namespace Checkout.Payments.Setups.Entities
         public CustomerDevice Device { get; set; }
 
         /// <summary>
-        /// The merchant account associated with this customer
+        /// Details of the account the customer holds with the merchant
         /// </summary>
         public PaymentSetupMerchantAccount MerchantAccount { get; set; }
     }

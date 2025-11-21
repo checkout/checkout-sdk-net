@@ -11,22 +11,24 @@ namespace Checkout.Payments.Setups
         public string ProcessingChannelId { get; set; }
 
         /// <summary>
-        /// The payment amount. The exact format depends on the currency
+        /// The payment amount, in the minor currency unit. The exact format depends on the currency
         /// </summary>
         public long? Amount { get; set; }
 
         /// <summary>
-        /// The three-letter ISO currency code
+        /// The currency of the payment, as a three-letter ISO currency code
         /// </summary>
         public Currency? Currency { get; set; }
 
         /// <summary>
-        /// The type of payment method
+        /// The type of payment.
+        //// You must provide this field for card payments in which the cardholder is not present. For example, if the transaction is a recurring payment, or a mail order/telephone order (MOTO) payment.
+        /// Enum: "Regular" "Recurring" "MOTO" "Installment" "Unscheduled"
         /// </summary>
         public PaymentType? PaymentType { get; set; }
 
         /// <summary>
-        /// A reference you can later use to identify this payment setup
+        /// A reference you can use to identify the payment. For example, an order number
         /// </summary>
         public string Reference { get; set; }
 
@@ -36,7 +38,7 @@ namespace Checkout.Payments.Setups
         public string Description { get; set; }
 
         /// <summary>
-        /// The payment method configuration for this setup
+        /// The payment methods that are enabled on your account and available for use
         /// </summary>
         public PaymentMethods PaymentMethods { get; set; }
 
@@ -56,7 +58,7 @@ namespace Checkout.Payments.Setups
         public Order Order { get; set; }
 
         /// <summary>
-        /// Industry-specific information for specialized payment scenarios
+        /// Details for specific industries, including airline and accommodation industries
         /// </summary>
         public Industry Industry { get; set; }
     }

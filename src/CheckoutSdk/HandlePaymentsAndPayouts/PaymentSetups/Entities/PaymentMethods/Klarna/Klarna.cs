@@ -15,7 +15,10 @@ namespace Checkout.Payments.Setups.Entities
         public IList<string> Flags { get; set; }
 
         /// <summary>
-        /// The initialization status or token for Klarna
+        ///  Default: "disabled"
+        /// The initialization state of the payment method.
+        /// When you create a Payment Setup, this defaults to disabled.
+        /// Enum: "disabled" "enabled"
         /// </summary>
         public string Initialization { get; set; }
 
