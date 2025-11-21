@@ -53,5 +53,6 @@
         [OAuthScope("Payment Context")] PaymentContext,
         [OAuthScope("forward")] Forward,
         [OAuthScope("vault:network-tokens")] VaultNetworkTokens,
+        [OAuthScope("agentic:enroll")] AgenticEnroll,
     }
 }
