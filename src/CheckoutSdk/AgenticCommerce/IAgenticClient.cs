@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Checkout.AgenticCommerce.Requests;
 using Checkout.AgenticCommerce.Responses;
 
-namespace Checkout.Agentic
+namespace Checkout.AgenticCommerce
 {
     /// <summary>
     /// Agentic Commerce API Client
@@ -17,7 +17,7 @@ namespace Checkout.Agentic
         /// Enroll a card for use with agentic commerce
         /// [BETA]
         /// </summary>
-        Task<EnrollACardResponse> Enroll(
+        Task<EnrollACardResponse> EnrollACard(
             EnrollACardRequest enrollACardRequest,
             CancellationToken cancellationToken = default);
         
