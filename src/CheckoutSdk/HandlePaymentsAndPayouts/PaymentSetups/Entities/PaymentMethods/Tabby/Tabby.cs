@@ -20,7 +20,7 @@ namespace Checkout.Payments.Setups.Entities
         /// When you create a Payment Setup, this defaults to disabled.
         /// Enum: "disabled" "enabled" 
         /// </summary>
-        public string Initialization { get; set; }
+        public PaymentMethodInitialization Initialization { get; set; } = PaymentMethodInitialization.Disabled;
 
         /// <summary>
         /// Payment method options specific to Tabby
