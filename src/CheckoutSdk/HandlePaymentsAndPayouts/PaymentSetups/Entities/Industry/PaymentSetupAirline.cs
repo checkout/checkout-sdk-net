@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Checkout.Payments.Contexts;
 
 namespace Checkout.Payments.Setups.Entities
 {
@@ -7,16 +8,16 @@ namespace Checkout.Payments.Setups.Entities
         /// <summary>
         /// The airline ticket information
         /// </summary>
-        public AirlineTicket Ticket { get; set; }
+        public PaymentContextsTicket Ticket { get; set; }
 
         /// <summary>
         /// List of passengers on the flight
         /// </summary>
-        public IList<AirlinePassenger> Passengers { get; set; }
+        public IList<PaymentContextsPassenger> Passengers { get; set; }
 
         /// <summary>
         /// Details of each leg of the flight journey
         /// </summary>
-        public IList<FlightLegDetails> FlightLegDetails { get; set; }
+        public IList<PaymentContextsFlightLegDetails> FlightLegDetails { get; set; }
     }
 }

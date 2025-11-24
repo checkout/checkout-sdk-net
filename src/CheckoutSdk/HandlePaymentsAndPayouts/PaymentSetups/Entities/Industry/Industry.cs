@@ -12,6 +12,6 @@ namespace Checkout.Payments.Setups.Entities
         /// <summary>
         /// Accommodation industry-specific data for hotel bookings and related payments
         /// </summary>
-        public IList<PaymentSetupAccommodation> AccommodationData { get; set; }
+        public IList<AccommodationData> AccommodationData { get; set; }
     }
 }
