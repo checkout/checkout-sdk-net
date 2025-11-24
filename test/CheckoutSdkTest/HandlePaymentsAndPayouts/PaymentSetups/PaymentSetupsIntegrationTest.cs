@@ -158,7 +158,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                     // Configure basic payment methods for testing
                     Klarna = new Klarna
                     {
-                        Initialization = "disabled",
+                        Initialization = KlarnaInitialization.Disabled,
                         AccountHolder = new KlarnaAccountHolder
                         {
                             BillingAddress = new Address
