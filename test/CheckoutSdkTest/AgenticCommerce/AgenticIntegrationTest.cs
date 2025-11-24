@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 using Shouldly;
 using Xunit;
 
@@ -867,33 +868,30 @@ namespace Checkout.AgenticCommerce
                 new { Description = "Complex purchase intent", CustomerPrompt = "Complex purchase intent with multiple mandates for deletion test" }
             };
 
-            foreach (var testCase in testCases)
+            foreach (var createRequest in testCases.Select(testCase => new PurchaseIntentCreateRequest
             {
-                // Create purchase intent
-                var createRequest = new PurchaseIntentCreateRequest
+                NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
+                Device = new Device
                 {
-                    NetworkTokenId = "nt_e7fjr77crbgmlhpjvuq3bj6jba",
-                    Device = new Device
+                    IpAddress = "10.0.0.1",
+                    UserAgent = "Test Agent States"
+                },
+                CustomerPrompt = testCase.CustomerPrompt,
+                Mandates = new List<Mandate>
+                {
+                    new Mandate
                     {
-                        IpAddress = "10.0.0.1",
-                        UserAgent = "Test Agent States"
-                    },
-                    CustomerPrompt = testCase.CustomerPrompt,
-                    Mandates = new List<Mandate>
-                    {
-                        new Mandate
+                        PurchaseThreshold = new PurchaseThreshold
                         {
-                            PurchaseThreshold = new PurchaseThreshold
-                            {
-                                Amount = 7500,
-                                CurrencyCode = Currency.USD
-                            },
-                            Description = $"Mandate for {testCase.Description}",
-                            ExpirationDate = DateTime.Parse("2026-12-31T23:59:59.000Z")
-                        }
+                            Amount = 7500,
+                            CurrencyCode = Currency.USD
+                        },
+                        Description = $"Mandate for {testCase.Description}",
+                        ExpirationDate = DateTime.Parse("2026-12-31T23:59:59.000Z")
                     }
-                };
-
+                }
+            }))
+            {
                 var purchaseIntentResponse = await DefaultApi.AgenticClient().CreatePurchaseIntent(createRequest);
                 purchaseIntentResponse.ShouldNotBeNull();
                 purchaseIntentResponse.Id.ShouldStartWith("pi_");
