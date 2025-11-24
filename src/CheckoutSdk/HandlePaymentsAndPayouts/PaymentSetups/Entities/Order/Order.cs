@@ -21,7 +21,7 @@ namespace Checkout.Payments.Setups.Entities
         public IList<OrderSubMerchant> SubMerchants { get; set; }
 
         /// <summary>
-        /// >= 0
+        /// &gt;= 0
         /// The discount amount applied to the order
         /// </summary>
         public long? DiscountAmount { get; set; }

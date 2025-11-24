@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Checkout.Payments.Setups.Entities
 {
@@ -20,7 +21,7 @@ namespace Checkout.Payments.Setups.Entities
         /// When you create a Payment Setup, this defaults to disabled.
         /// Enum: "disabled" "enabled"
         /// </summary>
-        public string Initialization { get; set; }
+        public KlarnaInitialization Initialization { get; set; } = KlarnaInitialization.Disabled;
 
         /// <summary>
         /// The account holder information for Klarna payments
@@ -31,5 +32,20 @@ namespace Checkout.Payments.Setups.Entities
         /// Payment method options specific to Klarna
         /// </summary>
         public KlarnaPaymentMethodOptions PaymentMethodOptions { get; set; }
+    }
+
+    public enum KlarnaInitialization
+    {
+        /// <summary>
+        /// The Klarna payment method is disabled
+        /// </summary>
+         [EnumMember(Value = "disabled")]
+        Disabled,
+        
+        /// <summary>
+        /// The Klarna payment method is enabled
+        /// </summary>
+        [EnumMember(Value = "enabled")]
+        Enabled
     }
 }

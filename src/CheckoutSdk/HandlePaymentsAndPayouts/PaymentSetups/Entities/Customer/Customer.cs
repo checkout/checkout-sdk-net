@@ -10,7 +10,7 @@ namespace Checkout.Payments.Setups.Entities
         public CustomerEmail Email { get; set; }
 
         /// <summary>
-        /// <= 100 characters
+        /// &lt;= 100 characters
         /// The customer's full name
         /// </summary>
         public string Name { get; set; }

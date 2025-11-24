@@ -68,12 +68,12 @@ namespace Checkout.Payments.Setups
         /// </summary>
         public Task<PaymentSetupsConfirmResponse> ConfirmPaymentSetup(
             string id, 
-            string PaymentMethodOptionId,
+            string paymentMethodOptionId,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("id", id);
+            CheckoutUtils.ValidateParams("id", id, "paymentMethodOptionId", paymentMethodOptionId);
             return ApiClient.Post<PaymentSetupsConfirmResponse>(
-                BuildPath(PaymentsPath, SetupsPath, id, ConfirmPath, PaymentMethodOptionId),
+                BuildPath(PaymentsPath, SetupsPath, id, ConfirmPath, paymentMethodOptionId),
                 SdkAuthorization(),
                 cancellationToken
             );  
