@@ -7,7 +7,7 @@ namespace Checkout.Payments.Setups.Entities
         /// <summary>
         /// Klarna SDK configuration options
         /// </summary>
-        public KlarnaOptionsSdk SDK { get; set; }
+        public KlarnaOptionsSdk Sdk { get; set; }
     }
 
     public class KlarnaOptionsSdk
