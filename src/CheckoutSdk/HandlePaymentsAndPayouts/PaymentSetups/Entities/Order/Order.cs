@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Checkout.Common;
+using Checkout.Payments.Contexts;
 
 namespace Checkout.Payments.Setups.Entities
 {
@@ -8,7 +9,7 @@ namespace Checkout.Payments.Setups.Entities
         /// <summary>
         /// The items included in the order
         /// </summary>
-        public IList<OrderItem> Items { get; set; }
+        public IList<PaymentContextsItems> Items { get; set; }
 
         /// <summary>
         /// The shipping information for the order
