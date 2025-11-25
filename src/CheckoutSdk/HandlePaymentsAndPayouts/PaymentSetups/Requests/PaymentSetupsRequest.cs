@@ -29,7 +29,7 @@ namespace Checkout.Payments.Setups
         /// Enum: "Regular" "Recurring" "MOTO" "Installment" "Unscheduled"
         /// [Optional]
         /// </summary>
-        public PaymentType? PaymentType { get; set; }
+        public PaymentType? PaymentType { get; set; } = Payments.PaymentType.Regular;
 
         /// <summary>
         /// A reference you can use to identify the payment. For example, an order number
