@@ -30,6 +30,6 @@ namespace Checkout.Payments.Setups.Entities
         /// <summary>
         /// Payment method options specific to Klarna
         /// </summary>
-        public KlarnaPaymentMethodOptions PaymentMethodOptions { get; set; }
+        public PaymentMethodOptions PaymentMethodOptions { get; set; }
     }
 }

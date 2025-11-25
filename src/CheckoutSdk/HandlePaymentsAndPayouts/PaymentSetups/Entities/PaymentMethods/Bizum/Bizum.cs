@@ -25,6 +25,6 @@ namespace Checkout.Payments.Setups.Entities
         /// <summary>
         /// Payment method options specific to Bizum
         /// </summary>
-        public BizumOptions PaymentMethodOptions { get; set; }
+        public PaymentMethodOptions PaymentMethodOptions { get; set; }
     }
 }

@@ -25,6 +25,6 @@ namespace Checkout.Payments.Setups.Entities
         /// <summary>
         /// Payment method options specific to Tabby
         /// </summary>
-        public TabbyOptions PaymentMethodOptions { get; set; }
+        public PaymentMethodOptions PaymentMethodOptions { get; set; }
     }
 }

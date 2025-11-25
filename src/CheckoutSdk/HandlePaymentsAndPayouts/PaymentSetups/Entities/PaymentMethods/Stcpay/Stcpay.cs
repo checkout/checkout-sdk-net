@@ -30,6 +30,6 @@ namespace Checkout.Payments.Setups.Entities
         /// <summary>
         /// Payment method options specific to STC Pay
         /// </summary>
-        public StcpayOptions PaymentMethodOptions { get; set; }
+        public PaymentMethodOptions PaymentMethodOptions { get; set; }
     }
 }
