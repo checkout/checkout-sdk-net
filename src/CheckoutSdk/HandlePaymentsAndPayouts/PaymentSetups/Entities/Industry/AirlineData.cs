@@ -3,7 +3,7 @@ using Checkout.Payments.Contexts;
 
 namespace Checkout.Payments.Setups.Entities
 {
-    public class PaymentSetupAirline
+    public class AirlineData
     {
         /// <summary>
         /// The airline ticket information

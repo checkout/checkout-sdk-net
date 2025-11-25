@@ -1,6 +1,6 @@
 namespace Checkout.Payments.Setups.Entities
 {
-    public class PaymentSetupMerchantAccount
+    public class MerchantAccount
     {
         /// <summary>
         /// The unique identifier of the merchant account

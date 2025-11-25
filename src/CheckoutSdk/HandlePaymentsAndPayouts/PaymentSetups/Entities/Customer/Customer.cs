@@ -28,7 +28,7 @@ namespace Checkout.Payments.Setups.Entities
         /// <summary>
         /// Details of the account the customer holds with the merchant
         /// </summary>
-        public PaymentSetupMerchantAccount MerchantAccount { get; set; }
+        public MerchantAccount MerchantAccount { get; set; }
     }
 
     public class CustomerEmail
