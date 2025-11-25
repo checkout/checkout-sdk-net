@@ -14,7 +14,7 @@ namespace Checkout.Payments.Setups.Entities
         /// <summary>
         /// The shipping information for the order
         /// </summary>
-        public OrderShipping Shipping { get; set; }
+        public ShippingDetails Shipping { get; set; }
 
         /// <summary>
         /// Information about sub-merchants involved in the order
@@ -26,19 +26,6 @@ namespace Checkout.Payments.Setups.Entities
         /// The discount amount applied to the order
         /// </summary>
         public long? DiscountAmount { get; set; }
-    }
-
-    public class OrderShipping
-    {
-        /// <summary>
-        /// The shipping address for the order
-        /// </summary>
-        public Address Address { get; set; }
-        
-        /// <summary>
-        /// The shipping method to be used
-        /// </summary>
-        public string Method { get; set; }
     }
 }
 
