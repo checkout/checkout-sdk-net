@@ -70,10 +70,13 @@ namespace Checkout.Metadata
 
         private static async Task<string> RequestCardToken()
         {
+            var logFactory = TestLoggerFactoryHelper.Instance;
+            
             var api = CheckoutSdk.Builder().StaticKeys()
                 .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PUBLIC_KEY"))
                 .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_SECRET_KEY"))
                 .Environment(Environment.Sandbox)
+                .LogProvider(logFactory)
                 .Build();
 
             var cardTokenRequest = new CardTokenRequest

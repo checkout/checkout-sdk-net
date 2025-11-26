@@ -14,6 +14,60 @@ using Xunit.Sdk;
 
 namespace Checkout
 {
+    /// <summary>
+    /// Non-disposable wrapper for ILoggerFactory to prevent disposal issues in CI/CD.
+    /// This wrapper protects the underlying logger factory from being disposed by LogProvider.SetLogFactory().
+    /// </summary>
+    public class NonDisposableLoggerFactory : ILoggerFactory
+    {
+        private readonly ILoggerFactory _innerFactory;
+
+        public NonDisposableLoggerFactory(ILoggerFactory innerFactory)
+        {
+            _innerFactory = innerFactory ?? throw new ArgumentNullException(nameof(innerFactory));
+        }
+
+        public ILogger CreateLogger(string categoryName) => _innerFactory.CreateLogger(categoryName);
+
+        public void AddProvider(ILoggerProvider provider) => _innerFactory.AddProvider(provider);
+
+        // This is the key: DO NOT dispose the inner factory
+        public void Dispose()
+        {
+            // Intentionally empty - we don't want to dispose the inner factory
+            // because it's shared across multiple test instances
+        }
+    }
+
+    /// <summary>
+    /// Thread-safe singleton logger factory for tests to prevent disposal issues in CI/CD.
+    /// Uses Lazy&lt;T&gt; for thread-safe initialization and maintains a single instance
+    /// throughout the test run lifecycle.
+    /// </summary>
+    public static class TestLoggerFactoryHelper
+    {
+        // Thread-safe singleton using Lazy<T>
+        private static readonly Lazy<ILoggerFactory> _instance = new Lazy<ILoggerFactory>(CreateInstance);
+        
+        /// <summary>
+        /// Gets the singleton ILoggerFactory instance wrapped in a non-disposable wrapper.
+        /// This prevents the SDK's LogProvider from disposing our shared instance.
+        /// </summary>
+        public static ILoggerFactory Instance => new NonDisposableLoggerFactory(_instance.Value);
+        
+        private static ILoggerFactory CreateInstance()
+        {
+            try
+            {
+                return new NLogLoggerFactory();
+            }
+            catch
+            {
+                return new LoggerFactory();
+            }
+        }
+    }
+
     public abstract class SandboxTestFixture
     {
         protected readonly Previous.ICheckoutApi PreviousApi;
@@ -23,7 +77,7 @@ namespace Checkout
 
         protected SandboxTestFixture(PlatformType platformType)
         {
-            var logFactory = new NLogLoggerFactory();
+            var logFactory = TestLoggerFactoryHelper.Instance;
             _log = logFactory.CreateLogger(typeof(SandboxTestFixture));
             
             switch (platformType)
@@ -72,6 +126,11 @@ namespace Checkout
                     throw new ArgumentOutOfRangeException(nameof(platformType), platformType, null);
             }
         }
+
+        /// <summary>
+        /// Gets the singleton logger factory instance. This prevents disposal issues in CI/CD.
+        /// </summary>
+        protected static ILoggerFactory CreateLoggerFactory() => TestLoggerFactoryHelper.Instance;
         
         protected class CustomClientFactory : IHttpClientFactory
         {
