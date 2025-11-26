@@ -1,4 +1,3 @@
-using Checkout;
 using Checkout.Common;
 using Checkout.Issuing.Cardholders.Requests;
 using Checkout.Issuing.Cardholders.Responses;
@@ -128,7 +127,7 @@ namespace Checkout.Issuing
 
         private static CheckoutApi IssuingCheckoutApi()
         {
-            var logFactory = TestLoggerFactoryHelper.Create();
+            var logFactory = CreateLoggerFactory();
             
             return CheckoutSdk.Builder()
                 .OAuth()

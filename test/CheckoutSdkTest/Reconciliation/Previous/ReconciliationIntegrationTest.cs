@@ -1,4 +1,3 @@
-using Checkout;
 using Checkout.Common;
 using Shouldly;
 using System;
@@ -19,7 +18,7 @@ namespace Checkout.Reconciliation.Previous
             .StaticKeys()
             .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_SECRET_KEY_PROD"))
             .Environment(Environment.Production)
-            .LogProvider(TestLoggerFactoryHelper.Create())
+            .LogProvider(Checkout.TestLoggerFactoryHelper.Create())
             .Build();
 
         [Fact(Skip = "Only works in Production")]

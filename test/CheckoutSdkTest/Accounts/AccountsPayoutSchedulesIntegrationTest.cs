@@ -1,4 +1,3 @@
-using Checkout;
 using Checkout.Accounts.Payout;
 using Checkout.Accounts.Payout.Request;
 using Checkout.Accounts.Payout.Response;
@@ -96,9 +95,9 @@ namespace Checkout.Accounts
             ((ScheduleFrequencyMonthlyResponse)currencySchedule.Recurrence).ByMonthDay.Count.ShouldBe(2);
         }
 
-        private static CheckoutApi GetPayoutSchedulesCheckoutApi()
+        private static ICheckoutApi GetPayoutSchedulesCheckoutApi()
         {
-            var logFactory = TestLoggerFactoryHelper.Create();
+            var logFactory = Checkout.TestLoggerFactoryHelper.Create();
             
             return CheckoutSdk.Builder()
                 .OAuth()

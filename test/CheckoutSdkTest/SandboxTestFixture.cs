@@ -14,41 +14,18 @@ using Xunit.Sdk;
 
 namespace Checkout
 {
-    /// <summary>
-    /// Utility class for creating logger factories in tests with fallback support.
-    /// This ensures tests work both locally and in CI/CD environments across all .NET versions.
-    /// </summary>
-    public static class TestLoggerFactoryHelper
-    {
-        /// <summary>
-        /// Creates an ILoggerFactory with fallback support.
-        /// First attempts to create NLogLoggerFactory, falls back to basic LoggerFactory if it fails.
-        /// </summary>
-        /// <returns>A working ILoggerFactory instance</returns>
-        public static ILoggerFactory Create()
-        {
-            try
-            {
-                return new NLogLoggerFactory();
-            }
-            catch
-            {
-                return new LoggerFactory();
-            }
-        }
-    }
-
-    public abstract class SandboxTestFixture
+    public abstract class SandboxTestFixture : IDisposable
     {
         protected readonly Previous.ICheckoutApi PreviousApi;
         protected readonly ICheckoutApi DefaultApi;
         private readonly ILogger _log;
+        private readonly DisposableLoggerFactory _logFactory;
         private const int TryMaxAttempts = 10;
 
         protected SandboxTestFixture(PlatformType platformType)
         {
-            var logFactory = CreateLoggerFactory();
-            _log = logFactory.CreateLogger(typeof(SandboxTestFixture));
+            _logFactory = CreateLoggerFactory();
+            _log = _logFactory.CreateLogger(typeof(SandboxTestFixture));
             
             switch (platformType)
             {
@@ -60,7 +37,7 @@ namespace Checkout
                         .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_SECRET_KEY"))
                         .Environment(Environment.Sandbox)
                         //.EnvironmentSubdomain(System.Environment.GetEnvironmentVariable("CHECKOUT_MERCHANT_SUBDOMAIN"))
-                        .LogProvider(logFactory)
+                        .LogProvider(_logFactory)
                         .HttpClientFactory(new DefaultHttpClientFactory())
                         .Build();
                     break;
@@ -71,7 +48,7 @@ namespace Checkout
                         .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_SECRET_KEY"))
                         .Environment(Environment.Sandbox)
                         //.EnvironmentSubdomain(System.Environment.GetEnvironmentVariable("CHECKOUT_MERCHANT_SUBDOMAIN"))
-                        .LogProvider(logFactory)
+                        .LogProvider(_logFactory)
                         .Build();
                     break;
 
@@ -88,7 +65,7 @@ namespace Checkout
                         .Environment(Environment.Sandbox)
                         //.HttpClientFactory(new CustomClientFactory("3.0"))
                         //.EnvironmentSubdomain(System.Environment.GetEnvironmentVariable("CHECKOUT_MERCHANT_SUBDOMAIN"))
-                        .LogProvider(logFactory)
+                        .LogProvider(_logFactory)
                         .Build();
                     break;
 
@@ -100,7 +77,12 @@ namespace Checkout
         /// <summary>
         /// Creates a logger factory with fallback to default implementation if NLog fails
         /// </summary>
-        protected static ILoggerFactory CreateLoggerFactory() => TestLoggerFactoryHelper.Create();
+        protected static DisposableLoggerFactory CreateLoggerFactory() => TestLoggerFactoryHelper.Create();
+
+        public void Dispose()
+        {
+            _logFactory?.Dispose();
+        }
         
         protected class CustomClientFactory : IHttpClientFactory
         {

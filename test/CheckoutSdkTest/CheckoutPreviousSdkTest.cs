@@ -12,7 +12,7 @@ namespace Checkout
         [Fact]
         private void ShouldCreateCheckoutSdks()
         {
-            var logFactory = TestLoggerFactoryHelper.Create();
+            var logFactory = CreateLoggerFactory();
             var checkoutApi1 = CheckoutSdk
                 .Builder()
                 .Previous()
@@ -42,7 +42,7 @@ namespace Checkout
         {
             try
             {
-                var logFactory = TestLoggerFactoryHelper.Create();
+                var logFactory = CreateLoggerFactory();
                 CheckoutSdk.Builder()
                     .Previous()
                     .StaticKeys()
@@ -61,7 +61,7 @@ namespace Checkout
 
             try
             {
-                var logFactory = TestLoggerFactoryHelper.Create();
+                var logFactory = CreateLoggerFactory();
                 CheckoutSdk
                     .Builder()
                     .Previous()
@@ -88,7 +88,7 @@ namespace Checkout
             httpClientFactory.Setup(mock => mock.CreateClient())
                 .Returns(new HttpClient());
 
-            var logFactory = TestLoggerFactoryHelper.Create();
+            var logFactory = CreateLoggerFactory();
             var checkoutApi = CheckoutSdk
                 .Builder()
                 .Previous()
@@ -107,7 +107,7 @@ namespace Checkout
         [Fact]
         private void ShouldCreateCheckoutSdksWithSubdomain()
         {
-            var logFactory = TestLoggerFactoryHelper.Create();
+            var logFactory = CreateLoggerFactory();
             var checkoutApi1 = CheckoutSdk
                 .Builder()
                 .Previous()
@@ -121,6 +121,7 @@ namespace Checkout
 
             checkoutApi1.ShouldNotBeNull();
 
+            var logFactory2 = CreateLoggerFactory();
             var checkoutApi2 = CheckoutSdk
                 .Builder()
                 .Previous()
@@ -128,7 +129,7 @@ namespace Checkout
                 .SecretKey(ValidPreviousSk)
                 .Environment(Environment.Sandbox)
                 .EnvironmentSubdomain("1234doma")
-                .LogProvider(logFactory)
+                .LogProvider(logFactory2)
                 .Build();
 
             checkoutApi2.ShouldNotBeNull();

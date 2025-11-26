@@ -1,5 +1,4 @@
-﻿using Checkout;
-using Checkout.Common;
+﻿using Checkout.Common;
 using Checkout.Metadata.Card;
 using Checkout.Metadata.Card.Source;
 using Checkout.Tokens;
@@ -71,7 +70,7 @@ namespace Checkout.Metadata
 
         private static async Task<string> RequestCardToken()
         {
-            var logFactory = TestLoggerFactoryHelper.Create();
+            var logFactory = CreateLoggerFactory();
             
             var api = CheckoutSdk.Builder().StaticKeys()
                 .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PUBLIC_KEY"))
