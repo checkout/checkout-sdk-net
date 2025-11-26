@@ -3,6 +3,8 @@ using Shouldly;
 using System;
 using System.Threading.Tasks;
 using Xunit;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 
 namespace Checkout.Reconciliation.Previous
 {
@@ -18,6 +20,7 @@ namespace Checkout.Reconciliation.Previous
             .StaticKeys()
             .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_SECRET_KEY_PROD"))
             .Environment(Environment.Production)
+            .LogProvider(TestLoggerFactory.Create())
             .Build();
 
         [Fact(Skip = "Only works in Production")]

@@ -7,6 +7,8 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Sdk;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 
 namespace Checkout
 {
@@ -64,10 +66,12 @@ namespace Checkout
         {
             try
             {
+                var logFactory = CreateLoggerFactory();
                 CheckoutSdk.Builder()
                     .OAuth()
                     .ClientCredentials("fake", "fake")
                     .Environment(Environment.Sandbox)
+                    .LogProvider(logFactory)
                     .Build();
                 throw new XunitException();
             }
@@ -82,12 +86,14 @@ namespace Checkout
         {
             try
             {
+                var logFactory = CreateLoggerFactory();
                 CheckoutSdk.Builder()
                     .OAuth()
                     .ClientCredentials(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_ID"),
                         System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET"))
                     .AuthorizationUri(new Uri("https://test.checkout.com"))
                     .HttpClientFactory(new DefaultHttpClientFactory())
+                    .LogProvider(logFactory)
                     .Build();
                 throw new XunitException();
             }

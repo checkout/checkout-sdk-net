@@ -5,6 +5,8 @@ using Checkout.Common;
 using Shouldly;
 using System.Threading.Tasks;
 using Xunit;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 
 namespace Checkout.Accounts
 {
@@ -97,12 +99,15 @@ namespace Checkout.Accounts
 
         private static CheckoutApi GetPayoutSchedulesCheckoutApi()
         {
+            var logFactory = TestLoggerFactory.Create();
+            
             return CheckoutSdk.Builder()
                 .OAuth()
                 .ClientCredentials(
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_ID"),
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET"))
                 .Scopes(OAuthScope.Marketplace)
+                .LogProvider(logFactory)
                 .Build() as CheckoutApi;
         }
     }

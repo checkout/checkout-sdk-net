@@ -23,7 +23,7 @@ namespace Checkout
 
         protected SandboxTestFixture(PlatformType platformType)
         {
-            var logFactory = new NLogLoggerFactory();
+            var logFactory = CreateLoggerFactory();
             _log = logFactory.CreateLogger(typeof(SandboxTestFixture));
             
             switch (platformType)
@@ -72,6 +72,11 @@ namespace Checkout
                     throw new ArgumentOutOfRangeException(nameof(platformType), platformType, null);
             }
         }
+
+        /// <summary>
+        /// Creates a logger factory with fallback to default implementation if NLog fails
+        /// </summary>
+        protected static ILoggerFactory CreateLoggerFactory() => TestLoggerFactory.Create();
         
         protected class CustomClientFactory : IHttpClientFactory
         {

@@ -4,6 +4,8 @@ using Checkout.Issuing.Cardholders.Responses;
 using Checkout.Issuing.Cards.Requests.Create;
 using Checkout.Issuing.Common;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 
 namespace Checkout.Issuing
 {
@@ -127,6 +129,8 @@ namespace Checkout.Issuing
 
         private static CheckoutApi IssuingCheckoutApi()
         {
+            var logFactory = TestLoggerFactory.Create();
+            
             return CheckoutSdk.Builder()
                 .OAuth()
                 .ClientCredentials(
@@ -135,6 +139,7 @@ namespace Checkout.Issuing
                 .Scopes(OAuthScope.IssuingCard, OAuthScope.IssuingControlRead, OAuthScope.IssuingControlWrite,
                     OAuthScope.IssuingClient, OAuthScope.IssuingTransactionsRead, OAuthScope.Vault)
                 .Environment(Environment.Sandbox)
+                .LogProvider(logFactory)
                 .Build() as CheckoutApi;
         }
     }
