@@ -1,4 +1,5 @@
-﻿using Checkout.Common;
+﻿using Checkout;
+using Checkout.Common;
 using Checkout.Metadata.Card;
 using Checkout.Metadata.Card.Source;
 using Checkout.Tokens;

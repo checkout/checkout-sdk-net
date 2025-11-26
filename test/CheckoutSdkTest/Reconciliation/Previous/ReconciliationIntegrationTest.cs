@@ -1,3 +1,4 @@
+using Checkout;
 using Checkout.Common;
 using Shouldly;
 using System;
