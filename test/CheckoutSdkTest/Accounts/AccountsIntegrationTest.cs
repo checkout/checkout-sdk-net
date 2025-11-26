@@ -5,8 +5,6 @@ using Checkout.Accounts.Entities.Request;
 using Checkout.Accounts.Entities.Response;
 using Checkout.Common;
 using Checkout.Instruments;
-using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 using Shouldly;
 using System;
 using System.Collections.Generic;

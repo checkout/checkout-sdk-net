@@ -14,6 +14,30 @@ using Xunit.Sdk;
 
 namespace Checkout
 {
+    /// <summary>
+    /// Utility class for creating logger factories in tests with fallback support.
+    /// This ensures tests work both locally and in CI/CD environments across all .NET versions.
+    /// </summary>
+    public static class TestLoggerFactoryHelper
+    {
+        /// <summary>
+        /// Creates an ILoggerFactory with fallback support.
+        /// First attempts to create NLogLoggerFactory, falls back to basic LoggerFactory if it fails.
+        /// </summary>
+        /// <returns>A working ILoggerFactory instance</returns>
+        public static ILoggerFactory Create()
+        {
+            try
+            {
+                return new NLogLoggerFactory();
+            }
+            catch
+            {
+                return new LoggerFactory();
+            }
+        }
+    }
+
     public abstract class SandboxTestFixture
     {
         protected readonly Previous.ICheckoutApi PreviousApi;
@@ -76,7 +100,7 @@ namespace Checkout
         /// <summary>
         /// Creates a logger factory with fallback to default implementation if NLog fails
         /// </summary>
-        protected static ILoggerFactory CreateLoggerFactory() => TestLoggerFactory.Create();
+        protected static ILoggerFactory CreateLoggerFactory() => TestLoggerFactoryHelper.Create();
         
         protected class CustomClientFactory : IHttpClientFactory
         {

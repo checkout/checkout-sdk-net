@@ -4,8 +4,6 @@ using Checkout.Issuing.Cardholders.Responses;
 using Checkout.Issuing.Cards.Requests.Create;
 using Checkout.Issuing.Common;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 
 namespace Checkout.Issuing
 {
@@ -129,7 +127,7 @@ namespace Checkout.Issuing
 
         private static CheckoutApi IssuingCheckoutApi()
         {
-            var logFactory = TestLoggerFactory.Create();
+            var logFactory = TestLoggerFactoryHelper.Create();
             
             return CheckoutSdk.Builder()
                 .OAuth()

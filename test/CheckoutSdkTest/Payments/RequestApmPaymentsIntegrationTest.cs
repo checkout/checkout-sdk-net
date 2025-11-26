@@ -8,8 +8,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 using Product = Checkout.Payments.Request.Product;
-using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 
 namespace Checkout.Payments
 {

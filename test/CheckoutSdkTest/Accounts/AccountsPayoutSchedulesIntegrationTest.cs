@@ -5,8 +5,6 @@ using Checkout.Common;
 using Shouldly;
 using System.Threading.Tasks;
 using Xunit;
-using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 
 namespace Checkout.Accounts
 {
@@ -99,7 +97,7 @@ namespace Checkout.Accounts
 
         private static CheckoutApi GetPayoutSchedulesCheckoutApi()
         {
-            var logFactory = TestLoggerFactory.Create();
+            var logFactory = TestLoggerFactoryHelper.Create();
             
             return CheckoutSdk.Builder()
                 .OAuth()

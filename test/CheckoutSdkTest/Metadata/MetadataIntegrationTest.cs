@@ -5,8 +5,6 @@ using Checkout.Tokens;
 using Shouldly;
 using System.Threading.Tasks;
 using Xunit;
-using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 
 namespace Checkout.Metadata
 {
@@ -72,7 +70,7 @@ namespace Checkout.Metadata
 
         private static async Task<string> RequestCardToken()
         {
-            var logFactory = TestLoggerFactory.Create();
+            var logFactory = TestLoggerFactoryHelper.Create();
             
             var api = CheckoutSdk.Builder().StaticKeys()
                 .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PUBLIC_KEY"))

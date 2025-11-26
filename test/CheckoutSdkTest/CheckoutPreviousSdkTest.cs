@@ -4,8 +4,6 @@ using System;
 using System.Net.Http;
 using Xunit;
 using Xunit.Sdk;
-using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 
 namespace Checkout
 {
@@ -14,7 +12,7 @@ namespace Checkout
         [Fact]
         private void ShouldCreateCheckoutSdks()
         {
-            var logFactory = TestLoggerFactory.Create();
+            var logFactory = TestLoggerFactoryHelper.Create();
             var checkoutApi1 = CheckoutSdk
                 .Builder()
                 .Previous()
@@ -44,7 +42,7 @@ namespace Checkout
         {
             try
             {
-                var logFactory = TestLoggerFactory.Create();
+                var logFactory = TestLoggerFactoryHelper.Create();
                 CheckoutSdk.Builder()
                     .Previous()
                     .StaticKeys()
@@ -63,7 +61,7 @@ namespace Checkout
 
             try
             {
-                var logFactory = TestLoggerFactory.Create();
+                var logFactory = TestLoggerFactoryHelper.Create();
                 CheckoutSdk
                     .Builder()
                     .Previous()
@@ -90,7 +88,7 @@ namespace Checkout
             httpClientFactory.Setup(mock => mock.CreateClient())
                 .Returns(new HttpClient());
 
-            var logFactory = TestLoggerFactory.Create();
+            var logFactory = TestLoggerFactoryHelper.Create();
             var checkoutApi = CheckoutSdk
                 .Builder()
                 .Previous()
@@ -109,7 +107,7 @@ namespace Checkout
         [Fact]
         private void ShouldCreateCheckoutSdksWithSubdomain()
         {
-            var logFactory = TestLoggerFactory.Create();
+            var logFactory = TestLoggerFactoryHelper.Create();
             var checkoutApi1 = CheckoutSdk
                 .Builder()
                 .Previous()

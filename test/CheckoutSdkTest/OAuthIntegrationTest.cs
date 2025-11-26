@@ -7,8 +7,6 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Sdk;
-using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 
 namespace Checkout
 {
