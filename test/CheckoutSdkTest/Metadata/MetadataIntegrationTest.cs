@@ -70,7 +70,7 @@ namespace Checkout.Metadata
 
         private static async Task<string> RequestCardToken()
         {
-            var logFactory = TestLoggerFactoryHelper.Create();
+            var logFactory = TestLoggerFactoryHelper.Instance;
             
             var api = CheckoutSdk.Builder().StaticKeys()
                 .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PUBLIC_KEY"))

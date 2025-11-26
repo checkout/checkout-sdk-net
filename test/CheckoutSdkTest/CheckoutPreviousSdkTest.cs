@@ -12,7 +12,7 @@ namespace Checkout
         [Fact]
         private void ShouldCreateCheckoutSdks()
         {
-            var logFactory = TestLoggerFactoryHelper.Create();
+            var logFactory = TestLoggerFactoryHelper.Instance;
             var checkoutApi1 = CheckoutSdk
                 .Builder()
                 .Previous()
@@ -42,7 +42,7 @@ namespace Checkout
         {
             try
             {
-                var logFactory = TestLoggerFactoryHelper.Create();
+                var logFactory = TestLoggerFactoryHelper.Instance;
                 CheckoutSdk.Builder()
                     .Previous()
                     .StaticKeys()
@@ -61,7 +61,7 @@ namespace Checkout
 
             try
             {
-                var logFactory = TestLoggerFactoryHelper.Create();
+                var logFactory = TestLoggerFactoryHelper.Instance;
                 CheckoutSdk
                     .Builder()
                     .Previous()
@@ -88,7 +88,7 @@ namespace Checkout
             httpClientFactory.Setup(mock => mock.CreateClient())
                 .Returns(new HttpClient());
 
-            var logFactory = TestLoggerFactoryHelper.Create();
+            var logFactory = TestLoggerFactoryHelper.Instance;
             var checkoutApi = CheckoutSdk
                 .Builder()
                 .Previous()
@@ -107,7 +107,7 @@ namespace Checkout
         [Fact]
         private void ShouldCreateCheckoutSdksWithSubdomain()
         {
-            var logFactory = TestLoggerFactoryHelper.Create();
+            var logFactory = TestLoggerFactoryHelper.Instance;
             var checkoutApi1 = CheckoutSdk
                 .Builder()
                 .Previous()

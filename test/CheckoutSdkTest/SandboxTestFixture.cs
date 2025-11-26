@@ -15,17 +15,22 @@ using Xunit.Sdk;
 namespace Checkout
 {
     /// <summary>
-    /// Utility class for creating logger factories in tests with fallback support.
-    /// This ensures tests work both locally and in CI/CD environments across all .NET versions.
+    /// Thread-safe singleton logger factory for tests to prevent disposal issues in CI/CD.
+    /// Uses Lazy&lt;T&gt; for thread-safe initialization and maintains a single instance
+    /// throughout the test run lifecycle.
     /// </summary>
     public static class TestLoggerFactoryHelper
     {
+        // Thread-safe singleton using Lazy<T>
+        private static readonly Lazy<ILoggerFactory> _instance = new Lazy<ILoggerFactory>(CreateInstance);
+        
         /// <summary>
-        /// Creates an ILoggerFactory with fallback support.
-        /// First attempts to create NLogLoggerFactory, falls back to basic LoggerFactory if it fails.
+        /// Gets the singleton ILoggerFactory instance.
+        /// This instance is never disposed during test execution.
         /// </summary>
-        /// <returns>A working ILoggerFactory instance</returns>
-        public static ILoggerFactory Create()
+        public static ILoggerFactory Instance => _instance.Value;
+        
+        private static ILoggerFactory CreateInstance()
         {
             try
             {
@@ -47,7 +52,7 @@ namespace Checkout
 
         protected SandboxTestFixture(PlatformType platformType)
         {
-            var logFactory = CreateLoggerFactory();
+            var logFactory = TestLoggerFactoryHelper.Instance;
             _log = logFactory.CreateLogger(typeof(SandboxTestFixture));
             
             switch (platformType)
@@ -98,9 +103,9 @@ namespace Checkout
         }
 
         /// <summary>
-        /// Creates a logger factory with fallback to default implementation if NLog fails
+        /// Gets the singleton logger factory instance. This prevents disposal issues in CI/CD.
         /// </summary>
-        protected static ILoggerFactory CreateLoggerFactory() => TestLoggerFactoryHelper.Create();
+        protected static ILoggerFactory CreateLoggerFactory() => TestLoggerFactoryHelper.Instance;
         
         protected class CustomClientFactory : IHttpClientFactory
         {

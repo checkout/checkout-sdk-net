@@ -97,7 +97,7 @@ namespace Checkout.Accounts
 
         private static CheckoutApi GetPayoutSchedulesCheckoutApi()
         {
-            var logFactory = TestLoggerFactoryHelper.Create();
+            var logFactory = TestLoggerFactoryHelper.Instance;
             
             return CheckoutSdk.Builder()
                 .OAuth()

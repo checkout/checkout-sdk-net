@@ -127,7 +127,7 @@ namespace Checkout.Issuing
 
         private static CheckoutApi IssuingCheckoutApi()
         {
-            var logFactory = TestLoggerFactoryHelper.Create();
+            var logFactory = TestLoggerFactoryHelper.Instance;
             
             return CheckoutSdk.Builder()
                 .OAuth()
