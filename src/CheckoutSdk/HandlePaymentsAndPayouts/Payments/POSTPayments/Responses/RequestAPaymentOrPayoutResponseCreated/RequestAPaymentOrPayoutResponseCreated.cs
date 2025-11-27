@@ -37,7 +37,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// [Required]
         /// 3 characters
         /// </summary>
-        public string Currency { get; set; }
+        public Currency Currency { get; set; }
 
         /// <summary>
         /// Whether or not the authorization or capture was successful
