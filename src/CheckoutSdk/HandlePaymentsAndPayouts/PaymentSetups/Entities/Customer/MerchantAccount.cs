@@ -10,12 +10,12 @@ namespace Checkout.Payments.Setups.Entities
         /// <summary>
         /// The date when the customer's account was first registered with the merchant
         /// </summary>
-        public string RegistrationDate { get; set; }
+        public DateTime RegistrationDate { get; set; }
 
         /// <summary>
         /// The date when the customer's account was last modified
         /// </summary>
-        public string LastModified { get; set; }
+        public DateTime LastModified { get; set; }
 
         /// <summary>
         /// Indicates whether this is a returning customer
@@ -25,12 +25,12 @@ namespace Checkout.Payments.Setups.Entities
         /// <summary>
         /// The date of the customer's first transaction with the merchant
         /// </summary>
-        public string FirstTransactionDate { get; set; }
+        public DateTime FirstTransactionDate { get; set; }
 
         /// <summary>
         /// The date of the customer's most recent transaction with the merchant
         /// </summary>
-        public string LastTransactionDate { get; set; }
+        public DateTime LastTransactionDate { get; set; }
 
         /// <summary>
         /// The total number of orders the customer has placed with the merchant

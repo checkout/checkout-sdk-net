@@ -20,6 +20,6 @@ namespace Checkout.Payments.Setups.Entities
         /// <summary>
         /// The date when the sub-merchant was registered in YYYY-MM-DD format
         /// </summary>
-        public string RegistrationDate { get; set; }
+        public DateTime RegistrationDate { get; set; }
     }
 }
