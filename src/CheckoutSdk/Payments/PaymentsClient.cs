@@ -18,12 +18,12 @@ namespace Checkout.Payments
         private const string PaymentsPath = "payments";
         private const string CancelAScheduledRetryPath = "cancellations";
 
-        private static readonly IDictionary<int, Type> RequestASessionResponseMappings = new Dictionary<int, Type>();
+        private static readonly IDictionary<int, Type> ResponseMappings = new Dictionary<int, Type>();
 
         static PaymentsClient()
         {
-            RequestASessionResponseMappings[201] = typeof(RequestAPaymentOrPayoutResponseCreated);
-            RequestASessionResponseMappings[202] = typeof(RequestAPaymentOrPayoutResponseAccepted);
+            ResponseMappings[201] = typeof(RequestAPaymentOrPayoutResponseCreated); 
+            ResponseMappings[202] = typeof(RequestAPaymentOrPayoutResponseAccepted);
         }
 
         public PaymentsClient(
@@ -52,7 +52,7 @@ namespace Checkout.Payments
         {
             CheckoutUtils.ValidateParams("paymentRequest", paymentRequest);
             var resource = await ApiClient.Post<HttpMetadata>(PaymentsPath, SdkAuthorization(),
-                RequestASessionResponseMappings,
+                ResponseMappings,
                 paymentRequest, cancellationToken,
                 idempotencyKey);
 
