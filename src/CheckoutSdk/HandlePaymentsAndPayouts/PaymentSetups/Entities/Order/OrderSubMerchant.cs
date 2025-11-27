@@ -1,3 +1,5 @@
+using System;
+
 namespace Checkout.Payments.Setups.Entities
 {
     public class OrderSubMerchant
