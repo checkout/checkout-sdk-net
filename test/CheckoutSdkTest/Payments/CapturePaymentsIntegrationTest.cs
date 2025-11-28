@@ -104,7 +104,7 @@ namespace Checkout.Payments
                                     FlightNumber = 123,
                                     CarrierCode = "code",
                                     ServiceClass = "class",
-                                    DepartureDate = "DepartureDate",
+                                    DepartureDate = DateTime.Now,
                                     DepartureTime = "time",
                                     DepartureAirport = "airport",
                                     ArrivalAirport = "arrival",
