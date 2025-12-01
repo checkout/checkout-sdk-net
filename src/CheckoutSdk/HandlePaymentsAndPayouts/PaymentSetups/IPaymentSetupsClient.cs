@@ -33,7 +33,7 @@ namespace Checkout.Payments.Setups
         /// </summary>
         Task<PaymentSetupsConfirmResponse> ConfirmPaymentSetup(
             string id, 
-            string PaymentMethodOptionId,
+            string paymentMethodOptionId,
             CancellationToken cancellationToken = default);
     }
 }
