@@ -38,7 +38,7 @@ namespace Checkout.Payments.Setups
         /// <summary>
         /// The status of the payment
         /// </summary>
-        public string Status { get; set; }
+        public PaymentStatus Status { get; set; }
 
         /// <summary>
         /// The acquirer authorization code if the payment was authorized
