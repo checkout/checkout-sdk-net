@@ -5,22 +5,22 @@ namespace Checkout.Payments.Setups.Entities
     public class PaymentMethods
     {
         /// <summary>
-        /// Klarna payment method configuration
+        /// The Klarna payment method's details and configuration.
         /// </summary>
         public Klarna Klarna { get; set; }
 
         /// <summary>
-        /// STC Pay payment method configuration
+        /// The stc pay payment method's details and configuration.
         /// </summary>
         public Stcpay Stcpay { get; set; }
 
         /// <summary>
-        /// Tabby payment method configuration
+        /// The Tabby payment method's details and configuration.
         /// </summary>
         public Tabby Tabby { get; set; }
 
         /// <summary>
-        /// Bizum payment method configuration
+        /// The Bizum payment method's details and configuration.
         /// </summary>
         public Bizum Bizum { get; set; }
     }

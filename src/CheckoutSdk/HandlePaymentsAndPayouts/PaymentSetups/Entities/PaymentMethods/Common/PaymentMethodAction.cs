@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Checkout.Payments.Setups.Entities
 {
     public class PaymentMethodAction

@@ -10,18 +10,18 @@ namespace Checkout.Payments.Setups.Entities
         public string Id { get; set; }
 
         /// <summary>
-        /// The category of products or services offered by the sub-merchant
+        /// The sub-merchant's product category
         /// </summary>
         public string ProductCategory { get; set; }
 
         /// <summary>
-        /// The number of trades or transactions the sub-merchant has conducted
+        /// The number of orders the sub-merchant has processed
         /// </summary>
         public int? NumberOfTrades { get; set; }
 
         /// <summary>
-        /// The date when the sub-merchant was registered in YYYY-MM-DD format
+        /// The sub-merchant's registration date
         /// </summary>
-        public DateTime RegistrationDate { get; set; }
+        public DateTime? RegistrationDate { get; set; }
     }
 }

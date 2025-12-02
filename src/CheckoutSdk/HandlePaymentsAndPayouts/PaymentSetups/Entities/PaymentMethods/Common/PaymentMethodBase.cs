@@ -8,9 +8,9 @@ namespace Checkout.Payments.Setups.Entities
     public abstract class PaymentMethodBase
     {
         /// <summary>
-        /// The status of the payment method
+        /// The payment method's status
         /// </summary>
-        public string Status { get; set; }
+        public PaymentMethodStatus? Status { get; set; }
 
         /// <summary>
         /// Configuration flags for the payment method

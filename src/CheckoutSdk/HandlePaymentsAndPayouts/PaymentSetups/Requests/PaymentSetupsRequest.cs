@@ -3,16 +3,23 @@ using Checkout.Payments.Setups.Entities;
 
 namespace Checkout.Payments.Setups
 {
+    /// <summary>
+    /// Creates a Payment Setup.
+    /// To maximize the amount of information the payment setup can use, we recommend that you create a payment setup as
+    /// early as possible in the customer's journey. For example, the first time they land on the basket page.
+    /// [Beta]
+    /// </summary>
     public class PaymentSetupsRequest
     {
         /// <summary>
-        /// The processing channel to be used for the payment setup
+        /// The processing channel to use for the payment.
         /// [Required]
+        /// ^(pc)_(\w{26})$
         /// </summary>
         public string ProcessingChannelId { get; set; }
 
         /// <summary>
-        /// The payment amount, in the minor currency unit. The exact format depends on the currency
+        /// The payment amount, in the minor currency unit.
         /// [Required]
         /// </summary>
         public long? Amount { get; set; }
@@ -22,10 +29,11 @@ namespace Checkout.Payments.Setups
         /// [Required]
         /// </summary>
         public Currency? Currency { get; set; }
-
+        
         /// <summary>
         /// The type of payment.
-        //// You must provide this field for card payments in which the cardholder is not present. For example, if the transaction is a recurring payment, or a mail order/telephone order (MOTO) payment.
+        /// You must provide this field for card payments in which the cardholder is not present. For example, if the
+        /// transaction is a recurring payment, or a mail order/telephone order (MOTO) payment.
         /// Enum: "Regular" "Recurring" "MOTO" "Installment" "Unscheduled"
         /// [Optional]
         /// </summary>
@@ -33,12 +41,14 @@ namespace Checkout.Payments.Setups
 
         /// <summary>
         /// A reference you can use to identify the payment. For example, an order number
+        /// &lt;= 80 characters
         /// [Optional]
         /// </summary>
         public string Reference { get; set; }
 
         /// <summary>
-        /// A description of the payment setup
+        /// A description of the payment.
+        /// &lt;= 100 characters
         /// [Optional]
         /// </summary>
         public string Description { get; set; }
@@ -50,19 +60,19 @@ namespace Checkout.Payments.Setups
         public PaymentMethods PaymentMethods { get; set; }
 
         /// <summary>
-        /// The payment setup configuration settings
+        /// Settings for the Payment Setup
         /// [Optional]
         /// </summary>
         public Settings Settings { get; set; }
 
         /// <summary>
-        /// Details about the customer
+        /// The customer's details
         /// [Optional]
         /// </summary>
         public Customer Customer { get; set; }
 
         /// <summary>
-        /// Details about the order associated with this payment setup
+        /// The customer's order details
         /// [Optional]
         /// </summary>
         public Order Order { get; set; }

@@ -5,13 +5,13 @@ namespace Checkout.Payments.Setups.Entities
     public class Customer
     {
         /// <summary>
-        /// The customer's email information
+        /// Details of the customer's email
         /// </summary>
         public CustomerEmail Email { get; set; }
 
         /// <summary>
-        /// &lt;= 100 characters
         /// The customer's full name
+        /// &lt;= 100 characters
         /// </summary>
         public string Name { get; set; }
 
@@ -21,7 +21,7 @@ namespace Checkout.Payments.Setups.Entities
         public Phone Phone { get; set; }
 
         /// <summary>
-        /// Information about the customer's device
+        /// The customer's device details
         /// </summary>
         public CustomerDevice Device { get; set; }
 
@@ -39,7 +39,7 @@ namespace Checkout.Payments.Setups.Entities
         public string Address { get; set; }
 
         /// <summary>
-        /// Whether the email address has been verified
+        /// Specifies whether the customer's email address is verified
         /// </summary>
         public bool? Verified { get; set; }
     }
@@ -47,7 +47,7 @@ namespace Checkout.Payments.Setups.Entities
     public class CustomerDevice
     {
         /// <summary>
-        /// The locale setting of the customer's device (e.g., "en-US")
+        /// The device's locale, as an ISO 639-2 language code
         /// </summary>
         public string Locale { get; set; }
     }

@@ -16,7 +16,11 @@ namespace Checkout.Payments.Setups
         }
 
         /// <summary>
-        /// Creates a Payment Setup
+        /// Creates a Payment Setup.
+        /// To maximize the amount of information the payment setup can use, we recommend that you create a payment
+        /// setup as early as possible in the customer's journey. For example, the first time they land on the basket
+        /// page
+        /// [Beta]
         /// </summary>
         public Task<PaymentSetupsResponse> CreatePaymentSetup(
             PaymentSetupsRequest paymentSetupsCreateRequest,
@@ -33,6 +37,9 @@ namespace Checkout.Payments.Setups
 
         /// <summary>
         /// Updates a Payment Setup
+        /// You should update the payment setup whenever there are significant changes in the data relevant to the
+        /// customer's transaction. For example, when the customer makes a change that impacts the total payment amount
+        /// [Beta]
         /// </summary>
         public Task<PaymentSetupsResponse> UpdatePaymentSetup(
             string id,
@@ -49,7 +56,8 @@ namespace Checkout.Payments.Setups
         }
 
         /// <summary>
-        /// Gets a Payment Setup
+        /// Retrieves a Payment Setup
+        /// [Beta]
         /// </summary>
         public Task<PaymentSetupsResponse> GetPaymentSetup(
             string id,
@@ -64,7 +72,8 @@ namespace Checkout.Payments.Setups
         }
 
         /// <summary>
-        /// Confirms a Payment Setup
+        /// Confirm a Payment Setup to begin processing the payment request with your chosen payment method option
+        /// [Beta]
         /// </summary>
         public Task<PaymentSetupsConfirmResponse> ConfirmPaymentSetup(
             string id, 

@@ -6,17 +6,17 @@ namespace Checkout.Payments.Setups.Entities
     public class AirlineData
     {
         /// <summary>
-        /// The airline ticket information
+        /// Details about the airline ticket
         /// </summary>
         public PaymentContextsTicket Ticket { get; set; }
 
         /// <summary>
-        /// List of passengers on the flight
+        /// Details about the flight passenger(s)
         /// </summary>
         public IList<PaymentContextsPassenger> Passengers { get; set; }
 
         /// <summary>
-        /// Details of each leg of the flight journey
+        /// Details about the flight leg(s) booked by the customer
         /// </summary>
         public IList<PaymentContextsFlightLegDetails> FlightLegDetails { get; set; }
     }

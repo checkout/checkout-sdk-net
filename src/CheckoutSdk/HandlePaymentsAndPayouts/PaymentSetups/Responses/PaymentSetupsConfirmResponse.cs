@@ -8,15 +8,22 @@ using PaymentSetupProcessing = Checkout.HandlePaymentsAndPayouts.Payments.POSTPa
 
 namespace Checkout.Payments.Setups
 {
+    /// <summary>
+    /// [Beta]
+    /// </summary>
     public class PaymentSetupsConfirmResponse : Resource
     {
         /// <summary>
         /// The payment's unique identifier
+        /// ^(pay)_(\w{26})$
+        /// 30 characters
         /// </summary>
         public string Id { get; set; }
 
         /// <summary>
         /// The unique identifier for the action performed against this payment
+        /// ^(act)_(\w{26})$
+        /// 30 characters
         /// </summary>
         public string ActionId { get; set; }
 
@@ -27,6 +34,7 @@ namespace Checkout.Payments.Setups
 
         /// <summary>
         /// The three-letter ISO currency code of the payment
+        /// 3 characters
         /// </summary>
         public Currency? Currency { get; set; }
 
@@ -100,5 +108,10 @@ namespace Checkout.Payments.Setups
         /// The scheme transaction identifier
         /// </summary>
         public string SchemeId { get; set; }
+        
+        /// <summary>
+        /// [Beta]
+        /// </summary>
+        public ConfirmPaymentSetupRetry Retry { get; set; }
     }
 }

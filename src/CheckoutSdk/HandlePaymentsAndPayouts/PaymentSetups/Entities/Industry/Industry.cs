@@ -5,12 +5,12 @@ namespace Checkout.Payments.Setups.Entities
     public class Industry
     {
         /// <summary>
-        /// Airline industry-specific data for flight bookings and related payments
+        /// Details about the airline ticket and flights the customer booked
         /// </summary>
         public AirlineData AirlineData { get; set; }
 
         /// <summary>
-        /// Accommodation industry-specific data for hotel bookings and related payments
+        /// Contains information about the accommodation booked by the customer
         /// </summary>
         public IList<AccommodationData> AccommodationData { get; set; }
     }
