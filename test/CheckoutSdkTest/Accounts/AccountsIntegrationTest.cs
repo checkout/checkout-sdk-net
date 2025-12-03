@@ -6,6 +6,7 @@ using Checkout.Accounts.Entities.Response;
 using Checkout.Common;
 using Checkout.Instruments;
 using Shouldly;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mime;
@@ -552,12 +553,14 @@ namespace Checkout.Accounts
 
         private static CheckoutApi GetAccountsCheckoutApi()
         {
+            var logFactory = CreateLoggerFactory();
             return CheckoutSdk.Builder()
                 .OAuth()
                 .ClientCredentials(
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_ID"),
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_SECRET"))
                 .Scopes(OAuthScope.Accounts)
+                .LogProvider(logFactory)
                 .Build() as CheckoutApi;
         }
     }

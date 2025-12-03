@@ -120,12 +120,14 @@ namespace Checkout.Payments
         [Fact(Skip = "Preview")]
         private async Task ShouldMakeTamaraPayment()
         {
+            var logFactory = CreateLoggerFactory();
             ICheckoutApi previewApi = CheckoutSdk.Builder()
                 .OAuth()
                 .ClientCredentials(
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PREVIEW_OAUTH_CLIENT_ID"),
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PREVIEW_OAUTH_CLIENT_SECRET"))
                 .Environment(Environment.Sandbox)
+                .LogProvider(logFactory)
                 .Build();
 
             var tamaraSource = new RequestTamaraSource();
