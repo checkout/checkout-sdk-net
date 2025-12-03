@@ -74,6 +74,7 @@ namespace Checkout.Payments.Setups
         /// <summary>
         /// Deprecated Replaced by local_schemes
         /// The local co-branded card scheme.
+        /// [Deprecated]
         /// </summary>
         public string SchemeLocal { get; set; }
 
