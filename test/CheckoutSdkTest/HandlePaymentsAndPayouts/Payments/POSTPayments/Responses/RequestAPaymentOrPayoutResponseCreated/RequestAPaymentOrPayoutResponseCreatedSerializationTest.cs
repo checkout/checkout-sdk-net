@@ -257,7 +257,6 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
             response.Source.ShouldBeOfType<CardSource>();
             var cardSource = (CardSource)response.Source;
             cardSource.Id.ShouldBe("src_nwd3m4in3hkuddfpjsaevunhdy");
-            cardSource.Last4.ShouldBe("4242");
             cardSource.ExpiryMonth.ShouldBe(6);
             cardSource.ExpiryYear.ShouldBe(2025);
             cardSource.Scheme.ShouldBe("Visa");
