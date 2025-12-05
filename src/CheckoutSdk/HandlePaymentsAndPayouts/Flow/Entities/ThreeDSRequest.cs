@@ -1,4 +1,5 @@
 
+using Checkout.Common;
 
 namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
 {
@@ -18,53 +19,17 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         /// <summary>
         /// Specifies the preference for whether a 3DS challenge should be performed. Default: "no_preference"
         /// </summary>
-        public ChallengeIndicator? ChallengeIndicator { get; set; } = Entities.ChallengeIndicator.NoPreference;
+        public ChallengeIndicatorType? ChallengeIndicator { get; set; } = ChallengeIndicatorType.NoPreference;
 
         /// <summary>
         /// Specifies an exemption reason for the payment to not be processed using 3D Secure authentication.
         /// </summary>
-        public ThreeDSExemption? Exemption { get; set; }
+        public Exemption? Exemption { get; set; }
 
         /// <summary>
         /// Specifies whether to process the payment as 3D Secure, if authorization was soft declined 
         /// due to 3DS authentication being required. Default: true
         /// </summary>
         public bool? AllowUpgrade { get; set; } = true;
-    }
-
-    public enum ChallengeIndicator
-    {
-        NoPreference,
-        
-        NoChallengeRequested,
-        
-        ChallengeRequested,
-        
-        ChallengeRequestedMandate
-    }
-
-    public enum ThreeDSExemption
-    {
-        LowValue,
-        
-        TrustedListing,
-        
-        TrustedListingPrompt,
-        
-        TransactionRiskAssessment,
-        
-        ThreeDSOutage,
-        
-        ScaDelegation,
-        
-        OutOfScaScope,
-        
-        LowRiskProgram,
-        
-        RecurringOperation,
-        
-        DataShare,
-        
-        Other
     }
 }

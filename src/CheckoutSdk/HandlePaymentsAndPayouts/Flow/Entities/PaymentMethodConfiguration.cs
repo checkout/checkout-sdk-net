@@ -1,4 +1,5 @@
 using Checkout.Common;
+using Checkout.Payments.Sessions;
 
 using System.Collections.Generic;
 
@@ -34,7 +35,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         /// <summary>
         /// Specifies whether you intend to store the cardholder's payment details. Default: "disabled"
         /// </summary>
-        public StorePaymentDetails? StorePaymentDetails { get; set; } = Entities.StorePaymentDetails.Disabled;
+        public StorePaymentDetailsType? StorePaymentDetails { get; set; } = StorePaymentDetailsType.Disabled;
 
         /// <summary>
         /// The account holder's details.
@@ -44,7 +45,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         /// <summary>
         /// The type of the Apple Pay payment total line item. Default: "final"
         /// </summary>
-        public TotalType? TotalType { get; set; } = Entities.TotalType.Final;
+        public TotalType? TotalType { get; set; } = Checkout.HandlePaymentsAndPayouts.Flow.Entities.TotalType.Final;
     }
 
     public class CardConfiguration
@@ -52,7 +53,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         /// <summary>
         /// Specifies whether you intend to store the cardholder's payment details. Default: "disabled"
         /// </summary>
-        public CardStorePaymentDetails? StorePaymentDetails { get; set; } = Entities.CardStorePaymentDetails.Disabled;
+        public StorePaymentDetailsType? StorePaymentDetails { get; set; } = StorePaymentDetailsType.Disabled;
 
         /// <summary>
         /// The account holder's details.
@@ -65,7 +66,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         /// <summary>
         /// Specifies whether you intend to store the cardholder's payment details. Default: "disabled"
         /// </summary>
-        public StorePaymentDetails? StorePaymentDetails { get; set; } = Entities.StorePaymentDetails.Disabled;
+        public StorePaymentDetailsType? StorePaymentDetails { get; set; } = StorePaymentDetailsType.Disabled;
 
         /// <summary>
         /// The account holder's details.
@@ -75,7 +76,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         /// <summary>
         /// The status of the Google Pay payment total price. Default: "final"
         /// </summary>
-        public TotalPriceStatus? TotalPriceStatus { get; set; } = Entities.TotalPriceStatus.Final;
+        public TotalPriceStatus? TotalPriceStatus { get; set; } = Checkout.HandlePaymentsAndPayouts.Flow.Entities.TotalPriceStatus.Final;
     }
 
     public class StoredCardConfiguration
@@ -102,22 +103,6 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         /// The maximum number of authorization retry attempts, excluding the initial authorization. Default: 5
         /// </summary>
         public int? MaxAttempts { get; set; } = 5;
-    }
-
-    public enum StorePaymentDetails
-    {
-        Disabled,
-        
-        Enabled
-    }
-
-    public enum CardStorePaymentDetails
-    {
-        Disabled,
-        
-        Enabled,
-        
-        CollectConsent
     }
 
     public enum TotalType

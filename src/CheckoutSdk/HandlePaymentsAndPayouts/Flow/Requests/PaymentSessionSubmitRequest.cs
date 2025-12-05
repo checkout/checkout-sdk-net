@@ -1,5 +1,6 @@
 
 using Checkout.HandlePaymentsAndPayouts.Flow.Entities;
+using Checkout.Payments.Request;
 using System.Collections.Generic;
 
 namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
@@ -27,7 +28,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// <summary>
         /// The line items in the order.
         /// </summary>
-        public IList<Item> Items { get; set; }
+        public IList<Checkout.Payments.Request.Product> Items { get; set; }
 
         /// <summary>
         /// Information required for 3D Secure authentication payments.
@@ -42,6 +43,6 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// <summary>
         /// Must be specified for card-not-present (CNP) payments. Default: "Regular"
         /// </summary>
-        public PaymentType? PaymentType { get; set; } = Entities.PaymentType.Regular;
+        public Checkout.Payments.PaymentType? PaymentType { get; set; } = Checkout.Payments.PaymentType.Regular;
     }
 }

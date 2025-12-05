@@ -1,5 +1,8 @@
 using Checkout.Common;
 using Checkout.HandlePaymentsAndPayouts.Flow.Entities;
+using Checkout.Payments;
+using Checkout.Payments.Request;
+using LocaleType = Checkout.Payments.LocaleType;
 using System;
 using System.Collections.Generic;
 
@@ -21,7 +24,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// <summary>
         /// The billing details.
         /// </summary>
-        public BillingDetails Billing { get; set; }
+        public BillingInformation Billing { get; set; }
 
         /// <summary>
         /// Overrides the default success redirect URL configured on your account, 
@@ -38,12 +41,12 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// <summary>
         /// Must be specified for card-not-present (CNP) payments. Default: "Regular"
         /// </summary>
-        public PaymentType? PaymentType { get; set; } = Entities.PaymentType.Regular;
+        public Checkout.Payments.PaymentType? PaymentType { get; set; } = Checkout.Payments.PaymentType.Regular;
 
         /// <summary>
         /// A description of the purchase, which is displayed on the customer's statement.
         /// </summary>
-        public BillingDescriptor BillingDescriptor { get; set; }
+        public Checkout.Payments.BillingDescriptor BillingDescriptor { get; set; }
 
         /// <summary>
         /// A reference you can use to identify the payment. For example, an order number.
@@ -58,27 +61,27 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// <summary>
         /// The customer's details. Required if source.type is tamara.
         /// </summary>
-        public Customer Customer { get; set; }
+        public CustomerResponse Customer { get; set; }
 
         /// <summary>
         /// The shipping details
         /// </summary>
-        public ShippingDetails Shipping { get; set; }
+        public Checkout.Payments.ShippingDetails Shipping { get; set; }
 
         /// <summary>
         /// Information about the recipient of the payment's funds.
         /// </summary>
-        public Recipient Recipient { get; set; }
+        public PaymentRecipient Recipient { get; set; }
 
         /// <summary>
         /// Use the processing object to influence or override the data sent during card processing
         /// </summary>
-        public Processing Processing { get; set; }
+        public Entities.Processing Processing { get; set; }
 
         /// <summary>
         /// Details about the payment instruction.
         /// </summary>
-        public Instruction Instruction { get; set; }
+        public Checkout.Payments.PaymentInstruction Instruction { get; set; }
 
         /// <summary>
         /// The processing channel to use for the payment.
@@ -88,17 +91,17 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// <summary>
         /// The line items in the order.
         /// </summary>
-        public IList<Item> Items { get; set; }
+        public IList<Checkout.Payments.Request.Product> Items { get; set; }
 
         /// <summary>
         /// The sub-entities that the payment is being processed on behalf of.
         /// </summary>
-        public IList<AmountAllocation> AmountAllocations { get; set; }
+        public IList<AmountAllocations> AmountAllocations { get; set; }
 
         /// <summary>
         /// Configures the risk assessment performed during payment processing.
         /// </summary>
-        public Entities.Risk Risk { get; set; }
+        public RiskRequest Risk { get; set; }
 
         /// <summary>
         /// The merchant's display name.
@@ -113,7 +116,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// <summary>
         /// Creates a translated version of the page in the specified language. Default: "en-GB"
         /// </summary>
-        public Locale? Locale { get; set; } = Entities.Locale.EnGB;
+        public LocaleType? Locale { get; set; } = LocaleType.EnGb;
 
         /// <summary>
         /// Information required for 3D Secure authentication payments.
@@ -153,7 +156,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// <summary>
         /// Configurations for payment method-specific settings.
         /// </summary>
-        public PaymentMethodConfiguration PaymentMethodConfiguration { get; set; }
+        public Entities.PaymentMethodConfiguration PaymentMethodConfiguration { get; set; }
 
         /// <summary>
         /// Configuration for asynchronous retries.

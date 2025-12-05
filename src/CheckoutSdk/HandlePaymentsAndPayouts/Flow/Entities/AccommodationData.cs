@@ -1,4 +1,6 @@
 
+using Checkout.Common;
+using Checkout.Payments.Contexts;
 using System;
 using System.Collections.Generic;
 
@@ -32,7 +34,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         /// <summary>
         /// The address details of the accommodation.
         /// </summary>
-        public AccommodationAddress Address { get; set; }
+        public Address Address { get; set; }
 
         /// <summary>
         /// The state or province of the address country (ISO 3166-2 code of up to two alphanumeric characters).
@@ -57,56 +59,17 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         /// <summary>
         /// Contains information about the guests staying at the accommodation.
         /// </summary>
-        public IList<Guest> Guests { get; set; }
+        public IList<AccountHolderBase> Guests { get; set; }
 
         /// <summary>
         /// Contains information about the rooms booked by the customer.
         /// </summary>
-        public IList<Room> Rooms { get; set; }
+        public IList<PaymentContextsAccommodationRoom> Rooms { get; set; }
     }
 
-    public class AccommodationAddress
-    {
-        /// <summary>
-        /// The first line of the address.
-        /// </summary>
-        public string AddressLine1 { get; set; }
 
-        /// <summary>
-        /// The postal code for the address.
-        /// </summary>
-        public string Zip { get; set; }
-    }
 
-    public class Guest
-    {
-        /// <summary>
-        /// The first name of the guest.
-        /// </summary>
-        public string FirstName { get; set; }
 
-        /// <summary>
-        /// The last name of the guest.
-        /// </summary>
-        public string LastName { get; set; }
 
-        /// <summary>
-        /// The date of birth of the guest.
-        /// </summary>
-        public DateTime? DateOfBirth { get; set; }
-    }
 
-    public class Room
-    {
-        /// <summary>
-        /// For lodging, contains the nightly rate for one room. For cruise, contains the total cost of the cruise.
-        /// </summary>
-        public string Rate { get; set; }
-
-        /// <summary>
-        /// For lodging, contains the number of nights charged at the rate provided in the rate field. 
-        /// For cruise, contains the length of the cruise in days.
-        /// </summary>
-        public string NumberOfNightsAtRoomRate { get; set; }
-    }
 }

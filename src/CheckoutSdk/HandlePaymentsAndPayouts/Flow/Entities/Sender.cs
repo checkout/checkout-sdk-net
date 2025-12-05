@@ -80,7 +80,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         /// <summary>
         /// The type of identification used to identify the sender
         /// </summary>
-        public IdentificationType? Type { get; set; }
+        public AccountHolderIdentificationType? Type { get; set; }
 
         /// <summary>
         /// The identification number
@@ -102,12 +102,4 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         Instrument
     }
 
-    public enum IdentificationType
-    {
-        Passport,
-        
-        DrivingLicence,
-        
-        NationalId
-    }
 }
