@@ -5,6 +5,7 @@ using Checkout.Issuing;
 using Checkout.Customers;
 using Checkout.Disputes;
 using Checkout.Financial;
+using Checkout.HandlePaymentsAndPayouts.Flow;
 using Checkout.Forex;
 using Checkout.Forward;
 using Checkout.Instruments;
@@ -66,6 +67,8 @@ namespace Checkout
         IPaymentSessionsClient PaymentSessionsClient();
         
         IForwardClient ForwardClient();
+        
+        IFlowClient FlowClient();
         
         INetworkTokensClient NetworkTokensClient();
     }
