@@ -134,7 +134,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             {
                 ProcessingChannelId = "pc_test_12345",
                 Amount = 1000,
-                Currency = Common.Currency.GBP,
+                Currency = Currency.GBP,
                 PaymentType = PaymentType.Regular,
                 Reference = "TEST-REF-001",
                 Description = "Test payment setup",
