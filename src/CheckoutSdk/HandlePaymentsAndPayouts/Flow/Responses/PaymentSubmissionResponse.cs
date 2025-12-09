@@ -7,16 +7,19 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Responses
     {
         /// <summary>
         /// The payment identifier.
+        /// [Required]
         /// </summary>
         public string Id { get; set; }
 
         /// <summary>
         /// The payment's status.
+        /// [Required]
         /// </summary>
         public abstract string Status { get; set; }
 
         /// <summary>
         /// The payment method name.
+        /// [Required]
         /// </summary>
         public PaymentMethod? Type { get; set; }
     }

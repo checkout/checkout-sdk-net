@@ -1,7 +1,6 @@
 ﻿using Checkout.Common;
 using Checkout.Payments.Request;
 using Checkout.Payments.Sender;
-using Checkout.Payments.Sessions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

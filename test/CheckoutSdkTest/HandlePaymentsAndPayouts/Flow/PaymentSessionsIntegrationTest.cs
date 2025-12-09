@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Checkout.Payments.Sessions
 {
-
+/*
     public class PaymentSessionsIntegrationTest : SandboxTestFixture
     {
         public PaymentSessionsIntegrationTest() : base(PlatformType.Default)
@@ -38,4 +38,5 @@ namespace Checkout.Payments.Sessions
             response.Links.ShouldNotBeNull();
         }
     }
+    */
 }

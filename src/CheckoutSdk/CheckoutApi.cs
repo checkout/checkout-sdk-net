@@ -15,7 +15,6 @@ using Checkout.Payments;
 using Checkout.Payments.Contexts;
 using Checkout.Payments.Hosted;
 using Checkout.Payments.Links;
-using Checkout.Payments.Sessions;
 using Checkout.Reports;
 using Checkout.Risk;
 using Checkout.Tokens;
@@ -45,7 +44,6 @@ namespace Checkout
         private readonly IFinancialClient _financialClient;
         private readonly IIssuingClient _issuingClient;
         private readonly IPaymentContextsClient _paymentContextsClient;
-        private readonly IPaymentSessionsClient _paymentSessionsClient;
         private readonly IForwardClient _forwardClient;
         private readonly IFlowClient _flowClient;
         private readonly INetworkTokensClient _networkTokensClient;
@@ -77,7 +75,6 @@ namespace Checkout
             _financialClient = new FinancialClient(baseApiClient, configuration);
             _issuingClient = new IssuingClient(baseApiClient, configuration);
             _paymentContextsClient = new PaymentContextsClient(baseApiClient, configuration);
-            _paymentSessionsClient = new PaymentSessionsClient(baseApiClient, configuration);
             _forwardClient = new ForwardClient(baseApiClient, configuration);
             _flowClient = new FlowClient(baseApiClient, configuration);
             _networkTokensClient = new NetworkTokensClient(baseApiClient, configuration);
@@ -207,11 +204,6 @@ namespace Checkout
         public IPaymentContextsClient PaymentContextsClient()
         {
             return _paymentContextsClient;
-        }
-
-        public IPaymentSessionsClient PaymentSessionsClient()
-        {
-            return _paymentSessionsClient;
         }
 
         public IForwardClient ForwardClient()

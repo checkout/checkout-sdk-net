@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Checkout.Payments.Sessions
+namespace Checkout.HandlePaymentsAndPayouts.Common
 {
     public enum StorePaymentDetailsType
     {

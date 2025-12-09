@@ -1,5 +1,5 @@
 using Checkout.Common;
-using Checkout.Payments.Sessions;
+using Checkout.HandlePaymentsAndPayouts.Common;
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
