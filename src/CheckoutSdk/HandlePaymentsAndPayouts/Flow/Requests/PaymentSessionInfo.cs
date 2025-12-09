@@ -1,21 +1,17 @@
-using Checkout.Common;
 using Checkout.HandlePaymentsAndPayouts.Flow.Entities;
 using Checkout.Payments;
-using Checkout.Payments.Request;
-using LocaleType = Checkout.Payments.LocaleType;
+using Checkout.Common;
+
 using System;
 using System.Collections.Generic;
 
 namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
 {
-    public class PaymentSessionCreateRequest
+    /// <summary>
+    /// Extended base class for payment session requests that include full payment details
+    /// </summary>
+    public abstract class PaymentSessionInfo : PaymentSessionBase
     {
-        /// <summary>
-        /// The payment amount. Provide a value of 0 to perform a card verification.
-        /// The amount must be provided in the minor currency unit.
-        /// </summary>
-        public long Amount { get; set; }
-
         /// <summary>
         /// The three-letter ISO currency code
         /// </summary>
@@ -39,19 +35,9 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         public string FailureUrl { get; set; }
 
         /// <summary>
-        /// Must be specified for card-not-present (CNP) payments. Default: "Regular"
-        /// </summary>
-        public Checkout.Payments.PaymentType? PaymentType { get; set; } = Checkout.Payments.PaymentType.Regular;
-
-        /// <summary>
         /// A description of the purchase, which is displayed on the customer's statement.
         /// </summary>
-        public Checkout.Payments.BillingDescriptor BillingDescriptor { get; set; }
-
-        /// <summary>
-        /// A reference you can use to identify the payment. For example, an order number.
-        /// </summary>
-        public string Reference { get; set; }
+        public BillingDescriptor BillingDescriptor { get; set; }
 
         /// <summary>
         /// A description for the payment.
@@ -81,17 +67,12 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// <summary>
         /// Details about the payment instruction.
         /// </summary>
-        public Checkout.Payments.PaymentInstruction Instruction { get; set; }
+        public PaymentInstruction Instruction { get; set; }
 
         /// <summary>
         /// The processing channel to use for the payment.
         /// </summary>
         public string ProcessingChannelId { get; set; }
-
-        /// <summary>
-        /// The line items in the order.
-        /// </summary>
-        public IList<Checkout.Payments.Request.Product> Items { get; set; }
 
         /// <summary>
         /// The sub-entities that the payment is being processed on behalf of.
@@ -119,11 +100,6 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         public LocaleType? Locale { get; set; } = LocaleType.EnGb;
 
         /// <summary>
-        /// Information required for 3D Secure authentication payments.
-        /// </summary>
-        public ThreeDSRequest ThreeDS { get; set; }
-
-        /// <summary>
         /// The sender of the payment.
         /// </summary>
         public AbstractSender Sender { get; set; }
@@ -137,35 +113,5 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// A timestamp specifying when to capture the payment, as an ISO 8601 code.
         /// </summary>
         public DateTime? CaptureOn { get; set; }
-
-        /// <summary>
-        /// A timestamp specifying when the PaymentSession should expire, as an ISO 8601 code.
-        /// </summary>
-        public DateTime? ExpiresOn { get; set; }
-
-        /// <summary>
-        /// Specifies which payment method options to present to the customer.
-        /// </summary>
-        public IList<PaymentMethod> EnabledPaymentMethods { get; set; }
-
-        /// <summary>
-        /// Specifies which payment method options to not present to the customer.
-        /// </summary>
-        public IList<PaymentMethod> DisabledPaymentMethods { get; set; }
-
-        /// <summary>
-        /// Configurations for payment method-specific settings.
-        /// </summary>
-        public Entities.PaymentMethodConfiguration PaymentMethodConfiguration { get; set; }
-
-        /// <summary>
-        /// Configuration for asynchronous retries.
-        /// </summary>
-        public CustomerRetry CustomerRetry { get; set; }
-
-        /// <summary>
-        /// Deprecated - The Customer's IP address. Only IPv4 and IPv6 addresses are accepted.
-        /// </summary>
-        public string IpAddress { get; set; }
     }
 }

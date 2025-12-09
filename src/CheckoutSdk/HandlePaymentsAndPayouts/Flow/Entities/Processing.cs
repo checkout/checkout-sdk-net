@@ -39,7 +39,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         /// <summary>
         /// The language and region of the customer in ISO 639-2 language code; value consists of language-country.
         /// </summary>
-        public string ProcessingLocale { get; set; }
+        public string Locale { get; set; }
 
         /// <summary>
         /// An array of key-and-value pairs with merchant-specific data for the transaction.

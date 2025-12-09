@@ -64,7 +64,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         /// <summary>
         /// Contains information about the rooms booked by the customer.
         /// </summary>
-        public IList<PaymentContextsAccommodationRoom> Rooms { get; set; }
+        public IList<PaymentContextsAccommodationRoom> Room { get; set; }
     }
 
 

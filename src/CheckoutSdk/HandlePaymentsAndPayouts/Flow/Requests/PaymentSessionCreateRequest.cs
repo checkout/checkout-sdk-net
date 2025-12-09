@@ -1,8 +1,10 @@
 using Checkout.Common;
 using Checkout.HandlePaymentsAndPayouts.Flow.Entities;
 using Checkout.Payments;
-using Checkout.Payments.Request;
+
 using LocaleType = Checkout.Payments.LocaleType;
+using Product = Checkout.Payments.Request.Product;
+
 using System;
 using System.Collections.Generic;
 
@@ -66,7 +68,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// <summary>
         /// The shipping details
         /// </summary>
-        public Checkout.Payments.ShippingDetails Shipping { get; set; }
+        public ShippingDetails Shipping { get; set; }
 
         /// <summary>
         /// Information about the recipient of the payment's funds.
@@ -81,7 +83,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// <summary>
         /// Details about the payment instruction.
         /// </summary>
-        public Checkout.Payments.PaymentInstruction Instruction { get; set; }
+        public PaymentInstruction Instruction { get; set; }
 
         /// <summary>
         /// The processing channel to use for the payment.
@@ -91,7 +93,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// <summary>
         /// The line items in the order.
         /// </summary>
-        public IList<Checkout.Payments.Request.Product> Items { get; set; }
+        public IList<Product> Items { get; set; }
 
         /// <summary>
         /// The sub-entities that the payment is being processed on behalf of.

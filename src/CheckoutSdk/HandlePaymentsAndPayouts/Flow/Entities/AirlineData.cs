@@ -10,7 +10,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
     {
         public PaymentContextsTicket Ticket { get; set; }
 
-        public IList<PaymentContextsPassenger> Passengers { get; set; }
+        public IList<PaymentContextsPassenger> Passenger { get; set; }
 
         public IList<PaymentContextsFlightLegDetails> FlightLegDetails { get; set; }
     }

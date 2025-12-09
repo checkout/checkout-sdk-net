@@ -24,7 +24,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow
         /// Some payment methods may require you to provide specific values for certain fields.
         /// You must supply the unmodified response body when you initialize Flow.
         /// </summary>
-        public Task<PaymentSessionResponse> RequestPaymentSession(PaymentSessionRequest request,
+        public Task<PaymentSessionResponse> RequestPaymentSession(PaymentSessionCreateRequest request,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("request", request);
