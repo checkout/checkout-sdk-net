@@ -38,7 +38,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// Information required for 3D Secure authentication payments.
         /// </summary>
         [JsonProperty(PropertyName = "3ds")]
-        public ThreeDSRequest ThreeDS { get; set; }
+        public ThreeDsRequest ThreeDS { get; set; }
 
         /// <summary>
         /// Must be specified for card-not-present (CNP) payments. Default: "Regular"

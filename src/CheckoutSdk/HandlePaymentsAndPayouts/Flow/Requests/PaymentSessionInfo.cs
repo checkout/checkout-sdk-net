@@ -6,6 +6,7 @@ using Customer = Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Respons
 
 using System;
 using System.Collections.Generic;
+using Checkout.Payments.Sender;
 
 namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
 {
@@ -108,7 +109,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// <summary>
         /// The sender of the payment.
         /// </summary>
-        public AbstractSender Sender { get; set; }
+        public PaymentSender Sender { get; set; }
 
         /// <summary>
         /// Specifies whether to capture the payment, if applicable. Default: true

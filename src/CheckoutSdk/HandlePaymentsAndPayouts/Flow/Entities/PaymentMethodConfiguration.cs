@@ -62,7 +62,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         /// <summary>
         /// The status of the Google Pay payment total price. Default: "final"
         /// </summary>
-        public TotalPriceStatus? TotalPriceStatus { get; set; } = Checkout.HandlePaymentsAndPayouts.Flow.Entities.TotalPriceStatus.Final;
+        public TotalPriceStatus? TotalPriceStatus { get; set; } = Entities.TotalPriceStatus.Final;
     }
 
     public class StoredCardConfiguration
@@ -102,8 +102,10 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
 
     public enum TotalPriceStatus
     {
+        [EnumMember(Value = "estimated")]
         Estimated,
         
+        [EnumMember(Value = "final")]
         Final
     }
 }

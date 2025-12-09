@@ -45,8 +45,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow
         public Task<PaymentSubmissionResponse> SubmitPaymentSession(string sessionId, PaymentSessionSubmitRequest request,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("sessionId", sessionId);
-            CheckoutUtils.ValidateParams("request", request);
+            CheckoutUtils.ValidateParams("request", request, "sessionId", sessionId);            
             return ApiClient.Post<PaymentSubmissionResponse>(
                 BuildPath(PaymentSessions, sessionId, "submit"),
                 SdkAuthorization(),

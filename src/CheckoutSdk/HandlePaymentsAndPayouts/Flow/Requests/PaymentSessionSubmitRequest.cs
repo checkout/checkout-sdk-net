@@ -9,6 +9,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// A unique token representing the additional customer data captured by Flow, 
         /// as received from the handleSubmit callback.
         /// Do not log or store this value.
+        /// [Required]
         /// </summary>
         public string SessionData { get; set; }
 

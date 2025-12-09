@@ -1,5 +1,6 @@
 using Checkout.HandlePaymentsAndPayouts.Flow.Entities;
-using Checkout.Payments;
+using Checkout.Payments.Request;
+
 using System;
 using System.Collections.Generic;
 
@@ -28,12 +29,12 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// <summary>
         /// Configurations for payment method-specific settings.
         /// </summary>
-        public Entities.PaymentMethodConfiguration PaymentMethodConfiguration { get; set; }
+        public PaymentMethodConfiguration PaymentMethodConfiguration { get; set; }
 
         /// <summary>
         /// Configuration for asynchronous retries.
         /// </summary>
-        public CustomerRetry CustomerRetry { get; set; }
+        public PaymentRetryRequest CustomerRetry { get; set; }
 
         /// <summary>
         /// Deprecated - The Customer's IP address. Only IPv4 and IPv6 addresses are accepted.
