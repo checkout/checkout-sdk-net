@@ -1,4 +1,3 @@
-using Checkout.HandlePaymentsAndPayouts.Flow.Entities;
 using Checkout.Payments;
 
 using Product = Checkout.Payments.Request.Product;

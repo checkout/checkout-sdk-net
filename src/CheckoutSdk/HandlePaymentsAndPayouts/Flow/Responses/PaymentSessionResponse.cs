@@ -1,9 +1,8 @@
 using Checkout.Common;
 
-
 namespace Checkout.HandlePaymentsAndPayouts.Flow.Responses
 {
-    public class PaymentSessionResponse : HttpMetadata
+    public class PaymentSessionResponse : Resource
     {
         /// <summary>
         /// The Payment Sessions unique identifier

@@ -1,4 +1,4 @@
-using Checkout.HandlePaymentsAndPayouts.Flow.Entities;
+using Checkout.Payments.Sender;
 using Checkout.Payments;
 using Checkout.Common;
 
@@ -6,7 +6,6 @@ using Customer = Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Respons
 
 using System;
 using System.Collections.Generic;
-using Checkout.Payments.Sender;
 
 namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
 {

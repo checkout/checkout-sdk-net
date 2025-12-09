@@ -1,10 +1,9 @@
 using Checkout.Common;
 using Checkout.HandlePaymentsAndPayouts.Flow.Entities;
-using Checkout.HandlePaymentsAndPayouts.Flow.Requests;
 
 namespace Checkout.HandlePaymentsAndPayouts.Flow.Responses
 {
-    public abstract class PaymentSubmissionResponse : HttpMetadata
+    public abstract class PaymentSubmissionResponse : Resource
     {
         /// <summary>
         /// The payment identifier.
