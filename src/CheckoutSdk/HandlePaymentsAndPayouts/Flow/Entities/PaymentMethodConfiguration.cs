@@ -2,8 +2,7 @@ using Checkout.Common;
 using Checkout.Payments.Sessions;
 
 using System.Collections.Generic;
-
-using Entities = Checkout.HandlePaymentsAndPayouts.Flow.Entities;
+using System.Runtime.Serialization;
 
 namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
 {
@@ -30,7 +29,10 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         public StoredCardConfiguration StoredCard { get; set; }
     }
 
-    public class ApplePayConfiguration
+    /// <summary>
+    /// Base class for payment method configurations containing common properties
+    /// </summary>
+    public abstract class PaymentMethodConfigurationBase
     {
         /// <summary>
         /// Specifies whether you intend to store the cardholder's payment details. Default: "disabled"
@@ -41,38 +43,22 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         /// The account holder's details.
         /// </summary>
         public AccountHolder AccountHolder { get; set; }
+    }
 
+    public class ApplePayConfiguration : PaymentMethodConfigurationBase
+    {
         /// <summary>
         /// The type of the Apple Pay payment total line item. Default: "final"
         /// </summary>
-        public TotalType? TotalType { get; set; } = Checkout.HandlePaymentsAndPayouts.Flow.Entities.TotalType.Final;
+        public TotalType? TotalType { get; set; } = Entities.TotalType.Final;
     }
 
-    public class CardConfiguration
+    public class CardConfiguration : PaymentMethodConfigurationBase
     {
-        /// <summary>
-        /// Specifies whether you intend to store the cardholder's payment details. Default: "disabled"
-        /// </summary>
-        public StorePaymentDetailsType? StorePaymentDetails { get; set; } = StorePaymentDetailsType.Disabled;
-
-        /// <summary>
-        /// The account holder's details.
-        /// </summary>
-        public AccountHolder AccountHolder { get; set; }
     }
 
-    public class GooglePayConfiguration
+    public class GooglePayConfiguration : PaymentMethodConfigurationBase
     {
-        /// <summary>
-        /// Specifies whether you intend to store the cardholder's payment details. Default: "disabled"
-        /// </summary>
-        public StorePaymentDetailsType? StorePaymentDetails { get; set; } = StorePaymentDetailsType.Disabled;
-
-        /// <summary>
-        /// The account holder's details.
-        /// </summary>
-        public AccountHolder AccountHolder { get; set; }
-
         /// <summary>
         /// The status of the Google Pay payment total price. Default: "final"
         /// </summary>
@@ -107,8 +93,10 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
 
     public enum TotalType
     {
+        [EnumMember(Value = "pending")]
         Pending,
         
+        [EnumMember(Value = "final")]
         Final
     }
 

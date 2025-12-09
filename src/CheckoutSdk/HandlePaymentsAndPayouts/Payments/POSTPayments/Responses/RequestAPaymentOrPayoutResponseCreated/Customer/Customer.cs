@@ -33,6 +33,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         public Phone.Phone Phone { get; set; }
 
         /// <summary>
+        /// The customer’s value-added tax (VAT) registration number.
+        /// </summary>
+        public string TaxNumber { get; set; }
+
+        /// <summary>
         /// Summary of the customer's transaction history.  Used for risk assessment when source.type is Tamara
         /// [Optional]
         /// </summary>

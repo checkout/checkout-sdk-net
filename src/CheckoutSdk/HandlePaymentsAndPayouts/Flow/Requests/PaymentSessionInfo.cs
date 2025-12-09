@@ -2,6 +2,8 @@ using Checkout.HandlePaymentsAndPayouts.Flow.Entities;
 using Checkout.Payments;
 using Checkout.Common;
 
+using Customer = Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseCreated.Customer;
+
 using System;
 using System.Collections.Generic;
 
@@ -14,23 +16,27 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
     {
         /// <summary>
         /// The three-letter ISO currency code
+        /// [Required]
         /// </summary>
         public Currency Currency { get; set; }
 
         /// <summary>
         /// The billing details.
+        /// [Required]
         /// </summary>
         public BillingInformation Billing { get; set; }
 
         /// <summary>
         /// Overrides the default success redirect URL configured on your account, 
         /// for payment methods that require a redirect.
+        /// [Required]
         /// </summary>
         public string SuccessUrl { get; set; }
 
         /// <summary>
         /// Overrides the default failure redirect URL configured on your account, 
         /// for payment methods that require a redirect.
+        /// [Required]
         /// </summary>
         public string FailureUrl { get; set; }
 
@@ -47,12 +53,12 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// <summary>
         /// The customer's details. Required if source.type is tamara.
         /// </summary>
-        public CustomerResponse Customer { get; set; }
+        public Customer.Customer Customer { get; set; }
 
         /// <summary>
         /// The shipping details
         /// </summary>
-        public Checkout.Payments.ShippingDetails Shipping { get; set; }
+        public ShippingDetails Shipping { get; set; }
 
         /// <summary>
         /// Information about the recipient of the payment's funds.
@@ -62,7 +68,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// <summary>
         /// Use the processing object to influence or override the data sent during card processing
         /// </summary>
-        public Entities.Processing Processing { get; set; }
+        public ProcessingSettings Processing { get; set; }
 
         /// <summary>
         /// Details about the payment instruction.
