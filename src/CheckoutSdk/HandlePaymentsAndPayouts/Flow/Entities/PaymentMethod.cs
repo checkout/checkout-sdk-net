@@ -43,7 +43,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         GooglePay,
         
         [EnumMember(Value = "ideal")]
-        IDeal,
+        Ideal,
         
         [EnumMember(Value = "kakaopay")]
         KakaoPay,

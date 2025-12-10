@@ -14,16 +14,17 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
+using Checkout.Payments.Sender;
 
 namespace Checkout.HandlePaymentsAndPayouts.Flow
 {
     public class FlowIntegrationTest : SandboxTestFixture
     {
-        public FlowIntegrationTest() : base(PlatformType.DefaultOAuth)
+        public FlowIntegrationTest() : base(PlatformType.Default)
         {
         }
 
-        [Fact(Skip = "This test requires a valid merchant configuration for Flow")]
+        [Fact]
         public async Task ShouldCreatePaymentSession()
         {
             // Arrange
@@ -39,7 +40,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow
             response.PaymentSessionSecret.ShouldNotBeNull();
         }
 
-        [Fact(Skip = "This test requires a valid merchant configuration for Flow and a valid payment session")]
+        [Fact(Skip = "This test requires a valid merchant configuration for Flow")]
         public async Task ShouldSubmitPaymentSession()
         {
             // Arrange
@@ -47,6 +48,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow
             var createResponse = await DefaultApi.FlowClient().CreatePaymentSession(createRequest);
             
             var submitRequest = CreatePaymentSessionSubmitRequest();
+            //submitRequest.SessionData = createResponse.PaymentSessionToken; ???
 
             // Act
             var response = await DefaultApi.FlowClient().SubmitPaymentSession(createResponse.Id, submitRequest);
@@ -71,62 +73,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow
             response.Id.ShouldNotBeNull();
             response.Status.ShouldNotBeNull();
         }
-
-        private PaymentSessionCreateRequest CreatePaymentSessionCreateRequest()
-        {
-            return new PaymentSessionCreateRequest
-            {
-                Amount = 1000,
-                Currency = Currency.GBP,
-                Reference = "ORD-5023-4E89",
-                Customer = new Customer.Customer
-                {
-                    Email = "johndoe@email.com",
-                    Name = "John Doe"
-                },
-                SuccessUrl = "https://example.com/payments/success",
-                FailureUrl = "https://example.com/payments/fail",
-                PaymentMethodConfiguration = new Entities.PaymentMethodConfiguration
-                {
-                    Card = new CardConfiguration
-                    {
-                        StorePaymentDetails = StorePaymentDetailsType.Enabled
-                    }
-                },
-                EnabledPaymentMethods = new List<PaymentMethod>
-                {
-                    PaymentMethod.Card
-                }
-            };
-        }
-
-        private PaymentSessionSubmitRequest CreatePaymentSessionSubmitRequest()
-        {
-            return new PaymentSessionSubmitRequest
-            {
-                SessionData = "encrypted_session_data",
-                IpAddress = "192.168.1.1"
-            };
-        }
-
-        private PaymentSessionCompleteRequest CreatePaymentSessionCompleteRequest()
-        {
-            return new PaymentSessionCompleteRequest
-            {
-                Amount = 1000,
-                Currency = Currency.USD,
-                Reference = "ORD-5023-4E89",
-                Customer = new Customer.Customer
-                {
-                    Email = "johndoe@email.com",
-                    Name = "John Doe"
-                },
-                SuccessUrl = "https://example.com/payments/success",
-                FailureUrl = "https://example.com/payments/fail",
-                SessionData = "encrypted_session_data"
-            };
-        }
-
+        
         [Fact]
         public void PaymentSessionCreateRequest_Should_Have_All_Required_Properties_For_JSON_Compatibility()
         {
@@ -409,6 +356,92 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow
             // request.Sender assertion commented due to type compatibility issues
             request.Capture.ShouldBe(true);
             request.CaptureOn.ShouldNotBeNull();
+        }
+
+        private PaymentSessionCreateRequest CreatePaymentSessionCreateRequest()
+        {
+            return new PaymentSessionCreateRequest
+            {
+                Amount = 1000L,
+                Currency = Currency.USD,
+                PaymentType = PaymentType.Regular,
+                Reference = "ORD-123A",
+                Description = "Payment for gold necklace",
+                DisplayName = "Company Test",
+                ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
+                SuccessUrl = "https://example.com/payments/success",
+                FailureUrl = "https://example.com/payments/failure",
+                EnabledPaymentMethods = new List<PaymentMethod>
+                {
+                    PaymentMethod.Card
+                },
+                PaymentMethodConfiguration = new Entities.PaymentMethodConfiguration
+                {
+                    Card = new CardConfiguration
+                    {
+                        StorePaymentDetails = StorePaymentDetailsType.Enabled
+                    }
+                },
+                Billing = new BillingInformation
+                {
+                    Address = new Address
+                    {
+                        AddressLine1 = "123 High St.",
+                        AddressLine2 = "Flat 456",
+                        City = "London",
+                        State = "str",
+                        Zip = "SW1A 1AA",
+                        Country = CountryCode.GB
+                    },
+                    Phone = new Phone
+                    {
+                        CountryCode = "+1",
+                        Number = "415 555 2671"
+                    }
+                },
+                BillingDescriptor = new BillingDescriptor
+                {
+                    Name = "Company Test",
+                    City = "London"
+                },
+                Risk = new RiskRequest
+                {
+                    Enabled = false
+                },
+                ThreeDS = new ThreeDsRequest
+                {
+                    Enabled = false
+                },
+                Capture = true,
+                Locale = LocaleType.EnGb
+            };
+        }
+
+        private PaymentSessionSubmitRequest CreatePaymentSessionSubmitRequest()
+        {
+            return new PaymentSessionSubmitRequest
+            {
+                SessionData = "encrypted_session_data",
+                IpAddress = "192.168.1.1"
+            };
+        }
+
+        private PaymentSessionCompleteRequest CreatePaymentSessionCompleteRequest()
+        {
+            return new PaymentSessionCompleteRequest
+            {
+                Amount = 1000,
+                Currency = Currency.USD,
+                Reference = "ORD-5023-4E89",
+                Customer = new Customer.Customer
+                {
+                    Email = "johndoe@email.com",
+                    Name = "John Doe"
+                },
+                SuccessUrl = "https://example.com/payments/success",
+                FailureUrl = "https://example.com/payments/fail",
+                SessionData = "encrypted_session_data"
+            };
         }
     }
 }
