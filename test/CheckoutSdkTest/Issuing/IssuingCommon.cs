@@ -127,6 +127,8 @@ namespace Checkout.Issuing
 
         private static CheckoutApi IssuingCheckoutApi()
         {
+            var logFactory = TestLoggerFactoryHelper.Instance;
+            
             return CheckoutSdk.Builder()
                 .OAuth()
                 .ClientCredentials(
@@ -135,6 +137,7 @@ namespace Checkout.Issuing
                 .Scopes(OAuthScope.IssuingCard, OAuthScope.IssuingControlRead, OAuthScope.IssuingControlWrite,
                     OAuthScope.IssuingClient, OAuthScope.IssuingTransactionsRead, OAuthScope.Vault)
                 .Environment(Environment.Sandbox)
+                .LogProvider(logFactory)
                 .Build() as CheckoutApi;
         }
     }

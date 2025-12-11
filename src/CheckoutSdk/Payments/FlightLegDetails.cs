@@ -1,3 +1,5 @@
+using System;
+
 namespace Checkout.Payments
 {
     public class FlightLegDetails
@@ -8,7 +10,7 @@ namespace Checkout.Payments
 
         public string ServiceClass { get; set; }
 
-        public string DepartureDate { get; set; }
+        public DateTime DepartureDate { get; set; }
 
         public string DepartureTime { get; set; }
 
