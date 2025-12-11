@@ -37,7 +37,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.
         /// The last four digits of the card number
         /// [Required]
         /// </summary>
-        public string LastFour { get; set; }
+        public string Last4 { get; set; }
 
         /// <summary>
         /// Uniquely identifies this particular card number. You can use this to compare cards across customers.

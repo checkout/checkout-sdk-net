@@ -6,5 +6,6 @@ namespace Checkout.Payments.Sessions
     {
         [EnumMember(Value = "disabled")] Disabled,
         [EnumMember(Value = "enabled")] Enabled,
+        [EnumMember(Value = "collect_consent")] CollectConsent
     }
 }

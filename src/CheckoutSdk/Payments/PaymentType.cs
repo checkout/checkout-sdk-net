@@ -8,6 +8,7 @@ namespace Checkout.Payments
         [EnumMember(Value = "Recurring")] Recurring,
         [EnumMember(Value = "MOTO")] Moto,
         [EnumMember(Value = "Installment")] Installment,
+        [EnumMember(Value = "PayLater")] PayLater,
         [EnumMember(Value = "Unscheduled")] Unscheduled
     }
 }

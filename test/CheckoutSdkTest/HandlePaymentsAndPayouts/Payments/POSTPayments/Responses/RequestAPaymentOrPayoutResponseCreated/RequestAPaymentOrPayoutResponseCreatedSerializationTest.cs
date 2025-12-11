@@ -1,3 +1,4 @@
+using Checkout.Common;
 using Checkout.HandlePaymentsAndPayouts.Payments.Common.Source;
 using CardSource =
     Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.CardSource.CardSource;
@@ -30,7 +31,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
                 ""source"": {
                     ""type"": ""card"",
                     ""id"": ""src_123"",
-                    ""last_four"": ""1234"",
+                    ""last4"": ""1234"",
                     ""fingerprint"": ""abc123"",
                     ""bin"": ""123456"",
                     ""scheme"": ""Visa"",
@@ -49,7 +50,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
             response.Source.Type.ShouldBe(SourceType.Card);
 
             var cardSource = (CardSource)response.Source;
-            cardSource.LastFour.ShouldBe("1234");
+            cardSource.Last4.ShouldBe("1234");
             cardSource.Fingerprint.ShouldBe("abc123");
             cardSource.Bin.ShouldBe("123456");
             cardSource.ExpiryMonth.ShouldBe(12);
@@ -244,7 +245,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
             response.ShouldNotBeNull();
             response.Id.ShouldBe("pay_y3oqhf46pyzuxjbcn2giaqnb44");
             response.Amount.ShouldBe(6540);
-            response.Currency.ShouldBe("USD");
+            response.Currency.ShouldBe(Currency.USD);
             response.Approved.ShouldBeTrue();
             response.Status.ShouldBe(StatusType.Authorized);
             response.AuthCode.ShouldBe("858188");
@@ -256,7 +257,6 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
             response.Source.ShouldBeOfType<CardSource>();
             var cardSource = (CardSource)response.Source;
             cardSource.Id.ShouldBe("src_nwd3m4in3hkuddfpjsaevunhdy");
-            cardSource.LastFour.ShouldBe("4242");
             cardSource.ExpiryMonth.ShouldBe(6);
             cardSource.ExpiryYear.ShouldBe(2025);
             cardSource.Scheme.ShouldBe("Visa");

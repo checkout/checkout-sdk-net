@@ -79,5 +79,12 @@ namespace Checkout.Payments
         
         [JsonProperty(PropertyName = "senderInformation")]
         public string SenderInformation { get; set; }
+        
+        public CardType? CardType { get; set; }
+        
+        public string AffiliateId { get; set; }
+        
+        public string AffiliateUrl { get; set; }
+        
     }
 }
