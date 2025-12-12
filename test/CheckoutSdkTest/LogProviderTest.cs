@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using System.Linq;
 using Xunit;
+using System.Collections.Concurrent;
 
 namespace Checkout
 {
@@ -26,8 +27,10 @@ namespace Checkout
         }
         
         [Fact]
-        public async Task ShouldCreateASingleLoggerInstanceForMultipleConcurrentRequests()
+        public async Task ShouldCreateDifferentLoggerInstancesForMultipleConcurrentRequests()
         {
+            ConcurrentBag<Type> logTypes = new ConcurrentBag<Type>();
+            
             LogProvider.SetLogFactory(_loggerFactory);
             Type[] loggerTypes = { typeof(LogProviderTests), typeof(AnotherTestClass), typeof(NoInitializedType) };
 
@@ -40,11 +43,16 @@ namespace Checkout
                         delay = Random.Next(1, 5);
                     }
                     await Task.Delay(delay);
-                    return await Task.FromResult(LogProvider.GetLogger(loggerTypes[index % loggerTypes.Length]));
+
+                    var logType = loggerTypes[index % loggerTypes.Length];
+                    logTypes.Add(logType);
+
+                    return await Task.FromResult(LogProvider.GetLogger(logType));
                 }).ToArray();
 
             ILogger[] loggers = await Task.WhenAll(createLoggerTasks);
-            Assert.Equal(loggerTypes.Length, loggers.Distinct().Count());
+            
+            Assert.Equal(logTypes.Distinct().Count(), loggers.Distinct().Count());
         }
 
         [Fact]
