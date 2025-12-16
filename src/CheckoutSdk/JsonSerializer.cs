@@ -109,7 +109,7 @@ namespace Checkout
                         throw new JsonSerializationException($"Cannot convert null value to {objectType}.");
                 }
 
-                var dateString = reader.Value?.ToString();
+                var dateString = reader.Value as string;
                 if (dateString == null)
                     return reader.Value; // Already parsed by another converter
 
