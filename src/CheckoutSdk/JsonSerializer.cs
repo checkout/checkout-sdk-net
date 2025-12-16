@@ -12,6 +12,7 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CardTypeResponseConverter = Checkout.Issuing.Common.Responses.CardTypeResponseConverter;
 
 namespace Checkout
@@ -56,6 +57,8 @@ namespace Checkout
                     new UpdateInstrumentResponseTypeConverter(),
                     // Workflows CS2
                     new WorkflowActionTypeResponseConverter(), new WorkflowConditionTypeResponseConverter(),
+                    // Short date format converter (must come before IsoDateTimeConverter)
+                    new ShortDateTimeConverter(),
                     GetConverterDateTimeToIso(),
                     // Accounts Payout Schedules
                     new GetScheduleResponseTypeConverter(), new ScheduleResponseTypeConverter(),
@@ -82,6 +85,49 @@ namespace Checkout
             };
 
             return converter;
+        }
+
+        private class ShortDateTimeConverter : JsonConverter
+        {
+            private const string DateTimeFormat = "yyyy-MM-dd";
+
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(DateTime) || objectType == typeof(DateTime?);
+            }
+
+            public override bool CanRead => true;
+            public override bool CanWrite => false;
+
+            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                if (reader.TokenType == JsonToken.Null)
+                {
+                    if (objectType == typeof(DateTime?))
+                        return null;
+                    else
+                        throw new JsonSerializationException($"Cannot convert null value to {objectType}.");
+                }
+
+                var dateString = reader.Value?.ToString();
+                if (dateString == null)
+                    return reader.Value; // Already parsed by another converter
+
+                // Only handle short date format (yyyy-MM-dd)
+                if (dateString.Length == 10 && dateString.Count(c => c == '-') == 2)
+                {
+                    if (DateTime.TryParseExact(dateString, DateTimeFormat, null, System.Globalization.DateTimeStyles.None, out var result))
+                        return result;
+                }
+
+                // Let the default converter handle other formats
+                return JsonConvert.DeserializeObject($"\"{dateString}\"", objectType);
+            }
+
+            public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                throw new NotSupportedException("ShortDateTimeConverter should not handle writing.");
+            }
         }
     }
 }
