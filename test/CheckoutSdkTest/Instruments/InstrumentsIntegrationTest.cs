@@ -149,6 +149,7 @@ namespace Checkout.Instruments
             cardResponse.Fingerprint.ShouldNotBeNull();
             cardResponse.ExpiryMonth.ShouldBe(12);
             cardResponse.ExpiryYear.ShouldBe(2030);
+
             cardResponse.AccountHolder.FirstName.ShouldBe("John");
             cardResponse.AccountHolder.LastName.ShouldBe("Doe");
             cardResponse.CardType.ShouldNotBeNull();

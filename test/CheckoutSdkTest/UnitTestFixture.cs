@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 namespace Checkout
 {
     public abstract class UnitTestFixture
@@ -13,5 +15,10 @@ namespace Checkout
         protected static readonly string ValidDefaultSk = System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_SECRET_KEY");
         protected const string InvalidDefaultPk = "pk_sbox_pkh";
         protected const string InvalidDefaultSk = "sk_sbox_m73dzbpy7c-f3gfd46xr4yj5xo4e";
+
+        /// <summary>
+        /// Gets the singleton logger factory instance. This prevents disposal issues in CI/CD.
+        /// </summary>
+        protected static ILoggerFactory CreateLoggerFactory() => TestLoggerFactoryHelper.Instance;
     }
 }
