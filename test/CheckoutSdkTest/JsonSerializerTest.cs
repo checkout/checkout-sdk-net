@@ -20,6 +20,11 @@ namespace Checkout
 {
     public class JsonSerializerTest : JsonTestFixture
     {
+        public class DummyDateTime
+        {
+            public DateTime Datetime { get; set; }
+        }
+
         [Fact]
         public void ShouldDeserializeDefaultGetPaymentResponseIndividualSender()
         {
@@ -248,6 +253,42 @@ namespace Checkout
                 paymentResponse.ProcessedOn.ShouldNotBeNull();
                 paymentResponse.ProcessedOn.ShouldBe(dateTime);
             }
+        }
+
+        [Fact]
+        public void ShouldWorkWithLongDates()
+        {
+            // This method tests the custom IsoDateTimeConverter
+            var serializer = new JsonSerializer();
+            var date = "{ \"datetime\" : \"2025-10-30T23:59:59Z\" }";
+            
+            // Test deserialization
+            DummyDateTime dummyDate = (DummyDateTime) serializer.Deserialize(date, typeof(DummyDateTime));
+            
+            // Test serialization as well
+            var serializedJson = serializer.Serialize(dummyDate);
+            
+            Assert.NotNull(dummyDate);
+            Assert.Equal(new DateTime(2025, 10, 30, 23, 59, 59, DateTimeKind.Utc), dummyDate.Datetime);
+            Assert.Contains("2025-10-30T23:59:59Z", serializedJson);
+        }
+
+        [Fact]
+        public void ShouldWorkWithShortDates()
+        {
+            // This method tests the custom ShortDateTimeConverter
+            var serializer = new JsonSerializer();
+            var date = "{ \"datetime\" : \"2025-10-30\" }";
+            
+            // Test deserialization
+            DummyDateTime dummyDate = (DummyDateTime) serializer.Deserialize(date, typeof(DummyDateTime));
+            
+            // Test serialization as well
+            var serializedJson = serializer.Serialize(dummyDate);
+            
+            Assert.NotNull(dummyDate);
+            Assert.Equal(new DateTime(2025, 10, 30), dummyDate.Datetime);
+            Assert.Contains("2025-10-30", serializedJson);
         }
     }
 }
