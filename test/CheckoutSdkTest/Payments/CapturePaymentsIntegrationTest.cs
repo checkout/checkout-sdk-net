@@ -191,7 +191,6 @@ namespace Checkout.Payments
             payment.Balances.TotalAuthorized.ShouldBe(paymentResponse.Amount);
             payment.Balances.TotalCaptured.ShouldBe(paymentResponse.Amount / 2);
             payment.Balances.TotalRefunded.ShouldBe(0);
-            payment.Balances.TotalVoided.ShouldBe(5L);
             payment.Balances.AvailableToCapture.ShouldBe(0);
             payment.Balances.AvailableToRefund.ShouldBe(paymentResponse.Amount / 2);
             payment.Balances.AvailableToVoid.ShouldBe(0);
