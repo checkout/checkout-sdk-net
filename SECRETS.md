@@ -33,7 +33,7 @@ env:
   CHECKOUT_DEFAULT_OAUTH_CLIENT_ID: ${{ secrets.IT_CHECKOUT_DEFAULT_OAUTH_CLIENT_ID }}
 ```
 - **File:** `.github/workflows/build-pull-request.yml`
-- **Line:** 46
+- **Section:** `build-and-test` step environment variables
 - **Triggered on:** Pull requests to master branch
 
 ### 2. build-master.yml
@@ -42,7 +42,7 @@ env:
   CHECKOUT_DEFAULT_OAUTH_CLIENT_ID: ${{ secrets.IT_CHECKOUT_DEFAULT_OAUTH_CLIENT_ID }}
 ```
 - **File:** `.github/workflows/build-master.yml`
-- **Line:** 47
+- **Section:** `build-and-test` step environment variables
 - **Triggered on:** Push to master branch
 
 ### 3. build-release.yml
@@ -51,7 +51,7 @@ env:
   CHECKOUT_DEFAULT_OAUTH_CLIENT_ID: ${{ secrets.IT_CHECKOUT_DEFAULT_OAUTH_CLIENT_ID }}
 ```
 - **File:** `.github/workflows/build-release.yml`
-- **Line:** 33
+- **Section:** `test-solution` step environment variables
 - **Triggered on:** Push to master branch when Directory.Build.props changes
 
 ## Related Secrets
@@ -84,10 +84,10 @@ System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_ID")
 ```
 
 ### Files that use this environment variable:
-- `test/CheckoutSdkTest/SandboxTestFixture.cs` (line 111)
-- `test/CheckoutSdkTest/Accounts/AccountsIntegrationTest.cs` (lines 90, 199)
-- `test/CheckoutSdkTest/Extensions/CheckoutServiceCollectionTest.cs` (lines 69, 147)
-- `test/CheckoutSdkTest/OAuthIntegrationTest.cs` (line 90)
+- `test/CheckoutSdkTest/SandboxTestFixture.cs`
+- `test/CheckoutSdkTest/Accounts/AccountsIntegrationTest.cs`
+- `test/CheckoutSdkTest/Extensions/CheckoutServiceCollectionTest.cs`
+- `test/CheckoutSdkTest/OAuthIntegrationTest.cs`
 
 ## Local Development
 
