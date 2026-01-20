@@ -83,7 +83,10 @@ namespace Checkout
             {
                 if (_authorizationUri == null)
                 {
-                    _authorizationUri = Env.GetAttribute<EnvironmentAttribute>().AuthorizationUri;
+                    var envSubdomain = _envSubdomain;
+                    _authorizationUri = envSubdomain != null ? 
+                                        envSubdomain.AuthorizationUri
+                                        : Env.GetAttribute<EnvironmentAttribute>().AuthorizationUri;
                 }
 
                 var credentials = new OAuthSdkCredentials(ClientFactory, _authorizationUri, _clientId,
