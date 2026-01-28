@@ -5,6 +5,7 @@ using Checkout.Issuing;
 using Checkout.Customers;
 using Checkout.Disputes;
 using Checkout.Financial;
+using Checkout.HandlePaymentsAndPayouts.Flow;
 using Checkout.Forex;
 using Checkout.Forward;
 using Checkout.Instruments;
@@ -14,7 +15,6 @@ using Checkout.Payments;
 using Checkout.Payments.Contexts;
 using Checkout.Payments.Hosted;
 using Checkout.Payments.Links;
-using Checkout.Payments.Sessions;
 using Checkout.Payments.Setups;
 using Checkout.Reports;
 using Checkout.Risk;
@@ -45,8 +45,8 @@ namespace Checkout
         private readonly IFinancialClient _financialClient;
         private readonly IIssuingClient _issuingClient;
         private readonly IPaymentContextsClient _paymentContextsClient;
-        private readonly IPaymentSessionsClient _paymentSessionsClient;
         private readonly IForwardClient _forwardClient;
+        private readonly IFlowClient _flowClient;
         private readonly INetworkTokensClient _networkTokensClient;
         private readonly IPaymentSetupsClient _paymentSetupsClient;
 
@@ -77,8 +77,8 @@ namespace Checkout
             _financialClient = new FinancialClient(baseApiClient, configuration);
             _issuingClient = new IssuingClient(baseApiClient, configuration);
             _paymentContextsClient = new PaymentContextsClient(baseApiClient, configuration);
-            _paymentSessionsClient = new PaymentSessionsClient(baseApiClient, configuration);
             _forwardClient = new ForwardClient(baseApiClient, configuration);
+            _flowClient = new FlowClient(baseApiClient, configuration);
             _networkTokensClient = new NetworkTokensClient(baseApiClient, configuration);
             _paymentSetupsClient = new PaymentSetupsClient(baseApiClient, configuration);
         }
@@ -209,14 +209,14 @@ namespace Checkout
             return _paymentContextsClient;
         }
 
-        public IPaymentSessionsClient PaymentSessionsClient()
-        {
-            return _paymentSessionsClient;
-        }
-
         public IForwardClient ForwardClient()
         {
             return _forwardClient;
+        }
+
+        public IFlowClient FlowClient()
+        {
+            return _flowClient;
         }
 
         public INetworkTokensClient NetworkTokensClient()
