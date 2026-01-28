@@ -23,27 +23,35 @@ namespace Checkout
     public class EnvironmentSubdomain
     {
         public Uri ApiUri { get; }
+        public Uri AuthorizationUri { get; }
 
         public EnvironmentSubdomain(Environment environment, string subdomain)
         {
-            ApiUri = AddSubdomainToApiUrlEnvironment(environment, subdomain);
+            ApiUri = CreateUrlWithSubdomain(environment.GetAttribute<EnvironmentAttribute>().ApiUri, subdomain);
+            AuthorizationUri = CreateUrlWithSubdomain(environment.GetAttribute<EnvironmentAttribute>().AuthorizationUri, subdomain);
         }
         
-        private static Uri AddSubdomainToApiUrlEnvironment(Environment environment, string subdomain)
+        /// <summary>
+        /// Applies subdomain transformation to any given URI.
+        /// If the subdomain is valid (alphanumeric pattern), prepends it to the host.
+        /// Otherwise, returns the original URI unchanged.
+        /// </summary>
+        /// <param name="originalUrl">The original URI to transform</param>
+        /// <param name="subdomain">The subdomain to prepend</param>
+        /// <returns>The transformed URI with subdomain, or original URI if subdomain is invalid</returns>
+        private static Uri CreateUrlWithSubdomain(Uri originalUrl, string subdomain)
         {
-            Uri apiUrl = environment.GetAttribute<EnvironmentAttribute>().ApiUri;
-            
-            Uri newEnvironment = new Uri(apiUrl.ToString());
+            Uri newEnvironment = new Uri(originalUrl.ToString());
             
             Regex regex = new Regex(@"^[0-9a-z]+$");
             if (regex.IsMatch(subdomain))
             {
-                UriBuilder merchantApiUrl = new UriBuilder(apiUrl.Host);
-                merchantApiUrl.Host = subdomain + "." + merchantApiUrl.Host;
-                merchantApiUrl.Scheme = apiUrl.Scheme;
-                merchantApiUrl.Port = apiUrl.Port;
+                UriBuilder merchantUrl = new UriBuilder(originalUrl);
+                merchantUrl.Host = subdomain + "." + originalUrl.Host;
+                merchantUrl.Scheme = originalUrl.Scheme;
+                merchantUrl.Port = originalUrl.Port;
 
-                newEnvironment = new Uri(merchantApiUrl.ToString());
+                newEnvironment = new Uri(merchantUrl.ToString());
             }
 
             return newEnvironment;

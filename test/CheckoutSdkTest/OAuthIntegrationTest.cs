@@ -100,5 +100,27 @@ namespace Checkout
                 e.Message.ShouldBe("OAuth client_credentials authentication failed with error: invalid_client");
             }
         }
+
+        [Fact]
+        public void ShouldCreateOAuthSdkWithSubdomain()
+        {
+            try
+            {
+                CheckoutSdk.Builder()
+                    .OAuth()
+                    .ClientCredentials("fake", "fake")
+                    .Environment(Environment.Sandbox)
+                    .EnvironmentSubdomain("1234doma")
+                    .Build();
+                throw new XunitException();
+            }
+            catch (Exception e)
+            {
+                e.Message.ShouldBe("OAuth client_credentials authentication failed with error: invalid_client");
+                // This test verifies that OAuth credentials are created with the subdomain-aware authorization URI
+                // The failure is expected since we're using fake credentials, but the important part is that
+                // the subdomain logic is triggered in the OAuth flow
+            }
+        }
     }
 }

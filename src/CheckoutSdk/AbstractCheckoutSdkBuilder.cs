@@ -11,7 +11,7 @@ namespace Checkout
         protected Environment Env = Checkout.Environment.Sandbox;
 
         private bool _recordTelemetry = true;
-        private EnvironmentSubdomain _envSubdomain;
+        protected EnvironmentSubdomain _envSubdomain = null;
         protected IHttpClientFactory ClientFactory = new DefaultHttpClientFactory();
 
         public AbstractCheckoutSdkBuilder<T> Environment(Environment environment)
