@@ -129,7 +129,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                         Locale = "en_GB"
                     }
                 },
-                PaymentMethods = new PaymentMethods
+                PaymentMethods = new Checkout.Payments.Setups.Entities.PaymentMethods
                 {
                     // Configure basic payment methods for testing
                     Klarna = new Klarna

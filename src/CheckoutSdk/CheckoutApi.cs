@@ -1,4 +1,5 @@
 using Checkout.Accounts;
+using Checkout.ApplePay;
 using Checkout.Authentication;
 using Checkout.Balances;
 using Checkout.Issuing;
@@ -11,6 +12,7 @@ using Checkout.Forward;
 using Checkout.Instruments;
 using Checkout.Metadata;
 using Checkout.NetworkTokens;
+using Checkout.PaymentMethods;
 using Checkout.Payments;
 using Checkout.Payments.Contexts;
 using Checkout.Payments.Hosted;
@@ -18,6 +20,7 @@ using Checkout.Payments.Links;
 using Checkout.Payments.Setups;
 using Checkout.Reports;
 using Checkout.Risk;
+using Checkout.StandaloneAccountUpdater;
 using Checkout.Tokens;
 using Checkout.Transfers;
 using Checkout.Workflows;
@@ -49,6 +52,9 @@ namespace Checkout
         private readonly IFlowClient _flowClient;
         private readonly INetworkTokensClient _networkTokensClient;
         private readonly IPaymentSetupsClient _paymentSetupsClient;
+        private readonly IApplePayClient _applePayClient;
+        private readonly IPaymentMethodsClient _paymentMethodsClient;
+        private readonly IStandaloneAccountUpdaterClient _standaloneAccountUpdaterClient;
 
         public CheckoutApi(CheckoutConfiguration configuration)
         {
@@ -81,6 +87,9 @@ namespace Checkout
             _flowClient = new FlowClient(baseApiClient, configuration);
             _networkTokensClient = new NetworkTokensClient(baseApiClient, configuration);
             _paymentSetupsClient = new PaymentSetupsClient(baseApiClient, configuration);
+            _applePayClient = new ApplePayClient(baseApiClient, configuration);
+            _paymentMethodsClient = new PaymentMethodsClient(baseApiClient, configuration);
+            _standaloneAccountUpdaterClient = new StandaloneAccountUpdaterClient(baseApiClient, configuration);
         }
 
         private static ApiClient BaseApiClient(CheckoutConfiguration configuration)
@@ -227,6 +236,21 @@ namespace Checkout
         public IPaymentSetupsClient PaymentSetupsClient()
         {
             return _paymentSetupsClient;
+        }
+        
+        public IApplePayClient ApplePayClient()
+        {
+            return _applePayClient;
+        }
+        
+        public IPaymentMethodsClient PaymentMethodsClient()
+        {
+            return _paymentMethodsClient;
+        }
+        
+        public IStandaloneAccountUpdaterClient StandaloneAccountUpdaterClient()
+        {
+            return _standaloneAccountUpdaterClient;
         }
         
     }
