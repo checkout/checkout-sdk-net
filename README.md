@@ -9,7 +9,7 @@
 
 [![GitHub license](https://img.shields.io/github/license/checkout/checkout-sdk-net.svg)](https://github.com/checkout/checkout-sdk-net/blob/master/LICENSE.md)
 
-## Getting started
+## Getting started 
 
 > **Version 4.0.0 is here!**
 >  <br/><br/>
