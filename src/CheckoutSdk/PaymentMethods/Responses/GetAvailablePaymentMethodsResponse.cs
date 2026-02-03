@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-
-using Checkout.PaymentMethods.Entities;
 using Checkout.Common;
 
 namespace Checkout.PaymentMethods.Responses

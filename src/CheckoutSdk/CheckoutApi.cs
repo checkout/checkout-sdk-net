@@ -1,4 +1,5 @@
 using Checkout.Accounts;
+using Checkout.ApplePay;
 using Checkout.Authentication;
 using Checkout.Balances;
 using Checkout.Issuing;
