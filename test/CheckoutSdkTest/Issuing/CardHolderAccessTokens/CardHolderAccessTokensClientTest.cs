@@ -2,6 +2,7 @@ using Checkout.Issuing.CardholderAccessTokens.Requests;
 using Checkout.Issuing.CardholderAccessTokens.Responses;
 using Moq;
 using Shouldly;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -44,7 +45,7 @@ namespace Checkout.Issuing
                     apiClient.Post<CardholderAccessTokenResponse>(
                         "issuing/access/connect/token",
                         _authorization,
-                        request,
+                        It.IsAny<FormUrlEncodedContent>(),
                         CancellationToken.None,
                         null))
                 .ReturnsAsync(response);
