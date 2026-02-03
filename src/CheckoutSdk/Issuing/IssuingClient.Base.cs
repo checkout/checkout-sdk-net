@@ -22,6 +22,7 @@ namespace Checkout.Issuing
         private const string ControlProfilesPath = "control-profiles";
         private const string AddPath = "add";
         private const string RemovePath = "remove";
+        private const string AccessTokenPath = "access/connect/token";
 
         public IssuingClient(IApiClient apiClient, CheckoutConfiguration configuration) :
             base(apiClient, configuration, SdkAuthorizationType.OAuth)

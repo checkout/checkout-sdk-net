@@ -472,5 +472,25 @@ namespace Checkout.Payments
 
             response.ShouldNotBeNull();
         }
+
+        [Fact]
+        private async Task ShouldSearchPayments()
+        {
+            var searchRequest = new PaymentsSearchRequest { Query = "id:'pay_test'", Limit = 10 };
+            var searchResponse = new PaymentsQueryResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<PaymentsQueryResponse>(PaymentsPath + "/search", _authorization,
+                        searchRequest,
+                        CancellationToken.None, null))
+                .ReturnsAsync(() => searchResponse);
+
+            IPaymentsClient paymentsClient = new PaymentsClient(_apiClient.Object, _configuration.Object);
+
+            var response = await paymentsClient.SearchPayments(searchRequest);
+
+            response.ShouldNotBeNull();
+            response.ShouldBeSameAs(searchResponse);
+        }
     }
 }

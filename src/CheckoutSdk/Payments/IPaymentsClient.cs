@@ -73,5 +73,9 @@ namespace Checkout.Payments
             AuthorizationRequest authorizationRequest = null,
             string idempotencyKey = null,
             CancellationToken cancellationToken = default);
+
+        Task<PaymentsQueryResponse> SearchPayments(
+            PaymentsSearchRequest searchRequest,
+            CancellationToken cancellationToken = default);
     }
 }

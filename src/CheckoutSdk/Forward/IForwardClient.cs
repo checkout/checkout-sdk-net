@@ -1,3 +1,4 @@
+using Checkout.Common;
 using Checkout.Forward.Requests;
 using Checkout.Forward.Responses;
 using System.Threading;
@@ -25,5 +26,30 @@ namespace Checkout.Forward
         /// The details can be retrieved for up to 14 days after the request was initiated.
         /// </summary>
         Task<GetForwardResponse> GetForwardRequest(string forwardId, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Create secret
+        /// Create a new secret for secure storage and retrieval.
+        /// </summary>
+        Task<SecretResponse> CreateSecret(SecretRequest secretRequest, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// List secrets
+        /// Retrieve a list of all stored secrets.
+        /// </summary>
+        Task<ItemsResponse<SecretResponse>> ListSecrets(CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Update secret
+        /// Update an existing secret. After updating, the version is automatically incremented.
+        /// Only value and entity_id can be updated.
+        /// </summary>
+        Task<SecretResponse> UpdateSecret(string name, SecretRequest secretRequest, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Delete secret
+        /// Permanently delete a secret by name.
+        /// </summary>
+        Task<EmptyResponse> DeleteSecret(string name, CancellationToken cancellationToken = default);
     }
 }

@@ -1,3 +1,4 @@
+using Checkout;
 using Checkout.Forward.Requests;
 using Checkout.Forward.Responses;
 using Moq;
@@ -62,6 +63,88 @@ namespace Checkout.Forward
             IForwardClient client = new ForwardClient(_apiClient.Object, _configuration.Object);
 
             GetForwardResponse result = await client.GetForwardRequest(forwardId);
+
+            result.ShouldNotBeNull();
+            result.ShouldBeSameAs(response);
+        }
+
+        [Fact]
+        public async Task CreateSecret_Should_Call_ApiClient_Post()
+        {
+            var request = new SecretRequest { Name = "secret_name", Value = "plaintext", EntityId = "ent_123" };
+            var response = new SecretResponse();
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<SecretResponse>(
+                        "forward/secrets",
+                        _authorization,
+                        request,
+                        CancellationToken.None,
+                        null))
+                .ReturnsAsync(response);
+
+            IForwardClient client = new ForwardClient(_apiClient.Object, _configuration.Object);
+
+            SecretResponse result = await client.CreateSecret(request);
+
+            result.ShouldNotBeNull();
+            result.ShouldBeSameAs(response);
+        }
+
+        [Fact]
+        public async Task ListSecrets_Should_Call_ApiClient_Get()
+        {
+            var response = new ItemsResponse<SecretResponse>();
+            _apiClient.Setup(apiClient =>
+                    apiClient.Get<ItemsResponse<SecretResponse>>(
+                        "forward/secrets",
+                        _authorization,
+                        CancellationToken.None))
+                .ReturnsAsync(response);
+
+            IForwardClient client = new ForwardClient(_apiClient.Object, _configuration.Object);
+
+            ItemsResponse<SecretResponse> result = await client.ListSecrets();
+
+            result.ShouldNotBeNull();
+            result.ShouldBeSameAs(response);
+        }
+
+        [Fact]
+        public async Task UpdateSecret_Should_Call_ApiClient_Patch()
+        {
+            var request = new SecretRequest { Value = "new_value", EntityId = "ent_456" };
+            var response = new SecretResponse();
+            _apiClient.Setup(apiClient =>
+                    apiClient.Patch<SecretResponse>(
+                        "forward/secrets/secret_name",
+                        _authorization,
+                        request,
+                        CancellationToken.None,
+                        null))
+                .ReturnsAsync(response);
+
+            IForwardClient client = new ForwardClient(_apiClient.Object, _configuration.Object);
+
+            SecretResponse result = await client.UpdateSecret("secret_name", request);
+
+            result.ShouldNotBeNull();
+            result.ShouldBeSameAs(response);
+        }
+
+        [Fact]
+        public async Task DeleteSecret_Should_Call_ApiClient_Delete()
+        {
+            var response = new EmptyResponse();
+            _apiClient.Setup(apiClient =>
+                    apiClient.Delete<EmptyResponse>(
+                        "forward/secrets/secret_name",
+                        _authorization,
+                        CancellationToken.None))
+                .ReturnsAsync(response);
+
+            IForwardClient client = new ForwardClient(_apiClient.Object, _configuration.Object);
+
+            EmptyResponse result = await client.DeleteSecret("secret_name");
 
             result.ShouldNotBeNull();
             result.ShouldBeSameAs(response);

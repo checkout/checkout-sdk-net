@@ -196,5 +196,17 @@ namespace Checkout.Payments
                 cancellationToken,
                 idempotencyKey);
         }
+
+        public Task<PaymentsQueryResponse> SearchPayments(
+            PaymentsSearchRequest searchRequest,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("searchRequest", searchRequest);
+            return ApiClient.Post<PaymentsQueryResponse>(
+                BuildPath(PaymentsPath, "search"),
+                SdkAuthorization(),
+                searchRequest,
+                cancellationToken);
+        }
     }
 }

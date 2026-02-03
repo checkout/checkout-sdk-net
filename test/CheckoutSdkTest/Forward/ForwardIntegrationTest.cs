@@ -1,6 +1,7 @@
 ﻿using Checkout.Forward.Requests;
 using Checkout.Forward.Requests.Signatures;
 using Checkout.Forward.Requests.Sources;
+using Checkout.Forward.Responses;
 using Shouldly;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -52,7 +53,7 @@ namespace Checkout.Forward
                 Reference = "ORD-5023-4E89",
                 ProcessingChannelId = "pc_azsiyswl7bwe2ynjzujy7lcjca",
                 NetworkToken = new NetworkToken { Enabled = true, RequestCryptogram = false },
-                DestinationRequest = new DestinationRequest
+                DestinationRequest = new Requests.DestinationRequest
                 {
                     Url = "https://example.com/payments",
                     Method = MethodType.Post,
@@ -78,6 +79,38 @@ namespace Checkout.Forward
                     }
                 }
             };
+        }
+
+        [Fact(Skip = "This test requires forward secrets scopes and valid credentials")]
+        private async Task ShouldCreateListUpdateDeleteSecret()
+        {
+            var secretName = $"secret_{System.Guid.NewGuid():N}";
+            var createRequest = new SecretRequest
+            {
+                Name = secretName,
+                Value = "plaintext",
+                EntityId = System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_ENTITY_ID")
+            };
+
+            SecretResponse created = await DefaultApi.ForwardClient().CreateSecret(createRequest);
+            created.ShouldNotBeNull();
+            created.Name.ShouldBe(secretName);
+
+            ItemsResponse<SecretResponse> listResponse = await DefaultApi.ForwardClient().ListSecrets();
+            listResponse.ShouldNotBeNull();
+
+            var updateRequest = new SecretRequest
+            {
+                Value = "NEW_VALUE_1",
+                EntityId = createRequest.EntityId
+            };
+
+            SecretResponse updated = await DefaultApi.ForwardClient().UpdateSecret(secretName, updateRequest);
+            updated.ShouldNotBeNull();
+            updated.Name.ShouldBe(secretName);
+
+            EmptyResponse deleted = await DefaultApi.ForwardClient().DeleteSecret(secretName);
+            deleted.ShouldNotBeNull();
         }
     }
 }
