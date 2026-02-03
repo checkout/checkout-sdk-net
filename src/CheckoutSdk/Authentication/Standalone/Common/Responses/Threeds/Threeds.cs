@@ -15,7 +15,7 @@ namespace Checkout.Authentication.Standalone.Common.Responses.Threeds
         /// <summary>
         /// The number of authentication attempts performed by the cardholder.
         /// [Optional]
-        /// <= 2
+        /// &lt;= 2
         /// </summary>
         public string InteractionCounter { get; set; }
 

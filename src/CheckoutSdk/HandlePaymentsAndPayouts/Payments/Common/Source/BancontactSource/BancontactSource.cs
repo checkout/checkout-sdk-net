@@ -17,7 +17,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.
         /// <summary>
         /// The IBAN of the Consumer Bank account used for payment (if applicable).
         /// [Optional]
-        /// <= 34
+        /// &lt;= 34
         /// </summary>
         public string Iban { get; set; }
     }

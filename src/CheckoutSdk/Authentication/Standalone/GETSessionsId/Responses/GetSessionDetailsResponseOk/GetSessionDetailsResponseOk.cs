@@ -86,7 +86,7 @@ namespace Checkout.Authentication.Standalone.GETSessionsId.Responses.GetSessionD
         /// <summary>
         /// The protocol version number of the specification used by the API for authentication
         /// [Required]
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public string ProtocolVersion { get; set; }
 
@@ -161,14 +161,14 @@ namespace Checkout.Authentication.Standalone.GETSessionsId.Responses.GetSessionD
         /// A reference you can later use to identify this payment, such as an order number. Do not pass sensitive
         /// information in this field e.g. card details
         /// [Optional]
-        /// <= 100
+        /// &lt;= 100
         /// </summary>
         public string Reference { get; set; }
 
         /// <summary>
         /// Default: "goods_service" Identifies the type of transaction being authenticated
         /// [Optional]
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public TransactionType? TransactionType { get; set; } = Common.TransactionType.GoodsService;
 

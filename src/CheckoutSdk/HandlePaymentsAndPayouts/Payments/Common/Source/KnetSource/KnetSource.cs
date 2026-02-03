@@ -84,7 +84,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.
         /// user_defined_field5 must be omitted when the ptlf field is not empty. This restriction exists because a PTLF
         /// value is passed to KNet Gateway as user_defined_field5.
         /// [Optional]
-        /// <= 45
+        /// &lt;= 45
         /// </summary>
         public string Ptlf { get; set; }
 

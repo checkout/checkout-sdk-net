@@ -17,7 +17,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.
         /// <summary>
         /// description
         /// [Required]
-        /// <= 27
+        /// &lt;= 27
         /// </summary>
         public string Description { get; set; }
 
@@ -25,7 +25,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.
         /// BIC (8 or 11-digits) BIC of the bank where the Consumer account is held.  If governing law prevents Issuers
         /// outside the Netherlands from disclosing this information, field may be omitted.
         /// [Required]
-        /// <= 11
+        /// &lt;= 11
         /// </summary>
         public string Bic { get; set; }
 
@@ -33,7 +33,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.
         /// The IBAN of the Consumer Bank account used for payment.  If governing law prevents Issuers outside the
         /// Netherlands  from disclosing this information, field may be omitted.
         /// [Optional]
-        /// <= 34
+        /// &lt;= 34
         /// </summary>
         public string Iban { get; set; }
 

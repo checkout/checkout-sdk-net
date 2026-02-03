@@ -27,7 +27,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.Unref
         /// The network token's expiration month.
         /// [Required]
         /// [ 1 .. 2 ] characters  >= 1
-        /// >= 1
+        /// &gt;= 1
         /// </summary>
         public int ExpiryMonth { get; set; }
 
@@ -48,14 +48,14 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.Unref
         /// The network token's Base64-encoded cryptographic identifier (TAVV).
         /// The cryptogram is used by card schemes to validate the token verification result.
         /// [Required]
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public string Cryptogram { get; set; }
 
         /// <summary>
         /// The network token's Electronic Commerce Indicator (ECI) security level.
         /// [Required]
-        /// <= 2
+        /// &lt;= 2
         /// </summary>
         public string Eci { get; set; }
 

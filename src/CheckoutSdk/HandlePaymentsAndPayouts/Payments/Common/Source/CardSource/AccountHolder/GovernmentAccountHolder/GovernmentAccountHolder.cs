@@ -20,7 +20,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.CardSource.Ac
         /// A valid and legal name must be populated in this field. The populated value cannot be only one character or
         /// all numeric.
         /// [Required]
-        /// <= 35
+        /// &lt;= 35
         /// </summary>
         public string CompanyName { get; set; }
 

@@ -52,6 +52,9 @@
         [OAuthScope("issuing:transactions-read")] IssuingTransactionsRead,
         [OAuthScope("Payment Context")] PaymentContext,
         [OAuthScope("forward")] Forward,
+        [OAuthScope("forward:secrets")] ForwardSecrets,
         [OAuthScope("vault:network-tokens")] VaultNetworkTokens,
+
+        [OAuthScope("payments:search")] PaymentsSearch
     }
 }

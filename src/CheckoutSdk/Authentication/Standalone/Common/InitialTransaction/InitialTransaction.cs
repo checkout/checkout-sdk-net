@@ -9,7 +9,7 @@ namespace Checkout.Authentication.Standalone.Common.InitialTransaction
         /// <summary>
         /// The Access Control Server (ACS) transaction ID for a previously authenticated transaction
         /// [Optional]
-        /// >= 36
+        /// &gt;= 36
         /// </summary>
         public string AcsTransactionId { get; set; }
 
@@ -27,7 +27,7 @@ namespace Checkout.Authentication.Standalone.Common.InitialTransaction
         /// <summary>
         /// Data that documents and supports a specific authentication process
         /// [Optional]
-        /// <= 2048
+        /// &lt;= 2048
         /// </summary>
         public string AuthenticationData { get; set; }
 

@@ -209,6 +209,10 @@ namespace Checkout
                 {
                     httpContent = content;
                 }
+                else if (requestBody is FormUrlEncodedContent formContent)
+                {
+                    httpContent = formContent;
+                }
                 else
                 {
                     httpContent = new StringContent(_serializer.Serialize(requestBody), Encoding.UTF8,

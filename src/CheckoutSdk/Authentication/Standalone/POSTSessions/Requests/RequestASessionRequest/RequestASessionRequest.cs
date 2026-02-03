@@ -47,8 +47,8 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// For recurring and installment payment types, this value is required and must be greater than zero.
         /// Omitting this value will set authentication_category to non_payment.
         /// [Optional]
-        /// <= 48
-        /// >= 0
+        /// &lt;= 48
+        /// &gt;= 0
         /// </summary>
         public long? Amount { get; set; }
 
@@ -91,7 +91,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// transaction_risk_assessment
         /// If an exemption cannot be applied, then the value no_challenge_requested will be used instead.
         /// [Optional]
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public ChallengeIndicatorType? ChallengeIndicator { get; set; } = ChallengeIndicatorType.NoPreference;
 
@@ -105,7 +105,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// A reference you can later use to identify this payment, such as an order number. Do not pass sensitive
         /// information in this field e.g. card details
         /// [Optional]
-        /// <= 100
+        /// &lt;= 100
         /// </summary>
         public string Reference { get; set; }
 
@@ -117,7 +117,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
 
         /// <summary>
         /// Default: "goods_service" Identifies the type of transaction being authenticated
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public TransactionType? TransactionType { get; set; } = Common.TransactionType.GoodsService;
 

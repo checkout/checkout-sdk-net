@@ -11,7 +11,7 @@ namespace Checkout.Authentication.Standalone.Common.Responses.Acs
         /// <summary>
         /// EMVCo-assigned unique identifier to track approved ACS
         /// [Required]
-        /// <= 32
+        /// &lt;= 32
         /// </summary>
         public string ReferenceNumber { get; set; }
 
@@ -25,7 +25,7 @@ namespace Checkout.Authentication.Standalone.Common.Responses.Acs
         /// <summary>
         /// DS assigned ACS identifier
         /// [Required]
-        /// <= 32
+        /// &lt;= 32
         /// </summary>
         public string OperatorId { get; set; }
 
@@ -38,7 +38,7 @@ namespace Checkout.Authentication.Standalone.Common.Responses.Acs
         /// <summary>
         /// Fully qualified URL of the ACS to be used for the challenge
         /// [Optional]
-        /// <= 2048
+        /// &lt;= 2048
         /// </summary>
         public string Url { get; set; }
 
@@ -46,7 +46,7 @@ namespace Checkout.Authentication.Standalone.Common.Responses.Acs
         /// Contains the JSON web signature (JWS) compact serialization created by the ACS for a challenged app
         /// authentication. (Example has been truncated for readability.)
         /// [Optional]
-        /// <= 512
+        /// &lt;= 512
         /// </summary>
         public string SignedContent { get; set; }
 

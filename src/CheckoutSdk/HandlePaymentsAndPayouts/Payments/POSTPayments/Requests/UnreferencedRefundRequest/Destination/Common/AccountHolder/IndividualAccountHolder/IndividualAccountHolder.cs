@@ -29,7 +29,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.Unref
         /// all numeric characters
         /// all punctuation characters
         /// [Required]
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public string FirstName { get; set; }
 
@@ -41,14 +41,14 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.Unref
         /// all numeric characters
         /// all punctuation characters
         /// [Required]
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public string LastName { get; set; }
 
         /// <summary>
         /// The account holder's middle name.
         /// [Optional]
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public string MiddleName { get; set; }
 
@@ -77,7 +77,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.Unref
         /// <summary>
         /// The account holder's email address.
         /// [Optional]
-        /// <= 255
+        /// &lt;= 255
         /// </summary>
         public string Email { get; set; }
 

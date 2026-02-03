@@ -20,7 +20,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.CardSource.Ac
         /// A valid and legal name must be populated in this field. The populated value cannot be only one character or
         /// all numeric.
         /// [Required]
-        /// <= 35
+        /// &lt;= 35
         /// </summary>
         public string FirstName { get; set; }
 
@@ -29,7 +29,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.CardSource.Ac
         /// A valid and legal name must be populated in this field. The populated value cannot be only one character or
         /// all numeric.
         /// [Required]
-        /// <= 35
+        /// &lt;= 35
         /// </summary>
         public string LastName { get; set; }
 
@@ -43,7 +43,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.CardSource.Ac
         /// The card account holder's middle name
         /// Conditional - required when the card metadata issuer_country = ZA (South Africa)
         /// [Optional]
-        /// <= 35
+        /// &lt;= 35
         /// </summary>
         public string MiddleName { get; set; }
 

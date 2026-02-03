@@ -22,7 +22,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// <summary>
         /// The Checkout.com card token
         /// [Required]
-        /// <= 100
+        /// &lt;= 100
         /// </summary>
         public string Token { get; set; }
 
@@ -79,7 +79,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// <summary>
         /// The email of the cardholder
         /// [Optional]
-        /// <= 254
+        /// &lt;= 254
         /// </summary>
         public string Email { get; set; }
     }

@@ -24,7 +24,7 @@ namespace Checkout.Authentication.Standalone.Common.AccountInfo.ThreeDsRequestor
         /// <summary>
         /// Data that documents and supports a specific authentication process.
         /// [Optional]
-        /// <= 20000
+        /// &lt;= 20000
         /// </summary>
         public string ThreeDsReqAuthData { get; set; }
     }
