@@ -16,21 +16,21 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// <summary>
         /// The type of elliptic curve.
         /// [Optional]
-        /// <= 40
+        /// &lt;= 40
         /// </summary>
         public string Crv { get; set; }
 
         /// <summary>
         /// x coordinate of the elliptic curve that is base64url-encoded.
         /// [Optional]
-        /// <= 100
+        /// &lt;= 100
         /// </summary>
         public string X { get; set; }
 
         /// <summary>
         /// y coordinate of the elliptic curve that is base64url-encoded.
         /// [Optional]
-        /// <= 100
+        /// &lt;= 100
         /// </summary>
         public string Y { get; set; }
     }

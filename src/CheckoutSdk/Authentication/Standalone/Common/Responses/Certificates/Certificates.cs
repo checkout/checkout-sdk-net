@@ -13,7 +13,7 @@ namespace Checkout.Authentication.Standalone.Common.Responses.Certificates
         /// A public certificate provided by the DS for encrytion of device data. It is a base64 URL encoded JSON web
         /// key.
         /// [Required]
-        /// <= 1024
+        /// &lt;= 1024
         /// </summary>
         public string DsPublic { get; set; }
 
@@ -21,7 +21,7 @@ namespace Checkout.Authentication.Standalone.Common.Responses.Certificates
         /// Certificate authority (CA) public certificate (root) of the DS-CA. This certificate is used to validate the
         /// ACS signed content JSON web signature (JWS) object. It is a base64 URL encoded DER encoded X.509.
         /// [Optional]
-        /// <= 1024
+        /// &lt;= 1024
         /// </summary>
         public string CaPublic { get; set; }
 

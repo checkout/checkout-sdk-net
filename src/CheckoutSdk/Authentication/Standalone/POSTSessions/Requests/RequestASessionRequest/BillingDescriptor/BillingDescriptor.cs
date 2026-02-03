@@ -10,7 +10,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// A dynamic description of the payment that replaces the Merchant Name that is displayed in 3DS Challenge
         /// window. Applies to card payments only. Special characters allowed: . ! * - = _ @
         /// [Optional]
-        /// <= 40
+        /// &lt;= 40
         /// </summary>
         public string Name { get; set; }
     }

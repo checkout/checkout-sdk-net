@@ -9,21 +9,21 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.Unref
         /// <summary>
         /// The brand of business segment.
         /// [Optional]
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public string Brand { get; set; }
 
         /// <summary>
         /// The category of business segment.
         /// [Optional]
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public string BusinessCategory { get; set; }
 
         /// <summary>
         /// The market of business segment.
         /// [Optional]
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public string Market { get; set; }
     }

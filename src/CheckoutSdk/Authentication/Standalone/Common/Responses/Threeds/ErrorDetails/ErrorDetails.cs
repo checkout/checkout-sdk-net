@@ -21,14 +21,14 @@ namespace Checkout.Authentication.Standalone.Common.Responses.Threeds.ErrorDetai
         /// <summary>
         /// Provides additional details about the issue.
         /// [Optional]
-        /// <= 2048
+        /// &lt;= 2048
         /// </summary>
         public string ErrorDetail { get; set; }
 
         /// <summary>
         /// A description of the issue identified.
         /// [Optional]
-        /// <= 2048
+        /// &lt;= 2048
         /// </summary>
         public string ErrorDescription { get; set; }
     }

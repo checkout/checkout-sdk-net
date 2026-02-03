@@ -14,21 +14,21 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.Unref
         /// <summary>
         /// The first line of the address.
         /// [Optional]
-        /// <= 200
+        /// &lt;= 200
         /// </summary>
         public string AddressLine1 { get; set; }
 
         /// <summary>
         /// The second line of the address.
         /// [Optional]
-        /// <= 200
+        /// &lt;= 200
         /// </summary>
         public string AddressLine2 { get; set; }
 
         /// <summary>
         /// The address city.
         /// [Optional]
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public string City { get; set; }
 
@@ -43,7 +43,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.Unref
         /// The address ZIP or postal code.
         /// You must provide US ZIPs in the format 00000, or 00000-0000.
         /// [Optional]
-        /// <= 10
+        /// &lt;= 10
         /// </summary>
         public string Zip { get; set; }
 

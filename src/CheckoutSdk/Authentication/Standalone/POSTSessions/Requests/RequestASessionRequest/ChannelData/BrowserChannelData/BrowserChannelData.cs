@@ -18,7 +18,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// <summary>
         /// Exact content of the HTTP accept headers as sent to the 3DS Requestor from the cardholder’s browser
         /// [Required]
-        /// <= 2048
+        /// &lt;= 2048
         /// </summary>
         public string AcceptHeader { get; set; }
 
@@ -78,14 +78,14 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// <summary>
         /// Exact content of the HTTP user-agent header
         /// [Required]
-        /// <= 2048
+        /// &lt;= 2048
         /// </summary>
         public string UserAgent { get; set; }
 
         /// <summary>
         /// IP address of the browser as returned by the HTTP headers to the 3DS Requestor
         /// [Required]
-        /// <= 45
+        /// &lt;= 45
         /// </summary>
         public string IpAddress { get; set; }
 

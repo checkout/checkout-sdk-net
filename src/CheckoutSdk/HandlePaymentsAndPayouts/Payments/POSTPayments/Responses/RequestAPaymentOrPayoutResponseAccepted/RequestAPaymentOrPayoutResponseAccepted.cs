@@ -23,7 +23,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// <summary>
         /// The payment's unique identifier.
         /// The reference you provided in the refund request.
-        /// <= 50 characters
+        /// &lt;= 50 characters
         /// </summary>
         public string Reference { get; set; }
 

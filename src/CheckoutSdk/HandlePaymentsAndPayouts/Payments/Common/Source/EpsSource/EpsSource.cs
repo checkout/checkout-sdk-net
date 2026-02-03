@@ -17,14 +17,14 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.
         /// <summary>
         /// Purpose of the payment as appearing on customer's bank statement.
         /// [Optional]
-        /// <= 27
+        /// &lt;= 27
         /// </summary>
         public string Purpose { get; set; }
 
         /// <summary>
         /// Bank Identifier Code (BIC). It can be exactly 8 characters or 11 characters long.
         /// [Optional]
-        /// <= 11
+        /// &lt;= 11
         /// 8 characters
         /// 11 characters
         /// </summary>
@@ -33,7 +33,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.
         /// <summary>
         /// International Bank Account Number (IBAN) without whitespaces.
         /// [Optional]
-        /// <= 34
+        /// &lt;= 34
         /// </summary>
         public string Iban { get; set; }
 

@@ -22,7 +22,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.
         /// The expiry month
         /// [Required]
         /// [ 1 .. 2 ] characters  >= 1
-        /// >= 1
+        /// &gt;= 1
         /// </summary>
         public int ExpiryMonth { get; set; }
 
@@ -48,7 +48,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.
         /// <summary>
         /// The card issuer's Bank Identification Number (BIN)
         /// [Required]
-        /// <= 8
+        /// &lt;= 8
         /// </summary>
         public string Bin { get; set; }
 

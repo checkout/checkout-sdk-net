@@ -11,8 +11,8 @@ namespace Checkout.Authentication.Standalone.Common.Installment
         /// Indicates the agreed total number of payment installments to be made in the duration of the installment
         /// agreement. Required when the authentication type is instalment.
         /// [Required]
-        /// <= 3
-        /// >= 2
+        /// &lt;= 3
+        /// &gt;= 2
         /// </summary>
         public int NumberOfPayments { get; set; }
 

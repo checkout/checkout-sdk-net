@@ -10,7 +10,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// <summary>
         /// The ID or reference linking a series of recurring payments together.
         /// [Optional]
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public string Id { get; set; }
     }

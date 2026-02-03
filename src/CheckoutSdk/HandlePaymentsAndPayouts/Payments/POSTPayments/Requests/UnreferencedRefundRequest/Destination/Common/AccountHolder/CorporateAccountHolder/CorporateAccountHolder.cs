@@ -29,7 +29,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.Unref
         /// all numeric characters
         /// all punctuation characters
         /// [Required]
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public string CompanyName { get; set; }
 
@@ -58,7 +58,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.Unref
         /// <summary>
         /// The account holder's email address.
         /// [Optional]
-        /// <= 255
+        /// &lt;= 255
         /// </summary>
         public string Email { get; set; }
     }

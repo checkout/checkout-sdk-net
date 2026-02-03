@@ -25,7 +25,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.Unref
         /// <summary>
         /// The amount of the payment
         /// [Required]
-        /// >= 1
+        /// &gt;= 1
         /// </summary>
         public int Amount { get; set; }
 

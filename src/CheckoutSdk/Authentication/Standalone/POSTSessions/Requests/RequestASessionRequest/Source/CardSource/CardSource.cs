@@ -73,7 +73,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// <summary>
         /// The email of the cardholder
         /// [Optional]
-        /// <= 254
+        /// &lt;= 254
         /// </summary>
         public string Email { get; set; }
 

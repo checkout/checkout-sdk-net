@@ -116,8 +116,8 @@ namespace Checkout.Authentication.Standalone.Common.AccountInfo
         /// year. This value includes both successful and abandoned transactions, across all payment accounts.
         /// Set this value to 999 if the number of transactions is 1000 or greater.
         /// [Optional]
-        /// <= 3
-        /// <= 999
+        /// &lt;= 3
+        /// &lt;= 999
         /// </summary>
         public long? TransactionsPerYear { get; set; }
 
@@ -146,7 +146,7 @@ namespace Checkout.Authentication.Standalone.Common.AccountInfo
         /// <summary>
         /// Additional information about the account optionally provided by the 3DS Requestor.
         /// [Optional]
-        /// <= 64
+        /// &lt;= 64
         /// </summary>
         public string AccountId { get; set; }
 

@@ -7,7 +7,7 @@ namespace Checkout.Payments.Request
         /// <summary>
         /// The query string.
         /// For more information on how to build out your query, see the Search and filter payments documentation.
-        /// <= 1024
+        /// &lt;= 1024
         /// </summary>
         public string Query { get; set; }
         

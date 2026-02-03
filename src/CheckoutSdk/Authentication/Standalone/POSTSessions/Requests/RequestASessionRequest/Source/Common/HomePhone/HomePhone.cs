@@ -20,7 +20,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// The rest of the number. According to ITU-E.164
         /// [Required]
         /// ^\d{1,15}$
-        /// <= 15
+        /// &lt;= 15
         /// </summary>
         public string Number { get; set; }
     }

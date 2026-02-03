@@ -17,7 +17,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// For hosted sessions, this overrides the default success redirect URL configured on your account
         /// [Required]
         /// <uri>
-        /// <= 256
+        /// &lt;= 256
         /// </summary>
         public string SuccessUrl { get; set; }
 
@@ -25,7 +25,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// For hosted sessions, this overrides the default failure redirect URL configured on your account
         /// [Required]
         /// <uri>
-        /// <= 256
+        /// &lt;= 256
         /// </summary>
         public string FailureUrl { get; set; }
     }

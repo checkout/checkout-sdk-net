@@ -11,28 +11,28 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// <summary>
         /// The first line of the address
         /// [Optional]
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public string AddressLine1 { get; set; }
 
         /// <summary>
         /// The second line of the address
         /// [Optional]
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public string AddressLine2 { get; set; }
 
         /// <summary>
         /// The third line of the address
         /// [Optional]
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public string AddressLine3 { get; set; }
 
         /// <summary>
         /// The address city
         /// [Optional]
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public string City { get; set; }
 
@@ -46,7 +46,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// <summary>
         /// The address zip/postal code
         /// [Optional]
-        /// <= 16
+        /// &lt;= 16
         /// </summary>
         public string Zip { get; set; }
 

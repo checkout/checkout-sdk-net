@@ -20,7 +20,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.Unref
         /// <summary>
         /// The card number.
         /// [Required]
-        /// <= 19
+        /// &lt;= 19
         /// </summary>
         public string Number { get; set; }
 

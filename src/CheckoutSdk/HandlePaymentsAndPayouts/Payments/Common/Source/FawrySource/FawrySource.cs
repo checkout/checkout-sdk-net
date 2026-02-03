@@ -17,7 +17,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.
         /// <summary>
         /// Payment description
         /// [Required]
-        /// <= 65534
+        /// &lt;= 65534
         /// </summary>
         public string Description { get; set; }
 

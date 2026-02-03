@@ -11,21 +11,21 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.CardSource.Bi
         /// <summary>
         /// The first line of the address.
         /// [Optional]
-        /// <= 200
+        /// &lt;= 200
         /// </summary>
         public string AddressLine1 { get; set; }
 
         /// <summary>
         /// The second line of the address
         /// [Optional]
-        /// <= 200
+        /// &lt;= 200
         /// </summary>
         public string AddressLine2 { get; set; }
 
         /// <summary>
         /// The address city.
         /// [Optional]
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public string City { get; set; }
 
@@ -33,14 +33,14 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.CardSource.Bi
         /// The state or province of the address country ISO 3166-2 code (for example: CA for California in the United
         /// States).
         /// [Optional]
-        /// <= 3
+        /// &lt;= 3
         /// </summary>
         public string State { get; set; }
 
         /// <summary>
         /// The address zip or postal code.
         /// [Optional]
-        /// <= 50
+        /// &lt;= 50
         /// </summary>
         public string Zip { get; set; }
 

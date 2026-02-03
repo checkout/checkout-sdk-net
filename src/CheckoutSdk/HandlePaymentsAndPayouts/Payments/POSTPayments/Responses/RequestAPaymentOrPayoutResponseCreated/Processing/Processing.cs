@@ -106,7 +106,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// <summary>
         /// Surcharge amount applied to the transaction in minor units
         /// [Optional]
-        /// >= 0
+        /// &gt;= 0
         /// </summary>
         public int? SurchargeAmount { get; set; }
 

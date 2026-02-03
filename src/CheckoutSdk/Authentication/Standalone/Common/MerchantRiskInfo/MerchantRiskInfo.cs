@@ -12,7 +12,7 @@ namespace Checkout.Authentication.Standalone.Common.MerchantRiskInfo
         /// <summary>
         /// For Electronic delivery, the email address to which the merchandise was delivered.
         /// [Optional]
-        /// <= 254
+        /// &lt;= 254
         /// </summary>
         public string DeliveryEmail { get; set; }
 
@@ -66,7 +66,7 @@ namespace Checkout.Authentication.Standalone.Common.MerchantRiskInfo
         /// The total purchase amount, in major units. For example, the major unit amount for a gift card purchase of
         /// 135.20 USD is 135. Only applicable for prepaid or gift card purchases.
         /// [Optional]
-        /// <= 15
+        /// &lt;= 15
         /// </summary>
         public string GiftCardAmount { get; set; }
 

@@ -27,7 +27,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// <summary>
         /// Indicates maximum amount of time (in minutes) for all exchanges
         /// [Required]
-        /// >= 5
+        /// &gt;= 5
         /// </summary>
         public int SdkMaxTimeout { get; set; }
 
@@ -42,7 +42,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// A JSON web encryption (JWE) object in compact serialization, containing data encrypted by the SDK for the
         /// Directory Server to decrypt.
         /// [Required]
-        /// <= 64000
+        /// &lt;= 64000
         /// </summary>
         public string SdkEncryptedData { get; set; }
 
@@ -50,7 +50,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// Identifies the vendor and version for the 3DS SDK that is integrated in a 3DS Requestor App, assigned by
         /// EMVCo when the 3DS SDK is approved.
         /// [Required]
-        /// <= 32
+        /// &lt;= 32
         /// </summary>
         public string SdkReferenceNumber { get; set; }
 

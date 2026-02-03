@@ -17,7 +17,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// For non-hosted sessions, you can define a URL to be called once the session is complete
         /// [Optional]
         /// <uri>
-        /// <= 256
+        /// &lt;= 256
         /// </summary>
         public string CallbackUrl { get; set; }
 
@@ -26,7 +26,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// provided, a Checkout.com endpoint will be used.
         /// [Optional]
         /// <uri>
-        /// <= 256
+        /// &lt;= 256
         /// </summary>
         public string ChallengeNotificationUrl { get; set; }
     }

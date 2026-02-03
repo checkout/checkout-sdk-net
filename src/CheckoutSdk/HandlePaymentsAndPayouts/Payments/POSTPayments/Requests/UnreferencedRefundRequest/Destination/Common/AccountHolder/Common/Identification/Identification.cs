@@ -18,7 +18,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.Unref
         /// <summary>
         /// The account holder's identification number.
         /// [Required]
-        /// <= 25
+        /// &lt;= 25
         /// </summary>
         public string Number { get; set; }
 
