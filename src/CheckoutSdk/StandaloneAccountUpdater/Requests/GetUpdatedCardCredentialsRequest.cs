@@ -1,3 +1,5 @@
+using Checkout.StandaloneAccountUpdater.Entities;
+
 namespace Checkout.StandaloneAccountUpdater.Requests
 {
     public class GetUpdatedCardCredentialsRequest

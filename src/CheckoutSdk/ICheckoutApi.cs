@@ -1,11 +1,11 @@
 using Checkout.Accounts;
-using Checkout.ApplePay;
 using Checkout.Authentication;
 using Checkout.Balances;
 using Checkout.Issuing;
 using Checkout.Customers;
 using Checkout.Disputes;
 using Checkout.Financial;
+using Checkout.HandlePaymentsAndPayouts.ApplePay;
 using Checkout.HandlePaymentsAndPayouts.Flow;
 using Checkout.Forex;
 using Checkout.Forward;

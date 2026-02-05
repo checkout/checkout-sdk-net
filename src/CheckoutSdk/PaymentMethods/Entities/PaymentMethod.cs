@@ -1,10 +1,11 @@
-namespace Checkout.PaymentMethods.Responses
+namespace Checkout.PaymentMethods.Entities
 {
     public class PaymentMethod
     {
         /// <summary>
         /// The type of the payment method
         /// </summary>
+        /// [Required]
         public PaymentMethodType? Type { get; set; }
 
         /// <summary>

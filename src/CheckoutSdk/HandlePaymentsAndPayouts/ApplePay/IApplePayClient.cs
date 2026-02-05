@@ -1,9 +1,9 @@
-using Checkout.ApplePay.Requests;
-using Checkout.ApplePay.Responses;
+using Checkout.HandlePaymentsAndPayouts.ApplePay.Requests;
+using Checkout.HandlePaymentsAndPayouts.ApplePay.Responses;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Checkout.ApplePay
+namespace Checkout.HandlePaymentsAndPayouts.ApplePay
 {
     public interface IApplePayClient
     {

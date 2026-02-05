@@ -1,6 +1,6 @@
-using Checkout.ApplePay.Entities;
+using Checkout.HandlePaymentsAndPayouts.ApplePay.Entities;
 
-namespace Checkout.ApplePay.Requests
+namespace Checkout.HandlePaymentsAndPayouts.ApplePay.Requests
 {
     public class GenerateSigningRequestRequest
     {

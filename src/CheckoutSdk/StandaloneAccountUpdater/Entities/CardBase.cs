@@ -1,20 +1,20 @@
-namespace Checkout.StandaloneAccountUpdater.Requests
+namespace Checkout.StandaloneAccountUpdater.Entities
 {
-    public class CardDetails
+    /// <summary>
+    /// Base class for card expiry date information
+    /// </summary>
+    public abstract class CardBase
     {
-        /// <summary>
-        /// The card number
-        /// </summary>
-        public string Number { get; set; }
-
         /// <summary>
         /// The expiry month of the card
         /// </summary>
+        /// [Required]
         public int ExpiryMonth { get; set; }
 
         /// <summary>
         /// The four-digit expiry year of the card
         /// </summary>
+        /// [Required]
         public int ExpiryYear { get; set; }
     }
 }

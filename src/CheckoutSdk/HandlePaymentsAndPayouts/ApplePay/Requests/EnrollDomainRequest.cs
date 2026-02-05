@@ -1,4 +1,4 @@
-namespace Checkout.ApplePay.Requests
+namespace Checkout.HandlePaymentsAndPayouts.ApplePay.Requests
 {
     public class EnrollDomainRequest
     {

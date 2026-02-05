@@ -1,4 +1,4 @@
-namespace Checkout.StandaloneAccountUpdater.Requests
+namespace Checkout.StandaloneAccountUpdater.Entities
 {
     public class SourceOptions
     {

@@ -1,17 +1,7 @@
-namespace Checkout.StandaloneAccountUpdater.Responses
+namespace Checkout.StandaloneAccountUpdater.Entities
 {
-    public class UpdatedCard
+    public class CardUpdated : CardBase
     {
-        /// <summary>
-        /// Expiry month. Expressed in number.
-        /// </summary>
-        public int ExpiryMonth { get; set; }
-
-        /// <summary>
-        /// Four-digit expiry year.
-        /// </summary>
-        public int ExpiryYear { get; set; }
-
         /// <summary>
         /// The encrypted full Primary Account Number (PAN). Returned only for PCI SAQ D merchants.
         /// </summary>

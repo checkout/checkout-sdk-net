@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Checkout.ApplePay.Entities
+namespace Checkout.HandlePaymentsAndPayouts.ApplePay.Entities
 {
     public enum ProtocolVersions
     {

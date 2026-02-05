@@ -1,6 +1,6 @@
 using Checkout.Common;
 
-namespace Checkout.ApplePay.Responses
+namespace Checkout.HandlePaymentsAndPayouts.ApplePay.Responses
 {
     public class GenerateSigningRequestResponse : Resource
     {

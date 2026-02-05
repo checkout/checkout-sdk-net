@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Checkout.PaymentMethods.Responses
+namespace Checkout.PaymentMethods.Entities
 {
     public enum PaymentMethodType
     {

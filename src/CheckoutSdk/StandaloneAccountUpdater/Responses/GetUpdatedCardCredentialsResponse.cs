@@ -1,4 +1,5 @@
 using Checkout.Common;
+using Checkout.StandaloneAccountUpdater.Entities;
 
 namespace Checkout.StandaloneAccountUpdater.Responses
 {
@@ -7,6 +8,7 @@ namespace Checkout.StandaloneAccountUpdater.Responses
         /// <summary>
         /// Result of the update operation.
         /// </summary>
+        /// [Required]
         public AccountUpdateStatus? AccountUpdateStatus { get; set; }
 
         /// <summary>
@@ -18,6 +20,6 @@ namespace Checkout.StandaloneAccountUpdater.Responses
         /// <summary>
         /// Updated card details. Fields vary depending on PCI compliance level.
         /// </summary>
-        public UpdatedCard Card { get; set; }
+        public CardUpdated Card { get; set; }
     }
 }
