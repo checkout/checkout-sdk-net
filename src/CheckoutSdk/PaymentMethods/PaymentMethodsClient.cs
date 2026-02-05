@@ -20,30 +20,10 @@ namespace Checkout.PaymentMethods
         {
             CheckoutUtils.ValidateParams("processingChannelId", processingChannelId);
 
-            var queryParameters = new Dictionary<string, object>
-            {
-                { "processing_channel_id", processingChannelId }
-            };
-
             return ApiClient.Get<GetAvailablePaymentMethodsResponse>(
-                BuildPathWithQuery(PaymentMethodsPath, queryParameters),
+                BuildPath(PaymentMethodsPath, processingChannelId),
                 SdkAuthorization(),
                 cancellationToken);
-        }
-
-        // Common methods
-        private string BuildPathWithQuery(string basePath, IDictionary<string, object> queryParameters)
-        {
-            if (queryParameters == null || queryParameters.Count == 0)
-                return basePath;
-
-            var queryPairs = new List<string>();
-            foreach (var kvp in queryParameters)
-            {
-                queryPairs.Add($"{kvp.Key}={kvp.Value}");
-            }
-
-            return $"{basePath}?{string.Join("&", queryPairs)}";
         }
     }
 }
