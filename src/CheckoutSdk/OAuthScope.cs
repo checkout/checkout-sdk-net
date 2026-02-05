@@ -6,6 +6,7 @@
         [OAuthScope("vault:instruments")] VaultInstruments,
         [OAuthScope("vault:tokenization")] VaultTokenization,
         [OAuthScope("vault:customers")] VaultCustomers,
+        [OAuthScope("vault:real-time-account-updater")] VaultRealTimeAccountUpdater,
         [OAuthScope("gateway")] Gateway,
         [OAuthScope("gateway:payment")] GatewayPayment,
         [OAuthScope("gateway:payment-details")] GatewayPaymentDetails,

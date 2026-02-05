@@ -5,12 +5,14 @@ using Checkout.Issuing;
 using Checkout.Customers;
 using Checkout.Disputes;
 using Checkout.Financial;
+using Checkout.HandlePaymentsAndPayouts.ApplePay;
 using Checkout.HandlePaymentsAndPayouts.Flow;
 using Checkout.Forex;
 using Checkout.Forward;
 using Checkout.Instruments;
 using Checkout.Metadata;
 using Checkout.NetworkTokens;
+using Checkout.PaymentMethods;
 using Checkout.Payments;
 using Checkout.Payments.Contexts;
 using Checkout.Payments.Hosted;
@@ -18,6 +20,7 @@ using Checkout.Payments.Links;
 using Checkout.Payments.Setups;
 using Checkout.Reports;
 using Checkout.Risk;
+using Checkout.StandaloneAccountUpdater;
 using Checkout.Tokens;
 using Checkout.Transfers;
 using Checkout.Workflows;
@@ -71,5 +74,11 @@ namespace Checkout
         INetworkTokensClient NetworkTokensClient();
 
         IPaymentSetupsClient PaymentSetupsClient();
+        
+        IApplePayClient ApplePayClient();
+        
+        IPaymentMethodsClient PaymentMethodsClient();
+        
+        IStandaloneAccountUpdaterClient StandaloneAccountUpdaterClient();
     }
 }
