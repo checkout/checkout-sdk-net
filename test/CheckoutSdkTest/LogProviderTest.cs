@@ -34,7 +34,6 @@ namespace Checkout
         public async Task ShouldCreateDifferentLoggerInstancesForMultipleConcurrentRequests()
         {
             ConcurrentBag<Type> logTypes = new ConcurrentBag<Type>();
-            ConcurrentBag<ILogger> loggers = new ConcurrentBag<ILogger>();
                         
             LogProvider.SetLogFactory(_loggerFactory);
             Type[] loggerTypes = { typeof(LogProviderTests), typeof(AnotherTestClass), typeof(NoInitializedType) };
@@ -53,7 +52,6 @@ namespace Checkout
                     var logType = loggerTypes[index % loggerTypes.Length];
                     var logger = LogProvider.GetLogger(logType);
                     Assert.NotNull(logger);
-                    loggers.Add(logger);
                     logTypes.Add(logType);
 
                     return logger;
