@@ -4,8 +4,8 @@ namespace Checkout.StandaloneAccountUpdater.Entities
     {
         /// <summary>
         /// Unique instrument identifier
-        /// </summary>
         /// [Required]
+        /// </summary>
         public string Id { get; set; }
     }
 }

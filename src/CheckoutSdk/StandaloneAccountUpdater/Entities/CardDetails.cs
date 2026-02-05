@@ -4,8 +4,8 @@ namespace Checkout.StandaloneAccountUpdater.Entities
     {
         /// <summary>
         /// The card number
-        /// </summary>
         /// [Required]
+        /// </summary>
         public string Number { get; set; }
     }
 }

@@ -4,14 +4,14 @@ namespace Checkout.StandaloneAccountUpdater.Responses
     {
         /// <summary>
         /// Expiry month. Expressed in number.
-        /// </summary>
         /// [Required]
+        /// </summary>
         public int ExpiryMonth { get; set; }
 
         /// <summary>
         /// Four-digit expiry year.
-        /// </summary>
         /// [Required]
+        /// </summary>
         public int ExpiryYear { get; set; }
 
         /// <summary>

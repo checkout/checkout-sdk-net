@@ -7,8 +7,8 @@ namespace Checkout.StandaloneAccountUpdater.Responses
     {
         /// <summary>
         /// Result of the update operation.
-        /// </summary>
         /// [Required]
+        /// </summary>
         public AccountUpdateStatus? AccountUpdateStatus { get; set; }
 
         /// <summary>

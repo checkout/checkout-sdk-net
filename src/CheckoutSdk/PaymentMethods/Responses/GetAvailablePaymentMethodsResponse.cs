@@ -9,8 +9,8 @@ namespace Checkout.PaymentMethods.Responses
     {
         /// <summary>
         /// The enabled payment methods for the processing channel
-        /// </summary>
         /// [Required]
+        /// </summary>
         public IList<PaymentMethod> Methods { get; set; }
     }
 }

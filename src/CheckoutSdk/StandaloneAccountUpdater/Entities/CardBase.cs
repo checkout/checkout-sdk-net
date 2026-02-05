@@ -7,14 +7,14 @@ namespace Checkout.StandaloneAccountUpdater.Entities
     {
         /// <summary>
         /// The expiry month of the card
-        /// </summary>
         /// [Required]
+        /// </summary>
         public int ExpiryMonth { get; set; }
 
         /// <summary>
         /// The four-digit expiry year of the card
-        /// </summary>
         /// [Required]
+        /// </summary>
         public int ExpiryYear { get; set; }
     }
 }

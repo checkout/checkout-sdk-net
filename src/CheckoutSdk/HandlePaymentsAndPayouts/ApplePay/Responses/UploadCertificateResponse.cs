@@ -7,26 +7,26 @@ namespace Checkout.HandlePaymentsAndPayouts.ApplePay.Responses
     {
         /// <summary>
         /// The identifier of the account domain
-        /// </summary>
         /// [Required]
+        /// </summary>
         public string Id { get; set; }
 
         /// <summary>
         /// Hash of the certificate public key
-        /// </summary>
         /// [Required]
+        /// </summary>
         public string PublicKeyHash { get; set; }
 
         /// <summary>
         /// When the certificate is valid from
-        /// </summary>
         /// [Required]
+        /// </summary>
         public DateTime? ValidFrom { get; set; }
 
         /// <summary>
         /// When the certificate is valid until
-        /// </summary>
         /// [Required]
+        /// </summary>
         public DateTime? ValidUntil { get; set; }
     }
 }

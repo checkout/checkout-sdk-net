@@ -4,8 +4,8 @@ namespace Checkout.PaymentMethods.Entities
     {
         /// <summary>
         /// The type of the payment method
-        /// </summary>
         /// [Required]
+        /// </summary>
         public PaymentMethodType? Type { get; set; }
 
         /// <summary>

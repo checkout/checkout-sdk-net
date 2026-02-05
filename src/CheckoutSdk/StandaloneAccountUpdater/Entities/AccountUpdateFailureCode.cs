@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Checkout.StandaloneAccountUpdater
+namespace Checkout.StandaloneAccountUpdater.Entities
 {
     public enum AccountUpdateFailureCode
     {
