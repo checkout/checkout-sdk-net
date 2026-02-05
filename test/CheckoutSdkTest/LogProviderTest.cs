@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Threading;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 using Microsoft.Extensions.Logging;
 using Xunit;
@@ -34,10 +35,11 @@ namespace Checkout
         {
             ConcurrentBag<Type> logTypes = new ConcurrentBag<Type>();
             ConcurrentBag<ILogger> loggers = new ConcurrentBag<ILogger>();
-            
+                        
             LogProvider.SetLogFactory(_loggerFactory);
             Type[] loggerTypes = { typeof(LogProviderTests), typeof(AnotherTestClass), typeof(NoInitializedType) };
 
+            // Create multiple tasks that request loggers for different types concurrently
             Task<ILogger>[] createLoggerTasks = Enumerable.Range(0, 50)
                 .Select(async index =>
                 {
@@ -58,8 +60,20 @@ namespace Checkout
                 }).ToArray();
 
             await Task.WhenAll(createLoggerTasks);
+
+            // Verify each distinct type has a unique logger instance
+            var distinctLoggers = new List<ILogger>();
+            var distinctTypes = logTypes.Distinct().ToList();
             
-            Assert.Equal(loggers.Distinct().Count(), logTypes.Distinct().Count());
+            foreach (var type in distinctTypes)
+            {
+                var logger = LogProvider.GetLogger(type);
+                Assert.NotNull(logger);
+                Assert.DoesNotContain(logger, distinctLoggers);
+                distinctLoggers.Add(logger);
+            }
+
+            Assert.Equal(distinctLoggers.Count, distinctTypes.Count);
         }
 
         [Fact]
