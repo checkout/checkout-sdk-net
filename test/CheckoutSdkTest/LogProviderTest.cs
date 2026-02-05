@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Xunit;
 
+using Microsoft.Extensions.Logging;
+using Xunit;
+
 namespace Checkout
 {
     [Collection("NonParallel")]
