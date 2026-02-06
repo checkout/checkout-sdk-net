@@ -9,6 +9,11 @@ using Checkout.HandlePaymentsAndPayouts.ApplePay;
 using Checkout.HandlePaymentsAndPayouts.Flow;
 using Checkout.Forex;
 using Checkout.Forward;
+using Checkout.Identities.Applicants;
+using Checkout.Identities.AmlScreening;
+using Checkout.Identities.FaceAuthentication;
+using Checkout.Identities.IdDocumentVerification;
+using Checkout.Identities.IdentityVerification;
 using Checkout.Instruments;
 using Checkout.Metadata;
 using Checkout.NetworkTokens;
@@ -70,6 +75,16 @@ namespace Checkout
         IForwardClient ForwardClient();
         
         IFlowClient FlowClient();
+        
+        IApplicantsClient ApplicantsClient();
+        
+        IAmlScreeningClient AmlScreeningClient();
+        
+        IFaceAuthenticationClient FaceAuthenticationClient();
+        
+        IIdDocumentVerificationClient IdDocumentVerificationClient();
+        
+        IIdentityVerificationClient IdentityVerificationClient();
         
         INetworkTokensClient NetworkTokensClient();
 

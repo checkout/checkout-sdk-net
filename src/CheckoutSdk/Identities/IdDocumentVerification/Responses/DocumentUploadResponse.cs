@@ -1,0 +1,1 @@
+// This file is no longer needed as all responses have been moved to IdDocumentVerificationResponse.cs
