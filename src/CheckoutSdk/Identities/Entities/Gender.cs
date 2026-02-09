@@ -1,4 +1,4 @@
-namespace Checkout.Identities.Common
+namespace Checkout.Identities.Entities
 {
     public enum Gender
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Checkout.Common;
-using Checkout.Identities.Common;
+using Checkout.Identities.Entities;
 
 namespace Checkout.Identities.IdentityVerification.Responses
 {

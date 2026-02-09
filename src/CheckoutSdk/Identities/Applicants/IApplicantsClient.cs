@@ -11,7 +11,7 @@ namespace Checkout.Identities.Applicants
     public interface IApplicantsClient
     {
         /// <summary>
-        ///     Creates a new applicant
+        /// Creates a new applicant
         /// </summary>
         /// <param name="createApplicantRequest">the create applicant request</param>
         /// <param name="cancellationToken">the cancellation token</param>
@@ -19,7 +19,7 @@ namespace Checkout.Identities.Applicants
         Task<ApplicantResponse> CreateApplicant(CreateApplicantRequest createApplicantRequest, CancellationToken cancellationToken = default);
 
         /// <summary>
-        ///     Retrieves an existing applicant by ID
+        /// Retrieves an existing applicant by ID
         /// </summary>
         /// <param name="applicantId">the applicant ID</param>
         /// <param name="cancellationToken">the cancellation token</param>
@@ -27,7 +27,7 @@ namespace Checkout.Identities.Applicants
         Task<ApplicantResponse> GetApplicant(string applicantId, CancellationToken cancellationToken = default);
 
         /// <summary>
-        ///     Updates an existing applicant
+        /// Updates an existing applicant
         /// </summary>
         /// <param name="applicantId">the applicant ID</param>
         /// <param name="updateApplicantRequest">the update applicant request</param>
@@ -36,7 +36,7 @@ namespace Checkout.Identities.Applicants
         Task<ApplicantResponse> UpdateApplicant(string applicantId, UpdateApplicantRequest updateApplicantRequest, CancellationToken cancellationToken = default);
 
         /// <summary>
-        ///     Anonymizes an existing applicant
+        /// Anonymizes an existing applicant
         /// </summary>
         /// <param name="applicantId">the applicant ID</param>
         /// <param name="cancellationToken">the cancellation token</param>
