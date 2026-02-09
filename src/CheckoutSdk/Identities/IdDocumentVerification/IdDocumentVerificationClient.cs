@@ -8,6 +8,9 @@ namespace Checkout.Identities.IdDocumentVerification
     public class IdDocumentVerificationClient : AbstractClient, IIdDocumentVerificationClient
     {
         private const string IdDocumentVerificationsPath = "id-document-verifications";
+        private const string AnonymizePath = "anonymize";
+        private const string AttemptsPath = "attempts";
+        private const string ReportPath = "pdf-report";
 
         public IdDocumentVerificationClient(IApiClient apiClient, CheckoutConfiguration configuration) :
             base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
@@ -49,7 +52,7 @@ namespace Checkout.Identities.IdDocumentVerification
         public Task<IdDocumentVerificationResponse> AnonymizeIdDocumentVerification(string idDocumentVerificationId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("idDocumentVerificationId", idDocumentVerificationId);
-            return ApiClient.Post<IdDocumentVerificationResponse>(BuildPath(IdDocumentVerificationsPath, idDocumentVerificationId, "anonymize"), 
+            return ApiClient.Post<IdDocumentVerificationResponse>(BuildPath(IdDocumentVerificationsPath, idDocumentVerificationId, AnonymizePath), 
                 SdkAuthorization(), (object)null, cancellationToken);
         }
 
@@ -64,7 +67,7 @@ namespace Checkout.Identities.IdDocumentVerification
         {
             CheckoutUtils.ValidateParams("idDocumentVerificationId", idDocumentVerificationId);
             CheckoutUtils.ValidateParams("attemptRequest", attemptRequest);
-            return ApiClient.Post<IdDocumentVerificationAttemptResponse>(BuildPath(IdDocumentVerificationsPath, idDocumentVerificationId, "attempts"), 
+            return ApiClient.Post<IdDocumentVerificationAttemptResponse>(BuildPath(IdDocumentVerificationsPath, idDocumentVerificationId, AttemptsPath), 
                 SdkAuthorization(), attemptRequest, cancellationToken);
         }
 
@@ -77,7 +80,7 @@ namespace Checkout.Identities.IdDocumentVerification
         public Task<IdDocumentVerificationAttemptsResponse> GetIdDocumentVerificationAttempts(string idDocumentVerificationId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("idDocumentVerificationId", idDocumentVerificationId);
-            return ApiClient.Get<IdDocumentVerificationAttemptsResponse>(BuildPath(IdDocumentVerificationsPath, idDocumentVerificationId, "attempts"), 
+            return ApiClient.Get<IdDocumentVerificationAttemptsResponse>(BuildPath(IdDocumentVerificationsPath, idDocumentVerificationId, AttemptsPath), 
                 SdkAuthorization(), cancellationToken);
         }
 
@@ -92,7 +95,7 @@ namespace Checkout.Identities.IdDocumentVerification
         {
             CheckoutUtils.ValidateParams("idDocumentVerificationId", idDocumentVerificationId);
             CheckoutUtils.ValidateParams("attemptId", attemptId);
-            return ApiClient.Get<IdDocumentVerificationAttemptResponse>(BuildPath(IdDocumentVerificationsPath, idDocumentVerificationId, "attempts", attemptId), 
+            return ApiClient.Get<IdDocumentVerificationAttemptResponse>(BuildPath(IdDocumentVerificationsPath, idDocumentVerificationId, AttemptsPath, attemptId), 
                 SdkAuthorization(), cancellationToken);
         }
 
@@ -105,7 +108,7 @@ namespace Checkout.Identities.IdDocumentVerification
         public Task<IdDocumentVerificationReportResponse> GetIdDocumentVerificationReport(string idDocumentVerificationId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("idDocumentVerificationId", idDocumentVerificationId);
-            return ApiClient.Get<IdDocumentVerificationReportResponse>(BuildPath(IdDocumentVerificationsPath, idDocumentVerificationId, "pdf-report"), 
+            return ApiClient.Get<IdDocumentVerificationReportResponse>(BuildPath(IdDocumentVerificationsPath, idDocumentVerificationId, ReportPath), 
                 SdkAuthorization(), cancellationToken);
         }
     }
