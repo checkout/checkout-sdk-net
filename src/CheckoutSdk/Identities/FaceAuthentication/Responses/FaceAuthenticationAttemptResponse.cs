@@ -6,51 +6,52 @@ using Checkout.Identities.Entities;
 
 namespace Checkout.Identities.FaceAuthentication.Responses
 {
-    public class FaceAuthenticationResponse : Resource
+    public class FaceAuthenticationAttemptResponse : Resource
     {
         /// <summary>
-        /// Your configuration ID
+        /// The URL to redirect the applicant to after the attempt
+        /// [Required]
         /// </summary>
-        public string UserJourneyId { get; set; }
-        
+        public string RedirectUrl { get; set; }
+
         /// <summary>
-        /// The face authentication's unique identifier
+        /// The unique identifier for the face authentication attempt
+        /// [Required]
         /// </summary>
         public string Id { get; set; }
 
         /// <summary>
+        /// The attempt status
+        /// [Required]
+        /// </summary>
+        public FaceAuthenticationAttemptStatus Status { get; set; }
+
+        /// <summary>
         /// The date and time when the resource was created, in UTC
+        /// [Required]
         /// </summary>
         public DateTime CreatedOn { get; set; }
 
         /// <summary>
         /// The date and time when the resource was modified, in UTC
+        /// [Required]
         /// </summary>
         public DateTime ModifiedOn { get; set; }
 
         /// <summary>
-        /// The face authentication status
-        /// </summary>
-        public FaceAuthenticationStatus Status { get; set; }
-
-        /// <summary>
-        /// The applicant's unique identifier
-        /// </summary>
-        public string ApplicantId { get; set; }
-
-        /// <summary>
         /// One or more response codes that provide more information about the status
+        /// [Required]
         /// </summary>
         public List<ResponseCode> ResponseCodes { get; set; }
 
         /// <summary>
-        /// One or more codes that provide more information about risks associated with the verification
+        /// The applicant's details
         /// </summary>
-        public List<string> RiskLabels { get; set; }
+        public ClientInformation ClientInformation { get; set; }
 
         /// <summary>
-        /// The details of the image of the applicant's face extracted from the video
+        /// The details of the attempt
         /// </summary>
-        public FaceDetails Face { get; set; }
-    }
+        public ApplicantSessionInformation ApplicantSessionInformation { get; set; }
+    }   
 }

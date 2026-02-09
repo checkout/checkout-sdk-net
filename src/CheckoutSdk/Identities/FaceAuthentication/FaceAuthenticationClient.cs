@@ -8,6 +8,8 @@ namespace Checkout.Identities.FaceAuthentication
     public class FaceAuthenticationClient : AbstractClient, IFaceAuthenticationClient
     {
         private const string FaceAuthenticationsPath = "face-authentications";
+        private const string AnonymizePath = "anonymize";
+        private const string AttemptsPath = "attempts";
 
         public FaceAuthenticationClient(IApiClient apiClient, CheckoutConfiguration configuration) :
             base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
@@ -41,7 +43,7 @@ namespace Checkout.Identities.FaceAuthentication
         }
 
         /// <summary>
-        ///     Anonymizes a face authentication by removing personal data
+        /// Anonymizes a face authentication by removing personal data
         /// </summary>
         /// <param name="faceAuthenticationId">the face authentication ID</param>
         /// <param name="cancellationToken">the cancellation token</param>
@@ -49,12 +51,12 @@ namespace Checkout.Identities.FaceAuthentication
         public Task<FaceAuthenticationResponse> AnonymizeFaceAuthentication(string faceAuthenticationId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("faceAuthenticationId", faceAuthenticationId);
-            return ApiClient.Post<FaceAuthenticationResponse>(BuildPath(FaceAuthenticationsPath, faceAuthenticationId, "anonymize"), 
+            return ApiClient.Post<FaceAuthenticationResponse>(BuildPath(FaceAuthenticationsPath, faceAuthenticationId, AnonymizePath), 
                 SdkAuthorization(), (object)null, cancellationToken);
         }
 
         /// <summary>
-        ///     Creates a new face authentication attempt
+        /// Creates a new face authentication attempt
         /// </summary>
         /// <param name="faceAuthenticationId">the face authentication ID</param>
         /// <param name="faceAuthenticationAttemptRequest">the face authentication attempt request</param>
@@ -64,12 +66,12 @@ namespace Checkout.Identities.FaceAuthentication
         {
             CheckoutUtils.ValidateParams("faceAuthenticationId", faceAuthenticationId);
             CheckoutUtils.ValidateParams("faceAuthenticationAttemptRequest", faceAuthenticationAttemptRequest);
-            return ApiClient.Post<FaceAuthenticationAttemptResponse>(BuildPath(FaceAuthenticationsPath, faceAuthenticationId, "attempts"), 
+            return ApiClient.Post<FaceAuthenticationAttemptResponse>(BuildPath(FaceAuthenticationsPath, faceAuthenticationId, AttemptsPath), 
                 SdkAuthorization(), faceAuthenticationAttemptRequest, cancellationToken);
         }
 
         /// <summary>
-        ///     Retrieves all attempts for a face authentication
+        /// Retrieves all attempts for a face authentication
         /// </summary>
         /// <param name="faceAuthenticationId">the face authentication ID</param>
         /// <param name="cancellationToken">the cancellation token</param>
@@ -77,7 +79,7 @@ namespace Checkout.Identities.FaceAuthentication
         public Task<FaceAuthenticationAttemptsResponse> GetFaceAuthenticationAttempts(string faceAuthenticationId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("faceAuthenticationId", faceAuthenticationId);
-            return ApiClient.Get<FaceAuthenticationAttemptsResponse>(BuildPath(FaceAuthenticationsPath, faceAuthenticationId, "attempts"), 
+            return ApiClient.Get<FaceAuthenticationAttemptsResponse>(BuildPath(FaceAuthenticationsPath, faceAuthenticationId, AttemptsPath), 
                 SdkAuthorization(), cancellationToken);
         }
 
@@ -92,7 +94,7 @@ namespace Checkout.Identities.FaceAuthentication
         {
             CheckoutUtils.ValidateParams("faceAuthenticationId", faceAuthenticationId);
             CheckoutUtils.ValidateParams("attemptId", attemptId);
-            return ApiClient.Get<FaceAuthenticationAttemptResponse>(BuildPath(FaceAuthenticationsPath, faceAuthenticationId, "attempts", attemptId), 
+            return ApiClient.Get<FaceAuthenticationAttemptResponse>(BuildPath(FaceAuthenticationsPath, faceAuthenticationId, AttemptsPath, attemptId), 
                 SdkAuthorization(), cancellationToken);
         }
     }

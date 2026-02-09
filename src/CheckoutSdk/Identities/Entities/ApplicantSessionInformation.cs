@@ -3,15 +3,11 @@ using System.Collections.Generic;
 
 namespace Checkout.Identities.Entities
 {
-    public class SelectedDocument
-    {
-        public CountryCode Country { get; set; }
-        public DocumentType DocumentType { get; set; }
-    }
-
     public class ApplicantSessionInformation
     {
+        /// <summary>
+        /// The applicant's IP address during the attempt
+        /// </summary>
         public string IpAddress { get; set; }
-        public List<SelectedDocument> SelectedDocuments { get; set; } = new List<SelectedDocument>();
     }
 }
