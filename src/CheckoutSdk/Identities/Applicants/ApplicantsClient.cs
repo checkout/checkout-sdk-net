@@ -7,7 +7,6 @@ namespace Checkout.Identities.Applicants
 {
     public class ApplicantsClient : AbstractClient, IApplicantsClient
     {
-        private const string IdentityPath = "identity";
         private const string ApplicantsPath = "applicants";
         private const string AnonymizePath = "anonymize";
 
@@ -25,7 +24,7 @@ namespace Checkout.Identities.Applicants
         public Task<ApplicantResponse> CreateApplicant(CreateApplicantRequest createApplicantRequest, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("createApplicantRequest", createApplicantRequest);
-            return ApiClient.Post<ApplicantResponse>(BuildPath(IdentityPath, ApplicantsPath), 
+            return ApiClient.Post<ApplicantResponse>(ApplicantsPath, 
                 SdkAuthorization(), createApplicantRequest, cancellationToken);
         }
 
@@ -38,7 +37,7 @@ namespace Checkout.Identities.Applicants
         public Task<ApplicantResponse> GetApplicant(string applicantId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("applicantId", applicantId);
-            return ApiClient.Get<ApplicantResponse>(BuildPath(IdentityPath, ApplicantsPath, applicantId), 
+            return ApiClient.Get<ApplicantResponse>(BuildPath(ApplicantsPath, applicantId), 
                 SdkAuthorization(), cancellationToken);
         }
 
@@ -52,7 +51,7 @@ namespace Checkout.Identities.Applicants
         public Task<ApplicantResponse> UpdateApplicant(string applicantId, UpdateApplicantRequest updateApplicantRequest, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("applicantId", applicantId, "updateApplicantRequest", updateApplicantRequest);
-            return ApiClient.Put<ApplicantResponse>(BuildPath(IdentityPath, ApplicantsPath, applicantId), 
+            return ApiClient.Patch<ApplicantResponse>(BuildPath(ApplicantsPath, applicantId), 
                 SdkAuthorization(), updateApplicantRequest, cancellationToken);
         }
 

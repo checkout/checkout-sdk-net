@@ -1,59 +1,53 @@
 using System;
-using System.Collections.Generic;
 using Checkout.Common;
-using Checkout.Identities.Common;
+using Checkout.Identities.Entities;
 
 namespace Checkout.Identities.AmlScreening.Responses
 {
     public class AmlScreeningResponse : Resource
     {
+        /// <summary>
+        /// The applicant's unique identifier
+        /// [Required]
+        /// </summary>
+        public string ApplicantId { get; set; }
+        
+        /// <summary>
+        /// The AML screening's unique identifier
+        /// [Required]
+        /// </summary>
         public string Id { get; set; }
 
-        public string ApplicantId { get; set; }
+        /// <summary>
+        /// The date and time when the resource was created, in UTC.
+        /// Format – yyyy-mm-ddThh:mm:ss.sss
+        /// [Required]
+        /// </summary>
+        public DateTime CreatedOn { get; set; }
 
-        public string Reference { get; set; }
+        /// <summary>
+        /// The date and time when the resource was modified, in UTC.
+        /// Format – yyyy-mm-ddThh:mm:ss.sss
+        /// [Required]
+        /// </summary>
+        public DateTime ModifiedOn { get; set; }
 
+        /// <summary>
+        /// The screening status.
+        /// Enum: "created" "screening_in_progress" "approved" "declined" "review_required"
+        /// [Required]
+        /// </summary>
         public AmlScreeningStatus Status { get; set; }
 
-        public DateTime CreatedAt { get; set; }
-
-        public DateTime? UpdatedAt { get; set; }
-
+        /// <summary>
+        /// The screening's configuration details
+        /// [Required]
+        /// </summary>
         public SearchParameters SearchParameters { get; set; }
 
-        public List<AmlMatch> Matches { get; set; }
-
-        public string Reason { get; set; }
-    }
-
-    public class AmlMatch
-    {
-        public string Id { get; set; }
-
-        public string Source { get; set; }
-
-        public string MatchType { get; set; }
-
-        public double MatchScore { get; set; }
-
-        public string Name { get; set; }
-
-        public DateTime? DateOfBirth { get; set; }
-
-        public List<string> Aliases { get; set; }
-
-        public List<string> Categories { get; set; }
-
-        public string Description { get; set; }
-
-        public List<string> Countries { get; set; }
-
-        public bool IsPep { get; set; }
-
-        public bool IsSanction { get; set; }
-
-        public bool IsAdverseMedia { get; set; }
-
-        public DateTime LastUpdated { get; set; }
+        /// <summary>
+        /// Indicates whether to continue to monitor the applicant's AML status
+        /// </summary>
+        public bool? Monitored { get; set; }
     }
 }

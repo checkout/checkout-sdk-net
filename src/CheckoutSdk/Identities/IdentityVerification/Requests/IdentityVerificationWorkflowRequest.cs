@@ -1,4 +1,4 @@
-using Checkout.Identities.Common;
+using Checkout.Identities.Entities;
 
 namespace Checkout.Identities.IdentityVerification.Requests
 {

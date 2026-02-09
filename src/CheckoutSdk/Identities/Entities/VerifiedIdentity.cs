@@ -1,6 +1,6 @@
 using Checkout.Common;
 
-namespace Checkout.Identities.Common
+namespace Checkout.Identities.Entities
 {
     public class VerifiedIdentity
     {
