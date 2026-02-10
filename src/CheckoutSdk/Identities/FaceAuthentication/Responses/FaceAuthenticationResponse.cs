@@ -1,56 +1,15 @@
 using System;
 using System.Collections.Generic;
-using Checkout.Common;
-
 using Checkout.Identities.Entities;
+using Checkout.Identities.Entities.Responses;
 
 namespace Checkout.Identities.FaceAuthentication.Responses
 {
-    public class FaceAuthenticationResponse : Resource
+    public class FaceAuthenticationResponse : BaseVerificationResponse<FaceAuthenticationStatus>
     {
-        /// <summary>
-        /// Your configuration ID
-        /// </summary>
-        public string UserJourneyId { get; set; }
-        
-        /// <summary>
-        /// The face authentication's unique identifier
-        /// </summary>
-        public string Id { get; set; }
-
-        /// <summary>
-        /// The date and time when the resource was created, in UTC
-        /// </summary>
-        public DateTime CreatedOn { get; set; }
-
-        /// <summary>
-        /// The date and time when the resource was modified, in UTC
-        /// </summary>
-        public DateTime ModifiedOn { get; set; }
-
-        /// <summary>
-        /// The face authentication status
-        /// </summary>
-        public FaceAuthenticationStatus Status { get; set; }
-
-        /// <summary>
-        /// The applicant's unique identifier
-        /// </summary>
-        public string ApplicantId { get; set; }
-
-        /// <summary>
-        /// One or more response codes that provide more information about the status
-        /// </summary>
-        public List<ResponseCode> ResponseCodes { get; set; }
-
-        /// <summary>
-        /// One or more codes that provide more information about risks associated with the verification
-        /// </summary>
-        public List<string> RiskLabels { get; set; }
-
         /// <summary>
         /// The details of the image of the applicant's face extracted from the video
         /// </summary>
-        public FaceDetails Face { get; set; }
+        public FaceImage Face { get; set; }
     }
 }

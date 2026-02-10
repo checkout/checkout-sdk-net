@@ -1,22 +1,22 @@
-using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using Checkout.Common;
+using Checkout.Identities.Entities;
 
 namespace Checkout.Identities.IdentityVerification.Requests
 {
-    /// <summary>
-    ///     Request for creating a new identity verification attempt
-    /// </summary>
     public class IdentityVerificationAttemptRequest
     {
         /// <summary>
-        ///     The type of method
+        /// The URL to redirect the applicant to after the attempt.
+        /// [Required]
         /// </summary>
-        [JsonProperty(PropertyName = "type")]
-        public string Type { get; set; } = "hosted";
+        public string RedirectUrl { get; set; }
 
         /// <summary>
-        ///     Configuration for the method
+        /// The applicant's details.
         /// </summary>
-        [JsonProperty(PropertyName = "config")]
-        public IdentityVerificationMethodConfig Config { get; set; }
+        public ClientInformation ClientInformation { get; set; }
+
     }
 }

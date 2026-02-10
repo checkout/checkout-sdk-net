@@ -16,7 +16,7 @@ namespace Checkout.Identities.IdentityVerification
         /// <param name="createAndOpenRequest">the create and open IDV request</param>
         /// <param name="cancellationToken">the cancellation token</param>
         /// <returns>the identity verification response with attempt URL</returns>
-        Task<IdentityVerificationCreateAndOpenResponse> CreateIdentityVerificationAndAttempt(IdentityVerificationCreateAndOpenRequest createAndOpenRequest, CancellationToken cancellationToken = default);
+        Task<IdentityVerificationAndAttemptResponse> CreateIdentityVerificationAndAttempt(IdentityVerificationAndAttemptRequest createAndOpenRequest, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Creates a new identity verification

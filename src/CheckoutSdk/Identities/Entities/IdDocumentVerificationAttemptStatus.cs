@@ -1,25 +1,25 @@
-using Newtonsoft.Json;
+using System.Runtime.Serialization;
 
 namespace Checkout.Identities.Entities
 {
     public enum IdDocumentVerificationAttemptStatus
     {
-        [JsonProperty("checks_in_progress")]
+        [EnumMember(Value = "checks_in_progress")]
         ChecksInProgress,
         
-        [JsonProperty("checks_inconclusive")]
+        [EnumMember(Value = "checks_inconclusive")]
         ChecksInconclusive,
         
-        [JsonProperty("completed")]
+        [EnumMember(Value = "completed")]
         Completed,
         
-        [JsonProperty("quality_checks_aborted")]
+        [EnumMember(Value = "quality_checks_aborted")]
         QualityChecksAborted,
         
-        [JsonProperty("quality_checks_in_progress")]
+        [EnumMember(Value = "quality_checks_in_progress")]
         QualityChecksInProgress,
         
-        [JsonProperty("terminated")]
+        [EnumMember(Value = "terminated")]
         Terminated
     }
 }
