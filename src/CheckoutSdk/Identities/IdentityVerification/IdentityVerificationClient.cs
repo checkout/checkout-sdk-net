@@ -11,7 +11,7 @@ namespace Checkout.Identities.IdentityVerification
         private const string IdentityVerificationsPath = "identity-verifications";
         private const string AnonymizePath = "anonymize";
         private const string AttemptsPath = "attempts";
-        private const string PdfReportPath = "pdf-report";
+        private const string ReportPath = "pdf-report";
 
         public IdentityVerificationClient(IApiClient apiClient, CheckoutConfiguration configuration) :
             base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
@@ -19,20 +19,21 @@ namespace Checkout.Identities.IdentityVerification
         }
 
         /// <summary>
-        ///     Creates an identity verification and initial attempt
+        /// Creates an identity verification and initial attempt
         /// </summary>
-        /// <param name="createAndOpenRequest">the create and open IDV request</param>
+        /// <param name="identityVerificationAndAttemptRequest">the create and open IDV request</param>
         /// <param name="cancellationToken">the cancellation token</param>
         /// <returns>the identity verification response with attempt URL</returns>
-        public Task<IdentityVerificationCreateAndOpenResponse> CreateIdentityVerificationAndAttempt(IdentityVerificationCreateAndOpenRequest createAndOpenRequest, CancellationToken cancellationToken = default)
+        public Task<IdentityVerificationAndAttemptResponse> CreateIdentityVerificationAndAttempt(IdentityVerificationAndAttemptRequest identityVerificationAndAttemptRequest, CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("createAndOpenRequest", createAndOpenRequest);
-            return ApiClient.Post<IdentityVerificationCreateAndOpenResponse>(CreateAndOpenPath, 
-                SdkAuthorization(), createAndOpenRequest, cancellationToken);
+            CheckoutUtils.ValidateParams("identityVerificationAndAttemptRequest", identityVerificationAndAttemptRequest);
+            return ApiClient.Post<IdentityVerificationAndAttemptResponse>(CreateAndOpenPath, 
+                SdkAuthorization(), identityVerificationAndAttemptRequest, cancellationToken);
         }
 
+
         /// <summary>
-        ///     Creates a new identity verification
+        /// Creates a new identity verification
         /// </summary>
         /// <param name="identityVerificationRequest">the identity verification request</param>
         /// <param name="cancellationToken">the cancellation token</param>
@@ -45,7 +46,7 @@ namespace Checkout.Identities.IdentityVerification
         }
 
         /// <summary>
-        ///     Retrieves an existing identity verification by ID
+        /// Retrieves an existing identity verification by ID
         /// </summary>
         /// <param name="identityVerificationId">the identity verification ID</param>
         /// <param name="cancellationToken">the cancellation token</param>
@@ -58,7 +59,7 @@ namespace Checkout.Identities.IdentityVerification
         }
 
         /// <summary>
-        ///     Anonymizes an identity verification by removing personal data
+        /// Anonymizes an identity verification by removing personal data
         /// </summary>
         /// <param name="identityVerificationId">the identity verification ID</param>
         /// <param name="cancellationToken">the cancellation token</param>
@@ -71,7 +72,7 @@ namespace Checkout.Identities.IdentityVerification
         }
 
         /// <summary>
-        ///     Creates a new identity verification attempt
+        /// Creates a new identity verification attempt
         /// </summary>
         /// <param name="identityVerificationId">the identity verification ID</param>
         /// <param name="identityVerificationAttemptRequest">the identity verification attempt request</param>
@@ -85,7 +86,7 @@ namespace Checkout.Identities.IdentityVerification
         }
 
         /// <summary>
-        ///     Retrieves all attempts for an identity verification
+        /// Retrieves all attempts for an identity verification
         /// </summary>
         /// <param name="identityVerificationId">the identity verification ID</param>
         /// <param name="cancellationToken">the cancellation token</param>
@@ -98,7 +99,7 @@ namespace Checkout.Identities.IdentityVerification
         }
 
         /// <summary>
-        ///     Retrieves a specific attempt for an identity verification
+        /// Retrieves a specific attempt for an identity verification
         /// </summary>
         /// <param name="identityVerificationId">the identity verification ID</param>
         /// <param name="attemptId">the attempt ID</param>
@@ -112,7 +113,7 @@ namespace Checkout.Identities.IdentityVerification
         }
 
         /// <summary>
-        ///     Retrieves the PDF report for an identity verification
+        /// Retrieves the PDF report for an identity verification
         /// </summary>
         /// <param name="identityVerificationId">the identity verification ID</param>
         /// <param name="cancellationToken">the cancellation token</param>
@@ -120,7 +121,7 @@ namespace Checkout.Identities.IdentityVerification
         public Task<IdentityVerificationReportResponse> GetIdentityVerificationReport(string identityVerificationId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("identityVerificationId", identityVerificationId);
-            return ApiClient.Get<IdentityVerificationReportResponse>(BuildPath(IdentityVerificationsPath, identityVerificationId, PdfReportPath), 
+            return ApiClient.Get<IdentityVerificationReportResponse>(BuildPath(IdentityVerificationsPath, identityVerificationId, ReportPath), 
                 SdkAuthorization(), cancellationToken);
         }
     }

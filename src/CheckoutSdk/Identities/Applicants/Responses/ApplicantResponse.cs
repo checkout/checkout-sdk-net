@@ -1,31 +1,10 @@
-using System;
-using Checkout.Common;
 using Checkout.Identities.Entities;
+using Checkout.Identities.Entities.Responses;
 
 namespace Checkout.Identities.Applicants.Responses
 {
-    public class ApplicantResponse : Resource
+    public class ApplicantResponse : BaseResponse
     {
-        /// <summary>
-        /// The applicant's unique identifier
-        /// [Required]
-        /// </summary>
-        public string Id { get; set; }
-
-        /// <summary>
-        /// The date and time when the resource was created, in UTC.
-        /// Format – yyyy-mm-ddThh:mm:ss.sss
-        /// [Required]
-        /// </summary>
-        public DateTime CreatedOn { get; set; }
-
-        /// <summary>
-        /// The date and time when the resource was modified, in UTC.
-        /// Format – yyyy-mm-ddThh:mm:ss.sss
-        /// [Required]
-        /// </summary>
-        public DateTime ModifiedOn { get; set; }
-
         /// <summary>
         /// Your reference for the applicant
         /// </summary>

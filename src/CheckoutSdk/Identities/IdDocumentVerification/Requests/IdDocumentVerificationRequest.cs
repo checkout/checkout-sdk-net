@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using Checkout.Identities.Entities;
 
 namespace Checkout.Identities.IdDocumentVerification.Requests
 {
@@ -20,14 +20,5 @@ namespace Checkout.Identities.IdDocumentVerification.Requests
         /// The personal details provided by the applicant
         /// </summary>
         public DeclaredData DeclaredData { get; set; }
-    }
-
-    public class DeclaredData
-    {
-        /// <summary>
-        /// The applicant's name
-        /// [Required]
-        /// </summary>
-        public string Name { get; set; }
     }
 }

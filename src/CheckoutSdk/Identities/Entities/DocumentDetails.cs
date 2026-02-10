@@ -6,7 +6,7 @@ namespace Checkout.Identities.Entities
         /// The type of identity document
         /// [Required]
         /// </summary>
-        public string DocumentType { get; set; }
+        public DocumentType DocumentType { get; set; }
 
         /// <summary>
         /// The document issuing country
