@@ -1,7 +1,8 @@
-using Checkout.PaymentMethods.Responses;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Checkout.PaymentMethods.Requests;
+using Checkout.PaymentMethods.Responses;
 
 namespace Checkout.PaymentMethods
 {
@@ -20,9 +21,15 @@ namespace Checkout.PaymentMethods
         {
             CheckoutUtils.ValidateParams("processingChannelId", processingChannelId);
 
-            return ApiClient.Get<GetAvailablePaymentMethodsResponse>(
-                BuildPath(PaymentMethodsPath, processingChannelId),
+            var queryFilter = new PaymentMethodsQueryFilter
+            {
+                ProcessingChannelId = processingChannelId
+            };
+
+            return ApiClient.Query<GetAvailablePaymentMethodsResponse>(
+                PaymentMethodsPath,
                 SdkAuthorization(),
+                queryFilter,
                 cancellationToken);
         }
     }

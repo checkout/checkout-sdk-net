@@ -8,14 +8,14 @@ namespace Checkout.PaymentMethods
 {
     public class PaymentMethodsIntegrationTest : SandboxTestFixture
     {
-        private const string _validProcessingChannelId = "pc_test_valid_channel_id";
+        private const string _validProcessingChannelId = "pc_5jp2az55l3cuths25t5p3xhwru";
         private const string _invalidProcessingChannelId = "pc_test_invalid_channel_id";
 
         public PaymentMethodsIntegrationTest() : base(PlatformType.DefaultOAuth)
         {
         }
 
-        [Fact(Skip = "This test requires a valid processing channel ID")]
+        [Fact]
         public async Task GetAvailablePaymentMethods_ShouldReturnValidResponse()
         {
             // Act
@@ -25,7 +25,7 @@ namespace Checkout.PaymentMethods
             ValidateGetAvailablePaymentMethodsResponse(response);
         }
 
-        [Fact(Skip = "This test requires a valid processing channel ID")]
+        [Fact]
         public async Task GetAvailablePaymentMethods_WithSpecificProcessingChannel_ShouldReturnRelevantMethods()
         {
             // Act

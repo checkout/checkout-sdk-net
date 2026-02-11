@@ -12,9 +12,12 @@ namespace Checkout.PaymentMethods.Entities
         [EnumMember(Value = "alma")] Alma,
         [EnumMember(Value = "amex")] Amex,
         [EnumMember(Value = "bancontact")] Bancontact,
+        [EnumMember(Value = "bank_redirects")] BankRedirects,
         [EnumMember(Value = "boost")] Boost,
         [EnumMember(Value = "bpi")] Bpi,
+        [EnumMember(Value = "bnpl")] Bnpl,
         [EnumMember(Value = "cartes_bancaires")] CartesBancaires,
+        [EnumMember(Value = "card_scheme")] CardScheme,
         [EnumMember(Value = "china_union_pay")] ChinaUnionPay,
         [EnumMember(Value = "connect_wallet")] ConnectWallet,
         [EnumMember(Value = "dana")] Dana,
@@ -51,6 +54,7 @@ namespace Checkout.PaymentMethods.Entities
         [EnumMember(Value = "truemoney")] Truemoney,
         [EnumMember(Value = "upi")] Upi,
         [EnumMember(Value = "visa")] Visa,
+        [EnumMember(Value = "wallet")] Wallet,
         [EnumMember(Value = "wechatpay")] Wechatpay
     }
 }
