@@ -112,7 +112,8 @@ namespace Checkout
                             System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET"))
                         .Scopes(OAuthScope.Files, OAuthScope.Flow, OAuthScope.Fx, OAuthScope.Gateway,
                             OAuthScope.Accounts, OAuthScope.SessionsApp, OAuthScope.SessionsBrowser,
-                            OAuthScope.Vault, OAuthScope.PayoutsBankDetails, OAuthScope.TransfersCreate,
+                            OAuthScope.Vault, OAuthScope.VaultRealTimeAccountUpdater, OAuthScope.VaultApmeEnrollment,
+                            OAuthScope.PayoutsBankDetails, OAuthScope.TransfersCreate,
                             OAuthScope.TransfersView, OAuthScope.BalancesView, OAuthScope.VaultCardMetadata,
                             OAuthScope.FinancialActions, OAuthScope.Forward, OAuthScope.ForwardSecrets,
                             OAuthScope.PaymentsSearch)

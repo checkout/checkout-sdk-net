@@ -57,7 +57,7 @@ namespace Checkout.Payments.Setups
         /// The payment methods that are enabled on your account and available for use
         /// [Optional]
         /// </summary>
-        public PaymentMethods PaymentMethods { get; set; }
+        public Entities.PaymentMethods PaymentMethods { get; set; }
 
         /// <summary>
         /// Settings for the Payment Setup
