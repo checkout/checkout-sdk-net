@@ -2,6 +2,7 @@
 using Checkout.Accounts.Entities.Response;
 using Checkout.Accounts.Payout.Request;
 using Checkout.Accounts.Payout.Response;
+using Checkout.Accounts.ReserveRules;
 using Checkout.Common;
 using Checkout.Files;
 using System;
@@ -84,6 +85,26 @@ namespace Checkout.Accounts
         Task<FileDetailsResponse> RetrieveFile(
             string entityId,
             string fileId,
+            CancellationToken cancellationToken = default);
+
+        Task<ReserveRuleIdResponse> CreateReserveRule(
+            string entityId,
+            ReserveRuleRequest reserveRuleRequest,
+            CancellationToken cancellationToken = default);
+
+        Task<ReserveRulesResponse> GetReserveRules(
+            string entityId,
+            CancellationToken cancellationToken = default);
+
+        Task<ReserveRuleResponse> GetReserveRuleDetails(
+            string entityId,
+            string reserveRuleId,
+            CancellationToken cancellationToken = default);
+
+        Task<ReserveRuleIdResponse> UpdateReserveRule(
+            string entityId,
+            string reserveRuleId,
+            ReserveRuleRequest reserveRuleRequest,
             CancellationToken cancellationToken = default);
     }
 }

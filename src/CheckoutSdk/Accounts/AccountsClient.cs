@@ -2,6 +2,7 @@
 using Checkout.Accounts.Entities.Response;
 using Checkout.Accounts.Payout.Request;
 using Checkout.Accounts.Payout.Response;
+using Checkout.Accounts.ReserveRules;
 using Checkout.Common;
 using Checkout.Files;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace Checkout.Accounts
         private const string InstrumentPath = "instruments";
         private const string PayoutSchedulePath = "payout-schedules";
         private const string PaymentInstrumentsPath = "payment-instruments";
+        private const string ReserveRulesPath = "reserve-rules";
 
         public AccountsClient(
             IApiClient apiClient,
@@ -214,6 +216,56 @@ namespace Checkout.Accounts
             return await ApiClient.Get<FileDetailsResponse>(
                 BuildPath(AccountsPath, entityId, FilesPath, fileId),
                 SdkAuthorization(),
+                cancellationToken);
+        }
+
+        public async Task<ReserveRuleIdResponse> CreateReserveRule(
+            string entityId,
+            ReserveRuleRequest reserveRuleRequest,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("entityId", entityId, "reserveRuleRequest", reserveRuleRequest);
+            return await ApiClient.Post<ReserveRuleIdResponse>(
+                BuildPath(AccountsPath, EntitiesPath, entityId, ReserveRulesPath),
+                SdkAuthorization(),
+                reserveRuleRequest,
+                cancellationToken);
+        }
+
+        public async Task<ReserveRulesResponse> GetReserveRules(
+            string entityId,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("entityId", entityId);
+            return await ApiClient.Get<ReserveRulesResponse>(
+                BuildPath(AccountsPath, EntitiesPath, entityId, ReserveRulesPath),
+                SdkAuthorization(),
+                cancellationToken);
+        }
+
+        public async Task<ReserveRuleResponse> GetReserveRuleDetails(
+            string entityId,
+            string reserveRuleId,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("entityId", entityId, "reserveRuleId", reserveRuleId);
+            return await ApiClient.Get<ReserveRuleResponse>(
+                BuildPath(AccountsPath, EntitiesPath, entityId, ReserveRulesPath, reserveRuleId),
+                SdkAuthorization(),
+                cancellationToken);
+        }
+
+        public async Task<ReserveRuleIdResponse> UpdateReserveRule(
+            string entityId,
+            string reserveRuleId,
+            ReserveRuleRequest reserveRuleRequest,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("entityId", entityId, "reserveRuleId", reserveRuleId, "reserveRuleRequest", reserveRuleRequest);
+            return await ApiClient.Put<ReserveRuleIdResponse>(
+                BuildPath(AccountsPath, EntitiesPath, entityId, ReserveRulesPath, reserveRuleId),
+                SdkAuthorization(),
+                reserveRuleRequest,
                 cancellationToken);
         }
     }
