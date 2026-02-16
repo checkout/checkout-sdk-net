@@ -1,13 +1,10 @@
 using System;
+using Checkout.Accounts;
 
 namespace Checkout.Accounts.ReserveRules
 {
-    public class ReserveRuleRequest
+    public class ReserveRuleRequest : ReserveRuleBase
     {
-        public string Type { get; set; }
-
-        public Rolling Rolling { get; set; }
-
-        public DateTime? ValidFrom { get; set; }
+        public Headers Headers { get; set; }
     }
 }

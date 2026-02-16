@@ -1,16 +1,14 @@
-using Checkout.Common;
 using System;
+using Checkout.Common;
 
 namespace Checkout.Accounts.ReserveRules
 {
-    public class ReserveRuleResponse : Resource
+    public class ReserveRuleResponse : ReserveRuleResponseBase
     {
+        /// <summary>
+        /// The reserve rule Id
+        /// [Required]
+        /// </summary>
         public string Id { get; set; }
-
-        public string Type { get; set; }
-
-        public Rolling Rolling { get; set; }
-
-        public DateTime? ValidFrom { get; set; }
     }
 }
