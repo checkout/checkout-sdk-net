@@ -258,15 +258,26 @@ namespace Checkout.Accounts
         public async Task<ReserveRuleIdResponse> UpdateReserveRule(
             string entityId,
             string reserveRuleId,
+            string etag,
             ReserveRuleRequest reserveRuleRequest,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("entityId", entityId, "reserveRuleId", reserveRuleId, "reserveRuleRequest", reserveRuleRequest);
+            CheckoutUtils.ValidateParams("entityId", entityId, "reserveRuleId", reserveRuleId, 
+                                        "reserveRuleRequest", reserveRuleRequest, "etag", etag);
+
+            Headers headers = null;
+            if(etag != null)
+            {
+                headers = new Headers { IfMatch = etag };
+            }
+
             return await ApiClient.Put<ReserveRuleIdResponse>(
                 BuildPath(AccountsPath, EntitiesPath, entityId, ReserveRulesPath, reserveRuleId),
                 SdkAuthorization(),
                 reserveRuleRequest,
-                cancellationToken);
+                cancellationToken, 
+                null, 
+                headers);
         }
     }
 }

@@ -104,6 +104,7 @@ namespace Checkout.Accounts
         Task<ReserveRuleIdResponse> UpdateReserveRule(
             string entityId,
             string reserveRuleId,
+            string etag,
             ReserveRuleRequest reserveRuleRequest,
             CancellationToken cancellationToken = default);
     }

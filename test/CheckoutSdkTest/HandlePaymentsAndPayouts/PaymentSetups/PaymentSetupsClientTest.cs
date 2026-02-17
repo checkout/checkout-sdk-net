@@ -65,6 +65,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                     _authorization, 
                     request,
                     CancellationToken.None, 
+                    null, 
                     null))
                 .ReturnsAsync(expectedResponse);
 

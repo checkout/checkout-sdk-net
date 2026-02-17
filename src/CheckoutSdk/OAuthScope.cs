@@ -50,6 +50,8 @@
         [OAuthScope("issuing:controls-read")] IssuingControlRead,
         [OAuthScope("issuing:controls-write")] IssuingControlWrite,
         [OAuthScope("issuing:transactions-read")] IssuingTransactionsRead,
+        [OAuthScope("issuing:disputes-read")] IssuingDisputesRead,
+        [OAuthScope("issuing:disputes-write")] IssuingDisputesWrite,
         [OAuthScope("Payment Context")] PaymentContext,
         [OAuthScope("forward")] Forward,
         [OAuthScope("forward:secrets")] ForwardSecrets,

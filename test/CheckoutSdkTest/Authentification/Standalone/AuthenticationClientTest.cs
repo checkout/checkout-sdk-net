@@ -245,7 +245,7 @@ namespace Checkout.Authentification.Standalone
                     apiClient.Put<UpdateASessionResponseOk>($"{Sessions}/id/{CollectData}",
                         _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.OAuth),
                         request.Object,
-                        CancellationToken.None, null))
+                        CancellationToken.None, null, null))
                 .ReturnsAsync(() => response.Object);
 
             _authenticationClient = new AuthenticationClient(_apiClient.Object, _configuration.Object);
@@ -265,7 +265,7 @@ namespace Checkout.Authentification.Standalone
             _apiClient.Setup(apiClient =>
                     apiClient.Put<UpdateASessionResponseOk>($"{Sessions}/id/{CollectData}", SessionSecretAuthorization,
                         request.Object,
-                        CancellationToken.None, null))
+                        CancellationToken.None, null, null))
                 .ReturnsAsync(() => response.Object);
 
             _authenticationClient = new AuthenticationClient(_apiClient.Object, _configuration.Object);
@@ -418,7 +418,7 @@ namespace Checkout.Authentification.Standalone
                     apiClient.Put<UpdateSessionThreedsMethodCompletionIndicatorResponseOk>($"{Sessions}/id/{IssuerFingerprint}",
                         _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.OAuth),
                         request.Object,
-                        CancellationToken.None, null))
+                        CancellationToken.None, null, null))
                 .ReturnsAsync(() => response.Object);
 
             _authenticationClient = new AuthenticationClient(_apiClient.Object, _configuration.Object);
@@ -439,7 +439,7 @@ namespace Checkout.Authentification.Standalone
             _apiClient.Setup(apiClient =>
                     apiClient.Put<UpdateSessionThreedsMethodCompletionIndicatorResponseOk>($"{Sessions}/id/{IssuerFingerprint}",
                         SessionSecretAuthorization, request.Object,
-                        CancellationToken.None, null))
+                        CancellationToken.None, null, null))
                 .ReturnsAsync(() => response.Object);
 
             _authenticationClient = new AuthenticationClient(_apiClient.Object, _configuration.Object);

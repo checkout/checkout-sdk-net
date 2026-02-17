@@ -92,6 +92,7 @@ namespace Checkout.Accounts
                         It.IsAny<SdkAuthorization>(),
                         It.IsAny<object>(),
                         It.IsAny<CancellationToken>(),
+                        null,
                         null))
                 .ReturnsAsync(responseObject);
 
@@ -181,7 +182,8 @@ namespace Checkout.Accounts
                         It.IsAny<SdkAuthorization>(),
                         It.IsAny<object>(),
                         It.IsAny<CancellationToken>(),
-                        It.IsAny<string>()))
+                        It.IsAny<string>(),
+                        It.IsAny<Headers>()))
                 .ReturnsAsync(responseObject);
 
             var response = await _accountsClient.UpdateEntity(
@@ -247,7 +249,8 @@ namespace Checkout.Accounts
                         It.IsAny<SdkAuthorization>(),
                         It.IsAny<object>(),
                         It.IsAny<CancellationToken>(),
-                        It.IsAny<string>()))
+                        It.IsAny<string>(),
+                        It.IsAny<Headers>()))
                 .ReturnsAsync(responseObject);
 
             var response = await _accountsClient.UpdateEntity(
@@ -436,6 +439,7 @@ namespace Checkout.Accounts
                         It.IsAny<SdkAuthorization>(),
                         It.IsAny<object>(),
                         It.IsAny<CancellationToken>(),
+                        null,
                         null
                     )
                 )
@@ -618,6 +622,7 @@ namespace Checkout.Accounts
             // Arrange
             var entityId = "ent_test_12345";
             var reserveRuleId = "rul_test_67890";
+            var etag = "Y3Y9MCZydj0w";
             var request = CreateValidReserveRuleRequest();
             var expectedResponse = new ReserveRuleIdResponse { Id = reserveRuleId };
 
@@ -626,11 +631,12 @@ namespace Checkout.Accounts
                     It.IsAny<SdkAuthorization>(),
                     It.IsAny<ReserveRuleRequest>(),
                     It.IsAny<CancellationToken>(),
-                    null))
+                    null,
+                    It.IsAny<Headers>()))
                 .ReturnsAsync(expectedResponse);
 
             // Act
-            var response = await _accountsClient.UpdateReserveRule(entityId, reserveRuleId, request);
+            var response = await _accountsClient.UpdateReserveRule(entityId, reserveRuleId, etag, request);
 
             // Assert
             response.ShouldNotBeNull();
