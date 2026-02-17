@@ -597,7 +597,7 @@ namespace Checkout.Accounts
             ValidateReserveRuleResponse(response, reserveRuleRequest);
         }
 
-        [Fact(Skip = "The server returns 428 Precondition Required when the If-Match header is included. This needs to be investigated further.")]
+        [Fact]
         public async Task UpdateReserveRule_ShouldReturnValidResponse()
         {
             // Arrange
@@ -610,24 +610,15 @@ namespace Checkout.Accounts
             updateRequest.Rolling.HoldingDuration.Weeks = 16;
             
             // Get ETag from the creation response headers
-            string etag = null;
+            string etag = null;            
             if (createResponse.ResponseHeaders != null)
             {
                 etag = createResponse.ResponseHeaders.FirstOrDefault(h => 
-                    string.Equals(h.Key, "ETag", StringComparison.OrdinalIgnoreCase)).Value;
-            }
-            
-            // Set the If-Match header using the Headers class
-            if (!string.IsNullOrEmpty(etag))
-            {
-                updateRequest.Headers = new Headers
-                {
-                    IfMatch = etag.Trim('"')  // Remove quotes if present
-                };
+                    string.Equals(h.Key?.ToLower(), "etag", StringComparison.OrdinalIgnoreCase)).Value;
             }
 
-            // Act
-            var response = await DefaultApi.AccountsClient().UpdateReserveRule(entityId, createResponse.Id, updateRequest);
+            // Act (will set the If-Match header when using the etag)
+            var response = await DefaultApi.AccountsClient().UpdateReserveRule(entityId, createResponse.Id, etag, updateRequest);
 
             // Assert
             ValidateReserveRuleIdResponse(response);
