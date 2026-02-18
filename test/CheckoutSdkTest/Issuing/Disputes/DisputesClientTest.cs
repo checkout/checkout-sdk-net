@@ -4,6 +4,7 @@ using Checkout.Issuing.Disputes.Requests;
 using Checkout.Issuing.Disputes.Responses;
 using Moq;
 using Shouldly;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,6 +33,7 @@ namespace Checkout.Issuing.Disputes
         public async Task CreateDispute_WhenRequestIsValid_ShouldSucceed()
         {
             // Arrange
+            var idempotencyKey = Guid.NewGuid().ToString();
             var request = CreateValidCreateDisputeRequest();
             var expectedResponse = CreateValidIssuingDisputeResponse();
 
@@ -40,13 +42,13 @@ namespace Checkout.Issuing.Disputes
                     _authorization,
                     request,
                     CancellationToken.None,
-                    null))
+                    idempotencyKey))
                 .ReturnsAsync(expectedResponse);
 
             IIssuingClient issuingClient = new IssuingClient(_apiClient.Object, _configuration.Object);
 
             // Act
-            var response = await issuingClient.CreateDispute(request);
+            var response = await issuingClient.CreateDispute(request, idempotencyKey);
 
             // Assert
             ValidateIssuingDisputeResponse(response, expectedResponse);
@@ -79,6 +81,7 @@ namespace Checkout.Issuing.Disputes
         public async Task CancelDispute_WhenDisputeIdIsValid_ShouldSucceed()
         {
             // Arrange
+            var idempotencyKey = Guid.NewGuid().ToString();
             var disputeId = "idsp_test_12345abcdefghijklmnop";
             var expectedResponse = new EmptyResponse();
 
@@ -87,13 +90,13 @@ namespace Checkout.Issuing.Disputes
                     _authorization,
                     null,
                     CancellationToken.None,
-                    null))
+                    idempotencyKey))
                 .ReturnsAsync(expectedResponse);
 
             IIssuingClient issuingClient = new IssuingClient(_apiClient.Object, _configuration.Object);
 
             // Act
-            var response = await issuingClient.CancelDispute(disputeId);
+            var response = await issuingClient.CancelDispute(disputeId, idempotencyKey);
 
             // Assert
             response.ShouldNotBeNull();
@@ -103,6 +106,7 @@ namespace Checkout.Issuing.Disputes
         public async Task EscalateDispute_WhenRequestIsValid_ShouldSucceed()
         {
             // Arrange
+            var idempotencyKey = Guid.NewGuid().ToString();
             var disputeId = "idsp_test_12345abcdefghijklmnop";
             var request = CreateValidEscalateDisputeRequest();
             var expectedResponse = new EmptyResponse();
@@ -112,13 +116,13 @@ namespace Checkout.Issuing.Disputes
                     _authorization,
                     request,
                     CancellationToken.None,
-                    null))
+                    idempotencyKey))
                 .ReturnsAsync(expectedResponse);
 
             IIssuingClient issuingClient = new IssuingClient(_apiClient.Object, _configuration.Object);
 
             // Act
-            var response = await issuingClient.EscalateDispute(disputeId, request);
+            var response = await issuingClient.EscalateDispute(disputeId, idempotencyKey, request);
 
             // Assert
             response.ShouldNotBeNull();
@@ -128,6 +132,7 @@ namespace Checkout.Issuing.Disputes
         public async Task SubmitDispute_WhenRequestIsValid_ShouldSucceed()
         {
             // Arrange
+            var idempotencyKey = Guid.NewGuid().ToString();
             var disputeId = "idsp_test_12345abcdefghijklmnop";
             var request = CreateValidSubmitDisputeRequest();
             var expectedResponse = CreateValidIssuingDisputeResponse();
@@ -138,13 +143,13 @@ namespace Checkout.Issuing.Disputes
                     _authorization,
                     request,
                     CancellationToken.None,
-                    null))
+                    idempotencyKey))
                 .ReturnsAsync(expectedResponse);
 
             IIssuingClient issuingClient = new IssuingClient(_apiClient.Object, _configuration.Object);
 
             // Act
-            var response = await issuingClient.SubmitDispute(disputeId, request);
+            var response = await issuingClient.SubmitDispute(disputeId, idempotencyKey, request);
 
             // Assert
             ValidateIssuingDisputeResponse(response, expectedResponse);
@@ -154,6 +159,7 @@ namespace Checkout.Issuing.Disputes
         public async Task SubmitDispute_WhenRequestIsNull_ShouldSucceed()
         {
             // Arrange
+            var idempotencyKey = Guid.NewGuid().ToString();
             var disputeId = "idsp_test_12345abcdefghijklmnop";
             var expectedResponse = CreateValidIssuingDisputeResponse();
             expectedResponse.Id = disputeId;
@@ -163,13 +169,13 @@ namespace Checkout.Issuing.Disputes
                     _authorization,
                     null,
                     CancellationToken.None,
-                    null))
+                    idempotencyKey))
                 .ReturnsAsync(expectedResponse);
 
             IIssuingClient issuingClient = new IssuingClient(_apiClient.Object, _configuration.Object);
 
             // Act
-            var response = await issuingClient.SubmitDispute(disputeId);
+            var response = await issuingClient.SubmitDispute(disputeId, idempotencyKey);
 
             // Assert
             ValidateIssuingDisputeResponse(response, expectedResponse);
