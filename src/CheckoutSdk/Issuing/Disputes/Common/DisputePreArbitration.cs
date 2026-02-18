@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Checkout.Issuing.Disputes
+namespace Checkout.Issuing.Disputes.Common
 {
     /// <summary>
     /// Information about the pre-arbitration stage of the dispute lifecycle.

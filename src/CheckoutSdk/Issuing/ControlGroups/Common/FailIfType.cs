@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Checkout.Issuing.ControlGroups
+namespace Checkout.Issuing.ControlGroups.Common
 {
     /// <summary>
     /// Defines how to determine the result of the control group.

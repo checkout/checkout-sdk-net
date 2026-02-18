@@ -1,6 +1,6 @@
 using Checkout.Issuing.Common;
 
-namespace Checkout.Issuing.ControlGroups
+namespace Checkout.Issuing.ControlGroups.Common
 {
     /// <summary>
     /// Control group control that applies MID (Merchant Identifier) limits to restrict or allow transactions at specific merchants.

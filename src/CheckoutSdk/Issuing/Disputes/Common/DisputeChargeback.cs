@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Checkout.Issuing.Disputes
+namespace Checkout.Issuing.Disputes.Common
 {
     /// <summary>
     /// The dispute details at the chargeback stage.

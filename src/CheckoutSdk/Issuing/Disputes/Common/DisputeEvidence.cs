@@ -1,4 +1,4 @@
-namespace Checkout.Issuing.Disputes
+namespace Checkout.Issuing.Disputes.Common
 {
     /// <summary>
     /// Evidence for an Issuing dispute, containing file information and description.

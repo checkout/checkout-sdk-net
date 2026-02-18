@@ -1,6 +1,6 @@
 using Checkout.Common;
 
-namespace Checkout.Issuing.Disputes
+namespace Checkout.Issuing.Disputes.Common
 {
     /// <summary>
     /// Amount information for an Issuing dispute, including the amount and currency.

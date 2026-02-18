@@ -1,7 +1,7 @@
 using Checkout.Common;
 using System.Collections.Generic;
 
-namespace Checkout.Issuing.Disputes
+namespace Checkout.Issuing.Disputes.Common
 {
     /// <summary>
     /// The details of the merchant you raised the dispute with.

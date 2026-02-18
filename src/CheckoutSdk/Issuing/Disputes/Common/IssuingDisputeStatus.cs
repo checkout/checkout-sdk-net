@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Checkout.Issuing.Disputes
+namespace Checkout.Issuing.Disputes.Common
 {
     /// <summary>
     /// The status of the issuing dispute.

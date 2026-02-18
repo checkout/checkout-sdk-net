@@ -1,4 +1,4 @@
-namespace Checkout.Issuing.Disputes
+namespace Checkout.Issuing.Disputes.Common
 {
     /// <summary>
     /// The change to the dispute reason and your justification for changing it.

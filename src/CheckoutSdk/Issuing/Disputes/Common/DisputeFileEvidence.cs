@@ -1,4 +1,4 @@
-namespace Checkout.Issuing.Disputes
+namespace Checkout.Issuing.Disputes.Common
 {
     /// <summary>
     /// File evidence for an Issuing dispute, referencing an uploaded file by ID.

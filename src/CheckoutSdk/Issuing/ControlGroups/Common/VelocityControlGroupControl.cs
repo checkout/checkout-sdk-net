@@ -1,6 +1,6 @@
 using Checkout.Issuing.Common;
 
-namespace Checkout.Issuing.ControlGroups
+namespace Checkout.Issuing.ControlGroups.Common
 {
     /// <summary>
     /// Control group control that applies velocity limits to restrict transaction frequency and amounts over time periods.
