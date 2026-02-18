@@ -1,5 +1,6 @@
 using Checkout.Issuing.Disputes.Requests;
 using Checkout.Issuing.Disputes.Responses;
+using Checkout.Issuing.Disputes.Common;
 using Checkout.Issuing.Transactions.Requests.Query;
 using Shouldly;
 using System;

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Checkout.Issuing.Disputes.Common;
 
 namespace Checkout.Issuing.Disputes.Requests
 {

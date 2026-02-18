@@ -1,6 +1,6 @@
 using Checkout.Issuing.Common;
 
-namespace Checkout.Issuing.ControlGroups
+namespace Checkout.Issuing.ControlGroups.Common
 {
     /// <summary>
     /// Base class for control group controls that define restrictions or permissions for card usage.

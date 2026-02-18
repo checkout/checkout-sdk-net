@@ -1,6 +1,6 @@
 using System;
 
-namespace Checkout.Issuing.Disputes
+namespace Checkout.Issuing.Disputes.Common
 {
     /// <summary>
     /// Information about the arbitration stage of the dispute lifecycle.

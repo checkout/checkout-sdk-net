@@ -1,5 +1,5 @@
 using Checkout.Common;
-using Checkout.Issuing.Disputes;
+using Checkout.Issuing.Disputes.Common;
 using Checkout.Issuing.Disputes.Requests;
 using Checkout.Issuing.Disputes.Responses;
 using Moq;

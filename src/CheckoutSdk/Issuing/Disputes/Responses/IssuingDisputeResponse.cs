@@ -1,5 +1,6 @@
-using Checkout.Common;
 using System;
+using Checkout.Common;
+using Checkout.Issuing.Disputes.Common;
 
 namespace Checkout.Issuing.Disputes.Responses
 {
