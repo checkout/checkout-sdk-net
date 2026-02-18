@@ -117,11 +117,11 @@ namespace Checkout
                             OAuthScope.TransfersView, OAuthScope.BalancesView, OAuthScope.VaultCardMetadata,
                             OAuthScope.FinancialActions, OAuthScope.Forward, OAuthScope.ForwardSecrets,
                             OAuthScope.PaymentsSearch, OAuthScope.IssuingDisputesRead,
-                            OAuthScope.IssuingDisputesWrite, OAuthScope.IssuingTransactionsRead
-                            //OAuthScope.IssuingCard, 
-                            //OAuthScope.IssuingControlRead,
-                            //OAuthScope.IssuingControlWrite,
-                            //OAuthScope.IssuingClient
+                            OAuthScope.IssuingDisputesWrite, OAuthScope.IssuingTransactionsRead,
+                            OAuthScope.IssuingCard, 
+                            OAuthScope.IssuingControlRead,
+                            OAuthScope.IssuingControlWrite,
+                            OAuthScope.IssuingClient
                             )
                         .Environment(Environment.Sandbox)
                         //.HttpClientFactory(new CustomClientFactory("3.0"))

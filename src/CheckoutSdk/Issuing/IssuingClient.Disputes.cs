@@ -9,6 +9,7 @@ namespace Checkout.Issuing
     {
         public Task<IssuingDisputeResponse> CreateDispute(
             CreateDisputeRequest createDisputeRequest,
+            string idempotencyKey,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("createDisputeRequest", createDisputeRequest);
@@ -16,7 +17,8 @@ namespace Checkout.Issuing
                 BuildPath(IssuingPath, DisputesPath),
                 SdkAuthorization(),
                 createDisputeRequest,
-                cancellationToken
+                cancellationToken,
+                idempotencyKey
             );
         }
 
@@ -34,6 +36,7 @@ namespace Checkout.Issuing
 
         public Task<EmptyResponse> CancelDispute(
             string disputeId,
+            string idempotencyKey,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("disputeId", disputeId);
@@ -42,13 +45,14 @@ namespace Checkout.Issuing
                 SdkAuthorization(),
                 null,
                 cancellationToken,
-                null
+                idempotencyKey
             );
         }
 
         public Task<EmptyResponse> EscalateDispute(
             string disputeId,
-            EscalateDisputeRequest escalateDisputeRequest,
+            string idempotencyKey,
+            EscalateDisputeRequest escalateDisputeRequest,            
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("disputeId", disputeId, "escalateDisputeRequest", escalateDisputeRequest);
@@ -56,13 +60,15 @@ namespace Checkout.Issuing
                 BuildPath(IssuingPath, DisputesPath, disputeId, EscalatePath),
                 SdkAuthorization(),
                 escalateDisputeRequest,
-                cancellationToken
+                cancellationToken,
+                idempotencyKey
             );
         }
 
         public Task<IssuingDisputeResponse> SubmitDispute(
             string disputeId,
-            SubmitDisputeRequest submitDisputeRequest = null,
+            string idempotencyKey,
+            SubmitDisputeRequest submitDisputeRequest = null,            
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("disputeId", disputeId);
@@ -71,7 +77,7 @@ namespace Checkout.Issuing
                 SdkAuthorization(),
                 submitDisputeRequest,
                 cancellationToken,
-                null
+                idempotencyKey
             );
         }
     }

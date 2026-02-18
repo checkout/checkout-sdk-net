@@ -22,6 +22,7 @@ namespace Checkout.Issuing.Disputes
         public async Task CreateDispute_ShouldReturnValidResponse()
         {
             // Arrange
+            var idempotencyKey = Guid.NewGuid().ToString();
             var transactionId = await GetValidTransactionIdForDispute();
             
             // Skip test if no valid transactions found
@@ -33,7 +34,7 @@ namespace Checkout.Issuing.Disputes
             var createRequest = CreateValidCreateDisputeRequest(transactionId);
 
             // Act
-            var response = await Api.IssuingClient().CreateDispute(createRequest);
+            var response = await DefaultApi.IssuingClient().CreateDispute(createRequest, idempotencyKey);
 
             // Assert
             ValidateCreatedDisputeResponse(response, createRequest);
@@ -43,6 +44,7 @@ namespace Checkout.Issuing.Disputes
         public async Task GetDisputeDetails_ShouldReturnValidResponse()
         {
             // Arrange
+            var idempotencyKey = Guid.NewGuid().ToString();
             var transactionId = await GetValidTransactionIdForDispute();
             
             // Skip test if no valid transactions found
@@ -52,10 +54,10 @@ namespace Checkout.Issuing.Disputes
             }
             
             var createRequest = CreateValidCreateDisputeRequest(transactionId);
-            var createResponse = await Api.IssuingClient().CreateDispute(createRequest);
+            var createResponse = await DefaultApi.IssuingClient().CreateDispute(createRequest, idempotencyKey);
 
             // Act
-            var response = await Api.IssuingClient().GetDisputeDetails(createResponse.Id);
+            var response = await DefaultApi.IssuingClient().GetDisputeDetails(createResponse.Id);
 
             // Assert
             ValidateDisputeDetailsResponse(response, createResponse);
@@ -65,6 +67,7 @@ namespace Checkout.Issuing.Disputes
         public async Task CancelDispute_ShouldSucceed()
         {
             // Arrange
+            var idempotencyKey = Guid.NewGuid().ToString();
             var transactionId = await GetValidTransactionIdForDispute();
             
             // Skip test if no valid transactions found
@@ -74,16 +77,16 @@ namespace Checkout.Issuing.Disputes
             }
             
             var createRequest = CreateValidCreateDisputeRequest(transactionId);
-            var createResponse = await Api.IssuingClient().CreateDispute(createRequest);
+            var createResponse = await DefaultApi.IssuingClient().CreateDispute(createRequest, idempotencyKey);
 
             // Act
-            var response = await Api.IssuingClient().CancelDispute(createResponse.Id);
+            var response = await DefaultApi.IssuingClient().CancelDispute(createResponse.Id, idempotencyKey);
 
             // Assert
             response.ShouldNotBeNull();
 
             // Verify the dispute was cancelled
-            var updatedDispute = await Api.IssuingClient().GetDisputeDetails(createResponse.Id);
+            var updatedDispute = await DefaultApi.IssuingClient().GetDisputeDetails(createResponse.Id);
             updatedDispute.Status.ShouldBe(IssuingDisputeStatus.Canceled);
         }
 
@@ -91,6 +94,7 @@ namespace Checkout.Issuing.Disputes
         public async Task EscalateDispute_ShouldSucceed()
         {
             // Arrange
+            var idempotencyKey = Guid.NewGuid().ToString();
             var transactionId = await GetValidTransactionIdForDispute();
             
             // Skip test if no valid transactions found
@@ -101,14 +105,14 @@ namespace Checkout.Issuing.Disputes
             
             var createRequest = CreateValidCreateDisputeRequest(transactionId);
             createRequest.IsReadyForSubmission = true; // Submit immediately to allow escalation
-            var createResponse = await Api.IssuingClient().CreateDispute(createRequest);
+            var createResponse = await DefaultApi.IssuingClient().CreateDispute(createRequest, idempotencyKey);
 
             // Wait for dispute to be in a state that allows escalation
             // In practice, you might need to wait for the dispute status to change
             var escalateRequest = CreateValidEscalateDisputeRequest();
 
             // Act
-            var response = await Api.IssuingClient().EscalateDispute(createResponse.Id, escalateRequest);
+            var response = await DefaultApi.IssuingClient().EscalateDispute(createResponse.Id, idempotencyKey, escalateRequest);
 
             // Assert
             response.ShouldNotBeNull();
@@ -118,6 +122,7 @@ namespace Checkout.Issuing.Disputes
         public async Task SubmitDispute_ShouldReturnValidResponse()
         {
             // Arrange
+            var idempotencyKey = Guid.NewGuid().ToString();
             var transactionId = await GetValidTransactionIdForDispute();
             
             // Skip test if no valid transactions found
@@ -128,12 +133,12 @@ namespace Checkout.Issuing.Disputes
             
             var createRequest = CreateValidCreateDisputeRequest(transactionId);
             createRequest.IsReadyForSubmission = false; // Create without submitting
-            var createResponse = await Api.IssuingClient().CreateDispute(createRequest);
+            var createResponse = await DefaultApi.IssuingClient().CreateDispute(createRequest, idempotencyKey);
 
             var submitRequest = CreateValidSubmitDisputeRequest();
 
             // Act
-            var response = await Api.IssuingClient().SubmitDispute(createResponse.Id, submitRequest);
+            var response = await DefaultApi.IssuingClient().SubmitDispute(createResponse.Id, idempotencyKey, submitRequest);
 
             // Assert
             ValidateSubmittedDisputeResponse(response, createResponse.Id);
@@ -143,6 +148,7 @@ namespace Checkout.Issuing.Disputes
         public async Task SubmitDispute_WithoutRequest_ShouldReturnValidResponse()
         {
             // Arrange
+            var idempotencyKey = Guid.NewGuid().ToString();
             var transactionId = await GetValidTransactionIdForDispute();
             
             // Skip test if no valid transactions found
@@ -153,10 +159,10 @@ namespace Checkout.Issuing.Disputes
             
             var createRequest = CreateValidCreateDisputeRequest(transactionId);
             createRequest.IsReadyForSubmission = false; // Create without submitting
-            var createResponse = await Api.IssuingClient().CreateDispute(createRequest);
+            var createResponse = await DefaultApi.IssuingClient().CreateDispute(createRequest, idempotencyKey);
 
             // Act
-            var response = await Api.IssuingClient().SubmitDispute(createResponse.Id);
+            var response = await DefaultApi.IssuingClient().SubmitDispute(createResponse.Id, idempotencyKey);
 
             // Assert
             ValidateSubmittedDisputeResponse(response, createResponse.Id);
@@ -169,7 +175,7 @@ namespace Checkout.Issuing.Disputes
             {
                 // Get recent transactions from your sandbox environment
                 var query = new TransactionsQueryFilter();
-                var transactions = await Api.IssuingClient().GetListTransactions(query);
+                var transactions = await DefaultApi.IssuingClient().GetListTransactions(query);
                 
                 // Find a cleared transaction that can be disputed
                 // Note: In a real scenario, you'd filter for:

@@ -12,10 +12,12 @@ namespace Checkout.Issuing
         /// [Beta]
         /// </summary>
         /// <param name="createDisputeRequest">The dispute creation request details.</param>
+        /// <param name="idempotencyKey">A unique idempotency key for safely retrying requests.</param>
         /// <param name="cancellationToken">An optional cancellation token.</param>
         /// <returns>The created dispute details.</returns>
         Task<IssuingDisputeResponse> CreateDispute(
             CreateDisputeRequest createDisputeRequest,
+            string idempotencyKey,
             CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -34,10 +36,12 @@ namespace Checkout.Issuing
         /// [Beta]
         /// </summary>
         /// <param name="disputeId">The unique identifier of the dispute to cancel.</param>
+        /// <param name="idempotencyKey">A unique idempotency key for safely retrying requests.</param>
         /// <param name="cancellationToken">An optional cancellation token.</param>
         /// <returns>An empty response indicating success.</returns>
         Task<EmptyResponse> CancelDispute(
             string disputeId,
+            string idempotencyKey,
             CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -45,11 +49,13 @@ namespace Checkout.Issuing
         /// [Beta]
         /// </summary>
         /// <param name="disputeId">The unique identifier of the dispute to escalate.</param>
+        /// <param name="idempotencyKey">A unique idempotency key for safely retrying requests.</param>
         /// <param name="escalateDisputeRequest">The escalation request details.</param>
         /// <param name="cancellationToken">An optional cancellation token.</param>
         /// <returns>An empty response indicating success.</returns>
         Task<EmptyResponse> EscalateDispute(
-            string disputeId,
+            string disputeId,            
+            string idempotencyKey,
             EscalateDisputeRequest escalateDisputeRequest,
             CancellationToken cancellationToken = default);
 
@@ -58,11 +64,13 @@ namespace Checkout.Issuing
         /// [Beta]
         /// </summary>
         /// <param name="disputeId">The unique identifier of the dispute to update.</param>
+        /// <param name="idempotencyKey">A unique idempotency key for safely retrying requests.</param>
         /// <param name="submitDisputeRequest">The optional update request details.</param>
         /// <param name="cancellationToken">An optional cancellation token.</param>
         /// <returns>The updated dispute details.</returns>
         Task<IssuingDisputeResponse> SubmitDispute(
             string disputeId,
+            string idempotencyKey,
             SubmitDisputeRequest submitDisputeRequest = null,
             CancellationToken cancellationToken = default);
     }
