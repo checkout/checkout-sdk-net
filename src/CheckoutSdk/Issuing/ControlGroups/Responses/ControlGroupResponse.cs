@@ -1,6 +1,5 @@
-using System;
 using System.Collections.Generic;
-using Checkout.Common;
+using Checkout.Issuing.Common.Responses;
 using Checkout.Issuing.ControlGroups.Common;
 
 namespace Checkout.Issuing.ControlGroups.Responses
@@ -8,16 +7,8 @@ namespace Checkout.Issuing.ControlGroups.Responses
     /// <summary>
     /// Control group response containing the details of a control group.
     /// </summary>
-    public class ControlGroupResponse : Resource
+    public class ControlGroupResponse : ControlIssuingResponseBase
     {
-        /// <summary>
-        /// The control group's unique identifier.
-        /// ^cgr_[a-z0-9]{26}$
-        /// 30 characters
-        /// [Required]
-        /// </summary>
-        public string Id { get; set; }
-
         /// <summary>
         /// The ID of the card or control profile.
         /// ^(crd|cpr)_[a-z0-9]{26}$
@@ -44,20 +35,6 @@ namespace Checkout.Issuing.ControlGroups.Responses
         /// [Required]
         /// </summary>
         public bool? IsEditable { get; set; }
-
-        /// <summary>
-        /// The date and time when the control group was created.
-        /// &lt;date-time&gt;
-        /// [Required]
-        /// </summary>
-        public DateTime? CreatedDate { get; set; }
-
-        /// <summary>
-        /// The date and time when the control group was last modified.
-        /// &lt;date-time&gt;
-        /// [Required]
-        /// </summary>
-        public DateTime? LastModifiedDate { get; set; }
 
         /// <summary>
         /// A description for the control group.
