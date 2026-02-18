@@ -31,14 +31,15 @@ namespace Checkout.PaymentMethods
         }
 
         [Fact]
-        public async Task GetAvailablePaymentMethods_WhenProcessingChannelIdIsValid_ShouldCallApiClientGet()
+        public async Task GetAvailablePaymentMethods_WhenProcessingChannelIdIsValid_ShouldCallApiClientQuery()
         {
             // Arrange
             var expectedResponse = CreateGetAvailablePaymentMethodsResponse();
 
-            _apiClient.Setup(apiClient => apiClient.Get<GetAvailablePaymentMethodsResponse>(
-                    $"payment-methods/{_processingChannelId}",
+            _apiClient.Setup(apiClient => apiClient.Query<GetAvailablePaymentMethodsResponse>(
+                    "payment-methods",
                     _authorization,
+                    It.Is<PaymentMethodsQueryFilter>(f => f.ProcessingChannelId == _processingChannelId),
                     CancellationToken.None))
                 .ReturnsAsync(expectedResponse);
 
