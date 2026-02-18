@@ -6,6 +6,7 @@ using Shouldly;
 using Xunit;
 
 using Checkout.PaymentMethods.Entities;
+using Checkout.PaymentMethods.Requests;
 using Checkout.PaymentMethods.Responses;
 
 namespace Checkout.PaymentMethods
@@ -77,9 +78,10 @@ namespace Checkout.PaymentMethods
             var expectedResponse = CreateGetAvailablePaymentMethodsResponse();
             var cancellationToken = new CancellationToken();
 
-            _apiClient.Setup(apiClient => apiClient.Get<GetAvailablePaymentMethodsResponse>(
-                    $"payment-methods/{_processingChannelId}",
+           _apiClient.Setup(apiClient => apiClient.Query<GetAvailablePaymentMethodsResponse>(
+                    "payment-methods",
                     _authorization,
+                    It.Is<PaymentMethodsQueryFilter>(f => f.ProcessingChannelId == _processingChannelId),
                     cancellationToken))
                 .ReturnsAsync(expectedResponse);
 
