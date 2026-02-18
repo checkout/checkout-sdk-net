@@ -1,9 +1,12 @@
-using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
-using Xunit;
+using System.Threading;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+
+using Microsoft.Extensions.Logging;
+using Xunit;
 
 namespace Checkout
 {
@@ -31,29 +34,44 @@ namespace Checkout
         public async Task ShouldCreateDifferentLoggerInstancesForMultipleConcurrentRequests()
         {
             ConcurrentBag<Type> logTypes = new ConcurrentBag<Type>();
-            
+                        
             LogProvider.SetLogFactory(_loggerFactory);
             Type[] loggerTypes = { typeof(LogProviderTests), typeof(AnotherTestClass), typeof(NoInitializedType) };
 
-            Task<ILogger>[] createLoggerTasks = Enumerable.Range(1, 50)
+            // Create multiple tasks that request loggers for different types concurrently
+            Task<ILogger>[] createLoggerTasks = Enumerable.Range(0, 50)
                 .Select(async index =>
                 {
                     int delay;
                     lock (RandLock)
                     {
-                        delay = Random.Next(1, 5);
+                        delay = Random.Next(0, 3);
                     }
-                    await Task.Delay(delay);
+                    Thread.Sleep(delay);
 
                     var logType = loggerTypes[index % loggerTypes.Length];
+                    var logger = LogProvider.GetLogger(logType);
+                    Assert.NotNull(logger);
                     logTypes.Add(logType);
 
-                    return await Task.FromResult(LogProvider.GetLogger(logType));
+                    return logger;
                 }).ToArray();
 
-            ILogger[] loggers = await Task.WhenAll(createLoggerTasks);
+            await Task.WhenAll(createLoggerTasks);
+
+            // Verify each distinct type has a unique logger instance
+            var distinctLoggers = new List<ILogger>();
+            var distinctTypes = logTypes.Distinct().ToList();
             
-            Assert.Equal(logTypes.Distinct().Count(), loggers.Distinct().Count());
+            foreach (var type in distinctTypes)
+            {
+                var logger = LogProvider.GetLogger(type);
+                Assert.NotNull(logger);
+                Assert.DoesNotContain(logger, distinctLoggers);
+                distinctLoggers.Add(logger);
+            }
+
+            Assert.Equal(distinctLoggers.Count, distinctTypes.Count);
         }
 
         [Fact]
