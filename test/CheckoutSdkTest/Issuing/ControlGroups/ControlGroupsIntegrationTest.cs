@@ -6,6 +6,7 @@ using Checkout.Issuing.ControlGroups.Common;
 using Checkout.Issuing.ControlGroups.Requests;
 using Checkout.Issuing.ControlGroups.Responses;
 using Shouldly;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,17 +17,12 @@ namespace Checkout.Issuing.ControlGroups
     public class ControlGroupsIntegrationTest : IssuingCommon, IAsyncLifetime
     {
         private CardholderResponse _cardholder;
-        private AbstractCardCreateResponse _card;
-        private ControlGroupResponse _controlGroup;
+        private AbstractCardCreateRequest _cardRequest;
 
         public async Task InitializeAsync()
         {
             _cardholder = await CreateCardholder();
-            var cardRequest = await CreateVirtualCard(_cardholder.Id);
-            _card = await Api.IssuingClient().CreateCard(cardRequest);
-            
-            var controlGroupRequest = CreateValidControlGroupRequest(_card.Id);
-            _controlGroup = await Api.IssuingClient().CreateControlGroup(controlGroupRequest);
+            _cardRequest = await CreateVirtualCard(_cardholder.Id);
         }
 
         public Task DisposeAsync()
@@ -34,47 +30,55 @@ namespace Checkout.Issuing.ControlGroups
             return Task.CompletedTask;
         }
 
-        [Fact (Skip = "Deactivated - needs investigation")]
+        [Fact]
         public async Task CreateControlGroup_ShouldReturnValidResponse()
         {
-            // Arrange
-            var request = CreateValidControlGroupRequest(_card.Id);
-
             // Act
+            var card = await Api.IssuingClient().CreateCard(_cardRequest);
+            var request = CreateValidControlGroupRequest(card.Id);
             var response = await Api.IssuingClient().CreateControlGroup(request);
 
             // Assert
             AssertControlGroupCreated(response, request);
         }
 
-        [Fact (Skip = "Deactivated - needs investigation")]
+        [Fact]
         public async Task GetTargetControlGroups_ShouldReturnValidResponse()
         {
             // Arrange
-            var query = new ControlGroupQueryTarget { TargetId = _card.Id };
+            var card = await Api.IssuingClient().CreateCard(_cardRequest);
+            var query = new ControlGroupQueryTarget { TargetId = card.Id };
+            var controlGroupRequest = CreateValidControlGroupRequest(card.Id);
+            var controlGroup = await Api.IssuingClient().CreateControlGroup(controlGroupRequest);
 
             // Act
             var response = await Api.IssuingClient().GetTargetControlGroups(query);
 
             // Assert
-            AssertTargetControlGroupsRetrieved(response, _controlGroup.Id);
+            AssertTargetControlGroupsRetrieved(response, controlGroup.Id);
         }
 
-        [Fact( Skip = "Deactivated - needs investigation")]
+        [Fact]
         public async Task GetControlGroupDetails_ShouldReturnValidResponse()
         {
+            // Arrange
+            var card = await Api.IssuingClient().CreateCard(_cardRequest);
+            var controlGroupRequest = CreateValidControlGroupRequest(card.Id);
+            var controlGroup = await Api.IssuingClient().CreateControlGroup(controlGroupRequest);
+
             // Act
-            var response = await Api.IssuingClient().GetControlGroupDetails(_controlGroup.Id);
+            var response = await Api.IssuingClient().GetControlGroupDetails(controlGroup.Id);
 
             // Assert
-            AssertControlGroupDetailsRetrieved(response, _controlGroup);
+            AssertControlGroupDetailsRetrieved(response, controlGroup);
         }
 
-        [Fact( Skip = "Deactivated - needs investigation")]
+        [Fact]
         public async Task RemoveControlGroup_ShouldReturnValidResponse()
         {
             // Arrange
-            var request = CreateValidControlGroupRequest(_card.Id);
+            var card = await Api.IssuingClient().CreateCard(_cardRequest);
+            var request = CreateValidControlGroupRequest(card.Id);
             var createResponse = await Api.IssuingClient().CreateControlGroup(request);
 
             // Act
@@ -84,7 +88,7 @@ namespace Checkout.Issuing.ControlGroups
             AssertControlGroupRemoved(response, createResponse.Id);
         }
 
-        [Fact( Skip = "Deactivated - needs investigation")]
+         [Fact]
         public async Task ControlGroupFlow_ShouldWorkEndToEnd()
         {
             // Arrange - Create a new cardholder and card for this flow test
@@ -188,8 +192,14 @@ namespace Checkout.Issuing.ControlGroups
             response.FailIf.ShouldBe(expected.FailIf);
             response.Description.ShouldBe(expected.Description);
             response.IsEditable.ShouldBe(expected.IsEditable);
-            response.CreatedDate.ShouldBe(expected.CreatedDate);
-            response.LastModifiedDate.ShouldBe(expected.LastModifiedDate);
+            
+            // Compare DateTime with tolerance due to API precision differences
+            response.CreatedDate.ShouldNotBeNull();
+            expected.CreatedDate.ShouldNotBeNull();
+            response.CreatedDate.Value.ShouldBe(expected.CreatedDate.Value, TimeSpan.FromMilliseconds(1));
+            response.LastModifiedDate.ShouldNotBeNull();  
+            expected.LastModifiedDate.ShouldNotBeNull();
+            response.LastModifiedDate.Value.ShouldBe(expected.LastModifiedDate.Value, TimeSpan.FromMilliseconds(1));
         }
 
         private static void AssertControlGroupRemoved(IdResponse response, string expectedId)
