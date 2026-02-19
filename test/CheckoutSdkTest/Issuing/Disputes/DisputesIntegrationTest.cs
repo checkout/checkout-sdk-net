@@ -13,12 +13,7 @@ namespace Checkout.Issuing.Disputes
 {
     public class DisputesIntegrationTest : IssuingCommon
     {
-         // NOTE: This test requires the following OAuth scopes:
-        // - issuing:disputes-read
-        // - issuing:disputes-write
-        // - issuing:transactions-read (to get real transaction IDs)
-
-        [Fact(Skip = "Requires existing cleared transaction and proper OAuth scopes")]
+        [Fact(Skip = "Requires existing cleared transaction")]
         public async Task CreateDispute_ShouldReturnValidResponse()
         {
             // Arrange
@@ -40,7 +35,7 @@ namespace Checkout.Issuing.Disputes
             ValidateCreatedDisputeResponse(response, createRequest);
         }
 
-        [Fact(Skip = "Requires existing cleared transaction and proper OAuth scopes")]
+        [Fact(Skip = "Requires existing cleared transaction")]
         public async Task GetDisputeDetails_ShouldReturnValidResponse()
         {
             // Arrange
@@ -63,7 +58,7 @@ namespace Checkout.Issuing.Disputes
             ValidateDisputeDetailsResponse(response, createResponse);
         }
 
-        [Fact(Skip = "Requires existing cleared transaction and proper OAuth scopes")]
+        [Fact(Skip = "Requires existing cleared transaction")]
         public async Task CancelDispute_ShouldSucceed()
         {
             // Arrange
@@ -90,7 +85,7 @@ namespace Checkout.Issuing.Disputes
             updatedDispute.Status.ShouldBe(IssuingDisputeStatus.Canceled);
         }
 
-        [Fact(Skip = "Requires existing submitted dispute and proper OAuth scopes")]
+        [Fact(Skip = "Requires existing submitted dispute")]
         public async Task EscalateDispute_ShouldSucceed()
         {
             // Arrange
@@ -118,7 +113,7 @@ namespace Checkout.Issuing.Disputes
             response.ShouldNotBeNull();
         }
 
-        [Fact(Skip = "Requires existing cleared transaction and proper OAuth scopes")]
+        [Fact(Skip = "Requires existing cleared transaction")]
         public async Task SubmitDispute_ShouldReturnValidResponse()
         {
             // Arrange
@@ -144,7 +139,7 @@ namespace Checkout.Issuing.Disputes
             ValidateSubmittedDisputeResponse(response, createResponse.Id);
         }
 
-        [Fact(Skip = "Requires existing cleared transaction and proper OAuth scopes")]
+        [Fact(Skip = "Requires existing cleared transaction")]
         public async Task SubmitDispute_WithoutRequest_ShouldReturnValidResponse()
         {
             // Arrange
