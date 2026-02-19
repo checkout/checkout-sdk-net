@@ -2,6 +2,12 @@ using Checkout.Issuing.Disputes.Requests;
 using Checkout.Issuing.Disputes.Responses;
 using Checkout.Issuing.Disputes.Common;
 using Checkout.Issuing.Transactions.Requests.Query;
+using Checkout.Issuing.Cardholders.Responses;
+using Checkout.Issuing.Cards.Requests.Create;
+using Checkout.Issuing.Cards.Responses.Create;
+using Checkout.Issuing.Testing.Requests;
+using Checkout.Issuing.Testing.Responses;
+using Checkout.Common;
 using Shouldly;
 using System;
 using System.Collections.Generic;
@@ -11,44 +17,51 @@ using Xunit;
 
 namespace Checkout.Issuing.Disputes
 {
-    public class DisputesIntegrationTest : IssuingCommon
+    public class DisputesIntegrationTest : IssuingCommon, IAsyncLifetime
     {
-        [Fact(Skip = "Requires existing cleared transaction")]
+        private CardholderResponse _cardholder;
+        private AbstractCardCreateResponse _card;
+        private string _clearedTransactionId;
+
+        public async Task InitializeAsync()
+        {
+            // Create cardholder and card for testing
+            _cardholder = await CreateCardholder();
+            var cardRequest = await CreateVirtualCard(_cardholder.Id);
+            _card = await Api.IssuingClient().CreateCard(cardRequest);
+            
+            // Activate the card before using it for transactions
+            await Api.IssuingClient().ActivateCard(_card.Id);
+            
+            // Create and clear a transaction for dispute testing
+            _clearedTransactionId = await CreateClearedTransaction();
+        }
+
+        public Task DisposeAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        [Fact] //(Skip = "Requires existing cleared transaction")]
         public async Task CreateDispute_ShouldReturnValidResponse()
         {
             // Arrange
             var idempotencyKey = Guid.NewGuid().ToString();
-            var transactionId = await GetValidTransactionIdForDispute();
-            
-            // Skip test if no valid transactions found
-            if (string.IsNullOrEmpty(transactionId))
-            {
-                return; // Skip.If() would be better but not available
-            }
-            
-            var createRequest = CreateValidCreateDisputeRequest(transactionId);
+            var createRequest = CreateValidCreateDisputeRequest(_clearedTransactionId);
 
             // Act
-            var response = await DefaultApi.IssuingClient().CreateDispute(createRequest, idempotencyKey);
+            var response = await Api.IssuingClient().CreateDispute(createRequest, idempotencyKey);
 
             // Assert
             ValidateCreatedDisputeResponse(response, createRequest);
         }
 
-        [Fact(Skip = "Requires existing cleared transaction")]
+        [Fact]
         public async Task GetDisputeDetails_ShouldReturnValidResponse()
         {
             // Arrange
             var idempotencyKey = Guid.NewGuid().ToString();
-            var transactionId = await GetValidTransactionIdForDispute();
-            
-            // Skip test if no valid transactions found
-            if (string.IsNullOrEmpty(transactionId))
-            {
-                return;
-            }
-            
-            var createRequest = CreateValidCreateDisputeRequest(transactionId);
+            var createRequest = CreateValidCreateDisputeRequest(_clearedTransactionId);
             var createResponse = await DefaultApi.IssuingClient().CreateDispute(createRequest, idempotencyKey);
 
             // Act
@@ -58,20 +71,12 @@ namespace Checkout.Issuing.Disputes
             ValidateDisputeDetailsResponse(response, createResponse);
         }
 
-        [Fact(Skip = "Requires existing cleared transaction")]
+        [Fact]
         public async Task CancelDispute_ShouldSucceed()
         {
             // Arrange
             var idempotencyKey = Guid.NewGuid().ToString();
-            var transactionId = await GetValidTransactionIdForDispute();
-            
-            // Skip test if no valid transactions found
-            if (string.IsNullOrEmpty(transactionId))
-            {
-                return;
-            }
-            
-            var createRequest = CreateValidCreateDisputeRequest(transactionId);
+            var createRequest = CreateValidCreateDisputeRequest(_clearedTransactionId);
             var createResponse = await DefaultApi.IssuingClient().CreateDispute(createRequest, idempotencyKey);
 
             // Act
@@ -85,20 +90,12 @@ namespace Checkout.Issuing.Disputes
             updatedDispute.Status.ShouldBe(IssuingDisputeStatus.Canceled);
         }
 
-        [Fact(Skip = "Requires existing submitted dispute")]
+        [Fact(Skip = "Requires submitted dispute to escalate - depends on dispute workflow")]
         public async Task EscalateDispute_ShouldSucceed()
         {
             // Arrange
             var idempotencyKey = Guid.NewGuid().ToString();
-            var transactionId = await GetValidTransactionIdForDispute();
-            
-            // Skip test if no valid transactions found
-            if (string.IsNullOrEmpty(transactionId))
-            {
-                return;
-            }
-            
-            var createRequest = CreateValidCreateDisputeRequest(transactionId);
+            var createRequest = CreateValidCreateDisputeRequest(_clearedTransactionId);
             createRequest.IsReadyForSubmission = true; // Submit immediately to allow escalation
             var createResponse = await DefaultApi.IssuingClient().CreateDispute(createRequest, idempotencyKey);
 
@@ -113,20 +110,12 @@ namespace Checkout.Issuing.Disputes
             response.ShouldNotBeNull();
         }
 
-        [Fact(Skip = "Requires existing cleared transaction")]
+        [Fact]
         public async Task SubmitDispute_ShouldReturnValidResponse()
         {
             // Arrange
             var idempotencyKey = Guid.NewGuid().ToString();
-            var transactionId = await GetValidTransactionIdForDispute();
-            
-            // Skip test if no valid transactions found
-            if (string.IsNullOrEmpty(transactionId))
-            {
-                return;
-            }
-            
-            var createRequest = CreateValidCreateDisputeRequest(transactionId);
+            var createRequest = CreateValidCreateDisputeRequest(_clearedTransactionId);
             createRequest.IsReadyForSubmission = false; // Create without submitting
             var createResponse = await DefaultApi.IssuingClient().CreateDispute(createRequest, idempotencyKey);
 
@@ -139,20 +128,12 @@ namespace Checkout.Issuing.Disputes
             ValidateSubmittedDisputeResponse(response, createResponse.Id);
         }
 
-        [Fact(Skip = "Requires existing cleared transaction")]
+        [Fact]
         public async Task SubmitDispute_WithoutRequest_ShouldReturnValidResponse()
         {
             // Arrange
             var idempotencyKey = Guid.NewGuid().ToString();
-            var transactionId = await GetValidTransactionIdForDispute();
-            
-            // Skip test if no valid transactions found
-            if (string.IsNullOrEmpty(transactionId))
-            {
-                return;
-            }
-            
-            var createRequest = CreateValidCreateDisputeRequest(transactionId);
+            var createRequest = CreateValidCreateDisputeRequest(_clearedTransactionId);
             createRequest.IsReadyForSubmission = false; // Create without submitting
             var createResponse = await DefaultApi.IssuingClient().CreateDispute(createRequest, idempotencyKey);
 
@@ -163,39 +144,46 @@ namespace Checkout.Issuing.Disputes
             ValidateSubmittedDisputeResponse(response, createResponse.Id);
         }
 
-        // Helper method to get a valid transaction ID for dispute testing
-        private async Task<string> GetValidTransactionIdForDispute()
+        // Helper method to create a cleared transaction for dispute testing
+        private async Task<string> CreateClearedTransaction()
         {
-            try
+            // Create an authorization
+            var authRequest = new CardAuthorizationRequest
             {
-                // Get recent transactions from your sandbox environment
-                var query = new TransactionsQueryFilter();
-                var transactions = await DefaultApi.IssuingClient().GetListTransactions(query);
-                
-                // Find a cleared transaction that can be disputed
-                // Note: In a real scenario, you'd filter for:
-                // - Status = "cleared"
-                // - Not already refunded
-                // - Not already disputed
-                var validTransaction = transactions.Data?.FirstOrDefault(t => 
-                    !string.IsNullOrEmpty(t.Id) && 
-                    t.Id.StartsWith("trx_"));
-                    
-                return validTransaction?.Id;
-            }
-            catch
+                Card = new CardSimulation
+                {
+                    Id = _card.Id,
+                    ExpiryMonth = _card.ExpiryMonth,
+                    ExpiryYear = _card.ExpiryYear
+                },
+                Transaction = new TransactionSimulation
+                {
+                    Type = TransactionType.Purchase,
+                    Amount = 1000, // $10.00 in cents
+                    Currency = Currency.USD
+                }
+            };
+
+            var authResponse = await Api.IssuingClient().SimulateAuthorization(authRequest);
+            
+            // Clear the transaction to make it disputable
+            var clearingRequest = new CardClearingAuthorizationRequest
             {
-                // If we can't get transactions, return null to skip the test
-                return null;
-            }
+                Amount = 1000 // Same amount as authorized
+            };
+
+            await Api.IssuingClient().SimulateClearing(authResponse.Id, clearingRequest);
+            
+            return authResponse.Id;
         }
 
         // Setup Methods (Builders)
+
         private CreateDisputeRequest CreateValidCreateDisputeRequest(string transactionId = null)
         {
             return new CreateDisputeRequest
             {
-                TransactionId = transactionId ?? "trx_test_abcdefghijklmnopqr", // Use real transaction ID when available
+                TransactionId = transactionId ?? "trx_test_abcdefghijklmnopqr",
                 Reason = "4837", // No cardholder authorization
                 Evidence = new List<DisputeEvidence>
                 {
