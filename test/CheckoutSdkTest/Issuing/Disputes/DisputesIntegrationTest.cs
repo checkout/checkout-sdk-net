@@ -42,7 +42,7 @@ namespace Checkout.Issuing.Disputes
             return Task.CompletedTask;
         }
 
-        [Fact] //(Skip = "Requires existing cleared transaction")]
+        [Fact(Skip = "Requires permissions to create disputes and simulate transactions - we must ensure the test environment is set up correctly first")]
         public async Task CreateDispute_ShouldReturnValidResponse()
         {
             // Arrange
@@ -56,7 +56,7 @@ namespace Checkout.Issuing.Disputes
             ValidateCreatedDisputeResponse(response, createRequest);
         }
 
-        [Fact]
+        [Fact(Skip = "Requires permissions to create disputes and simulate transactions - we must ensure the test environment is set up correctly first")]
         public async Task GetDisputeDetails_ShouldReturnValidResponse()
         {
             // Arrange
@@ -71,7 +71,7 @@ namespace Checkout.Issuing.Disputes
             ValidateDisputeDetailsResponse(response, createResponse);
         }
 
-        [Fact]
+        [Fact(Skip = "Requires permissions to create disputes and simulate transactions - we must ensure the test environment is set up correctly first")]
         public async Task CancelDispute_ShouldSucceed()
         {
             // Arrange
@@ -90,7 +90,7 @@ namespace Checkout.Issuing.Disputes
             updatedDispute.Status.ShouldBe(IssuingDisputeStatus.Canceled);
         }
 
-        [Fact(Skip = "Requires submitted dispute to escalate - depends on dispute workflow")]
+        [Fact(Skip = "Requires permissions to create disputes and simulate transactions - we must ensure the test environment is set up correctly first")]
         public async Task EscalateDispute_ShouldSucceed()
         {
             // Arrange
@@ -110,7 +110,7 @@ namespace Checkout.Issuing.Disputes
             response.ShouldNotBeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "Requires permissions to create disputes and simulate transactions - we must ensure the test environment is set up correctly first")]
         public async Task SubmitDispute_ShouldReturnValidResponse()
         {
             // Arrange
@@ -128,7 +128,7 @@ namespace Checkout.Issuing.Disputes
             ValidateSubmittedDisputeResponse(response, createResponse.Id);
         }
 
-        [Fact]
+        [Fact(Skip = "Requires permissions to create disputes and simulate transactions - we must ensure the test environment is set up correctly first")]
         public async Task SubmitDispute_WithoutRequest_ShouldReturnValidResponse()
         {
             // Arrange
