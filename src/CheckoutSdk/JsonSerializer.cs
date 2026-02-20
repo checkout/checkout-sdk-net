@@ -5,6 +5,7 @@ using Checkout.Instruments.Get.Util;
 using Checkout.Instruments.Update.Util;
 using Checkout.Issuing.Cards.Responses.Create;
 using Checkout.Issuing.Controls.Responses;
+using Checkout.Issuing.ControlGroups.Common.Util;
 using Checkout.Workflows.Actions.Response.Util;
 using Checkout.Workflows.Conditions.Response.Util;
 using Newtonsoft.Json;
@@ -53,20 +54,26 @@ namespace Checkout
                 {
                     new StringEnumConverter(),
                     // Instruments CS2
-                    new CreateInstrumentResponseTypeConverter(), new GetInstrumentResponseTypeConverter(),
+                    new CreateInstrumentResponseTypeConverter(), 
+                    new GetInstrumentResponseTypeConverter(),
                     new UpdateInstrumentResponseTypeConverter(),
                     // Workflows CS2
-                    new WorkflowActionTypeResponseConverter(), new WorkflowConditionTypeResponseConverter(),
+                    new WorkflowActionTypeResponseConverter(),
+                    new WorkflowConditionTypeResponseConverter(),
                     // Short date format converter (must come before IsoDateTimeConverter)
                     new ShortDateTimeConverter(),
                     GetConverterDateTimeToIso(),
                     // Accounts Payout Schedules
-                    new GetScheduleResponseTypeConverter(), new ScheduleResponseTypeConverter(),
+                    new GetScheduleResponseTypeConverter(),
+                    new ScheduleResponseTypeConverter(),
                     // Items Response
                     new ItemsResponseConverter(),
                     // Issuing
-                    new CardTypeResponseConverter(), new CardControlsResponseConverter(),
-                    new CardCreateResponseConverter(), new CardControlTypeResponseConverter(),
+                    new CardTypeResponseConverter(), 
+                    new CardControlsResponseConverter(),
+                    new CardCreateResponseConverter(),
+                    new CardControlTypeResponseConverter(),
+                    new ControlGroupControlTypeConverter(),
                     // HandlePaymentsAndPayouts Sources
                     new RequestAPaymentOrPayoutResponseCreatedSourceTypeConverter(),
                 }

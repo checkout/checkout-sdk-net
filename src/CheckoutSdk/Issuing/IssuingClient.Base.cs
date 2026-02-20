@@ -20,6 +20,11 @@ namespace Checkout.Issuing
         private const string ReversalsPath = "reversals";
         private const string TransactionsPath = "transactions";
         private const string ControlProfilesPath = "control-profiles";
+        private const string ControlGroupsPath = "control-groups";
+        private const string DisputesPath = "disputes";
+        private const string CancelPath = "cancel";
+        private const string EscalatePath = "escalate";
+        private const string SubmitPath = "submit";
         private const string AddPath = "add";
         private const string RemovePath = "remove";
         private const string AccessTokenPath = "access/connect/token";

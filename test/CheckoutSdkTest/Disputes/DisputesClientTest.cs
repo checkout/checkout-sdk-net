@@ -86,7 +86,7 @@ namespace Checkout.Disputes
             _apiClient.Setup(apiClient =>
                     apiClient.Put<EmptyResponse>($"disputes/{disputeId}/evidence", _authorization, request,
                         CancellationToken.None,
-                        null))
+                        null, null))
                 .ReturnsAsync(() => new EmptyResponse());
 
             IDisputesClient client = new DisputesClient(_apiClient.Object, _configuration.Object);

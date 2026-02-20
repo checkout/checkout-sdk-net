@@ -9,7 +9,7 @@ namespace Checkout.Issuing
 {
     public class IssuingCommon : SandboxTestFixture
     {
-        protected readonly CheckoutApi Api;
+        protected readonly ICheckoutApi Api;
         protected readonly string ProductIdOk = "pro_3fn6pv2ikshurn36dbd3iysyha";
         protected readonly string ProductIdBad = "pro_2ebzpnw3wvcefnu7fqglqmg56m";
 
@@ -125,11 +125,11 @@ namespace Checkout.Issuing
             return cardholderResponse;
         }
 
-        private static CheckoutApi IssuingCheckoutApi()
+        private static ICheckoutApi IssuingCheckoutApi()
         {
             var logFactory = TestLoggerFactoryHelper.Instance;
             
-            return CheckoutSdk.Builder()
+            var defaultApi = CheckoutSdk.Builder()
                 .OAuth()
                 .ClientCredentials(
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_ID"),
@@ -138,7 +138,9 @@ namespace Checkout.Issuing
                     OAuthScope.IssuingClient, OAuthScope.IssuingTransactionsRead, OAuthScope.Vault)
                 .Environment(Environment.Sandbox)
                 .LogProvider(logFactory)
-                .Build() as CheckoutApi;
+                .Build();
+
+            return defaultApi;
         }
     }
 }

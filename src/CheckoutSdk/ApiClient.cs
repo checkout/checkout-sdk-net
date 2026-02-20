@@ -13,6 +13,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Checkout.Accounts;
+
 namespace Checkout
 {
     public class ApiClient : IApiClient
@@ -124,7 +126,8 @@ namespace Checkout
             SdkAuthorization authorization,
             object request = null,
             CancellationToken cancellationToken = default,
-            string idempotencyKey = null)
+            string idempotencyKey = null, 
+            Headers headers = null)
             where TResult : HttpMetadata
         {
             var httpResponse = await SendRequestAsync(
@@ -133,7 +136,8 @@ namespace Checkout
                 authorization,
                 request,
                 cancellationToken,
-                null
+                null,
+                headers
             );
             return await DeserializeResponseAsync<TResult>(httpResponse);
         }
@@ -198,7 +202,8 @@ namespace Checkout
             SdkAuthorization authorization,
             object requestBody,
             CancellationToken cancellationToken,
-            string idempotencyKey)
+            string idempotencyKey,
+            Headers headers = null)
         {
             CheckoutUtils.ValidateParams("httpMethod", httpMethod, "authorization", authorization);
 
@@ -226,7 +231,8 @@ namespace Checkout
                 authorization,
                 httpContent,
                 cancellationToken,
-                idempotencyKey);
+                idempotencyKey,
+                headers);
 
             await ValidateResponseAsync(httpResponse);
 
@@ -239,7 +245,8 @@ namespace Checkout
             SdkAuthorization authorization,
             HttpContent httpContent,
             CancellationToken cancellationToken,
-            string idempotencyKey)
+            string idempotencyKey,
+            Headers headers = null)
         {
             CheckoutUtils.ValidateParams("httpMethod", httpMethod, "authorization", authorization);
 
@@ -256,6 +263,19 @@ namespace Checkout
             if (!string.IsNullOrWhiteSpace(idempotencyKey))
             {
                 httpRequest.Headers.Add("Cko-Idempotency-Key", idempotencyKey);
+            }
+
+            if(headers != null)
+            {
+                foreach (var header in headers.GetType().GetProperties())
+                {
+                    var value = header.GetValue(headers)?.ToString();
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        var headerName = GetJsonPropertyName(header) ?? header.Name;
+                        httpRequest.Headers.Add(headerName, value);
+                    }
+                }
             }
             
             if (_enableTelemetry)
@@ -300,7 +320,8 @@ namespace Checkout
             httpResponse.Headers.TryGetValues("Cko-Request-Id", out var requestIdHeader);
             var requestId = requestIdHeader?.FirstOrDefault();
             var json = await httpResponse.Content.ReadAsStringAsync();
-            var errorDetails = _serializer.Deserialize(json);
+            var errorDetails = GetErrorDetails(json);
+
             throw new CheckoutApiException(requestId, httpResponse.StatusCode, errorDetails);
         }
 
@@ -367,6 +388,53 @@ namespace Checkout
                     h => h.Value.FirstOrDefault() ?? string.Empty
                 ) ?? new Dictionary<string, string>();
             }
+        }
+
+        private static string GetJsonPropertyName(System.Reflection.PropertyInfo property)
+        {
+            // Check for System.Text.Json JsonPropertyName attribute
+            var jsonPropertyNameAttr = property.GetCustomAttributes(false)
+                .FirstOrDefault(attr => attr.GetType().Name == "JsonPropertyNameAttribute");
+            if (jsonPropertyNameAttr != null)
+            {
+                var nameProperty = jsonPropertyNameAttr.GetType().GetProperty("Name");
+                if (nameProperty != null)
+                {
+                    return nameProperty.GetValue(jsonPropertyNameAttr)?.ToString();
+                }
+            }
+
+            // Check for Newtonsoft.Json JsonProperty attribute
+            var jsonPropertyAttr = property.GetCustomAttributes(false)
+                .FirstOrDefault(attr => attr.GetType().Name == "JsonPropertyAttribute");
+            if (jsonPropertyAttr != null)
+            {
+                var propertyNameProperty = jsonPropertyAttr.GetType().GetProperty("PropertyName");
+                if (propertyNameProperty != null)
+                {
+                    return propertyNameProperty.GetValue(jsonPropertyAttr)?.ToString();
+                }
+            }
+
+            return null;
+        }
+        
+        private IDictionary<string, object> GetErrorDetails(string json)
+        {
+            IDictionary<string, object> errorDetails;
+            try
+            {
+                errorDetails = _serializer.Deserialize(json);
+            }
+            catch
+            {
+                errorDetails = new Dictionary<string, object>
+                {
+                    { "error message", json }
+                };
+            }
+
+            return errorDetails;
         }
     }
 }

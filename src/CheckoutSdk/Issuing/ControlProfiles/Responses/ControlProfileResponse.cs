@@ -1,16 +1,9 @@
-using Checkout.Common;
-using System;
+using Checkout.Issuing.Common.Responses;
 
 namespace Checkout.Issuing.ControlProfiles.Responses
 {
-    public class ControlProfileResponse : Resource
+    public class ControlProfileResponse : ControlIssuingResponseBase
     {
-        public string Id { get; set; }
-        
         public string Name { get; set; }
-        
-        public DateTime? CreatedDate { get; set; }
-        
-        public DateTime? LastModifiedDate { get; set; }
     }
 }
