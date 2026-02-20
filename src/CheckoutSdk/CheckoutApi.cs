@@ -9,6 +9,11 @@ using Checkout.HandlePaymentsAndPayouts.ApplePay;
 using Checkout.HandlePaymentsAndPayouts.Flow;
 using Checkout.Forex;
 using Checkout.Forward;
+using Checkout.Identities.Applicants;
+using Checkout.Identities.AmlScreening;
+using Checkout.Identities.FaceAuthentication;
+using Checkout.Identities.IdDocumentVerification;
+using Checkout.Identities.IdentityVerification;
 using Checkout.Instruments;
 using Checkout.Metadata;
 using Checkout.NetworkTokens;
@@ -50,6 +55,11 @@ namespace Checkout
         private readonly IPaymentContextsClient _paymentContextsClient;
         private readonly IForwardClient _forwardClient;
         private readonly IFlowClient _flowClient;
+        private readonly IApplicantsClient _applicantsClient;
+        private readonly IAmlScreeningClient _amlScreeningClient;
+        private readonly IFaceAuthenticationClient _faceAuthenticationClient;
+        private readonly IIdDocumentVerificationClient _idDocumentVerificationClient;
+        private readonly IIdentityVerificationClient _identityVerificationClient;
         private readonly INetworkTokensClient _networkTokensClient;
         private readonly IPaymentSetupsClient _paymentSetupsClient;
         private readonly IApplePayClient _applePayClient;
@@ -85,6 +95,11 @@ namespace Checkout
             _paymentContextsClient = new PaymentContextsClient(baseApiClient, configuration);
             _forwardClient = new ForwardClient(baseApiClient, configuration);
             _flowClient = new FlowClient(baseApiClient, configuration);
+            _applicantsClient = new ApplicantsClient(baseApiClient, configuration);
+            _amlScreeningClient = new AmlScreeningClient(baseApiClient, configuration);
+            _faceAuthenticationClient = new FaceAuthenticationClient(baseApiClient, configuration);
+            _idDocumentVerificationClient = new IdDocumentVerificationClient(baseApiClient, configuration);
+            _identityVerificationClient = new IdentityVerificationClient(baseApiClient, configuration);
             _networkTokensClient = new NetworkTokensClient(baseApiClient, configuration);
             _paymentSetupsClient = new PaymentSetupsClient(baseApiClient, configuration);
             _applePayClient = new ApplePayClient(baseApiClient, configuration);
@@ -226,6 +241,31 @@ namespace Checkout
         public IFlowClient FlowClient()
         {
             return _flowClient;
+        }
+
+        public IApplicantsClient ApplicantsClient()
+        {
+            return _applicantsClient;
+        }
+
+        public IAmlScreeningClient AmlScreeningClient()
+        {
+            return _amlScreeningClient;
+        }
+
+        public IFaceAuthenticationClient FaceAuthenticationClient()
+        {
+            return _faceAuthenticationClient;
+        }
+
+        public IIdDocumentVerificationClient IdDocumentVerificationClient()
+        {
+            return _idDocumentVerificationClient;
+        }
+
+        public IIdentityVerificationClient IdentityVerificationClient()
+        {
+            return _identityVerificationClient;
         }
 
         public INetworkTokensClient NetworkTokensClient()

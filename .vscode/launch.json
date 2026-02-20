@@ -1,0 +1,130 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Tests - All",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "dotnet",
+            "args": [
+                "test",
+                "${workspaceFolder}/test/CheckoutSdkTest/CheckoutSdkTest.csproj",
+                "--verbosity",
+                "normal"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "stopAtEntry": false,
+            "justMyCode": false
+        },
+        {
+            "name": "Debug Tests - Agentic Only",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "dotnet",
+            "args": [
+                "test",
+                "${workspaceFolder}/test/CheckoutSdkTest/CheckoutSdkTest.csproj",
+                "--filter",
+                "FullyQualifiedName~Agentic",
+                "--verbosity",
+                "normal"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "stopAtEntry": false,
+            "justMyCode": false
+        },
+        {
+            "name": "Debug Tests - Instruments Only",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "dotnet",
+            "args": [
+                "test",
+                "${workspaceFolder}/test/CheckoutSdkTest/CheckoutSdkTest.csproj",
+                "--filter",
+                "FullyQualifiedName~Instruments",
+                "--verbosity",
+                "normal"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "stopAtEntry": false,
+            "justMyCode": false
+        },
+        {
+            "name": "Debug Single Test Class",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "dotnet",
+            "args": [
+                "test",
+                "${workspaceFolder}/test/CheckoutSdkTest/CheckoutSdkTest.csproj",
+                "--filter",
+                "FullyQualifiedName~${input:testClassName}",
+                "--verbosity",
+                "normal"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "stopAtEntry": false,
+            "justMyCode": false
+        },
+        {
+            "name": "Build CheckoutSdk",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "dotnet",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/CheckoutSdk/CheckoutSdk.csproj",
+                "--verbosity",
+                "normal"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "stopAtEntry": false,
+            "justMyCode": false
+        },
+        {
+            "name": "Build Entire Solution",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "dotnet",
+            "args": [
+                "build",
+                "${workspaceFolder}/checkout-sdk-net.sln",
+                "--verbosity",
+                "normal"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "stopAtEntry": false,
+            "justMyCode": false
+        },
+        {
+            "name": "Clean and Rebuild Solution",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "dotnet",
+            "args": [
+                "clean",
+                "${workspaceFolder}/checkout-sdk-net.sln"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "stopAtEntry": false,
+            "justMyCode": false,
+            "postDebugTask": "rebuild-solution"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "testClassName",
+            "description": "Enter the test class name to filter (e.g., AgenticClientTest, InstrumentsIntegrationTest)",
+            "default": "AgenticClientTest",
+            "type": "promptString"
+        }
+    ]
+}
