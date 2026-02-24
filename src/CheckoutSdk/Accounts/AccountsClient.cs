@@ -90,6 +90,7 @@ namespace Checkout.Accounts
                 cancellationToken);
         }
 
+        // Obsoleted, different path, use instead CreatePaymentInstrument with AccountsPaymentInstrument request
         public async Task<EmptyResponse> CreatePaymentInstrument(
             string entityId,
             AccountsPaymentInstrument accountsPaymentInstrument,

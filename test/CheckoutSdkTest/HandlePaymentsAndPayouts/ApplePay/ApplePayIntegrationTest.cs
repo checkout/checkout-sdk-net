@@ -9,7 +9,7 @@ namespace Checkout.HandlePaymentsAndPayouts.ApplePay
 {
     public class ApplePayIntegrationTest : SandboxTestFixture
     {
-        public ApplePayIntegrationTest() : base(PlatformType.Default)
+        public ApplePayIntegrationTest() : base(PlatformType.DefaultOAuth)
         {
         }
 
@@ -24,6 +24,20 @@ namespace Checkout.HandlePaymentsAndPayouts.ApplePay
 
             // Assert
             ValidateUploadCertificateResponse(response, request);
+        }
+
+        [Fact(Skip = "This test requires OAuth credentials and domain verification")]
+        public async Task EnrollDomain_ShouldSucceed()
+        {
+            // Arrange
+            var request = CreateValidEnrollDomainRequest();
+
+            // Act
+            var response = await DefaultApi.ApplePayClient().EnrollDomain(request);
+
+            // Assert
+            response.ShouldNotBeNull();
+            // EmptyResponse doesn't have properties to validate, but should not throw
         }
 
         [Fact]
