@@ -60,11 +60,11 @@ namespace Checkout.Identities.Applicants
         /// </summary>
         /// <param name="applicantId">the applicant ID</param>
         /// <param name="cancellationToken">the cancellation token</param>
-        /// <returns>an empty response</returns>
-        public Task<EmptyResponse> AnonymizeApplicant(string applicantId, CancellationToken cancellationToken = default)
+        /// <returns>the anonymized applicant response</returns>
+        public Task<ApplicantResponse> AnonymizeApplicant(string applicantId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("applicantId", applicantId);
-            return ApiClient.Post<EmptyResponse>(BuildPath(ApplicantsPath, applicantId, AnonymizePath), 
+            return ApiClient.Post<ApplicantResponse>(BuildPath(ApplicantsPath, applicantId, AnonymizePath), 
                 SdkAuthorization(), cancellationToken);
         }
     }

@@ -70,11 +70,12 @@ namespace Checkout.Identities.Applicants
                 .CreateApplicant(createApplicantRequest);
 
             // Act
-            var anonymizeResponse = await DefaultApi.ApplicantsClient()
-                .AnonymizeApplicant(createdApplicant.Id);
+            var anonymizeResponse = await DefaultApi.ApplicantsClient().AnonymizeApplicant(createdApplicant.Id);
 
             // Assert
             anonymizeResponse.ShouldNotBeNull();
+            anonymizeResponse.Id.ShouldBe(createdApplicant.Id);
+            ValidateBaseApplicantResponse(anonymizeResponse);            
             
             // Verify applicant is no longer accessible (should throw or return null/error)
             await Should.ThrowAsync<Exception>(async () =>

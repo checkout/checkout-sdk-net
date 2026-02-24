@@ -40,7 +40,7 @@ namespace Checkout.Identities.Applicants
         /// </summary>
         /// <param name="applicantId">the applicant ID</param>
         /// <param name="cancellationToken">the cancellation token</param>
-        /// <returns>an empty response</returns>
-        Task<EmptyResponse> AnonymizeApplicant(string applicantId, CancellationToken cancellationToken = default);
+        /// <returns>the anonymized applicant response</returns>
+        Task<ApplicantResponse> AnonymizeApplicant(string applicantId, CancellationToken cancellationToken = default);
     }
 }
