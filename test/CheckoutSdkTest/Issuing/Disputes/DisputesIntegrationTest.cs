@@ -19,6 +19,9 @@ namespace Checkout.Issuing.Disputes
 {
     public class DisputesIntegrationTest : IssuingCommon, IAsyncLifetime
     {
+        protected readonly string _cardholderEntityId = "ent_tvt3w5p6wii4ahjd5j3bacej7u";
+        protected readonly string _cardProductId = "pro_chiapr3qadiepcljgz5qeiopza";
+
         private CardholderResponse _cardholder;
         private AbstractCardCreateResponse _card;
         private string _clearedTransactionId;
@@ -26,12 +29,17 @@ namespace Checkout.Issuing.Disputes
         public async Task InitializeAsync()
         {
             // Create cardholder and card for testing
-            _cardholder = await CreateCardholder();
+            var cardholderRequest = CardholderRequest();
+            cardholderRequest.EntityId = _cardholderEntityId;
+            _cardholder = await DefaultApi.IssuingClient().CreateCardholder(cardholderRequest);
+            
+            // Create a virtual card for testing disputes
             var cardRequest = await CreateVirtualCard(_cardholder.Id);
-            _card = await Api.IssuingClient().CreateCard(cardRequest);
+            cardRequest.CardProductId = _cardProductId;
+            _card = await DefaultApi.IssuingClient().CreateCard(cardRequest);
             
             // Activate the card before using it for transactions
-            await Api.IssuingClient().ActivateCard(_card.Id);
+            await DefaultApi.IssuingClient().ActivateCard(_card.Id);
             
             // Create and clear a transaction for dispute testing
             _clearedTransactionId = await CreateClearedTransaction();
@@ -50,7 +58,7 @@ namespace Checkout.Issuing.Disputes
             var createRequest = CreateValidCreateDisputeRequest(_clearedTransactionId);
 
             // Act
-            var response = await Api.IssuingClient().CreateDispute(createRequest, idempotencyKey);
+            var response = await DefaultApi.IssuingClient().CreateDispute(createRequest, idempotencyKey);
 
             // Assert
             ValidateCreatedDisputeResponse(response, createRequest);
@@ -59,7 +67,7 @@ namespace Checkout.Issuing.Disputes
         [Fact(Skip = "Requires permissions to create disputes and simulate transactions - we must ensure the test environment is set up correctly first")]
         public async Task GetDisputeDetails_ShouldReturnValidResponse()
         {
-            // Arrange
+            // Arrange                                          
             var idempotencyKey = Guid.NewGuid().ToString();
             var createRequest = CreateValidCreateDisputeRequest(_clearedTransactionId);
             var createResponse = await DefaultApi.IssuingClient().CreateDispute(createRequest, idempotencyKey);
@@ -164,7 +172,7 @@ namespace Checkout.Issuing.Disputes
                 }
             };
 
-            var authResponse = await Api.IssuingClient().SimulateAuthorization(authRequest);
+            var authResponse = await DefaultApi.IssuingClient().SimulateAuthorization(authRequest);
             
             // Clear the transaction to make it disputable
             var clearingRequest = new CardClearingAuthorizationRequest
@@ -172,7 +180,7 @@ namespace Checkout.Issuing.Disputes
                 Amount = 1000 // Same amount as authorized
             };
 
-            await Api.IssuingClient().SimulateClearing(authResponse.Id, clearingRequest);
+            await DefaultApi.IssuingClient().SimulateClearing(authResponse.Id, clearingRequest);
             
             return authResponse.Id;
         }
