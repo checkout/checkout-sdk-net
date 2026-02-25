@@ -111,10 +111,10 @@ namespace Checkout.Identities.Applicants
         public async Task AnonymizeApplicant_Should_Call_ApiClient_Post()
         {
             // Arrange
-            var response = new EmptyResponse();
+            var response = CreateApplicantResponse();
             
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<EmptyResponse>(
+                    apiClient.Post<ApplicantResponse>(
                         $"{ApplicantsPath}/{ApplicantId}/anonymize",
                         _authorization,
                         CancellationToken.None,
@@ -125,11 +125,12 @@ namespace Checkout.Identities.Applicants
             IApplicantsClient client = new ApplicantsClient(_apiClient.Object, _configuration.Object);
 
             // Act
-            EmptyResponse result = await client.AnonymizeApplicant(ApplicantId);
+            ApplicantResponse result = await client.AnonymizeApplicant(ApplicantId);
 
             // Assert
             result.ShouldNotBeNull();
             result.ShouldBeSameAs(response);
+            ValidateApplicantResponse(result);
         }
 
         [Fact]
