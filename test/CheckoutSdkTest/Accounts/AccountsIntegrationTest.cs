@@ -3,11 +3,13 @@ using Checkout.Accounts.Entities.Common.ContactDetails;
 using Checkout.Accounts.Entities.Common.Documents;
 using Checkout.Accounts.Entities.Request;
 using Checkout.Accounts.Entities.Response;
+using Checkout.Accounts.ReserveRules;
 using Checkout.Common;
 using Checkout.Instruments;
 using Shouldly;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -549,6 +551,150 @@ namespace Checkout.Accounts
             fileResponse.Id.ShouldNotBeNull();
 
             return fileResponse;
+        }
+
+        [Fact]
+        public async Task CreateReserveRule_ShouldReturnValidResponse()
+        {
+            // Arrange
+            var entityId = await CreateTestEntity();
+            var reserveRuleRequest = CreateValidReserveRuleRequest();
+
+            // Act
+            var response = await DefaultApi.AccountsClient().CreateReserveRule(entityId, reserveRuleRequest);
+
+            // Assert
+            ValidateReserveRuleIdResponse(response);
+        }
+
+        [Fact]
+        public async Task GetReserveRules_ShouldReturnValidResponse()
+        {
+            // Arrange
+            var entityId = await CreateTestEntity();
+            var reserveRuleRequest = CreateValidReserveRuleRequest();
+            await DefaultApi.AccountsClient().CreateReserveRule(entityId, reserveRuleRequest);
+
+            // Act
+            var response = await DefaultApi.AccountsClient().GetReserveRules(entityId);
+
+            // Assert
+            ValidateReserveRulesResponse(response);
+        }
+
+        [Fact]
+        public async Task GetReserveRuleDetails_ShouldReturnValidResponse()
+        {
+            // Arrange
+            var entityId = await CreateTestEntity();
+            var reserveRuleRequest = CreateValidReserveRuleRequest();
+            var createResponse = await DefaultApi.AccountsClient().CreateReserveRule(entityId, reserveRuleRequest);
+
+            // Act
+            var response = await DefaultApi.AccountsClient().GetReserveRuleDetails(entityId, createResponse.Id);
+
+            // Assert
+            ValidateReserveRuleResponse(response, reserveRuleRequest);
+        }
+
+        [Fact]
+        public async Task UpdateReserveRule_ShouldReturnValidResponse()
+        {
+            // Arrange
+            var entityId = await CreateTestEntity();
+            var originalRequest = CreateValidReserveRuleRequest();
+            var createResponse = await DefaultApi.AccountsClient().CreateReserveRule(entityId, originalRequest);
+
+            var updateRequest = CreateValidReserveRuleRequest();
+            updateRequest.Rolling.Percentage = 15.0m;
+            updateRequest.Rolling.HoldingDuration.Weeks = 16;
+            
+            // Get ETag from the creation response headers
+            string etag = null;            
+            if (createResponse.ResponseHeaders != null)
+            {
+                etag = createResponse.ResponseHeaders.FirstOrDefault(h => 
+                    string.Equals(h.Key?.ToLower(), "etag", StringComparison.OrdinalIgnoreCase)).Value;
+            }
+
+            // Act (will set the If-Match header when using the etag)
+            var response = await DefaultApi.AccountsClient().UpdateReserveRule(entityId, createResponse.Id, etag, updateRequest);
+
+            // Assert
+            ValidateReserveRuleIdResponse(response);
+            response.Id.ShouldBe(createResponse.Id);
+        }
+
+        private async Task<string> CreateTestEntity()
+        {
+            var entityRequest = new OnboardEntityRequest
+            {
+                Reference = RandomString(15),
+                ContactDetails = BuildContactDetails(),
+                Profile = BuildProfile(),
+                Company = new Company
+                {
+                    BusinessRegistrationNumber = "01234567",
+                    LegalName = "Reserve Rules Test Inc.",
+                    TradingName = "Reserve Rules Test",
+                    PrincipalAddress = GetAddress(),
+                    RegisteredAddress = GetAddress(),
+                    Representatives = new List<Representative>
+                    {
+                        new Representative { FirstName = "John", LastName = "Doe", Address = GetAddress() }
+                    }
+                }
+            };
+
+            var entityResponse = await DefaultApi.AccountsClient().CreateEntity(entityRequest);
+            entityResponse.ShouldNotBeNull();
+            entityResponse.Id.ShouldNotBeNull();
+            return entityResponse.Id;
+        }
+
+        private ReserveRuleRequest CreateValidReserveRuleRequest()
+        {
+            return new ReserveRuleRequest
+            {
+                Type = "rolling",
+                Rolling = new RollingReserveRule
+                {
+                    Percentage = 12.5m,
+                    HoldingDuration = new HoldingDuration
+                    {
+                        Weeks = 8
+                    }
+                },
+                ValidFrom = DateTime.UtcNow.AddDays(30)
+            };
+        }
+
+        private void ValidateReserveRuleIdResponse(ReserveRuleIdResponse response)
+        {
+            response.ShouldNotBeNull();
+            response.Id.ShouldNotBeNull();
+            response.Id.ShouldNotBeEmpty();
+        }
+
+        private void ValidateReserveRulesResponse(ReserveRulesResponse response)
+        {
+            response.ShouldNotBeNull();
+            response.Data.ShouldNotBeNull();
+            response.Data.Count.ShouldBeGreaterThan(0);
+            response.Data.First().Id.ShouldNotBeNull();
+            response.Data.First().Type.ShouldNotBeNull();
+        }
+
+        private void ValidateReserveRuleResponse(ReserveRuleResponse response, ReserveRuleRequest originalRequest)
+        {
+            response.ShouldNotBeNull();
+            response.Id.ShouldNotBeNull();
+            response.Type.ShouldBe(originalRequest.Type);
+            response.Rolling.ShouldNotBeNull();
+            response.Rolling.Percentage.ShouldBe(originalRequest.Rolling.Percentage);
+            response.Rolling.HoldingDuration.ShouldNotBeNull();
+            response.Rolling.HoldingDuration.Weeks.ShouldBe(originalRequest.Rolling.HoldingDuration.Weeks);
+            response.ValidFrom.ShouldNotBeNull();
         }
 
         private static CheckoutApi GetAccountsCheckoutApi()

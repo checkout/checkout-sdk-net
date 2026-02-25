@@ -262,7 +262,7 @@ namespace Checkout.Workflows
 
             _apiClient.Setup(apiClient =>
                     apiClient.Put<EmptyResponse>("workflows" + "/workflow_id/actions/action_id", _authorization,
-                        workflowActionRequest, CancellationToken.None, null))
+                        workflowActionRequest, CancellationToken.None, null, null))
                 .ReturnsAsync(() => new EmptyResponse());
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);
@@ -399,7 +399,7 @@ namespace Checkout.Workflows
 
             _apiClient.Setup(apiClient =>
                     apiClient.Put<EmptyResponse>("workflows" + "/workflow_id/conditions/condition_id", _authorization,
-                        eventWorkflowConditionRequest, CancellationToken.None, null))
+                        eventWorkflowConditionRequest, CancellationToken.None, null, null))
                 .ReturnsAsync(() => new EmptyResponse());
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);

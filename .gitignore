@@ -13,3 +13,4 @@ testlog.manifest
 nuget.exe
 coverage.cobertura.xml
 SonarQube.xml
+*/.gitkeep

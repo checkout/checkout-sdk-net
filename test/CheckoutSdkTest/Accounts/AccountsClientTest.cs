@@ -4,12 +4,14 @@ using Checkout.Accounts.Entities.Request;
 using Checkout.Accounts.Entities.Response;
 using Checkout.Accounts.Payout.Request;
 using Checkout.Accounts.Payout.Response;
+using Checkout.Accounts.ReserveRules;
 using Checkout.Common;
 using Checkout.Files;
 using Checkout.Instruments;
 using Moq;
 using Shouldly;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -90,6 +92,7 @@ namespace Checkout.Accounts
                         It.IsAny<SdkAuthorization>(),
                         It.IsAny<object>(),
                         It.IsAny<CancellationToken>(),
+                        null,
                         null))
                 .ReturnsAsync(responseObject);
 
@@ -179,7 +182,8 @@ namespace Checkout.Accounts
                         It.IsAny<SdkAuthorization>(),
                         It.IsAny<object>(),
                         It.IsAny<CancellationToken>(),
-                        It.IsAny<string>()))
+                        It.IsAny<string>(),
+                        It.IsAny<Headers>()))
                 .ReturnsAsync(responseObject);
 
             var response = await _accountsClient.UpdateEntity(
@@ -245,7 +249,8 @@ namespace Checkout.Accounts
                         It.IsAny<SdkAuthorization>(),
                         It.IsAny<object>(),
                         It.IsAny<CancellationToken>(),
-                        It.IsAny<string>()))
+                        It.IsAny<string>(),
+                        It.IsAny<Headers>()))
                 .ReturnsAsync(responseObject);
 
             var response = await _accountsClient.UpdateEntity(
@@ -434,6 +439,7 @@ namespace Checkout.Accounts
                         It.IsAny<SdkAuthorization>(),
                         It.IsAny<object>(),
                         It.IsAny<CancellationToken>(),
+                        null,
                         null
                     )
                 )
@@ -533,6 +539,125 @@ namespace Checkout.Accounts
 
             response.ShouldNotBeNull();
             response.ShouldBe(responseObject);
+        }
+
+        [Fact]
+        public async Task CreateReserveRule_WhenRequestIsValid_ShouldSucceed()
+        {
+            // Arrange
+            var entityId = "ent_test_12345";
+            var request = CreateValidReserveRuleRequest();
+            var expectedResponse = new ReserveRuleIdResponse { Id = "rul_test_67890" };
+
+            _apiClient.Setup(apiClient => apiClient.Post<ReserveRuleIdResponse>(
+                    $"accounts/entities/{entityId}/reserve-rules",
+                    It.IsAny<SdkAuthorization>(),
+                    It.IsAny<ReserveRuleRequest>(),
+                    It.IsAny<CancellationToken>(),
+                    null))
+                .ReturnsAsync(expectedResponse);
+
+            // Act
+            var response = await _accountsClient.CreateReserveRule(entityId, request);
+
+            // Assert
+            response.ShouldNotBeNull();
+            response.Id.ShouldBe("rul_test_67890");
+        }
+
+        [Fact]
+        public async Task GetReserveRules_WhenEntityIdIsValid_ShouldSucceed()
+        {
+            // Arrange
+            var entityId = "ent_test_12345";
+            var expectedResponse = new ReserveRulesResponse 
+            { 
+                Data = new List<ReserveRuleResponse> 
+                { 
+                    new ReserveRuleResponse { Id = "rul_test_67890" } 
+                } 
+            };
+
+            _apiClient.Setup(apiClient => apiClient.Get<ReserveRulesResponse>(
+                    "accounts/entities/ent_test_12345/reserve-rules",
+                    It.IsAny<SdkAuthorization>(),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expectedResponse);
+
+            // Act
+            var response = await _accountsClient.GetReserveRules(entityId);
+
+            // Assert
+            response.ShouldNotBeNull();
+            response.Data.ShouldNotBeNull();
+            response.Data.Count.ShouldBe(1);
+            response.Data.First().Id.ShouldBe("rul_test_67890");
+        }
+
+        [Fact]
+        public async Task GetReserveRuleDetails_WhenIdsAreValid_ShouldSucceed()
+        {
+            // Arrange
+            var entityId = "ent_test_12345";
+            var reserveRuleId = "rul_test_67890";
+            var expectedResponse = new ReserveRuleResponse { Id = reserveRuleId };
+
+            _apiClient.Setup(apiClient => apiClient.Get<ReserveRuleResponse>(
+                    "accounts/entities/ent_test_12345/reserve-rules/rul_test_67890",
+                    It.IsAny<SdkAuthorization>(),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expectedResponse);
+
+            // Act
+            var response = await _accountsClient.GetReserveRuleDetails(entityId, reserveRuleId);
+
+            // Assert
+            response.ShouldNotBeNull();
+            response.Id.ShouldBe(reserveRuleId);
+        }
+
+        [Fact]
+        public async Task UpdateReserveRule_WhenRequestIsValid_ShouldSucceed()
+        {
+            // Arrange
+            var entityId = "ent_test_12345";
+            var reserveRuleId = "rul_test_67890";
+            var etag = "Y3Y9MCZydj0w";
+            var request = CreateValidReserveRuleRequest();
+            var expectedResponse = new ReserveRuleIdResponse { Id = reserveRuleId };
+
+            _apiClient.Setup(apiClient => apiClient.Put<ReserveRuleIdResponse>(
+                    "accounts/entities/ent_test_12345/reserve-rules/rul_test_67890",
+                    It.IsAny<SdkAuthorization>(),
+                    It.IsAny<ReserveRuleRequest>(),
+                    It.IsAny<CancellationToken>(),
+                    null,
+                    It.IsAny<Headers>()))
+                .ReturnsAsync(expectedResponse);
+
+            // Act
+            var response = await _accountsClient.UpdateReserveRule(entityId, reserveRuleId, etag, request);
+
+            // Assert
+            response.ShouldNotBeNull();
+            response.Id.ShouldBe(reserveRuleId);
+        }
+
+        private ReserveRuleRequest CreateValidReserveRuleRequest()
+        {
+            return new ReserveRuleRequest
+            {
+                Type = "rolling",
+                Rolling = new RollingReserveRule
+                {
+                    Percentage = 10.5m,
+                    HoldingDuration = new HoldingDuration
+                    {
+                        Weeks = 12
+                    }
+                },
+                ValidFrom = System.DateTime.UtcNow.AddDays(1)
+            };
         }
     }
 }

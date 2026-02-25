@@ -127,7 +127,7 @@ namespace Checkout.Issuing.Controls
                         _authorization,
                         cardControlUpdate,
                         CancellationToken.None,
-                        null))
+                        null, null))
                 .ReturnsAsync(() => abstractCardControlResponse);
 
             IIssuingClient client =
