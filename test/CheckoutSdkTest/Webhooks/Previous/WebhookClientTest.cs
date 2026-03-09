@@ -107,7 +107,7 @@ namespace Checkout.Webhooks.Previous
             _apiClient.Setup(apiClient =>
                     apiClient.Patch<WebhookResponse>("webhooks/wh_kve4kqtq3ueezaxriev666j4ky", _authorization,
                         webhookRequest,
-                        CancellationToken.None, null))
+                        CancellationToken.None, null, null))
                 .ReturnsAsync(() => webhookResponse);
 
             IWebhooksClient client = new WebhooksClient(_apiClient.Object, _configuration.Object);

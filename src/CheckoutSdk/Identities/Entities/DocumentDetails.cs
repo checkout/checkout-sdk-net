@@ -60,7 +60,7 @@ namespace Checkout.Identities.Entities
         /// <summary>
         /// The applicant's gender
         /// </summary>
-        public string Gender { get; set; }
+        public Gender? Gender { get; set; }
 
         /// <summary>
         /// The applicant's personal number

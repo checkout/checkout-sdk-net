@@ -140,7 +140,7 @@ namespace Checkout.Workflows
 
             _apiClient.Setup(apiClient =>
                     apiClient.Patch<UpdateWorkflowResponse>("workflows" + "/workflow_id", _authorization,
-                        updateWorkflowRequest, CancellationToken.None, null))
+                        updateWorkflowRequest, CancellationToken.None, null, null))
                 .ReturnsAsync(() => updateWorkflowResponse);
 
             IWorkflowsClient workflowsClient = new WorkflowsClient(_apiClient.Object, _configuration.Object);

@@ -107,7 +107,8 @@ namespace Checkout
             SdkAuthorization authorization,
             object request = null,
             CancellationToken cancellationToken = default,
-            string idempotencyKey = null)
+            string idempotencyKey = null,
+            Headers headers = null)
             where TResult : HttpMetadata
         {
             var httpResponse = await SendRequestAsync(
@@ -116,7 +117,8 @@ namespace Checkout
                 authorization,
                 request,
                 cancellationToken,
-                null
+                idempotencyKey,
+                headers
             );
             return await DeserializeResponseAsync<TResult>(httpResponse);
         }

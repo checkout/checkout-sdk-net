@@ -143,7 +143,9 @@ namespace Checkout.Accounts
                 BuildPath(AccountsPath, EntitiesPath, entityId, PaymentInstrumentsPath, instrumentId),
                 SdkAuthorization(),
                 updatePaymentInstrumentRequest,
-                cancellationToken);
+                cancellationToken,
+                null,
+                updatePaymentInstrumentRequest.Headers);
         }
 
         public async Task<PaymentInstrumentQueryResponse> QueryPaymentInstruments(
