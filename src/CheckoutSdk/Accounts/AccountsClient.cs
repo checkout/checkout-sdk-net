@@ -204,7 +204,7 @@ namespace Checkout.Accounts
         {
             CheckoutUtils.ValidateParams("accountsFileRequest", accountsFileRequest);
             return await ApiClient.Post<UploadFileResponse>(
-                BuildPath(AccountsPath, entityId, FilesPath),
+                BuildPath(EntitiesPath, entityId, FilesPath),
                 SdkAuthorization(),
                 accountsFileRequest,
                 cancellationToken);
@@ -217,7 +217,7 @@ namespace Checkout.Accounts
         {
             CheckoutUtils.ValidateParams("entityId", entityId, "fileId", fileId);
             return await ApiClient.Get<FileDetailsResponse>(
-                BuildPath(AccountsPath, entityId, FilesPath, fileId),
+                BuildPath(EntitiesPath, entityId, FilesPath, fileId),
                 SdkAuthorization(),
                 cancellationToken);
         }
