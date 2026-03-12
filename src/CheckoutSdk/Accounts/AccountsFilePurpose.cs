@@ -22,14 +22,14 @@ namespace Checkout.Accounts
         [EnumMember(Value = "identification")]
         Identification,
         
-         [EnumMember(Value = "identity_verification")]
+        [EnumMember(Value = "identity_verification")]
         IdentityVerification,
         
         [EnumMember(Value = "dispute_evidence")]
         DisputeEvidence,
 
-         [EnumMember(Value = "company_verification")]
-         CompanyVerification,
+        [EnumMember(Value = "company_verification")]
+        CompanyVerification,
 
         [EnumMember(Value = "financial_verification")]
         FinancialVerification,
