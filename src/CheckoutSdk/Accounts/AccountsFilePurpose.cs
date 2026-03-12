@@ -9,6 +9,16 @@
 
         public string Value { get; }
         
+        public static implicit operator AccountsFilePurpose(string value)
+        {
+            return new AccountsFilePurpose(value);
+        }
+        
+        public static implicit operator string(AccountsFilePurpose purpose)
+        {
+            return purpose?.Value;
+        }
+        
         public static AccountsFilePurpose AdditionalDocument => new AccountsFilePurpose("additional_document");
         
         public static AccountsFilePurpose ArticlesOfAssociation => new AccountsFilePurpose("articles_of_association");
@@ -40,6 +50,21 @@
         public static AccountsFilePurpose ProofOfResidentialAddress => new AccountsFilePurpose("proof_of_residential_address");
         
         public static AccountsFilePurpose ProofOfRegistration => new AccountsFilePurpose("proof_of_registration");
+        
+        public override string ToString()
+        {
+            return Value;
+        }
+        
+        public override bool Equals(object obj)
+        {
+            return obj is AccountsFilePurpose other && Value == other.Value;
+        }
+        
+        public override int GetHashCode()
+        {
+            return Value?.GetHashCode() ?? 0;
+        }
         
     }
 }

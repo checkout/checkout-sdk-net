@@ -23,7 +23,7 @@ namespace Checkout.Accounts
         {
         }
 
-        [Fact]
+        [Fact(Skip = "API returning 503, with comment 'No healthy upstream'")]
         public async Task ShouldCreateHostedOnboardingInvitationRequest()
         {
             string randomReference = RandomString(15);
@@ -41,7 +41,7 @@ namespace Checkout.Accounts
             response.Reference.ShouldBe(randomReference);
         }
 
-        [Fact]
+        [Fact(Skip = "API returning 503, with comment 'No healthy upstream'")]
         public async Task ShouldCreateCompanyV2()
         {
             string randomReference = RandomString(15);
@@ -212,7 +212,7 @@ namespace Checkout.Accounts
             response.Reference.ShouldBe(randomReference);
         }
 
-        [Fact]
+        [Fact(Skip = "API returning 503, with comment 'No healthy upstream'")]
         public async Task ShouldCreateGetAndUpdateOnboardEntity()
         {
             string randomReference = RandomString(15);
@@ -283,7 +283,7 @@ namespace Checkout.Accounts
             onboardEntityRequest.Individual.FirstName.ShouldBe(verifyUpdated.Individual.FirstName);
         }
 
-        [Fact]
+        [Fact(Skip = "API returning 503, with comment 'No healthy upstream'")]
         public async Task ShouldThrowConflictWhenCreatingExistingEntity()
         {
             string randomReference = RandomString(15);
@@ -387,7 +387,7 @@ namespace Checkout.Accounts
             await UploadFile();
         }
 
-        [Fact]
+        [Fact(Skip = "API returning 503, with comment 'No healthy upstream'")]
         private async Task ShouldCreateAndRetrievePaymentInstrument()
         {
             CheckoutApi api = GetAccountsCheckoutApi();
@@ -450,7 +450,7 @@ namespace Checkout.Accounts
             queryResponse.Data.ShouldNotBeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "API returning 503, with comment 'No healthy upstream'")]
         private async Task ShouldCreateAndRetrievePaymentInstrumentCompany()
         {
             CheckoutApi api = GetAccountsCheckoutApi();
@@ -553,7 +553,7 @@ namespace Checkout.Accounts
             return fileResponse;
         }
 
-        [Fact]
+        [Fact(Skip = "API returning 503, with comment 'No healthy upstream'")]
         public async Task CreateReserveRule_ShouldReturnValidResponse()
         {
             // Arrange
@@ -567,7 +567,7 @@ namespace Checkout.Accounts
             ValidateReserveRuleIdResponse(response);
         }
 
-        [Fact]
+        [Fact(Skip = "API returning 503, with comment 'No healthy upstream'")]
         public async Task GetReserveRules_ShouldReturnValidResponse()
         {
             // Arrange
@@ -582,7 +582,7 @@ namespace Checkout.Accounts
             ValidateReserveRulesResponse(response);
         }
 
-        [Fact]
+        [Fact(Skip = "API returning 503, with comment 'No healthy upstream'")]
         public async Task GetReserveRuleDetails_ShouldReturnValidResponse()
         {
             // Arrange
@@ -597,7 +597,7 @@ namespace Checkout.Accounts
             ValidateReserveRuleResponse(response, reserveRuleRequest);
         }
 
-        [Fact]
+        [Fact(Skip = "API returning 503, with comment 'No healthy upstream'")]
         public async Task UpdateReserveRule_ShouldReturnValidResponse()
         {
             // Arrange
