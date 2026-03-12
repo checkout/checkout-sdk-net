@@ -1,4 +1,4 @@
-namespace Checkout.StandaloneAccountUpdater.Responses
+namespace Checkout.StandaloneAccountUpdater.Entities
 {
     public class UpdatedCard
     {
