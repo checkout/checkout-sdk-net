@@ -1,45 +1,55 @@
-﻿namespace Checkout.Accounts
+﻿using System.Runtime.Serialization;
+
+namespace Checkout.Accounts
 {
-    public class AccountsFilePurpose
-    {
-        private AccountsFilePurpose(string purpose)
-        {
-            Value = purpose;
-        }
+    public enum AccountsFilePurpose
+    {        
+        [EnumMember(Value = "additional_document")]
+        AdditionalDocument,
+        
+        [EnumMember(Value = "articles_of_association")]
+        ArticlesOfAssociation,
 
-        public string Value { get; }
+        [EnumMember(Value = "bank_verification")]
+        BankVerification,
         
-        public static AccountsFilePurpose AdditionalDocument => new AccountsFilePurpose("additional_document");
+        [EnumMember(Value = "certified_authorised_signatory")]
+        CertifiedAuthorisedSignatory,
         
-        public static AccountsFilePurpose ArticlesOfAssociation => new AccountsFilePurpose("articles_of_association");
+        [EnumMember(Value = "company_ownership")]
+        CompanyOwnership,
 
-        public static AccountsFilePurpose BankVerification => new AccountsFilePurpose("bank_verification");
+        [EnumMember(Value = "identification")]
+        Identification,
         
-        public static AccountsFilePurpose CertifiedAuthorisedSignatory => new AccountsFilePurpose("certified_authorised_signatory");
+         [EnumMember(Value = "identity_verification")]
+        IdentityVerification,
         
-        public static AccountsFilePurpose CompanyOwnership => new AccountsFilePurpose("company_ownership");
+        [EnumMember(Value = "dispute_evidence")]
+        DisputeEvidence,
 
-        public static AccountsFilePurpose Identification => new AccountsFilePurpose("identification");
-        
-        public static AccountsFilePurpose IdentityVerification => new AccountsFilePurpose("identity_verification");
-        
-        public static AccountsFilePurpose DisputeEvidence => new AccountsFilePurpose("dispute_evidence");
+         [EnumMember(Value = "company_verification")]
+         CompanyVerification,
 
-        public static AccountsFilePurpose CompanyVerification => new AccountsFilePurpose("company_verification");
-
-        public static AccountsFilePurpose FinancialVerification => new AccountsFilePurpose("financial_verification");
+        [EnumMember(Value = "financial_verification")]
+        FinancialVerification,
         
-        public static AccountsFilePurpose TaxVerification => new AccountsFilePurpose("tax_verification");
+        [EnumMember(Value = "tax_verification")]
+        TaxVerification,
         
-        public static AccountsFilePurpose ProofOfLegality => new AccountsFilePurpose("proof_of_legality");
+        [EnumMember(Value = "proof_of_legality")]
+        ProofOfLegality,
         
-        public static AccountsFilePurpose ProofOfPrincipalAddress => new AccountsFilePurpose("proof_of_principal_address");
+        [EnumMember(Value = "proof_of_principal_address")]
+        ProofOfPrincipalAddress,
         
-        public static AccountsFilePurpose ShareholderStructure => new AccountsFilePurpose("shareholder_structure");
+        [EnumMember(Value = "shareholder_structure")]
+        ShareholderStructure,
         
-        public static AccountsFilePurpose ProofOfResidentialAddress => new AccountsFilePurpose("proof_of_residential_address");
+        [EnumMember(Value = "proof_of_residential_address")]
+        ProofOfResidentialAddress,
         
-        public static AccountsFilePurpose ProofOfRegistration => new AccountsFilePurpose("proof_of_registration");
-        
+        [EnumMember(Value = "proof_of_registration")]
+        ProofOfRegistration        
     }
 }

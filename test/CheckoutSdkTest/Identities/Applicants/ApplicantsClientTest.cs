@@ -93,7 +93,7 @@ namespace Checkout.Identities.Applicants
                         _authorization,
                         request,
                         CancellationToken.None,
-                        null))
+                        null, null))
                 .ReturnsAsync(response);
 
             IApplicantsClient client = new ApplicantsClient(_apiClient.Object, _configuration.Object);

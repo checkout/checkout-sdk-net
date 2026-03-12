@@ -69,7 +69,7 @@ namespace Checkout.Instruments.Previous
             _apiClient.Setup(apiClient =>
                     apiClient.Patch<UpdateInstrumentResponse>("instruments/instrument_id", _authorization,
                         updateInstrumentRequest,
-                        CancellationToken.None, null))
+                        CancellationToken.None, null, null))
                 .ReturnsAsync(() => updateInstrumentResponse);
 
             IInstrumentsClient client = new InstrumentsClient(_apiClient.Object, _configuration.Object);

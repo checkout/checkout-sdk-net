@@ -82,7 +82,7 @@ namespace Checkout.Issuing.Cardholders
                         _authorization,
                         cardholderRequest,
                         CancellationToken.None, 
-                        null))
+                        null, null))
                 .ReturnsAsync(() => updateResponse);
             
             IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);

@@ -110,7 +110,7 @@ namespace Checkout.Issuing.Cards
                     apiClient.Patch<ThreeDsEnrollmentUpdateResponse>("issuing/cards/card_id/3ds-enrollment",
                         _authorization,
                         cardEnrollSecurityQuestionThreeDsDetailsRequest,
-                        CancellationToken.None, null))
+                        CancellationToken.None, null, null))
                 .ReturnsAsync(() => threeDsEnrollmentUpdateResponse);
 
             IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
@@ -242,7 +242,7 @@ namespace Checkout.Issuing.Cards
                         _authorization,
                         cardUpdateRequest,
                         CancellationToken.None,
-                        null))
+                        null, null))
                 .ReturnsAsync(() => updateResponse);
 
             IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);

@@ -64,7 +64,7 @@ namespace Checkout.Customers.Previous
             _apiClient.Setup(apiClient =>
                     apiClient.Patch<EmptyResponse>("customers/cus_12345", _authorization, customerRequest,
                         CancellationToken.None
-                        , null))
+                        , null, null))
                 .ReturnsAsync(() => new EmptyResponse());
 
             ICustomersClient client = new CustomersClient(_apiClient.Object, _configuration.Object);

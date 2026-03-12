@@ -393,7 +393,8 @@ namespace Checkout.Accounts
                         It.IsAny<SdkAuthorization>(),
                         It.IsAny<UpdatePaymentInstrumentRequest>(),
                         It.IsAny<CancellationToken>(),
-                        null
+                        null,
+                        request.Headers
                     )
                 )
                 .ReturnsAsync(responseAsync);
@@ -509,7 +510,7 @@ namespace Checkout.Accounts
             _apiClient
                 .Setup(x =>
                     x.Post<UploadFileResponse>(
-                        "accounts/entity_id/files",
+                        "entities/entity_id/files",
                         It.IsAny<SdkAuthorization>(),
                         It.IsAny<object>(),
                         It.IsAny<CancellationToken>(),
@@ -530,7 +531,7 @@ namespace Checkout.Accounts
             _apiClient
                 .Setup(x =>
                     x.Get<FileDetailsResponse>(
-                        "accounts/entity_id/files/file_id",
+                        "entities/entity_id/files/file_id",
                         It.IsAny<SdkAuthorization>(),
                         It.IsAny<CancellationToken>()))
                 .ReturnsAsync(responseObject);

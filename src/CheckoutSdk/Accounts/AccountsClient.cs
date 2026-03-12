@@ -143,7 +143,9 @@ namespace Checkout.Accounts
                 BuildPath(AccountsPath, EntitiesPath, entityId, PaymentInstrumentsPath, instrumentId),
                 SdkAuthorization(),
                 updatePaymentInstrumentRequest,
-                cancellationToken);
+                cancellationToken,
+                null,
+                updatePaymentInstrumentRequest.Headers);
         }
 
         public async Task<PaymentInstrumentQueryResponse> QueryPaymentInstruments(
@@ -191,8 +193,9 @@ namespace Checkout.Accounts
         {
             CheckoutUtils.ValidateParams("accountsFileRequest", accountsFileRequest,
                 "accountsFileRequest.purpose", accountsFileRequest.Purpose);
-            return await SubmitFileToFilesApi(accountsFileRequest.File, accountsFileRequest.Purpose.Value,
-                cancellationToken);
+            return await SubmitFileToFilesApi(accountsFileRequest.File, 
+                                                CheckoutUtils.GetEnumMemberValue(accountsFileRequest.Purpose),
+                                                cancellationToken);
         }
 
         public async Task<UploadFileResponse> UploadFile(
@@ -202,7 +205,7 @@ namespace Checkout.Accounts
         {
             CheckoutUtils.ValidateParams("accountsFileRequest", accountsFileRequest);
             return await ApiClient.Post<UploadFileResponse>(
-                BuildPath(AccountsPath, entityId, FilesPath),
+                BuildPath(EntitiesPath, entityId, FilesPath),
                 SdkAuthorization(),
                 accountsFileRequest,
                 cancellationToken);
@@ -215,7 +218,7 @@ namespace Checkout.Accounts
         {
             CheckoutUtils.ValidateParams("entityId", entityId, "fileId", fileId);
             return await ApiClient.Get<FileDetailsResponse>(
-                BuildPath(AccountsPath, entityId, FilesPath, fileId),
+                BuildPath(EntitiesPath, entityId, FilesPath, fileId),
                 SdkAuthorization(),
                 cancellationToken);
         }

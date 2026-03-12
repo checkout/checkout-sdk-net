@@ -100,7 +100,7 @@ namespace Checkout.Issuing.ControlProfiles
                         _authorization,
                         controlProfileRequest,
                         CancellationToken.None,
-                        null))
+                        null, null))
                 .ReturnsAsync(() => controlProfileResponse);
 
             IIssuingClient client =

@@ -1,5 +1,6 @@
 using Checkout.Common;
 using Checkout.HandlePaymentsAndPayouts.Common;
+using Newtonsoft.Json;
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -11,6 +12,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         /// <summary>
         /// Configuration options specific to Apple Pay payments.
         /// </summary>
+        [JsonProperty(PropertyName = "applepay")]
         public ApplePayConfiguration ApplePay { get; set; }
 
         /// <summary>
@@ -21,6 +23,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         /// <summary>
         /// Configuration options specific to Google Pay payments.
         /// </summary>
+        [JsonProperty(PropertyName = "googlepay")]
         public GooglePayConfiguration GooglePay { get; set; }
 
         /// <summary>

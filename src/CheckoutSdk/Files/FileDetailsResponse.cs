@@ -1,3 +1,4 @@
+using Checkout.Accounts;
 using Checkout.Common;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,6 @@ namespace Checkout.Files
         
         public string Filename { get; set; }
 
-        public string Purpose { get; set; }
+        public AccountsFilePurpose Purpose { get; set; }
     }
 }

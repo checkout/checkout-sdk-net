@@ -110,7 +110,7 @@ namespace Checkout.NetworkTokens
                         "network-tokens/" + networkTokenId + "/delete",
                         _authorization,
                         permanentlyDeleteANetworkTokenRequest,
-                        CancellationToken.None, null))
+                        CancellationToken.None, null, null))
                 .ReturnsAsync(() => emptyResponse);
 
             INetworkTokensClient client =

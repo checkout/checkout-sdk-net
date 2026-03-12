@@ -15,7 +15,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Entities
         [EnumMember(Value = "alma")]
         Alma,
         
-        [EnumMember(Value = "apple_pay")]
+        [EnumMember(Value = "applepay")]
         ApplePay,
         
         [EnumMember(Value = "bancontact")]
