@@ -193,8 +193,9 @@ namespace Checkout.Accounts
         {
             CheckoutUtils.ValidateParams("accountsFileRequest", accountsFileRequest,
                 "accountsFileRequest.purpose", accountsFileRequest.Purpose);
-            return await SubmitFileToFilesApi(accountsFileRequest.File, accountsFileRequest.Purpose.Value,
-                cancellationToken);
+            return await SubmitFileToFilesApi(accountsFileRequest.File, 
+                                                CheckoutUtils.GetEnumMemberValue(accountsFileRequest.Purpose),
+                                                cancellationToken);
         }
 
         public async Task<UploadFileResponse> UploadFile(
