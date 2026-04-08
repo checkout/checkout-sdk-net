@@ -3,6 +3,7 @@ using Checkout.Payments;
 using Checkout.Payments.Setups;
 using Checkout.Payments.Setups.Entities;
 using Shouldly;
+using System;
 using System.Collections.Generic;
 using Xunit;
 using SetupAccommodationData = Checkout.Payments.Setups.Entities.AccommodationData;
@@ -158,11 +159,11 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.Customer.BillingAddress.Country.ShouldBe(CountryCode.DE);
             result.Customer.Device.Locale.ShouldBe("de-DE");
             result.Customer.MerchantAccount.Id.ShouldBe("cust_resp_001");
-            result.Customer.MerchantAccount.RegistrationDate.ShouldBe("2021-03-15");
-            result.Customer.MerchantAccount.LastModified.ShouldBe("2024-09-20");
+            result.Customer.MerchantAccount.RegistrationDate.ShouldBe(new DateTime(2021, 3, 15));
+            result.Customer.MerchantAccount.LastModified.ShouldBe(new DateTime(2024, 9, 20));
             result.Customer.MerchantAccount.ReturningCustomer.ShouldBe(true);
-            result.Customer.MerchantAccount.FirstTransactionDate.ShouldBe("2021-04-01");
-            result.Customer.MerchantAccount.LastTransactionDate.ShouldBe("2024-12-15");
+            result.Customer.MerchantAccount.FirstTransactionDate.ShouldBe(new DateTime(2021, 4, 1));
+            result.Customer.MerchantAccount.LastTransactionDate.ShouldBe(new DateTime(2024, 12, 15));
             result.Customer.MerchantAccount.TotalOrderCount.ShouldBe(100);
             result.Customer.MerchantAccount.LastPaymentAmount.ShouldBe(250.50m);
 
@@ -174,7 +175,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.Order.SubMerchants[0].Id.ShouldBe("sub_resp_001");
             result.Order.SubMerchants[0].ProductCategory.ShouldBe("food");
             result.Order.SubMerchants[0].NumberOfSales.ShouldBe(300);
-            result.Order.SubMerchants[0].RegistrationDate.ShouldBe("2020-01-01");
+            result.Order.SubMerchants[0].RegistrationDate.ShouldBe(new DateTime(2020, 1, 1));
 
             // Industry
             result.Industry.AccommodationData.Name.ShouldBe("Alpine Lodge");
@@ -271,11 +272,11 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                     MerchantAccount = new MerchantAccount
                     {
                         Id = "cust_rt",
-                        RegistrationDate = "2024-01-01",
-                        LastModified = "2024-06-01",
+                        RegistrationDate = new DateTime(2024, 1, 1),
+                        LastModified = new DateTime(2024, 6, 1),
                         ReturningCustomer = true,
-                        FirstTransactionDate = "2024-01-15",
-                        LastTransactionDate = "2024-06-15",
+                        FirstTransactionDate = new DateTime(2024, 1, 15),
+                        LastTransactionDate = new DateTime(2024, 6, 15),
                         TotalOrderCount = 10,
                         LastPaymentAmount = 75.00m
                     }
@@ -362,11 +363,11 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             deserialized.Customer.BillingAddress.AddressLine1.ShouldBe("10 Roundtrip Ln");
             deserialized.Customer.Device.Locale.ShouldBe("en-GB");
             deserialized.Customer.MerchantAccount.Id.ShouldBe("cust_rt");
-            deserialized.Customer.MerchantAccount.RegistrationDate.ShouldBe("2024-01-01");
-            deserialized.Customer.MerchantAccount.LastModified.ShouldBe("2024-06-01");
+            deserialized.Customer.MerchantAccount.RegistrationDate.ShouldBe(new DateTime(2024, 1, 1));
+            deserialized.Customer.MerchantAccount.LastModified.ShouldBe(new DateTime(2024, 6, 1));
             deserialized.Customer.MerchantAccount.ReturningCustomer.ShouldBe(true);
-            deserialized.Customer.MerchantAccount.FirstTransactionDate.ShouldBe("2024-01-15");
-            deserialized.Customer.MerchantAccount.LastTransactionDate.ShouldBe("2024-06-15");
+            deserialized.Customer.MerchantAccount.FirstTransactionDate.ShouldBe(new DateTime(2024, 1, 15));
+            deserialized.Customer.MerchantAccount.LastTransactionDate.ShouldBe(new DateTime(2024, 6, 15));
             deserialized.Customer.MerchantAccount.TotalOrderCount.ShouldBe(10);
             deserialized.Customer.MerchantAccount.LastPaymentAmount.ShouldBe(75.00m);
 

@@ -4,6 +4,7 @@ using Checkout.Payments.Contexts;
 using Checkout.Payments.Setups;
 using Checkout.Payments.Setups.Entities;
 using Shouldly;
+using System;
 using System.Collections.Generic;
 using Xunit;
 using SetupAccommodationData = Checkout.Payments.Setups.Entities.AccommodationData;
@@ -61,11 +62,11 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             deserialized.Customer.Device.Locale.ShouldBe("en-GB");
             deserialized.Customer.MerchantAccount.ShouldNotBeNull();
             deserialized.Customer.MerchantAccount.Id.ShouldBe("cust_001");
-            deserialized.Customer.MerchantAccount.RegistrationDate.ShouldBe("2023-01-15");
-            deserialized.Customer.MerchantAccount.LastModified.ShouldBe("2024-06-01");
+            deserialized.Customer.MerchantAccount.RegistrationDate.ShouldBe(new DateTime(2023, 1, 15));
+            deserialized.Customer.MerchantAccount.LastModified.ShouldBe(new DateTime(2024, 6, 1));
             deserialized.Customer.MerchantAccount.ReturningCustomer.ShouldBe(true);
-            deserialized.Customer.MerchantAccount.FirstTransactionDate.ShouldBe("2023-02-10");
-            deserialized.Customer.MerchantAccount.LastTransactionDate.ShouldBe("2024-12-01");
+            deserialized.Customer.MerchantAccount.FirstTransactionDate.ShouldBe(new DateTime(2023, 2, 10));
+            deserialized.Customer.MerchantAccount.LastTransactionDate.ShouldBe(new DateTime(2024, 12, 1));
             deserialized.Customer.MerchantAccount.TotalOrderCount.ShouldBe(42);
             deserialized.Customer.MerchantAccount.LastPaymentAmount.ShouldBe(99.99m);
 
@@ -82,7 +83,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             deserialized.Order.SubMerchants[0].Id.ShouldBe("sub_001");
             deserialized.Order.SubMerchants[0].ProductCategory.ShouldBe("electronics");
             deserialized.Order.SubMerchants[0].NumberOfSales.ShouldBe(150);
-            deserialized.Order.SubMerchants[0].RegistrationDate.ShouldBe("2022-03-01");
+            deserialized.Order.SubMerchants[0].RegistrationDate.ShouldBe(new DateTime(2022, 3, 1));
 
             // Industry
             deserialized.Industry.ShouldNotBeNull();
@@ -309,11 +310,11 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.Customer.BillingAddress.Country.ShouldBe(CountryCode.US);
             result.Customer.Device.Locale.ShouldBe("en-US");
             result.Customer.MerchantAccount.Id.ShouldBe("cust_002");
-            result.Customer.MerchantAccount.RegistrationDate.ShouldBe("2022-06-15");
-            result.Customer.MerchantAccount.LastModified.ShouldBe("2024-01-10");
+            result.Customer.MerchantAccount.RegistrationDate.ShouldBe(new DateTime(2022, 6, 15));
+            result.Customer.MerchantAccount.LastModified.ShouldBe(new DateTime(2024, 1, 10));
             result.Customer.MerchantAccount.ReturningCustomer.ShouldBe(false);
-            result.Customer.MerchantAccount.FirstTransactionDate.ShouldBe("2022-07-01");
-            result.Customer.MerchantAccount.LastTransactionDate.ShouldBe("2024-11-15");
+            result.Customer.MerchantAccount.FirstTransactionDate.ShouldBe(new DateTime(2022, 7, 1));
+            result.Customer.MerchantAccount.LastTransactionDate.ShouldBe(new DateTime(2024, 11, 15));
             result.Customer.MerchantAccount.TotalOrderCount.ShouldBe(5);
             result.Customer.MerchantAccount.LastPaymentAmount.ShouldBe(49.99m);
 
@@ -325,7 +326,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.Order.SubMerchants[0].Id.ShouldBe("sub_002");
             result.Order.SubMerchants[0].ProductCategory.ShouldBe("clothing");
             result.Order.SubMerchants[0].NumberOfSales.ShouldBe(75);
-            result.Order.SubMerchants[0].RegistrationDate.ShouldBe("2023-01-01");
+            result.Order.SubMerchants[0].RegistrationDate.ShouldBe(new DateTime(2023, 1, 1));
 
             // Industry - AccommodationData
             result.Industry.AccommodationData.Name.ShouldBe("Beach Resort");
@@ -422,11 +423,11 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                     MerchantAccount = new MerchantAccount
                     {
                         Id = "cust_001",
-                        RegistrationDate = "2023-01-15",
-                        LastModified = "2024-06-01",
+                        RegistrationDate = new DateTime(2023, 1, 15),
+                        LastModified = new DateTime(2024, 6, 1),
                         ReturningCustomer = true,
-                        FirstTransactionDate = "2023-02-10",
-                        LastTransactionDate = "2024-12-01",
+                        FirstTransactionDate = new DateTime(2023, 2, 10),
+                        LastTransactionDate = new DateTime(2024, 12, 1),
                         TotalOrderCount = 42,
                         LastPaymentAmount = 99.99m
                     }
@@ -448,7 +449,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                             Id = "sub_001",
                             ProductCategory = "electronics",
                             NumberOfSales = 150,
-                            RegistrationDate = "2022-03-01"
+                            RegistrationDate = new DateTime(2022, 3, 1)
                         }
                     }
                 },

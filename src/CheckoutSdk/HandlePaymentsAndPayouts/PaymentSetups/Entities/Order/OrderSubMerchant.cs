@@ -1,3 +1,5 @@
+using System;
+
 namespace Checkout.Payments.Setups.Entities
 {
     public class OrderSubMerchant
@@ -23,8 +25,7 @@ namespace Checkout.Payments.Setups.Entities
         /// <summary>
         /// The registration date of the sub-merchant (yyyy-MM-dd).
         /// [Optional]
-        /// Format: date
         /// </summary>
-        public string RegistrationDate { get; set; }
+        public DateTime? RegistrationDate { get; set; }
     }
 }
