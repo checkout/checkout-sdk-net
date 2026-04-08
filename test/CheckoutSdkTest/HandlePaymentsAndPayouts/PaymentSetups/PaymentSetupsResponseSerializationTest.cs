@@ -186,7 +186,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.Industry.AccommodationData.Address.AddressLine1.ShouldBe("5 Mountain Rd");
             result.Industry.AccommodationData.Address.City.ShouldBe("Innsbruck");
             result.Industry.AccommodationData.Address.State.ShouldBe("Tyrol");
-            result.Industry.AccommodationData.Address.Country.ShouldBe("AT");
+            result.Industry.AccommodationData.Address.Country.ShouldBe(CountryCode.AT);
             result.Industry.AccommodationData.Address.Zip.ShouldBe("6020");
             result.Industry.AccommodationData.Guests[0].FirstName.ShouldBe("Max");
             result.Industry.AccommodationData.Guests[0].LastName.ShouldBe("Mustermann");
@@ -302,7 +302,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                             AddressLine1 = "1 RT Rd",
                             City = "London",
                             State = "London",
-                            Country = "GB",
+                            Country = CountryCode.GB,
                             Zip = "SW1A 1AA"
                         },
                         Guests = new List<AccommodationGuest>
@@ -386,7 +386,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             deserialized.Industry.AccommodationData.Address.AddressLine1.ShouldBe("1 RT Rd");
             deserialized.Industry.AccommodationData.Address.City.ShouldBe("London");
             deserialized.Industry.AccommodationData.Address.State.ShouldBe("London");
-            deserialized.Industry.AccommodationData.Address.Country.ShouldBe("GB");
+            deserialized.Industry.AccommodationData.Address.Country.ShouldBe(CountryCode.GB);
             deserialized.Industry.AccommodationData.Address.Zip.ShouldBe("SW1A 1AA");
             deserialized.Industry.AccommodationData.Guests[0].FirstName.ShouldBe("Round");
             deserialized.Industry.AccommodationData.Guests[0].LastName.ShouldBe("Trip");

@@ -1,6 +1,5 @@
 using Checkout.Authentication.Standalone.PUTSessionsIdCollectData.Requests;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace Checkout.Authentication
 {
@@ -15,7 +14,6 @@ namespace Checkout.Authentication
         /// "collect_channel_data" and, if available, "issuer_fingerprint".
         /// </summary>
         [JsonProperty(PropertyName = "channel")]
-        [JsonConverter(typeof(StringEnumConverter))]
         public ChannelType? Channel { get; set; }
     }
 }

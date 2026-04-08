@@ -1,5 +1,6 @@
 using Checkout.AgenticCommerce.Entities;
 using Checkout.AgenticCommerce.Requests;
+using Checkout.Common;
 using Shouldly;
 using System;
 using System.Collections.Generic;
@@ -79,7 +80,7 @@ namespace Checkout.AgenticCommerce
                     City = "San Francisco",
                     State = "CA",
                     PostalCode = "12345",
-                    Country = "US"
+                    Country = CountryCode.US
                 },
                 RiskSignals = new List<DelegatedPaymentRiskSignal>
                 {

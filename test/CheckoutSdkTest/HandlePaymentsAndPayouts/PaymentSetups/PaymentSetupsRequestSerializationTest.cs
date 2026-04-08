@@ -97,7 +97,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             deserialized.Industry.AccommodationData.Address.AddressLine1.ShouldBe("10 Hotel Rd");
             deserialized.Industry.AccommodationData.Address.City.ShouldBe("London");
             deserialized.Industry.AccommodationData.Address.State.ShouldBe("England");
-            deserialized.Industry.AccommodationData.Address.Country.ShouldBe("GB");
+            deserialized.Industry.AccommodationData.Address.Country.ShouldBe(CountryCode.GB);
             deserialized.Industry.AccommodationData.Address.Zip.ShouldBe("EC1A 1BB");
             deserialized.Industry.AccommodationData.Guests.ShouldNotBeNull();
             deserialized.Industry.AccommodationData.Guests.Count.ShouldBe(1);
@@ -337,7 +337,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.Industry.AccommodationData.Address.AddressLine1.ShouldBe("1 Beach Rd");
             result.Industry.AccommodationData.Address.City.ShouldBe("Miami");
             result.Industry.AccommodationData.Address.State.ShouldBe("FL");
-            result.Industry.AccommodationData.Address.Country.ShouldBe("US");
+            result.Industry.AccommodationData.Address.Country.ShouldBe(CountryCode.US);
             result.Industry.AccommodationData.Address.Zip.ShouldBe("33101");
             result.Industry.AccommodationData.Guests[0].FirstName.ShouldBe("Jane");
             result.Industry.AccommodationData.Guests[0].LastName.ShouldBe("Smith");
@@ -467,7 +467,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                             AddressLine1 = "10 Hotel Rd",
                             City = "London",
                             State = "England",
-                            Country = "GB",
+                            Country = CountryCode.GB,
                             Zip = "EC1A 1BB"
                         },
                         Guests = new List<AccommodationGuest>

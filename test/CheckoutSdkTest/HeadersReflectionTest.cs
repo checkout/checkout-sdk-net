@@ -4,9 +4,11 @@ using Checkout.Authentication;
 using Checkout.Authentication.Standalone.PUTSessionsIdCollectData.Requests;
 using Newtonsoft.Json;
 using Shouldly;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using Xunit;
 
 namespace Checkout
@@ -82,7 +84,7 @@ namespace Checkout
         }
 
         [Fact]
-        public void SessionHeaders_ShouldResolveChannel()
+        public void SessionHeaders_ShouldResolveChannelUsingEnumMemberValue()
         {
             var headers = new SessionHeaders
             {
@@ -92,8 +94,21 @@ namespace Checkout
             var resolved = ResolveHeaders(headers);
 
             resolved.ShouldContainKey("channel");
-            resolved["channel"].ShouldBe("Browser");
+            resolved["channel"].ShouldBe("browser");
             resolved.Count.ShouldBe(1);
+        }
+
+        [Theory]
+        [InlineData(ChannelType.Browser, "browser")]
+        [InlineData(ChannelType.App, "app")]
+        [InlineData(ChannelType.MerchantInitiated, "merchant_initiated")]
+        public void SessionHeaders_ShouldResolveAllChannelTypes(ChannelType channel, string expected)
+        {
+            var headers = new SessionHeaders { Channel = channel };
+
+            var resolved = ResolveHeaders(headers);
+
+            resolved["channel"].ShouldBe(expected);
         }
 
         [Fact]
@@ -131,14 +146,16 @@ namespace Checkout
         }
 
         /// <summary>
-        /// Mirrors the reflection logic in ApiClient.Invoke for resolving IHeaders to HTTP headers.
+        /// Mirrors the reflection logic in ApiClient for resolving IHeaders to HTTP headers.
+        /// Enum values are resolved via [EnumMember] to match the API's expected casing.
         /// </summary>
         private static Dictionary<string, string> ResolveHeaders(IHeaders headers)
         {
             var result = new Dictionary<string, string>();
             foreach (var property in headers.GetType().GetProperties())
             {
-                var value = property.GetValue(headers)?.ToString();
+                var raw = property.GetValue(headers);
+                var value = ResolveHeaderValue(raw);
                 if (!string.IsNullOrEmpty(value))
                 {
                     var jsonAttr = property.GetCustomAttribute<JsonPropertyAttribute>();
@@ -148,6 +165,24 @@ namespace Checkout
             }
 
             return result;
+        }
+
+        private static string ResolveHeaderValue(object raw)
+        {
+            if (raw == null) return null;
+
+            var type = raw.GetType();
+            type = Nullable.GetUnderlyingType(type) ?? type;
+
+            if (type.IsEnum)
+            {
+                var member = type.GetMember(raw.ToString()).FirstOrDefault();
+                var attr = member?.GetCustomAttributes(typeof(EnumMemberAttribute), false)
+                    .Cast<EnumMemberAttribute>().FirstOrDefault();
+                if (attr?.Value != null) return attr.Value;
+            }
+
+            return raw.ToString();
         }
     }
 }

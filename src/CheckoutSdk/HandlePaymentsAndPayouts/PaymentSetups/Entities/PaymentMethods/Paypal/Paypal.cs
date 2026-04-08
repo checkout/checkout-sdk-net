@@ -1,7 +1,3 @@
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
 namespace Checkout.Payments.Setups.Entities
 {
     /// <summary>
@@ -16,7 +12,6 @@ namespace Checkout.Payments.Setups.Entities
         /// [Optional]
         /// Enum: "pay_now" "continue"
         /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
         public PaypalUserAction? UserAction { get; set; }
 
         /// <summary>
@@ -31,7 +26,6 @@ namespace Checkout.Payments.Setups.Entities
         /// [Optional]
         /// Enum: "no_shipping" "get_from_file" "set_provided_address"
         /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
         public PaypalShippingPreference? ShippingPreference { get; set; }
 
         /// <summary>
@@ -39,23 +33,5 @@ namespace Checkout.Payments.Setups.Entities
         /// [Optional]
         /// </summary>
         public PaymentMethodAction Action { get; set; }
-    }
-
-    public enum PaypalUserAction
-    {
-        [EnumMember(Value = "pay_now")]
-        PayNow,
-        [EnumMember(Value = "continue")]
-        Continue
-    }
-
-    public enum PaypalShippingPreference
-    {
-        [EnumMember(Value = "no_shipping")]
-        NoShipping,
-        [EnumMember(Value = "get_from_file")]
-        GetFromFile,
-        [EnumMember(Value = "set_provided_address")]
-        SetProvidedAddress
     }
 }

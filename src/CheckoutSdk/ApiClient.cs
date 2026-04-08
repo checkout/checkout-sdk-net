@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -309,7 +310,7 @@ namespace Checkout
             {
                 foreach (var header in headers.GetType().GetProperties())
                 {
-                    var value = header.GetValue(headers)?.ToString();
+                    var value = ResolveHeaderValue(header.GetValue(headers));
                     if (!string.IsNullOrEmpty(value))
                     {
                         var headerName = GetJsonPropertyName(header) ?? header.Name;
@@ -428,6 +429,24 @@ namespace Checkout
                     h => h.Value.FirstOrDefault() ?? string.Empty
                 ) ?? new Dictionary<string, string>();
             }
+        }
+
+        private static string ResolveHeaderValue(object raw)
+        {
+            if (raw == null) return null;
+
+            var type = raw.GetType();
+            type = Nullable.GetUnderlyingType(type) ?? type;
+
+            if (type.IsEnum)
+            {
+                var member = type.GetMember(raw.ToString()).FirstOrDefault();
+                var attr = member?.GetCustomAttributes(typeof(EnumMemberAttribute), false)
+                    .Cast<EnumMemberAttribute>().FirstOrDefault();
+                if (attr?.Value != null) return attr.Value;
+            }
+
+            return raw.ToString();
         }
 
         private static string GetJsonPropertyName(System.Reflection.PropertyInfo property)
