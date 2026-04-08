@@ -8,6 +8,7 @@ namespace Checkout.AgenticCommerce.Entities
     public enum DelegatedPaymentMethodType
     {
         /// <summary>Card payment method.</summary>
-        [EnumMember(Value = "card")] Card,
+        [EnumMember(Value = "card")]
+        Card,
     }
 }

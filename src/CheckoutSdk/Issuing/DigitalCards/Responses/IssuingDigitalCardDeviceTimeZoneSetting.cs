@@ -7,7 +7,9 @@ namespace Checkout.Issuing.DigitalCards.Responses
     /// </summary>
     public enum IssuingDigitalCardDeviceTimeZoneSetting
     {
-        [EnumMember(Value = "network_set")] NetworkSet,
-        [EnumMember(Value = "consumer_set")] ConsumerSet,
+        [EnumMember(Value = "network_set")]
+        NetworkSet,
+        [EnumMember(Value = "consumer_set")]
+        ConsumerSet,
     }
 }

@@ -8,7 +8,9 @@ namespace Checkout.Issuing.DigitalCards.Responses
     /// </summary>
     public enum IssuingDigitalCardDeviceNetworkType
     {
-        [EnumMember(Value = "cellular")] Cellular,
-        [EnumMember(Value = "wifi")] Wifi,
+        [EnumMember(Value = "cellular")]
+        Cellular,
+        [EnumMember(Value = "wifi")]
+        Wifi,
     }
 }

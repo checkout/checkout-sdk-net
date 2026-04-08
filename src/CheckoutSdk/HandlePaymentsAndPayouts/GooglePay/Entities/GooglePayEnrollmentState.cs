@@ -7,7 +7,9 @@ namespace Checkout.HandlePaymentsAndPayouts.GooglePay.Entities
     /// </summary>
     public enum GooglePayEnrollmentState
     {
-        [EnumMember(Value = "ACTIVE")] Active,
-        [EnumMember(Value = "INACTIVE")] Inactive,
+        [EnumMember(Value = "ACTIVE")]
+        Active,
+        [EnumMember(Value = "INACTIVE")]
+        Inactive,
     }
 }

@@ -8,12 +8,15 @@ namespace Checkout.Issuing.DigitalCards.Responses
     public enum IssuingDigitalCardStatus
     {
         /// <summary>The default state — authorizations will be declined until the card is activated.</summary>
-        [EnumMember(Value = "inactive")] Inactive,
+        [EnumMember(Value = "inactive")]
+        Inactive,
 
         /// <summary>Authorization requests can be approved.</summary>
-        [EnumMember(Value = "active")] Active,
+        [EnumMember(Value = "active")]
+        Active,
 
         /// <summary>Incoming authorization requests will be declined permanently — the card cannot be reactivated.</summary>
-        [EnumMember(Value = "deleted")] Deleted,
+        [EnumMember(Value = "deleted")]
+        Deleted,
     }
 }

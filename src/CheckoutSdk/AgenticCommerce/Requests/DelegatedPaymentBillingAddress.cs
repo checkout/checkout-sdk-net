@@ -1,3 +1,5 @@
+using Checkout.Common;
+
 namespace Checkout.AgenticCommerce.Requests
 {
     /// <summary>
@@ -51,6 +53,6 @@ namespace Checkout.AgenticCommerce.Requests
         /// [Required]
         /// 2 characters.
         /// </summary>
-        public string Country { get; set; }
+        public CountryCode? Country { get; set; }
     }
 }

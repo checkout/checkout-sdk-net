@@ -43,14 +43,19 @@ namespace Checkout.Payments.Setups.Entities
 
     public enum PaypalUserAction
     {
-        [EnumMember(Value = "pay_now")] PayNow,
-        [EnumMember(Value = "continue")] Continue
+        [EnumMember(Value = "pay_now")]
+        PayNow,
+        [EnumMember(Value = "continue")]
+        Continue
     }
 
     public enum PaypalShippingPreference
     {
-        [EnumMember(Value = "no_shipping")] NoShipping,
-        [EnumMember(Value = "get_from_file")] GetFromFile,
-        [EnumMember(Value = "set_provided_address")] SetProvidedAddress
+        [EnumMember(Value = "no_shipping")]
+        NoShipping,
+        [EnumMember(Value = "get_from_file")]
+        GetFromFile,
+        [EnumMember(Value = "set_provided_address")]
+        SetProvidedAddress
     }
 }

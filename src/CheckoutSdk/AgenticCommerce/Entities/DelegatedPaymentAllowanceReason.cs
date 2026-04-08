@@ -7,6 +7,7 @@ namespace Checkout.AgenticCommerce.Entities
     /// </summary>
     public enum DelegatedPaymentAllowanceReason
     {
-        [EnumMember(Value = "one_time")] OneTime,
+        [EnumMember(Value = "one_time")]
+        OneTime,
     }
 }

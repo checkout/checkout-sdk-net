@@ -82,7 +82,7 @@ namespace Checkout.Payments.Setups.Entities
         /// <summary>
         /// [Optional]
         /// </summary>
-        public string Country { get; set; }
+        public CountryCode? Country { get; set; }
 
         /// <summary>
         /// [Optional]
