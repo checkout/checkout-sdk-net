@@ -21,7 +21,15 @@ namespace Checkout.Authentication
         Task<GetSessionDetailsResponseOk> GetSessionDetails(string sessionId,
             CancellationToken cancellationToken = default);
 
+        Task<GetSessionDetailsResponseOk> GetSessionDetails(string sessionId,
+            ChannelType channel,
+            CancellationToken cancellationToken = default);
+
         Task<GetSessionDetailsResponseOk> GetSessionDetails(string sessionSecret, string sessionId,
+            CancellationToken cancellationToken = default);
+
+        Task<GetSessionDetailsResponseOk> GetSessionDetails(string sessionSecret, string sessionId,
+            ChannelType channel,
             CancellationToken cancellationToken = default);
 
         Task<UpdateASessionResponseOk> UpdateASession(string sessionId,
