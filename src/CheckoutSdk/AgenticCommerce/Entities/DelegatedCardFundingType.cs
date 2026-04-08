@@ -7,8 +7,11 @@ namespace Checkout.AgenticCommerce.Entities
     /// </summary>
     public enum DelegatedCardFundingType
     {
-        [EnumMember(Value = "credit")] Credit,
-        [EnumMember(Value = "debit")] Debit,
-        [EnumMember(Value = "prepaid")] Prepaid,
+        [EnumMember(Value = "credit")]
+        Credit,
+        [EnumMember(Value = "debit")]
+        Debit,
+        [EnumMember(Value = "prepaid")]
+        Prepaid,
     }
 }
