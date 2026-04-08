@@ -23,5 +23,10 @@ namespace Checkout.Payments.Setups.Entities
         /// The Bizum payment method's details and configuration.
         /// </summary>
         public Bizum Bizum { get; set; }
+
+        /// <summary>
+        /// The PayPal payment method's details and configuration.
+        /// </summary>
+        public Paypal Paypal { get; set; }
     }
 }

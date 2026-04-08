@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Checkout.Payments.Setups.Entities
 {
     public class Industry
@@ -12,6 +10,6 @@ namespace Checkout.Payments.Setups.Entities
         /// <summary>
         /// Contains information about the accommodation booked by the customer
         /// </summary>
-        public IList<AccommodationData> AccommodationData { get; set; }
+        public AccommodationData AccommodationData { get; set; }
     }
 }

@@ -34,8 +34,9 @@ namespace Checkout.Payments.Setups
         /// The type of payment.
         /// You must provide this field for card payments in which the cardholder is not present. For example, if the
         /// transaction is a recurring payment, or a mail order/telephone order (MOTO) payment.
-        /// Enum: "Regular" "Recurring" "MOTO" "Installment" "Unscheduled"
         /// [Optional]
+        /// Enum: "Regular" "Recurring" "MOTO" "Installment" "PayLater" "Unscheduled"
+        /// Default: Regular
         /// </summary>
         public PaymentType? PaymentType { get; set; } = Payments.PaymentType.Regular;
 
@@ -82,5 +83,11 @@ namespace Checkout.Payments.Setups
         /// [Optional]
         /// </summary>
         public Industry Industry { get; set; }
+
+        /// <summary>
+        /// The billing details for the payment.
+        /// [Optional]
+        /// </summary>
+        public Billing Billing { get; set; }
     }
 }
