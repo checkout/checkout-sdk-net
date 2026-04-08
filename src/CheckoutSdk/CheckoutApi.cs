@@ -1,12 +1,15 @@
 using Checkout.Accounts;
+using Checkout.AgenticCommerce;
 using Checkout.Authentication;
 using Checkout.Balances;
+using Checkout.ComplianceRequests;
 using Checkout.Issuing;
 using Checkout.Customers;
 using Checkout.Disputes;
 using Checkout.Financial;
 using Checkout.HandlePaymentsAndPayouts.ApplePay;
 using Checkout.HandlePaymentsAndPayouts.Flow;
+using Checkout.HandlePaymentsAndPayouts.GooglePay;
 using Checkout.Forex;
 using Checkout.Forward;
 using Checkout.Identities.Applicants;
@@ -65,6 +68,9 @@ namespace Checkout
         private readonly IApplePayClient _applePayClient;
         private readonly IPaymentMethodsClient _paymentMethodsClient;
         private readonly IStandaloneAccountUpdaterClient _standaloneAccountUpdaterClient;
+        private readonly IGooglePayClient _googlePayClient;
+        private readonly IComplianceRequestsClient _complianceRequestsClient;
+        private readonly IAgenticCommerceClient _agenticCommerceClient;
 
         public CheckoutApi(CheckoutConfiguration configuration)
         {
@@ -105,6 +111,9 @@ namespace Checkout
             _applePayClient = new ApplePayClient(baseApiClient, configuration);
             _paymentMethodsClient = new PaymentMethodsClient(baseApiClient, configuration);
             _standaloneAccountUpdaterClient = new StandaloneAccountUpdaterClient(baseApiClient, configuration);
+            _googlePayClient = new GooglePayClient(baseApiClient, configuration);
+            _complianceRequestsClient = new ComplianceRequestsClient(baseApiClient, configuration);
+            _agenticCommerceClient = new AgenticCommerceClient(baseApiClient, configuration);
         }
 
         private static ApiClient BaseApiClient(CheckoutConfiguration configuration)
@@ -292,6 +301,20 @@ namespace Checkout
         {
             return _standaloneAccountUpdaterClient;
         }
-        
+
+        public IGooglePayClient GooglePayClient()
+        {
+            return _googlePayClient;
+        }
+
+        public IComplianceRequestsClient ComplianceRequestsClient()
+        {
+            return _complianceRequestsClient;
+        }
+
+        public IAgenticCommerceClient AgenticCommerceClient()
+        {
+            return _agenticCommerceClient;
+        }
     }
 }

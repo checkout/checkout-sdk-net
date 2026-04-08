@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization;
+using System.Runtime.Serialization;
 
 namespace Checkout.Common
 {
@@ -10,7 +10,10 @@ namespace Checkout.Common
         [EnumMember(Value = "nyce")] Nyce,
         [EnumMember(Value = "omannet")] Omannet,
         [EnumMember(Value = "pulse")] Pulse,
+        [EnumMember(Value = "shazam")] Shazam,
         [EnumMember(Value = "star")] Star,
         [EnumMember(Value = "upi")] Upi,
+        [EnumMember(Value = "paypak")] Paypak,
+        [EnumMember(Value = "maestro")] Maestro,
     }
 }

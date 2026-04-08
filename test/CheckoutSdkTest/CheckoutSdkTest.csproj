@@ -6,6 +6,14 @@
         <TargetFrameworks>net6.0;net5.0;netcoreapp3.1</TargetFrameworks>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <CollectCoverage>true</CollectCoverage>
+        <CoverletOutputFormat>cobertura</CoverletOutputFormat>
+        <CoverletOutput>$(MSBuildThisFileDirectory)coverage/</CoverletOutput>
+        <Include>[CheckoutSdk]*,[CheckoutSdk.Extensions]*</Include>
+        <ExcludeByAttribute>GeneratedCodeAttribute,CompilerGeneratedAttribute,ExcludeFromCodeCoverageAttribute</ExcludeByAttribute>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="4.0.1" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
@@ -22,6 +30,10 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="coverlet.collector" Version="3.1.0">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="coverlet.msbuild" Version="3.2.0">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>

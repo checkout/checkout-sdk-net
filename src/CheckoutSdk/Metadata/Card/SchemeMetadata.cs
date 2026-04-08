@@ -7,6 +7,7 @@ namespace Checkout.Metadata.Card
         public IList<PinlessDebitSchemeMetadata> Accel { get; set; }
         public IList<PinlessDebitSchemeMetadata> Pulse { get; set; }
         public IList<PinlessDebitSchemeMetadata> Nyce { get; set; }
+        public IList<PinlessDebitSchemeMetadata> Shazam { get; set; }
         public IList<PinlessDebitSchemeMetadata> Star { get; set; }
     }
 }

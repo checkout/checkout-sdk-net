@@ -8,6 +8,7 @@ using Xunit;
 
 namespace Checkout.Payments
 {
+    [Trait("Category", "Integration")]
     public class RefundPaymentsIntegrationTest : AbstractPaymentsIntegrationTest
     {
         [Fact]

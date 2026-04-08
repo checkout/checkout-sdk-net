@@ -1,12 +1,15 @@
 using Checkout.Accounts;
+using Checkout.AgenticCommerce;
 using Checkout.Authentication;
 using Checkout.Balances;
+using Checkout.ComplianceRequests;
 using Checkout.Issuing;
 using Checkout.Customers;
 using Checkout.Disputes;
 using Checkout.Financial;
 using Checkout.HandlePaymentsAndPayouts.ApplePay;
 using Checkout.HandlePaymentsAndPayouts.Flow;
+using Checkout.HandlePaymentsAndPayouts.GooglePay;
 using Checkout.Forex;
 using Checkout.Forward;
 using Checkout.Identities.Applicants;
@@ -95,5 +98,11 @@ namespace Checkout
         IPaymentMethodsClient PaymentMethodsClient();
         
         IStandaloneAccountUpdaterClient StandaloneAccountUpdaterClient();
+
+        IGooglePayClient GooglePayClient();
+
+        IComplianceRequestsClient ComplianceRequestsClient();
+
+        IAgenticCommerceClient AgenticCommerceClient();
     }
 }

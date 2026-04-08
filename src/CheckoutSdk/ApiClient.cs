@@ -13,8 +13,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Checkout.Accounts;
-
 namespace Checkout
 {
     public class ApiClient : IApiClient
@@ -53,6 +51,25 @@ namespace Checkout
                 null,
                 cancellationToken,
                 null
+            );
+            return await DeserializeResponseAsync<TResult>(httpResponse);
+        }
+
+        public async Task<TResult> Get<TResult>(
+            string path,
+            SdkAuthorization authorization,
+            IHeaders headers,
+            CancellationToken cancellationToken = default)
+            where TResult : HttpMetadata
+        {
+            var httpResponse = await SendRequestAsync(
+                HttpMethod.Get,
+                path,
+                authorization,
+                null,
+                cancellationToken,
+                null,
+                headers
             );
             return await DeserializeResponseAsync<TResult>(httpResponse);
         }
@@ -102,13 +119,34 @@ namespace Checkout
             return await DeserializeResponseAsync(httpResponse, responseType);
         }
 
+        public async Task<TResult> Post<TResult>(
+            string path,
+            SdkAuthorization authorization,
+            object request,
+            CancellationToken cancellationToken,
+            string idempotencyKey,
+            IHeaders headers)
+            where TResult : HttpMetadata
+        {
+            var httpResponse = await SendRequestAsync(
+                HttpMethod.Post,
+                path,
+                authorization,
+                request,
+                cancellationToken,
+                idempotencyKey,
+                headers
+            );
+            return await DeserializeResponseAsync<TResult>(httpResponse);
+        }
+
         public async Task<TResult> Patch<TResult>(
             string path,
             SdkAuthorization authorization,
             object request = null,
             CancellationToken cancellationToken = default,
             string idempotencyKey = null,
-            Headers headers = null)
+            IHeaders headers = null)
             where TResult : HttpMetadata
         {
             var httpResponse = await SendRequestAsync(
@@ -129,7 +167,7 @@ namespace Checkout
             object request = null,
             CancellationToken cancellationToken = default,
             string idempotencyKey = null, 
-            Headers headers = null)
+            IHeaders headers = null)
             where TResult : HttpMetadata
         {
             var httpResponse = await SendRequestAsync(
@@ -205,7 +243,7 @@ namespace Checkout
             object requestBody,
             CancellationToken cancellationToken,
             string idempotencyKey,
-            Headers headers = null)
+            IHeaders headers = null)
         {
             CheckoutUtils.ValidateParams("httpMethod", httpMethod, "authorization", authorization);
 
@@ -248,7 +286,7 @@ namespace Checkout
             HttpContent httpContent,
             CancellationToken cancellationToken,
             string idempotencyKey,
-            Headers headers = null)
+            IHeaders headers = null)
         {
             CheckoutUtils.ValidateParams("httpMethod", httpMethod, "authorization", authorization);
 

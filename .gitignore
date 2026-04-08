@@ -12,5 +12,7 @@ testlog.manifest
 *.nuspec
 nuget.exe
 coverage.cobertura.xml
+coverage/
 SonarQube.xml
 */.gitkeep
+.cursor/
