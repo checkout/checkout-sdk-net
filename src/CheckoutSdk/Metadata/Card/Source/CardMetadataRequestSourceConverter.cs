@@ -23,13 +23,13 @@ namespace Checkout.Metadata.Card.Source
             var sourceType = jObject.SelectToken(CheckoutUtils.Type)?.Value<string>()?.ToLowerInvariant();
 
             CardMetadataRequestSource target;
-            if ("card".Equals(sourceType))
+            if (string.Equals(sourceType, "card"))
                 target = new CardMetadataCardSource();
-            else if ("bin".Equals(sourceType))
+            else if (string.Equals(sourceType, "bin"))
                 target = new CardMetadataBinSource();
-            else if ("token".Equals(sourceType))
+            else if (string.Equals(sourceType, "token"))
                 target = new CardMetadataTokenSource();
-            else if ("id".Equals(sourceType))
+            else if (string.Equals(sourceType, "id"))
                 target = new CardMetadataIdSource();
             else
                 target = null;
