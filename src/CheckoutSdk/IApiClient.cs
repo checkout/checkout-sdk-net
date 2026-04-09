@@ -1,4 +1,3 @@
-using Checkout.Accounts;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -12,6 +11,13 @@ namespace Checkout
         Task<TResult> Get<TResult>(
             string path,
             SdkAuthorization authorization,
+            CancellationToken cancellationToken = default)
+            where TResult : HttpMetadata;
+
+        Task<TResult> Get<TResult>(
+            string path,
+            SdkAuthorization authorization,
+            IHeaders headers,
             CancellationToken cancellationToken = default)
             where TResult : HttpMetadata;
 
@@ -32,13 +38,22 @@ namespace Checkout
             string idempotencyKey = null) 
             where TResult : HttpMetadata;
 
+        Task<TResult> Post<TResult>(
+            string path,
+            SdkAuthorization authorization,
+            object request,
+            CancellationToken cancellationToken,
+            string idempotencyKey,
+            IHeaders headers)
+            where TResult : HttpMetadata;
+
         Task<TResult> Patch<TResult>(
             string path,
             SdkAuthorization authorization,
             object request = null,
             CancellationToken cancellationToken = default,
             string idempotencyKey = null,
-            Headers headers = null)
+            IHeaders headers = null)
             where TResult : HttpMetadata;
 
         Task<TResult> Put<TResult>(
@@ -47,7 +62,7 @@ namespace Checkout
             object request = null,
             CancellationToken cancellationToken = default,
             string idempotencyKey = null,
-            Headers headers = null)
+            IHeaders headers = null)
             where TResult : HttpMetadata;
 
         Task<TResult> Delete<TResult>(

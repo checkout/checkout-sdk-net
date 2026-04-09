@@ -10,6 +10,7 @@ using Checkout.Authentication.Standalone.PUTSessionsIdIssuerFingerprint.Requests
     UpdateSessionThreeDSMethodCompletionIndicatorRequest;
 using Checkout.Authentication.Standalone.PUTSessionsIdIssuerFingerprint.Responses.
     UpdateSessionThreedsMethodCompletionIndicatorResponseOk;
+using ChannelType = Checkout.Authentication.Standalone.PUTSessionsIdCollectData.Requests.ChannelType;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -63,14 +64,32 @@ namespace Checkout.Authentication
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("sessionId", sessionId);
-            return await GetSessionDetails(sessionId, SdkAuthorization(), cancellationToken);
+            return await GetSessionDetails(sessionId, SdkAuthorization(), null, cancellationToken);
+        }
+
+        public async Task<GetSessionDetailsResponseOk> GetSessionDetails(string sessionId,
+            ChannelType channel,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("sessionId", sessionId);
+            return await GetSessionDetails(sessionId, SdkAuthorization(),
+                new SessionHeaders { Channel = channel }, cancellationToken);
         }
 
         public async Task<GetSessionDetailsResponseOk> GetSessionDetails(string sessionSecret, string sessionId,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("sessionSecret", sessionSecret, "sessionId", sessionId);
-            return await GetSessionDetails(sessionId, SessionSecretAuthorization(sessionSecret), cancellationToken);
+            return await GetSessionDetails(sessionId, SessionSecretAuthorization(sessionSecret), null, cancellationToken);
+        }
+
+        public async Task<GetSessionDetailsResponseOk> GetSessionDetails(string sessionSecret, string sessionId,
+            ChannelType channel,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("sessionSecret", sessionSecret, "sessionId", sessionId);
+            return await GetSessionDetails(sessionId, SessionSecretAuthorization(sessionSecret),
+                new SessionHeaders { Channel = channel }, cancellationToken);
         }
 
         public async Task<UpdateASessionResponseOk> UpdateASession(string sessionId,
@@ -134,11 +153,17 @@ namespace Checkout.Authentication
         }
 
         private async Task<GetSessionDetailsResponseOk> GetSessionDetails(string sessionId, SdkAuthorization sdkAuthorization,
-            CancellationToken cancellationToken = default)
+            IHeaders headers = null, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams(SessionIdPath, sessionId, "sdkAuthorization", sdkAuthorization);
-            return await ApiClient.Get<GetSessionDetailsResponseOk>(BuildPath(SessionsPath, sessionId), sdkAuthorization,
-                cancellationToken);
+            if (headers != null)
+            {
+                return await ApiClient.Get<GetSessionDetailsResponseOk>(
+                    BuildPath(SessionsPath, sessionId), sdkAuthorization, headers, cancellationToken);
+            }
+
+            return await ApiClient.Get<GetSessionDetailsResponseOk>(
+                BuildPath(SessionsPath, sessionId), sdkAuthorization, cancellationToken);
         }
 
         private async Task<UpdateASessionResponseOk> UpdateASession(string sessionId, AbstractUpdateASessionRequest updateASessionRequest,

@@ -8,12 +8,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
-using Checkout.Accounts;
 
 namespace Checkout
 {
@@ -53,6 +52,25 @@ namespace Checkout
                 null,
                 cancellationToken,
                 null
+            );
+            return await DeserializeResponseAsync<TResult>(httpResponse);
+        }
+
+        public async Task<TResult> Get<TResult>(
+            string path,
+            SdkAuthorization authorization,
+            IHeaders headers,
+            CancellationToken cancellationToken = default)
+            where TResult : HttpMetadata
+        {
+            var httpResponse = await SendRequestAsync(
+                HttpMethod.Get,
+                path,
+                authorization,
+                null,
+                cancellationToken,
+                null,
+                headers
             );
             return await DeserializeResponseAsync<TResult>(httpResponse);
         }
@@ -102,13 +120,34 @@ namespace Checkout
             return await DeserializeResponseAsync(httpResponse, responseType);
         }
 
+        public async Task<TResult> Post<TResult>(
+            string path,
+            SdkAuthorization authorization,
+            object request,
+            CancellationToken cancellationToken,
+            string idempotencyKey,
+            IHeaders headers)
+            where TResult : HttpMetadata
+        {
+            var httpResponse = await SendRequestAsync(
+                HttpMethod.Post,
+                path,
+                authorization,
+                request,
+                cancellationToken,
+                idempotencyKey,
+                headers
+            );
+            return await DeserializeResponseAsync<TResult>(httpResponse);
+        }
+
         public async Task<TResult> Patch<TResult>(
             string path,
             SdkAuthorization authorization,
             object request = null,
             CancellationToken cancellationToken = default,
             string idempotencyKey = null,
-            Headers headers = null)
+            IHeaders headers = null)
             where TResult : HttpMetadata
         {
             var httpResponse = await SendRequestAsync(
@@ -129,7 +168,7 @@ namespace Checkout
             object request = null,
             CancellationToken cancellationToken = default,
             string idempotencyKey = null, 
-            Headers headers = null)
+            IHeaders headers = null)
             where TResult : HttpMetadata
         {
             var httpResponse = await SendRequestAsync(
@@ -205,7 +244,7 @@ namespace Checkout
             object requestBody,
             CancellationToken cancellationToken,
             string idempotencyKey,
-            Headers headers = null)
+            IHeaders headers = null)
         {
             CheckoutUtils.ValidateParams("httpMethod", httpMethod, "authorization", authorization);
 
@@ -248,7 +287,7 @@ namespace Checkout
             HttpContent httpContent,
             CancellationToken cancellationToken,
             string idempotencyKey,
-            Headers headers = null)
+            IHeaders headers = null)
         {
             CheckoutUtils.ValidateParams("httpMethod", httpMethod, "authorization", authorization);
 
@@ -271,7 +310,7 @@ namespace Checkout
             {
                 foreach (var header in headers.GetType().GetProperties())
                 {
-                    var value = header.GetValue(headers)?.ToString();
+                    var value = ResolveHeaderValue(header.GetValue(headers));
                     if (!string.IsNullOrEmpty(value))
                     {
                         var headerName = GetJsonPropertyName(header) ?? header.Name;
@@ -390,6 +429,24 @@ namespace Checkout
                     h => h.Value.FirstOrDefault() ?? string.Empty
                 ) ?? new Dictionary<string, string>();
             }
+        }
+
+        private static string ResolveHeaderValue(object raw)
+        {
+            if (raw == null) return null;
+
+            var type = raw.GetType();
+            type = Nullable.GetUnderlyingType(type) ?? type;
+
+            if (type.IsEnum)
+            {
+                var member = type.GetMember(raw.ToString()).FirstOrDefault();
+                var attr = member?.GetCustomAttributes(typeof(EnumMemberAttribute), false)
+                    .Cast<EnumMemberAttribute>().FirstOrDefault();
+                if (attr?.Value != null) return attr.Value;
+            }
+
+            return raw.ToString();
         }
 
         private static string GetJsonPropertyName(System.Reflection.PropertyInfo property)

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Checkout.Common;
 using Checkout.Payments.Setups.Entities;
 
@@ -10,6 +11,7 @@ namespace Checkout.Payments.Setups
     {
         /// <summary>
         /// The payment's unique identifier
+        /// [Required] readOnly
         /// ^(pay)_(\w{26})$
         /// 30 characters
         /// </summary>
@@ -87,5 +89,18 @@ namespace Checkout.Payments.Setups
         /// [Optional]
         /// </summary>
         public Industry Industry { get; set; }
+
+        /// <summary>
+        /// The billing details for the payment.
+        /// [Optional]
+        /// </summary>
+        public Billing Billing { get; set; }
+
+        /// <summary>
+        /// An ordered list of available payment method names. The order indicates the recommended
+        /// presentation priority, with the first item being the highest priority.
+        /// [Optional] readOnly
+        /// </summary>
+        public IList<string> AvailablePaymentMethods { get; set; }
     }
 }

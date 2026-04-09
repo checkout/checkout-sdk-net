@@ -74,7 +74,7 @@ namespace Checkout.Customers
             request.Name = "Changed Name";
 
             var customerId = customerResponse.Id;
-            await DefaultApi.CustomersClient().Update(customerId, request);
+            var response204 = await DefaultApi.CustomersClient().Update(customerId, request);
 
             var customerDetails = await DefaultApi.CustomersClient().Get(customerId);
             customerDetails.ShouldNotBeNull();

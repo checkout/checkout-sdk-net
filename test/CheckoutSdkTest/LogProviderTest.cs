@@ -33,13 +33,14 @@ namespace Checkout
         [Fact]
         public async Task ShouldCreateDifferentLoggerInstancesForMultipleConcurrentRequests()
         {
-            ConcurrentBag<Type> logTypes = new ConcurrentBag<Type>();
-                        
             LogProvider.SetLogFactory(_loggerFactory);
             Type[] loggerTypes = { typeof(LogProviderTests), typeof(AnotherTestClass), typeof(NoInitializedType) };
 
-            // Create multiple tasks that request loggers for different types concurrently
-            Task<ILogger>[] createLoggerTasks = Enumerable.Range(0, 50)
+            var loggersByType = new ConcurrentDictionary<Type, ConcurrentBag<ILogger>>();
+            foreach (var t in loggerTypes)
+                loggersByType[t] = new ConcurrentBag<ILogger>();
+
+            Task[] createLoggerTasks = Enumerable.Range(0, 50)
                 .Select(async index =>
                 {
                     int delay;
@@ -47,31 +48,29 @@ namespace Checkout
                     {
                         delay = Random.Next(0, 3);
                     }
-                    Thread.Sleep(delay);
+                    await Task.Delay(delay);
 
                     var logType = loggerTypes[index % loggerTypes.Length];
                     var logger = LogProvider.GetLogger(logType);
                     Assert.NotNull(logger);
-                    logTypes.Add(logType);
-
-                    return logger;
+                    loggersByType[logType].Add(logger);
                 }).ToArray();
 
             await Task.WhenAll(createLoggerTasks);
 
-            // Verify each distinct type has a unique logger instance
-            var distinctLoggers = new List<ILogger>();
-            var distinctTypes = logTypes.Distinct().ToList();
-            
-            foreach (var type in distinctTypes)
+            // All calls for the same type should return the same cached instance
+            foreach (var kvp in loggersByType)
             {
-                var logger = LogProvider.GetLogger(type);
-                Assert.NotNull(logger);
-                Assert.DoesNotContain(logger, distinctLoggers);
-                distinctLoggers.Add(logger);
+                var loggers = kvp.Value.Distinct().ToList();
+                Assert.Single(loggers);
             }
 
-            Assert.Equal(distinctLoggers.Count, distinctTypes.Count);
+            // Different types should have different logger instances
+            var uniqueLoggers = loggersByType.Values
+                .Select(bag => bag.First())
+                .Distinct()
+                .ToList();
+            Assert.Equal(loggerTypes.Length, uniqueLoggers.Count);
         }
 
         [Fact]

@@ -9,6 +9,7 @@ using Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessionRe
 using Checkout.Authentication.Standalone.POSTSessions.Responses.RequestASessionResponseAccepted;
 using Checkout.Authentication.Standalone.POSTSessions.Responses.RequestASessionResponseCreated;
 using Checkout.Authentication.Standalone.POSTSessionsIdComplete.Responses.CompleteASessionResponseNoContent;
+using Checkout.Authentication.Standalone.PUTSessionsIdCollectData.Requests;
 using Checkout.Authentication.Standalone.PUTSessionsIdCollectData.Requests.AppRequest;
 using Checkout.Authentication.Standalone.PUTSessionsIdCollectData.Responses.UpdateASessionResponseOk;
 using Checkout.Authentication.Standalone.PUTSessionsIdIssuerFingerprint.Requests.UpdateSessionThreeDSMethodCompletionIndicatorRequest;
@@ -233,6 +234,51 @@ namespace Checkout.Authentification.Standalone
                 ex.ShouldBeAssignableTo(typeof(CheckoutArgumentException));
                 ex.Message.ShouldBe("sessionSecret cannot be null");
             }
+        }
+
+        [Fact]
+        private async Task ShouldGetSessionDetailsWithChannel()
+        {
+            var response = new GetSessionDetailsResponseOk
+            {
+                FlowType = FlowType.Frictionless,
+            };
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Get<GetSessionDetailsResponseOk>(
+                        $"{Sessions}/id",
+                        _sdkCredentials.Object.GetSdkAuthorization(SdkAuthorizationType.OAuth),
+                        It.Is<SessionHeaders>(h => h.Channel == ChannelType.Browser),
+                        CancellationToken.None))
+                .ReturnsAsync(() => response);
+
+            _authenticationClient = new AuthenticationClient(_apiClient.Object, _configuration.Object);
+
+            var getSessionResponse = await _authenticationClient.GetSessionDetails("id", ChannelType.Browser, CancellationToken.None);
+
+            getSessionResponse.ShouldNotBeNull();
+            getSessionResponse.FlowType.ShouldBe(FlowType.Frictionless);
+        }
+
+        [Fact]
+        private async Task ShouldGetSessionDetailsWithChannelSessionSecret()
+        {
+            var response = new Mock<GetSessionDetailsResponseOk>();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Get<GetSessionDetailsResponseOk>(
+                        $"{Sessions}/id",
+                        SessionSecretAuthorization,
+                        It.Is<SessionHeaders>(h => h.Channel == ChannelType.App),
+                        CancellationToken.None))
+                .ReturnsAsync(() => response.Object);
+
+            _authenticationClient = new AuthenticationClient(_apiClient.Object, _configuration.Object);
+
+            var getSessionResponse =
+                await _authenticationClient.GetSessionDetails("sessionSecret", "id", ChannelType.App, CancellationToken.None);
+
+            getSessionResponse.ShouldNotBeNull();
         }
 
         [Fact]

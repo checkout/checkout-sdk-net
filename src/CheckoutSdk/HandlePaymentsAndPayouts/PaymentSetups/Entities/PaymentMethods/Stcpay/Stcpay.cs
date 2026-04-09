@@ -8,6 +8,11 @@ namespace Checkout.Payments.Setups.Entities
         public string Otp { get; set; }
 
         /// <summary>
+        /// The next available action for the STC Pay payment method (response only).
+        /// </summary>
+        public PaymentMethodAction Action { get; set; }
+
+        /// <summary>
         /// Payment method options specific to STC Pay
         /// </summary>
         public PaymentMethodOptions PaymentMethodOptions { get; set; }
