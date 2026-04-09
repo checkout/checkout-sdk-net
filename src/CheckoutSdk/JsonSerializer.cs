@@ -6,6 +6,7 @@ using Checkout.Instruments.Update.Util;
 using Checkout.Issuing.Cards.Responses.Create;
 using Checkout.Issuing.Controls.Responses;
 using Checkout.Issuing.ControlGroups.Common.Util;
+using Checkout.Metadata.Card.Source;
 using Checkout.Workflows.Actions.Response.Util;
 using Checkout.Workflows.Conditions.Response.Util;
 using Newtonsoft.Json;
@@ -76,6 +77,8 @@ namespace Checkout
                     new ControlGroupControlTypeConverter(),
                     // HandlePaymentsAndPayouts Sources
                     new RequestAPaymentOrPayoutResponseCreatedSourceTypeConverter(),
+                    // Metadata Card Sources
+                    new CardMetadataRequestSourceConverter(),
                 }
             };
 
