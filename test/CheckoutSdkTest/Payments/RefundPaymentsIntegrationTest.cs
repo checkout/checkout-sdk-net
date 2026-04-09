@@ -48,7 +48,8 @@ namespace Checkout.Payments
             response.GetLink("payment").ShouldNotBeNull();
 
             var payment = await Retriable(async () =>
-                await DefaultApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id));
+                await DefaultApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id),
+                p => p.Balances.TotalRefunded == paymentResponse.Amount);
             //Balances
             payment.Balances.TotalAuthorized.ShouldBe(paymentResponse.Amount);
             payment.Balances.TotalCaptured.ShouldBe(paymentResponse.Amount);
@@ -78,7 +79,8 @@ namespace Checkout.Payments
             response.GetLink("payment").ShouldNotBeNull();
 
             var payment = await Retriable(async () =>
-                await DefaultApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id));
+                await DefaultApi.PaymentsClient().GetPaymentDetails(paymentResponse.Id),
+                p => p.Balances.TotalRefunded == paymentResponse.Amount / 2);
             //Balances
             payment.Balances.TotalAuthorized.ShouldBe(paymentResponse.Amount);
             payment.Balances.TotalCaptured.ShouldBe(paymentResponse.Amount);
