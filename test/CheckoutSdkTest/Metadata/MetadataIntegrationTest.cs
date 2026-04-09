@@ -20,43 +20,76 @@ namespace Checkout.Metadata
         [Fact]
         private async Task ShouldRequestCardMetadataForCardNumber()
         {
-            CardMetadataRequest request = new CardMetadataRequest
+            var request = new CardMetadataRequest
             {
                 Source = new CardMetadataCardSource { Number = CardNumberConstant },
                 Format = CardMetadataFormatType.Basic
             };
 
-            await MakeCardMetadataRequest(request);
+            await AssertBasicCardMetadataResponse(request);
+        }
+
+        [Fact]
+        private async Task ShouldRequestCardMetadataForCardNumberWithReference()
+        {
+            var request = new CardMetadataRequest
+            {
+                Source = new CardMetadataCardSource { Number = CardNumberConstant },
+                Format = CardMetadataFormatType.Basic,
+                Reference = "ORD-TEST-001"
+            };
+
+            await AssertBasicCardMetadataResponse(request);
+        }
+
+        [Fact]
+        private async Task ShouldRequestCardMetadataForCardNumberWithCardPayoutsFormat()
+        {
+            var request = new CardMetadataRequest
+            {
+                Source = new CardMetadataCardSource { Number = CardNumberConstant },
+                Format = CardMetadataFormatType.CardPayouts
+            };
+
+            var response = await DefaultApi.MetadataClient().RequestCardMetadata(request);
+
+            response.ShouldNotBeNull();
+            response.HttpStatusCode.ShouldBe(200);
+            response.Bin.ShouldBe(BinNumberConstant);
+            response.Scheme.ShouldNotBeNull();
+            response.CardPayouts.ShouldNotBeNull();
         }
 
         [Fact(Skip = "unavailable")]
         private async Task ShouldRequestCardMetadataForBinNumber()
         {
-            CardMetadataRequest request = new CardMetadataRequest
+            var request = new CardMetadataRequest
             {
                 Source = new CardMetadataBinSource { Bin = BinNumberConstant },
                 Format = CardMetadataFormatType.Basic
             };
-            await MakeCardMetadataRequest(request);
+
+            await AssertBasicCardMetadataResponse(request);
         }
 
         [Fact]
-        private async Task ShouldRequestCardMetadataForEmptyRequestError()
+        private async Task ShouldRequestCardMetadataForToken()
         {
-            CardMetadataRequest request = new CardMetadataRequest
+            var request = new CardMetadataRequest
             {
                 Source = new CardMetadataTokenSource { Token = await RequestCardToken() },
                 Format = CardMetadataFormatType.Basic
             };
 
-            await MakeCardMetadataRequest(request);
+            await AssertBasicCardMetadataResponse(request);
         }
 
-        private async Task MakeCardMetadataRequest(CardMetadataRequest request)
+        private async Task AssertBasicCardMetadataResponse(CardMetadataRequest request)
         {
-            CardMetadataResponse response = await DefaultApi.MetadataClient().RequestCardMetadata(request);
+            var response = await DefaultApi.MetadataClient().RequestCardMetadata(request);
 
             response.ShouldNotBeNull();
+            response.HttpStatusCode.ShouldBe(200);
             response.Bin.ShouldBe(BinNumberConstant);
             response.Scheme.ShouldNotBeNull();
             response.CardType.ShouldBeOfType<CardMetadataType>();
@@ -65,13 +98,13 @@ namespace Checkout.Metadata
             response.IssuerCountryName.ShouldNotBeNull();
             response.ProductId.ShouldNotBeNull();
             response.ProductType.ShouldNotBeNull();
-            response.HttpStatusCode.ShouldBe(200);
+            response.IsComboCard.ShouldNotBeNull();
         }
 
         private static async Task<string> RequestCardToken()
         {
             var logFactory = TestLoggerFactoryHelper.Instance;
-            
+
             var api = CheckoutSdk.Builder().StaticKeys()
                 .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PUBLIC_KEY"))
                 .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_SECRET_KEY"))

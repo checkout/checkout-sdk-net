@@ -25,28 +25,46 @@ namespace Checkout.Metadata
         }
 
         [Fact]
-        private async Task ShouldRequestMetadataCardBin()
+        private async Task ShouldRequestCardMetadata()
         {
-            CardMetadataRequest metadataCardRequest = new CardMetadataRequest();
-            CardMetadataResponse cardMetadataResponse = new CardMetadataResponse();
+            var request = new CardMetadataRequest();
+            var expectedResponse = new CardMetadataResponse();
 
             _apiClient.Setup(apiClient =>
                     apiClient.Post<CardMetadataResponse>("metadata/card", _authorization,
-                        metadataCardRequest,
-                        CancellationToken.None, null))
-                .ReturnsAsync(() => cardMetadataResponse);
+                        request, CancellationToken.None, null))
+                .ReturnsAsync(() => expectedResponse);
 
-            IMetadataClient client =
-                new MetadataClient(_apiClient.Object, _configuration.Object);
+            IMetadataClient client = new MetadataClient(_apiClient.Object, _configuration.Object);
 
-            CardMetadataResponse response = await client.RequestCardMetadata(metadataCardRequest);
+            var response = await client.RequestCardMetadata(request);
 
             response.ShouldNotBeNull();
-            response.ShouldBeSameAs(cardMetadataResponse);
+            response.ShouldBeSameAs(expectedResponse);
         }
 
         [Fact]
-        private async Task ShouldRequestMetadataCardError()
+        private async Task ShouldRequestCardMetadataWithCancellationToken()
+        {
+            var request = new CardMetadataRequest();
+            var expectedResponse = new CardMetadataResponse();
+            var cancellationToken = new CancellationToken();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<CardMetadataResponse>("metadata/card", _authorization,
+                        request, cancellationToken, null))
+                .ReturnsAsync(() => expectedResponse);
+
+            IMetadataClient client = new MetadataClient(_apiClient.Object, _configuration.Object);
+
+            var response = await client.RequestCardMetadata(request, cancellationToken);
+
+            response.ShouldNotBeNull();
+            response.ShouldBeSameAs(expectedResponse);
+        }
+
+        [Fact]
+        private async Task ShouldReturnNullWhenApiReturnsUnexpectedType()
         {
             _apiClient.Setup(apiClient =>
                     apiClient.Post<HttpMetadata>("metadata/card", _authorization, null, CancellationToken.None, null))
@@ -54,7 +72,7 @@ namespace Checkout.Metadata
 
             IMetadataClient client = new MetadataClient(_apiClient.Object, _configuration.Object);
 
-            CardMetadataResponse response = await client.RequestCardMetadata(new CardMetadataRequest());
+            var response = await client.RequestCardMetadata(new CardMetadataRequest());
 
             response.ShouldBeNull();
         }
