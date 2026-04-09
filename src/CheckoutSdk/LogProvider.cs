@@ -12,9 +12,8 @@ namespace Checkout
         private static readonly object SyncRoot = new object();
         private static ILoggerFactory _loggerFactory = new LoggerFactory();
 
-        // Replaced (not cleared) on every SetLogFactory call so that in-flight GetLogger
-        // calls that already snapshotted the old reference continue to see a stable,
-        // consistent cache and always return the same ILogger instance for the same type.
+        // Replaced on every SetLogFactory call. Declared volatile so every GetLogger
+        // call reads the most current dictionary without needing a lock.
         private static volatile ConcurrentDictionary<Type, Lazy<ILogger>> _loggers =
             new ConcurrentDictionary<Type, Lazy<ILogger>>();
 
@@ -24,8 +23,10 @@ namespace Checkout
             {
                 _loggerFactory?.Dispose();
                 _loggerFactory = factory ?? new LoggerFactory();
-                // Replace instead of Clear: threads already holding a reference to the
-                // old dictionary are unaffected and will keep returning consistent instances.
+                // Replace the cache so new GetLogger calls start fresh with the new factory.
+                // The old dictionary is abandoned; any concurrent GetOrAdd call already in
+                // flight against it will complete safely (ConcurrentDictionary is fully
+                // thread-safe) and its result will simply be discarded on the next call.
                 _loggers = new ConcurrentDictionary<Type, Lazy<ILogger>>();
             }
         }
@@ -37,24 +38,21 @@ namespace Checkout
                 return NullLogger.Instance;
             }
 
-            // Snapshot both the cache and the factory atomically so that this call
-            // always uses a consistent (loggers, factory) pair regardless of any
-            // concurrent SetLogFactory invocation.
-            ConcurrentDictionary<Type, Lazy<ILogger>> loggers;
-            ILoggerFactory factory;
-            lock (SyncRoot)
-            {
-                loggers = _loggers;
-                factory = _loggerFactory;
-            }
-
-            // LazyThreadSafetyMode.ExecutionAndPublication guarantees the value factory
-            // is invoked at most once per Lazy instance, even under concurrent access.
-            // Combined with GetOrAdd storing only one Lazy per key, every caller for the
-            // same type receives the exact same ILogger reference.
-            return loggers.GetOrAdd(loggerType, type =>
+            // Read the current cache directly (volatile field — atomic on all platforms).
+            // All concurrent GetLogger calls that see the same _loggers reference share one
+            // ConcurrentDictionary, so GetOrAdd returns the same Lazy<ILogger> per key and
+            // LazyThreadSafetyMode.ExecutionAndPublication ensures a single ILogger is created.
+            // If SetLogFactory replaces _loggers between two calls, those calls use different
+            // dictionaries; that is acceptable because the factory itself changed.
+            return _loggers.GetOrAdd(loggerType, type =>
                 new Lazy<ILogger>(() =>
                 {
+                    ILoggerFactory factory;
+                    lock (SyncRoot)
+                    {
+                        factory = _loggerFactory;
+                    }
+
                     var name = type.FullName ?? type.Name;
                     return factory.CreateLogger(name) ?? NullLogger.Instance;
                 }, LazyThreadSafetyMode.ExecutionAndPublication)
