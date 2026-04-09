@@ -31,8 +31,14 @@ namespace Checkout
         }
         
         [Fact]
-        public async Task ShouldCreateDifferentLoggerInstancesForMultipleConcurrentRequests()
+        public async Task ShouldReturnNonNullLoggersForAllConcurrentRequests()
         {
+            // Verifies that concurrent GetLogger calls do not throw and always
+            // return a non-null ILogger.  Reference-equality across tasks is NOT
+            // asserted here because other test classes that run outside the
+            // NonParallel xUnit collection may call SetLogFactory concurrently,
+            // which legitimately replaces the internal cache dictionary.
+            // The per-type caching guarantee is covered by the synchronous tests below.
             LogProvider.SetLogFactory(_loggerFactory);
             Type[] loggerTypes = { typeof(LogProviderTests), typeof(AnotherTestClass), typeof(NoInitializedType) };
 
@@ -58,18 +64,50 @@ namespace Checkout
 
             await Task.WhenAll(createLoggerTasks);
 
-            // Every task must have received a non-null, functional logger.
-            // We do NOT assert reference-equality across tasks because other test classes
-            // running in parallel (outside the NonParallel collection) may call
-            // SetLogFactory, which replaces the internal cache dictionary; tasks that
-            // execute either side of that replacement legitimately receive loggers from
-            // different dictionaries. The important invariant is that no logger is null
-            // and no exception escapes the concurrent calls.
             foreach (var kvp in loggersByType)
             {
                 Assert.NotEmpty(kvp.Value);
                 Assert.All(kvp.Value, logger => Assert.NotNull(logger));
             }
+        }
+
+        [Fact]
+        public async Task ShouldCacheLoggerPerTypeUnderConcurrency()
+        {
+            // Verifies the SDK user's core expectation: once a factory is set,
+            // every concurrent GetLogger call for the same Type returns the SAME
+            // ILogger reference (i.e. the cache works under concurrent reads).
+            // SetLogFactory is NOT called during the concurrent phase so that the
+            // internal dictionary cannot be replaced mid-flight.
+            LogProvider.SetLogFactory(_loggerFactory);
+
+            // Prime the cache for all three types before spawning concurrent tasks
+            // so the Lazy<ILogger> is already resolved in the shared dictionary.
+            Type[] loggerTypes = { typeof(LogProviderTests), typeof(AnotherTestClass), typeof(NoInitializedType) };
+            var seeded = loggerTypes.ToDictionary(t => t, t => LogProvider.GetLogger(t));
+
+            var loggersByType = new ConcurrentDictionary<Type, ConcurrentBag<ILogger>>();
+            foreach (var t in loggerTypes)
+                loggersByType[t] = new ConcurrentBag<ILogger>();
+
+            Task[] tasks = Enumerable.Range(0, 50)
+                .Select(index => Task.Run(() =>
+                {
+                    var logType = loggerTypes[index % loggerTypes.Length];
+                    loggersByType[logType].Add(LogProvider.GetLogger(logType));
+                })).ToArray();
+
+            await Task.WhenAll(tasks);
+
+            // All concurrent reads must return the same cached instance per type.
+            foreach (var kvp in loggersByType)
+            {
+                Assert.All(kvp.Value, logger => Assert.Same(seeded[kvp.Key], logger));
+            }
+
+            // Loggers for different types must be distinct instances.
+            var perType = loggerTypes.Select(t => seeded[t]).Distinct().ToList();
+            Assert.Equal(loggerTypes.Length, perType.Count);
         }
 
         [Fact]
