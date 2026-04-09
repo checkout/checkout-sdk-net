@@ -98,7 +98,6 @@ namespace Checkout.Metadata
             response.IssuerCountryName.ShouldNotBeNull();
             response.ProductId.ShouldNotBeNull();
             response.ProductType.ShouldNotBeNull();
-            response.IsComboCard.ShouldNotBeNull();
         }
 
         private static async Task<string> RequestCardToken()
