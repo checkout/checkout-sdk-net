@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Reflection;
 
 namespace Checkout.Metadata.Card.Source
 {
@@ -10,7 +11,7 @@ namespace Checkout.Metadata.Card.Source
 
         public override bool CanConvert(Type objectType)
         {
-            return typeof(CardMetadataRequestSource).IsAssignableFrom(objectType);
+            return typeof(CardMetadataRequestSource).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo());
         }
 
         public override object ReadJson(
@@ -20,20 +21,7 @@ namespace Checkout.Metadata.Card.Source
             Newtonsoft.Json.JsonSerializer serializer)
         {
             var jObject = JObject.Load(reader);
-            var sourceType = jObject.SelectToken(CheckoutUtils.Type)?.Value<string>()?.ToLowerInvariant();
-
-            CardMetadataRequestSource target;
-            if (string.Equals(sourceType, "card"))
-                target = new CardMetadataCardSource();
-            else if (string.Equals(sourceType, "bin"))
-                target = new CardMetadataBinSource();
-            else if (string.Equals(sourceType, "token"))
-                target = new CardMetadataTokenSource();
-            else if (string.Equals(sourceType, "id"))
-                target = new CardMetadataIdSource();
-            else
-                target = null;
-
+            var target = Create(jObject);
             if (target != null)
             {
                 serializer.Populate(jObject.CreateReader(), target);
@@ -48,6 +36,43 @@ namespace Checkout.Metadata.Card.Source
             Newtonsoft.Json.JsonSerializer serializer)
         {
             throw new NotImplementedException();
+        }
+
+        private static CardMetadataRequestSource Create(JToken jToken)
+        {
+            CheckoutUtils.ValidateParams("jToken", jToken);
+            var sourceType = GetSourceType(jToken);
+            return CreateSource(sourceType);
+        }
+
+        private static CardMetadataRequestSource CreateSource(string sourceType)
+        {
+            if (CheckoutUtils.GetEnumMemberValue(CardMetadataSourceType.Card).Equals(sourceType))
+            {
+                return new CardMetadataCardSource();
+            }
+
+            if (CheckoutUtils.GetEnumMemberValue(CardMetadataSourceType.Bin).Equals(sourceType))
+            {
+                return new CardMetadataBinSource();
+            }
+
+            if (CheckoutUtils.GetEnumMemberValue(CardMetadataSourceType.Token).Equals(sourceType))
+            {
+                return new CardMetadataTokenSource();
+            }
+
+            if (CheckoutUtils.GetEnumMemberValue(CardMetadataSourceType.Id).Equals(sourceType))
+            {
+                return new CardMetadataIdSource();
+            }
+
+            return null;
+        }
+
+        private static string GetSourceType(JToken jToken)
+        {
+            return jToken.SelectToken(CheckoutUtils.Type)?.Value<string>()?.ToLowerInvariant();
         }
     }
 }
