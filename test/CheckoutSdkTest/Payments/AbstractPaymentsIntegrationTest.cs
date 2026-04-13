@@ -1,4 +1,5 @@
 using Checkout.Common;
+using Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.CardSource.AccountHolder.IndividualAccountHolder;
 using Checkout.Payments.Request;
 using Checkout.Payments.Request.Source;
 using Checkout.Payments.Response;
@@ -39,7 +40,7 @@ namespace Checkout.Payments
                 Cvv = TestCardSource.Visa.Cvv,
                 BillingAddress = GetAddress(),
                 Phone = GetPhone(),
-                AccountHolder = GetAccountHolder()
+                AccountHolder = new IndividualAccountHolder { FirstName = "John", LastName = "Doe" }
             };
 
             var customerRequest = new CustomerRequest {Email = GenerateRandomEmail(), Name = "Customer"};
