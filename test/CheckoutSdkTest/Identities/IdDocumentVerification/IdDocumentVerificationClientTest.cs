@@ -416,7 +416,7 @@ namespace Checkout.Identities.IdDocumentVerification
             response.Id.ShouldNotBeNullOrEmpty();
             response.UserJourneyId.ShouldNotBeNullOrEmpty();
             response.ApplicantId.ShouldNotBeNullOrEmpty();
-            response.Status.ShouldNotBe(default);
+            response.Status.ShouldBeOneOf(IdDocumentVerificationStatus.Created, IdDocumentVerificationStatus.QualityChecksInProgress, IdDocumentVerificationStatus.ChecksInProgress);
         }
 
         private static void ValidateIdDocumentVerificationAttemptResponse(IdDocumentVerificationAttemptResponse response)
