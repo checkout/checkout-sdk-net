@@ -33,7 +33,7 @@ namespace Checkout.Authentification.Standalone
             created.Id.ShouldNotBeNull();
             created.SessionSecret.ShouldNotBeNull();
             created.TransactionId.ShouldNotBeNull();
-            created.Amount.ShouldNotBeNull();
+            created.Amount.ShouldNotBe(0);
             created.AuthenticationType.ShouldBe(AuthenticationType.Regular);
             created.AuthenticationCategory.ShouldBe(AuthenticationCategoryType.Payment);
             created.NextActions.Count.ShouldBe(1);
@@ -61,7 +61,7 @@ namespace Checkout.Authentification.Standalone
                 updated.SessionSecret.ShouldNotBeNull();
 
             updated.Id.ShouldNotBeNull();
-            updated.Amount.ShouldNotBeNull();
+            updated.Amount.ShouldNotBe(0);
             updated.Card.ShouldNotBeNull();
             updated.AuthenticationType.ShouldBe(AuthenticationType.Regular);
             updated.AuthenticationCategory.ShouldBe(AuthenticationCategoryType.Payment);
@@ -86,7 +86,7 @@ namespace Checkout.Authentification.Standalone
             created.Id.ShouldNotBeNull();
             created.SessionSecret.ShouldNotBeNull();
             created.TransactionId.ShouldNotBeNull();
-            created.Amount.ShouldNotBeNull();
+            created.Amount.ShouldNotBe(0);
             created.Card.ShouldNotBeNull();
             created.AuthenticationType.ShouldBe(AuthenticationType.Regular);
             created.AuthenticationCategory.ShouldBe(AuthenticationCategoryType.Payment);
@@ -104,7 +104,7 @@ namespace Checkout.Authentification.Standalone
             updated.ShouldNotBeNull();
             updated.Id.ShouldNotBeNull();
             updated.TransactionId.ShouldNotBeNull();
-            updated.Amount.ShouldNotBeNull();
+            updated.Amount.ShouldNotBe(0);
             updated.Card.ShouldNotBeNull();
             updated.AuthenticationType.ShouldBe(AuthenticationType.Regular);
             updated.AuthenticationCategory.ShouldBe(AuthenticationCategoryType.Payment);

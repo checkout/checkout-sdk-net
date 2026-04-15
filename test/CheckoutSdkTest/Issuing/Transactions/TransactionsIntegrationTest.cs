@@ -34,8 +34,8 @@ namespace Checkout.Issuing.Transactions
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNullOrEmpty();
             response.CreatedOn.ShouldNotBeNull();
-            response.Status.ShouldNotBeNull();
-            response.TransactionType.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
+            response.TransactionType.ShouldNotBe(default);
             response.Client.ShouldNotBeNull();
             response.Entity.ShouldNotBeNull();
             response.Card.ShouldNotBeNull();

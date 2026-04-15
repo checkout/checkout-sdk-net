@@ -82,7 +82,7 @@ namespace Checkout.Issuing.Cards
             response.LastFour.ShouldNotBeNull();
             response.ExpiryMonth.ShouldNotBeNull();
             response.ExpiryYear.ShouldNotBeNull();
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
             response.DisplayName.ShouldNotBeNull();
             response.BillingCurrency.ShouldNotBeNull();
             response.IssuingCountry.ShouldNotBeNull();
@@ -116,7 +116,7 @@ namespace Checkout.Issuing.Cards
             response.LastFour.ShouldNotBeNull();
             response.ExpiryMonth.ShouldNotBeNull();
             response.ExpiryYear.ShouldNotBeNull();
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
             response.DisplayName.ShouldNotBeNull();
             response.BillingCurrency.ShouldNotBeNull();
             response.IssuingCountry.ShouldNotBeNull();

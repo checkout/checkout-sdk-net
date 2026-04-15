@@ -60,7 +60,7 @@ namespace Checkout.Apm.Previous.Klarna
             creditSession.PurchaseCountry.ShouldNotBeNull();
             creditSession.Currency.ShouldNotBeNull();
             creditSession.Locale.ShouldNotBeNull();
-            creditSession.Amount.ShouldNotBeNull();
+            creditSession.Amount.ShouldNotBe(0);
             creditSession.TaxAmount.ShouldNotBeNull();
             creditSession.Products.ShouldNotBeNull();
             foreach (var creditSessionProduct in creditSession.Products)

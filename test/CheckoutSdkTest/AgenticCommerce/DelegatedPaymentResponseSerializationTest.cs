@@ -35,7 +35,7 @@ namespace Checkout.AgenticCommerce
 
             response.ShouldNotBeNull();
             response.Id.ShouldBe("vt_abc123def456ghi789");
-            response.Created.ShouldNotBeNull();
+            response.Created.ShouldNotBe(default);
             response.Metadata.ShouldNotBeNull();
             response.Metadata["psp"].ShouldBe("checkout.com");
         }

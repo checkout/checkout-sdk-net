@@ -21,7 +21,7 @@ namespace Checkout.Issuing.DigitalCards
             response.Id.ShouldBe(digitalCardId);
             response.CardId.ShouldNotBeNullOrEmpty();
             response.LastFour.ShouldNotBeNullOrEmpty();
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
         }
     }
 }

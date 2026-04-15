@@ -152,7 +152,7 @@ namespace Checkout.HandlePaymentsAndPayouts.ApplePay
             response.Content.ShouldContain("END CERTIFICATE REQUEST");
             
             // Verify the protocol version was respected (indirectly through successful response)
-            request.ProtocolVersion.ShouldNotBeNull();
+            request.ProtocolVersion.ShouldNotBe(default);
         }
     }
 }

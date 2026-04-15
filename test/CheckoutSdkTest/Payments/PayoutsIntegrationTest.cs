@@ -86,7 +86,7 @@ namespace Checkout.Payments
             PayoutResponse response = await DefaultApi.PaymentsClient().RequestPayout(request);
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNull();
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
             response.Instruction.ShouldNotBeNull();
             response.Instruction.ValueDate.ShouldNotBeNull();
         }

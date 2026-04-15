@@ -37,7 +37,7 @@ namespace Checkout.Instruments
                 {
                     field.Id.ShouldNotBeNull();
                     field.Display.ShouldNotBeNull();
-                    field.Type.ShouldNotBeNull();
+                    field.Type.ShouldNotBe(default);
                 }
             }
         }

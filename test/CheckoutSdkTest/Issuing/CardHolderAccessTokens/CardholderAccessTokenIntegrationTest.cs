@@ -24,7 +24,7 @@ namespace Checkout.Issuing
 
             response.ShouldNotBeNull();
             response.AccessToken.ShouldNotBeNull();
-            response.TokenType.ShouldNotBeNull();
+            response.TokenType.ShouldNotBe(default);
             response.ExpiresIn.ShouldNotBeNull();
         }
     }

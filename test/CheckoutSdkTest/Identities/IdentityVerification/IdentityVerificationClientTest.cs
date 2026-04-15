@@ -534,7 +534,7 @@ namespace Checkout.Identities.IdentityVerification
             response.Id.ShouldNotBeNullOrEmpty();
             response.UserJourneyId.ShouldNotBeNullOrEmpty();
             response.ApplicantId.ShouldNotBeNullOrEmpty();
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
             response.RedirectUrl.ShouldNotBeNullOrEmpty();
         }
 
@@ -544,14 +544,14 @@ namespace Checkout.Identities.IdentityVerification
             response.Id.ShouldNotBeNullOrEmpty();
             response.UserJourneyId.ShouldNotBeNullOrEmpty();
             response.ApplicantId.ShouldNotBeNullOrEmpty();
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
         }
 
         private static void ValidateIdentityVerificationAttemptResponse(IdentityVerificationAttemptResponse response)
         {
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNullOrEmpty();
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
         }
 
         private static void ValidateIdentityVerificationAttemptsResponse(IdentityVerificationAttemptsResponse response)

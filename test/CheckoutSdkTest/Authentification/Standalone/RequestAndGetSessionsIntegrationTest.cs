@@ -23,13 +23,13 @@ namespace Checkout.Authentification.Standalone
                 await CreateNonHostedSession(browserSession, category, challengeIndicator, transactionType);
 
             sessionResponse.ShouldNotBeNull();
-            sessionResponse.Created.ShouldNotBeNull();
+            sessionResponse.Created.ShouldNotBe(default);
 
             var response = sessionResponse.Created;
             response.Id.ShouldNotBeNull();
             response.SessionSecret.ShouldNotBeNull();
             response.TransactionId.ShouldNotBeNull();
-            response.Amount.ShouldNotBeNull();
+            response.Amount.ShouldNotBe(0);
             response.Certificates.ShouldNotBeNull();
             response.Ds.ShouldNotBeNull();
             response.Acs.ShouldNotBeNull();
@@ -42,7 +42,7 @@ namespace Checkout.Authentification.Standalone
             response.NextActions[0].ShouldBe(NextActionsType.ChallengeCardholder);
             response.TransactionType.ShouldBe(transactionType);
             response.ResponseCode.ShouldBe(ResponseCodeType.C);
-            response.AuthenticationDate.ShouldNotBeNull();
+            response.AuthenticationDate.ShouldNotBe(default);
 
             response.GetSelfLink().ShouldNotBeNull();
             response.GetLink("callback_url").ShouldNotBeNull();
@@ -55,7 +55,7 @@ namespace Checkout.Authentification.Standalone
             getSessionResponse.Id.ShouldNotBeNull();
             getSessionResponse.SessionSecret.ShouldNotBeNull();
             getSessionResponse.TransactionId.ShouldNotBeNull();
-            getSessionResponse.Amount.ShouldNotBeNull();
+            getSessionResponse.Amount.ShouldNotBe(0);
             getSessionResponse.Certificates.ShouldNotBeNull();
             getSessionResponse.Ds.ShouldNotBeNull();
             getSessionResponse.Card.ShouldNotBeNull();
@@ -67,7 +67,7 @@ namespace Checkout.Authentification.Standalone
             getSessionResponse.NextActions[0].ShouldBe(NextActionsType.ChallengeCardholder);
             getSessionResponse.TransactionType.ShouldBe(transactionType);
             getSessionResponse.ResponseCode.ShouldBe(ResponseCodeType.C);
-            response.AuthenticationDate.ShouldNotBeNull();
+            response.AuthenticationDate.ShouldNotBe(default);
 
             getSessionResponse.GetSelfLink().ShouldNotBeNull();
             getSessionResponse.GetLink("callback_url").ShouldNotBeNull();
@@ -81,7 +81,7 @@ namespace Checkout.Authentification.Standalone
 
             getSessionSecretSessionResponse.Id.ShouldNotBeNull();
             getSessionSecretSessionResponse.TransactionId.ShouldNotBeNull();
-            getSessionSecretSessionResponse.Amount.ShouldNotBeNull();
+            getSessionSecretSessionResponse.Amount.ShouldNotBe(0);
             getSessionSecretSessionResponse.Ds.ShouldNotBeNull();
             getSessionSecretSessionResponse.Acs.ShouldNotBeNull();
             getSessionSecretSessionResponse.Card.ShouldNotBeNull();
@@ -117,7 +117,7 @@ namespace Checkout.Authentification.Standalone
             response.Id.ShouldNotBeNull();
             response.SessionSecret.ShouldNotBeNull();
             response.TransactionId.ShouldNotBeNull();
-            response.Amount.ShouldNotBeNull();
+            response.Amount.ShouldNotBe(0);
             response.Card.ShouldNotBeNull();
 
             response.AuthenticationType.ShouldBe(AuthenticationType.Regular);
@@ -137,7 +137,7 @@ namespace Checkout.Authentification.Standalone
             getSessionResponse.Id.ShouldNotBeNull();
             getSessionResponse.SessionSecret.ShouldNotBeNull();
             getSessionResponse.TransactionId.ShouldNotBeNull();
-            getSessionResponse.Amount.ShouldNotBeNull();
+            getSessionResponse.Amount.ShouldNotBe(0);
             getSessionResponse.Certificates.ShouldNotBeNull();
             getSessionResponse.Ds.ShouldNotBeNull();
             getSessionResponse.Acs.ShouldBeNull();
@@ -150,7 +150,7 @@ namespace Checkout.Authentification.Standalone
             getSessionResponse.NextActions[0].ShouldBe(NextActionsType.CollectChannelData);
             getSessionResponse.TransactionType.ShouldBe(transactionType);
             getSessionResponse.ResponseCode.ShouldBeNull();
-            getSessionResponse.AuthenticationDate.ShouldNotBeNull();
+            getSessionResponse.AuthenticationDate.ShouldNotBe(default);
 
             getSessionResponse.GetSelfLink().ShouldNotBeNull();
             getSessionResponse.GetLink("callback_url").ShouldNotBeNull();
@@ -169,13 +169,13 @@ namespace Checkout.Authentification.Standalone
                 await CreateNonHostedSession(merchantInitiatedSession, category, challengeIndicator, transactionType);
 
             sessionResponse.ShouldNotBeNull();
-            sessionResponse.Created.ShouldNotBeNull();
+            sessionResponse.Created.ShouldNotBe(default);
 
             var response = sessionResponse.Created;
             response.Id.ShouldNotBeNull();
             response.SessionSecret.ShouldNotBeNull();
             response.TransactionId.ShouldNotBeNull();
-            response.Amount.ShouldNotBeNull();
+            response.Amount.ShouldNotBe(0);
             response.Certificates.ShouldNotBeNull();
             response.Ds.ShouldNotBeNull();
             response.Card.ShouldNotBeNull();
@@ -198,7 +198,7 @@ namespace Checkout.Authentification.Standalone
             getSessionResponse.Id.ShouldNotBeNull();
             getSessionResponse.SessionSecret.ShouldNotBeNull();
             getSessionResponse.TransactionId.ShouldNotBeNull();
-            getSessionResponse.Amount.ShouldNotBeNull();
+            getSessionResponse.Amount.ShouldNotBe(0);
             getSessionResponse.Certificates.ShouldNotBeNull();
             getSessionResponse.Ds.ShouldNotBeNull();
             getSessionResponse.Acs.ShouldBeNull();
@@ -211,7 +211,7 @@ namespace Checkout.Authentification.Standalone
             getSessionResponse.NextActions[0].ShouldBe(NextActionsType.Complete);
             getSessionResponse.TransactionType.ShouldBe(transactionType);
             getSessionResponse.ResponseCode.ShouldBe(ResponseCodeType.U);
-            getSessionResponse.AuthenticationDate.ShouldNotBeNull();
+            getSessionResponse.AuthenticationDate.ShouldNotBe(default);
 
             getSessionResponse.GetSelfLink().ShouldNotBeNull();
             getSessionResponse.GetLink("callback_url").ShouldNotBeNull();

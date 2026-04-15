@@ -416,14 +416,14 @@ namespace Checkout.Identities.IdDocumentVerification
             response.Id.ShouldNotBeNullOrEmpty();
             response.UserJourneyId.ShouldNotBeNullOrEmpty();
             response.ApplicantId.ShouldNotBeNullOrEmpty();
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
         }
 
         private static void ValidateIdDocumentVerificationAttemptResponse(IdDocumentVerificationAttemptResponse response)
         {
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNullOrEmpty();
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
         }
 
         private static void ValidateIdDocumentVerificationAttemptsResponse(IdDocumentVerificationAttemptsResponse response)

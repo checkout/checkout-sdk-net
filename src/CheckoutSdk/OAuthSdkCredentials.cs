@@ -1,4 +1,4 @@
-#if (NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER)
+#if NET5_0_OR_GREATER || NETSTANDARD2_0
 using Microsoft.Extensions.Logging;
 #endif
 using System;
@@ -10,7 +10,7 @@ namespace Checkout
 {
     public sealed class OAuthSdkCredentials : SdkCredentials
     {
-#if (NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER)
+#if NET5_0_OR_GREATER || NETSTANDARD2_0
         private readonly ILogger _log = LogProvider.GetLogger(typeof(OAuthSdkCredentials));
 #endif
         private readonly string _clientId;
@@ -71,7 +71,7 @@ namespace Checkout
 
         private OAuthServiceResponse Request()
         {
-#if (NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER)
+#if NET5_0_OR_GREATER || NETSTANDARD2_0
             _log.LogInformation("requesting OAuth token using client_credentials flow");
 #endif
             try

@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
-      - id: setup-net-2_0-3_1-5_0
+      - id: setup-net-2_0-3_1-5_0-6_0-8_0
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: |
@@ -19,6 +19,7 @@ jobs:
             3.1.x
             5.0.x
             6.0.x
+            8.0.x
       - id: list-installed-runtimes
         run: dotnet --list-runtimes
       - id: build-solution

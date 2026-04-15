@@ -97,7 +97,7 @@ namespace Checkout.Metadata
             response.IssuerCountry.ShouldBeOfType<CountryCode>();
             response.IssuerCountryName.ShouldNotBeNull();
             response.ProductId.ShouldNotBeNull();
-            response.ProductType.ShouldNotBeNull();
+            response.ProductType.ShouldNotBe(default);
         }
 
         private static async Task<string> RequestCardToken()

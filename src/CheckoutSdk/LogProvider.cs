@@ -1,4 +1,4 @@
-#if (NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER)
+#if NET5_0_OR_GREATER || NETSTANDARD2_0
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;

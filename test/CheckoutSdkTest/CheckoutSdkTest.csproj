@@ -3,7 +3,8 @@
     <PropertyGroup>
         <RootNamespace>Checkout</RootNamespace>
         <IsPackable>false</IsPackable>
-        <TargetFrameworks>net6.0;net5.0;netcoreapp3.1</TargetFrameworks>
+        <TargetFrameworks>net8.0;net6.0;net5.0;netstandard2.0</TargetFrameworks>
+        <LangVersion>8.0</LangVersion>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -39,6 +40,12 @@
         </PackageReference>
         <PackageReference Include="Moq" Version="4.16.1" />
         <PackageReference Include="Shouldly" Version="3.0.1" />
+    </ItemGroup>
+
+    <!-- Additional packages for netstandard2.0 to support C# 8.0 features -->
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+        <PackageReference Include="IndexRange" Version="1.0.0" />
     </ItemGroup>
 
     <ItemGroup>

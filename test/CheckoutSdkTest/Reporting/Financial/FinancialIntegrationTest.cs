@@ -33,13 +33,13 @@ namespace Checkout.Financial
             ;
 
             response.ShouldNotBeNull();
-            if (!response.Data.IsNullOrEmpty())
+            if (response.Data?.Count > 0)
             {
                 foreach (var action in response.Data)
                 {
                     action.PaymentId.ShouldNotBeNull();
                     action.ActionId.ShouldNotBeNull();
-                    action.ActionType.ShouldNotBeNull();
+                    action.ActionType.ShouldNotBe(default);
                     action.EntityId.ShouldNotBeNull();
                     action.CurrencyAccountId.ShouldNotBeNull();
                     action.ProcessedOn.ShouldNotBeNull();

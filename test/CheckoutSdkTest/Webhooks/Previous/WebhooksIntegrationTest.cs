@@ -23,7 +23,7 @@ namespace Checkout.Webhooks.Previous
             var webhookResponses = await PreviousApi.WebhooksClient().RetrieveWebhooks();
             webhookResponses.HttpStatusCode.ShouldNotBeNull();
             webhookResponses.HttpStatusCode.ShouldNotBeNull();
-            if (!webhookResponses.Items.IsNullOrEmpty())
+            if (webhookResponses.Items?.Count > 0)
             {
                 foreach (var webhook in webhookResponses.Items)
                 {
