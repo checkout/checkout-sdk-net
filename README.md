@@ -11,6 +11,21 @@
 
 ## Getting started 
 
+> **Version 5.0.0 is here!**
+>  <br/><br/>
+> We've enhanced the SDK with .NET 8 support and comprehensive coverage of all current API modules. <br/>
+> This version brings improved performance, better async patterns, and full compatibility with the latest .NET ecosystem. <br/>
+> The SDK now includes complete support for all Checkout.com API modules:
+> * **Payments & Processing**: Payments, PaymentMethods, Sources, Tokens, HandlePaymentsAndPayouts
+> * **Customer Management**: Customers, Identities, Instruments, NetworkTokens
+> * **Business Operations**: Accounts, Platforms, Workflows, Transfers, Balances
+> * **Risk & Compliance**: Risk, Disputes, ComplianceRequests, StandaloneAccountUpdater
+> * **Analytics & Reporting**: Reporting, Reconciliation, Events, Metadata
+> * **Advanced Features**: Issuing, Forex, Forward, Files, Webhooks, Apm, AgenticCommerce
+> * **Authentication & Authorization**: Authentication with full OAuth support
+> 
+> If you're upgrading from previous versions, most existing code will continue to work seamlessly. For any migration questions, don't hesitate to open a [ticket](https://github.com/checkout/checkout-sdk-net/issues/new/choose).
+
 > **Version 4.0.0 is here!**
 >  <br/><br/>
 > We improved the initialization of SDK making it easier to understand the available options. <br/>
