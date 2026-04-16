@@ -1,0 +1,7 @@
+{
+    "dotnet.defaultSolution": "checkout-sdk-net.sln",
+    "dotnet-test-explorer.testArguments": "--framework net8.0",
+    "dotnetCoreExplorer.targetFramework": "net8.0",
+    "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": true,
+    "omnisharp.defaultLaunchSolution": "checkout-sdk-net.sln"
+}
