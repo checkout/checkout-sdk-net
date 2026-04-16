@@ -30,14 +30,14 @@ namespace Checkout.Transfers
 
             createTransferResponse.ShouldNotBeNull();
             createTransferResponse.Id.ShouldNotBeNullOrEmpty();
-            createTransferResponse.Status.ShouldNotBeNull();
+            createTransferResponse.Status.ShouldNotBe(default);
             createTransferResponse.Links.ShouldNotBeNull();
             createTransferResponse.Links.ShouldNotBeEmpty();
 
             var transferDetailsResponse = await DefaultApi.TransfersClient().RetrieveATransfer(createTransferResponse.Id);
             transferDetailsResponse.ShouldNotBeNull();
-            transferDetailsResponse.Status.ShouldNotBeNull();
-            transferDetailsResponse.TransferType.ShouldNotBeNull();
+            transferDetailsResponse.Status.ShouldNotBe(default);
+            transferDetailsResponse.TransferType.ShouldNotBe(default);
             transferDetailsResponse.RequestedOn.ShouldNotBeNull();
             transferDetailsResponse.Source.ShouldNotBeNull();
             transferDetailsResponse.Source.EntityId.ShouldNotBeNull();
@@ -65,7 +65,7 @@ namespace Checkout.Transfers
 
             createTransferResponse.ShouldNotBeNull();
             createTransferResponse.Id.ShouldNotBeNullOrEmpty();
-            createTransferResponse.Status.ShouldNotBeNull();
+            createTransferResponse.Status.ShouldNotBe(default);
             createTransferResponse.Links.ShouldNotBeNull();
             createTransferResponse.Links.ShouldNotBeEmpty();
 

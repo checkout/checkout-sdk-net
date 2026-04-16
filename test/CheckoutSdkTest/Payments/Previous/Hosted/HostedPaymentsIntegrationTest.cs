@@ -27,7 +27,7 @@ namespace Checkout.Payments.Previous.Hosted
             getResponse.Id.ShouldNotBeNullOrEmpty();
             getResponse.Reference.ShouldNotBeNullOrEmpty();
             getResponse.Status.ShouldBe(HostedPaymentStatus.PaymentPending);
-            getResponse.Amount.ShouldNotBeNull();
+            getResponse.Amount.ShouldNotBe(0);
             getResponse.Billing.ShouldNotBeNull();
             getResponse.Currency.ShouldBe(Currency.GBP);
             getResponse.Customer.ShouldNotBeNull();

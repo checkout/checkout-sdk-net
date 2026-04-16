@@ -368,14 +368,14 @@ namespace Checkout.Identities.FaceAuthentication
             response.Id.ShouldNotBeNullOrEmpty();
             response.UserJourneyId.ShouldNotBeNullOrEmpty();
             response.ApplicantId.ShouldNotBeNullOrEmpty();
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
         }
 
         private static void ValidateFaceAuthenticationAttemptResponse(FaceAuthenticationAttemptResponse response)
         {
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNullOrEmpty();
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
         }
 
         private static void ValidateFaceAuthenticationAttemptsResponse(FaceAuthenticationAttemptsResponse response)

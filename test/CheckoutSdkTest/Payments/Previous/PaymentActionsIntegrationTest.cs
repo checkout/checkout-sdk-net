@@ -26,7 +26,7 @@ namespace Checkout.Payments.Previous
                 paymentAction.Reference.ShouldNotBeNullOrEmpty();
                 paymentAction.ResponseCode.ShouldNotBeNullOrEmpty();
                 paymentAction.ResponseSummary.ShouldNotBeNullOrEmpty();
-                paymentAction.Type.ShouldNotBeNull();
+                paymentAction.Type.ShouldNotBe(default);
             }
         }
 

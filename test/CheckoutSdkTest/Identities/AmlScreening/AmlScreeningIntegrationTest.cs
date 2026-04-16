@@ -167,7 +167,7 @@ namespace Checkout.Identities.AmlScreening
             response.Id.ShouldStartWith("scr_");
             response.ApplicantId.ShouldNotBeNullOrEmpty(); 
             response.ApplicantId.ShouldStartWith("aplt_");
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
             response.SearchParameters.ShouldNotBeNull();
             response.SearchParameters.ConfigurationIdentifier.ShouldNotBeNullOrEmpty();
             response.CreatedOn.ShouldNotBeNull();

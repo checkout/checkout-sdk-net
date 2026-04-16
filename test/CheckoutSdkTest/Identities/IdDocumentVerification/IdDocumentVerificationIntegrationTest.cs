@@ -205,7 +205,7 @@ namespace Checkout.Identities.IdDocumentVerification
             response.Id.ShouldNotBeNullOrEmpty();
             response.UserJourneyId.ShouldBe(request.UserJourneyId);
             response.ApplicantId.ShouldBe(request.ApplicantId);
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
             
             if (response.DeclaredData != null && request.DeclaredData != null)
             {
@@ -224,7 +224,7 @@ namespace Checkout.Identities.IdDocumentVerification
             retrieved.Id.ShouldBe(created.Id);
             retrieved.UserJourneyId.ShouldBe(created.UserJourneyId);
             retrieved.ApplicantId.ShouldBe(created.ApplicantId);
-            retrieved.Status.ShouldNotBeNull();
+            retrieved.Status.ShouldNotBe(default);
         }
 
         private static void ValidateAnonymizedIdDocumentVerification(IdDocumentVerificationResponse response)
@@ -237,7 +237,7 @@ namespace Checkout.Identities.IdDocumentVerification
         {
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNullOrEmpty();
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
         }
 
         private static void ValidateRetrievedIdDocumentVerificationAttempts(IdDocumentVerificationAttemptsResponse response, IdDocumentVerificationAttemptResponse createdAttempt)
@@ -252,7 +252,7 @@ namespace Checkout.Identities.IdDocumentVerification
         {
             retrieved.ShouldNotBeNull();
             retrieved.Id.ShouldBe(created.Id);
-            retrieved.Status.ShouldNotBeNull();
+            retrieved.Status.ShouldNotBe(default);
         }
 
         private static void ValidateIdDocumentVerificationReport(IdDocumentVerificationReportResponse response)

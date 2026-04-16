@@ -19,7 +19,7 @@ namespace Checkout.AgenticCommerce
         /// <param name="headers">The required authentication headers (Signature and Timestamp)</param>
         /// <param name="cancellationToken">A cancellation token for the operation</param>
         /// <returns>The created delegated payment token</returns>
-        Task<DelegatedPaymentResponse> CreateDelegatedPayment(DelegatedPaymentRequest request,
+        Task<DelegatedPaymentResponse> CreateDelegatedPaymentToken(DelegatedPaymentRequest request,
             DelegatedPaymentHeaders headers,
             CancellationToken cancellationToken = default);
     }

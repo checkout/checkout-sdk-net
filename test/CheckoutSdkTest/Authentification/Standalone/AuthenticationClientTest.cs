@@ -95,7 +95,7 @@ namespace Checkout.Authentification.Standalone
 
             getSessionResponse.ShouldNotBeNull();
             getSessionResponse.Accepted.ShouldBeNull();
-            getSessionResponse.Created.ShouldNotBeNull();
+            getSessionResponse.Created.ShouldNotBe(default);
             getSessionResponse.Created.Acs.ChallengeCancelReasonCode.ShouldNotBeNull();
             getSessionResponse.Created.SchemeInfo.ShouldNotBeNull();
             getSessionResponse.Created.SchemeInfo.Name.ShouldNotBeNull();
@@ -127,8 +127,8 @@ namespace Checkout.Authentification.Standalone
 
             getSessionResponse.ShouldNotBeNull();
             getSessionResponse.Accepted.ShouldNotBeNull();
-            getSessionResponse.Accepted.AuthenticationDate.ShouldNotBeNull();
-            getSessionResponse.Accepted.ChallengeIndicator.ShouldNotBeNull();
+            getSessionResponse.Accepted.AuthenticationDate.ShouldNotBe(default);
+            getSessionResponse.Accepted.ChallengeIndicator.ShouldNotBe(default);
             getSessionResponse.Created.ShouldBeNull();
         }
 
@@ -180,9 +180,9 @@ namespace Checkout.Authentification.Standalone
 
             getSessionResponse.ShouldNotBeNull();
             getSessionResponse.Exemption.ShouldNotBeNull();
-            getSessionResponse.AuthenticationDate.ShouldNotBeNull();
-            getSessionResponse.FlowType.ShouldNotBeNull();
-            getSessionResponse.ChallengeIndicator.ShouldNotBeNull();
+            getSessionResponse.AuthenticationDate.ShouldNotBe(default);
+            getSessionResponse.FlowType.ShouldNotBe(default);
+            getSessionResponse.ChallengeIndicator.ShouldNotBe(default);
             getSessionResponse.SchemeInfo.ShouldNotBeNull();
         }
 

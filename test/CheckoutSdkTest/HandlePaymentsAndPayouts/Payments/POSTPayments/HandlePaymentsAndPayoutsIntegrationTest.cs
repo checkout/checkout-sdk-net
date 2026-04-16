@@ -35,17 +35,17 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments
             if (response.Created != null)
             {
                 response.Created.Id.ShouldNotBeNull();
-                response.Created.Status.ShouldNotBeNull();
+                response.Created.Status.ShouldNotBe(default);
                 response.Created.Amount.ShouldBe(1000);
                 response.Created.Currency.ShouldBe(Currency.USD);
                 response.Created.Reference.ShouldBe("ORD-5023-4E89");
                 response.Created.Source.ShouldNotBeNull();
-                response.Created.Source.Type.ShouldNotBeNull();
+                response.Created.Source.Type.ShouldNotBe(default);
             }
             else if (response.Accepted != null)
             {
                 response.Accepted.Id.ShouldNotBeNull();
-                response.Accepted.Status.ShouldNotBeNull();
+                response.Accepted.Status.ShouldNotBe(default);
                 response.Accepted.Reference.ShouldBe("ORD-5023-4E89");
             }
             else

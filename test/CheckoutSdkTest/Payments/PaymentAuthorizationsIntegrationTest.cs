@@ -27,7 +27,7 @@ namespace Checkout.Payments
                 .IncrementPaymentAuthorization(paymentResponse.Id, authorizationRequest);
 
             authorizationResponse.ShouldNotBeNull();
-            authorizationResponse.Amount.ShouldNotBeNull();
+            authorizationResponse.Amount.ShouldNotBe(0);
             authorizationResponse.ActionId.ShouldNotBeNull();
             authorizationResponse.Currency.ShouldNotBeNull();
             authorizationResponse.Approved.ShouldNotBeNull();

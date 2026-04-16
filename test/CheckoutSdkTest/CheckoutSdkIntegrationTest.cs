@@ -83,7 +83,11 @@ namespace Checkout
                 CancellationToken cancellationToken)
             {
                 var response = new HttpResponseMessage();
+#if NETSTANDARD2_0
+                response.StatusCode = (HttpStatusCode)508;
+#else
                 response.StatusCode = HttpStatusCode.LoopDetected;
+#endif
                 response.Content = new StringContent("{}", Encoding.UTF8, "application/json");
                 return Task.Factory.StartNew(() => response, cancellationToken);
             }

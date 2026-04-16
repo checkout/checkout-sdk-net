@@ -184,7 +184,7 @@ namespace Checkout.Identities.FaceAuthentication
             response.Id.ShouldNotBeNullOrEmpty();
             response.UserJourneyId.ShouldBe(request.UserJourneyId);
             response.ApplicantId.ShouldBe(request.ApplicantId);
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
             
             if (response.CreatedOn.HasValue)
             {
@@ -198,7 +198,7 @@ namespace Checkout.Identities.FaceAuthentication
             retrieved.Id.ShouldBe(created.Id);
             retrieved.UserJourneyId.ShouldBe(created.UserJourneyId);
             retrieved.ApplicantId.ShouldBe(created.ApplicantId);
-            retrieved.Status.ShouldNotBeNull();
+            retrieved.Status.ShouldNotBe(default);
         }
 
         private static void ValidateAnonymizedFaceAuthentication(FaceAuthenticationResponse response)
@@ -211,7 +211,7 @@ namespace Checkout.Identities.FaceAuthentication
         {
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNullOrEmpty();
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
             
             if (response.RedirectUrl != null)
             {
@@ -231,7 +231,7 @@ namespace Checkout.Identities.FaceAuthentication
         {
             retrieved.ShouldNotBeNull();
             retrieved.Id.ShouldBe(created.Id);
-            retrieved.Status.ShouldNotBeNull();
+            retrieved.Status.ShouldNotBe(default);
         }
 
         private static string GenerateRandomId()

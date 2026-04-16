@@ -64,7 +64,11 @@ namespace Checkout.StandaloneAccountUpdater
 
             // Account updater returns 422 for standard test cards - likely requires cards that exist in the system
             // or specific card numbers that simulate real account updater scenarios
+#if NETSTANDARD2_0
+            exception.HttpStatusCode.ShouldBe((System.Net.HttpStatusCode)422);
+#else
             exception.HttpStatusCode.ShouldBe(System.Net.HttpStatusCode.UnprocessableEntity);
+#endif
         }
 
         // Common methods
@@ -131,14 +135,14 @@ namespace Checkout.StandaloneAccountUpdater
         private static void ValidateGetUpdatedCardCredentialsResponse(GetUpdatedCardCredentialsResponse response)
         {
             response.ShouldNotBeNull();
-            response.AccountUpdateStatus.ShouldNotBeNull();
+            response.AccountUpdateStatus.ShouldNotBe(default);
             
             if (response.AccountUpdateStatus == AccountUpdateStatus.CardUpdated || 
                 response.AccountUpdateStatus == AccountUpdateStatus.CardExpiryUpdated)
             {
                 response.Card.ShouldNotBeNull();
-                response.Card.ExpiryMonth.ShouldNotBeNull();
-                response.Card.ExpiryYear.ShouldNotBeNull();
+                response.Card.ExpiryMonth.ShouldNotBe(0);
+                response.Card.ExpiryYear.ShouldNotBe(0);
             }
             
             if (response.AccountUpdateStatus == AccountUpdateStatus.UpdateFailed)

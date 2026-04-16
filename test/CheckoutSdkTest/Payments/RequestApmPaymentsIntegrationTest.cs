@@ -64,7 +64,7 @@ namespace Checkout.Payments
             var paymentResponse = await DefaultApi.PaymentsClient().RequestPayment(paymentRequest);
 
             paymentResponse.ShouldNotBeNull();
-            paymentResponse.Status.ShouldNotBeNull();
+            paymentResponse.Status.ShouldNotBe(default);
             paymentResponse.Reference.ShouldBe("REFERENCE");
             paymentResponse.Links.ShouldNotBeNull();
 
@@ -72,7 +72,7 @@ namespace Checkout.Payments
 
             payment.ShouldNotBeNull();
 
-            payment.Status.ShouldNotBeNull();
+            payment.Status.ShouldNotBe(default);
             payment.Links.ShouldNotBeNull();
 
             payment.Source.ShouldBeOfType(typeof(AlternativePaymentSourceResponse));

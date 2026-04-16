@@ -32,12 +32,12 @@ namespace Checkout.Instruments
             cardResponse.Bin.ShouldNotBeNull();
             cardResponse.IssuerCountry.ShouldNotBeNull();
             cardResponse.ProductId.ShouldNotBeNull();
-            cardResponse.ProductType.ShouldNotBeNull();
+            cardResponse.ProductType.ShouldNotBe(default);
             cardResponse.Customer.ShouldNotBeNull();
             cardResponse.AccountHolder.ShouldNotBeNull();
             cardResponse.AccountHolder.BillingAddress.ShouldNotBeNull();
             cardResponse.AccountHolder.Phone.ShouldNotBeNull();
-            cardResponse.CardType.ShouldNotBeNull();
+            cardResponse.CardType.ShouldNotBe(default);
             cardResponse.CardCategory.ShouldNotBeNull();
         }
         
@@ -152,7 +152,7 @@ namespace Checkout.Instruments
 
             cardResponse.AccountHolder.FirstName.ShouldBe("John");
             cardResponse.AccountHolder.LastName.ShouldBe("Doe");
-            cardResponse.CardType.ShouldNotBeNull();
+            cardResponse.CardType.ShouldNotBe(default);
             cardResponse.CardCategory.ShouldNotBeNull();
         }
 
@@ -225,9 +225,9 @@ namespace Checkout.Instruments
             createTokenInstrumentResponse.Bin.ShouldNotBeNull();
             createTokenInstrumentResponse.IssuerCountry.ShouldNotBeNull();
             createTokenInstrumentResponse.ProductId.ShouldNotBeNull();
-            createTokenInstrumentResponse.ProductType.ShouldNotBeNull();
+            createTokenInstrumentResponse.ProductType.ShouldNotBe(default);
             createTokenInstrumentResponse.Customer.ShouldNotBeNull();
-            createTokenInstrumentResponse.CardType.ShouldNotBeNull();
+            createTokenInstrumentResponse.CardType.ShouldNotBe(default);
             createTokenInstrumentResponse.CardCategory.ShouldNotBeNull();
             return createTokenInstrumentResponse;
         }

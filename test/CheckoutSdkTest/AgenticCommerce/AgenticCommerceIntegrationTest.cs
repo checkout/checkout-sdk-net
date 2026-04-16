@@ -50,11 +50,11 @@ namespace Checkout.AgenticCommerce
                 Signature = "computed-hmac-sha256-base64-signature"
             };
 
-            var response = await DefaultApi.AgenticCommerceClient().CreateDelegatedPayment(request, headers);
+            var response = await DefaultApi.AgenticCommerceClient().CreateDelegatedPaymentToken(request, headers);
 
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNullOrEmpty();
-            response.Created.ShouldNotBeNull();
+            response.Created.ShouldNotBe(default);
             response.Metadata.ShouldNotBeNull();
         }
     }

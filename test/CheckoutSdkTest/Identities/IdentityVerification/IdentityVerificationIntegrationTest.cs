@@ -280,7 +280,7 @@ namespace Checkout.Identities.IdentityVerification
             response.Id.ShouldNotBeNullOrEmpty();
             response.UserJourneyId.ShouldBe(request.UserJourneyId);
             response.ApplicantId.ShouldBe(request.ApplicantId);
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
             response.RedirectUrl.ShouldBe(request.RedirectUrl);
 
             if (response.DeclaredData != null && request.DeclaredData != null)
@@ -300,7 +300,7 @@ namespace Checkout.Identities.IdentityVerification
             response.Id.ShouldNotBeNullOrEmpty();
             response.UserJourneyId.ShouldBe(request.UserJourneyId);
             response.ApplicantId.ShouldBe(request.ApplicantId);
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
 
             if (response.DeclaredData != null && request.DeclaredData != null)
             {
@@ -319,7 +319,7 @@ namespace Checkout.Identities.IdentityVerification
             retrieved.Id.ShouldBe(created.Id);
             retrieved.UserJourneyId.ShouldBe(created.UserJourneyId);
             retrieved.ApplicantId.ShouldBe(created.ApplicantId);
-            retrieved.Status.ShouldNotBeNull();
+            retrieved.Status.ShouldNotBe(default);
         }
 
         private static void ValidateRetrievedIdentityVerificationFromCreatedAndAttempt(IdentityVerificationResponse retrieved, IdentityVerificationAndAttemptResponse created)
@@ -328,7 +328,7 @@ namespace Checkout.Identities.IdentityVerification
             retrieved.Id.ShouldBe(created.Id);
             retrieved.UserJourneyId.ShouldBe(created.UserJourneyId);
             retrieved.ApplicantId.ShouldBe(created.ApplicantId);
-            retrieved.Status.ShouldNotBeNull();
+            retrieved.Status.ShouldNotBe(default);
         }
 
         private static void ValidateAnonymizedIdentityVerification(IdentityVerificationResponse response)
@@ -341,7 +341,7 @@ namespace Checkout.Identities.IdentityVerification
         {
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNullOrEmpty();
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
             
             if (response.RedirectUrl != null)
             {
@@ -361,7 +361,7 @@ namespace Checkout.Identities.IdentityVerification
         {
             retrieved.ShouldNotBeNull();
             retrieved.Id.ShouldBe(created.Id);
-            retrieved.Status.ShouldNotBeNull();
+            retrieved.Status.ShouldNotBe(default);
         }
 
         private static void ValidateIdentityVerificationReport(IdentityVerificationReportResponse response)

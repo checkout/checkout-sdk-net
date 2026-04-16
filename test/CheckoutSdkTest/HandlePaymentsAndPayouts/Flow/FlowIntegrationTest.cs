@@ -56,7 +56,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow
             // Assert
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNull();
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
         }
 
         [Fact(Skip = "This test requires a valid merchant configuration for Flow")]
@@ -71,7 +71,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow
             // Assert
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNull();
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldNotBe(default);
         }
         
         [Fact]

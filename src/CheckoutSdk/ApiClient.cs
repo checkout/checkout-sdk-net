@@ -1,4 +1,4 @@
-#if (NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER)
+#if NET5_0_OR_GREATER || NETSTANDARD2_0
 using Microsoft.Extensions.Logging;
 using System.Web;
 #endif
@@ -18,7 +18,7 @@ namespace Checkout
 {
     public class ApiClient : IApiClient
     {
-#if (NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER)
+#if NET5_0_OR_GREATER || NETSTANDARD2_0
         private readonly ILogger _log = LogProvider.GetLogger(typeof(ApiClient));
 #endif
 
@@ -216,7 +216,7 @@ namespace Checkout
                 {
                     var queryString = string.Join("&",
                         parameters.Select(kvp =>
-#if (NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER)
+#if NET5_0_OR_GREATER || NETSTANDARD2_0
                             $"{HttpUtility.UrlEncode(kvp.Key)}={HttpUtility.UrlEncode(kvp.Value)}"));
 #else
                             $"{WebUtility.UrlEncode(kvp.Key)}={WebUtility.UrlEncode(kvp.Value)}"));
@@ -293,7 +293,7 @@ namespace Checkout
 
             var pathUri = new Uri(_baseUri, path);
             var httpRequest = new HttpRequestMessage(httpMethod, pathUri) { Content = httpContent };
-#if (NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER)
+#if NET5_0_OR_GREATER || NETSTANDARD2_0
             _log.LogInformation(@"{HttpMethod}: {Path}", httpMethod, path);
 #endif
 

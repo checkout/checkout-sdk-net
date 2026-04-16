@@ -191,7 +191,7 @@ namespace Checkout.Identities.AmlScreening
         {
             response.Id.ShouldNotBeNullOrEmpty();
             response.ApplicantId.ShouldNotBeNullOrEmpty();
-            response.Status.ShouldNotBeNull();
+            response.Status.ShouldBeOneOf(AmlScreeningStatus.Created, AmlScreeningStatus.ScreeningInProgress, AmlScreeningStatus.Approved, AmlScreeningStatus.Declined, AmlScreeningStatus.ReviewRequired);
             response.SearchParameters.ShouldNotBeNull();
             response.SearchParameters.ConfigurationIdentifier.ShouldNotBeNullOrEmpty();
             response.Monitored.ShouldNotBeNull();

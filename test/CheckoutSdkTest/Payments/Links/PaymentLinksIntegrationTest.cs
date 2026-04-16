@@ -153,7 +153,7 @@ namespace Checkout.Payments.Links
             responseGet.CreatedOn.ShouldNotBeNull();
             responseGet.Currency.ShouldNotBeNull();
             responseGet.Customer.ShouldNotBeNull();
-            responseGet.Status.ShouldNotBeNull();
+            responseGet.Status.ShouldNotBe(default);
             responseGet.Reference.ShouldNotBeNullOrEmpty();
             responseGet.Description.ShouldNotBeNullOrEmpty();
             responseGet.Links.ShouldNotBeNull();

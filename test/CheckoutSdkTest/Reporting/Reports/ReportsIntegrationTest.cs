@@ -26,18 +26,18 @@ namespace Checkout.Reports
             var reports = await DefaultApi.ReportsClient().GetAllReports(_query);
             
             reports.ShouldNotBeNull();
-            if (!reports.Data.IsNullOrEmpty())
+            if (reports.Data?.Count > 0)
             {
                 foreach (var report in reports.Data)
                 {
                     report.Id.ShouldNotBeNull();
                     report.CreatedOn.ShouldNotBeNull();
-                    report.Type.ShouldNotBeNull();
+                    report.Type.ShouldNotBe(default);
                     report.Account.ShouldNotBeNull();
                     report.Account.ClientId.ShouldNotBeNull();
                     report.Account.EntityId.ShouldNotBeNull();
-                    report.From.ShouldNotBeNull();
-                    report.To.ShouldNotBeNull();
+                    report.From.ShouldNotBe(default);
+                    report.To.ShouldNotBe(default);
                     report.Files.ShouldNotBeNull();
                 }
             }
@@ -49,7 +49,7 @@ namespace Checkout.Reports
             var reports = await DefaultApi.ReportsClient().GetAllReports(_query);
             
             reports.ShouldNotBeNull();
-            if (!reports.Data.IsNullOrEmpty())
+            if (reports.Data?.Count > 0)
             {
                 var reportDetails = reports.Data[0];
                 var detailsResponse = await DefaultApi.ReportsClient().GetReportDetails(reportDetails.Id);
@@ -64,7 +64,7 @@ namespace Checkout.Reports
             var reports = await DefaultApi.ReportsClient().GetAllReports(_query);
             
             reports.ShouldNotBeNull();
-            if (!reports.Data.IsNullOrEmpty())
+            if (reports.Data?.Count > 0)
             {
                 var reportDetails = reports.Data[0];
                 var detailsResponse = await DefaultApi.ReportsClient().GetReportDetails(reportDetails.Id);

@@ -14,7 +14,7 @@ namespace Checkout.AgenticCommerce
         {
         }
 
-        public Task<DelegatedPaymentResponse> CreateDelegatedPayment(DelegatedPaymentRequest request,
+        public Task<DelegatedPaymentResponse> CreateDelegatedPaymentToken(DelegatedPaymentRequest request,
             DelegatedPaymentHeaders headers,
             CancellationToken cancellationToken = default)
         {

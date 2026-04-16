@@ -135,7 +135,7 @@ namespace Checkout.Workflows
 
             WorkflowActionResponse action = getWorkflowResponseUpdated.Actions[0];
             action.Id.ShouldNotBeNullOrEmpty();
-            action.Type.ShouldNotBeNull();
+            action.Type.ShouldNotBe(default);
         }
 
         [Fact(Skip = "unstable")]
@@ -208,7 +208,7 @@ namespace Checkout.Workflows
 
             updatedEventConditionResponse.ShouldNotBeNull();
             updatedEventConditionResponse.Id.ShouldNotBeNull();
-            updatedEventConditionResponse.Type.ShouldNotBeNull();
+            updatedEventConditionResponse.Type.ShouldNotBe(default);
         }
 
         [Fact(Skip = "unstable")]

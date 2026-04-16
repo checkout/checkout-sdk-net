@@ -88,7 +88,7 @@ namespace Checkout.Issuing.ControlGroups
             AssertControlGroupRemoved(response, createResponse.Id);
         }
 
-         [Fact]
+        [Fact]
         public async Task ControlGroupFlow_ShouldWorkEndToEnd()
         {
             // Arrange - Create a new cardholder and card for this flow test

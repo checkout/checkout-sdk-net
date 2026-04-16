@@ -438,9 +438,9 @@ namespace Checkout.Accounts
                 .RetrievePaymentInstrumentDetails(entityResponse.Id, instrumentResponse.Id);
             instrumentDetails.ShouldNotBeNull();
             instrumentDetails.Id.ShouldNotBeNull();
-            instrumentDetails.Status.ShouldNotBeNull();
+            instrumentDetails.Status.ShouldNotBe(default);
             instrumentDetails.Label.ShouldNotBeNull();
-            instrumentDetails.Type.ShouldNotBeNull();
+            instrumentDetails.Type.ShouldNotBe(default);
             instrumentDetails.Currency.ShouldNotBeNull();
             instrumentDetails.Country.ShouldNotBeNull();
             instrumentDetails.Document.ShouldNotBeNull();
@@ -506,9 +506,9 @@ namespace Checkout.Accounts
                 .RetrievePaymentInstrumentDetails(entityResponse.Id, instrumentResponse.Id);
             instrumentDetails.ShouldNotBeNull();
             instrumentDetails.Id.ShouldNotBeNull();
-            instrumentDetails.Status.ShouldNotBeNull();
+            instrumentDetails.Status.ShouldNotBe(default);
             instrumentDetails.Label.ShouldNotBeNull();
-            instrumentDetails.Type.ShouldNotBeNull();
+            instrumentDetails.Type.ShouldNotBe(default);
             instrumentDetails.Currency.ShouldNotBeNull();
             instrumentDetails.Country.ShouldNotBeNull();
             instrumentDetails.Document.ShouldNotBeNull();
@@ -682,7 +682,7 @@ namespace Checkout.Accounts
             response.Data.ShouldNotBeNull();
             response.Data.Count.ShouldBeGreaterThan(0);
             response.Data.First().Id.ShouldNotBeNull();
-            response.Data.First().Type.ShouldNotBeNull();
+            response.Data.First().Type.ShouldNotBe(default);
         }
 
         private void ValidateReserveRuleResponse(ReserveRuleResponse response, ReserveRuleRequest originalRequest)

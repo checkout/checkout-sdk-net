@@ -24,7 +24,7 @@ namespace Checkout.Authentification.Standalone
 
             created.Id.ShouldNotBeNull();
             created.SessionSecret.ShouldNotBeNull();
-            created.Amount.ShouldNotBeNull();
+            created.Amount.ShouldNotBe(0);
             created.Card.ShouldNotBeNull();
             created.AuthenticationType.ShouldBe(AuthenticationType.Regular);
             created.AuthenticationCategory.ShouldBe(AuthenticationCategoryType.Payment);

@@ -51,7 +51,7 @@ namespace Checkout.AgenticCommerce
                 .ReturnsAsync(expectedResponse);
 
             IAgenticCommerceClient client = new AgenticCommerceClient(_apiClient.Object, _configuration.Object);
-            var response = await client.CreateDelegatedPayment(request, headers);
+            var response = await client.CreateDelegatedPaymentToken(request, headers);
 
             response.ShouldNotBeNull();
             response.Id.ShouldBe("vt_abc123def456ghi789");
@@ -63,7 +63,7 @@ namespace Checkout.AgenticCommerce
         {
             IAgenticCommerceClient client = new AgenticCommerceClient(_apiClient.Object, _configuration.Object);
             var exception = await Should.ThrowAsync<CheckoutArgumentException>(
-                async () => await client.CreateDelegatedPayment(null, new DelegatedPaymentHeaders()));
+                async () => await client.CreateDelegatedPaymentToken(null, new DelegatedPaymentHeaders()));
             exception.ShouldBeOfType<CheckoutArgumentException>();
         }
 
@@ -72,7 +72,7 @@ namespace Checkout.AgenticCommerce
         {
             IAgenticCommerceClient client = new AgenticCommerceClient(_apiClient.Object, _configuration.Object);
             var exception = await Should.ThrowAsync<CheckoutArgumentException>(
-                async () => await client.CreateDelegatedPayment(CreateValidDelegatedPaymentRequest(), null));
+                async () => await client.CreateDelegatedPaymentToken(CreateValidDelegatedPaymentRequest(), null));
             exception.ShouldBeOfType<CheckoutArgumentException>();
         }
 
@@ -94,7 +94,7 @@ namespace Checkout.AgenticCommerce
                 .ReturnsAsync(expectedResponse);
 
             IAgenticCommerceClient client = new AgenticCommerceClient(_apiClient.Object, _configuration.Object);
-            var response = await client.CreateDelegatedPayment(request, headers, cancellationToken);
+            var response = await client.CreateDelegatedPaymentToken(request, headers, cancellationToken);
 
             response.ShouldNotBeNull();
             response.Id.ShouldBe("vt_test123");

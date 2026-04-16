@@ -46,7 +46,7 @@ namespace Checkout.Disputes
             fileDetails.ShouldNotBeNull();
             fileDetails.Id.ShouldNotBeNull();
             fileDetails.Filename.ShouldNotBeNull();
-            fileDetails.Purpose.ShouldNotBeNull();
+            fileDetails.Purpose.ShouldNotBe(default);
             fileDetails.Size.ShouldNotBeNull();
             fileDetails.UploadedOn.ShouldNotBeNull();
         }

@@ -54,7 +54,7 @@ namespace Checkout.PaymentMethods
             foreach (var method in response.Methods)
             {
                 method.ShouldNotBeNull();
-                method.Type.ShouldNotBeNull();
+                method.Type.ShouldNotBe(default);
             }
         }
 
@@ -66,7 +66,7 @@ namespace Checkout.PaymentMethods
             foreach (var method in response.Methods)
             {
                 // Validate that each method has the expected structure
-                method.Type.ShouldNotBeNull();
+                method.Type.ShouldNotBe(default);
                 
                 // If partner merchant ID is provided, it should be valid
                 if (!string.IsNullOrEmpty(method.PartnerMerchantId))

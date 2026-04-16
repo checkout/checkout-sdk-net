@@ -1,6 +1,6 @@
 using System;
 using System.Text.RegularExpressions;
-#if (NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER)
+#if NET5_0_OR_GREATER || NETSTANDARD2_0
 using Microsoft.Extensions.Logging;
 #endif
 
@@ -32,7 +32,7 @@ namespace Checkout
             return this;
         }
 
-#if (NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER)
+#if NET5_0_OR_GREATER || NETSTANDARD2_0
         public AbstractCheckoutSdkBuilder<T> LogProvider(ILoggerFactory loggerFactory)
         {
             Checkout.LogProvider.SetLogFactory(loggerFactory);

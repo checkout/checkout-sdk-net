@@ -20,8 +20,8 @@ namespace Checkout.Disputes.Previous
             response.Limit.ShouldBe(250);
             response.Skip.ShouldNotBeNull();
             response.TotalCount.ShouldNotBeNull();
-            response.To.ShouldNotBeNull();
-            response.From.ShouldNotBeNull();
+            response.To.ShouldNotBe(default);
+            response.From.ShouldNotBe(default);
 
             if (response.TotalCount > 0)
             {
@@ -51,7 +51,7 @@ namespace Checkout.Disputes.Previous
             fileDetails.ShouldNotBeNull();
             fileDetails.Id.ShouldNotBeNull();
             fileDetails.Filename.ShouldNotBeNull();
-            fileDetails.Purpose.ShouldNotBeNull();
+            fileDetails.Purpose.ShouldNotBe(default);
             fileDetails.Size.ShouldNotBeNull();
             fileDetails.UploadedOn.ShouldNotBeNull();
         }
