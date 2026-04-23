@@ -65,10 +65,11 @@ namespace Checkout.Issuing
             );
         }
 
+        [System.Obsolete("POST /issuing/disputes/{disputeId}/submit was removed from the API on 2026-04-15.", false)]
         public Task<IssuingDisputeResponse> SubmitDispute(
             string disputeId,
             string idempotencyKey,
-            SubmitDisputeRequest submitDisputeRequest = null,            
+            SubmitDisputeRequest submitDisputeRequest = null,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("disputeId", disputeId);

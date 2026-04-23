@@ -50,12 +50,12 @@ namespace Checkout.Issuing.Disputes.Requests
         public string PresentmentMessageId { get; set; }
 
         /// <summary>
-        /// Indicates whether to submit the dispute:
-        /// • Immediately – Set to true.
-        /// • Later – Set to false.
-        /// Default: false
-        /// [Optional]
+        /// Indicates whether to submit the dispute immediately (true) or later (false).
         /// </summary>
+        /// <remarks>
+        /// Removed from the API on 2026-04-15. Use the Submit an Issuing Dispute endpoint instead.
+        /// </remarks>
+        [System.Obsolete("This property was removed from the API on 2026-04-15. Use the Submit an Issuing Dispute endpoint instead.", false)]
         public bool? IsReadyForSubmission { get; set; }
 
         /// <summary>
