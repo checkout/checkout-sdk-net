@@ -128,6 +128,7 @@ namespace Checkout.Issuing.Disputes
             response.ShouldNotBeNull();
         }
 
+#pragma warning disable CS0618
         [Fact]
         public async Task SubmitDispute_WhenRequestIsValid_ShouldSucceed()
         {
@@ -181,6 +182,8 @@ namespace Checkout.Issuing.Disputes
             ValidateIssuingDisputeResponse(response, expectedResponse);
         }
 
+#pragma warning restore CS0618
+
         // Setup Methods (Builders)
         private CreateDisputeRequest CreateValidCreateDisputeRequest()
         {
@@ -199,7 +202,9 @@ namespace Checkout.Issuing.Disputes
                 },
                 Amount = 1000,
                 PresentmentMessageId = "msg_test_abcdefghijklmnopqr",
+#pragma warning disable CS0618
                 IsReadyForSubmission = false,
+#pragma warning restore CS0618
                 Justification = "Customer dispute"
             };
         }
