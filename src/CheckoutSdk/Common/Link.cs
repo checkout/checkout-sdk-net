@@ -1,5 +1,3 @@
-using Newtonsoft.Json;
-
 namespace Checkout.Common
 {
     public class Link
@@ -26,7 +24,6 @@ namespace Checkout.Common
         /// QR code data for payment methods that require a QR code scan, returned in 202 responses.
         /// [Optional]
         /// </summary>
-        [JsonProperty("qr_code")]
         public QrCode QrCode { get; set; }
     }
 }

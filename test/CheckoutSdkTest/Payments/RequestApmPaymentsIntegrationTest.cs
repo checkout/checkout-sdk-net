@@ -231,7 +231,7 @@ namespace Checkout.Payments
                 PayeeNotOnboarded);
         }
 
-        [Fact]
+        [Fact(Skip = "unavailable")]
         private async Task ShouldMakeQPayPayment()
         {
             var request = new PaymentRequest

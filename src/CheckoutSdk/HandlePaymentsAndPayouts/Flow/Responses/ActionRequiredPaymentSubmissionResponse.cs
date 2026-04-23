@@ -6,6 +6,9 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Responses
     /// </summary>
     public class ActionRequiredPaymentSubmissionResponse : PaymentSubmissionResponse
     {
+        /// <summary>
+        /// The payment status. Always "Action Required" for this response type.
+        /// </summary>
         public override string Status { get; set; } = "Action Required";
     }
 }

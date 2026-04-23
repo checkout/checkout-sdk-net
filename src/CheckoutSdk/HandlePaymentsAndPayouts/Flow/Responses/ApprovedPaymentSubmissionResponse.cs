@@ -6,6 +6,9 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Responses
     /// </summary>
     public class ApprovedPaymentSubmissionResponse : PaymentSubmissionResponse
     {
+        /// <summary>
+        /// The payment status. Always "Approved" for this response type.
+        /// </summary>
         public override string Status { get; set; } = "Approved";
     }
 }
