@@ -13,13 +13,11 @@ namespace Checkout.Payments
         /// <summary>
         /// The Visa identifier for the payment aggregator.
         /// </summary>
-        [Newtonsoft.Json.JsonProperty(PropertyName = "aggregator_id_visa")]
         public string AggregatorIdVisa { get; set; }
 
         /// <summary>
         /// The Mastercard identifier for the payment aggregator.
         /// </summary>
-        [Newtonsoft.Json.JsonProperty(PropertyName = "aggregator_id_mc")]
         public string AggregatorIdMc { get; set; }
     }
 }

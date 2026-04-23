@@ -15,6 +15,8 @@ namespace Checkout.Payments.Sender
 
         public string LastName { get; set; }
         
+        /// <summary>Renamed to <see cref="DateOfBirth"/> per API changelog 2025/02/21.</summary>
+        [System.Obsolete("Renamed to DateOfBirth per API changelog 2025/02/21.")]
         public string Dob { get; set; }
 
         public Address Address { get; set; }
