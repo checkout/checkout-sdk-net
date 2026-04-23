@@ -16,3 +16,5 @@ coverage/
 SonarQube.xml
 */.gitkeep
 .cursor/
+.claude/
+CLAUDE.md
