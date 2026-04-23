@@ -12,5 +12,11 @@ namespace Checkout.NetworkTokens.Common.Responses
 
         /// <summary> Token requestor ID (Optional) </summary>
         public string TokenRequestorId { get; set; }
+
+        /// <summary>
+        /// The scheme-specific identifier for the network token.
+        /// For Visa this is the vProvisionedTokenID; for Mastercard the tokenUniqueReference.
+        /// </summary>
+        public string TokenSchemeId { get; set; }
     }
 }

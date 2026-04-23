@@ -255,5 +255,11 @@ namespace Checkout.Payments.Request
         /// [Optional]
         /// </summary>
         public PaymentInstruction Instruction { get; set; }
+
+        /// <summary>
+        /// A fallback card source used if the primary source fails.
+        /// [Optional]
+        /// </summary>
+        public RequestCardSource FallbackSource { get; set; }
     }
 }

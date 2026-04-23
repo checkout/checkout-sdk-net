@@ -50,5 +50,10 @@ namespace Checkout.Payments.Response
         public PanProcessedType? PanTypeProcessed { get; set; }
         
         public bool? CkoNetworkTokenAvailable { get; set; }
+
+        /// <summary>
+        /// Indicates whether the fallback_source field was used for the payment.
+        /// </summary>
+        public bool? FallbackSourceUsed { get; set; }
     }
 }

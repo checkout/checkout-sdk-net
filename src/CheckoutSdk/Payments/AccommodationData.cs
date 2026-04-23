@@ -52,5 +52,15 @@ namespace Checkout.Payments
         /// Details of the rooms booked
         /// </summary>
         public List<PaymentContextsAccommodationRoom> Room { get; set; }
+
+        /// <summary>
+        /// The property's phone information.
+        /// </summary>
+        public List<AccommodationPhone> PropertyPhone { get; set; }
+
+        /// <summary>
+        /// The customer service phone information.
+        /// </summary>
+        public List<AccommodationPhone> CustomerServicePhone { get; set; }
     }
 }

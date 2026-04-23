@@ -83,8 +83,28 @@ namespace Checkout.Payments
         public CardType? CardType { get; set; }
         
         public string AffiliateId { get; set; }
-        
+
         public string AffiliateUrl { get; set; }
-        
+
+        /// <summary>
+        /// Information about the payment aggregator.
+        /// </summary>
+        public ProcessingAggregator Aggregator { get; set; }
+
+        /// <summary>
+        /// The transaction identifier to track a payment request.
+        /// </summary>
+        public string ReconciliationId { get; set; }
+
+        /// <summary>
+        /// The foreign retailer amount applied to the transaction, in the minor currency unit.
+        /// </summary>
+        public long? ForeignRetailerAmount { get; set; }
+
+        /// <summary>
+        /// Specifies which ACH service to use for the payment when source.type is "ach".
+        /// </summary>
+        public AchServiceType? ServiceType { get; set; }
+
     }
 }
