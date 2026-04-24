@@ -60,14 +60,12 @@ namespace Checkout.Issuing
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Submit updates to an existing Issuing dispute.
-        /// [Beta]
+        /// Submit an Issuing dispute.
         /// </summary>
-        /// <param name="disputeId">The unique identifier of the dispute to update.</param>
-        /// <param name="idempotencyKey">A unique idempotency key for safely retrying requests.</param>
-        /// <param name="submitDisputeRequest">The optional update request details.</param>
-        /// <param name="cancellationToken">An optional cancellation token.</param>
-        /// <returns>The updated dispute details.</returns>
+        /// <remarks>
+        /// This endpoint was removed from the API on 2026-04-15.
+        /// </remarks>
+        [System.Obsolete("POST /issuing/disputes/{disputeId}/submit was removed from the API on 2026-04-15.", false)]
         Task<IssuingDisputeResponse> SubmitDispute(
             string disputeId,
             string idempotencyKey,
