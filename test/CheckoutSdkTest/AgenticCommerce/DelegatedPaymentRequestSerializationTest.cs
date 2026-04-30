@@ -25,7 +25,7 @@ namespace Checkout.AgenticCommerce
                 {
                     Reason = DelegatedPaymentAllowanceReason.OneTime,
                     MaxAmount = 10000,
-                    Currency = "USD",
+                    Currency = Currency.USD,
                     MerchantId = "cli_test",
                     CheckoutSessionId = "1PQrsT",
                     ExpiresAt = DateTime.UtcNow.AddHours(1)
@@ -67,7 +67,7 @@ namespace Checkout.AgenticCommerce
                 {
                     Reason = DelegatedPaymentAllowanceReason.OneTime,
                     MaxAmount = 10000,
-                    Currency = "USD",
+                    Currency = Currency.USD,
                     MerchantId = "cli_vkuhvk4vjn2edkps7dfsq6emqm",
                     CheckoutSessionId = "1PQrsT",
                     ExpiresAt = new DateTime(2025, 10, 9, 7, 20, 50)
@@ -107,7 +107,7 @@ namespace Checkout.AgenticCommerce
                 {
                     Reason = DelegatedPaymentAllowanceReason.OneTime,
                     MaxAmount = 5000,
-                    Currency = "GBP",
+                    Currency = Currency.GBP,
                     MerchantId = "cli_test",
                     CheckoutSessionId = "sess123",
                     ExpiresAt = new DateTime(2026, 1, 1)
@@ -120,7 +120,7 @@ namespace Checkout.AgenticCommerce
             var json = serializer.Serialize(original);
             var deserialized = (DelegatedPaymentRequest)serializer.Deserialize(json, typeof(DelegatedPaymentRequest));
 
-            deserialized.Allowance.Currency.ShouldBe("GBP");
+            deserialized.Allowance.Currency.ShouldBe(Currency.GBP);
             deserialized.Allowance.MaxAmount.ShouldBe(5000L);
             deserialized.PaymentMethod.Number.ShouldBe("4242424242424242");
             deserialized.Metadata["key"].ShouldBe("value");

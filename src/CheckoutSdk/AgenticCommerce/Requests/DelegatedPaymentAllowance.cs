@@ -1,4 +1,5 @@
 using Checkout.AgenticCommerce.Entities;
+using Checkout.Common;
 using System;
 
 namespace Checkout.AgenticCommerce.Requests
@@ -26,7 +27,7 @@ namespace Checkout.AgenticCommerce.Requests
         /// [Required]
         /// 3 characters.
         /// </summary>
-        public string Currency { get; set; }
+        public Currency Currency { get; set; }
 
         /// <summary>
         /// The unique identifier of the merchant that will process the payment.

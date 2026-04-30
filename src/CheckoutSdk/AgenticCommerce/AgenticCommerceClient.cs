@@ -16,6 +16,7 @@ namespace Checkout.AgenticCommerce
 
         public Task<DelegatedPaymentResponse> CreateDelegatedPaymentToken(DelegatedPaymentRequest request,
             DelegatedPaymentHeaders headers,
+            string idempotencyKey = null,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("request", request, "headers", headers);
@@ -24,7 +25,7 @@ namespace Checkout.AgenticCommerce
                 SdkAuthorization(),
                 request,
                 cancellationToken,
-                null,
+                idempotencyKey,
                 headers);
         }
     }

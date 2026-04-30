@@ -1,5 +1,6 @@
 using Checkout.AgenticCommerce.Entities;
 using Checkout.AgenticCommerce.Requests;
+using Checkout.Common;
 using Shouldly;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace Checkout.AgenticCommerce
                 {
                     Reason = DelegatedPaymentAllowanceReason.OneTime,
                     MaxAmount = 10000,
-                    Currency = "USD",
+                    Currency = Currency.USD,
                     MerchantId = "cli_vkuhvk4vjn2edkps7dfsq6emqm",
                     CheckoutSessionId = "1PQrsT",
                     ExpiresAt = DateTime.UtcNow.AddHours(1)
