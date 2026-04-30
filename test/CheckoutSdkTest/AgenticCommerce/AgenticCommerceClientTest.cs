@@ -95,10 +95,34 @@ namespace Checkout.AgenticCommerce
                 .ReturnsAsync(expectedResponse);
 
             IAgenticCommerceClient client = new AgenticCommerceClient(_apiClient.Object, _configuration.Object);
-            var response = await client.CreateDelegatedPaymentToken(request, headers, cancellationToken);
+            var response = await client.CreateDelegatedPaymentToken(request, headers, cancellationToken: cancellationToken);
 
             response.ShouldNotBeNull();
             response.Id.ShouldBe("vt_test123");
+        }
+
+        [Fact]
+        public async Task CreateDelegatedPayment_WithIdempotencyKey_ShouldPassKeyToApiClient()
+        {
+            var request = CreateValidDelegatedPaymentRequest();
+            var headers = CreateValidDelegatedPaymentHeaders();
+            const string idempotencyKey = "test-idempotency-key-123";
+            var expectedResponse = new DelegatedPaymentResponse { Id = "vt_idempotent123" };
+
+            _apiClient.Setup(c => c.Post<DelegatedPaymentResponse>(
+                    "agentic_commerce/delegate_payment",
+                    _authorization,
+                    request,
+                    CancellationToken.None,
+                    idempotencyKey,
+                    headers))
+                .ReturnsAsync(expectedResponse);
+
+            IAgenticCommerceClient client = new AgenticCommerceClient(_apiClient.Object, _configuration.Object);
+            var response = await client.CreateDelegatedPaymentToken(request, headers, idempotencyKey);
+
+            response.ShouldNotBeNull();
+            response.Id.ShouldBe("vt_idempotent123");
         }
 
         private DelegatedPaymentRequest CreateValidDelegatedPaymentRequest()
