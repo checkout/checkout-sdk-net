@@ -1,5 +1,3 @@
-using Checkout.Common;
-
 namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessionRequest.Source.Common.HomePhone
 {
     /// <summary>
@@ -14,7 +12,7 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// [ 1 .. 3 ] characters
         /// ^\d{1,3}$
         /// </summary>
-        public CountryCode? CountryCode { get; set; }
+        public string CountryCode { get; set; }
 
         /// <summary>
         /// The rest of the number. According to ITU-E.164

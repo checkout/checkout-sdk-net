@@ -1,5 +1,3 @@
-using Checkout.Common;
-
 namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.PaymentGetResponseKlarnaSourceSource.AccountHolder.Phone
 {
     /// <summary>
@@ -9,9 +7,10 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.PaymentGetRes
     public class Phone
     {
         /// <summary>
+        /// The international country calling code.
         /// [Optional]
         /// </summary>
-        public CountryCode? CountryCode { get; set; }
+        public string CountryCode { get; set; }
 
         /// <summary>
         /// [Optional]

@@ -1,5 +1,3 @@
-using Checkout.Common;
-
 namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseCreated.
     Customer.
     Phone
@@ -15,7 +13,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// [Optional]
         /// [ 1 .. 7 ] characters
         /// </summary>
-        public CountryCode? CountryCode { get; set; }
+        public string CountryCode { get; set; }
 
         /// <summary>
         /// The phone number. Required if source.type is tamara.
