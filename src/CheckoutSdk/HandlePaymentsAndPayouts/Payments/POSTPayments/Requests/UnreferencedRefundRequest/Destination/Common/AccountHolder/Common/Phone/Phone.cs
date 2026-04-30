@@ -1,5 +1,3 @@
-using Checkout.Common;
-
 namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.UnreferencedRefundRequest.Destination.Common.
     AccountHolder.Common.Phone
 {
@@ -14,7 +12,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Requests.Unref
         /// [Required]
         /// [ 1 .. 7 ] characters
         /// </summary>
-        public CountryCode? CountryCode { get; set; }
+        public string CountryCode { get; set; }
 
         /// <summary>
         /// The digits of the phone number, not including the country_code.
