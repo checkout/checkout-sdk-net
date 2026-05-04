@@ -1,5 +1,6 @@
 using Checkout.Accounts;
 using Checkout.AgenticCommerce;
+using Checkout.Common;
 using Checkout.AgenticCommerce.Entities;
 using Checkout.AgenticCommerce.Requests;
 using Checkout.AgenticCommerce.Responses;
@@ -94,10 +95,34 @@ namespace Checkout.AgenticCommerce
                 .ReturnsAsync(expectedResponse);
 
             IAgenticCommerceClient client = new AgenticCommerceClient(_apiClient.Object, _configuration.Object);
-            var response = await client.CreateDelegatedPaymentToken(request, headers, cancellationToken);
+            var response = await client.CreateDelegatedPaymentToken(request, headers, cancellationToken: cancellationToken);
 
             response.ShouldNotBeNull();
             response.Id.ShouldBe("vt_test123");
+        }
+
+        [Fact]
+        public async Task CreateDelegatedPayment_WithIdempotencyKey_ShouldPassKeyToApiClient()
+        {
+            var request = CreateValidDelegatedPaymentRequest();
+            var headers = CreateValidDelegatedPaymentHeaders();
+            const string idempotencyKey = "test-idempotency-key-123";
+            var expectedResponse = new DelegatedPaymentResponse { Id = "vt_idempotent123" };
+
+            _apiClient.Setup(c => c.Post<DelegatedPaymentResponse>(
+                    "agentic_commerce/delegate_payment",
+                    _authorization,
+                    request,
+                    CancellationToken.None,
+                    idempotencyKey,
+                    headers))
+                .ReturnsAsync(expectedResponse);
+
+            IAgenticCommerceClient client = new AgenticCommerceClient(_apiClient.Object, _configuration.Object);
+            var response = await client.CreateDelegatedPaymentToken(request, headers, idempotencyKey);
+
+            response.ShouldNotBeNull();
+            response.Id.ShouldBe("vt_idempotent123");
         }
 
         private DelegatedPaymentRequest CreateValidDelegatedPaymentRequest()
@@ -116,7 +141,7 @@ namespace Checkout.AgenticCommerce
                 {
                     Reason = DelegatedPaymentAllowanceReason.OneTime,
                     MaxAmount = 10000,
-                    Currency = "USD",
+                    Currency = Currency.USD,
                     MerchantId = "cli_vkuhvk4vjn2edkps7dfsq6emqm",
                     CheckoutSessionId = "1PQrsT",
                     ExpiresAt = DateTime.UtcNow.AddHours(1)
