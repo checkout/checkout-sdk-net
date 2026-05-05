@@ -9,14 +9,18 @@ namespace Checkout
             "https://access.sandbox.checkout.com/connect/token",
             "https://files.sandbox.checkout.com/",
             "https://transfers.sandbox.checkout.com/",
-            "https://balances.sandbox.checkout.com/")]
+            "https://balances.sandbox.checkout.com/",
+            "https://forward.sandbox.checkout.com/",
+            "https://identity-verification.sandbox.checkout.com/")]
         Sandbox,
 
         [Environment("https://api.checkout.com/",
             "https://access.checkout.com/connect/token",
             "https://files.checkout.com/",
             "https://transfers.checkout.com/",
-            "https://balances.checkout.com/")]
+            "https://balances.checkout.com/",
+            "https://forward.checkout.com/",
+            "https://identity-verification.checkout.com/")]
         Production
     }
 
@@ -43,7 +47,7 @@ namespace Checkout
         {
             Uri newEnvironment = new Uri(originalUrl.ToString());
             
-            Regex regex = new Regex(@"^[0-9a-z]+$");
+            Regex regex = new Regex(@"^[a-z0-9]+(-[a-z0-9]+)*$");
             if (regex.IsMatch(subdomain))
             {
                 UriBuilder merchantUrl = new UriBuilder(originalUrl);
