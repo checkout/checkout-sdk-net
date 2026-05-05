@@ -53,6 +53,7 @@ namespace Checkout
                 ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() },
                 Converters = new JsonConverter[]
                 {
+                    new CardTypeUnknownConverter(),
                     new StringEnumConverter(),
                     // Instruments CS2
                     new CreateInstrumentResponseTypeConverter(), 
@@ -95,6 +96,40 @@ namespace Checkout
             };
 
             return converter;
+        }
+
+        private class CardTypeUnknownConverter : StringEnumConverter
+        {
+            private static readonly HashSet<Type> CardTypeEnums = new HashSet<Type>
+            {
+                typeof(Common.CardType),
+                typeof(HandlePaymentsAndPayouts.Payments.Common.Source.CardSource.CardType),
+                typeof(Authentication.Standalone.Common.Responses.Card.Metadata.CardType),
+            };
+
+            public override bool CanConvert(Type objectType)
+            {
+                var underlying = Nullable.GetUnderlyingType(objectType) ?? objectType;
+                return CardTypeEnums.Contains(underlying);
+            }
+
+            public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+                Newtonsoft.Json.JsonSerializer serializer)
+            {
+                if (reader.TokenType == JsonToken.Null)
+                    return null;
+
+                try
+                {
+                    return base.ReadJson(reader, objectType, existingValue, serializer);
+                }
+                catch (JsonSerializationException) when (
+                    reader.TokenType == JsonToken.String &&
+                    !string.IsNullOrEmpty(reader.Value as string))
+                {
+                    return Nullable.GetUnderlyingType(objectType) != null ? null : existingValue;
+                }
+            }
         }
 
         private class ShortDateTimeConverter : JsonConverter

@@ -1,6 +1,8 @@
 using Checkout.Accounts.Entities.Common.Company;
 using Checkout.Accounts.Entities.Response;
+using Checkout.Common;
 using Checkout.Financial;
+using Newtonsoft.Json;
 using Checkout.Issuing.Cards.Requests.Create;
 using Checkout.Issuing.Common;
 using Checkout.Issuing.Common.Responses;
@@ -279,16 +281,72 @@ namespace Checkout
             // This method tests the custom ShortDateTimeConverter
             var serializer = new JsonSerializer();
             var date = "{ \"datetime\" : \"2025-10-30\" }";
-            
+
             // Test deserialization
             DummyDateTime dummyDate = (DummyDateTime) serializer.Deserialize(date, typeof(DummyDateTime));
-            
+
             // Test serialization as well
             var serializedJson = serializer.Serialize(dummyDate);
-            
+
             Assert.NotNull(dummyDate);
             Assert.Equal(new DateTime(2025, 10, 30), dummyDate.Datetime);
             Assert.Contains("2025-10-30", serializedJson);
+        }
+
+        [Fact]
+        public void ShouldDeserializeKnownCardType()
+        {
+            const string json = @"{""type"":""card"",""card_type"":""Credit""}";
+            var source = (CardResponseSource)new JsonSerializer().Deserialize(json, typeof(CardResponseSource));
+            source.CardType.ShouldBe(CardType.Credit);
+        }
+
+        [Fact]
+        public void ShouldReturnNullForUnknownCardTypeEnumValue()
+        {
+            const string json = @"{""type"":""card"",""card_type"":""UNKNOWN""}";
+            var source = (CardResponseSource)new JsonSerializer().Deserialize(json, typeof(CardResponseSource));
+            source.ShouldNotBeNull();
+            source.CardType.ShouldBeNull();
+        }
+
+        [Fact]
+        public void ShouldDeserializeFullPaymentResponseWithUnknownCardType()
+        {
+            const string json = @"{
+                ""id"": ""pay_talabat_incident"",
+                ""status"": ""Authorized"",
+                ""approved"": true,
+                ""source"": {
+                    ""type"": ""card"",
+                    ""last4"": ""4242"",
+                    ""card_type"": ""UNKNOWN""
+                }
+            }";
+
+            PaymentResponse response = null;
+            Should.NotThrow(() =>
+                response = (PaymentResponse)new JsonSerializer().Deserialize(json, typeof(PaymentResponse)));
+            response.ShouldNotBeNull();
+            response.Approved.ShouldBe(true);
+            var source = response.Source.ShouldBeAssignableTo<CardResponseSource>();
+            source.CardType.ShouldBeNull();
+        }
+
+        [Fact]
+        public void ShouldThrowWhenCardTypeTokenIsNotAString()
+        {
+            const string json = @"{""type"":""card"",""card_type"":true}";
+            Should.Throw<JsonSerializationException>(() =>
+                new JsonSerializer().Deserialize(json, typeof(CardResponseSource)));
+        }
+
+        [Fact]
+        public void ShouldThrowForUnknownValueOnNonCardTypeEnum()
+        {
+            const string json = @"{""type"":""card"",""card_category"":""UNKNOWN""}";
+            Should.Throw<JsonSerializationException>(() =>
+                new JsonSerializer().Deserialize(json, typeof(CardResponseSource)));
         }
     }
 }
