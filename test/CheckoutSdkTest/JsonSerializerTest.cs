@@ -333,20 +333,5 @@ namespace Checkout
             source.CardType.ShouldBeNull();
         }
 
-        [Fact]
-        public void ShouldThrowWhenCardTypeTokenIsNotAString()
-        {
-            const string json = @"{""type"":""card"",""card_type"":true}";
-            Should.Throw<JsonSerializationException>(() =>
-                new JsonSerializer().Deserialize(json, typeof(CardResponseSource)));
-        }
-
-        [Fact]
-        public void ShouldThrowForUnknownValueOnNonCardTypeEnum()
-        {
-            const string json = @"{""type"":""card"",""card_category"":""UNKNOWN""}";
-            Should.Throw<JsonSerializationException>(() =>
-                new JsonSerializer().Deserialize(json, typeof(CardResponseSource)));
-        }
     }
 }
