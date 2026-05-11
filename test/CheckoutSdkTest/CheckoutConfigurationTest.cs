@@ -25,7 +25,7 @@ namespace Checkout
         [InlineData("abc1", "https://abc1.api.sandbox.checkout.com/", "https://abc1.access.sandbox.checkout.com/connect/token")]
         [InlineData("12345domain", "https://12345domain.api.sandbox.checkout.com/", "https://12345domain.access.sandbox.checkout.com/connect/token")]
         [InlineData("1234doma", "https://1234doma.api.sandbox.checkout.com/", "https://1234doma.access.sandbox.checkout.com/connect/token")]
-        [InlineData("test-123", "https://test-123.api.sandbox.checkout.com/", "https://test-123.access.sandbox.checkout.com/connect/token")]
+        [InlineData("pl-vkuhvk4v", "https://pl-vkuhvk4v.api.sandbox.checkout.com/", "https://pl-vkuhvk4v.access.sandbox.checkout.com/connect/token")]
         [InlineData("pl-abc123", "https://pl-abc123.api.sandbox.checkout.com/", "https://pl-abc123.access.sandbox.checkout.com/connect/token")]
         public void ShouldCreateConfigurationWithSubdomain(string subdomain, string expectedApiUri, string expectedAuthUri)
         {
@@ -51,6 +51,9 @@ namespace Checkout
         [InlineData("foo-", "https://api.sandbox.checkout.com/", "https://access.sandbox.checkout.com/connect/token")]
         [InlineData("-foo", "https://api.sandbox.checkout.com/", "https://access.sandbox.checkout.com/connect/token")]
         [InlineData("ABC123", "https://api.sandbox.checkout.com/", "https://access.sandbox.checkout.com/connect/token")]
+        [InlineData("test-123", "https://api.sandbox.checkout.com/", "https://access.sandbox.checkout.com/connect/token")]
+        [InlineData("foo-bar", "https://api.sandbox.checkout.com/", "https://access.sandbox.checkout.com/connect/token")]
+        [InlineData("pl-", "https://api.sandbox.checkout.com/", "https://access.sandbox.checkout.com/connect/token")]
         public void ShouldCreateConfigurationWithBadSubdomain(string subdomain, string expectedApiUri, string expectedAuthUri)
         {
             var credentials = new StaticKeysSdkCredentials(ValidDefaultSk, ValidDefaultPk);

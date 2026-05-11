@@ -47,9 +47,9 @@ namespace CheckoutSdkTest
         }
 
         [Fact]
-        public void ShouldAddSubdomainForHyphenatedSubdomain()
+        public void ShouldAddSubdomainForPrivateLinkPrefix()
         {
-            var subdomain = "pl-abc123";
+            var subdomain = "pl-vkuhvk4v";
             var environmentSubdomain = new EnvironmentSubdomain(Environment.Sandbox, subdomain);
 
             Assert.Equal($"https://{subdomain}.api.sandbox.checkout.com/", environmentSubdomain.ApiUri.ToString());

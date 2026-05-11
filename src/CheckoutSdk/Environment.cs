@@ -47,7 +47,7 @@ namespace Checkout
         {
             Uri newEnvironment = new Uri(originalUrl.ToString());
             
-            Regex regex = new Regex(@"^[a-z0-9]+(-[a-z0-9]+)*$");
+            Regex regex = new Regex(@"^(?:pl-)?[a-z0-9]+$");
             if (regex.IsMatch(subdomain))
             {
                 UriBuilder merchantUrl = new UriBuilder(originalUrl);
