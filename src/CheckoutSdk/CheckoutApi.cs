@@ -101,11 +101,12 @@ namespace Checkout
             _paymentContextsClient = new PaymentContextsClient(baseApiClient, configuration);
             _forwardClient = new ForwardClient(ForwardApiClient(configuration), configuration);
             _flowClient = new FlowClient(baseApiClient, configuration);
-            _applicantsClient = new ApplicantsClient(IdentityApiClient(configuration), configuration);
-            _amlScreeningClient = new AmlScreeningClient(IdentityApiClient(configuration), configuration);
-            _faceAuthenticationClient = new FaceAuthenticationClient(IdentityApiClient(configuration), configuration);
-            _idDocumentVerificationClient = new IdDocumentVerificationClient(IdentityApiClient(configuration), configuration);
-            _identityVerificationClient = new IdentityVerificationClient(IdentityApiClient(configuration), configuration);
+            var identityApiClient = IdentityApiClient(configuration);
+            _applicantsClient = new ApplicantsClient(identityApiClient, configuration);
+            _amlScreeningClient = new AmlScreeningClient(identityApiClient, configuration);
+            _faceAuthenticationClient = new FaceAuthenticationClient(identityApiClient, configuration);
+            _idDocumentVerificationClient = new IdDocumentVerificationClient(identityApiClient, configuration);
+            _identityVerificationClient = new IdentityVerificationClient(identityApiClient, configuration);
             _networkTokensClient = new NetworkTokensClient(baseApiClient, configuration);
             _paymentSetupsClient = new PaymentSetupsClient(baseApiClient, configuration);
             _applePayClient = new ApplePayClient(baseApiClient, configuration);
