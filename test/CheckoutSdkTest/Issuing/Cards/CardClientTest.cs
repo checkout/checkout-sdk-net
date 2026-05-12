@@ -284,7 +284,7 @@ namespace Checkout.Issuing.Cards
 
             _apiClient.Setup(apiClient =>
                     apiClient.Post<Resource>(
-                        "issuing/cards/schedule-revocation",
+                        "issuing/cards/card_id/schedule-revocation",
                         _authorization,
                         scheduleRequest,
                         CancellationToken.None,
@@ -293,7 +293,7 @@ namespace Checkout.Issuing.Cards
 
             IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
 
-            Resource response = await client.ScheduleCardRevocation(scheduleRequest, CancellationToken.None);
+            Resource response = await client.ScheduleCardRevocation("card_id", scheduleRequest, CancellationToken.None);
 
             response.ShouldNotBeNull();
             response.ShouldBeSameAs(resourceResponse);

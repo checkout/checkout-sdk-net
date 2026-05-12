@@ -321,12 +321,13 @@ namespace Checkout.Issuing.Cards
         [Fact(Skip = "Avoid creating cards all the time")]
         private async Task ShouldScheduleCardRevocation()
         {
+            AbstractCardCreateResponse abstractCard = _abstractCardRequest;
             var scheduleRequest = new ScheduleCardRevocationRequest
             {
                 RevocationDate = System.DateTime.UtcNow.AddDays(7).ToString("yyyy-MM-dd")
             };
 
-            var resourceResponse = await Api.IssuingClient().ScheduleCardRevocation(scheduleRequest);
+            var resourceResponse = await Api.IssuingClient().ScheduleCardRevocation(abstractCard.Id, scheduleRequest);
 
             resourceResponse.HttpStatusCode.ShouldBe(200);
             resourceResponse.Body.ShouldNotBeNull();
