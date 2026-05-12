@@ -53,17 +53,18 @@ namespace Checkout.Issuing.ControlProfiles
         [Fact]
         private async Task ShouldGetAllControlProfiles()
         {
+            ControlProfileQueryTarget query = new ControlProfileQueryTarget { TargetId = "target_id" };
             ControlProfilesResponse controlProfilesResponse = new ControlProfilesResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<ControlProfilesResponse>("issuing/controls/control-profiles", _authorization,
-                        CancellationToken.None))
+                    apiClient.Query<ControlProfilesResponse>("issuing/controls/control-profiles", _authorization,
+                        query, CancellationToken.None))
                 .ReturnsAsync(() => controlProfilesResponse);
 
             IIssuingClient client =
                 new IssuingClient(_apiClient.Object, _configuration.Object);
 
-            ControlProfilesResponse response = await client.GetAllControlProfiles("target_id");
+            ControlProfilesResponse response = await client.GetAllControlProfiles(query);
 
             response.ShouldNotBeNull();
             response.ShouldBeSameAs(controlProfilesResponse);

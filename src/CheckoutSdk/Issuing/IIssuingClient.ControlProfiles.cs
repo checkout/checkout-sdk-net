@@ -12,7 +12,7 @@ namespace Checkout.Issuing
         Task<ControlProfileResponse> CreateControlProfile(ControlProfileRequest controlProfileRequest,
             CancellationToken cancellationToken = default);
 
-        Task<ControlProfilesResponse> GetAllControlProfiles(string targetId,
+        Task<ControlProfilesResponse> GetAllControlProfiles(ControlProfileQueryTarget query,
             CancellationToken cancellationToken = default);
 
         Task<ControlProfileResponse> GetControlProfileDetails(string controlProfileId,
