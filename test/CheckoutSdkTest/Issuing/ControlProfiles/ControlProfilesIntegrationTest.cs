@@ -41,7 +41,8 @@ namespace Checkout.Issuing.ControlProfiles
         [Fact(Skip = "Use on demand")]
         private async Task ShouldGetAllControlProfiles()
         {
-            ControlProfilesResponse response = await Api.IssuingClient().GetAllControlProfiles(_controlProfile.Id);
+            ControlProfilesResponse response = await Api.IssuingClient().GetAllControlProfiles(
+                new ControlProfileQueryTarget { TargetId = _controlProfile.Id });
             response.ShouldNotBeNull();
             response.ControlProfiles.ShouldNotBeNull();
 

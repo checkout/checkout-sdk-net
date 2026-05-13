@@ -140,12 +140,13 @@ namespace Checkout.Issuing
         }
 
         public Task<Resource> ScheduleCardRevocation(
+            string cardId, 
             ScheduleCardRevocationRequest scheduleCardRevocationRequest,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("scheduleCardRevocationRequest", scheduleCardRevocationRequest);
+            CheckoutUtils.ValidateParams("cardId", cardId, "scheduleCardRevocationRequest", scheduleCardRevocationRequest);
             return ApiClient.Post<Resource>(
-                BuildPath(IssuingPath, CardsPath, ScheduleRevocation),
+                BuildPath(IssuingPath, CardsPath, cardId, ScheduleRevocation),
                 SdkAuthorization(),
                 scheduleCardRevocationRequest,
                 cancellationToken

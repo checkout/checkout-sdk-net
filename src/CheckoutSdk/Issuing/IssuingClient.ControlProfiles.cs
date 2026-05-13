@@ -20,12 +20,13 @@ namespace Checkout.Issuing
             );
         }
 
-        public Task<ControlProfilesResponse> GetAllControlProfiles(string targetId, CancellationToken cancellationToken = default)
+        public Task<ControlProfilesResponse> GetAllControlProfiles(ControlProfileQueryTarget query, CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("targetId", targetId);
-            return ApiClient.Get<ControlProfilesResponse>(
+            CheckoutUtils.ValidateParams("query", query);
+            return ApiClient.Query<ControlProfilesResponse>(
                 BuildPath(IssuingPath, ControlsPath, ControlProfilesPath),
                 SdkAuthorization(),
+                query,
                 cancellationToken
             );
         }
