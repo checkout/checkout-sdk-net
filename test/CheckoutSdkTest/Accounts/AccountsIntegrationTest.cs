@@ -1,6 +1,7 @@
 using Checkout.Accounts.Entities.Common.Company;
 using Checkout.Accounts.Entities.Common.ContactDetails;
 using Checkout.Accounts.Entities.Common.Documents;
+using Checkout.Accounts.Entities.Common.Requirements;
 using Checkout.Accounts.Entities.Request;
 using Checkout.Accounts.Entities.Response;
 using Checkout.Accounts.ReserveRules;
@@ -708,6 +709,70 @@ namespace Checkout.Accounts
                 .Scopes(OAuthScope.Accounts)
                 .LogProvider(logFactory)
                 .Build() as CheckoutApi;
+        }
+
+        [Fact(Skip = "Requires a sub-entity with pending requirements")]
+        private async Task ShouldListEntityRequirements()
+        {
+            var entityId = System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_ENTITY_ID");
+
+            var response = await DefaultApi.AccountsClient().GetEntityRequirements(entityId);
+
+            ValidateEntityRequirementListResponse(response);
+        }
+
+        [Fact(Skip = "Requires a sub-entity with a known requirement id")]
+        private async Task ShouldGetEntityRequirementDetails()
+        {
+            var entityId = System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_ENTITY_ID");
+            var list = await DefaultApi.AccountsClient().GetEntityRequirements(entityId);
+            list.Data.ShouldNotBeEmpty();
+            var requirementId = list.Data.First().Id;
+
+            var details = await DefaultApi.AccountsClient().GetEntityRequirementDetails(entityId, requirementId);
+
+            ValidateEntityRequirementDetailsResponse(details, requirementId);
+        }
+
+        [Fact(Skip = "Requires a sub-entity with a known requirement id")]
+        private async Task ShouldResolveEntityRequirement()
+        {
+            var entityId = System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_ENTITY_ID");
+            var list = await DefaultApi.AccountsClient().GetEntityRequirements(entityId);
+            list.Data.ShouldNotBeEmpty();
+            var requirementId = list.Data.First().Id;
+            var updateRequest = new EntityRequirementUpdateRequest { Value = "Acme Holdings Limited" };
+
+            var response = await DefaultApi.AccountsClient()
+                .ResolveEntityRequirement(entityId, requirementId, updateRequest);
+
+            ValidateEntityRequirementUpdateResponse(response, requirementId);
+        }
+
+        private static void ValidateEntityRequirementListResponse(EntityRequirementListResponse response)
+        {
+            response.ShouldNotBeNull();
+            response.Data.ShouldNotBeNull();
+            foreach (var item in response.Data)
+            {
+                item.Id.ShouldNotBeNullOrEmpty();
+                item.Resource.ShouldNotBeNullOrEmpty();
+            }
+        }
+
+        private static void ValidateEntityRequirementDetailsResponse(EntityRequirementDetailsResponse response, string requirementId)
+        {
+            response.ShouldNotBeNull();
+            response.Id.ShouldBe(requirementId);
+            response.Resource.ShouldNotBeNullOrEmpty();
+        }
+
+        private static void ValidateEntityRequirementUpdateResponse(EntityRequirementUpdateResponse response, string requirementId)
+        {
+            response.ShouldNotBeNull();
+            response.Id.ShouldBe(requirementId);
+            response.Status.ShouldBe(EntityRequirementUpdateStatus.Processing);
+            response.SubmittedAt.ShouldNotBeNull();
         }
     }
 }
