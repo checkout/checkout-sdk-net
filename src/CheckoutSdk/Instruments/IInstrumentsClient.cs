@@ -20,6 +20,14 @@ namespace Checkout.Instruments
 
         Task<EmptyResponse> Delete(string instrumentId, CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// Revoke a payment instrument. The instrument status is set to INVALID with the reason
+        /// revoked_by_merchant. The instrument record is retained for audit purposes.
+        /// </summary>
+        /// <param name="instrumentId">The payment instrument ID. Pattern: ^(src_)[a-z0-9]{26}$.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        Task<EmptyResponse> Revoke(string instrumentId, CancellationToken cancellationToken = default);
+
         Task<BankAccountFieldResponse> GetBankAccountFieldFormatting(CountryCode country, Currency currency,
             BankAccountFieldQuery bankAccountFieldQuery, CancellationToken cancellationToken = default);
     }

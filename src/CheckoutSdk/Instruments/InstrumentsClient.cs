@@ -56,6 +56,16 @@ namespace Checkout.Instruments
                 cancellationToken);
         }
 
+        public Task<EmptyResponse> Revoke(string instrumentId, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("instrumentId", instrumentId);
+            return ApiClient.Patch<EmptyResponse>(
+                BuildPath(InstrumentsPath, instrumentId, "revoke"),
+                SdkAuthorization(),
+                null,
+                cancellationToken);
+        }
+
         public Task<BankAccountFieldResponse> GetBankAccountFieldFormatting(CountryCode country, Currency currency,
             BankAccountFieldQuery bankAccountFieldQuery, CancellationToken cancellationToken = default)
         {

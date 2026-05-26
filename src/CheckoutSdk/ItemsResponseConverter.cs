@@ -1,3 +1,4 @@
+using Checkout.Accounts.Simulator;
 using Checkout.Events.Previous;
 using Checkout.Payments.Previous;
 using Checkout.Webhooks.Previous;
@@ -76,6 +77,16 @@ namespace Checkout
             {
                 ((ItemsResponse<Payments.PaymentAction>)wrapper).Items =
                     (List<Payments.PaymentAction>)target;
+            }
+            else if (genericArgument == typeof(SimulatorAvailableRequirement))
+            {
+                ((ItemsResponse<SimulatorAvailableRequirement>)wrapper).Items =
+                    (List<SimulatorAvailableRequirement>)target;
+            }
+            else if (genericArgument == typeof(SimulatorScenario))
+            {
+                ((ItemsResponse<SimulatorScenario>)wrapper).Items =
+                    (List<SimulatorScenario>)target;
             }
         }
     }

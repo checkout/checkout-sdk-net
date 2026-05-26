@@ -89,5 +89,11 @@ namespace Checkout.Payments.Setups
         /// [Optional]
         /// </summary>
         public Billing Billing { get; set; }
+
+        /// <summary>
+        /// Account funding transaction details for the payment.
+        /// [Optional]
+        /// </summary>
+        public PaymentSetupAccountFundingTransaction AccountFundingTransaction { get; set; }
     }
 }

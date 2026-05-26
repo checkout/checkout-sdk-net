@@ -28,5 +28,16 @@ namespace Checkout.Tokens
             CheckoutUtils.ValidateParams("walletTokenRequest", walletTokenRequest);
             return ApiClient.Post<TokenResponse>(Tokens, SdkAuthorization(), walletTokenRequest, cancellationToken);
         }
+
+        public Task<TokenMetadataResponse> GetTokenMetadata(
+            string tokenId,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("tokenId", tokenId);
+            return ApiClient.Get<TokenMetadataResponse>(
+                BuildPath(Tokens, tokenId, "metadata"),
+                SdkAuthorization(SdkAuthorizationType.SecretKeyOrOAuth),
+                cancellationToken);
+        }
     }
 }

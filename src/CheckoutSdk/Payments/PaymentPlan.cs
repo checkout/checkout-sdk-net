@@ -10,7 +10,14 @@ namespace Checkout.Payments
         // Installment
         public bool? Financing { get; set; }
 
-        public string Amount { get; set; }
+        /// <summary>
+        /// The amount to charge for each payment in the plan, in the minor currency unit.
+        /// Required when source.type is blik, payment_plan.amount_variability is Fixed,
+        /// and the recurring agreement is created without an initial payment (amount set to 0).
+        /// [Optional]
+        /// &gt;= 1
+        /// </summary>
+        public long? Amount { get; set; }
 
         // Common properties
         public int? DaysBetweenPayments { get; set; }
@@ -20,5 +27,22 @@ namespace Checkout.Payments
         public int? CurrentPaymentNumber { get; set; }
 
         public DateTime Expiry { get; set; }
+
+        /// <summary>
+        /// The name of the payment plan. Required when source.type is blik.
+        /// For Blik merchant-initiated requests using an external partner_agreement_id,
+        /// this value is used as the Blik Alias Label.
+        /// [Optional]
+        /// &lt;= 35 characters
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// The date on which the first payment will be taken, in YYYYMMDD format.
+        /// Required when source.type is blik and the recurring agreement is created
+        /// without an initial payment (amount set to 0).
+        /// [Optional]
+        /// </summary>
+        public string StartDate { get; set; }
     }
 }

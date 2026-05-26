@@ -28,6 +28,9 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source
         [EnumMember(Value = "benefit")]
         Benefit,
 
+        [EnumMember(Value = "blik")]
+        Blik,
+
         [EnumMember(Value = "cvconnect")]
         Cvconnect,
 

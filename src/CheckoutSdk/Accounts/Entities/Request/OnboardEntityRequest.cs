@@ -24,9 +24,25 @@ namespace Checkout.Accounts.Entities.Request
         public bool? IsDraft { get; set; }
         
         public Individual Individual { get; set; }
-        
+
         // Unknown
-        
+
         public AdditionalInfo AdditionalInfo { get; set; }
+
+        /// <summary>
+        /// Identifier of a seller category configured on your platform during onboarding.
+        /// Categories define the pricing, capabilities, and risk profile applied to sub-entities;
+        /// ask your Checkout.com contact for the list available to your platform.
+        /// Used for US ISV onboarding variants.
+        /// [Optional]
+        /// </summary>
+        public string SellerCategory { get; set; }
+
+        /// <summary>
+        /// Captures evidence of the end-user's consent to onboarding.
+        /// Used for US ISV onboarding variants.
+        /// [Optional]
+        /// </summary>
+        public Submitter Submitter { get; set; }
     }
 }

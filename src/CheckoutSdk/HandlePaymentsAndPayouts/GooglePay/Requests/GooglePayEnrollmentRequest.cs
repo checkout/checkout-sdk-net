@@ -2,7 +2,7 @@ namespace Checkout.HandlePaymentsAndPayouts.GooglePay.Requests
 {
     /// <summary>
     /// Request to enroll an entity with Google Pay.
-    /// Required (API): entityId, emailAddress, acceptTermsOfService.
+    /// Required (API): entity_id, email_address, accept_terms_of_service.
     /// </summary>
     public class GooglePayEnrollmentRequest
     {

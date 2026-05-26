@@ -9,6 +9,12 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
     public class Retry
     {
         /// <summary>
+        /// Indicates whether asynchronous retries are enabled for the payment.
+        /// [Optional]
+        /// </summary>
+        public bool? Enabled { get; set; }
+
+        /// <summary>
         /// Default:  6 The maximum number of authorization retry attempts, excluding the initial authorization.
         /// [ 1 .. 15 ]
         /// </summary>
