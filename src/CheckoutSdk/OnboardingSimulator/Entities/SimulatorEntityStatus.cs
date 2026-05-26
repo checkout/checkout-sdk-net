@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Checkout.Accounts.Simulator
+namespace Checkout.OnboardingSimulator.Entities
 {
     public enum SimulatorEntityStatus
     {

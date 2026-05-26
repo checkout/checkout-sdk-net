@@ -1,4 +1,4 @@
-namespace Checkout.Accounts.Entities.Requirements
+namespace Checkout.Accounts.Entities.Request
 {
     /// <summary>
     /// Request body used to resolve a requirement. The shape of value is defined by the requirement's

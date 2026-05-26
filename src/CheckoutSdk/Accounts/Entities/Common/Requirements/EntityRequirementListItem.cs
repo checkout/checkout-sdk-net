@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Checkout.Common;
 
-namespace Checkout.Accounts.Entities.Requirements
+namespace Checkout.Accounts.Entities.Common.Requirements
 {
     /// <summary>
     /// A pending requirement that the sub-entity must resolve to remain compliant or unlock capabilities.

@@ -1,10 +1,8 @@
 ﻿using Checkout.Accounts.Entities.Request;
-using Checkout.Accounts.Entities.Requirements;
 using Checkout.Accounts.Entities.Response;
 using Checkout.Accounts.Payout.Request;
 using Checkout.Accounts.Payout.Response;
 using Checkout.Accounts.ReserveRules;
-using Checkout.Accounts.Simulator;
 using Checkout.Common;
 using Checkout.Files;
 using System.Collections.Generic;
@@ -24,10 +22,6 @@ namespace Checkout.Accounts
         private const string PaymentInstrumentsPath = "payment-instruments";
         private const string ReserveRulesPath = "reserve-rules";
         private const string RequirementsPath = "requirements";
-        private const string SimulatePath = "simulate";
-        private const string SimulateRequirementsDuePath = "requirements-due";
-        private const string SimulateScenariosPath = "scenarios";
-        private const string SimulateStatusPath = "status";
 
         public AccountsClient(
             IApiClient apiClient,
@@ -291,7 +285,7 @@ namespace Checkout.Accounts
                 headers);
         }
 
-        public async Task<EntityRequirementListResponse> ListEntityRequirements(
+        public async Task<EntityRequirementListResponse> GetEntityRequirements(
             string entityId,
             CancellationToken cancellationToken = default)
         {
@@ -302,13 +296,13 @@ namespace Checkout.Accounts
                 cancellationToken);
         }
 
-        public async Task<EntityRequirementDetails> GetEntityRequirement(
+        public async Task<EntityRequirementDetailsResponse> GetEntityRequirementDetails(
             string entityId,
             string requirementId,
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("entityId", entityId, "requirementId", requirementId);
-            return await ApiClient.Get<EntityRequirementDetails>(
+            return await ApiClient.Get<EntityRequirementDetailsResponse>(
                 BuildPath(AccountsPath, EntitiesPath, entityId, RequirementsPath, requirementId),
                 SdkAuthorization(),
                 cancellationToken);
@@ -326,63 +320,6 @@ namespace Checkout.Accounts
                 BuildPath(AccountsPath, EntitiesPath, entityId, RequirementsPath, requirementId),
                 SdkAuthorization(),
                 updateRequest,
-                cancellationToken);
-        }
-
-        public async Task<SimulatorSetRequirementsDueResponse> SimulatorSetRequirementsDue(
-            string entityId,
-            SimulatorSetRequirementsDueRequest request,
-            CancellationToken cancellationToken = default)
-        {
-            CheckoutUtils.ValidateParams("entityId", entityId, "request", request);
-            return await ApiClient.Post<SimulatorSetRequirementsDueResponse>(
-                BuildPath(SimulatePath, EntitiesPath, entityId, SimulateRequirementsDuePath),
-                SdkAuthorization(SdkAuthorizationType.OAuth),
-                request,
-                cancellationToken);
-        }
-
-        public async Task<SimulatorRunScenarioResponse> SimulatorRunScenario(
-            string entityId,
-            string scenarioId,
-            CancellationToken cancellationToken = default)
-        {
-            CheckoutUtils.ValidateParams("entityId", entityId, "scenarioId", scenarioId);
-            return await ApiClient.Post<SimulatorRunScenarioResponse>(
-                BuildPath(SimulatePath, EntitiesPath, entityId, SimulateScenariosPath, scenarioId),
-                SdkAuthorization(SdkAuthorizationType.OAuth),
-                (object)null,
-                cancellationToken);
-        }
-
-        public async Task<SimulatorSetStatusResponse> SimulatorSetStatus(
-            string entityId,
-            SimulatorSetStatusRequest request,
-            CancellationToken cancellationToken = default)
-        {
-            CheckoutUtils.ValidateParams("entityId", entityId, "request", request);
-            return await ApiClient.Post<SimulatorSetStatusResponse>(
-                BuildPath(SimulatePath, EntitiesPath, entityId, SimulateStatusPath),
-                SdkAuthorization(SdkAuthorizationType.OAuth),
-                request,
-                cancellationToken);
-        }
-
-        public async Task<ItemsResponse<SimulatorAvailableRequirement>> SimulatorListAvailableRequirements(
-            CancellationToken cancellationToken = default)
-        {
-            return await ApiClient.Get<ItemsResponse<SimulatorAvailableRequirement>>(
-                BuildPath(SimulatePath, SimulateRequirementsDuePath),
-                SdkAuthorization(SdkAuthorizationType.OAuth),
-                cancellationToken);
-        }
-
-        public async Task<ItemsResponse<SimulatorScenario>> SimulatorListScenarios(
-            CancellationToken cancellationToken = default)
-        {
-            return await ApiClient.Get<ItemsResponse<SimulatorScenario>>(
-                BuildPath(SimulatePath, SimulateScenariosPath),
-                SdkAuthorization(SdkAuthorizationType.OAuth),
                 cancellationToken);
         }
     }

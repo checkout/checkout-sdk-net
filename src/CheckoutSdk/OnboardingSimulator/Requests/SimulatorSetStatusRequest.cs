@@ -1,4 +1,6 @@
-namespace Checkout.Accounts.Simulator
+using Checkout.OnboardingSimulator.Entities;
+
+namespace Checkout.OnboardingSimulator.Requests
 {
     /// <summary>
     /// Request body for forcing the entity to a specific status.

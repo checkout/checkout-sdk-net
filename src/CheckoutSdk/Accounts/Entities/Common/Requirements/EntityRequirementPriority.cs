@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Checkout.Accounts.Entities.Requirements
+namespace Checkout.Accounts.Entities.Common.Requirements
 {
     public enum EntityRequirementPriority
     {

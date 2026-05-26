@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Checkout.Accounts.Entities.Requirements
+using Checkout.Accounts.Entities.Common.Requirements;
+
+namespace Checkout.Accounts.Entities.Response
 {
     /// <summary>
     /// Detailed information about a single requirement.
     /// </summary>
-    public class EntityRequirementDetails : EntityRequirementListItem
+    public class EntityRequirementDetailsResponse : EntityRequirementListItem
     {
         /// <summary>
         /// A user-facing explanation of what is needed to resolve the requirement.

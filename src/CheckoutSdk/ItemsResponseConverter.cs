@@ -1,5 +1,5 @@
-using Checkout.Accounts.Simulator;
 using Checkout.Events.Previous;
+using Checkout.OnboardingSimulator.Entities;
 using Checkout.Payments.Previous;
 using Checkout.Webhooks.Previous;
 using Newtonsoft.Json;

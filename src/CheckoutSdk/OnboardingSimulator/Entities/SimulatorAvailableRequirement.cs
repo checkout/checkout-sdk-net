@@ -1,4 +1,4 @@
-namespace Checkout.Accounts.Simulator
+namespace Checkout.OnboardingSimulator.Entities
 {
     /// <summary>
     /// A requirement field available to mark as due in the Onboarding Simulator.

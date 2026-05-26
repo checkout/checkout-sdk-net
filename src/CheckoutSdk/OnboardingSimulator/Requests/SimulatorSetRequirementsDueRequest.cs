@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Checkout.Accounts.Simulator
+namespace Checkout.OnboardingSimulator.Requests
 {
     /// <summary>
     /// Request body for marking requirement fields as due on an entity.

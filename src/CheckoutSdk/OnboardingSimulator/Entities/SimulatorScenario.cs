@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Checkout.Accounts.Simulator
+namespace Checkout.OnboardingSimulator.Entities
 {
     /// <summary>
     /// A pre-defined scenario available in the Onboarding Simulator.

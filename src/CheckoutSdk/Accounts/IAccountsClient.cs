@@ -1,14 +1,11 @@
 ﻿using Checkout.Accounts.Entities.Request;
-using Checkout.Accounts.Entities.Requirements;
 using Checkout.Accounts.Entities.Response;
 using Checkout.Accounts.Payout.Request;
 using Checkout.Accounts.Payout.Response;
 using Checkout.Accounts.ReserveRules;
-using Checkout.Accounts.Simulator;
 using Checkout.Common;
 using Checkout.Files;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -114,14 +111,14 @@ namespace Checkout.Accounts
         /// <summary>
         /// Retrieve the list of pending requirements that the sub-entity must resolve.
         /// </summary>
-        Task<EntityRequirementListResponse> ListEntityRequirements(
+        Task<EntityRequirementListResponse> GetEntityRequirements(
             string entityId,
             CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Retrieve detailed information for a single requirement.
         /// </summary>
-        Task<EntityRequirementDetails> GetEntityRequirement(
+        Task<EntityRequirementDetailsResponse> GetEntityRequirementDetails(
             string entityId,
             string requirementId,
             CancellationToken cancellationToken = default);
@@ -133,42 +130,6 @@ namespace Checkout.Accounts
             string entityId,
             string requirementId,
             EntityRequirementUpdateRequest updateRequest,
-            CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Sandbox only. Marks the specified requirement fields as due on an entity.
-        /// </summary>
-        Task<SimulatorSetRequirementsDueResponse> SimulatorSetRequirementsDue(
-            string entityId,
-            SimulatorSetRequirementsDueRequest request,
-            CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Sandbox only. Executes a pre-defined scenario against an entity.
-        /// </summary>
-        Task<SimulatorRunScenarioResponse> SimulatorRunScenario(
-            string entityId,
-            string scenarioId,
-            CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Sandbox only. Forces the entity to the specified status.
-        /// </summary>
-        Task<SimulatorSetStatusResponse> SimulatorSetStatus(
-            string entityId,
-            SimulatorSetStatusRequest request,
-            CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Sandbox only. Returns all requirement fields that can be set as due on an entity.
-        /// </summary>
-        Task<ItemsResponse<SimulatorAvailableRequirement>> SimulatorListAvailableRequirements(
-            CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Sandbox only. Returns all pre-defined scenarios available.
-        /// </summary>
-        Task<ItemsResponse<SimulatorScenario>> SimulatorListScenarios(
             CancellationToken cancellationToken = default);
     }
 }

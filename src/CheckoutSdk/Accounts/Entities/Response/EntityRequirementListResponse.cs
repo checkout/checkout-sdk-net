@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using Checkout.Common;
 
-namespace Checkout.Accounts.Entities.Requirements
+using Checkout.Accounts.Entities.Common.Requirements;
+
+namespace Checkout.Accounts.Entities.Response
 {
     /// <summary>
     /// The list of pending requirements for a sub-entity.

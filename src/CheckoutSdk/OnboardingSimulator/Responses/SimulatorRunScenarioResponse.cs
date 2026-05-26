@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Checkout.Common;
 
-namespace Checkout.Accounts.Simulator
+namespace Checkout.OnboardingSimulator.Responses
 {
     /// <summary>
     /// Result of running a simulator scenario.

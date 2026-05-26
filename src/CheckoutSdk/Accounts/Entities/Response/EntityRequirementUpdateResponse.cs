@@ -2,7 +2,7 @@ using System;
 using System.Runtime.Serialization;
 using Checkout.Common;
 
-namespace Checkout.Accounts.Entities.Requirements
+namespace Checkout.Accounts.Entities.Response
 {
     public enum EntityRequirementUpdateStatus
     {
