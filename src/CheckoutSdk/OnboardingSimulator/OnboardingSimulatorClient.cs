@@ -48,7 +48,7 @@ namespace Checkout.OnboardingSimulator
                 cancellationToken);
         }
 
-        public Task<SimulatorSetStatusResponse> SetStatus(
+        public Task<SimulatorSetStatusResponse> SetEntityStatus(
             string entityId,
             SimulatorSetStatusRequest request,
             CancellationToken cancellationToken = default)

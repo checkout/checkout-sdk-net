@@ -30,7 +30,7 @@ namespace Checkout.OnboardingSimulator
         /// <summary>
         /// Forces the entity to the specified status.
         /// </summary>
-        Task<SimulatorSetStatusResponse> SetStatus(
+        Task<SimulatorSetStatusResponse> SetEntityStatus(
             string entityId,
             SimulatorSetStatusRequest request,
             CancellationToken cancellationToken = default);
