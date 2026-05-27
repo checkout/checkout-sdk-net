@@ -26,7 +26,10 @@ namespace Checkout.Payments
 
         public int? CurrentPaymentNumber { get; set; }
 
-        public DateTime Expiry { get; set; }
+        /// <summary>
+        /// The date after which no further payments will be performed in the format YYYYMMDD
+        /// </summary>
+        public string Expiry { get; set; }
 
         /// <summary>
         /// The name of the payment plan. Required when source.type is blik.
