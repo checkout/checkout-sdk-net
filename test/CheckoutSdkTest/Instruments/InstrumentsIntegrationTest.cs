@@ -170,6 +170,19 @@ namespace Checkout.Instruments
             await AssertNotFound(DefaultApi.InstrumentsClient().Get(tokenInstrument.Id));
         }
 
+        [Fact(Skip = "Service was unavailable in the API when test was done, receiving 503")]
+        private async Task ShouldRevokeInstrument()
+        {
+            var tokenInstrument = await CreateTokenInstrument();
+            tokenInstrument.ShouldNotBeNull();
+
+            var emptyResponse = await DefaultApi.InstrumentsClient().Revoke(tokenInstrument.Id);
+
+            emptyResponse.ShouldNotBeNull();
+            emptyResponse.HttpStatusCode.ShouldNotBeNull();
+            emptyResponse.ResponseHeaders.ShouldNotBeNull();
+        }
+
         private async Task<CreateTokenInstrumentResponse> CreateTokenInstrument()
         {
             var phone = new Phone {CountryCode = "1", Number = "4155552671"};

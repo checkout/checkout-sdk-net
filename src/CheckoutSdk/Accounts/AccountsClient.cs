@@ -21,6 +21,7 @@ namespace Checkout.Accounts
         private const string PayoutSchedulePath = "payout-schedules";
         private const string PaymentInstrumentsPath = "payment-instruments";
         private const string ReserveRulesPath = "reserve-rules";
+        private const string RequirementsPath = "requirements";
 
         public AccountsClient(
             IApiClient apiClient,
@@ -266,7 +267,7 @@ namespace Checkout.Accounts
             ReserveRuleRequest reserveRuleRequest,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("entityId", entityId, "reserveRuleId", reserveRuleId, 
+            CheckoutUtils.ValidateParams("entityId", entityId, "reserveRuleId", reserveRuleId,
                                         "reserveRuleRequest", reserveRuleRequest, "etag", etag);
 
             Headers headers = null;
@@ -279,9 +280,47 @@ namespace Checkout.Accounts
                 BuildPath(AccountsPath, EntitiesPath, entityId, ReserveRulesPath, reserveRuleId),
                 SdkAuthorization(),
                 reserveRuleRequest,
-                cancellationToken, 
-                null, 
+                cancellationToken,
+                null,
                 headers);
+        }
+
+        public async Task<EntityRequirementListResponse> GetEntityRequirements(
+            string entityId,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("entityId", entityId);
+            return await ApiClient.Get<EntityRequirementListResponse>(
+                BuildPath(AccountsPath, EntitiesPath, entityId, RequirementsPath),
+                SdkAuthorization(),
+                cancellationToken);
+        }
+
+        public async Task<EntityRequirementDetailsResponse> GetEntityRequirementDetails(
+            string entityId,
+            string requirementId,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("entityId", entityId, "requirementId", requirementId);
+            return await ApiClient.Get<EntityRequirementDetailsResponse>(
+                BuildPath(AccountsPath, EntitiesPath, entityId, RequirementsPath, requirementId),
+                SdkAuthorization(),
+                cancellationToken);
+        }
+
+        public async Task<EntityRequirementUpdateResponse> ResolveEntityRequirement(
+            string entityId,
+            string requirementId,
+            EntityRequirementUpdateRequest updateRequest,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("entityId", entityId, "requirementId", requirementId,
+                "updateRequest", updateRequest);
+            return await ApiClient.Put<EntityRequirementUpdateResponse>(
+                BuildPath(AccountsPath, EntitiesPath, entityId, RequirementsPath, requirementId),
+                SdkAuthorization(),
+                updateRequest,
+                cancellationToken);
         }
     }
 }

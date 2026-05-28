@@ -20,6 +20,7 @@ using Checkout.Identities.IdentityVerification;
 using Checkout.Instruments;
 using Checkout.Metadata;
 using Checkout.NetworkTokens;
+using Checkout.OnboardingSimulator;
 using Checkout.PaymentMethods;
 using Checkout.Payments;
 using Checkout.Payments.Contexts;
@@ -104,5 +105,7 @@ namespace Checkout
         IComplianceRequestsClient ComplianceRequestsClient();
 
         IAgenticCommerceClient AgenticCommerceClient();
+
+        IOnboardingSimulatorClient OnboardingSimulatorClient();
     }
 }

@@ -1,5 +1,6 @@
 using Checkout.Accounts.Entities.Common.Company;
 using Checkout.Accounts.Entities.Common.ContactDetails;
+using Checkout.Accounts.Entities.Common.Requirements;
 using Checkout.Accounts.Entities.Request;
 using Checkout.Accounts.Entities.Response;
 using Checkout.Accounts.Payout.Request;
@@ -658,6 +659,124 @@ namespace Checkout.Accounts
                     }
                 },
                 ValidFrom = System.DateTime.UtcNow.AddDays(1)
+            };
+        }
+
+        [Fact]
+        public async Task ShouldGetEntityRequirements()
+        {
+            const string entityId = "ent_wxglze3wwywujg4nna5fb7ldli";
+            var expected = CreateEntityRequirementListResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Get<EntityRequirementListResponse>(
+                        $"accounts/entities/{entityId}/requirements",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expected);
+
+            var response = await _accountsClient.GetEntityRequirements(entityId);
+
+            response.ShouldNotBeNull();
+            response.ShouldBeSameAs(expected);
+            response.Data.ShouldNotBeEmpty();
+        }
+
+        [Fact]
+        public async Task ShouldGetEntityRequirementDetails()
+        {
+            const string entityId = "ent_wxglze3wwywujg4nna5fb7ldli";
+            const string requirementId = "req_5wmacwhrhbzhqkhx5hlqmzje44";
+            var expected = CreateEntityRequirementDetailsResponse(requirementId);
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Get<EntityRequirementDetailsResponse>(
+                        $"accounts/entities/{entityId}/requirements/{requirementId}",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expected);
+
+            var response = await _accountsClient.GetEntityRequirementDetails(entityId, requirementId);
+
+            response.ShouldNotBeNull();
+            response.ShouldBeSameAs(expected);
+            response.Id.ShouldBe(requirementId);
+            response.Message.ShouldNotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task ShouldResolveEntityRequirement()
+        {
+            const string entityId = "ent_wxglze3wwywujg4nna5fb7ldli";
+            const string requirementId = "req_5wmacwhrhbzhqkhx5hlqmzje44";
+            var request = new EntityRequirementUpdateRequest { Value = "Acme Holdings Limited" };
+            var expected = CreateEntityRequirementUpdateResponse(requirementId);
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Put<EntityRequirementUpdateResponse>(
+                        $"accounts/entities/{entityId}/requirements/{requirementId}",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<object>(),
+                        It.IsAny<CancellationToken>(),
+                        null,
+                        null))
+                .ReturnsAsync(expected);
+
+            var response = await _accountsClient.ResolveEntityRequirement(entityId, requirementId, request);
+
+            response.ShouldNotBeNull();
+            response.ShouldBeSameAs(expected);
+            response.Id.ShouldBe(requirementId);
+            response.Status.ShouldBe(EntityRequirementUpdateStatus.Processing);
+        }
+
+        private static EntityRequirementListResponse CreateEntityRequirementListResponse()
+        {
+            return new EntityRequirementListResponse
+            {
+                Data = new List<EntityRequirementListItem>
+                {
+                    new EntityRequirementListItem
+                    {
+                        Id = "req_5wmacwhrhbzhqkhx5hlqmzje44",
+                        Resource = "ent_wxglze3wwywujg4nna5fb7ldli",
+                        ResourceType = "company",
+                        Reason = EntityRequirementReason.PeriodicReview,
+                        Priority = EntityRequirementPriority.Critical,
+                        Deadline = System.DateTime.UtcNow.AddDays(7),
+                        FieldPath = "company.legal_name"
+                    }
+                }
+            };
+        }
+
+        private static EntityRequirementDetailsResponse CreateEntityRequirementDetailsResponse(string requirementId)
+        {
+            return new EntityRequirementDetailsResponse
+            {
+                Id = requirementId,
+                Resource = "ent_wxglze3wwywujg4nna5fb7ldli",
+                ResourceType = "company",
+                Reason = EntityRequirementReason.PeriodicReview,
+                Priority = EntityRequirementPriority.High,
+                FieldPath = "company.legal_name",
+                Message = "Please confirm your legal company name.",
+                Schema = new Dictionary<string, object>
+                {
+                    { "type", "string" },
+                    { "minLength", 1 },
+                    { "maxLength", 200 }
+                }
+            };
+        }
+
+        private static EntityRequirementUpdateResponse CreateEntityRequirementUpdateResponse(string requirementId)
+        {
+            return new EntityRequirementUpdateResponse
+            {
+                Id = requirementId,
+                Status = EntityRequirementUpdateStatus.Processing,
+                SubmittedAt = System.DateTime.UtcNow
             };
         }
     }

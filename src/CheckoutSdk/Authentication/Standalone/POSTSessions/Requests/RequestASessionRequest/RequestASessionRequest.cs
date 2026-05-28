@@ -176,5 +176,11 @@ namespace Checkout.Authentication.Standalone.POSTSessions.Requests.RequestASessi
         /// [Optional]
         /// </summary>
         public IList<PreferredExperiencesType> PreferredExperiences { get; set; }
+
+        /// <summary>
+        /// Details of the device from which the authentication originated.
+        /// [Optional]
+        /// </summary>
+        public DeviceInformation DeviceInformation { get; set; }
     }
 }

@@ -14,7 +14,28 @@ namespace Checkout.Tokens
         [Fact]
         private async Task ShouldRequestCardToken()
         {
-            var cardTokenRequest = new CardTokenRequest
+            var cardTokenRequest = CreateCardTokenRequest();
+
+            var cardTokenResponse = await DefaultApi.TokensClient().Request(cardTokenRequest);
+
+            ValidateCardTokenResponse(cardTokenResponse, cardTokenRequest);
+        }
+
+        [Fact(Skip = "Requires secret-key scope tokens:metadata which is not provisioned by default")]
+        private async Task ShouldGetTokenMetadata()
+        {
+            var cardTokenRequest = CreateCardTokenRequest();
+            var cardTokenResponse = await DefaultApi.TokensClient().Request(cardTokenRequest);
+            cardTokenResponse.Token.ShouldNotBeNullOrEmpty();
+
+            var metadata = await DefaultApi.TokensClient().GetTokenMetadata(cardTokenResponse.Token);
+
+            ValidateTokenMetadataResponse(metadata, cardTokenResponse.Token, cardTokenRequest);
+        }
+
+        private static CardTokenRequest CreateCardTokenRequest()
+        {
+            return new CardTokenRequest
             {
                 Name = TestCardSource.Visa.Name,
                 Number = TestCardSource.Visa.Number,
@@ -24,17 +45,30 @@ namespace Checkout.Tokens
                 BillingAddress = GetAddress(),
                 Phone = GetPhone()
             };
+        }
 
-            var cardTokenResponse = await DefaultApi.TokensClient().Request(cardTokenRequest);
-            cardTokenResponse.ShouldNotBeNull();
+        private static void ValidateCardTokenResponse(CardTokenResponse response, CardTokenRequest request)
+        {
+            response.ShouldNotBeNull();
+            response.Token.ShouldNotBeNullOrEmpty();
+            response.Type.ShouldBe(TokenType.Card);
+            response.ExpiryMonth.ShouldBe(request.ExpiryMonth);
+            response.ExpiryYear.ShouldBe(request.ExpiryYear);
+            response.ExpiresOn.ShouldNotBeNull();
+            response.CardType.ShouldBe(CardType.Credit);
+            response.CardCategory.ShouldBe(CardCategory.Consumer);
+        }
 
-            cardTokenResponse.Token.ShouldNotBeNullOrEmpty();
-            cardTokenResponse.Type.ShouldBe(TokenType.Card);
-            cardTokenResponse.ExpiryMonth.ShouldBe(cardTokenRequest.ExpiryMonth);
-            cardTokenResponse.ExpiryYear.ShouldBe(cardTokenRequest.ExpiryYear);
-            cardTokenResponse.ExpiresOn.ShouldNotBeNull();
-            cardTokenResponse.CardType.ShouldBe(CardType.Credit);
-            cardTokenResponse.CardCategory.ShouldBe(CardCategory.Consumer);
+        private static void ValidateTokenMetadataResponse(TokenMetadataResponse response, string token, CardTokenRequest request)
+        {
+            response.ShouldNotBeNull();
+            response.Token.ShouldBe(token);
+            response.Type.ShouldBe("card");
+            response.ExpiryMonth.ShouldBe(request.ExpiryMonth);
+            response.ExpiryYear.ShouldBe(request.ExpiryYear);
+            response.Last4.ShouldNotBeNullOrEmpty();
+            response.Bin.ShouldNotBeNullOrEmpty();
+            response.ExpiresOn.ShouldNotBeNull();
         }
     }
 }

@@ -28,5 +28,10 @@ namespace Checkout.Payments.Setups.Entities
         /// The PayPal payment method's details and configuration.
         /// </summary>
         public Paypal Paypal { get; set; }
+
+        /// <summary>
+        /// The Blik payment method's details and configuration.
+        /// </summary>
+        public Blik Blik { get; set; }
     }
 }

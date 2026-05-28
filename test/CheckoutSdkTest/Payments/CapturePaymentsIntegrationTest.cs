@@ -93,9 +93,10 @@ namespace Checkout.Payments
                             Passenger =
                                 new Passenger
                                 {
-                                    Name = new PassengerName {FullName = "passenger"},
-                                    DateOfBirth = "01-01-01",
-                                    CountryCode = CountryCode.AC
+                                    FirstName = "passenger",
+                                    LastName = "test",
+                                    DateOfBirth = new DateTime(2001, 1, 1),
+                                    Address = new PassengerAddress { Country = CountryCode.AC }
                                 },
                             FlightLegDetails = new List<FlightLegDetails>
                             {

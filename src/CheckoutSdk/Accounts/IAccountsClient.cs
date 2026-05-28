@@ -107,5 +107,29 @@ namespace Checkout.Accounts
             string etag,
             ReserveRuleRequest reserveRuleRequest,
             CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Retrieve the list of pending requirements that the sub-entity must resolve.
+        /// </summary>
+        Task<EntityRequirementListResponse> GetEntityRequirements(
+            string entityId,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Retrieve detailed information for a single requirement.
+        /// </summary>
+        Task<EntityRequirementDetailsResponse> GetEntityRequirementDetails(
+            string entityId,
+            string requirementId,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Submit a response to resolve a requirement.
+        /// </summary>
+        Task<EntityRequirementUpdateResponse> ResolveEntityRequirement(
+            string entityId,
+            string requirementId,
+            EntityRequirementUpdateRequest updateRequest,
+            CancellationToken cancellationToken = default);
     }
 }

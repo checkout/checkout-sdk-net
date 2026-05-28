@@ -105,6 +105,28 @@ namespace Checkout.Instruments
         }
 
         [Fact]
+        private async Task ShouldRevokeInstrument()
+        {
+            var emptyResponse = new EmptyResponse();
+            _apiClient.Setup(apiClient =>
+                    apiClient.Patch<EmptyResponse>(
+                        "instruments/instrument_id/revoke",
+                        _authorization,
+                        null,
+                        CancellationToken.None,
+                        null,
+                        null))
+                .ReturnsAsync(() => emptyResponse);
+
+            IInstrumentsClient client = new InstrumentsClient(_apiClient.Object, _configuration.Object);
+
+            var response = await client.Revoke("instrument_id");
+
+            response.ShouldNotBeNull();
+            response.ShouldBeSameAs(emptyResponse);
+        }
+
+        [Fact]
         private async Task ShouldGetBankAccountFieldFormatting()
         {
             BankAccountFieldQuery bankAccountFieldQuery = new BankAccountFieldQuery();

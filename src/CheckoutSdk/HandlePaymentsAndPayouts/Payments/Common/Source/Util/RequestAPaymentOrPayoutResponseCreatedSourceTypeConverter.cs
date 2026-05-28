@@ -103,6 +103,11 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.Util
                 return new BenefitSource.BenefitSource();
             }
 
+            if (CheckoutUtils.GetEnumMemberValue(SourceType.Blik).Equals(sourceType))
+            {
+                return new BlikSource.BlikSource();
+            }
+
             if (CheckoutUtils.GetEnumMemberValue(SourceType.CurrencyAccount).Equals(sourceType))
             {
                 return new CurrencyAccountSource.CurrencyAccountSource();
@@ -296,6 +301,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.Util
                    CheckoutUtils.GetEnumMemberValue(SourceType.Alma).Equals(sourceType) ||
                    CheckoutUtils.GetEnumMemberValue(SourceType.Bancontact).Equals(sourceType) ||
                    CheckoutUtils.GetEnumMemberValue(SourceType.Benefit).Equals(sourceType) ||
+                   CheckoutUtils.GetEnumMemberValue(SourceType.Blik).Equals(sourceType) ||
                    CheckoutUtils.GetEnumMemberValue(SourceType.Cvconnect).Equals(sourceType) ||
                    CheckoutUtils.GetEnumMemberValue(SourceType.Dana).Equals(sourceType) ||
                    CheckoutUtils.GetEnumMemberValue(SourceType.Eps).Equals(sourceType) ||

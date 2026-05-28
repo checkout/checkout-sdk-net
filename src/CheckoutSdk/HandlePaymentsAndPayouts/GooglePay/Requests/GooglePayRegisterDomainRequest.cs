@@ -2,7 +2,7 @@ namespace Checkout.HandlePaymentsAndPayouts.GooglePay.Requests
 {
     /// <summary>
     /// Request to register a web domain for an actively enrolled Google Pay entity.
-    /// Required (API): webDomain.
+    /// Required (API): web_domain.
     /// </summary>
     public class GooglePayRegisterDomainRequest
     {

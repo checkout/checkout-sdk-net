@@ -20,6 +20,7 @@ using Checkout.Identities.IdentityVerification;
 using Checkout.Instruments;
 using Checkout.Metadata;
 using Checkout.NetworkTokens;
+using Checkout.OnboardingSimulator;
 using Checkout.PaymentMethods;
 using Checkout.Payments;
 using Checkout.Payments.Contexts;
@@ -71,6 +72,7 @@ namespace Checkout
         private readonly IGooglePayClient _googlePayClient;
         private readonly IComplianceRequestsClient _complianceRequestsClient;
         private readonly IAgenticCommerceClient _agenticCommerceClient;
+        private readonly IOnboardingSimulatorClient _onboardingSimulatorClient;
 
         public CheckoutApi(CheckoutConfiguration configuration)
         {
@@ -114,6 +116,7 @@ namespace Checkout
             _googlePayClient = new GooglePayClient(baseApiClient, configuration);
             _complianceRequestsClient = new ComplianceRequestsClient(baseApiClient, configuration);
             _agenticCommerceClient = new AgenticCommerceClient(baseApiClient, configuration);
+            _onboardingSimulatorClient = new OnboardingSimulatorClient(baseApiClient, configuration);
         }
 
         private static ApiClient BaseApiClient(CheckoutConfiguration configuration)
@@ -315,6 +318,11 @@ namespace Checkout
         public IAgenticCommerceClient AgenticCommerceClient()
         {
             return _agenticCommerceClient;
+        }
+
+        public IOnboardingSimulatorClient OnboardingSimulatorClient()
+        {
+            return _onboardingSimulatorClient;
         }
     }
 }

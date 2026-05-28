@@ -6,7 +6,6 @@ namespace Checkout.Issuing.Disputes.Requests
     /// <summary>
     /// Create a dispute for an Issuing transaction. For full guidance, see Manage Issuing disputes.
     /// The transaction must already be cleared and not refunded.
-    /// For the card scheme to process the chargeback, you must submit the dispute using either this endpoint, or the Submit an Issuing dispute endpoint.
     /// [Beta]
     /// </summary>
     public class CreateDisputeRequest

@@ -23,5 +23,14 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPaymentsIdReversals.Res
         /// </summary>
         public string Reference { get; set; }
 
+        /// <summary>
+        /// The payment action performed during the reversal.
+        /// Determined by the payment's state at the time of processing:
+        /// - "Refund" if the payment has been fully or partially captured
+        /// - "Void" if the payment is in an Authorized state.
+        /// [Optional]
+        /// </summary>
+        public string ActionType { get; set; }
+
     }
 }

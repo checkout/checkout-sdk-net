@@ -102,5 +102,11 @@ namespace Checkout.Payments.Setups
         /// [Optional] readOnly
         /// </summary>
         public IList<string> AvailablePaymentMethods { get; set; }
+
+        /// <summary>
+        /// Account funding transaction details for the payment.
+        /// [Optional]
+        /// </summary>
+        public PaymentSetupAccountFundingTransaction AccountFundingTransaction { get; set; }
     }
 }

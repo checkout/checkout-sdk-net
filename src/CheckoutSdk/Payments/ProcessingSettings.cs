@@ -106,5 +106,14 @@ namespace Checkout.Payments
         /// </summary>
         public AchServiceType? ServiceType { get; set; }
 
+        /// <summary>
+        /// The customer's 6-digit Blik code. Required when source.type is blik and merchant_initiated is false
+        /// (For example, for Regular payments and the initial payment of a Recurring agreement).
+        /// [Optional]
+        /// Pattern: ^\d{6}$
+        /// 6 characters
+        /// </summary>
+        public string PartnerCode { get; set; }
+
     }
 }

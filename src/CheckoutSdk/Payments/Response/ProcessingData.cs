@@ -55,5 +55,27 @@ namespace Checkout.Payments.Response
         /// Indicates whether the fallback_source field was used for the payment.
         /// </summary>
         public bool? FallbackSourceUsed { get; set; }
+
+        /// <summary>
+        /// A high-level failure category returned by the payment provider when a payment is declined or fails.
+        /// Not all payment methods return this field.
+        /// [Optional]
+        /// </summary>
+        public string FailureCode { get; set; }
+
+        /// <summary>
+        /// The 6-digit partner code returned by the payment provider. Returned when source.type is blik.
+        /// [Optional]
+        /// Pattern: ^\d{6}$
+        /// 6 characters
+        /// </summary>
+        public string PartnerCode { get; set; }
+
+        /// <summary>
+        /// The raw response code returned by the payment provider when a payment is declined or fails.
+        /// Not all payment methods return this field.
+        /// [Optional]
+        /// </summary>
+        public string PartnerResponseCode { get; set; }
     }
 }
