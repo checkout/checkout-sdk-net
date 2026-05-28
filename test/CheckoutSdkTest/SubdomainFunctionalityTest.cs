@@ -38,12 +38,22 @@ namespace CheckoutSdkTest
         [Fact]
         public void ShouldNotAddSubdomainForInvalidSubdomainFormat()
         {
-            var invalidSubdomain = "invalid-subdomain";
+            var invalidSubdomain = "invalid_subdomain!";
             var environmentSubdomain = new EnvironmentSubdomain(Environment.Sandbox, invalidSubdomain);
-            
+
             // Should fallback to original URLs without subdomain
             Assert.Equal("https://api.sandbox.checkout.com/", environmentSubdomain.ApiUri.ToString());
             Assert.Equal("https://access.sandbox.checkout.com/connect/token", environmentSubdomain.AuthorizationUri.ToString());
+        }
+
+        [Fact]
+        public void ShouldAddSubdomainForPrivateLinkPrefix()
+        {
+            var subdomain = "pl-vkuhvk4v";
+            var environmentSubdomain = new EnvironmentSubdomain(Environment.Sandbox, subdomain);
+
+            Assert.Equal($"https://{subdomain}.api.sandbox.checkout.com/", environmentSubdomain.ApiUri.ToString());
+            Assert.Equal($"https://{subdomain}.access.sandbox.checkout.com/connect/token", environmentSubdomain.AuthorizationUri.ToString());
         }
     }
 }

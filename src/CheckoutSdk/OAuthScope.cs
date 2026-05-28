@@ -57,6 +57,7 @@
         [OAuthScope("Payment Context")] PaymentContext,
         [OAuthScope("forward")] Forward,
         [OAuthScope("forward:secrets")] ForwardSecrets,
+        [OAuthScope("identity-verification")] IdentityVerification,
         [OAuthScope("vault:network-tokens")] VaultNetworkTokens,
 
         [OAuthScope("payments:search")] PaymentsSearch
