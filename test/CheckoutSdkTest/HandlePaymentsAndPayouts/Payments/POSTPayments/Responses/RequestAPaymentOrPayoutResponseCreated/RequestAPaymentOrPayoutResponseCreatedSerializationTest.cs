@@ -266,5 +266,34 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
             response.Customer.Email.ShouldBe("brucewayne@gmail.com");
             response.Customer.Name.ShouldBe("Bruce Wayne");
         }
+
+        [Fact]
+        public void ShouldDeserializeProcessingSchemeTransactionLinkId()
+        {
+            const string json = @"{
+                ""id"": ""pay_123"",
+                ""amount"": 1000,
+                ""currency"": ""USD"",
+                ""approved"": true,
+                ""status"": ""Authorized"",
+                ""processed_on"": ""2021-06-08T12:25:01Z"",
+                ""processing"": {
+                    ""retrieval_reference_number"": ""RRN001"",
+                    ""acquirer_transaction_id"": ""ACQ001"",
+                    ""scheme"": ""Mastercard"",
+                    ""scheme_transaction_link_id"": ""MTL-XYZ-789""
+                }
+            }";
+
+            var response = (RequestAPaymentOrPayoutResponseCreated)new JsonSerializer()
+                .Deserialize(json, typeof(RequestAPaymentOrPayoutResponseCreated));
+
+            response.ShouldNotBeNull();
+            response.Processing.ShouldNotBeNull();
+            response.Processing.RetrievalReferenceNumber.ShouldBe("RRN001");
+            response.Processing.AcquirerTransactionId.ShouldBe("ACQ001");
+            response.Processing.Scheme.ShouldBe("Mastercard");
+            response.Processing.SchemeTransactionLinkId.ShouldBe("MTL-XYZ-789");
+        }
     }
 }
