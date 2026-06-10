@@ -54,6 +54,13 @@ namespace Checkout.Payments
             payment.Customer.Id.ShouldNotBeNull();
             payment.Customer.Name.ShouldNotBeNull();
             payment.Customer.Email.ShouldNotBeNull();
+            //Processing - Mastercard Transaction Link Identifier is optional and only populated for
+            //Mastercard transactions. Exercising the property confirms the SDK exposes it and
+            //deserializes without error even when absent from the response payload.
+            if (payment.Processing != null)
+            {
+                _ = payment.Processing.SchemeTransactionLinkId;
+            }
             //Risk
             payment.Risk.Flagged.ShouldBe(false);
             //Links

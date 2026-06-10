@@ -52,5 +52,13 @@ namespace Checkout.Payments
 
         public bool? Aft { get; set; }
 
+        /// <summary>
+        /// The scheme transaction link identifier. Returned for Mastercard transactions when the scheme
+        /// provides a link identifier that ties together related transactions on the network
+        /// (see Mastercard Transaction Link Identifier documentation).
+        /// [Optional]
+        /// </summary>
+        public string SchemeTransactionLinkId { get; set; }
+
     }
 }

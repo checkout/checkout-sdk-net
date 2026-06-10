@@ -44,5 +44,25 @@ namespace Checkout.Payments
         public string CryptogramAlgorithm { get; set; }
         
         public string AuthenticationId { get; set; }
+
+        /// <summary>
+        /// The information about how the 3DS Requestor authenticated the cardholder
+        /// before or during the transaction.
+        /// [Optional]
+        /// </summary>
+        public MerchantAuthenticationInfo MerchantAuthenticationInfo { get; set; }
+
+        /// <summary>
+        /// Additional information about the cardholder's account.
+        /// [Optional]
+        /// </summary>
+        public AccountInfo AccountInfo { get; set; }
+
+        /// <summary>
+        /// The details of a previous 3DS authenticated transaction.
+        /// Required when 3DS authentication was performed by a third-party provider.
+        /// [Optional]
+        /// </summary>
+        public InitialAuthentication InitialAuthentication { get; set; }
     }
 }

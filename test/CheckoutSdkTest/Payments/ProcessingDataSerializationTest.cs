@@ -45,10 +45,34 @@ namespace Checkout.Payments
                 SchemeMerchantId = "scheme_merchant_001",
                 PanTypeProcessed = PanProcessedType.FPAN,
                 CkoNetworkTokenAvailable = true,
-                FallbackSourceUsed = false
+                FallbackSourceUsed = false,
+                SchemeTransactionLinkId = "MTL-001"
             };
 
             Should.NotThrow(() => Serializer.Serialize(data));
+        }
+
+        [Fact]
+        public void ShouldDeserializeSchemeTransactionLinkId()
+        {
+            const string json = @"{""scheme_transaction_link_id"": ""MTL-001""}";
+
+            var result = (ProcessingData)Serializer.Deserialize(json, typeof(ProcessingData));
+
+            result.ShouldNotBeNull();
+            result.SchemeTransactionLinkId.ShouldBe("MTL-001");
+        }
+
+        [Fact]
+        public void ShouldRoundTripSerializeSchemeTransactionLinkId()
+        {
+            var original = new ProcessingData { SchemeTransactionLinkId = "MTL-XYZ-789" };
+
+            var json = Serializer.Serialize(original);
+            var deserialized = (ProcessingData)Serializer.Deserialize(json, typeof(ProcessingData));
+
+            json.ShouldContain("\"scheme_transaction_link_id\":\"MTL-XYZ-789\"");
+            deserialized.SchemeTransactionLinkId.ShouldBe("MTL-XYZ-789");
         }
 
         [Fact]
