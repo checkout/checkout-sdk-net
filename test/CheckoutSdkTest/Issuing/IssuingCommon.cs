@@ -10,7 +10,12 @@ namespace Checkout.Issuing
     public class IssuingCommon : SandboxTestFixture
     {
         protected readonly ICheckoutApi Api;
-        protected readonly string ProductIdOk = "pro_3fn6pv2ikshurn36dbd3iysyha";
+        
+        // currently not used: Sandbox card product account range is full error (card_product_account_range_full)
+        protected readonly string OldProductIdOk = "pro_3fn6pv2ikshurn36dbd3iysyha";
+
+        // new product with available account range created for testing purposes
+        protected readonly string ProductIdOk = "pro_gfp2kpog3ztutpgtpu4jj36n7i";
         protected readonly string ProductIdBad = "pro_2ebzpnw3wvcefnu7fqglqmg56m";
 
         protected IssuingCommon() : base(PlatformType.DefaultOAuth)
