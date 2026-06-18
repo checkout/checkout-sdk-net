@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Checkout.Identities.Entities;
 using Checkout.Identities.FaceAuthentication.Requests;
 using Checkout.Identities.FaceAuthentication.Responses;
 
@@ -10,6 +11,7 @@ namespace Checkout.Identities.FaceAuthentication
         private const string FaceAuthenticationsPath = "face-authentications";
         private const string AnonymizePath = "anonymize";
         private const string AttemptsPath = "attempts";
+        private const string AssetsPath = "assets";
 
         public FaceAuthenticationClient(IApiClient apiClient, CheckoutConfiguration configuration) :
             base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
@@ -94,8 +96,23 @@ namespace Checkout.Identities.FaceAuthentication
         {
             CheckoutUtils.ValidateParams("faceAuthenticationId", faceAuthenticationId);
             CheckoutUtils.ValidateParams("attemptId", attemptId);
-            return ApiClient.Get<FaceAuthenticationAttemptResponse>(BuildPath(FaceAuthenticationsPath, faceAuthenticationId, AttemptsPath, attemptId), 
+            return ApiClient.Get<FaceAuthenticationAttemptResponse>(BuildPath(FaceAuthenticationsPath, faceAuthenticationId, AttemptsPath, attemptId),
                 SdkAuthorization(), cancellationToken);
+        }
+
+        /// <summary>
+        ///     Retrieves the assets (face images and videos) captured during a face authentication attempt
+        /// </summary>
+        /// <param name="faceAuthenticationId">the face authentication ID</param>
+        /// <param name="attemptId">the attempt ID</param>
+        /// <param name="query">the pagination query parameters (skip and limit)</param>
+        /// <param name="cancellationToken">the cancellation token</param>
+        /// <returns>the face authentication attempt assets response</returns>
+        public Task<FaceAuthenticationAttemptAssetsResponse> GetFaceAuthenticationAttemptAssets(string faceAuthenticationId, string attemptId, AttemptAssetsQuery query = null, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("faceAuthenticationId", faceAuthenticationId, "attemptId", attemptId);
+            return ApiClient.Query<FaceAuthenticationAttemptAssetsResponse>(BuildPath(FaceAuthenticationsPath, faceAuthenticationId, AttemptsPath, attemptId, AssetsPath),
+                SdkAuthorization(), query, cancellationToken);
         }
     }
 }

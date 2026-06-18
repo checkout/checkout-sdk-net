@@ -115,5 +115,11 @@ namespace Checkout.Payments
         /// </summary>
         public string PartnerCode { get; set; }
 
+        /// <summary>
+        /// The scheme transaction link identifier.
+        /// [Optional]
+        /// </summary>
+        public string SchemeTransactionLinkId { get; set; }
+
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Checkout.Common;
 using Checkout.Identities.Entities;
 using Checkout.Identities.FaceAuthentication.Requests;
 using Checkout.Identities.FaceAuthentication.Responses;
@@ -291,7 +292,61 @@ namespace Checkout.Identities.FaceAuthentication
             // Act & Assert
             var exception = await Should.ThrowAsync<CheckoutArgumentException>(async () =>
                 await client.GetFaceAuthenticationAttempt(FaceAuthenticationId, null, CancellationToken.None));
-            
+
+            exception.ShouldNotBeNull();
+            exception.ShouldBeOfType<CheckoutArgumentException>();
+        }
+
+        [Fact]
+        public async Task GetFaceAuthenticationAttemptAssets_Should_Call_ApiClient_Query()
+        {
+            // Arrange
+            var query = new AttemptAssetsQuery { Skip = 0, Limit = 10 };
+            var response = CreateFaceAuthenticationAttemptAssetsResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Query<FaceAuthenticationAttemptAssetsResponse>(
+                        $"{FaceAuthenticationsPath}/{FaceAuthenticationId}/attempts/{AttemptId}/assets",
+                        _authorization,
+                        query,
+                        CancellationToken.None))
+                .ReturnsAsync(response);
+
+            IFaceAuthenticationClient client = new FaceAuthenticationClient(_apiClient.Object, _configuration.Object);
+
+            // Act
+            FaceAuthenticationAttemptAssetsResponse result = await client.GetFaceAuthenticationAttemptAssets(FaceAuthenticationId, AttemptId, query, CancellationToken.None);
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.ShouldBeSameAs(response);
+            ValidateFaceAuthenticationAttemptAssetsResponse(result);
+        }
+
+        [Fact]
+        public async Task GetFaceAuthenticationAttemptAssets_Should_Throw_When_FaceAuthenticationId_Null()
+        {
+            // Arrange
+            IFaceAuthenticationClient client = new FaceAuthenticationClient(_apiClient.Object, _configuration.Object);
+
+            // Act & Assert
+            var exception = await Should.ThrowAsync<CheckoutArgumentException>(async () =>
+                await client.GetFaceAuthenticationAttemptAssets(null, AttemptId, null, CancellationToken.None));
+
+            exception.ShouldNotBeNull();
+            exception.ShouldBeOfType<CheckoutArgumentException>();
+        }
+
+        [Fact]
+        public async Task GetFaceAuthenticationAttemptAssets_Should_Throw_When_AttemptId_Null()
+        {
+            // Arrange
+            IFaceAuthenticationClient client = new FaceAuthenticationClient(_apiClient.Object, _configuration.Object);
+
+            // Act & Assert
+            var exception = await Should.ThrowAsync<CheckoutArgumentException>(async () =>
+                await client.GetFaceAuthenticationAttemptAssets(FaceAuthenticationId, null, null, CancellationToken.None));
+
             exception.ShouldNotBeNull();
             exception.ShouldBeOfType<CheckoutArgumentException>();
         }
@@ -379,6 +434,36 @@ namespace Checkout.Identities.FaceAuthentication
         }
 
         private static void ValidateFaceAuthenticationAttemptsResponse(FaceAuthenticationAttemptsResponse response)
+        {
+            response.ShouldNotBeNull();
+            response.Data.ShouldNotBeNull();
+            response.TotalCount.ShouldBeGreaterThanOrEqualTo(0);
+            response.Skip.ShouldBeGreaterThanOrEqualTo(0);
+            response.Limit.ShouldBeGreaterThanOrEqualTo(0);
+        }
+
+        private static FaceAuthenticationAttemptAssetsResponse CreateFaceAuthenticationAttemptAssetsResponse()
+        {
+            return new FaceAuthenticationAttemptAssetsResponse
+            {
+                TotalCount = 1,
+                Skip = 0,
+                Limit = 10,
+                Data = new List<FaceAuthenticationAttemptAsset>
+                {
+                    new FaceAuthenticationAttemptAsset
+                    {
+                        Type = FaceAuthenticationAttemptAssetType.FaceImage,
+                        Links = new AttemptAssetLinks
+                        {
+                            AssetUrl = new Link { Href = "https://example.com/face-image.jpg" }
+                        }
+                    }
+                }
+            };
+        }
+
+        private static void ValidateFaceAuthenticationAttemptAssetsResponse(FaceAuthenticationAttemptAssetsResponse response)
         {
             response.ShouldNotBeNull();
             response.Data.ShouldNotBeNull();

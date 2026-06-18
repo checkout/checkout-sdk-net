@@ -119,5 +119,19 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// A timestamp specifying when to capture the payment, as an ISO 8601 code.
         /// </summary>
         public DateTime? CaptureOn { get; set; }
+
+        /// <summary>
+        /// The authorization type.
+        /// [Optional]
+        /// Enum: "Final" "Estimated"
+        /// Default: "Final"
+        /// </summary>
+        public AuthorizationType? AuthorizationType { get; set; }
+
+        /// <summary>
+        /// The information to process a recurring payment request. To be used when the payment_type is Recurring.
+        /// [Optional]
+        /// </summary>
+        public PaymentPlan PaymentPlan { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Checkout.Identities.Entities;
 using Checkout.Identities.IdentityVerification.Requests;
 using Checkout.Identities.IdentityVerification.Responses;
 
@@ -12,6 +13,7 @@ namespace Checkout.Identities.IdentityVerification
         private const string AnonymizePath = "anonymize";
         private const string AttemptsPath = "attempts";
         private const string ReportPath = "pdf-report";
+        private const string AssetsPath = "assets";
 
         public IdentityVerificationClient(IApiClient apiClient, CheckoutConfiguration configuration) :
             base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
@@ -121,8 +123,23 @@ namespace Checkout.Identities.IdentityVerification
         public Task<IdentityVerificationReportResponse> GetIdentityVerificationReport(string identityVerificationId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("identityVerificationId", identityVerificationId);
-            return ApiClient.Get<IdentityVerificationReportResponse>(BuildPath(IdentityVerificationsPath, identityVerificationId, ReportPath), 
+            return ApiClient.Get<IdentityVerificationReportResponse>(BuildPath(IdentityVerificationsPath, identityVerificationId, ReportPath),
                 SdkAuthorization(), cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves the assets (face images, videos, and document images) captured during an identity verification attempt
+        /// </summary>
+        /// <param name="identityVerificationId">the identity verification ID</param>
+        /// <param name="attemptId">the attempt ID</param>
+        /// <param name="query">the pagination query parameters (skip and limit)</param>
+        /// <param name="cancellationToken">the cancellation token</param>
+        /// <returns>the identity verification attempt assets response</returns>
+        public Task<IdentityVerificationAttemptAssetsResponse> GetIdentityVerificationAttemptAssets(string identityVerificationId, string attemptId, AttemptAssetsQuery query = null, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("identityVerificationId", identityVerificationId, "attemptId", attemptId);
+            return ApiClient.Query<IdentityVerificationAttemptAssetsResponse>(BuildPath(IdentityVerificationsPath, identityVerificationId, AttemptsPath, attemptId, AssetsPath),
+                SdkAuthorization(), query, cancellationToken);
         }
     }
 }

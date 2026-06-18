@@ -69,5 +69,19 @@ namespace Checkout.Payments.Links
         public PaymentInstruction Instruction { get; set; }
 
         public PaymentMethodConfiguration PaymentMethodConfiguration { get; set; }
+
+        /// <summary>
+        /// The information to process a recurring payment request. To be used when the payment_type is Recurring.
+        /// [Optional]
+        /// </summary>
+        public PaymentPlan PaymentPlan { get; set; }
+
+        /// <summary>
+        /// The authorization type.
+        /// [Optional]
+        /// Enum: "Final" "Estimated"
+        /// Default: "Final"
+        /// </summary>
+        public AuthorizationType? AuthorizationType { get; set; }
     }
 }

@@ -119,6 +119,30 @@ namespace Checkout.Identities.FaceAuthentication
         }
 
         [Fact(Skip = "This test requires valid test environment setup")]
+        private async Task ShouldGetFaceAuthenticationAttemptAssets()
+        {
+            // Arrange
+            var createFaceAuthenticationRequest = CreateFaceAuthenticationRequest();
+            var createdFaceAuthentication = await DefaultApi.FaceAuthenticationClient()
+                .CreateFaceAuthentication(createFaceAuthenticationRequest);
+
+            var createAttemptRequest = CreateFaceAuthenticationAttemptRequest();
+            var createdAttempt = await DefaultApi.FaceAuthenticationClient()
+                .CreateFaceAuthenticationAttempt(createdFaceAuthentication.Id, createAttemptRequest);
+
+            var query = new AttemptAssetsQuery { Skip = 0, Limit = 10 };
+
+            // Act
+            var assets = await DefaultApi.FaceAuthenticationClient()
+                .GetFaceAuthenticationAttemptAssets(createdFaceAuthentication.Id, createdAttempt.Id, query);
+
+            // Assert
+            assets.ShouldNotBeNull();
+            assets.Data.ShouldNotBeNull();
+            assets.TotalCount.ShouldBeGreaterThanOrEqualTo(0);
+        }
+
+        [Fact(Skip = "This test requires valid test environment setup")]
         private async Task ShouldPerformFaceAuthenticationWorkflow()
         {
             // Arrange
