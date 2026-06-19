@@ -27,7 +27,7 @@ namespace Checkout.Authentication.Standalone.PUTSessionsIdCollectData.Requests.B
         /// navigator.javaEnabled property.
         /// [Required]
         /// </summary>
-        public bool JavaEnabled { get; set; }
+        public bool? JavaEnabled { get; set; }
 
         /// <summary>
         /// Default: true Boolean that represents the ability of the cardholder's browser to execute Javascript. Value
@@ -36,7 +36,7 @@ namespace Checkout.Authentication.Standalone.PUTSessionsIdCollectData.Requests.B
         /// disregarded.
         /// [Required]
         /// </summary>
-        public bool JavascriptEnabled { get; set; } = true;
+        public bool? JavascriptEnabled { get; set; }
 
         /// <summary>
         /// Value representing the browser language as defined in IETF BCP47. Returned from the navigator.language
