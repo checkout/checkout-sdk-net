@@ -133,6 +133,30 @@ namespace Checkout.Identities.IdentityVerification
         }
 
         [Fact(Skip = "This test requires valid test environment setup")]
+        private async Task ShouldGetIdentityVerificationAttemptAssets()
+        {
+            // Arrange
+            var createRequest = CreateIdentityVerificationRequest();
+            var created = await DefaultApi.IdentityVerificationClient()
+                .CreateIdentityVerification(createRequest);
+
+            var attemptRequest = CreateIdentityVerificationAttemptRequest();
+            var createdAttempt = await DefaultApi.IdentityVerificationClient()
+                .CreateIdentityVerificationAttempt(created.Id, attemptRequest);
+
+            var query = new AttemptAssetsQuery { Skip = 0, Limit = 10 };
+
+            // Act
+            var assets = await DefaultApi.IdentityVerificationClient()
+                .GetIdentityVerificationAttemptAssets(created.Id, createdAttempt.Id, query);
+
+            // Assert
+            assets.ShouldNotBeNull();
+            assets.Data.ShouldNotBeNull();
+            assets.TotalCount.ShouldBeGreaterThanOrEqualTo(0);
+        }
+
+        [Fact(Skip = "This test requires valid test environment setup")]
         private async Task ShouldGetIdentityVerificationReport()
         {
             // Arrange

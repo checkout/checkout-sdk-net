@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Checkout.Identities.Entities;
 using Checkout.Identities.FaceAuthentication.Requests;
 using Checkout.Identities.FaceAuthentication.Responses;
 
@@ -59,5 +60,15 @@ namespace Checkout.Identities.FaceAuthentication
         /// <param name="cancellationToken">the cancellation token</param>
         /// <returns>the face authentication attempt response</returns>
         Task<FaceAuthenticationAttemptResponse> GetFaceAuthenticationAttempt(string faceAuthenticationId, string attemptId, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        ///     Retrieves the assets (face images and videos) captured during a face authentication attempt
+        /// </summary>
+        /// <param name="faceAuthenticationId">the face authentication ID</param>
+        /// <param name="attemptId">the attempt ID</param>
+        /// <param name="query">the pagination query parameters (skip and limit)</param>
+        /// <param name="cancellationToken">the cancellation token</param>
+        /// <returns>the face authentication attempt assets response</returns>
+        Task<FaceAuthenticationAttemptAssetsResponse> GetFaceAuthenticationAttemptAssets(string faceAuthenticationId, string attemptId, AttemptAssetsQuery query = null, CancellationToken cancellationToken = default);
     }
 }

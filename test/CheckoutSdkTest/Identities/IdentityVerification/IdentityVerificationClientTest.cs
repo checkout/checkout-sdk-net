@@ -371,7 +371,61 @@ namespace Checkout.Identities.IdentityVerification
             // Act & Assert
             var exception = await Should.ThrowAsync<CheckoutArgumentException>(async () =>
                 await client.GetIdentityVerificationReport(null, CancellationToken.None));
-            
+
+            exception.ShouldNotBeNull();
+            exception.ShouldBeOfType<CheckoutArgumentException>();
+        }
+
+        [Fact]
+        public async Task GetIdentityVerificationAttemptAssets_Should_Call_ApiClient_Query()
+        {
+            // Arrange
+            var query = new AttemptAssetsQuery { Skip = 0, Limit = 10 };
+            var response = CreateIdentityVerificationAttemptAssetsResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Query<IdentityVerificationAttemptAssetsResponse>(
+                        $"{IdentityVerificationsPath}/{IdentityVerificationId}/attempts/{AttemptId}/assets",
+                        _authorization,
+                        query,
+                        CancellationToken.None))
+                .ReturnsAsync(response);
+
+            IIdentityVerificationClient client = new IdentityVerificationClient(_apiClient.Object, _configuration.Object);
+
+            // Act
+            IdentityVerificationAttemptAssetsResponse result = await client.GetIdentityVerificationAttemptAssets(IdentityVerificationId, AttemptId, query, CancellationToken.None);
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.ShouldBeSameAs(response);
+            ValidateIdentityVerificationAttemptAssetsResponse(result);
+        }
+
+        [Fact]
+        public async Task GetIdentityVerificationAttemptAssets_Should_Throw_When_IdentityVerificationId_Null()
+        {
+            // Arrange
+            IIdentityVerificationClient client = new IdentityVerificationClient(_apiClient.Object, _configuration.Object);
+
+            // Act & Assert
+            var exception = await Should.ThrowAsync<CheckoutArgumentException>(async () =>
+                await client.GetIdentityVerificationAttemptAssets(null, AttemptId, null, CancellationToken.None));
+
+            exception.ShouldNotBeNull();
+            exception.ShouldBeOfType<CheckoutArgumentException>();
+        }
+
+        [Fact]
+        public async Task GetIdentityVerificationAttemptAssets_Should_Throw_When_AttemptId_Null()
+        {
+            // Arrange
+            IIdentityVerificationClient client = new IdentityVerificationClient(_apiClient.Object, _configuration.Object);
+
+            // Act & Assert
+            var exception = await Should.ThrowAsync<CheckoutArgumentException>(async () =>
+                await client.GetIdentityVerificationAttemptAssets(IdentityVerificationId, null, null, CancellationToken.None));
+
             exception.ShouldNotBeNull();
             exception.ShouldBeOfType<CheckoutArgumentException>();
         }
@@ -555,6 +609,36 @@ namespace Checkout.Identities.IdentityVerification
         }
 
         private static void ValidateIdentityVerificationAttemptsResponse(IdentityVerificationAttemptsResponse response)
+        {
+            response.ShouldNotBeNull();
+            response.Data.ShouldNotBeNull();
+            response.TotalCount.ShouldBeGreaterThanOrEqualTo(0);
+            response.Skip.ShouldBeGreaterThanOrEqualTo(0);
+            response.Limit.ShouldBeGreaterThanOrEqualTo(0);
+        }
+
+        private static IdentityVerificationAttemptAssetsResponse CreateIdentityVerificationAttemptAssetsResponse()
+        {
+            return new IdentityVerificationAttemptAssetsResponse
+            {
+                TotalCount = 1,
+                Skip = 0,
+                Limit = 10,
+                Data = new List<IdentityVerificationAttemptAsset>
+                {
+                    new IdentityVerificationAttemptAsset
+                    {
+                        Type = IdentityVerificationAttemptAssetType.DocumentFrontImage,
+                        Links = new AttemptAssetLinks
+                        {
+                            AssetUrl = new Checkout.Common.Link { Href = "https://example.com/document-front.jpg" }
+                        }
+                    }
+                }
+            };
+        }
+
+        private static void ValidateIdentityVerificationAttemptAssetsResponse(IdentityVerificationAttemptAssetsResponse response)
         {
             response.ShouldNotBeNull();
             response.Data.ShouldNotBeNull();

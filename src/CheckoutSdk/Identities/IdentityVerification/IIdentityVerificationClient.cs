@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Checkout.Identities.Entities;
 using Checkout.Identities.IdentityVerification.Requests;
 using Checkout.Identities.IdentityVerification.Responses;
 
@@ -75,5 +76,15 @@ namespace Checkout.Identities.IdentityVerification
         /// <param name="cancellationToken">the cancellation token</param>
         /// <returns>the identity verification report response</returns>
         Task<IdentityVerificationReportResponse> GetIdentityVerificationReport(string identityVerificationId, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        ///     Retrieves the assets (face images, videos, and document images) captured during an identity verification attempt
+        /// </summary>
+        /// <param name="identityVerificationId">the identity verification ID</param>
+        /// <param name="attemptId">the attempt ID</param>
+        /// <param name="query">the pagination query parameters (skip and limit)</param>
+        /// <param name="cancellationToken">the cancellation token</param>
+        /// <returns>the identity verification attempt assets response</returns>
+        Task<IdentityVerificationAttemptAssetsResponse> GetIdentityVerificationAttemptAssets(string identityVerificationId, string attemptId, AttemptAssetsQuery query = null, CancellationToken cancellationToken = default);
     }
 }
