@@ -14,7 +14,7 @@ namespace Checkout.Payments.Contexts
         {
         }
 
-        [Fact]
+        [Fact(Skip = "Skipped because error = apm_service_unavailable")]
         private async Task ShouldMakeAPayPalPaymentContextRequest()
         {
             var paymentContextsRequest = new PaymentContextsRequest
@@ -126,7 +126,7 @@ namespace Checkout.Payments.Contexts
                 "currency_not_supported");
         }
 
-        [Fact]
+        [Fact(Skip = "Skipped because error = apm_service_unavailable")]
         private async Task ShouldGetAPaymentContext()
         {
             var paymentContextsRequest = new PaymentContextsRequest
