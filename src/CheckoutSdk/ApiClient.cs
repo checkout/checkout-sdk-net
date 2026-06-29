@@ -167,7 +167,7 @@ namespace Checkout
             SdkAuthorization authorization,
             object request = null,
             CancellationToken cancellationToken = default,
-            string idempotencyKey = null, 
+            string idempotencyKey = null,
             IHeaders headers = null)
             where TResult : HttpMetadata
         {
@@ -306,7 +306,7 @@ namespace Checkout
                 httpRequest.Headers.Add("Cko-Idempotency-Key", idempotencyKey);
             }
 
-            if(headers != null)
+            if (headers != null)
             {
                 foreach (var header in headers.GetType().GetProperties())
                 {
@@ -318,7 +318,7 @@ namespace Checkout
                     }
                 }
             }
-            
+
             if (_enableTelemetry)
             {
                 var currentRequestId = Guid.NewGuid().ToString();
@@ -386,7 +386,7 @@ namespace Checkout
                 (httpResponse.Content.Headers.ContentLength.HasValue && httpResponse.Content.Headers.ContentLength.Value == 0))
             {
                 deserializedObject = Activator.CreateInstance(resultType);
-                
+
                 if (deserializedObject == null)
                 {
                     deserializedObject = new DefaultHttpMetadata();
@@ -401,14 +401,14 @@ namespace Checkout
                 var json = await httpResponse.Content.ReadAsStringAsync();
                 deserializedObject = _serializer.Deserialize(json, resultType);
             }
-            
+
             if (deserializedObject is HttpMetadata metadata)
             {
                 metadata.Body = metadata.Body ?? string.Empty;
                 metadata.HttpStatusCode = metadata.HttpStatusCode == null ? 0 : (int)httpResponse.StatusCode;
                 metadata.ResponseHeaders = metadata.ResponseHeaders ?? new Dictionary<string, string>();
             }
-            
+
             if (deserializedObject != null)
             {
                 await SetHttpMetadata(httpResponse, deserializedObject);
@@ -477,7 +477,7 @@ namespace Checkout
 
             return null;
         }
-        
+
         private IDictionary<string, object> GetErrorDetails(string json)
         {
             IDictionary<string, object> errorDetails;
