@@ -236,6 +236,15 @@ namespace Checkout.Issuing.Disputes
             ValidateIssuingDisputeResponse(response, expectedResponse);
         }
 
+        [Fact]
+        public async Task AmendDispute_WhenDisputeIdIsNull_ShouldThrowCheckoutArgumentException()
+        {
+            IIssuingClient issuingClient = new IssuingClient(_apiClient.Object, _configuration.Object);
+            var exception = await Should.ThrowAsync<CheckoutArgumentException>(
+                async () => await issuingClient.AmendDispute(null, Guid.NewGuid().ToString()));
+            exception.ShouldBeOfType<CheckoutArgumentException>();
+        }
+
         // Setup Methods (Builders)
         private CreateDisputeRequest CreateValidCreateDisputeRequest()
         {

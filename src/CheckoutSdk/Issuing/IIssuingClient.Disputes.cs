@@ -64,7 +64,6 @@ namespace Checkout.Issuing
         /// [Beta]
         /// </summary>
         /// <remarks>
-        /// This endpoint was removed from the API on 2026-04-15.
         /// This endpoint is deprecated. Use <see cref="CreateDispute"/> to create and submit a dispute in a
         /// single step, or <see cref="AmendDispute"/> if the dispute status is action_required.
         /// </remarks>
@@ -73,7 +72,7 @@ namespace Checkout.Issuing
         /// <param name="submitDisputeRequest">The optional submit request details.</param>
         /// <param name="cancellationToken">An optional cancellation token.</param>
         /// <returns>The dispute details.</returns>
-        [System.Obsolete("POST /issuing/disputes/{disputeId}/submit was removed from the API on 2026-04-15.", false)]
+        [System.Obsolete("POST /issuing/disputes/{disputeId}/submit is deprecated. Use CreateDispute to create and submit a dispute in a single step, or AmendDispute if the dispute status is action_required.", false)]
         Task<IssuingDisputeResponse> SubmitDispute(
             string disputeId,
             string idempotencyKey,

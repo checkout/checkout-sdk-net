@@ -1,3 +1,5 @@
+using Checkout.Common;
+
 namespace Checkout.Payments.Setups.Entities
 {
     /// <summary>
@@ -34,7 +36,7 @@ namespace Checkout.Payments.Setups.Entities
         /// [Optional]
         /// min 2 characters, max 2 characters
         /// </summary>
-        public string Country { get; set; }
+        public CountryCode? Country { get; set; }
 
         /// <summary>
         /// The account holder's account currency.

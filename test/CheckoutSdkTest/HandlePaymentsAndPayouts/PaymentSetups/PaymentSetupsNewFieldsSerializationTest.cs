@@ -76,7 +76,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                         Type = BacsAccountHolderType.Individual, FirstName = "John", LastName = "Smith",
                         Email = "john.smith@example.com"
                     },
-                    AccountNumber = "12345678", BankCode = "010203", Country = "GB", Currency = "GBP",
+                    AccountNumber = "12345678", BankCode = "010203", Country = CountryCode.GB, Currency = "GBP",
                     AllowPartialMatch = false
                 },
                 CardPresent = new CardPresent
