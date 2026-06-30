@@ -101,13 +101,14 @@ namespace Checkout
             _financialClient = new FinancialClient(baseApiClient, configuration);
             _issuingClient = new IssuingClient(baseApiClient, configuration);
             _paymentContextsClient = new PaymentContextsClient(baseApiClient, configuration);
-            _forwardClient = new ForwardClient(baseApiClient, configuration);
+            _forwardClient = new ForwardClient(ForwardApiClient(configuration), configuration);
             _flowClient = new FlowClient(baseApiClient, configuration);
-            _applicantsClient = new ApplicantsClient(baseApiClient, configuration);
-            _amlScreeningClient = new AmlScreeningClient(baseApiClient, configuration);
-            _faceAuthenticationClient = new FaceAuthenticationClient(baseApiClient, configuration);
-            _idDocumentVerificationClient = new IdDocumentVerificationClient(baseApiClient, configuration);
-            _identityVerificationClient = new IdentityVerificationClient(baseApiClient, configuration);
+            var identityApiClient = IdentityApiClient(configuration);
+            _applicantsClient = new ApplicantsClient(identityApiClient, configuration);
+            _amlScreeningClient = new AmlScreeningClient(identityApiClient, configuration);
+            _faceAuthenticationClient = new FaceAuthenticationClient(identityApiClient, configuration);
+            _idDocumentVerificationClient = new IdDocumentVerificationClient(identityApiClient, configuration);
+            _identityVerificationClient = new IdentityVerificationClient(identityApiClient, configuration);
             _networkTokensClient = new NetworkTokensClient(baseApiClient, configuration);
             _paymentSetupsClient = new PaymentSetupsClient(baseApiClient, configuration);
             _applePayClient = new ApplePayClient(baseApiClient, configuration);
@@ -146,6 +147,20 @@ namespace Checkout
         {
             return new ApiClient(configuration.HttpClientFactory,
                 configuration.Environment.GetAttribute<EnvironmentAttribute>().BalancesApiUri,
+                configuration.RecordTelemetry);
+        }
+
+        private static ApiClient ForwardApiClient(CheckoutConfiguration configuration)
+        {
+            return new ApiClient(configuration.HttpClientFactory,
+                configuration.Environment.GetAttribute<EnvironmentAttribute>().ForwardApiUri,
+                configuration.RecordTelemetry);
+        }
+
+        private static ApiClient IdentityApiClient(CheckoutConfiguration configuration)
+        {
+            return new ApiClient(configuration.HttpClientFactory,
+                configuration.Environment.GetAttribute<EnvironmentAttribute>().IdentityApiUri,
                 configuration.RecordTelemetry);
         }
 
