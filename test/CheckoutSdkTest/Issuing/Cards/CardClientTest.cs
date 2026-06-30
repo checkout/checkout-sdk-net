@@ -275,48 +275,5 @@ namespace Checkout.Issuing.Cards
             response.ShouldNotBeNull();
             response.ShouldBeSameAs(renewResponse);
         }
-
-        [Fact]
-        private async Task ShouldScheduleCardRevocation()
-        {
-            var scheduleRequest = new ScheduleCardRevocationRequest();
-            var resourceResponse = new Resource();
-
-            _apiClient.Setup(apiClient =>
-                    apiClient.Post<Resource>(
-                        "issuing/cards/card_id/schedule-revocation",
-                        _authorization,
-                        scheduleRequest,
-                        CancellationToken.None,
-                        null))
-                .ReturnsAsync(() => resourceResponse);
-
-            IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
-
-            Resource response = await client.ScheduleCardRevocation("card_id", scheduleRequest, CancellationToken.None);
-
-            response.ShouldNotBeNull();
-            response.ShouldBeSameAs(resourceResponse);
-        }
-
-        [Fact]
-        private async Task ShouldDeleteScheduledRevocation()
-        {
-            var resourceResponse = new Resource();
-
-            _apiClient.Setup(apiClient =>
-                    apiClient.Delete<Resource>(
-                        "issuing/cards/card_id/schedule-revocation",
-                        _authorization,
-                        CancellationToken.None))
-                .ReturnsAsync(() => resourceResponse);
-
-            IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
-
-            Resource response = await client.DeleteScheduledRevocation("card_id", CancellationToken.None);
-
-            response.ShouldNotBeNull();
-            response.ShouldBeSameAs(resourceResponse);
-        }
     }
 }

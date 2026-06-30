@@ -119,8 +119,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             deserialized.PaymentMethods.Klarna.Flags.ShouldNotBeNull();
             deserialized.PaymentMethods.Klarna.Flags.Count.ShouldBe(1);
             deserialized.PaymentMethods.Klarna.AccountHolder.ShouldNotBeNull();
-            deserialized.PaymentMethods.Klarna.AccountHolder.BillingAddress.ShouldNotBeNull();
-            deserialized.PaymentMethods.Klarna.AccountHolder.BillingAddress.AddressLine1.ShouldBe("1 Klarna St");
+            deserialized.PaymentMethods.Klarna.AccountHolder.Name.ShouldBe("John Klarna");
             deserialized.PaymentMethods.Klarna.Action.ShouldNotBeNull();
             deserialized.PaymentMethods.Klarna.Action.Type.ShouldBe("sdk");
             deserialized.PaymentMethods.Klarna.Action.ClientToken.ShouldBe("klarna_token_123");
@@ -248,7 +247,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                         ""status"": ""available"",
                         ""initialization"": ""enabled"",
                         ""flags"": [""express""],
-                        ""account_holder"": { ""billing_address"": { ""address_line1"": ""1 Klarna St"" } },
+                        ""account_holder"": { ""name"": ""John Klarna"" },
                         ""action"": { ""type"": ""sdk"", ""client_token"": ""tok_abc"", ""session_id"": ""sess_def"" },
                         ""payment_method_options"": { ""sdk"": { ""id"": ""opt_k1"" } }
                     },
@@ -349,7 +348,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.PaymentMethods.Klarna.Status.ShouldBe(PaymentMethodStatus.Available);
             result.PaymentMethods.Klarna.Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
             result.PaymentMethods.Klarna.Flags.ShouldContain("express");
-            result.PaymentMethods.Klarna.AccountHolder.BillingAddress.AddressLine1.ShouldBe("1 Klarna St");
+            result.PaymentMethods.Klarna.AccountHolder.Name.ShouldBe("John Klarna");
             result.PaymentMethods.Klarna.Action.Type.ShouldBe("sdk");
             result.PaymentMethods.Klarna.Action.ClientToken.ShouldBe("tok_abc");
             result.PaymentMethods.Klarna.Action.SessionId.ShouldBe("sess_def");
@@ -489,7 +488,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                         Flags = new List<string> { "express" },
                         AccountHolder = new KlarnaAccountHolder
                         {
-                            BillingAddress = new Address { AddressLine1 = "1 Klarna St" }
+                            Name = "John Klarna"
                         },
                         Action = new PaymentMethodAction
                         {

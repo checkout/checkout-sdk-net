@@ -78,13 +78,7 @@ namespace Checkout.Issuing
                 PhoneNumber = GetPhone(),
                 DateOfBirth = "1985-05-15",
                 BillingAddress = GetAddress(),
-                ResidencyAddress = GetAddress(),
-                Document = new CardholderDocument
-                {
-                    Type = DocumentType.Passport,
-                    FrontDocumentId = "file_6lbss42ezvoufcb2beo76rvwly",
-                    BackDocumentId = "file_aaz5pemp6326zbuvevp6qroqu4"
-                }
+                ResidencyAddress = GetAddress()
             };
             return request;
         }
@@ -111,13 +105,7 @@ namespace Checkout.Issuing
                 PhoneNumber = GetPhone(),
                 DateOfBirth = "1985-05-15",
                 BillingAddress = GetAddress(),
-                ResidencyAddress = GetAddress(),
-                Document = new CardholderDocument
-                {
-                    Type = DocumentType.Passport,
-                    FrontDocumentId = "file_6lbss42ezvoufcb2beo76rvwly",
-                    BackDocumentId = "file_aaz5pemp6326zbuvevp6qroqu4"
-                }
+                ResidencyAddress = GetAddress()
             };
             return request;
         }

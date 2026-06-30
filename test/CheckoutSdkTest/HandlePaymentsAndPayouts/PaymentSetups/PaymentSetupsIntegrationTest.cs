@@ -137,13 +137,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                         Initialization = PaymentMethodInitialization.Disabled,
                         AccountHolder = new KlarnaAccountHolder
                         {
-                            BillingAddress = new Address
-                            {
-                                AddressLine1 = "123 High Street",
-                                City = "London",
-                                Zip = "SW1A 1AA",
-                                Country = CountryCode.GB
-                            }
+                            Name = "John Klarna"
                         }
                     }
                 }

@@ -152,6 +152,37 @@ namespace Checkout.Issuing.Disputes
             ValidateSubmittedDisputeResponse(response, createResponse.Id);
         }
 
+        [Fact(Skip = "Requires permissions to create disputes and simulate transactions - we must ensure the test environment is set up correctly first")]
+        public async Task AmendDispute_ShouldReturnValidResponse()
+        {
+            // Arrange
+            var idempotencyKey = Guid.NewGuid().ToString();
+            var createRequest = CreateValidCreateDisputeRequest(_clearedTransactionId);
+            var createResponse = await DefaultApi.IssuingClient().CreateDispute(createRequest, idempotencyKey);
+
+            var amendRequest = CreateValidAmendDisputeRequest();
+
+            // Act
+            var response = await DefaultApi.IssuingClient().AmendDispute(createResponse.Id, idempotencyKey, amendRequest);
+
+            // Assert
+            ValidateSubmittedDisputeResponse(response, createResponse.Id);
+        }
+
+        private AmendDisputeRequest CreateValidAmendDisputeRequest()
+        {
+            return new AmendDisputeRequest
+            {
+                Reason = "4807",
+                Amount = 1500,
+                FraudDetails = new IssuingDisputeFraudDetails
+                {
+                    FraudType = IssuingDisputeFraudType.CardNotPresentFraud
+                },
+                ReasonChangeJustification = "New evidence confirms an unauthorized transaction."
+            };
+        }
+
         // Helper method to create a cleared transaction for dispute testing
         private async Task<string> CreateClearedTransaction()
         {

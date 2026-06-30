@@ -34,5 +34,13 @@ namespace Checkout.Issuing.Disputes.Requests
         /// [Optional]
         /// </summary>
         public DisputeReasonChange ReasonChange { get; set; }
+
+        /// <summary>
+        /// Provides fraud-related details.
+        /// This field is required if the dispute has a fraud-related reason code at the escalation stage,
+        /// or after a requested reason code change to a fraud code.
+        /// [Optional]
+        /// </summary>
+        public IssuingDisputeFraudDetails FraudDetails { get; set; }
     }
 }
