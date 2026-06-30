@@ -60,16 +60,39 @@ namespace Checkout.Issuing
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Submit an Issuing dispute.
+        /// Submit an Issuing dispute to the card scheme for processing.
+        /// [Beta]
         /// </summary>
         /// <remarks>
-        /// This endpoint was removed from the API on 2026-04-15.
+        /// This endpoint is deprecated. Use <see cref="CreateDispute"/> to create and submit a dispute in a
+        /// single step, or <see cref="AmendDispute"/> if the dispute status is action_required.
         /// </remarks>
-        [System.Obsolete("POST /issuing/disputes/{disputeId}/submit was removed from the API on 2026-04-15.", false)]
+        /// <param name="disputeId">The unique identifier of the dispute to submit.</param>
+        /// <param name="idempotencyKey">A unique idempotency key for safely retrying requests.</param>
+        /// <param name="submitDisputeRequest">The optional submit request details.</param>
+        /// <param name="cancellationToken">An optional cancellation token.</param>
+        /// <returns>The dispute details.</returns>
+        [System.Obsolete("POST /issuing/disputes/{disputeId}/submit is deprecated. Use CreateDispute to create and submit a dispute in a single step, or AmendDispute if the dispute status is action_required.", false)]
         Task<IssuingDisputeResponse> SubmitDispute(
             string disputeId,
             string idempotencyKey,
             SubmitDisputeRequest submitDisputeRequest = null,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Amend an Issuing dispute that is currently blocked from proceeding. Handles both
+        /// chargeback-stage and escalation-stage amendments.
+        /// [Beta]
+        /// </summary>
+        /// <param name="disputeId">The unique identifier of the dispute to amend.</param>
+        /// <param name="idempotencyKey">A unique idempotency key for safely retrying requests.</param>
+        /// <param name="amendDisputeRequest">The optional amend request details.</param>
+        /// <param name="cancellationToken">An optional cancellation token.</param>
+        /// <returns>The dispute details.</returns>
+        Task<IssuingDisputeResponse> AmendDispute(
+            string disputeId,
+            string idempotencyKey,
+            AmendDisputeRequest amendDisputeRequest = null,
             CancellationToken cancellationToken = default);
     }
 }

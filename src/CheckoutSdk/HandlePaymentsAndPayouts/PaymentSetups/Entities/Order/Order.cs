@@ -50,6 +50,12 @@ namespace Checkout.Payments.Setups.Entities
         /// &gt;= 0
         /// </summary>
         public long? TaxAmount { get; set; }
+
+        /// <summary>
+        /// The amount allocations representing the sub-entities on whose behalf the payment is processed.
+        /// [Optional]
+        /// </summary>
+        public IList<PaymentSetupAmountAllocation> AmountAllocations { get; set; }
     }
 }
 

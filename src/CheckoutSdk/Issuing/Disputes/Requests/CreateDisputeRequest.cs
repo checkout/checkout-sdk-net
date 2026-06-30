@@ -52,9 +52,10 @@ namespace Checkout.Issuing.Disputes.Requests
         /// Indicates whether to submit the dispute immediately (true) or later (false).
         /// </summary>
         /// <remarks>
-        /// Removed from the API on 2026-04-15. Use the Submit an Issuing Dispute endpoint instead.
+        /// This property is deprecated. Use CreateDispute directly to create and submit in a single step,
+        /// or AmendDispute if the dispute status is action_required.
         /// </remarks>
-        [System.Obsolete("This property was removed from the API on 2026-04-15. Use the Submit an Issuing Dispute endpoint instead.", false)]
+        [System.Obsolete("This property is deprecated. Use CreateDispute to create and submit a dispute in a single step, or AmendDispute if the dispute status is action_required.", false)]
         public bool? IsReadyForSubmission { get; set; }
 
         /// <summary>
@@ -63,5 +64,12 @@ namespace Checkout.Issuing.Disputes.Requests
         /// &lt;= 100 characters
         /// </summary>
         public string Justification { get; set; }
+
+        /// <summary>
+        /// Contains all fraud-related information to be sent with the chargeback.
+        /// This field is required if the dispute has a fraud-related reason code.
+        /// [Optional]
+        /// </summary>
+        public IssuingDisputeFraudDetails FraudDetails { get; set; }
     }
 }

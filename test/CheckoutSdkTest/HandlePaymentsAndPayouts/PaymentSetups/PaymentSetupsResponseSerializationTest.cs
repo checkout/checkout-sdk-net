@@ -99,7 +99,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                         ""status"": ""available"",
                         ""initialization"": ""enabled"",
                         ""flags"": [""express"", ""test""],
-                        ""account_holder"": { ""billing_address"": { ""address_line1"": ""1 Klarna Weg"" } },
+                        ""account_holder"": { ""name"": ""Hans Klarna"" },
                         ""action"": { ""type"": ""sdk"", ""client_token"": ""tok_resp"", ""session_id"": ""sess_resp"" },
                         ""payment_method_options"": { ""sdk"": { ""id"": ""opt_resp_k"", ""status"": ""active"", ""flags"": [""f1""], ""action"": { ""type"": ""sdk"" } } }
                     },
@@ -198,7 +198,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.PaymentMethods.Klarna.Status.ShouldBe(PaymentMethodStatus.Available);
             result.PaymentMethods.Klarna.Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
             result.PaymentMethods.Klarna.Flags.Count.ShouldBe(2);
-            result.PaymentMethods.Klarna.AccountHolder.BillingAddress.AddressLine1.ShouldBe("1 Klarna Weg");
+            result.PaymentMethods.Klarna.AccountHolder.Name.ShouldBe("Hans Klarna");
             result.PaymentMethods.Klarna.Action.Type.ShouldBe("sdk");
             result.PaymentMethods.Klarna.Action.ClientToken.ShouldBe("tok_resp");
             result.PaymentMethods.Klarna.Action.SessionId.ShouldBe("sess_resp");

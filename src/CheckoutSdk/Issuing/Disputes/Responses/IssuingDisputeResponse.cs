@@ -91,5 +91,11 @@ namespace Checkout.Issuing.Disputes.Responses
         /// The dispute details during the arbitration stage.
         /// </summary>
         public DisputeArbitration Arbitration { get; set; }
+
+        /// <summary>
+        /// Provides instructions on the amendments required before the dispute can proceed, if the dispute
+        /// status is action_required.
+        /// </summary>
+        public IssuingDisputeActionDetails ActionDetails { get; set; }
     }
 }

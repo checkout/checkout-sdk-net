@@ -52,13 +52,6 @@ namespace Checkout.Issuing
 
         Task<Resource> RevokeCard(string cardId, RevokeCardRequest revokeCardRequest,
             CancellationToken cancellationToken = default);
-        
-        Task<Resource> ScheduleCardRevocation(string cardId,
-            ScheduleCardRevocationRequest scheduleCardRevocationRequest,
-            CancellationToken cancellationToken = default);
-        
-        Task<Resource> DeleteScheduledRevocation(string cardId,
-            CancellationToken cancellationToken = default);
 
         Task<Resource> SuspendCard(string cardId, SuspendCardRequest suspendCardRequest,
             CancellationToken cancellationToken = default);

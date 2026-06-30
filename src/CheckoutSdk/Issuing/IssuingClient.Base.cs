@@ -10,7 +10,6 @@ namespace Checkout.Issuing
         private const string Credentials = "credentials";
         private const string Renew = "renew";
         private const string Revoke = "revoke";
-        private const string ScheduleRevocation = "schedule-revocation";
         private const string Suspend = "suspend";
         private const string ControlsPath = "controls";
         private const string SimulatePath = "simulate";
@@ -25,6 +24,7 @@ namespace Checkout.Issuing
         private const string CancelPath = "cancel";
         private const string EscalatePath = "escalate";
         private const string SubmitPath = "submit";
+        private const string AmendPath = "amend";
         private const string AddPath = "add";
         private const string RemovePath = "remove";
         private const string AccessTokenPath = "access/connect/token";
