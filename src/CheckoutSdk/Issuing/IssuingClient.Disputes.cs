@@ -65,7 +65,7 @@ namespace Checkout.Issuing
             );
         }
 
-        [System.Obsolete("POST /issuing/disputes/{disputeId}/submit was removed from the API on 2026-04-15.", false)]
+        [System.Obsolete("POST /issuing/disputes/{disputeId}/submit was removed from the API on 2026-04-15. This endpoint is deprecated. Use CreateDispute to create and submit a dispute in a single step, or AmendDispute if the dispute status is action_required.", false)]
         public Task<IssuingDisputeResponse> SubmitDispute(
             string disputeId,
             string idempotencyKey,
@@ -77,6 +77,22 @@ namespace Checkout.Issuing
                 BuildPath(IssuingPath, DisputesPath, disputeId, SubmitPath),
                 SdkAuthorization(),
                 submitDisputeRequest,
+                cancellationToken,
+                idempotencyKey
+            );
+        }
+
+        public Task<IssuingDisputeResponse> AmendDispute(
+            string disputeId,
+            string idempotencyKey,
+            AmendDisputeRequest amendDisputeRequest = null,
+            CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("disputeId", disputeId);
+            return ApiClient.Post<IssuingDisputeResponse>(
+                BuildPath(IssuingPath, DisputesPath, disputeId, AmendPath),
+                SdkAuthorization(),
+                amendDisputeRequest,
                 cancellationToken,
                 idempotencyKey
             );

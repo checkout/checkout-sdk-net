@@ -33,5 +33,25 @@ namespace Checkout.Payments.Setups.Entities
         /// The Blik payment method's details and configuration.
         /// </summary>
         public Blik Blik { get; set; }
+
+        /// <summary>
+        /// The Bacs payment method's details and configuration.
+        /// </summary>
+        public Bacs Bacs { get; set; }
+
+        /// <summary>
+        /// The Card Present payment method's details and configuration.
+        /// </summary>
+        public CardPresent CardPresent { get; set; }
+
+        /// <summary>
+        /// The Pay by Bank (Open Banking) payment method's details and configuration.
+        /// </summary>
+        public PayByBank PayByBank { get; set; }
+
+        /// <summary>
+        /// The Stablecoin payment method's details and configuration.
+        /// </summary>
+        public Stablecoin Stablecoin { get; set; }
     }
 }

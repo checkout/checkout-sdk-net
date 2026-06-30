@@ -63,5 +63,12 @@ namespace Checkout.Issuing.Disputes.Requests
         /// &lt;= 100 characters
         /// </summary>
         public string Justification { get; set; }
+
+        /// <summary>
+        /// Contains all fraud-related information to be sent with the chargeback.
+        /// This field is required if the dispute has a fraud-related reason code.
+        /// [Optional]
+        /// </summary>
+        public IssuingDisputeFraudDetails FraudDetails { get; set; }
     }
 }

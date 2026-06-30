@@ -139,30 +139,6 @@ namespace Checkout.Issuing
             );
         }
 
-        public Task<Resource> ScheduleCardRevocation(
-            string cardId, 
-            ScheduleCardRevocationRequest scheduleCardRevocationRequest,
-            CancellationToken cancellationToken = default)
-        {
-            CheckoutUtils.ValidateParams("cardId", cardId, "scheduleCardRevocationRequest", scheduleCardRevocationRequest);
-            return ApiClient.Post<Resource>(
-                BuildPath(IssuingPath, CardsPath, cardId, ScheduleRevocation),
-                SdkAuthorization(),
-                scheduleCardRevocationRequest,
-                cancellationToken
-            );
-        }
-
-        public Task<Resource> DeleteScheduledRevocation(string cardId, CancellationToken cancellationToken = default)
-        {
-            CheckoutUtils.ValidateParams("cardId", cardId);
-            return ApiClient.Delete<Resource>(
-                BuildPath(IssuingPath, CardsPath, cardId, ScheduleRevocation),
-                SdkAuthorization(),
-                cancellationToken
-            );
-        }
-
         public Task<Resource> SuspendCard(string cardId, SuspendCardRequest suspendCardRequest,
             CancellationToken cancellationToken = default)
         {

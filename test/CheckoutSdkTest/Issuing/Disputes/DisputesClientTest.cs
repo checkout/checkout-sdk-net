@@ -181,8 +181,60 @@ namespace Checkout.Issuing.Disputes
             // Assert
             ValidateIssuingDisputeResponse(response, expectedResponse);
         }
-
 #pragma warning restore CS0618
+
+        [Fact]
+        public async Task AmendDispute_WhenRequestIsValid_ShouldSucceed()
+        {
+            // Arrange
+            var idempotencyKey = Guid.NewGuid().ToString();
+            var disputeId = "idsp_test_12345abcdefghijklmnop";
+            var request = CreateValidAmendDisputeRequest();
+            var expectedResponse = CreateValidIssuingDisputeResponse();
+            expectedResponse.Id = disputeId;
+
+            _apiClient.Setup(apiClient => apiClient.Post<IssuingDisputeResponse>(
+                    $"issuing/disputes/{disputeId}/amend",
+                    _authorization,
+                    request,
+                    CancellationToken.None,
+                    idempotencyKey))
+                .ReturnsAsync(expectedResponse);
+
+            IIssuingClient issuingClient = new IssuingClient(_apiClient.Object, _configuration.Object);
+
+            // Act
+            var response = await issuingClient.AmendDispute(disputeId, idempotencyKey, request);
+
+            // Assert
+            ValidateIssuingDisputeResponse(response, expectedResponse);
+        }
+
+        [Fact]
+        public async Task AmendDispute_WhenRequestIsNull_ShouldSucceed()
+        {
+            // Arrange
+            var idempotencyKey = Guid.NewGuid().ToString();
+            var disputeId = "idsp_test_12345abcdefghijklmnop";
+            var expectedResponse = CreateValidIssuingDisputeResponse();
+            expectedResponse.Id = disputeId;
+
+            _apiClient.Setup(apiClient => apiClient.Post<IssuingDisputeResponse>(
+                    $"issuing/disputes/{disputeId}/amend",
+                    _authorization,
+                    null,
+                    CancellationToken.None,
+                    idempotencyKey))
+                .ReturnsAsync(expectedResponse);
+
+            IIssuingClient issuingClient = new IssuingClient(_apiClient.Object, _configuration.Object);
+
+            // Act
+            var response = await issuingClient.AmendDispute(disputeId, idempotencyKey);
+
+            // Assert
+            ValidateIssuingDisputeResponse(response, expectedResponse);
+        }
 
         // Setup Methods (Builders)
         private CreateDisputeRequest CreateValidCreateDisputeRequest()
@@ -205,7 +257,12 @@ namespace Checkout.Issuing.Disputes
 #pragma warning disable CS0618
                 IsReadyForSubmission = false,
 #pragma warning restore CS0618
-                Justification = "Customer dispute"
+                Justification = "Customer dispute",
+                FraudDetails = new IssuingDisputeFraudDetails
+                {
+                    FraudType = IssuingDisputeFraudType.CardNotPresentFraud,
+                    Description = "Cardholder confirmed they made no online purchases on this date."
+                }
             };
         }
 
@@ -223,7 +280,34 @@ namespace Checkout.Issuing.Disputes
                         Description = "Additional supporting documentation"
                     }
                 },
-                Amount = 500
+                Amount = 500,
+                FraudDetails = new IssuingDisputeFraudDetails
+                {
+                    FraudType = IssuingDisputeFraudType.AccountTakeover
+                }
+            };
+        }
+
+        private AmendDisputeRequest CreateValidAmendDisputeRequest()
+        {
+            return new AmendDisputeRequest
+            {
+                Reason = "4807",
+                Amount = 1500,
+                Evidence = new List<DisputeEvidence>
+                {
+                    new DisputeEvidence
+                    {
+                        Name = "amended_evidence.pdf",
+                        Content = "QW1lbmRlZCBFdmlkZW5jZQ==",
+                        Description = "Amended evidence file"
+                    }
+                },
+                FraudDetails = new IssuingDisputeFraudDetails
+                {
+                    FraudType = IssuingDisputeFraudType.CounterfeitCard
+                },
+                ReasonChangeJustification = "New evidence confirms this was an unauthorized transaction."
             };
         }
 
@@ -258,7 +342,12 @@ namespace Checkout.Issuing.Disputes
                 },
                 Status = IssuingDisputeStatus.Created,
                 StatusReason = IssuingDisputeStatusReason.ChargebackPending,
-                TransactionId = "trx_test_abcdefghijklmnopqr"
+                TransactionId = "trx_test_abcdefghijklmnopqr",
+                ActionDetails = new IssuingDisputeActionDetails
+                {
+                    Instructions = "Provide a valid reason code.",
+                    LastActionResponse = "none"
+                }
             };
         }
 
@@ -277,6 +366,13 @@ namespace Checkout.Issuing.Disputes
                 actual.DisputedAmount.ShouldNotBeNull();
                 actual.DisputedAmount.Amount.ShouldBe(expected.DisputedAmount.Amount);
                 actual.DisputedAmount.Currency.ShouldBe(expected.DisputedAmount.Currency);
+            }
+
+            if (expected.ActionDetails != null)
+            {
+                actual.ActionDetails.ShouldNotBeNull();
+                actual.ActionDetails.Instructions.ShouldBe(expected.ActionDetails.Instructions);
+                actual.ActionDetails.LastActionResponse.ShouldBe(expected.ActionDetails.LastActionResponse);
             }
         }
     }
