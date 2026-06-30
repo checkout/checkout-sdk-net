@@ -69,7 +69,7 @@ namespace Checkout.Issuing.Common.Responses
         /// <summary>
         /// The card's expiration month.
         /// [Required]
-        /// >= 1
+        /// &gt;= 1
         /// &lt;= 12
         /// </summary>
         public int? ExpiryMonth { get; set; }

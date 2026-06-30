@@ -20,7 +20,7 @@ namespace Checkout.Issuing.Cards.Requests.Update
         /// <summary>
         /// The card's expiration month.
         /// [Optional]
-        /// >= 1
+        /// &gt;= 1
         /// &lt;= 12
         /// </summary>
         public int? ExpiryMonth { get; set; }
