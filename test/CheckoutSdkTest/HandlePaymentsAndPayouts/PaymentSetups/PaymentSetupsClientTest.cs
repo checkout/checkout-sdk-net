@@ -107,13 +107,13 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
         {
             // Arrange
             var paymentSetupId = "ps_test_12345";
-            var paymentMethodOptionId = "opt_test_67890";
+            var paymentMethodName = "card";
             var expectedResponse = new PaymentSetupsConfirmResponse { Id = "pay_test_confirm_111" };
 
             // El método ConfirmPaymentSetup usa Post con 3 parámetros: path, authorization, cancellationToken
             _apiClient.Setup(apiClient => apiClient.Post<PaymentSetupsConfirmResponse>(
-                    $"payments/setups/{paymentSetupId}/confirm/{paymentMethodOptionId}", 
-                    _authorization, 
+                    $"payments/setups/{paymentSetupId}/confirm/{paymentMethodName}",
+                    _authorization,
                     It.IsAny<object>(),
                     It.IsAny<CancellationToken>(),
                     It.IsAny<string>()))
@@ -122,7 +122,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             IPaymentSetupsClient paymentSetupsClient = new PaymentSetupsClient(_apiClient.Object, _configuration.Object);
 
             // Act
-            var response = await paymentSetupsClient.ConfirmPaymentSetup(paymentSetupId, paymentMethodOptionId);
+            var response = await paymentSetupsClient.ConfirmPaymentSetup(paymentSetupId, paymentMethodName);
 
             // Assert
             response.ShouldNotBeNull();

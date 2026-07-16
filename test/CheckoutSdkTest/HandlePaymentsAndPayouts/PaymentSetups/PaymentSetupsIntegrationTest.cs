@@ -81,19 +81,17 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             var paymentSetupsRequest = CreateValidPaymentSetupsRequest();
             var createResponse = await DefaultApi.PaymentSetupsClient().CreatePaymentSetup(paymentSetupsRequest);
 
-            // This would require extracting a payment method option ID from the create response
-            var paymentMethodOptionId = "opt_test_12345"; // This should come from the payment setup response
+            // The name of the payment method to process the payment with (for example, tabby, klarna, card)
+            var paymentMethodName = "card";
 
             // Act
-            var response = await DefaultApi.PaymentSetupsClient().ConfirmPaymentSetup(createResponse.Id, paymentMethodOptionId);
+            var response = await DefaultApi.PaymentSetupsClient().ConfirmPaymentSetup(createResponse.Id, paymentMethodName);
 
             // Assert
             response.ShouldNotBeNull();
             response.Id.ShouldNotBeNull();
-            response.ActionId.ShouldNotBeNull();
             response.Amount.ShouldBe(paymentSetupsRequest.Amount);
             response.Currency.ShouldBe(paymentSetupsRequest.Currency);
-            response.ProcessedOn.ShouldNotBeNull();
         }
 
         private PaymentSetupsRequest CreateValidPaymentSetupsRequest()

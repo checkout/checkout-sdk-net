@@ -72,17 +72,17 @@ namespace Checkout.Payments.Setups
         }
 
         /// <summary>
-        /// Confirm a Payment Setup to begin processing the payment request with your chosen payment method option
+        /// Confirm a Payment Setup to begin processing the payment request with your chosen payment method
         /// [Beta]
         /// </summary>
         public Task<PaymentSetupsConfirmResponse> ConfirmPaymentSetup(
-            string id, 
-            string paymentMethodOptionId,
+            string id,
+            string paymentMethodName,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("id", id, "paymentMethodOptionId", paymentMethodOptionId);
+            CheckoutUtils.ValidateParams("id", id, "paymentMethodName", paymentMethodName);
             return ApiClient.Post<PaymentSetupsConfirmResponse>(
-                BuildPath(PaymentsPath, SetupsPath, id, ConfirmPath, paymentMethodOptionId),
+                BuildPath(PaymentsPath, SetupsPath, id, ConfirmPath, paymentMethodName),
                 SdkAuthorization(),
                 cancellationToken
             );  

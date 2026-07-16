@@ -1,149 +1,139 @@
-using System;
-using Newtonsoft.Json;
-
+using System.Collections.Generic;
 using Checkout.Common;
-using PaymentSetupRisk = Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseCreated.Risk;
-using PaymentSetupThreeds = Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseCreated.Threeds;
-using PaymentSetupProcessing = Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseCreated.Processing;
-using PaymentSetupBalances = Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseCreated.Balances;
-using PaymentSetupSubscription = Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseCreated.Subscription;
-using PaymentSetupRetry = Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseCreated.Retry;
+using Checkout.Payments.Setups.Entities;
 
 namespace Checkout.Payments.Setups
 {
     /// <summary>
     /// Payment setup confirmation response
+    /// Beta
     /// </summary>
     public class PaymentSetupsConfirmResponse : Resource
     {
         /// <summary>
         /// The payment's unique identifier
+        /// [Required] readOnly
         /// ^(pay)_(\w{26})$
         /// 30 characters
-        /// [Required]
         /// </summary>
         public string Id { get; set; }
 
         /// <summary>
-        /// The unique identifier for the action performed against this payment
-        /// ^(act)_(\w{26})$
-        /// 30 characters
+        /// The processing channel to use for the payment
+        /// ^(pc)_(\w{26})$
         /// [Required]
         /// </summary>
-        public string ActionId { get; set; }
+        public string ProcessingChannelId { get; set; }
 
         /// <summary>
-        /// The payment amount
+        /// The payment amount, in the minor currency unit:
+        /// https://www.checkout.com/docs/payments/accept-payments/format-the-amount-value
         /// [Required]
         /// </summary>
         public long? Amount { get; set; }
 
         /// <summary>
-        /// The three-letter ISO currency code of the payment
-        /// 3 characters
+        /// The currency of the payment, as a three-letter ISO currency code:
+        /// https://www.checkout.com/docs/developer-resources/codes/currency-codes
         /// [Required]
         /// </summary>
         public Currency? Currency { get; set; }
 
         /// <summary>
-        /// Whether or not the authorization or capture was successful
-        /// [Required]
+        /// The type of payment.
+        /// You must provide this field for card payments in which the cardholder is not present. For example, if the
+        /// transaction is a recurring payment, or a mail order/telephone order (MOTO) payment
+        /// [Optional]
         /// </summary>
-        public bool? Approved { get; set; }
+        public PaymentType? PaymentType { get; set; } = Payments.PaymentType.Regular;
 
         /// <summary>
-        /// The status of the payment
-        /// [Required]
-        /// </summary>
-        public PaymentStatus Status { get; set; }
-
-        /// <summary>
-        /// The Gateway response code
-        /// [Required]
-        /// </summary>
-        public string ResponseCode { get; set; }
-
-        /// <summary>
-        /// The date and time at which the payment was processed
-        /// [Required]
-        /// </summary>
-        public DateTime? ProcessedOn { get; set; }
-
-        /// <summary>
-        /// The full amount from the original authorization, if a partial authorization was requested and approved
-        /// </summary>
-        public long? AmountRequested { get; set; }
-
-        /// <summary>
-        /// The acquirer authorization code if the payment was authorized
-        /// </summary>
-        public string AuthCode { get; set; }
-
-        /// <summary>
-        /// The Gateway response summary
-        /// </summary>
-        public string ResponseSummary { get; set; }
-
-        /// <summary>
-        /// The timestamp (ISO 8601 code) for when the authorization's validity period expires
-        /// </summary>
-        public string ExpiresOn { get; set; }
-
-        /// <summary>
-        /// Provides 3D Secure enrollment status if the payment was downgraded to non-3D Secure
-        /// </summary>
-        [JsonProperty(PropertyName = "3ds")]
-        public PaymentSetupThreeds.Threeds ThreeDSecure { get; set; }
-
-        /// <summary>
-        /// Returns the payment's risk assessment results
-        /// </summary>
-        public PaymentSetupRisk.Risk Risk { get; set; }
-
-        /// <summary>
-        /// The source of the payment
-        /// </summary>
-        public PaymentSetupSource Source { get; set; }
-
-        /// <summary>
-        /// The customer associated with the payment, if provided in the request
-        /// </summary>
-        public CustomerResponse Customer { get; set; }
-
-        /// <summary>
-        /// The payment balances
-        /// </summary>
-        public PaymentSetupBalances.Balances Balances { get; set; }
-
-        /// <summary>
-        /// Your reference for the payment
+        /// A reference you can use to identify the payment. For example, an order number.
+        /// &lt;= 80 characters
+        /// [Optional]
         /// </summary>
         public string Reference { get; set; }
 
         /// <summary>
-        /// The details of the subscription
+        /// A description of the payment
+        /// &lt;= 100 characters
+        /// [Optional]
         /// </summary>
-        public PaymentSetupSubscription.Subscription Subscription { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
-        /// Returns information related to the processing of the payment
+        /// The payment methods that are enabled on your account and available for use
+        /// [Optional]
         /// </summary>
-        public PaymentSetupProcessing.Processing Processing { get; set; }
+        public Entities.PaymentMethods PaymentMethods { get; set; }
 
         /// <summary>
-        /// The final Electronic Commerce Indicator (ECI) security level used to authorize the payment. 
-        /// Applicable for 3D Secure and network token payments
+        /// Settings for the Payment Setup
+        /// [Optional]
         /// </summary>
-        public string Eci { get; set; }
+        public Settings Settings { get; set; }
 
         /// <summary>
-        /// The scheme transaction identifier
+        /// The customer's details
+        /// [Optional]
         /// </summary>
-        public string SchemeId { get; set; }
-        
+        public Customer Customer { get; set; }
+
         /// <summary>
-        /// The retry information
+        /// The customer's order details
+        /// [Optional]
         /// </summary>
-        public PaymentSetupRetry.Retry Retry { get; set; }
+        public Order Order { get; set; }
+
+        /// <summary>
+        /// Details for specific industries, including airline and accommodation industries
+        /// [Optional]
+        /// </summary>
+        public Industry Industry { get; set; }
+
+        /// <summary>
+        /// The billing details for the payment.
+        /// [Optional]
+        /// </summary>
+        public Billing Billing { get; set; }
+
+        /// <summary>
+        /// An ordered list of available payment method names. The order indicates the recommended
+        /// presentation priority, with the first item being the highest priority.
+        /// [Optional] readOnly
+        /// </summary>
+        public IList<string> AvailablePaymentMethods { get; set; }
+
+        /// <summary>
+        /// Account funding transaction details for the payment.
+        /// [Optional]
+        /// </summary>
+        public PaymentSetupAccountFundingTransaction AccountFundingTransaction { get; set; }
+
+        /// <summary>
+        /// The billing descriptor for the payment.
+        /// [Optional]
+        /// </summary>
+        public PaymentSetupBillingDescriptor BillingDescriptor { get; set; }
+
+        /// <summary>
+        /// The latest payment response from the gateway, populated when auto-confirm succeeds during setup
+        /// creation. For the full response schema, see Request a Payment or Payout.
+        /// [Optional] readOnly
+        /// </summary>
+        public object LatestPayment { get; set; }
+
+        /// <summary>
+        /// The amount and currency to present to the customer, when the settlement currency differs from the
+        /// customer-facing currency.
+        /// [Optional]
+        /// </summary>
+        public PaymentSetupPresentmentDetails PresentmentDetails { get; set; }
+
+        /// <summary>
+        /// Terminal details.
+        /// [Optional]
+        /// </summary>
+        public PaymentSetupTerminal Terminal { get; set; }
     }
 }

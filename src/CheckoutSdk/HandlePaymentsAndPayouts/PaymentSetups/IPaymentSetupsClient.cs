@@ -37,12 +37,13 @@ namespace Checkout.Payments.Setups
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Confirm a Payment Setup to begin processing the payment request with your chosen payment method option
+        /// Confirm a Payment Setup to begin processing the payment request with your chosen payment method.
+        /// paymentMethodName is the name of the payment method to process the payment with (for example, tabby, klarna, card)
         /// [Beta]
         /// </summary>
         Task<PaymentSetupsConfirmResponse> ConfirmPaymentSetup(
-            string id, 
-            string paymentMethodOptionId,
+            string id,
+            string paymentMethodName,
             CancellationToken cancellationToken = default);
     }
 }
