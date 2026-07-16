@@ -75,7 +75,7 @@ namespace Checkout.Forward
             var response = new SecretResponse();
             _apiClient.Setup(apiClient =>
                     apiClient.Post<SecretResponse>(
-                        "forward/secrets",
+                        "secrets",
                         _authorization,
                         request,
                         CancellationToken.None,
@@ -96,7 +96,7 @@ namespace Checkout.Forward
             var response = new ItemsResponse<SecretResponse>();
             _apiClient.Setup(apiClient =>
                     apiClient.Get<ItemsResponse<SecretResponse>>(
-                        "forward/secrets",
+                        "secrets",
                         _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(response);

@@ -12,6 +12,7 @@ namespace Checkout.Forward
     public class ForwardClient : AbstractClient, IForwardClient
     {
         private const string Forward = "forward";
+        private const string Secrets = "secrets";
         
         public ForwardClient(IApiClient apiClient, CheckoutConfiguration configuration) :
             base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
@@ -61,7 +62,7 @@ namespace Checkout.Forward
         {
             CheckoutUtils.ValidateParams("secretRequest", secretRequest);
             return ApiClient.Post<SecretResponse>(
-                BuildPath(Forward, "secrets"),
+                Secrets,
                 SdkAuthorization(),
                 secretRequest,
                 cancellationToken
@@ -76,7 +77,7 @@ namespace Checkout.Forward
             CancellationToken cancellationToken = default)
         {
             return ApiClient.Get<ItemsResponse<SecretResponse>>(
-                BuildPath(Forward, "secrets"),
+                Secrets,
                 SdkAuthorization(),
                 cancellationToken
             );
@@ -92,7 +93,7 @@ namespace Checkout.Forward
         {
             CheckoutUtils.ValidateParams("name", name, "secretRequest", secretRequest);
             return ApiClient.Patch<SecretResponse>(
-                BuildPath(Forward, "secrets", name),
+                BuildPath(Forward, Secrets, name),
                 SdkAuthorization(),
                 secretRequest,
                 cancellationToken
@@ -108,7 +109,7 @@ namespace Checkout.Forward
         {
             CheckoutUtils.ValidateParams("name", name);
             return ApiClient.Delete<EmptyResponse>(
-                BuildPath(Forward, "secrets", name),
+                BuildPath(Forward, Secrets, name),
                 SdkAuthorization(),
                 cancellationToken
             );
