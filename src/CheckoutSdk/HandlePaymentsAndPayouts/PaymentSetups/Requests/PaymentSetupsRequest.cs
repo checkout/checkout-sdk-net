@@ -95,5 +95,24 @@ namespace Checkout.Payments.Setups
         /// [Optional]
         /// </summary>
         public PaymentSetupAccountFundingTransaction AccountFundingTransaction { get; set; }
+
+        /// <summary>
+        /// The billing descriptor for the payment.
+        /// [Optional]
+        /// </summary>
+        public PaymentSetupBillingDescriptor BillingDescriptor { get; set; }
+
+        /// <summary>
+        /// The amount and currency to present to the customer, when the settlement currency differs from the
+        /// customer-facing currency.
+        /// [Optional]
+        /// </summary>
+        public PaymentSetupPresentmentDetails PresentmentDetails { get; set; }
+
+        /// <summary>
+        /// Terminal details.
+        /// [Optional]
+        /// </summary>
+        public PaymentSetupTerminal Terminal { get; set; }
     }
 }
