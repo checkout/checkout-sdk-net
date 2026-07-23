@@ -93,7 +93,7 @@ namespace Checkout.Forward
         {
             CheckoutUtils.ValidateParams("name", name, "secretRequest", secretRequest);
             return ApiClient.Patch<SecretResponse>(
-                BuildPath(Forward, Secrets, name),
+                BuildPath(Secrets, name),
                 SdkAuthorization(),
                 secretRequest,
                 cancellationToken
@@ -109,7 +109,7 @@ namespace Checkout.Forward
         {
             CheckoutUtils.ValidateParams("name", name);
             return ApiClient.Delete<EmptyResponse>(
-                BuildPath(Forward, Secrets, name),
+                BuildPath(Secrets, name),
                 SdkAuthorization(),
                 cancellationToken
             );
