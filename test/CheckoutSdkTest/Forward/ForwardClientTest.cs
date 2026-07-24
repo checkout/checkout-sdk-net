@@ -75,7 +75,7 @@ namespace Checkout.Forward
             var response = new SecretResponse();
             _apiClient.Setup(apiClient =>
                     apiClient.Post<SecretResponse>(
-                        "forward/secrets",
+                        "secrets",
                         _authorization,
                         request,
                         CancellationToken.None,
@@ -96,7 +96,7 @@ namespace Checkout.Forward
             var response = new ItemsResponse<SecretResponse>();
             _apiClient.Setup(apiClient =>
                     apiClient.Get<ItemsResponse<SecretResponse>>(
-                        "forward/secrets",
+                        "secrets",
                         _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(response);
@@ -116,7 +116,7 @@ namespace Checkout.Forward
             var response = new SecretResponse();
             _apiClient.Setup(apiClient =>
                     apiClient.Patch<SecretResponse>(
-                        "forward/secrets/secret_name",
+                        "secrets/secret_name",
                         _authorization,
                         request,
                         CancellationToken.None,
@@ -138,7 +138,7 @@ namespace Checkout.Forward
             var response = new EmptyResponse();
             _apiClient.Setup(apiClient =>
                     apiClient.Delete<EmptyResponse>(
-                        "forward/secrets/secret_name",
+                        "secrets/secret_name",
                         _authorization,
                         CancellationToken.None))
                 .ReturnsAsync(response);
