@@ -2,6 +2,7 @@ using Checkout.Forward.Responses;
 using Shouldly;
 using System;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Checkout.Forward
 {
@@ -23,11 +24,11 @@ namespace Checkout.Forward
 
             response.ShouldNotBeNull();
             response.Name.ShouldBe("my_secret");
-            response.CreatedAt.ShouldNotBeNull();
-            response.CreatedAt.Value.ToUniversalTime()
+            var createdAt = response.CreatedAt ?? throw new XunitException("created_at was null");
+            createdAt.ToUniversalTime()
                 .ShouldBe(new DateTime(2024, 1, 15, 10, 30, 0, DateTimeKind.Utc));
-            response.UpdatedAt.ShouldNotBeNull();
-            response.UpdatedAt.Value.ToUniversalTime()
+            var updatedAt = response.UpdatedAt ?? throw new XunitException("updated_at was null");
+            updatedAt.ToUniversalTime()
                 .ShouldBe(new DateTime(2024, 2, 20, 14, 45, 0, DateTimeKind.Utc));
             response.Version.ShouldBe(3);
             response.EntityId.ShouldBe("ent_123");
@@ -69,8 +70,12 @@ namespace Checkout.Forward
             var deserialized = (SecretResponse)serializer.Deserialize(json, typeof(SecretResponse));
 
             deserialized.Name.ShouldBe(original.Name);
-            deserialized.CreatedAt.Value.ToUniversalTime().ShouldBe(original.CreatedAt.Value.ToUniversalTime());
-            deserialized.UpdatedAt.Value.ToUniversalTime().ShouldBe(original.UpdatedAt.Value.ToUniversalTime());
+            var deserializedCreatedAt = deserialized.CreatedAt ?? throw new XunitException("created_at was null");
+            var originalCreatedAt = original.CreatedAt ?? throw new XunitException("created_at was null");
+            deserializedCreatedAt.ToUniversalTime().ShouldBe(originalCreatedAt.ToUniversalTime());
+            var deserializedUpdatedAt = deserialized.UpdatedAt ?? throw new XunitException("updated_at was null");
+            var originalUpdatedAt = original.UpdatedAt ?? throw new XunitException("updated_at was null");
+            deserializedUpdatedAt.ToUniversalTime().ShouldBe(originalUpdatedAt.ToUniversalTime());
             deserialized.Version.ShouldBe(original.Version);
             deserialized.EntityId.ShouldBe(original.EntityId);
         }
