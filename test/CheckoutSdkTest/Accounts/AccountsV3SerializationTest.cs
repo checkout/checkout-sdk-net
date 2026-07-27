@@ -107,6 +107,11 @@ namespace Checkout.Accounts
                 {
                     FirstName = "John",
                     LastName = "Doe",
+                    Citizenships = new List<Citizenship>
+                    {
+                        new Citizenship { Type = "citizenship", Country = CountryCode.US }
+                    },
+                    NationalIdType = NationalIdType.Ssn,
                     NationalIdNumber = "AB123456C"
                 },
                 CompanyPosition = CompanyPositionType.CEO,
@@ -123,6 +128,10 @@ namespace Checkout.Accounts
             var json = _serializer.Serialize(representative);
 
             json.ShouldContain("\"individual\"");
+            json.ShouldContain("\"citizenships\"");
+            json.ShouldContain("\"country\"");
+            json.ShouldContain("\"national_id_type\"");
+            json.ShouldContain("ssn");
             json.ShouldContain("\"company_position\"");
             json.ShouldContain("ceo");
             json.ShouldContain("\"ownership_percentage\"");

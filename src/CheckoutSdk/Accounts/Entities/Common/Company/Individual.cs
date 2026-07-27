@@ -1,4 +1,5 @@
 ﻿using Checkout.Common;
+using System.Collections.Generic;
 
 namespace Checkout.Accounts.Entities.Common.Company
 {
@@ -17,6 +18,10 @@ namespace Checkout.Accounts.Entities.Common.Company
 
         public string MiddleName { get; set; }
         
+        public IList<Citizenship> Citizenships { get; set; }
+
+        public NationalIdType? NationalIdType { get; set; }
+
         public string NationalIdNumber { get; set; }
         
         public string EmailAddress { get; set; }
