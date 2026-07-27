@@ -23,6 +23,13 @@ namespace Checkout.Accounts
         private const string ReserveRulesPath = "reserve-rules";
         private const string RequirementsPath = "requirements";
 
+        private const string DefaultSchemaVersion = "3.0";
+
+        private static Headers BuildSchemaVersionHeaders(string schemaVersion)
+        {
+            return new Headers { Accept = "application/json;schema_version=" + schemaVersion };
+        }
+
         public AccountsClient(
             IApiClient apiClient,
             IApiClient filesApiClient,
@@ -33,14 +40,17 @@ namespace Checkout.Accounts
 
         public async Task<OnboardEntityResponse> CreateEntity(
             OnboardEntityRequest entityRequest,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            string schemaVersion = DefaultSchemaVersion)
         {
             CheckoutUtils.ValidateParams("entityRequest", entityRequest);
             return await ApiClient.Post<OnboardEntityResponse>(
                 BuildPath(AccountsPath, EntitiesPath),
                 SdkAuthorization(),
                 entityRequest,
-                cancellationToken);
+                cancellationToken,
+                null,
+                BuildSchemaVersionHeaders(schemaVersion));
         }
 
         public async Task<OnboardSubEntityDetailsResponse> GetSubEntityMembers(
@@ -71,26 +81,31 @@ namespace Checkout.Accounts
 
         public async Task<OnboardEntityDetailsResponse> GetEntity(
             string entityId,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            string schemaVersion = DefaultSchemaVersion)
         {
             CheckoutUtils.ValidateParams("entityId", entityId);
             return await ApiClient.Get<OnboardEntityDetailsResponse>(
                 BuildPath(AccountsPath, EntitiesPath, entityId),
                 SdkAuthorization(),
+                BuildSchemaVersionHeaders(schemaVersion),
                 cancellationToken);
         }
 
         public async Task<OnboardEntityResponse> UpdateEntity(
             string entityId,
             OnboardEntityRequest entityRequest,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            string schemaVersion = DefaultSchemaVersion)
         {
             CheckoutUtils.ValidateParams("entityId", entityId, "entityRequest", entityRequest);
             return await ApiClient.Put<OnboardEntityResponse>(
                 BuildPath(AccountsPath, EntitiesPath, entityId),
                 SdkAuthorization(),
                 entityRequest,
-                cancellationToken);
+                cancellationToken,
+                null,
+                BuildSchemaVersionHeaders(schemaVersion));
         }
 
         // Obsoleted, different path, use instead CreatePaymentInstrument with AccountsPaymentInstrument request
@@ -287,12 +302,14 @@ namespace Checkout.Accounts
 
         public async Task<EntityRequirementListResponse> GetEntityRequirements(
             string entityId,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            string schemaVersion = DefaultSchemaVersion)
         {
             CheckoutUtils.ValidateParams("entityId", entityId);
             return await ApiClient.Get<EntityRequirementListResponse>(
                 BuildPath(AccountsPath, EntitiesPath, entityId, RequirementsPath),
                 SdkAuthorization(),
+                BuildSchemaVersionHeaders(schemaVersion),
                 cancellationToken);
         }
 

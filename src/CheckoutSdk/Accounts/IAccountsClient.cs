@@ -15,7 +15,8 @@ namespace Checkout.Accounts
     { 
         Task<OnboardEntityResponse> CreateEntity(
             OnboardEntityRequest entityRequest,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default,
+            string schemaVersion = "3.0");
         
         Task<OnboardSubEntityDetailsResponse> GetSubEntityMembers(
             string entityId,
@@ -29,12 +30,14 @@ namespace Checkout.Accounts
 
         Task<OnboardEntityDetailsResponse> GetEntity(
             string entityId,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default,
+            string schemaVersion = "3.0");
 
         Task<OnboardEntityResponse> UpdateEntity(
             string entityId,
             OnboardEntityRequest entityRequest,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default,
+            string schemaVersion = "3.0");
 
         [Obsolete("Use CreatePaymentInstrument for PaymentInstrumentRequest instead", false)]
         Task<EmptyResponse> CreatePaymentInstrument(
@@ -113,7 +116,8 @@ namespace Checkout.Accounts
         /// </summary>
         Task<EntityRequirementListResponse> GetEntityRequirements(
             string entityId,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default,
+            string schemaVersion = "3.0");
 
         /// <summary>
         /// Retrieve detailed information for a single requirement.

@@ -45,7 +45,8 @@ namespace Checkout.Accounts
             var onboardEntityResponse = new OnboardEntityResponse {Id = "Id"};
 
             _apiClient.Setup(x => x.Post<OnboardEntityResponse>("accounts/entities", It.IsAny<SdkAuthorization>(),
-                    It.IsAny<object>(), It.IsAny<CancellationToken>(), It.IsAny<string>()))
+                    It.IsAny<object>(), It.IsAny<CancellationToken>(), It.IsAny<string>(),
+                    It.Is<Headers>(h => h.Accept == "application/json;schema_version=3.0")))
                 .ReturnsAsync(onboardEntityResponse);
 
             var response = await _accountsClient.CreateEntity(new OnboardEntityRequest());
@@ -120,6 +121,7 @@ namespace Checkout.Accounts
                     x.Get<OnboardEntityDetailsResponse>(
                         "accounts/entities/entity_id",
                         It.IsAny<SdkAuthorization>(),
+                        It.Is<Headers>(h => h.Accept == "application/json;schema_version=3.0"),
                         It.IsAny<CancellationToken>()))
                 .ReturnsAsync(responseObject);
 
@@ -184,7 +186,7 @@ namespace Checkout.Accounts
                         It.IsAny<object>(),
                         It.IsAny<CancellationToken>(),
                         It.IsAny<string>(),
-                        It.IsAny<Headers>()))
+                        It.Is<Headers>(h => h.Accept == "application/json;schema_version=3.0")))
                 .ReturnsAsync(responseObject);
 
             var response = await _accountsClient.UpdateEntity(
@@ -251,7 +253,7 @@ namespace Checkout.Accounts
                         It.IsAny<object>(),
                         It.IsAny<CancellationToken>(),
                         It.IsAny<string>(),
-                        It.IsAny<Headers>()))
+                        It.Is<Headers>(h => h.Accept == "application/json;schema_version=3.0")))
                 .ReturnsAsync(responseObject);
 
             var response = await _accountsClient.UpdateEntity(
@@ -672,6 +674,7 @@ namespace Checkout.Accounts
                     apiClient.Get<EntityRequirementListResponse>(
                         $"accounts/entities/{entityId}/requirements",
                         It.IsAny<SdkAuthorization>(),
+                        It.Is<Headers>(h => h.Accept == "application/json;schema_version=3.0"),
                         It.IsAny<CancellationToken>()))
                 .ReturnsAsync(expected);
 
