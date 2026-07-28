@@ -411,6 +411,24 @@ namespace Checkout.Payments
         }
 
         [Fact]
+        private async Task ShouldMakeBlikPayment()
+        {
+            var request = new PaymentRequest
+            {
+                Source = new RequestBlikSource(),
+                Currency = Currency.PLN,
+                Amount = 100,
+                Reference = Guid.NewGuid().ToString(),
+                Processing = new ProcessingSettings { PartnerCode = "123456" },
+                SuccessUrl = "https://testing.checkout.com/sucess",
+                FailureUrl = "https://testing.checkout.com/failure"
+            };
+
+            await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
+                PayeeNotOnboarded);
+        }
+
+        [Fact]
         private async Task ShouldMakeMultiBancoPayment()
         {
             var request = new PaymentRequest
