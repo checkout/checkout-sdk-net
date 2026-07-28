@@ -18,6 +18,7 @@ namespace Checkout.Payments
         protected const string PayeeNotOnboarded = "payee_not_onboarded";
         protected const string ApmServiceUnavailable = "apm_service_unavailable";
         protected const string ApmCurrencyNotSupported = "currency_not_supported";
+        protected const string ApmMerchantCategoryCodeRequired = "merchant_category_code_required";
 
         protected AbstractPaymentsIntegrationTest(PlatformType platform = PlatformType.Default) : base(platform)
         {

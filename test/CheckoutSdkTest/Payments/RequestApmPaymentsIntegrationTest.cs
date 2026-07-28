@@ -425,8 +425,9 @@ namespace Checkout.Payments
                 FailureUrl = "https://testing.checkout.com/failure"
             };
 
+            // We need a MCC configuration to do this payment, expecting error until have one
             await CheckErrorItem(async () => await DefaultApi.PaymentsClient().RequestPayment(request),
-                PayeeNotOnboarded);
+                ApmMerchantCategoryCodeRequired);
         }
 
         [Fact]
