@@ -31,7 +31,7 @@ namespace Checkout.Payments
                 Amount = 10L,
                 Currency = Currency.EUR,
                 ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure",
             };
 
@@ -57,7 +57,7 @@ namespace Checkout.Payments
                 Currency = Currency.EUR,
                 Amount = 1000,
                 Capture = true,
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
 
@@ -92,7 +92,7 @@ namespace Checkout.Payments
                 Currency = Currency.EUR,
                 Amount = 100,
                 Capture = true,
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
 
@@ -147,7 +147,7 @@ namespace Checkout.Payments
                 Currency = Currency.SAR,
                 Amount = 10000,
                 Capture = true,
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure",
                 Reference = "ORD-5023-4E89",
                 Processing = new ProcessingSettings { TaxAmount = 500, ShippingAmount = 1000 },
@@ -200,7 +200,7 @@ namespace Checkout.Payments
                 Amount = 10L,
                 Currency = Currency.EUR,
                 ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure",
             };
 
@@ -223,7 +223,7 @@ namespace Checkout.Payments
                 Amount = 10L,
                 Currency = Currency.BHD,
                 Reference = "REFERENCE",
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure",
             };
 
@@ -243,7 +243,7 @@ namespace Checkout.Payments
                 Amount = 10L,
                 Currency = Currency.QAR,
                 Reference = "REFERENCE",
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure",
             };
 
@@ -260,7 +260,7 @@ namespace Checkout.Payments
                 Amount = 10L,
                 Currency = Currency.BHD,
                 Reference = "REFERENCE",
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure",
             };
 
@@ -277,7 +277,7 @@ namespace Checkout.Payments
                 Amount = 10L,
                 Currency = Currency.EUR,
                 Reference = "REFERENCE",
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure",
             };
 
@@ -305,7 +305,7 @@ namespace Checkout.Payments
                 Amount = 10L,
                 Currency = Currency.EUR,
                 Reference = "REFERENCE",
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure",
             };
 
@@ -328,7 +328,7 @@ namespace Checkout.Payments
                 Reference = "REFERENCE",
                 Description = "Description",
                 Shipping = new ShippingDetails { Address = GetAddress(), Phone = GetPhone(), },
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure",
             };
 
@@ -351,7 +351,7 @@ namespace Checkout.Payments
                 Currency = Currency.PLN,
                 Amount = 100,
                 Reference = Guid.NewGuid().ToString(),
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
 
@@ -376,7 +376,7 @@ namespace Checkout.Payments
                 Currency = Currency.KWD,
                 Amount = 100,
                 Reference = Guid.NewGuid().ToString(),
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
 
@@ -399,7 +399,7 @@ namespace Checkout.Payments
                 Currency = Currency.EUR,
                 Amount = 10,
                 Reference = Guid.NewGuid().ToString(),
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
 
@@ -421,7 +421,7 @@ namespace Checkout.Payments
                 // Blik limits reference to 35 characters; a dashed GUID is 36, so use the 32-char "N" format.
                 Reference = Guid.NewGuid().ToString("N"),
                 Processing = new ProcessingSettings { PartnerCode = "123456" },
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
 
@@ -444,7 +444,7 @@ namespace Checkout.Payments
                 Currency = Currency.EUR,
                 Amount = 10,
                 Reference = Guid.NewGuid().ToString(),
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
 
@@ -466,7 +466,7 @@ namespace Checkout.Payments
                 Currency = Currency.EUR,
                 Amount = 10,
                 Reference = Guid.NewGuid().ToString(),
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
 
@@ -487,7 +487,7 @@ namespace Checkout.Payments
                 {
                     Email = GenerateRandomEmail(), Name = "Louis Smith", Phone = GetPhone()
                 },
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
 
@@ -504,7 +504,7 @@ namespace Checkout.Payments
                 Currency = Currency.EUR,
                 Amount = 10,
                 Reference = Guid.NewGuid().ToString(),
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
 
@@ -530,7 +530,7 @@ namespace Checkout.Payments
                 Currency = Currency.EUR,
                 Amount = 10,
                 Reference = Guid.NewGuid().ToString(),
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
 
@@ -565,7 +565,7 @@ namespace Checkout.Payments
                 Currency = Currency.EGP,
                 Amount = 10,
                 Reference = Guid.NewGuid().ToString(),
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
 
@@ -582,7 +582,7 @@ namespace Checkout.Payments
                 Currency = Currency.EUR,
                 Amount = 10,
                 Reference = Guid.NewGuid().ToString(),
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
 
@@ -599,7 +599,7 @@ namespace Checkout.Payments
                 Currency = Currency.EUR,
                 Amount = 10,
                 Reference = Guid.NewGuid().ToString(),
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
 
@@ -625,7 +625,7 @@ namespace Checkout.Payments
                 Currency = Currency.EUR,
                 Amount = 10,
                 Reference = Guid.NewGuid().ToString(),
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
 
@@ -649,7 +649,7 @@ namespace Checkout.Payments
                 Amount = 10L,
                 Currency = Currency.EUR,
                 ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure",
             };
 
@@ -672,7 +672,7 @@ namespace Checkout.Payments
                 Currency = Currency.EUR,
                 Customer = GetCustomer(),
                 ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure",
             };
 
@@ -689,7 +689,7 @@ namespace Checkout.Payments
                 Amount = 10L,
                 Currency = Currency.USD,
                 ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure",
             };
 
@@ -719,7 +719,7 @@ namespace Checkout.Payments
                 Amount = 10L,
                 Currency = Currency.USD,
                 ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure",
             };
 
@@ -736,7 +736,7 @@ namespace Checkout.Payments
                 Currency = Currency.EUR,
                 Amount = 10,
                 Reference = Guid.NewGuid().ToString(),
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
 

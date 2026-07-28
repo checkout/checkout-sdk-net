@@ -377,7 +377,7 @@ namespace Checkout.Payments
                 Currency = Currency.EGP,
                 Amount = 10,
                 Reference = Guid.NewGuid().ToString(),
-                SuccessUrl = "https://testing.checkout.com/sucess",
+                SuccessUrl = "https://testing.checkout.com/success",
                 FailureUrl = "https://testing.checkout.com/failure"
             };
 
