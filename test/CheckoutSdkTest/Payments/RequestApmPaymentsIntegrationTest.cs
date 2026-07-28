@@ -418,7 +418,8 @@ namespace Checkout.Payments
                 Source = new RequestBlikSource(),
                 Currency = Currency.PLN,
                 Amount = 100,
-                Reference = Guid.NewGuid().ToString(),
+                // Blik limits reference to 35 characters; a dashed GUID is 36, so use the 32-char "N" format.
+                Reference = Guid.NewGuid().ToString("N"),
                 Processing = new ProcessingSettings { PartnerCode = "123456" },
                 SuccessUrl = "https://testing.checkout.com/sucess",
                 FailureUrl = "https://testing.checkout.com/failure"
