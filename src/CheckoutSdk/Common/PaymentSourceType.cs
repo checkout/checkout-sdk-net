@@ -36,6 +36,7 @@ namespace Checkout.Common
         [EnumMember(Value = "benefitpay")] BenefitPay,
         [EnumMember(Value = "bizum")] Bizum,
         [EnumMember(Value = "bancontact")] Bancontact,
+        [EnumMember(Value = "blik")] Blik,
         [EnumMember(Value = "tamara")] Tamara,
         [EnumMember(Value = "bank_account")] BankAccount,
         [EnumMember(Value = "alipay_hk")] AlipayHk,
