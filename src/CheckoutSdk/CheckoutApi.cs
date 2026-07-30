@@ -16,6 +16,7 @@ using Checkout.Identities.Applicants;
 using Checkout.Identities.AmlScreening;
 using Checkout.Identities.FaceAuthentication;
 using Checkout.Identities.IdDocumentVerification;
+using Checkout.Identities.AddressDocumentVerification;
 using Checkout.Identities.IdentityVerification;
 using Checkout.Instruments;
 using Checkout.Metadata;
@@ -63,6 +64,7 @@ namespace Checkout
         private readonly IAmlScreeningClient _amlScreeningClient;
         private readonly IFaceAuthenticationClient _faceAuthenticationClient;
         private readonly IIdDocumentVerificationClient _idDocumentVerificationClient;
+        private readonly IAddressDocumentVerificationClient _addressDocumentVerificationClient;
         private readonly IIdentityVerificationClient _identityVerificationClient;
         private readonly INetworkTokensClient _networkTokensClient;
         private readonly IPaymentSetupsClient _paymentSetupsClient;
@@ -108,6 +110,7 @@ namespace Checkout
             _amlScreeningClient = new AmlScreeningClient(identityApiClient, configuration);
             _faceAuthenticationClient = new FaceAuthenticationClient(identityApiClient, configuration);
             _idDocumentVerificationClient = new IdDocumentVerificationClient(identityApiClient, configuration);
+            _addressDocumentVerificationClient = new AddressDocumentVerificationClient(identityApiClient, configuration);
             _identityVerificationClient = new IdentityVerificationClient(identityApiClient, configuration);
             _networkTokensClient = new NetworkTokensClient(baseApiClient, configuration);
             _paymentSetupsClient = new PaymentSetupsClient(baseApiClient, configuration);
@@ -288,6 +291,11 @@ namespace Checkout
         public IIdDocumentVerificationClient IdDocumentVerificationClient()
         {
             return _idDocumentVerificationClient;
+        }
+
+        public IAddressDocumentVerificationClient AddressDocumentVerificationClient()
+        {
+            return _addressDocumentVerificationClient;
         }
 
         public IIdentityVerificationClient IdentityVerificationClient()

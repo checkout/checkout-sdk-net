@@ -16,6 +16,7 @@ using Checkout.Identities.Applicants;
 using Checkout.Identities.AmlScreening;
 using Checkout.Identities.FaceAuthentication;
 using Checkout.Identities.IdDocumentVerification;
+using Checkout.Identities.AddressDocumentVerification;
 using Checkout.Identities.IdentityVerification;
 using Checkout.Instruments;
 using Checkout.Metadata;
@@ -87,6 +88,8 @@ namespace Checkout
         IFaceAuthenticationClient FaceAuthenticationClient();
         
         IIdDocumentVerificationClient IdDocumentVerificationClient();
+
+        IAddressDocumentVerificationClient AddressDocumentVerificationClient();
         
         IIdentityVerificationClient IdentityVerificationClient();
         
