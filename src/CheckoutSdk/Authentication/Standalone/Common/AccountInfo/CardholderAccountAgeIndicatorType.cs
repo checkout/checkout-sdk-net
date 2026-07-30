@@ -4,7 +4,7 @@ namespace Checkout.Authentication.Standalone.Common.AccountInfo
 {
     public enum CardholderAccountAgeIndicatorType
     {
-        [EnumMember(Value = "no_account,")]
+        [EnumMember(Value = "no_account")]
         NoAccount,
 
         [EnumMember(Value = "this_transaction")]
