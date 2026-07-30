@@ -21,7 +21,11 @@ namespace Checkout.Metadata.Card
         Charge,
 
         /// <summary>Deferred debit card.</summary>
-        [EnumMember(Value = "deferred_debit")]
+        [EnumMember(Value = "deferred debit")]
         DeferredDebit,
+
+        /// <summary>Network token.</summary>
+        [EnumMember(Value = "network token")]
+        NetworkToken,
     }
 }

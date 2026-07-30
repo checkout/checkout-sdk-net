@@ -1,13 +1,28 @@
-﻿using System.Runtime.Serialization;
+using System.Runtime.Serialization;
 
 namespace Checkout.Common
 {
     public enum CardType
     {
-        [EnumMember(Value = "Credit")] Credit,
-        [EnumMember(Value = "Debit")] Debit,
-        [EnumMember(Value = "Prepaid")] Prepaid,
-        [EnumMember(Value = "Charge")] Charge,
-        [EnumMember(Value = "Deferred Debit")] DeferredDebit
+        [EnumMember(Value = "Credit")]
+        Credit,
+
+        [EnumMember(Value = "Debit")]
+        Debit,
+
+        [EnumMember(Value = "Prepaid")]
+        Prepaid,
+
+        [EnumMember(Value = "Charge")]
+        Charge,
+
+        [EnumMember(Value = "Deferred Debit")]
+        DeferredDebit,
+
+        /// <summary>
+        /// Returned only on card payout destinations.
+        /// </summary>
+        [EnumMember(Value = "Unknown")]
+        Unknown
     }
 }

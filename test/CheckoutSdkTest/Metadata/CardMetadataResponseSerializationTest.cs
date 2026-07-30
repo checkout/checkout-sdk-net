@@ -77,6 +77,48 @@ namespace Checkout.Metadata
         // ── Response deserialization ───────────────────────────────────────────
 
         [Fact]
+        public void ShouldDeserializeEveryCardTypeValue()
+        {
+            var expected = new Dictionary<string, CardMetadataType>
+            {
+                { "CREDIT", CardMetadataType.Credit },
+                { "DEBIT", CardMetadataType.Debit },
+                { "PREPAID", CardMetadataType.Prepaid },
+                { "CHARGE", CardMetadataType.Charge },
+                { "DEFERRED DEBIT", CardMetadataType.DeferredDebit },
+                { "NETWORK TOKEN", CardMetadataType.NetworkToken }
+            };
+
+            foreach (var pair in expected)
+            {
+                var json = @"{""bin"":""45434720"",""card_type"":""" + pair.Key + @"""}";
+                var r = (CardMetadataResponse)Serializer.Deserialize(json, typeof(CardMetadataResponse));
+                r.CardType.ShouldBe(pair.Value, $"card_type '{pair.Key}' did not deserialize");
+            }
+        }
+
+        [Fact]
+        public void ShouldDeserializeEveryCardCategoryValue()
+        {
+            // CONSUMER and COMMERCIAL are the values this endpoint returns. UNKNOWN is covered
+            // too because CardCategory is the shared Common enum, and card payout destinations
+            // return it.
+            var expected = new Dictionary<string, CardCategory>
+            {
+                { "CONSUMER", CardCategory.Consumer },
+                { "COMMERCIAL", CardCategory.Commercial },
+                { "UNKNOWN", CardCategory.Unknown }
+            };
+
+            foreach (var pair in expected)
+            {
+                var json = @"{""bin"":""45434720"",""card_category"":""" + pair.Key + @"""}";
+                var r = (CardMetadataResponse)Serializer.Deserialize(json, typeof(CardMetadataResponse));
+                r.CardCategory.ShouldBe(pair.Value, $"card_category '{pair.Key}' did not deserialize");
+            }
+        }
+
+        [Fact]
         public void ShouldDeserializeFullResponse()
         {
             const string json = @"{

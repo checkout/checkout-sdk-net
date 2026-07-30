@@ -302,16 +302,16 @@ namespace Checkout
         }
 
         [Fact]
-        public void ShouldReturnNullForUnknownCardTypeEnumValue()
+        public void ShouldReturnNullForUnrecognizedCardTypeEnumValue()
         {
-            const string json = @"{""type"":""card"",""card_type"":""UNKNOWN""}";
+            const string json = @"{""type"":""card"",""card_type"":""NOT_A_CARD_TYPE""}";
             var source = (CardResponseSource)new JsonSerializer().Deserialize(json, typeof(CardResponseSource));
             source.ShouldNotBeNull();
             source.CardType.ShouldBeNull();
         }
 
         [Fact]
-        public void ShouldDeserializeFullPaymentResponseWithUnknownCardType()
+        public void ShouldDeserializeFullPaymentResponseWithUnrecognizedCardType()
         {
             const string json = @"{
                 ""id"": ""pay_talabat_incident"",
@@ -320,7 +320,7 @@ namespace Checkout
                 ""source"": {
                     ""type"": ""card"",
                     ""last4"": ""4242"",
-                    ""card_type"": ""UNKNOWN""
+                    ""card_type"": ""NOT_A_CARD_TYPE""
                 }
             }";
 
@@ -331,6 +331,16 @@ namespace Checkout
             response.Approved.ShouldBe(true);
             var source = response.Source.ShouldBeAssignableTo<CardResponseSource>();
             source.CardType.ShouldBeNull();
+        }
+
+        [Fact]
+        public void ShouldDeserializeUnknownCardTypeAndCardCategory()
+        {
+            // UNKNOWN is a real value on card payout destinations, not an unrecognized one.
+            const string json = @"{""type"":""card"",""card_type"":""UNKNOWN"",""card_category"":""UNKNOWN""}";
+            var source = (CardResponseSource)new JsonSerializer().Deserialize(json, typeof(CardResponseSource));
+            source.CardType.ShouldBe(CardType.Unknown);
+            source.CardCategory.ShouldBe(CardCategory.Unknown);
         }
 
     }

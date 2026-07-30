@@ -1,13 +1,19 @@
-﻿using System.Runtime.Serialization;
+using System.Runtime.Serialization;
 
 namespace Checkout.Common
 {
     public enum CardCategory
     {
-        [EnumMember(Value = "all")] All,
-        [EnumMember(Value = "commercial")] Commercial,
-        [EnumMember(Value = "consumer")] Consumer,
-        [EnumMember(Value = "NotSet")] NotSet,
-        [EnumMember(Value = "other")] Other
+        [EnumMember(Value = "commercial")]
+        Commercial,
+
+        [EnumMember(Value = "consumer")]
+        Consumer,
+
+        /// <summary>
+        /// Returned only on card payout destinations.
+        /// </summary>
+        [EnumMember(Value = "unknown")]
+        Unknown
     }
 }
