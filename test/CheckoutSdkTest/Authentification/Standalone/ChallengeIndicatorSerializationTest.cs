@@ -1,3 +1,4 @@
+using Checkout.Payments;
 using Shouldly;
 using System;
 using Xunit;
@@ -52,16 +53,16 @@ namespace Checkout.Authentification.Standalone
         }
 
         [Theory]
-        [InlineData(RequestChallengeIndicatorType.NoPreference, "no_preference")]
-        [InlineData(RequestChallengeIndicatorType.NoChallengeRequested, "no_challenge_requested")]
-        [InlineData(RequestChallengeIndicatorType.ChallengeRequested, "challenge_requested")]
-        [InlineData(RequestChallengeIndicatorType.ChallengeRequestedMandate, "challenge_requested_mandate")]
-        [InlineData(RequestChallengeIndicatorType.LowValue, "low_value")]
-        [InlineData(RequestChallengeIndicatorType.TrustedListing, "trusted_listing")]
-        [InlineData(RequestChallengeIndicatorType.TrustedListingPrompt, "trusted_listing_prompt")]
-        [InlineData(RequestChallengeIndicatorType.TransactionRiskAssessment, "transaction_risk_assessment")]
-        [InlineData(RequestChallengeIndicatorType.DataShare, "data_share")]
-        public void ShouldRoundTripEveryRequestValue(RequestChallengeIndicatorType value, string expected)
+        [InlineData(RequestChallengeIndicatorType.NoPreference)]
+        [InlineData(RequestChallengeIndicatorType.NoChallengeRequested)]
+        [InlineData(RequestChallengeIndicatorType.ChallengeRequested)]
+        [InlineData(RequestChallengeIndicatorType.ChallengeRequestedMandate)]
+        [InlineData(RequestChallengeIndicatorType.LowValue)]
+        [InlineData(RequestChallengeIndicatorType.TrustedListing)]
+        [InlineData(RequestChallengeIndicatorType.TrustedListingPrompt)]
+        [InlineData(RequestChallengeIndicatorType.TransactionRiskAssessment)]
+        [InlineData(RequestChallengeIndicatorType.DataShare)]
+        public void ShouldRoundTripEveryRequestValue(RequestChallengeIndicatorType value)
         {
             var json = Serializer.Serialize(new RequestASessionRequestBody { ChallengeIndicator = value });
 
@@ -69,7 +70,6 @@ namespace Checkout.Authentification.Standalone
                 json, typeof(RequestASessionRequestBody));
 
             deserialized.ChallengeIndicator.ShouldBe(value);
-            expected.ShouldNotBeNull();
         }
 
         [Fact]
@@ -126,12 +126,29 @@ namespace Checkout.Authentification.Standalone
         [InlineData(CommonChallengeIndicatorType.ChallengeRequestedMandate, "challenge_requested_mandate")]
         public void ShouldRoundTripEverySharedPaymentsValue(CommonChallengeIndicatorType value, string wireValue)
         {
-            var json = Serializer.Serialize(new ThreeDsHolder { ChallengeIndicator = value });
+            var request = new ThreeDsRequest { ChallengeIndicator = value };
+
+            var json = Serializer.Serialize(request);
 
             json.ShouldContain("\"challenge_indicator\":\"" + wireValue + "\"");
 
-            var deserialized = (ThreeDsHolder)Serializer.Deserialize(json, typeof(ThreeDsHolder));
+            var deserialized = (ThreeDsRequest)Serializer.Deserialize(json, typeof(ThreeDsRequest));
             deserialized.ChallengeIndicator.ShouldBe(value);
+        }
+
+        /// <summary>
+        /// The payments 3ds field must stay bound to the four-value shared enum. Assigning a sessions
+        /// exemption value to it should not compile, so this guards the binding by type identity: if
+        /// ThreeDsRequest.ChallengeIndicator were retyped to either sessions enum, this fails.
+        /// </summary>
+        [Fact]
+        public void ShouldBindPaymentsThreeDsToTheSharedFourValueEnum()
+        {
+            var property = typeof(ThreeDsRequest).GetProperty(nameof(ThreeDsRequest.ChallengeIndicator));
+
+            property.ShouldNotBeNull();
+            Nullable.GetUnderlyingType(property.PropertyType).ShouldBe(typeof(CommonChallengeIndicatorType));
+            Enum.GetValues(typeof(CommonChallengeIndicatorType)).Length.ShouldBe(4);
         }
 
         /// <summary>
@@ -145,11 +162,6 @@ namespace Checkout.Authentification.Standalone
             Enum.GetValues(typeof(CommonChallengeIndicatorType)).Length.ShouldBe(4);
             Enum.GetValues(typeof(RequestChallengeIndicatorType)).Length.ShouldBe(9);
             Enum.GetValues(typeof(ResponseChallengeIndicatorType)).Length.ShouldBe(9);
-        }
-
-        private class ThreeDsHolder
-        {
-            public CommonChallengeIndicatorType ChallengeIndicator { get; set; }
         }
     }
 }
