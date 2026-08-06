@@ -20,6 +20,10 @@ namespace CheckoutSDK.Extensions.Configuration
 
         public Environment Environment { get; set; }
 
+        public string EnvironmentSubdomain { get; set; }
+
+        public bool UseLegacyDomain { get; set; }
+
         public PlatformType? PlatformType { get; set; }
 
         public IHttpClientFactory HttpClientFactory { get; set; }

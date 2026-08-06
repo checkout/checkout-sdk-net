@@ -12,6 +12,10 @@ namespace Checkout.Previous
             private string _publicKey;
             private string _secretKey;
 
+            // The Previous (ABC) platform predates merchant-specific subdomains, so it is exempt
+            // from the mandatory EnvironmentSubdomain/UseLegacyDomain configuration.
+            protected override bool RequiresEnvironmentSubdomain => false;
+
             public CheckoutStaticKeysSdkBuilder PublicKey(string publicKey)
             {
                 _publicKey = publicKey;

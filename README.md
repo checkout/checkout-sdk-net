@@ -63,6 +63,10 @@ Note: sandbox keys have a `sbox_` or `test_` identifier, for Default and Previou
 If you don't have your own API keys, you can sign up for a test account [here](https://www.checkout.com/get-test-account).
 
 
+### Subdomain value
+
+Requests must be made through your merchant-specific subdomain (MSSD): the first 8 characters of your client ID (excluding `cli_`). For example, if your client ID is `cli_vkuhvk4vjn2edkps7dfsq6emqm`, your subdomain is `vkuhvk4v`. When the `EnvironmentSubdomain` is set the SDK will send requests to `https://vkuhvk4v.api.checkout.com`. See [Base URLs](https://api-reference.checkout.com/#section/Base-URLs) and [API endpoints](c) for further details, and instructions on where to find your unique client ID.
+
 ### Default
 
 Default keys client instantiation can be done as follows:
@@ -72,7 +76,7 @@ ICheckoutApi api = CheckoutSdk.Builder().StaticKeys()
     .PublicKey("public_key") // optional, only required for operations related with tokens
     .SecretKey("secret_key")
     .Environment(Environment.Sandbox)
-    .EnvironmentSubdomain("subdomain") // optional, Merchant-specific DNS name
+    .EnvironmentSubdomain("subdomain") // required, Merchant-specific DNS name, the first 8 characters of your client ID
     .LogProvider(logFactory) // optional
     .HttpClientFactory(httpClientFactory) // optional
     .Build();
@@ -89,7 +93,7 @@ ICheckoutApi api = CheckoutSdk.Builder().OAuth()
     .AuthorizationUri(new Uri("https://access.sandbox.checkout.com/connect/token")) // custom authorization URI, optional
     .Scopes(OAuthScope.Files, OAuthScope.Flow) // array of scopes, optional
     .Environment(Environment.Sandbox)
-    .EnvironmentSubdomain("subdomain") // optional, Merchant-specific DNS name
+    .EnvironmentSubdomain("subdomain") // required, Merchant-specific DNS name, the first 8 characters of your client ID
     .LogProvider(logFactory) // optional
     .HttpClientFactory(httpClientFactory) // optional
     .Build();
@@ -106,7 +110,7 @@ Checkout.Previous.ICheckoutApi api = CheckoutSdk.Builder()
     .PublicKey("public_key") // optional, only required for operations related with tokens
     .SecretKey("secret_key")
     .Environment(Environment.Sandbox)
-    .EnvironmentSubdomain("subdomain") // optional, Merchant-specific DNS name
+    .EnvironmentSubdomain("subdomain") // optional for the Previous platform, Merchant-specific DNS name
     .LogProvider(logFactory) // optional
     .HttpClientFactory(httpClientFactory) // optional
     .Build();
@@ -130,10 +134,13 @@ Initialize the Configuration of your `appsettings.json` file:
     "SecretKey": "secret_key",
     "PublicKey": "public_key",
     "Environment": "Sandbox",
+    "EnvironmentSubdomain": "subdomain",
     "PlatformType": "Default" 
   }
 }
 ```
+
+`EnvironmentSubdomain` is required for the `Default` and `DefaultOAuth` platform types (see [Subdomain value](#subdomain-value)).
 You can chose PlatformType `Default` or `Previous` depending of the type of keys and account system access.
 
 For OAuth, the configuration file should include the following properties:
@@ -146,6 +153,7 @@ For OAuth, the configuration file should include the following properties:
     "AuthorizationUri": "https://access.sandbox.checkout.com/connect/token",
     "Scopes": ["vault", "fx"],
     "Environment": "Sandbox",
+    "EnvironmentSubdomain": "subdomain",
     "PlatformType": "DefaultOAuth"
   }
 }
@@ -212,7 +220,7 @@ private class CustomClientFactory : IHttpClientFactory
 ICheckoutApi api = CheckoutSdk.Builder().StaticKeys()
     .SecretKey("secret_key")
     .Environment(Environment.Sandbox)
-    .EnvironmentSubdomain("subdomain") // optional, Merchant-specific DNS name
+    .EnvironmentSubdomain("subdomain") // required, Merchant-specific DNS name, first 8 characters of your client ID
     .HttpClientFactory(new CustomClientFactory()) // optional
     .Build();
 ```
@@ -228,10 +236,26 @@ _log = logFactory.CreateLogger(typeof(SandboxTestFixture));
 ICheckoutApi api = CheckoutSdk.Builder().StaticKeys()
     .SecretKey("secret_key")
     .Environment(Environment.Sandbox)
-    .EnvironmentSubdomain("subdomain") // optional, Merchant-specific DNS name
+    .EnvironmentSubdomain("subdomain") // required, Merchant-specific DNS name, first 8 characters of your client ID
     .LogProvider(logFactory)
     .Build();
 ```
+
+## Legacy domain (emergency use only)
+
+> :warning: **Only use if merchant specific sub domains are causing issues** Connecting through your merchant-specific subdomain (see [Subdomain value](#subdomain-value)) is the supported way of using the Checkout.com API, and non-subdomain usage will be deprecated.
+
+If, in exceptional circumstances, you cannot use your merchant-specific subdomain, you can explicitly opt out by calling `UseLegacyDomain()` instead of `EnvironmentSubdomain(...)`:
+
+```c#
+ICheckoutApi api = CheckoutSdk.Builder().StaticKeys()
+    .SecretKey("secret_key")
+    .Environment(Environment.Sandbox)
+    .UseLegacyDomain() // deprecated, emergency fallback only
+    .Build();
+```
+
+This routes requests to `api.checkout.com` (or `api.sandbox.checkout.com`) and `access.checkout.com` (or `access.sandbox.checkout.com`). The method is marked as deprecated and produces a compile-time warning. Exactly one of `EnvironmentSubdomain(...)` or `UseLegacyDomain()` must be set — the SDK will fail to build the client if both, or neither, are set. When using the `CheckoutSDK.Extensions.Microsoft` package, the equivalent configuration property is `"UseLegacyDomain": true`.
 
 ## Exception handling
 

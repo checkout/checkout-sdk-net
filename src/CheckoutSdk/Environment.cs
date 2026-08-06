@@ -36,29 +36,28 @@ namespace Checkout
         }
         
         /// <summary>
-        /// Applies subdomain transformation to any given URI.
-        /// If the subdomain is valid (alphanumeric pattern), prepends it to the host.
-        /// Otherwise, returns the original URI unchanged.
+        /// Applies subdomain transformation to any given URI, prepending the subdomain to the host.
         /// </summary>
         /// <param name="originalUrl">The original URI to transform</param>
         /// <param name="subdomain">The subdomain to prepend</param>
-        /// <returns>The transformed URI with subdomain, or original URI if subdomain is invalid</returns>
+        /// <returns>The transformed URI with subdomain</returns>
+        /// <exception cref="CheckoutArgumentException">Thrown when the subdomain is not a valid merchant-specific subdomain</exception>
         private static Uri CreateUrlWithSubdomain(Uri originalUrl, string subdomain)
         {
-            Uri newEnvironment = new Uri(originalUrl.ToString());
-            
             Regex regex = new Regex(@"^(?:pl-)?[a-z0-9]+$", RegexOptions.None, TimeSpan.FromMilliseconds(100));
-            if (regex.IsMatch(subdomain))
+            if (subdomain == null || !regex.IsMatch(subdomain))
             {
-                UriBuilder merchantUrl = new UriBuilder(originalUrl);
-                merchantUrl.Host = subdomain + "." + originalUrl.Host;
-                merchantUrl.Scheme = originalUrl.Scheme;
-                merchantUrl.Port = originalUrl.Port;
-
-                newEnvironment = new Uri(merchantUrl.ToString());
+                throw new CheckoutArgumentException(
+                    "invalid environment subdomain - provide your merchant-specific subdomain, the first 8 " +
+                    "characters of your client ID (see https://api-reference.checkout.com/#section/Base-URLs)");
             }
 
-            return newEnvironment;
+            UriBuilder merchantUrl = new UriBuilder(originalUrl);
+            merchantUrl.Host = subdomain + "." + originalUrl.Host;
+            merchantUrl.Scheme = originalUrl.Scheme;
+            merchantUrl.Port = originalUrl.Port;
+
+            return new Uri(merchantUrl.ToString());
         }
     }
 }

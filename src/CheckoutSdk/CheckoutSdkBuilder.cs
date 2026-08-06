@@ -83,8 +83,8 @@ namespace Checkout
             {
                 if (_authorizationUri == null)
                 {
-                    var envSubdomain = _envSubdomain;
-                    _authorizationUri = envSubdomain != null ? 
+                    var envSubdomain = GetEnvironmentSubdomain();
+                    _authorizationUri = envSubdomain != null ?
                                         envSubdomain.AuthorizationUri
                                         : Env.GetAttribute<EnvironmentAttribute>().AuthorizationUri;
                 }

@@ -104,12 +104,15 @@ namespace Checkout.Metadata
         {
             var logFactory = TestLoggerFactoryHelper.Instance;
 
+#pragma warning disable CS0618 // sandbox test credentials are not tied to a merchant-specific subdomain
             var api = CheckoutSdk.Builder().StaticKeys()
                 .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PUBLIC_KEY"))
                 .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_SECRET_KEY"))
                 .Environment(Environment.Sandbox)
+                .UseLegacyDomain()
                 .LogProvider(logFactory)
                 .Build();
+#pragma warning restore CS0618
 
             var cardTokenRequest = new CardTokenRequest
             {

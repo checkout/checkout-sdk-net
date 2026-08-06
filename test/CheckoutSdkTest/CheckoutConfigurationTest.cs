@@ -42,30 +42,24 @@ namespace Checkout
         }
 
         [Theory]
-        [InlineData("", "https://api.sandbox.checkout.com/", "https://access.sandbox.checkout.com/connect/token")]
-        [InlineData(" ", "https://api.sandbox.checkout.com/", "https://access.sandbox.checkout.com/connect/token")]
-        [InlineData("  ", "https://api.sandbox.checkout.com/", "https://access.sandbox.checkout.com/connect/token")]
-        [InlineData(" - ", "https://api.sandbox.checkout.com/", "https://access.sandbox.checkout.com/connect/token")]
-        [InlineData("a b", "https://api.sandbox.checkout.com/", "https://access.sandbox.checkout.com/connect/token")]
-        [InlineData("ab c1", "https://api.sandbox.checkout.com/", "https://access.sandbox.checkout.com/connect/token")]
-        [InlineData("foo-", "https://api.sandbox.checkout.com/", "https://access.sandbox.checkout.com/connect/token")]
-        [InlineData("-foo", "https://api.sandbox.checkout.com/", "https://access.sandbox.checkout.com/connect/token")]
-        [InlineData("ABC123", "https://api.sandbox.checkout.com/", "https://access.sandbox.checkout.com/connect/token")]
-        [InlineData("test-123", "https://api.sandbox.checkout.com/", "https://access.sandbox.checkout.com/connect/token")]
-        [InlineData("foo-bar", "https://api.sandbox.checkout.com/", "https://access.sandbox.checkout.com/connect/token")]
-        [InlineData("pl-", "https://api.sandbox.checkout.com/", "https://access.sandbox.checkout.com/connect/token")]
-        public void ShouldCreateConfigurationWithBadSubdomain(string subdomain, string expectedApiUri, string expectedAuthUri)
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("  ")]
+        [InlineData(" - ")]
+        [InlineData("a b")]
+        [InlineData("ab c1")]
+        [InlineData("foo-")]
+        [InlineData("-foo")]
+        [InlineData("ABC123")]
+        [InlineData("test-123")]
+        [InlineData("foo-bar")]
+        [InlineData("pl-")]
+        public void ShouldThrowForBadSubdomain(string subdomain)
         {
-            var credentials = new StaticKeysSdkCredentials(ValidDefaultSk, ValidDefaultPk);
-            var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            var environmentSubdomain = new EnvironmentSubdomain(Environment.Sandbox, subdomain);
-            var configuration = new CheckoutConfiguration(credentials, Environment.Sandbox, environmentSubdomain,
-                httpClientFactoryMock.Object, false);
+            var exception = Assert.Throws<CheckoutArgumentException>(
+                () => new EnvironmentSubdomain(Environment.Sandbox, subdomain));
 
-            configuration.Environment.ShouldBe(Environment.Sandbox);
-            configuration.EnvironmentSubdomain.ApiUri.ToString().ShouldBe(expectedApiUri);
-            configuration.EnvironmentSubdomain.AuthorizationUri.ToString().ShouldBe(expectedAuthUri);
-            configuration.SdkCredentials.ShouldBeAssignableTo(typeof(StaticKeysSdkCredentials));
+            exception.Message.ShouldContain("invalid environment subdomain");
         }
 
         [Theory]
