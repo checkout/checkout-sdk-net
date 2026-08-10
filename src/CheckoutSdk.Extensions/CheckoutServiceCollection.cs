@@ -131,12 +131,12 @@ namespace CheckoutSDK.Extensions.Configuration
                 builder.EnvironmentSubdomain(options.EnvironmentSubdomain);
             }
 
+#pragma warning disable CS0618 // UseLegacyDomain is deprecated but remains configurable as an emergency opt-out
             if (options.UseLegacyDomain)
             {
-#pragma warning disable CS0618 // UseLegacyDomain is deprecated but remains configurable as an emergency opt-out
                 builder.UseLegacyDomain();
-#pragma warning restore CS0618
             }
+#pragma warning restore CS0618
 
             if (loggerFactory != null)
             {

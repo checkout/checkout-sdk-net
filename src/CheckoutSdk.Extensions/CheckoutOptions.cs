@@ -22,6 +22,9 @@ namespace CheckoutSDK.Extensions.Configuration
 
         public string EnvironmentSubdomain { get; set; }
 
+        [Obsolete("UseLegacyDomain is deprecated and will be removed in a future release. It is intended only as an " +
+                  "emergency fallback when the merchant-specific subdomain cannot be used. Set EnvironmentSubdomain " +
+                  "instead. See https://api-reference.checkout.com/#section/Base-URLs")]
         public bool UseLegacyDomain { get; set; }
 
         public PlatformType? PlatformType { get; set; }
