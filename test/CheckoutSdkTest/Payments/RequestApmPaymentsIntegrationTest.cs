@@ -128,6 +128,7 @@ namespace Checkout.Payments
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PREVIEW_OAUTH_CLIENT_SECRET"))
                 .Environment(Environment.Sandbox)
                 .LogProvider(logFactory)
+                .ConfigureDomain()
                 .Build();
 
             var tamaraSource = new RequestTamaraSource();

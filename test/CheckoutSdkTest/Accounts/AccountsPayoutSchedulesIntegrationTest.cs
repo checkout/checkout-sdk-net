@@ -106,6 +106,7 @@ namespace Checkout.Accounts
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET"))
                 .Scopes(OAuthScope.Marketplace)
                 .LogProvider(logFactory)
+                .ConfigureDomain()
                 .Build() as CheckoutApi;
         }
     }

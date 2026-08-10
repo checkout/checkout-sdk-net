@@ -96,16 +96,13 @@ namespace Checkout
                     break;
 
                 case PlatformType.Default:
-#pragma warning disable CS0618 // sandbox test credentials are not tied to a merchant-specific subdomain
                     DefaultApi = CheckoutSdk.Builder().StaticKeys()
                         .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PUBLIC_KEY"))
                         .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_SECRET_KEY"))
                         .Environment(Environment.Sandbox)
-                        //.EnvironmentSubdomain(System.Environment.GetEnvironmentVariable("CHECKOUT_MERCHANT_SUBDOMAIN"))
-                        .UseLegacyDomain()
                         .LogProvider(logFactory)
+                        .ConfigureDomain()
                         .Build();
-#pragma warning restore CS0618
                     break;
 
                 case PlatformType.DefaultOAuth:
@@ -128,11 +125,8 @@ namespace Checkout
                             )
                         .Environment(Environment.Sandbox)
                         //.HttpClientFactory(new CustomClientFactory("3.0"))
-                        //.EnvironmentSubdomain(System.Environment.GetEnvironmentVariable("CHECKOUT_MERCHANT_SUBDOMAIN"))
-#pragma warning disable CS0618 // sandbox test credentials are not tied to a merchant-specific subdomain
-                        .UseLegacyDomain()
-#pragma warning restore CS0618
                         .LogProvider(logFactory)
+                        .ConfigureDomain()
                         .Build();
                     break;
 

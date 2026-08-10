@@ -95,6 +95,7 @@ namespace Checkout.Accounts
                 .Scopes(OAuthScope.Accounts)
                 .Environment(Environment.Sandbox)
                 .HttpClientFactory(new CustomClientFactory("2.0"))
+                .ConfigureDomain()
                 .Build();
             
             var response = await api.AccountsClient().CreateEntity(request, schemaVersion: "2.0");
@@ -813,6 +814,7 @@ namespace Checkout.Accounts
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_SECRET"))
                 .Scopes(OAuthScope.Accounts)
                 .LogProvider(logFactory)
+                .ConfigureDomain()
                 .Build() as CheckoutApi;
         }
 

@@ -131,6 +131,7 @@ namespace Checkout.Issuing
                     OAuthScope.IssuingClient, OAuthScope.IssuingTransactionsRead, OAuthScope.Vault)
                 .Environment(Environment.Sandbox)
                 .LogProvider(logFactory)
+                .ConfigureDomain()
                 .Build();
 
             return defaultApi;
