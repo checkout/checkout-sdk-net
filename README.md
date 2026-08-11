@@ -257,6 +257,18 @@ ICheckoutApi api = CheckoutSdk.Builder().StaticKeys()
 
 This routes requests to `api.checkout.com` (or `api.sandbox.checkout.com`) and `access.checkout.com` (or `access.sandbox.checkout.com`). The method is marked as deprecated and produces a compile-time warning. Exactly one of `EnvironmentSubdomain(...)` or `UseLegacyDomain()` must be set — the SDK will fail to build the client if both, or neither, are set. When using the `CheckoutSDK.Extensions.Microsoft` package, the equivalent configuration property is `"UseLegacyDomain": true`.
 
+## Running the tests against your subdomain
+
+The test suite builds every client through `TestDomainConfiguration`, which has two modes. By default it uses the shared hosts, because the sandbox OAuth clients are not provisioned for merchant-specific subdomains and the token request would come back `invalid_client`. To run against a subdomain instead:
+
+```bash
+export CHECKOUT_MERCHANT_SUBDOMAIN="your_subdomain"
+export CHECKOUT_TEST_USE_SUBDOMAIN=true
+dotnet test
+```
+
+The switch is separate from `CHECKOUT_MERCHANT_SUBDOMAIN` on purpose: CI already exports that secret, so provisioning is what should flip the behaviour, not the presence of a value. Once sandbox is provisioned like production, set `CHECKOUT_TEST_USE_SUBDOMAIN: 'true'` in the workflows and CI exercises the subdomain path end to end.
+
 ## Exception handling
 
 All the API responses that do not fall in the 2** status codes will cause a `CheckoutApiException`. The exception encapsulates
