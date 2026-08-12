@@ -95,7 +95,12 @@ namespace Checkout.Accounts
                 .Scopes(OAuthScope.Accounts)
                 .Environment(Environment.Sandbox)
                 .HttpClientFactory(new CustomClientFactory("2.0"))
-                .ConfigureDomain()
+                // The sandbox OAuth clients are not provisioned for the merchant-specific subdomain,
+                // so the token request would come back invalid_client. Opting out explicitly until
+                // they are.
+#pragma warning disable CS0618
+                .UseLegacyDomain()
+#pragma warning restore CS0618
                 .Build();
             
             var response = await api.AccountsClient().CreateEntity(request, schemaVersion: "2.0");
@@ -814,7 +819,12 @@ namespace Checkout.Accounts
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_SECRET"))
                 .Scopes(OAuthScope.Accounts)
                 .LogProvider(logFactory)
-                .ConfigureDomain()
+                // The sandbox OAuth clients are not provisioned for the merchant-specific subdomain,
+                // so the token request would come back invalid_client. Opting out explicitly until
+                // they are.
+#pragma warning disable CS0618
+                .UseLegacyDomain()
+#pragma warning restore CS0618
                 .Build() as CheckoutApi;
         }
 

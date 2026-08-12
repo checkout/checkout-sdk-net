@@ -106,7 +106,12 @@ namespace Checkout.Accounts
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET"))
                 .Scopes(OAuthScope.Marketplace)
                 .LogProvider(logFactory)
-                .ConfigureDomain()
+                // The sandbox OAuth clients are not provisioned for the merchant-specific subdomain,
+                // so the token request would come back invalid_client. Opting out explicitly until
+                // they are.
+#pragma warning disable CS0618
+                .UseLegacyDomain()
+#pragma warning restore CS0618
                 .Build() as CheckoutApi;
         }
     }
