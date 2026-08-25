@@ -6,6 +6,11 @@ namespace Checkout.Instruments.Create
 {
     public class InstrumentData
     {
+        /// <summary>
+        /// The type of SEPA mandate. Core or B2B.
+        /// </summary>
+        public SepaMandateType? Type { get; set; }
+
         public string AccountNumber { get; set; }
 
         public CountryCode? Country { get; set; }
