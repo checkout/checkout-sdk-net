@@ -57,6 +57,21 @@ namespace Checkout.Instruments.Update.Util
                 return new UpdateCardInstrumentResponse();
             }
 
+            if (CheckoutUtils.GetEnumMemberValue(InstrumentType.Bacs).Equals(type))
+            {
+                return new UpdateBacsInstrumentResponse();
+            }
+
+            if (CheckoutUtils.GetEnumMemberValue(InstrumentType.Sepa).Equals(type))
+            {
+                return new UpdateSepaInstrumentResponse();
+            }
+
+            if (CheckoutUtils.GetEnumMemberValue(InstrumentType.Ach).Equals(type))
+            {
+                return new UpdateAchInstrumentResponse();
+            }
+
             return new UpdateInstrumentResponse(
                 CheckoutUtils.GetEnumFromStringMemberValue<InstrumentType>(type));
         }

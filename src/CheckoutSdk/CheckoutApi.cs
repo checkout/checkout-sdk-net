@@ -1,5 +1,6 @@
-using Checkout.Accounts;
+﻿using Checkout.Accounts;
 using Checkout.AgenticCommerce;
+using Checkout.Apm.Bacs;
 using Checkout.Authentication;
 using Checkout.Balances;
 using Checkout.ComplianceRequests;
@@ -75,6 +76,7 @@ namespace Checkout
         private readonly IComplianceRequestsClient _complianceRequestsClient;
         private readonly IAgenticCommerceClient _agenticCommerceClient;
         private readonly IOnboardingSimulatorClient _onboardingSimulatorClient;
+        private readonly IBacsClient _bacsClient;
 
         public CheckoutApi(CheckoutConfiguration configuration)
         {
@@ -121,6 +123,7 @@ namespace Checkout
             _complianceRequestsClient = new ComplianceRequestsClient(baseApiClient, configuration);
             _agenticCommerceClient = new AgenticCommerceClient(baseApiClient, configuration);
             _onboardingSimulatorClient = new OnboardingSimulatorClient(baseApiClient, configuration);
+            _bacsClient = new BacsClient(baseApiClient, configuration);
         }
 
         private static ApiClient BaseApiClient(CheckoutConfiguration configuration)
@@ -168,184 +171,300 @@ namespace Checkout
         }
 
 
+        /// <summary>
+        /// Creates single-use tokens from card details, wallet payloads or Apple Pay and Google Pay data.
+        /// </summary>
         public ITokensClient TokensClient()
         {
             return _tokensClient;
         }
 
+        /// <summary>
+        /// Creates, retrieves, updates and deletes customers and their stored instruments.
+        /// </summary>
         public ICustomersClient CustomersClient()
         {
             return _customersClient;
         }
 
+        /// <summary>
+        /// Requests payments and payouts, and retrieves, captures, refunds and voids them.
+        /// </summary>
         public IPaymentsClient PaymentsClient()
         {
             return _paymentsClient;
         }
 
+        /// <summary>
+        /// Stores, retrieves, updates and deletes payment instruments.
+        /// </summary>
         public IInstrumentsClient InstrumentsClient()
         {
             return _instrumentsClient;
         }
 
+        /// <summary>
+        /// Retrieves disputes and submits evidence against them.
+        /// </summary>
         public IDisputesClient DisputesClient()
         {
             return _disputesClient;
         }
 
+        /// <summary>
+        /// Runs pre-authentication and pre-capture risk assessments.
+        /// </summary>
         public IRiskClient RiskClient()
         {
             return _riskClient;
         }
 
+        /// <summary>
+        /// Retrieves foreign exchange quotes and rates.
+        /// </summary>
         public IForexClient ForexClient()
         {
             return _forexClient;
         }
 
+        /// <summary>
+        /// Creates and manages workflows, their conditions and their actions.
+        /// </summary>
         public IWorkflowsClient WorkflowsClient()
         {
             return _workflowsClient;
         }
 
+        /// <summary>
+        /// Runs standalone 3D Secure authentication sessions.
+        /// </summary>
         public IAuthenticationClient AuthenticationClient()
         {
             return _authenticationClient;
         }
 
+        /// <summary>
+        /// Onboards and manages sub-entities, their instruments, payout schedules and files.
+        /// </summary>
         public IAccountsClient AccountsClient()
         {
             return _accountsClient;
         }
 
+        /// <summary>
+        /// Creates and retrieves payment links.
+        /// </summary>
         public IPaymentLinksClient PaymentLinksClient()
         {
             return _paymentLinksClient;
         }
 
+        /// <summary>
+        /// Creates and retrieves hosted payment pages.
+        /// </summary>
         public IHostedPaymentsClient HostedPaymentsClient()
         {
             return _hostedPaymentsClient;
         }
 
+        /// <summary>
+        /// Retrieves entity balances.
+        /// </summary>
         public IBalancesClient BalancesClient()
         {
             return _balancesClient;
         }
 
+        /// <summary>
+        /// Initiates and retrieves transfers between entities.
+        /// </summary>
         public ITransfersClient TransfersClient()
         {
             return _transfersClient;
         }
 
+        /// <summary>
+        /// Retrieves reports and downloads their files.
+        /// </summary>
         public IReportsClient ReportsClient()
         {
             return _reportsClient;
         }
 
+        /// <summary>
+        /// Retrieves card and bank account metadata.
+        /// </summary>
         public IMetadataClient MetadataClient()
         {
             return _metadataClient;
         }
 
+        /// <summary>
+        /// Retrieves financial actions.
+        /// </summary>
         public IFinancialClient FinancialClient()
         {
             return _financialClient;
         }
 
+        /// <summary>
+        /// Manages issued cardholders, cards, controls, transactions and issuing disputes.
+        /// </summary>
         public IIssuingClient IssuingClient()
         {
             return _issuingClient;
         }
 
+        /// <summary>
+        /// Creates and retrieves payment contexts for alternative payment methods.
+        /// </summary>
         public IPaymentContextsClient PaymentContextsClient()
         {
             return _paymentContextsClient;
         }
 
+        /// <summary>
+        /// Forwards requests to third-party endpoints and manages forwarding secrets.
+        /// </summary>
         public IForwardClient ForwardClient()
         {
             return _forwardClient;
         }
 
+        /// <summary>
+        /// Retrieves and manages Flow payment sessions.
+        /// </summary>
         public IFlowClient FlowClient()
         {
             return _flowClient;
         }
 
+        /// <summary>
+        /// Creates and manages identity verification applicants.
+        /// </summary>
         public IApplicantsClient ApplicantsClient()
         {
             return _applicantsClient;
         }
 
+        /// <summary>
+        /// Runs anti-money-laundering screening checks.
+        /// </summary>
         public IAmlScreeningClient AmlScreeningClient()
         {
             return _amlScreeningClient;
         }
 
+        /// <summary>
+        /// Runs face authentication checks.
+        /// </summary>
         public IFaceAuthenticationClient FaceAuthenticationClient()
         {
             return _faceAuthenticationClient;
         }
 
+        /// <summary>
+        /// Runs identity document verification checks.
+        /// </summary>
         public IIdDocumentVerificationClient IdDocumentVerificationClient()
         {
             return _idDocumentVerificationClient;
         }
 
+        /// <summary>
+        /// Runs address document verification checks.
+        /// </summary>
         public IAddressDocumentVerificationClient AddressDocumentVerificationClient()
         {
             return _addressDocumentVerificationClient;
         }
 
+        /// <summary>
+        /// Runs combined identity verification checks.
+        /// </summary>
         public IIdentityVerificationClient IdentityVerificationClient()
         {
             return _identityVerificationClient;
         }
 
+        /// <summary>
+        /// Provisions and manages network tokens.
+        /// </summary>
         public INetworkTokensClient NetworkTokensClient()
         {
             return _networkTokensClient;
         }
 
+        /// <summary>
+        /// Creates, confirms and retrieves payment setups.
+        /// </summary>
         public IPaymentSetupsClient PaymentSetupsClient()
         {
             return _paymentSetupsClient;
         }
         
+        /// <summary>
+        /// Manages Apple Pay merchant registration and certificates.
+        /// </summary>
         public IApplePayClient ApplePayClient()
         {
             return _applePayClient;
         }
         
+        /// <summary>
+        /// Retrieves and configures available payment methods.
+        /// </summary>
         public IPaymentMethodsClient PaymentMethodsClient()
         {
             return _paymentMethodsClient;
         }
         
+        /// <summary>
+        /// Runs standalone account updater requests on stored cards.
+        /// </summary>
         public IStandaloneAccountUpdaterClient StandaloneAccountUpdaterClient()
         {
             return _standaloneAccountUpdaterClient;
         }
 
+        /// <summary>
+        /// Manages Google Pay enrollments.
+        /// </summary>
         public IGooglePayClient GooglePayClient()
         {
             return _googlePayClient;
         }
 
+        /// <summary>
+        /// Retrieves compliance requests and submits responses to them.
+        /// </summary>
         public IComplianceRequestsClient ComplianceRequestsClient()
         {
             return _complianceRequestsClient;
         }
 
+        /// <summary>
+        /// Creates delegated payment tokens for agentic commerce flows.
+        /// </summary>
         public IAgenticCommerceClient AgenticCommerceClient()
         {
             return _agenticCommerceClient;
         }
 
+        /// <summary>
+        /// Drives sandbox-only onboarding simulations for sub-entities.
+        /// </summary>
         public IOnboardingSimulatorClient OnboardingSimulatorClient()
         {
             return _onboardingSimulatorClient;
+        }
+
+        /// <summary>
+        /// Sends Bacs Direct Debit pre-notifications.
+        /// </summary>
+        public IBacsClient BacsClient()
+        {
+            return _bacsClient;
         }
     }
 }
