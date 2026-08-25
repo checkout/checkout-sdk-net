@@ -2,6 +2,12 @@
 
 namespace Checkout.Common
 {
+    /// <summary>
+    /// The payment source type. This enum is the union of the source types accepted on payment
+    /// requests and returned on payment responses, on both the current and the previous platform,
+    /// so it also carries previous-platform values that the current API specification no longer
+    /// declares.
+    /// </summary>
     public enum PaymentSourceType
     {
         [EnumMember(Value = "card")] Card,
@@ -60,6 +66,12 @@ namespace Checkout.Common
         [EnumMember(Value = "sequra")] Sequra,
         [EnumMember(Value = "tabby")] Tabby,
         [EnumMember(Value = "applepay")] Applepay,
-        [EnumMember(Value = "googlepay")] Googlepay
+        [EnumMember(Value = "googlepay")] Googlepay,
+        [EnumMember(Value = "bacs")] Bacs,
+        [EnumMember(Value = "mobilepay")] Mobilepay,
+        [EnumMember(Value = "paynow")] Paynow,
+        [EnumMember(Value = "swish")] Swish,
+        [EnumMember(Value = "twint")] Twint,
+        [EnumMember(Value = "vipps")] Vipps
     }
 }

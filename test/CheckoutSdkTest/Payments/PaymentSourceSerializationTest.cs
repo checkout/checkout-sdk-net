@@ -1,0 +1,295 @@
+using Checkout.Common;
+using Checkout.Payments.Request.Source.Apm;
+using Checkout.Payments.Request.Source;
+using Checkout.Payments.Request;
+using Checkout.Payments.Response.Source;
+using Checkout.Payments.Response;
+using Shouldly;
+using Xunit;
+
+namespace Checkout.Payments
+{
+    /// <summary>
+    /// Schema validation tests for Checkout.Payments.
+    /// Grouped by domain; each section below covers one subject.
+    /// </summary>
+    public class PaymentSourceSerializationTest
+    {
+        private static readonly JsonSerializer Serializer = new JsonSerializer();
+
+        // ------------------------------------------------------------------------
+        // PaymentSourceType
+        // Schema validation tests for PaymentSourceType, value by value in both directions.
+        // ------------------------------------------------------------------------
+
+        [Theory]
+        [InlineData(PaymentSourceType.Card, "card")]
+        [InlineData(PaymentSourceType.Id, "id")]
+        [InlineData(PaymentSourceType.NetworkToken, "network_token")]
+        [InlineData(PaymentSourceType.Token, "token")]
+        [InlineData(PaymentSourceType.Ach, "ach")]
+        [InlineData(PaymentSourceType.Customer, "customer")]
+        [InlineData(PaymentSourceType.ProviderToken, "provider_token")]
+        [InlineData(PaymentSourceType.DLocal, "dLocal")]
+        [InlineData(PaymentSourceType.CurrencyAccount, "currency_account")]
+        [InlineData(PaymentSourceType.Boleto, "boleto")]
+        [InlineData(PaymentSourceType.Fawry, "fawry")]
+        [InlineData(PaymentSourceType.Giropay, "giropay")]
+        [InlineData(PaymentSourceType.Ideal, "ideal")]
+        [InlineData(PaymentSourceType.Oxxo, "oxxo")]
+        [InlineData(PaymentSourceType.PagoFacil, "pagofacil")]
+        [InlineData(PaymentSourceType.RapiPago, "rapipago")]
+        [InlineData(PaymentSourceType.Klarna, "klarna")]
+        [InlineData(PaymentSourceType.Sofort, "sofort")]
+        [InlineData(PaymentSourceType.Knet, "knet")]
+        [InlineData(PaymentSourceType.QPay, "qpay")]
+        [InlineData(PaymentSourceType.Alipay, "alipay")]
+        [InlineData(PaymentSourceType.PayPal, "paypal")]
+        [InlineData(PaymentSourceType.Multibanco, "multibanco")]
+        [InlineData(PaymentSourceType.Octopus, "octopus")]
+        [InlineData(PaymentSourceType.Plaid, "plaid")]
+        [InlineData(PaymentSourceType.EPS, "eps")]
+        [InlineData(PaymentSourceType.Illicado, "illicado")]
+        [InlineData(PaymentSourceType.Poli, "poli")]
+        [InlineData(PaymentSourceType.Przelewy24, "p24")]
+        [InlineData(PaymentSourceType.BenefitPay, "benefitpay")]
+        [InlineData(PaymentSourceType.Bizum, "bizum")]
+        [InlineData(PaymentSourceType.Bancontact, "bancontact")]
+        [InlineData(PaymentSourceType.Blik, "blik")]
+        [InlineData(PaymentSourceType.Tamara, "tamara")]
+        [InlineData(PaymentSourceType.BankAccount, "bank_account")]
+        [InlineData(PaymentSourceType.AlipayHk, "alipay_hk")]
+        [InlineData(PaymentSourceType.AlipayCn, "alipay_cn")]
+        [InlineData(PaymentSourceType.AlipayPlus, "alipay_plus")]
+        [InlineData(PaymentSourceType.Gcash, "gcash")]
+        [InlineData(PaymentSourceType.Wechatpay, "wechatpay")]
+        [InlineData(PaymentSourceType.Dana, "dana")]
+        [InlineData(PaymentSourceType.Kakaopay, "kakaopay")]
+        [InlineData(PaymentSourceType.Truemoney, "truemoney")]
+        [InlineData(PaymentSourceType.Tng, "tng")]
+        [InlineData(PaymentSourceType.Afterpay, "afterpay")]
+        [InlineData(PaymentSourceType.Benefit, "benefit")]
+        [InlineData(PaymentSourceType.Mbway, "mbway")]
+        [InlineData(PaymentSourceType.Postfinance, "postfinance")]
+        [InlineData(PaymentSourceType.Stcpay, "stcpay")]
+        [InlineData(PaymentSourceType.Alma, "alma")]
+        [InlineData(PaymentSourceType.Trustly, "trustly")]
+        [InlineData(PaymentSourceType.Cvconnect, "cvconnect")]
+        [InlineData(PaymentSourceType.Sepa, "sepa")]
+        [InlineData(PaymentSourceType.Sequra, "sequra")]
+        [InlineData(PaymentSourceType.Tabby, "tabby")]
+        [InlineData(PaymentSourceType.Applepay, "applepay")]
+        [InlineData(PaymentSourceType.Googlepay, "googlepay")]
+        [InlineData(PaymentSourceType.Bacs, "bacs")]
+        [InlineData(PaymentSourceType.Mobilepay, "mobilepay")]
+        [InlineData(PaymentSourceType.Paynow, "paynow")]
+        [InlineData(PaymentSourceType.Swish, "swish")]
+        [InlineData(PaymentSourceType.Twint, "twint")]
+        [InlineData(PaymentSourceType.Vipps, "vipps")]
+        public void ShouldMapEveryPaymentSourceTypeToItsWireValue(
+            PaymentSourceType sourceType,
+            string wireValue)
+        {
+            CheckoutUtils.GetEnumMemberValue(sourceType).ShouldBe(wireValue);
+            CheckoutUtils.GetEnumFromStringMemberValue<PaymentSourceType>(wireValue).ShouldBe(sourceType);
+        }
+
+        // ------------------------------------------------------------------------
+        // ApmRequestSource
+        // Schema validation tests for the alternative payment method request sources added to close the
+        // gap between PaymentSourceType and the typed request source classes.
+        // ------------------------------------------------------------------------
+
+        [Theory]
+        [InlineData(typeof(RequestMobilePaySource), "mobilepay")]
+        [InlineData(typeof(RequestPayNowSource), "paynow")]
+        [InlineData(typeof(RequestTwintSource), "twint")]
+        [InlineData(typeof(RequestVippsSource), "vipps")]
+        public void ShouldSerializeTypeOnlySources(System.Type sourceType, string wireType)
+        {
+            var source = (AbstractRequestSource)System.Activator.CreateInstance(sourceType);
+
+            var json = Serializer.Serialize(source);
+
+            json.ShouldBe("{\"type\":\"" + wireType + "\"}");
+        }
+
+        [Fact]
+        public void ShouldRoundTripSerializeSwishSource()
+        {
+            var original = new RequestSwishSource
+            {
+                PaymentCountry = CountryCode.SE,
+                AccountHolder = new SwishAccountHolder
+                {
+                    FirstName = "Bruce",
+                    LastName = "Wayne"
+                },
+                BillingDescriptor = new SwishBillingDescriptor { Name = "CKO Store" }
+            };
+
+            var json = Serializer.Serialize(original);
+            var d = (RequestSwishSource)Serializer.Deserialize(json, typeof(RequestSwishSource));
+
+            json.ShouldContain("\"type\":\"swish\"");
+            json.ShouldContain("\"payment_country\":\"SE\"");
+            d.Type.ShouldBe(PaymentSourceType.Swish);
+            d.PaymentCountry.ShouldBe(CountryCode.SE);
+            d.AccountHolder.FirstName.ShouldBe(original.AccountHolder.FirstName);
+            d.AccountHolder.LastName.ShouldBe(original.AccountHolder.LastName);
+            d.BillingDescriptor.Name.ShouldBe(original.BillingDescriptor.Name);
+        }
+
+        [Fact]
+        public void ShouldDeserializeSwishSwaggerExample()
+        {
+            const string json = @"{
+                ""type"": ""swish"",
+                ""payment_country"": ""SE"",
+                ""account_holder"": { ""first_name"": ""Bruce"", ""last_name"": ""Wayne"" },
+                ""billing_descriptor"": { ""name"": ""CKO Store"" }
+            }";
+
+            var s = (RequestSwishSource)Serializer.Deserialize(json, typeof(RequestSwishSource));
+
+            s.Type.ShouldBe(PaymentSourceType.Swish);
+            s.PaymentCountry.ShouldBe(CountryCode.SE);
+            s.AccountHolder.FirstName.ShouldBe("Bruce");
+            s.AccountHolder.LastName.ShouldBe("Wayne");
+            s.BillingDescriptor.Name.ShouldBe("CKO Store");
+        }
+
+        // ------------------------------------------------------------------------
+        // BacsPaymentSource
+        // Schema validation tests for the bacs payment source, covering both
+        // PaymentRequestBacsSource and PaymentGetResponseBacsSource.
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldRoundTripSerializeRequestSource()
+        {
+            var original = new RequestBacsSource
+            {
+                Id = "src_wmlfc3zyhqzehihu7giusaaawu"
+            };
+
+            var json = Serializer.Serialize(original);
+            var deserialized = (RequestBacsSource)Serializer
+                .Deserialize(json, typeof(RequestBacsSource));
+
+            json.ShouldContain("\"type\":\"bacs\"");
+            json.ShouldContain("\"id\":\"src_wmlfc3zyhqzehihu7giusaaawu\"");
+            deserialized.Type.ShouldBe(PaymentSourceType.Bacs);
+            deserialized.Id.ShouldBe(original.Id);
+        }
+
+        [Fact]
+        public void ShouldDeserializeResponseSourceToTypedClass()
+        {
+            const string json = @"{
+                ""id"": ""pay_mbabizu24mvu3mela5njyhpit4"",
+                ""source"": {
+                    ""type"": ""bacs"",
+                    ""id"": ""src_wmlfc3zyhqzehihu7giusaaawu""
+                }
+            }";
+
+            var response = (GetPaymentResponse)Serializer.Deserialize(json, typeof(GetPaymentResponse));
+
+            var bacsSource = response.Source.ShouldBeOfType<BacsResponseSource>();
+            bacsSource.SourceType.ShouldBe(PaymentSourceType.Bacs);
+            bacsSource.Type().ShouldBe(PaymentSourceType.Bacs);
+            bacsSource.Id.ShouldBe("src_wmlfc3zyhqzehihu7giusaaawu");
+        }
+
+        [Fact]
+        public void ShouldRoundTripSerializeResponseSource()
+        {
+            var original = new BacsResponseSource
+            {
+                SourceType = PaymentSourceType.Bacs,
+                Id = "src_wmlfc3zyhqzehihu7giusaaawu"
+            };
+
+            var json = Serializer.Serialize(original);
+            var deserialized = (BacsResponseSource)Serializer
+                .Deserialize(json, typeof(BacsResponseSource));
+
+            json.ShouldContain("\"type\":\"bacs\"");
+            json.ShouldContain("\"id\":\"src_wmlfc3zyhqzehihu7giusaaawu\"");
+            deserialized.SourceType.ShouldBe(original.SourceType);
+            deserialized.Id.ShouldBe(original.Id);
+        }
+
+        // ------------------------------------------------------------------------
+        // PaymentRequestFallbackSource
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldSerializeFallbackSource()
+        {
+            var request = new PaymentRequest
+            {
+                FallbackSource = new RequestCardSource
+                {
+                    Number = "4543474002249996",
+                    ExpiryMonth = 6,
+                    ExpiryYear = 2030,
+                    Cvv = "956"
+                }
+            };
+
+            var json = Serializer.Serialize(request);
+
+            json.ShouldContain("\"fallback_source\"");
+            json.ShouldContain("4543474002249996");
+        }
+
+        [Fact]
+        public void ShouldRoundTripSerializeFallbackSource()
+        {
+            var original = new PaymentRequest
+            {
+                FallbackSource = new RequestCardSource
+                {
+                    Number = "4543474002249996",
+                    ExpiryMonth = 6,
+                    ExpiryYear = 2030,
+                    Cvv = "956",
+                    Name = "Bruce Wayne"
+                }
+            };
+
+            var json = Serializer.Serialize(original);
+            var deserialized = (PaymentRequest)Serializer.Deserialize(json, typeof(PaymentRequest));
+
+            deserialized.FallbackSource.ShouldNotBeNull();
+            deserialized.FallbackSource.Number.ShouldBe("4543474002249996");
+            deserialized.FallbackSource.ExpiryMonth.ShouldBe(6);
+            deserialized.FallbackSource.ExpiryYear.ShouldBe(2030);
+            deserialized.FallbackSource.Cvv.ShouldBe("956");
+            deserialized.FallbackSource.Name.ShouldBe("Bruce Wayne");
+        }
+
+        [Fact]
+        public void ShouldDeserializeSwaggerExample()
+        {
+            const string json = @"{
+                ""fallback_source"": {
+                    ""type"": ""card"",
+                    ""number"": ""4543474002249996"",
+                    ""expiry_month"": 6,
+                    ""expiry_year"": 2030,
+                    ""cvv"": ""956""
+                }
+            }";
+
+            var request = (PaymentRequest)Serializer.Deserialize(json, typeof(PaymentRequest));
+
+            request.FallbackSource.ShouldNotBeNull();
+            request.FallbackSource.Number.ShouldBe("4543474002249996");
+            request.FallbackSource.ExpiryMonth.ShouldBe(6);
+            request.FallbackSource.ExpiryYear.ShouldBe(2030);
+        }
+    }
+}

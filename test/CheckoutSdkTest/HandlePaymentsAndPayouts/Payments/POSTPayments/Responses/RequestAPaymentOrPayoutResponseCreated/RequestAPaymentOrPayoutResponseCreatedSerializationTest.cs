@@ -1,13 +1,15 @@
-using Checkout.Common;
-using Checkout.HandlePaymentsAndPayouts.Payments.Common.Source;
 using CardSource =
     Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.CardSource.CardSource;
+using Checkout.Common;
+using Checkout.HandlePaymentsAndPayouts.Payments.Common.Source;
+using CurrencyAccountSource =
+    Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.CurrencyAccountSource.CurrencyAccountSource;
 using KlarnaSource =
     Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.KlarnaSource.KlarnaSource;
 using PaypalSource =
     Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.PaypalSource.PaypalSource;
-using CurrencyAccountSource =
-    Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.CurrencyAccountSource.CurrencyAccountSource;
+using Phone =
+    Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseCreated.Customer.Phone.Phone;
 using SepaSource =
     Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.SepaSource.SepaSource;
 using Shouldly;
@@ -15,8 +17,16 @@ using Xunit;
 
 namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseCreated
 {
+    /// <summary>
+    /// Schema validation tests for Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseCreated.
+    /// Grouped by domain; each section below covers one subject.
+    /// </summary>
     public class RequestAPaymentOrPayoutResponseCreatedSerializationTest : JsonTestFixture
     {
+        // ------------------------------------------------------------------------
+        // RequestAPaymentOrPayoutResponseCreated
+        // ------------------------------------------------------------------------
+
         [Fact]
         public void ShouldDeserializeCardSource()
         {
@@ -294,6 +304,50 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
             response.Processing.AcquirerTransactionId.ShouldBe("ACQ001");
             response.Processing.Scheme.ShouldBe("Mastercard");
             response.Processing.SchemeTransactionLinkId.ShouldBe("MTL-XYZ-789");
+        }
+
+        // ------------------------------------------------------------------------
+        // CustomerPhone
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldSerializeWithAllProperties()
+        {
+            var phone = new Phone { CountryCode = "+1", Number = "415 555 2671" };
+
+            Should.NotThrow(() => new JsonSerializer().Serialize(phone));
+        }
+
+        [Fact]
+        public void ShouldSerializeWithNoOptionalProperties()
+        {
+            var phone = new Phone();
+
+            Should.NotThrow(() => new JsonSerializer().Serialize(phone));
+        }
+
+        [Fact]
+        public void ShouldRoundTripSerialize()
+        {
+            var original = new Phone { CountryCode = "+44", Number = "207 946 0000" };
+            var serializer = new JsonSerializer();
+
+            var json = serializer.Serialize(original);
+            var deserialized = (Phone)serializer.Deserialize(json, typeof(Phone));
+
+            deserialized.CountryCode.ShouldBe("+44");
+            deserialized.Number.ShouldBe("207 946 0000");
+        }
+
+        [Fact]
+        public void ShouldDeserializeFromSwaggerExample()
+        {
+            const string json = @"{""country_code"":""+1"",""number"":""415 555 2671""}";
+
+            var phone = (Phone)new JsonSerializer().Deserialize(json, typeof(Phone));
+
+            phone.CountryCode.ShouldBe("+1");
+            phone.Number.ShouldBe("415 555 2671");
         }
     }
 }

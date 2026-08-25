@@ -62,6 +62,16 @@ namespace Checkout.Instruments.Get.Util
                 return new GetSepaInstrumentResponse();
             }
 
+            if (CheckoutUtils.GetEnumMemberValue(InstrumentType.Bacs).Equals(type))
+            {
+                return new GetBacsInstrumentResponse();
+            }
+
+            if (CheckoutUtils.GetEnumMemberValue(InstrumentType.Ach).Equals(type))
+            {
+                return new GetAchInstrumentResponse();
+            }
+
             return new GetInstrumentResponse(
                 CheckoutUtils.GetEnumFromStringMemberValue<InstrumentType>(type));
         }

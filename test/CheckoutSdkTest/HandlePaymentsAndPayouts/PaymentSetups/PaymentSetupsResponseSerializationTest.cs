@@ -1,18 +1,26 @@
 using Checkout.Common;
-using Checkout.Payments;
-using Checkout.Payments.Setups;
 using Checkout.Payments.Setups.Entities;
-using Shouldly;
-using System;
-using System.Collections.Generic;
-using Xunit;
+using Checkout.Payments.Setups;
+using Checkout.Payments;
 using SetupAccommodationData = Checkout.Payments.Setups.Entities.AccommodationData;
+using Shouldly;
+using System.Collections.Generic;
+using System;
+using Xunit;
 
 namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
 {
+    /// <summary>
+    /// Schema validation tests for Checkout.HandlePaymentsAndPayouts.PaymentSetups.
+    /// Grouped by domain; each section below covers one subject.
+    /// </summary>
     public class PaymentSetupsResponseSerializationTest
     {
-        private readonly JsonSerializer _serializer = new JsonSerializer();
+        private static readonly JsonSerializer Serializer = new JsonSerializer();
+
+        // ------------------------------------------------------------------------
+        // PaymentSetupsResponse
+        // ------------------------------------------------------------------------
 
         [Fact]
         public void ShouldDeserializeFullResponse()
@@ -124,7 +132,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                 }
             }";
 
-            var result = (PaymentSetupsResponse)_serializer.Deserialize(json, typeof(PaymentSetupsResponse));
+            var result = (PaymentSetupsResponse)Serializer.Deserialize(json, typeof(PaymentSetupsResponse));
 
             // Top-level
             result.Id.ShouldBe("pay_abcdefghijklmnopqrstuvwxyz01");
@@ -334,8 +342,8 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                 AvailablePaymentMethods = new List<string> { "paypal", "card" }
             };
 
-            var json = _serializer.Serialize(original);
-            var deserialized = (PaymentSetupsResponse)_serializer.Deserialize(json, typeof(PaymentSetupsResponse));
+            var json = Serializer.Serialize(original);
+            var deserialized = (PaymentSetupsResponse)Serializer.Deserialize(json, typeof(PaymentSetupsResponse));
 
             deserialized.Id.ShouldBe("pay_roundtrip_test_12345678901");
             deserialized.ProcessingChannelId.ShouldBe("pc_abcdefghijklmnopqrstuvwxyz");
@@ -407,6 +415,44 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             deserialized.AvailablePaymentMethods.Count.ShouldBe(2);
             deserialized.AvailablePaymentMethods.ShouldContain("paypal");
             deserialized.AvailablePaymentMethods.ShouldContain("card");
+        }
+
+        // ------------------------------------------------------------------------
+        // PaymentSetupsConfirmResponse
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldDeserializeConfirmResponseWithSetupsEntitiesModels()
+        {
+            const string json = @"{
+                ""id"": ""psu_y3oqhf46pyzuxjbcn2giaqnb44"",
+                ""processing_channel_id"": ""pc_q4dbxom5jbgudnjzjpz7j2z6uq"",
+                ""amount"": 10000,
+                ""currency"": ""GBP"",
+                ""payment_type"": ""Regular"",
+                ""reference"": ""REF-0987-475"",
+                ""customer"": {
+                    ""name"": ""John Smith"",
+                    ""email"": { ""address"": ""johnsmith@example.com"", ""verified"": true }
+                }
+            }";
+
+            var result =
+                (PaymentSetupsConfirmResponse)Serializer.Deserialize(json, typeof(PaymentSetupsConfirmResponse));
+
+            result.ShouldNotBeNull();
+            result.Id.ShouldBe("psu_y3oqhf46pyzuxjbcn2giaqnb44");
+            result.Amount.ShouldBe(10000L);
+            result.Currency.ShouldBe(Currency.GBP);
+            result.PaymentType.ShouldBe(PaymentType.Regular);
+
+            // The customer must be the setups Customer, whose email is a nested object
+            // (the payments CustomerResponse models email as a plain string and would not deserialize this shape).
+            result.Customer.ShouldNotBeNull();
+            result.Customer.Name.ShouldBe("John Smith");
+            result.Customer.Email.ShouldNotBeNull();
+            result.Customer.Email.Address.ShouldBe("johnsmith@example.com");
+            result.Customer.Email.Verified.ShouldBe(true);
         }
     }
 }

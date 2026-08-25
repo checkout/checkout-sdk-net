@@ -85,6 +85,11 @@ namespace Checkout.Payments.Util
                 return new PaymentContextsTabbyResponseSource();
             }
 
+            if (CheckoutUtils.GetEnumMemberValue(PaymentSourceType.Bacs).Equals(sourceType))
+            {
+                return new BacsResponseSource();
+            }
+
             return new AlternativePaymentSourceResponse();
         }
 
