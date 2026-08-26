@@ -38,10 +38,5 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         /// </summary>
         [JsonProperty(PropertyName = "3ds")]
         public ThreeDsRequest ThreeDS { get; set; }
-
-        /// <summary>
-        /// Must be specified for card-not-present (CNP) payments. Default: "Regular"
-        /// </summary>
-        public PaymentType? PaymentType { get; set; } = Checkout.Payments.PaymentType.Regular;
     }
 }

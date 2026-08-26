@@ -9,7 +9,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
     /// <summary>
     /// Request to create a payment session.
     /// </summary>
-    public class PaymentSessionCreateRequest : PaymentSessionInfo
+    public class PaymentSessionCreateRequest : PaymentSessionCreateBase
     {
         /// <summary>
         /// A timestamp specifying when the PaymentSession should expire, as an ISO 8601 code.
