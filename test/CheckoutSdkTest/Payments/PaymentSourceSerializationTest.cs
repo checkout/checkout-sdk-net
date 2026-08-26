@@ -1,3 +1,6 @@
+using System;
+using Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseCreated;
+using Checkout.HandlePaymentsAndPayouts.Payments.Common.Source;
 using Checkout.Common;
 using Checkout.Payments.Request.Source.Apm;
 using Checkout.Payments.Request.Source;
@@ -291,5 +294,75 @@ namespace Checkout.Payments
             request.FallbackSource.ExpiryMonth.ShouldBe(6);
             request.FallbackSource.ExpiryYear.ShouldBe(2030);
         }
+
+        // ------------------------------------------------------------------------
+        // PaymentCreateResponseSourceDispatch
+        // Schema validation tests for the POST /payments 201 response source. PaymentResponseSource
+        // maps card, ach, alipay_cn, bank_account, sepa and bacs. The converter throws
+        // CheckoutApiException for a type it does not recognise, so every mapped type must resolve.
+        // ------------------------------------------------------------------------
+
+        [Theory]
+        [InlineData("card")]
+        [InlineData("ach")]
+        [InlineData("alipay_cn")]
+        [InlineData("bank_account")]
+        [InlineData("sepa")]
+        [InlineData("bacs")]
+        public void ShouldResolveEveryMappedCreateResponseSourceType(string type)
+        {
+            var json = @"{""id"":""pay_mbabizu24mvu3mela5njyhpit4"",""source"":{""type"":""" +
+                       type + @""",""id"":""src_wmlfc3zyhqzehihu7giusaaawu""}}";
+
+            var response = (RequestAPaymentOrPayoutResponseCreated)Serializer
+                .Deserialize(json, typeof(RequestAPaymentOrPayoutResponseCreated));
+
+            response.Source.ShouldNotBeNull();
+            CheckoutUtils.GetEnumMemberValue(response.Source.Type.Value).ShouldBe(type);
+        }
+
+        [Fact]
+        public void ShouldDeserializeTheBacsCreateResponseSourceId()
+        {
+            const string json = @"{
+                ""id"": ""pay_mbabizu24mvu3mela5njyhpit4"",
+                ""source"": { ""type"": ""bacs"", ""id"": ""src_wmlfc3zyhqzehihu7giusaaawu"" }
+            }";
+
+            var response = (RequestAPaymentOrPayoutResponseCreated)Serializer
+                .Deserialize(json, typeof(RequestAPaymentOrPayoutResponseCreated));
+
+            var bacs = response.Source.ShouldBeOfType<HandlePaymentsAndPayouts.Payments.Common.Source.BacsSource.BacsSource>();
+            bacs.Type.ShouldBe(SourceType.Bacs);
+            bacs.Id.ShouldBe("src_wmlfc3zyhqzehihu7giusaaawu");
+        }
+
+        // ------------------------------------------------------------------------
+        // ApmRequestSourceCoverage
+        // Every wire value in the PaymentRequestSource discriminator must have a request-source
+        // class, and each must serialize its own type.
+        // ------------------------------------------------------------------------
+
+        [Theory]
+        [InlineData(typeof(RequestAlipayCnSource), "alipay_cn")]
+        [InlineData(typeof(RequestAlipayHkSource), "alipay_hk")]
+        [InlineData(typeof(RequestDanaSource), "dana")]
+        [InlineData(typeof(RequestGcashSource), "gcash")]
+        [InlineData(typeof(RequestKakaopaySource), "kakaopay")]
+        [InlineData(typeof(RequestTngSource), "tng")]
+        [InlineData(typeof(RequestTruemoneySource), "truemoney")]
+        [InlineData(typeof(RequestBacsSource), "bacs")]
+        [InlineData(typeof(RequestMobilePaySource), "mobilepay")]
+        [InlineData(typeof(RequestPayNowSource), "paynow")]
+        [InlineData(typeof(RequestSwishSource), "swish")]
+        [InlineData(typeof(RequestTwintSource), "twint")]
+        [InlineData(typeof(RequestVippsSource), "vipps")]
+        public void ShouldSerializeEachApmRequestSourceWithItsOwnType(Type sourceType, string wire)
+        {
+            var source = (AbstractRequestSource)Activator.CreateInstance(sourceType);
+
+            Serializer.Serialize(source).ShouldContain(@"""type"":""" + wire + @"""");
+        }
+
     }
 }
