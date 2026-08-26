@@ -3,7 +3,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
     /// <summary>
     /// Request to create and complete a payment session in one operation.
     /// </summary>
-    public class PaymentSessionCompleteRequest : PaymentSessionInfo
+    public class PaymentSessionCompleteRequest : PaymentSessionCreateBase
     {
         /// <summary>
         /// A unique token representing the additional customer data captured by Flow, 

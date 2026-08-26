@@ -10,33 +10,39 @@ using System.Collections.Generic;
 namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
 {
     /// <summary>
-    /// Extended base class for payment session requests that include full payment details
+    /// Extended base class for payment session requests that include full payment details.
+    ///
+    /// This class holds only the properties that every payment session request accepts, whether it
+    /// creates a session or submits a payment attempt for an existing one. Properties that only the
+    /// session creation endpoints accept live in PaymentSessionCreateBase.
     /// </summary>
     public abstract class PaymentSessionInfo : PaymentSessionBase
     {
         /// <summary>
-        /// The three-letter ISO currency code
-        /// [Required]
+        /// The three-letter ISO currency code.
+        /// Nullable so that a submit request omits it unless the caller sets it, which leaves the
+        /// value provided when the payment session was created untouched.
+        /// [Required] when creating a payment session
         /// </summary>
-        public Currency Currency { get; set; }
+        public Currency? Currency { get; set; }
 
         /// <summary>
         /// The billing details.
-        /// [Required]
+        /// [Required] when creating a payment session
         /// </summary>
         public BillingInformation Billing { get; set; }
 
         /// <summary>
-        /// Overrides the default success redirect URL configured on your account, 
+        /// Overrides the default success redirect URL configured on your account,
         /// for payment methods that require a redirect.
-        /// [Required]
+        /// [Required] when creating a payment session
         /// </summary>
         public string SuccessUrl { get; set; }
 
         /// <summary>
-        /// Overrides the default failure redirect URL configured on your account, 
+        /// Overrides the default failure redirect URL configured on your account,
         /// for payment methods that require a redirect.
-        /// [Required]
+        /// [Required] when creating a payment session
         /// </summary>
         public string FailureUrl { get; set; }
 
@@ -46,17 +52,12 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         public BillingDescriptor BillingDescriptor { get; set; }
 
         /// <summary>
-        /// A description for the payment.
-        /// </summary>
-        public string Description { get; set; }
-
-        /// <summary>
         /// The customer's details. Required if source.type is tamara.
         /// </summary>
         public Customer.Customer Customer { get; set; }
 
         /// <summary>
-        /// The shipping details
+        /// The shipping details.
         /// </summary>
         public ShippingDetails Shipping { get; set; }
 
@@ -66,7 +67,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         public PaymentRecipient Recipient { get; set; }
 
         /// <summary>
-        /// Use the processing object to influence or override the data sent during card processing
+        /// Use the processing object to influence or override the data sent during card processing.
         /// </summary>
         public ProcessingSettings Processing { get; set; }
 
@@ -82,18 +83,9 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
 
         /// <summary>
         /// The sub-entities that the payment is being processed on behalf of.
+        /// min 1 max 50 items
         /// </summary>
         public IList<AmountAllocations> AmountAllocations { get; set; }
-
-        /// <summary>
-        /// Configures the risk assessment performed during payment processing.
-        /// </summary>
-        public RiskRequest Risk { get; set; }
-
-        /// <summary>
-        /// The merchant's display name.
-        /// </summary>
-        public string DisplayName { get; set; }
 
         /// <summary>
         /// Allows you to store additional information about a transaction with custom fields.
@@ -101,37 +93,14 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         public Dictionary<string, object> Metadata { get; set; }
 
         /// <summary>
-        /// Creates a translated version of the page in the specified language. Default: "en-GB"
-        /// </summary>
-        public LocaleType? Locale { get; set; } = LocaleType.EnGb;
-
-        /// <summary>
         /// The sender of the payment.
         /// </summary>
         public PaymentSender Sender { get; set; }
 
         /// <summary>
-        /// Specifies whether to capture the payment, if applicable. Default: true
-        /// </summary>
-        public bool? Capture { get; set; } = true;
-
-        /// <summary>
         /// A timestamp specifying when to capture the payment, as an ISO 8601 code.
+        /// If a value is provided, capture is automatically set to true by the API.
         /// </summary>
         public DateTime? CaptureOn { get; set; }
-
-        /// <summary>
-        /// The authorization type.
-        /// [Optional]
-        /// Enum: "Final" "Estimated"
-        /// Default: "Final"
-        /// </summary>
-        public AuthorizationType? AuthorizationType { get; set; }
-
-        /// <summary>
-        /// The information to process a recurring payment request. To be used when the payment_type is Recurring.
-        /// [Optional]
-        /// </summary>
-        public PaymentPlan PaymentPlan { get; set; }
     }
 }
