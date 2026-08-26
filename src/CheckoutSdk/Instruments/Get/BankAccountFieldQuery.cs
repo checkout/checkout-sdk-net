@@ -21,6 +21,6 @@ namespace Checkout.Instruments.Get
         /// [Optional]
         /// </summary>
         [JsonProperty(PropertyName = "payment-network")]
-        public PaymentNetwork PaymentNetwork { get; set; }
+        public PaymentNetwork? PaymentNetwork { get; set; }
     }
 }

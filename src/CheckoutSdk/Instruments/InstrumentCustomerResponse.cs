@@ -30,6 +30,6 @@ namespace Checkout.Instruments
         /// This will be true if this instrument is set as the default for the customer.
         /// [Optional]
         /// </summary>
-        public bool Default { get; set; }
+        public bool? Default { get; set; }
     }
 }

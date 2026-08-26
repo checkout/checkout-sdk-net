@@ -2,6 +2,7 @@ using Checkout.Common;
 using Checkout.Instruments.Create;
 using Checkout.Instruments.Get;
 using Checkout.Instruments.Update;
+using UpdateInstrumentResponse = Checkout.Instruments.Update.UpdateInstrumentResponse;
 using Shouldly;
 using Xunit;
 
@@ -323,6 +324,201 @@ namespace Checkout.Instruments
             var deserialized = (BankAccountField)Serializer.Deserialize(json, typeof(BankAccountField));
             deserialized.MinLength.ShouldBe(15);
             deserialized.MaxLength.ShouldBe(34);
+        }
+
+        // ------------------------------------------------------------------------
+        // OptionalRequestFields
+        // Schema validation tests asserting the SDK does not send values the caller never set.
+        // Both of these fields are optional in the specification, so a non-nullable CLR type would
+        // serialize its default and silently change the request.
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldNotSendAPaymentNetworkThatWasNotSet()
+        {
+            var query = new BankAccountFieldQuery { AccountHolderType = AccountHolderType.Corporate };
+
+            var json = Serializer.Serialize(query);
+
+            json.ShouldBe(@"{""account-holder-type"":""corporate""}");
+            json.ShouldNotContain("payment-network");
+        }
+
+        [Fact]
+        public void ShouldSendThePaymentNetworkWhenItIsSet()
+        {
+            var query = new BankAccountFieldQuery { PaymentNetwork = PaymentNetwork.Sepa };
+
+            Serializer.Serialize(query).ShouldContain(@"""payment-network"":""sepa""");
+        }
+
+        [Fact]
+        public void ShouldNotSendADefaultFlagThatWasNotSet()
+        {
+            var customer = new CreateCustomerInstrumentRequest { Id = "cus_y3oqhf46pyzuxjbcn2giaqnb44" };
+
+            var json = Serializer.Serialize(customer);
+
+            json.ShouldBe(@"{""id"":""cus_y3oqhf46pyzuxjbcn2giaqnb44""}");
+            json.ShouldNotContain("default");
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ShouldSendTheDefaultFlagWhenItIsSet(bool value)
+        {
+            var customer = new CreateCustomerInstrumentRequest { Id = "cus_x", Default = value };
+
+            Serializer.Serialize(customer)
+                .ShouldContain(@"""default"":" + (value ? "true" : "false"));
+        }
+
+        // ------------------------------------------------------------------------
+        // InstrumentResponseDispatch
+        // Schema validation tests for the polymorphic instrument response converters. A payload
+        // without a type discriminator must degrade to the base response rather than throw.
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldNotThrowDeserializingAnInstrumentResponseWithoutAType()
+        {
+            const string json = @"{""id"":""src_wmlfc3zyhqzehihu7giusaaawu""}";
+
+            var get = (GetInstrumentResponse)Serializer.Deserialize(json, typeof(GetInstrumentResponse));
+            get.Type.ShouldBeNull();
+            get.Id.ShouldBe("src_wmlfc3zyhqzehihu7giusaaawu");
+
+            var create = (CreateInstrumentResponse)Serializer.Deserialize(json, typeof(CreateInstrumentResponse));
+            create.Type.ShouldBeNull();
+
+            var update = (UpdateInstrumentResponse)Serializer.Deserialize(json, typeof(UpdateInstrumentResponse));
+            update.Type.ShouldBeNull();
+        }
+
+        [Fact]
+        public void ShouldReturnNullResolvingAnEnumFromANullWireValue()
+        {
+            CheckoutUtils.GetEnumFromStringMemberValue<InstrumentType>(null).ShouldBeNull();
+        }
+
+        // ------------------------------------------------------------------------
+        // AccountHolderType
+        // Schema validation tests for Checkout.Common.AccountHolderType, which the
+        // account-holder-type query parameter and the AccountHolder schema declare as individual,
+        // corporate and government.
+        // ------------------------------------------------------------------------
+
+        [Theory]
+        [InlineData(AccountHolderType.Individual, "individual")]
+        [InlineData(AccountHolderType.Corporate, "corporate")]
+        [InlineData(AccountHolderType.Government, "government")]
+        public void ShouldMapEveryCommonAccountHolderTypeToItsWireValue(AccountHolderType type, string wire)
+        {
+            CheckoutUtils.GetEnumMemberValue(type).ShouldBe(wire);
+            CheckoutUtils.GetEnumFromStringMemberValue<AccountHolderType>(wire).ShouldBe(type);
+        }
+
+        [Fact]
+        public void ShouldFilterBankAccountFieldsByGovernmentAccountHolder()
+        {
+            var query = new BankAccountFieldQuery { AccountHolderType = AccountHolderType.Government };
+
+            Serializer.Serialize(query).ShouldContain(@"""account-holder-type"":""government""");
+        }
+
+        // ------------------------------------------------------------------------
+        // GetCardInstrumentResponse
+        // Schema validation tests for GetCardInstrumentResponse. Covers all 20 properties, including
+        // the inherited ones, against the RetrieveCardInstrumentResponse swagger schema.
+        // ------------------------------------------------------------------------
+
+        private const string CardInstrumentJson = @"{
+            ""type"": ""card"",
+            ""id"": ""src_wmlfc3zyhqzehihu7giusaaawu"",
+            ""fingerprint"": ""vnsdrvikkvre3dtrjjvlm5du4q"",
+            ""encrypted_card_number"": ""eyJhbGciOiJSU0EtT0FFUC0yNTYi"",
+            ""expiry_month"": 6,
+            ""expiry_year"": 2027,
+            ""name"": ""Bruce Wayne"",
+            ""scheme"": ""VISA"",
+            ""scheme_local"": ""cartes_bancaires"",
+            ""last4"": ""9996"",
+            ""bin"": ""454347"",
+            ""card_type"": ""CREDIT"",
+            ""card_category"": ""CONSUMER"",
+            ""issuer"": ""GOTHAM STATE BANK"",
+            ""issuer_country"": ""GB"",
+            ""product_id"": ""F"",
+            ""product_type"": ""Visa Classic"",
+            ""card_wallet_type"": ""applepay"",
+            ""regulated_indicator"": true,
+            ""network_token"": {
+                ""id"": ""nt_wmlfc3zyhqzehihu7giusaaawu"",
+                ""state"": ""active""
+            },
+            ""customer"": {
+                ""id"": ""cus_y3oqhf46pyzuxjbcn2giaqnb44"",
+                ""email"": ""brucewayne@gmail.com"",
+                ""name"": ""Bruce Wayne"",
+                ""default"": true
+            }
+        }";
+
+        [Fact]
+        public void ShouldDeserializeEveryPropertyOfTheCardInstrumentRetrieveResponse()
+        {
+            var r = (GetCardInstrumentResponse)Serializer
+                .Deserialize(CardInstrumentJson, typeof(GetCardInstrumentResponse));
+
+            r.Type.ShouldBe(InstrumentType.Card);
+            r.Id.ShouldBe("src_wmlfc3zyhqzehihu7giusaaawu");
+            r.Fingerprint.ShouldBe("vnsdrvikkvre3dtrjjvlm5du4q");
+            r.EncryptedCardNumber.ShouldBe("eyJhbGciOiJSU0EtT0FFUC0yNTYi");
+            r.ExpiryMonth.ShouldBe(6);
+            r.ExpiryYear.ShouldBe(2027);
+            r.Name.ShouldBe("Bruce Wayne");
+            r.Scheme.ShouldBe("VISA");
+            r.SchemeLocal.ShouldBe("cartes_bancaires");
+            r.Last4.ShouldBe("9996");
+            r.Bin.ShouldBe("454347");
+            r.CardType.ShouldBe(Common.CardType.Credit);
+            r.CardCategory.ShouldBe(Common.CardCategory.Consumer);
+            r.Issuer.ShouldBe("GOTHAM STATE BANK");
+            r.IssuerCountry.ShouldBe(CountryCode.GB);
+            r.ProductId.ShouldBe("F");
+            r.ProductType.ShouldBe("Visa Classic");
+            r.CardWalletType.ShouldBe(Common.CardWalletType.Applepay);
+            r.RegulatedIndicator.ShouldBe(true);
+            r.NetworkToken.ShouldNotBeNull();
+            r.NetworkToken.Id.ShouldBe("nt_wmlfc3zyhqzehihu7giusaaawu");
+            r.NetworkToken.State.ShouldBe(InstrumentNetworkTokenState.Active);
+            r.Customer.ShouldNotBeNull();
+            r.Customer.Id.ShouldBe("cus_y3oqhf46pyzuxjbcn2giaqnb44");
+            r.Customer.Default.ShouldBe(true);
+        }
+
+        [Fact]
+        public void ShouldRoundTripTheCardInstrumentRetrieveResponse()
+        {
+            var original = (GetCardInstrumentResponse)Serializer
+                .Deserialize(CardInstrumentJson, typeof(GetCardInstrumentResponse));
+
+            var json = Serializer.Serialize(original);
+
+            json.ShouldContain("\"encrypted_card_number\":");
+            json.ShouldContain("\"card_wallet_type\":\"applepay\"");
+            json.ShouldContain("\"regulated_indicator\":true");
+            json.ShouldContain("\"network_token\":");
+
+            var d = (GetCardInstrumentResponse)Serializer
+                .Deserialize(json, typeof(GetCardInstrumentResponse));
+
+            d.EncryptedCardNumber.ShouldBe(original.EncryptedCardNumber);
+            d.CardWalletType.ShouldBe(original.CardWalletType);
+            d.RegulatedIndicator.ShouldBe(original.RegulatedIndicator);
+            d.NetworkToken.Id.ShouldBe(original.NetworkToken.Id);
+            d.NetworkToken.State.ShouldBe(original.NetworkToken.State);
         }
     }
 }

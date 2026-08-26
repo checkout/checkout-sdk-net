@@ -12,6 +12,13 @@ namespace Checkout.Instruments.Get
         }
 
         /// <summary>
+        /// The JWE-encrypted full card number. This is only present if your level of PCI compliance
+        /// is SAQ-D.
+        /// [Optional]
+        /// </summary>
+        public string EncryptedCardNumber { get; set; }
+
+        /// <summary>
         /// The expiry month.
         /// [Required]
         /// Minimum value 1. max 2 characters
@@ -93,5 +100,23 @@ namespace Checkout.Instruments.Get
         /// [Optional]
         /// </summary>
         public string ProductType { get; set; }
+
+        /// <summary>
+        /// The network token details.
+        /// [Optional]
+        /// </summary>
+        public InstrumentNetworkToken NetworkToken { get; set; }
+
+        /// <summary>
+        /// The type of digital wallet used for the card.
+        /// [Optional]
+        /// </summary>
+        public CardWalletType? CardWalletType { get; set; }
+
+        /// <summary>
+        /// Indicates whether the instrument is regulated debit.
+        /// [Required]
+        /// </summary>
+        public bool? RegulatedIndicator { get; set; }
     }
 }
