@@ -79,12 +79,10 @@ namespace Checkout.Instruments.Update
         public AccountHolder AccountHolder { get; set; }
 
         /// <summary>
-        /// Not aligned with the API specification. The specification declares this field as bank,
-        /// but this property serializes as bank_details, which the API does not accept. There is no
-        /// property on this class that serializes as bank, so the bank details cannot currently be
-        /// sent on a bank account instrument update.
+        /// The bank details.
+        /// [Optional]
         /// </summary>
-        public BankDetails BankDetails { get; set; }
+        public BankDetails Bank { get; set; }
 
         /// <summary>
         /// The customer details.

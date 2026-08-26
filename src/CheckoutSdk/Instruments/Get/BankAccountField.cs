@@ -58,11 +58,8 @@ namespace Checkout.Instruments.Get
         /// <summary>
         /// The maximum length of the field.
         /// [Optional]
-        /// Not aligned with the API specification: the specification declares this field as
-        /// max_length, but this property serializes and deserializes as maxlength, so the API
-        /// response never populates it.
         /// </summary>
-        public int? Maxlength { get; set; }
+        public int? MaxLength { get; set; }
 
         /// <summary>
         /// The allowed options for the field.
