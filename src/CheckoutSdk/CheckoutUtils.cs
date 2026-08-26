@@ -37,6 +37,11 @@ namespace Checkout
             where T : struct, IConvertible
         {
             ValidateEnumType<T>();
+            if (value == null)
+            {
+                return null;
+            }
+
             foreach (T enumValue in Enum.GetValues(typeof(T)))
             {
                 var name = GetEnumMemberValue(enumValue);

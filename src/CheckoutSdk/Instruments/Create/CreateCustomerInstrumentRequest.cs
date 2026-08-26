@@ -41,6 +41,6 @@ namespace Checkout.Instruments.Create
         /// created as a result of this request, the instrument will automatically be the default.
         /// [Optional]
         /// </summary>
-        public bool Default { get; set; }
+        public bool? Default { get; set; }
     }
 }
