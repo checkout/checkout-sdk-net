@@ -11,6 +11,13 @@ namespace Checkout.Instruments.Update
         }
 
         /// <summary>
+        /// The unique identifier of the payment source or destination that can be used later for
+        /// payments.
+        /// [Required]
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
         /// A token that can uniquely identify this instrument across all customers.
         /// [Required]
         /// Pattern: ^([a-z0-9]{26})$

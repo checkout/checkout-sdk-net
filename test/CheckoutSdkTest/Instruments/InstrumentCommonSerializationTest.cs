@@ -520,5 +520,40 @@ namespace Checkout.Instruments
             d.NetworkToken.Id.ShouldBe(original.NetworkToken.Id);
             d.NetworkToken.State.ShouldBe(original.NetworkToken.State);
         }
+
+        // ------------------------------------------------------------------------
+        // UpdateInstrumentResponseId
+        // Schema validation tests asserting id is declared only on the Bacs update response.
+        // UpdateBankInstrumentResponse and UpdateCardInstrumentResponse declare type and fingerprint
+        // only, so they must not expose an id.
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldExposeAnIdOnlyOnTheBacsUpdateResponse()
+        {
+            typeof(UpdateBacsInstrumentResponse).GetProperty("Id").ShouldNotBeNull();
+            typeof(UpdateBankInstrumentResponse).GetProperty("Id").ShouldBeNull();
+            typeof(UpdateCardInstrumentResponse).GetProperty("Id").ShouldBeNull();
+            typeof(Instruments.Update.UpdateInstrumentResponse).GetProperty("Id").ShouldBeNull();
+        }
+
+        [Fact]
+        public void ShouldDeserializeTheIdOnTheBacsUpdateResponse()
+        {
+            const string json = @"{
+                ""type"": ""bacs"",
+                ""id"": ""src_wmlfc3zyhqzehihu7giusaaawu"",
+                ""fingerprint"": ""vnsdrvikkvre3dtrjjvlm5du4q""
+            }";
+
+            var response = (Instruments.Update.UpdateInstrumentResponse)Serializer
+                .Deserialize(json, typeof(Instruments.Update.UpdateInstrumentResponse));
+
+            var bacs = response.ShouldBeOfType<UpdateBacsInstrumentResponse>();
+            bacs.Type.ShouldBe(InstrumentType.Bacs);
+            bacs.Id.ShouldBe("src_wmlfc3zyhqzehihu7giusaaawu");
+            bacs.Fingerprint.ShouldBe("vnsdrvikkvre3dtrjjvlm5du4q");
+        }
+
     }
 }

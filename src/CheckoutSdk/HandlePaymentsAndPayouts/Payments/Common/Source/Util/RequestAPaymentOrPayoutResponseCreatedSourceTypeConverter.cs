@@ -68,6 +68,21 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.Util
                 return new CardSource.CardSource();
             }
 
+            if (CheckoutUtils.GetEnumMemberValue(SourceType.Ach).Equals(sourceType))
+            {
+                return new AchSource.AchSource();
+            }
+
+            if (CheckoutUtils.GetEnumMemberValue(SourceType.Bacs).Equals(sourceType))
+            {
+                return new BacsSource.BacsSource();
+            }
+
+            if (CheckoutUtils.GetEnumMemberValue(SourceType.BankAccount).Equals(sourceType))
+            {
+                return new BankAccountSource.BankAccountSource();
+            }
+
             if (CheckoutUtils.GetEnumMemberValue(SourceType.Afterpay).Equals(sourceType))
             {
                 return new AfterpaySource.AfterpaySource();
@@ -294,6 +309,9 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.Util
         {
             // Check all known SourceType enum values
             return CheckoutUtils.GetEnumMemberValue(SourceType.Card).Equals(sourceType) ||
+                   CheckoutUtils.GetEnumMemberValue(SourceType.Ach).Equals(sourceType) ||
+                   CheckoutUtils.GetEnumMemberValue(SourceType.Bacs).Equals(sourceType) ||
+                   CheckoutUtils.GetEnumMemberValue(SourceType.BankAccount).Equals(sourceType) ||
                    CheckoutUtils.GetEnumMemberValue(SourceType.Afterpay).Equals(sourceType) ||
                    CheckoutUtils.GetEnumMemberValue(SourceType.AlipayCn).Equals(sourceType) ||
                    CheckoutUtils.GetEnumMemberValue(SourceType.AlipayHk).Equals(sourceType) ||

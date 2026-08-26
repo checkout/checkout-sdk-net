@@ -13,13 +13,6 @@ namespace Checkout.Instruments.Update
         /// </summary>
         public InstrumentType? Type { get; set; }
 
-        /// <summary>
-        /// The unique identifier of the payment source or destination that can be used later for
-        /// payments. Declared by the Bacs variant only.
-        /// [Optional]
-        /// </summary>
-        public string Id { get; set; }
-
         public UpdateInstrumentResponse(InstrumentType? type)
         {
             Type = type;
