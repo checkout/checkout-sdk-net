@@ -80,12 +80,6 @@ namespace Checkout.Instruments.Create
         public AccountHolder AccountHolder { get; set; }
 
         /// <summary>
-        /// Not declared in the API specification. This property serializes as bank_details, which
-        /// the API does not accept. Use Bank instead.
-        /// </summary>
-        public BankDetails BankDetails { get; set; }
-
-        /// <summary>
         /// The bank details.
         /// [Optional]
         /// </summary>

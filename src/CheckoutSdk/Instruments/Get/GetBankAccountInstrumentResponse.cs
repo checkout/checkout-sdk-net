@@ -66,10 +66,9 @@ namespace Checkout.Instruments.Get
         public CountryCode? Country { get; set; }
 
         /// <summary>
-        /// Not aligned with the API specification. The specification declares this field as bank,
-        /// but this property serializes and deserializes as bank_details, so the API response never
-        /// populates it.
+        /// The bank details.
+        /// [Optional]
         /// </summary>
-        public BankDetails BankDetails { get; set; }
+        public BankDetails Bank { get; set; }
     }
 }

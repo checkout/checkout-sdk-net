@@ -1,5 +1,7 @@
+using Checkout.Common;
 using Checkout.Instruments.Create;
 using Checkout.Instruments.Get;
+using Checkout.Instruments.Update;
 using Shouldly;
 using Xunit;
 
@@ -191,6 +193,136 @@ namespace Checkout.Instruments
         {
             CheckoutUtils.GetEnumMemberValue(state).ShouldBe(wire);
             CheckoutUtils.GetEnumFromStringMemberValue<InstrumentNetworkTokenState>(wire).ShouldBe(state);
+        }
+
+        // ------------------------------------------------------------------------
+        // BankAccountInstrumentBankDetails
+        // Schema validation tests pinning the bank details field to the wire name the specification
+        // declares. StoreBankAccountInstrumentRequest, UpdateBankInstrumentRequest and
+        // RetrieveBankAccountInstrumentResponse all declare it as bank. These classes previously
+        // exposed it as BankDetails, which serialized as bank_details and was never accepted or
+        // populated.
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldSerializeBankAsBankOnTheBankAccountStoreRequest()
+        {
+            var request = new CreateBankAccountInstrumentRequest
+            {
+                Currency = Currency.GBP,
+                Country = CountryCode.GB,
+                Bank = new BankDetails { Name = "Lloyds TSB", Branch = "Bournemouth" }
+            };
+
+            var json = Serializer.Serialize(request);
+
+            json.ShouldContain("\"bank\":");
+            json.ShouldContain("\"name\":\"Lloyds TSB\"");
+            json.ShouldContain("\"branch\":\"Bournemouth\"");
+            json.ShouldNotContain("bank_details");
+            typeof(CreateBankAccountInstrumentRequest).GetProperty("BankDetails").ShouldBeNull();
+        }
+
+        [Fact]
+        public void ShouldSerializeBankAsBankOnTheBankAccountUpdateRequest()
+        {
+            var request = new UpdateBankInstrumentRequest
+            {
+                Bank = new BankDetails { Name = "Lloyds TSB", Branch = "Bournemouth" }
+            };
+
+            var json = Serializer.Serialize(request);
+
+            json.ShouldContain("\"bank\":");
+            json.ShouldNotContain("bank_details");
+            typeof(UpdateBankInstrumentRequest).GetProperty("BankDetails").ShouldBeNull();
+        }
+
+        [Fact]
+        public void ShouldDeserializeBankFromBankOnTheBankAccountRetrieveResponse()
+        {
+            const string json = @"{
+                ""type"": ""bank_account"",
+                ""id"": ""src_wmlfc3zyhqzehihu7giusaaawu"",
+                ""fingerprint"": ""vnsdrvikkvre3dtrjjvlm5du4q"",
+                ""currency"": ""GBP"",
+                ""country"": ""GB"",
+                ""bank"": {
+                    ""name"": ""Lloyds TSB"",
+                    ""branch"": ""Bournemouth""
+                }
+            }";
+
+            var response = (GetBankAccountInstrumentResponse)Serializer
+                .Deserialize(json, typeof(GetBankAccountInstrumentResponse));
+
+            response.Bank.ShouldNotBeNull();
+            response.Bank.Name.ShouldBe("Lloyds TSB");
+            response.Bank.Branch.ShouldBe("Bournemouth");
+            typeof(GetBankAccountInstrumentResponse).GetProperty("BankDetails").ShouldBeNull();
+        }
+
+        // ------------------------------------------------------------------------
+        // BankAccountField
+        // Schema validation tests for the bank account field formatting response. BankAccountFields
+        // declares the field length bounds as min_length and max_length. MaxLength was previously
+        // spelled Maxlength, which serialized as maxlength and was never populated.
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldDeserializeBankAccountFieldLengthBounds()
+        {
+            const string json = @"{
+                ""sections"": [{
+                    ""name"": ""Account details"",
+                    ""fields"": [{
+                        ""id"": ""accountNumber"",
+                        ""section"": ""Account details"",
+                        ""display"": ""Account number"",
+                        ""help_text"": ""Enter the account number"",
+                        ""type"": ""string"",
+                        ""required"": true,
+                        ""validation_regex"": ""^[0-9]{8}$"",
+                        ""min_length"": 8,
+                        ""max_length"": 8,
+                        ""allowed_options"": [{ ""id"": ""opt_1"", ""display"": ""Option 1"" }],
+                        ""dependencies"": [{ ""field_id"": ""country"", ""value"": ""GB"" }]
+                    }]
+                }]
+            }";
+
+            var response = (BankAccountFieldResponse)Serializer
+                .Deserialize(json, typeof(BankAccountFieldResponse));
+
+            var field = response.Sections.ShouldHaveSingleItem().Fields.ShouldHaveSingleItem();
+            field.Id.ShouldBe("accountNumber");
+            field.Section.ShouldBe("Account details");
+            field.Display.ShouldBe("Account number");
+            field.HelpText.ShouldBe("Enter the account number");
+            field.Type.ShouldBe("string");
+            field.Required.ShouldBe(true);
+            field.ValidationRegex.ShouldBe("^[0-9]{8}$");
+            field.MinLength.ShouldBe(8);
+            field.MaxLength.ShouldBe(8);
+            field.AllowedOptions.ShouldHaveSingleItem().Id.ShouldBe("opt_1");
+            field.Dependencies.ShouldHaveSingleItem().FieldId.ShouldBe("country");
+            typeof(BankAccountField).GetProperty("Maxlength").ShouldBeNull();
+        }
+
+        [Fact]
+        public void ShouldRoundTripBankAccountFieldLengthBounds()
+        {
+            var original = new BankAccountField { Id = "iban", MinLength = 15, MaxLength = 34 };
+
+            var json = Serializer.Serialize(original);
+
+            json.ShouldContain("\"min_length\":15");
+            json.ShouldContain("\"max_length\":34");
+            json.ShouldNotContain("maxlength");
+
+            var deserialized = (BankAccountField)Serializer.Deserialize(json, typeof(BankAccountField));
+            deserialized.MinLength.ShouldBe(15);
+            deserialized.MaxLength.ShouldBe(34);
         }
     }
 }
