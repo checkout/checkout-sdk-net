@@ -97,5 +97,35 @@ namespace Checkout.Accounts
             schedule.CarryForwardEnabled.ShouldBeNull();
             schedule.PaymentInstrumentId.ShouldBeNull();
         }
+    
+        /// <summary>
+        /// The OpenAPI spec (GetScheduleResponse) nests everything under a per-currency
+        /// recurrence wrapper with the frequency in an inner schedule object. Every typed
+        /// SDK (this one, Java, Go) models the flat shape asserted above and their
+        /// integration suites pass against the live API, so the flat shape is treated as
+        /// the real contract and the spec wording as a spec bug (reported). This test
+        /// documents how a spec-shaped payload behaves today: if it ever starts mapping,
+        /// the API moved and the model must follow.
+        /// </summary>
+        [Fact]
+        public void ShouldNotMapASpecShapedResponse()
+        {
+            const string json = "{\"recurrence\":{\"enabled\":true,\"threshold\":100," +
+                                "\"balance_minimum\":500,\"carry_forward_enabled\":true," +
+                                "\"payment_instrument_id\":\"ppi_w4jelhppmfiufdnatam37wrfc4\"," +
+                                "\"schedule\":{\"frequency\":\"weekly\",\"by_day\":[\"monday\"]}}}";
+
+            CurrencySchedule schedule = null;
+            System.Exception thrown = Record.Exception(() =>
+                schedule = (CurrencySchedule)_serializer.Deserialize(json, typeof(CurrencySchedule)));
+
+            if (thrown == null)
+            {
+                schedule.Enabled.ShouldBeNull();
+                schedule.Threshold.ShouldBeNull();
+                schedule.BalanceMinimum.ShouldBeNull();
+                schedule.PaymentInstrumentId.ShouldBeNull();
+            }
+        }
     }
 }
