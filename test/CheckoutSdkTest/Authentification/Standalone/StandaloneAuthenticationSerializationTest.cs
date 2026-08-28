@@ -356,7 +356,7 @@ namespace Checkout.Authentification.Standalone
             var response = Deserialize<GetSessionDetailsResponseOk>();
 
             response.AuthenticationDate.ShouldNotBeNull();
-            response.AuthenticationDate.Value.ToUniversalTime()
+            response.AuthenticationDate.GetValueOrDefault().ToUniversalTime()
                 .ShouldBe(new DateTime(2026, 8, 3, 10, 11, 12, DateTimeKind.Utc));
         }
 
