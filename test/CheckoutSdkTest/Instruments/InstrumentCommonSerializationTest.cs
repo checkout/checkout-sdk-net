@@ -1,3 +1,4 @@
+using System;
 using Checkout.Common;
 using Checkout.Instruments.Create;
 using Checkout.Instruments.Get;
@@ -523,25 +524,42 @@ namespace Checkout.Instruments
 
         // ------------------------------------------------------------------------
         // UpdateInstrumentResponseId
-        // Schema validation tests asserting id is declared only on the Bacs update response.
-        // UpdateBankInstrumentResponse and UpdateCardInstrumentResponse declare type and fingerprint
-        // only, so they must not expose an id.
+        // Schema validation tests asserting where id is declared on the update responses.
+        // UpdateSepaInstrumentResponse, UpdateAchInstrumentResponse and
+        // UpdateBacsInstrumentResponse require type, id and fingerprint. UpdateCardInstrumentResponse
+        // and UpdateBankInstrumentResponse require type and fingerprint only, so they must not
+        // expose an id, and neither must the base, which declares no properties of its own.
         // ------------------------------------------------------------------------
 
-        [Fact]
-        public void ShouldExposeAnIdOnlyOnTheBacsUpdateResponse()
+        [Theory]
+        [InlineData(typeof(UpdateSepaInstrumentResponse))]
+        [InlineData(typeof(UpdateAchInstrumentResponse))]
+        [InlineData(typeof(UpdateBacsInstrumentResponse))]
+        public void ShouldExposeAnIdOnTheTypedUpdateResponses(Type responseType)
         {
-            typeof(UpdateBacsInstrumentResponse).GetProperty("Id").ShouldNotBeNull();
-            typeof(UpdateBankInstrumentResponse).GetProperty("Id").ShouldBeNull();
-            typeof(UpdateCardInstrumentResponse).GetProperty("Id").ShouldBeNull();
-            typeof(Instruments.Update.UpdateInstrumentResponse).GetProperty("Id").ShouldBeNull();
+            responseType.GetProperty("Id").ShouldNotBeNull();
         }
 
-        [Fact]
-        public void ShouldDeserializeTheIdOnTheBacsUpdateResponse()
+        [Theory]
+        [InlineData(typeof(UpdateCardInstrumentResponse))]
+        [InlineData(typeof(UpdateBankInstrumentResponse))]
+        [InlineData(typeof(Instruments.Update.UpdateInstrumentResponse))]
+        public void ShouldNotExposeAnIdOnTheUntypedUpdateResponses(Type responseType)
         {
-            const string json = @"{
-                ""type"": ""bacs"",
+            responseType.GetProperty("Id").ShouldBeNull();
+        }
+
+        [Theory]
+        [InlineData("sepa", InstrumentType.Sepa, typeof(UpdateSepaInstrumentResponse))]
+        [InlineData("ach", InstrumentType.Ach, typeof(UpdateAchInstrumentResponse))]
+        [InlineData("bacs", InstrumentType.Bacs, typeof(UpdateBacsInstrumentResponse))]
+        public void ShouldDeserializeTheIdOnTheTypedUpdateResponses(
+            string wireType,
+            InstrumentType expectedType,
+            Type expectedResponseType)
+        {
+            var json = @"{
+                ""type"": """ + wireType + @""",
                 ""id"": ""src_wmlfc3zyhqzehihu7giusaaawu"",
                 ""fingerprint"": ""vnsdrvikkvre3dtrjjvlm5du4q""
             }";
@@ -549,10 +567,19 @@ namespace Checkout.Instruments
             var response = (Instruments.Update.UpdateInstrumentResponse)Serializer
                 .Deserialize(json, typeof(Instruments.Update.UpdateInstrumentResponse));
 
-            var bacs = response.ShouldBeOfType<UpdateBacsInstrumentResponse>();
-            bacs.Type.ShouldBe(InstrumentType.Bacs);
-            bacs.Id.ShouldBe("src_wmlfc3zyhqzehihu7giusaaawu");
-            bacs.Fingerprint.ShouldBe("vnsdrvikkvre3dtrjjvlm5du4q");
+            response.ShouldBeOfType(expectedResponseType);
+            response.Type.ShouldBe(expectedType);
+            ReadProperty(response, "Id").ShouldBe("src_wmlfc3zyhqzehihu7giusaaawu");
+            ReadProperty(response, "Fingerprint").ShouldBe("vnsdrvikkvre3dtrjjvlm5du4q");
+        }
+
+        // The sepa, ach and bacs update responses declare id and fingerprint themselves; the base
+        // declares no properties of its own, so the values are read off the concrete instance.
+        private static string ReadProperty(object response, string name)
+        {
+            var property = response.GetType().GetProperty(name);
+            property.ShouldNotBeNull();
+            return (string)property.GetValue(response);
         }
 
     }

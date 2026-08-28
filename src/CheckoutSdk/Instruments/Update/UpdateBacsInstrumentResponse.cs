@@ -2,7 +2,9 @@ namespace Checkout.Instruments.Update
 {
     /// <summary>
     /// Update Bacs Direct Debit account instrument response.
-    /// The type and id are inherited from UpdateInstrumentResponse.
+    /// The type is inherited from UpdateInstrumentResponse. The id is declared per
+    /// variant: the sepa, ach and bacs update responses have one, card and
+    /// bank_account do not.
     /// </summary>
     public class UpdateBacsInstrumentResponse : UpdateInstrumentResponse
     {
