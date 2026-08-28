@@ -586,6 +586,11 @@ namespace Checkout.Instruments
                 .Deserialize(json, typeof(UpdateInstrumentResponse));
 
             response.ShouldBeOfType(expected);
+
+            // sepa, ach and bacs each declare a required id, so the value must survive dispatch.
+            var id = expected.GetProperty("Id");
+            id.ShouldNotBeNull();
+            id.GetValue(response).ShouldBe("src_wmlfc3zyhqzehihu7giusaaawu");
         }
 
         [Theory]

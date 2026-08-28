@@ -321,20 +321,39 @@ namespace Checkout.Payments
             CheckoutUtils.GetEnumMemberValue(response.Source.Type.Value).ShouldBe(type);
         }
 
-        [Fact]
-        public void ShouldDeserializeTheBacsCreateResponseSourceId()
+        // Every type that PaymentResponseSource maps to PaymentDeclinedSourceResponse must keep the
+        // id, which that schema declares required alongside type.
+        [Theory]
+        [InlineData("ach", SourceType.Ach,
+            typeof(HandlePaymentsAndPayouts.Payments.Common.Source.AchSource.AchSource))]
+        [InlineData("alipay_cn", SourceType.AlipayCn,
+            typeof(HandlePaymentsAndPayouts.Payments.Common.Source.AlipayCnSource.AlipayCnSource))]
+        [InlineData("bank_account", SourceType.BankAccount,
+            typeof(HandlePaymentsAndPayouts.Payments.Common.Source.BankAccountSource.BankAccountSource))]
+        [InlineData("sepa", SourceType.Sepa,
+            typeof(HandlePaymentsAndPayouts.Payments.Common.Source.SepaSource.SepaSource))]
+        [InlineData("bacs", SourceType.Bacs,
+            typeof(HandlePaymentsAndPayouts.Payments.Common.Source.BacsSource.BacsSource))]
+        public void ShouldDeserializeTheIdOnEveryDeclinedCreateResponseSource(
+            string wireType,
+            SourceType expectedType,
+            Type expectedSourceType)
         {
-            const string json = @"{
+            var json = @"{
                 ""id"": ""pay_mbabizu24mvu3mela5njyhpit4"",
-                ""source"": { ""type"": ""bacs"", ""id"": ""src_wmlfc3zyhqzehihu7giusaaawu"" }
+                ""source"": { ""type"": """ + wireType + @""", ""id"": ""src_wmlfc3zyhqzehihu7giusaaawu"" }
             }";
 
             var response = (RequestAPaymentOrPayoutResponseCreated)Serializer
                 .Deserialize(json, typeof(RequestAPaymentOrPayoutResponseCreated));
 
-            var bacs = response.Source.ShouldBeOfType<HandlePaymentsAndPayouts.Payments.Common.Source.BacsSource.BacsSource>();
-            bacs.Type.ShouldBe(SourceType.Bacs);
-            bacs.Id.ShouldBe("src_wmlfc3zyhqzehihu7giusaaawu");
+            var source = response.Source;
+            source.ShouldBeOfType(expectedSourceType);
+            source.Type.ShouldBe(expectedType);
+
+            var id = expectedSourceType.GetProperty("Id");
+            id.ShouldNotBeNull();
+            id.GetValue(source).ShouldBe("src_wmlfc3zyhqzehihu7giusaaawu");
         }
 
         // ------------------------------------------------------------------------
