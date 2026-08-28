@@ -228,7 +228,7 @@ namespace Checkout
         {
             try
             {
-                T t = await func.Invoke();
+                await func.Invoke();
                 throw new XunitException("Shouldn't get here");
             }
             catch (CheckoutApiException ex)
@@ -243,10 +243,8 @@ namespace Checkout
             {
                 await task;
             }
-            catch (Exception ex)
+            catch (CheckoutApiException ex)
             {
-                ex.ShouldNotBeNull();
-                ex.ShouldBeAssignableTo(typeof(CheckoutApiException));
                 ex.Message.ShouldBe("The API response status code (422) does not indicate success.");
             }
         }
@@ -257,10 +255,8 @@ namespace Checkout
             {
                 await task;
             }
-            catch (Exception ex)
+            catch (CheckoutApiException ex)
             {
-                ex.ShouldNotBeNull();
-                ex.ShouldBeAssignableTo(typeof(CheckoutApiException));
                 ex.Message.ShouldBe("The API response status code (404) does not indicate success.");
             }
         }

@@ -16,14 +16,15 @@ namespace Checkout.Payments
         [Fact]
         private async Task ShouldMakeAliPayPayment()
         {
-            var source = RequestAlipayPlusSource.RequestAlipayPlusCnSource();
-            source = RequestAlipayPlusSource.RequestAlipayPlusGCashSource();
-            source = RequestAlipayPlusSource.RequestAlipayPlusHkSource();
-            source = RequestAlipayPlusSource.RequestAlipayPlusDanaSource();
-            source = RequestAlipayPlusSource.RequestAlipayPlusKakaoPaySource();
-            source = RequestAlipayPlusSource.RequestAlipayPlusTrueMoneySource();
-            source = RequestAlipayPlusSource.RequestAlipayPlusTngSource();
-            source = RequestAlipayPlusSource.RequestAliPayPlusSource();
+            // Exercise every AliPay+ source factory; the payment itself uses the generic one.
+            RequestAlipayPlusSource.RequestAlipayPlusCnSource();
+            RequestAlipayPlusSource.RequestAlipayPlusGCashSource();
+            RequestAlipayPlusSource.RequestAlipayPlusHkSource();
+            RequestAlipayPlusSource.RequestAlipayPlusDanaSource();
+            RequestAlipayPlusSource.RequestAlipayPlusKakaoPaySource();
+            RequestAlipayPlusSource.RequestAlipayPlusTrueMoneySource();
+            RequestAlipayPlusSource.RequestAlipayPlusTngSource();
+            var source = RequestAlipayPlusSource.RequestAliPayPlusSource();
 
             var request = new PaymentRequest
             {
@@ -39,9 +40,9 @@ namespace Checkout.Payments
             {
                 await DefaultApi.PaymentsClient().RequestPayment(request);
             }
-            catch (Exception e)
+            catch (CheckoutApiException)
             {
-                e.ShouldBeAssignableTo<CheckoutApiException>();
+                // The sandbox may accept or reject the APM request; only an API error is expected.
             }
         }
 
@@ -214,9 +215,9 @@ namespace Checkout.Payments
             {
                 await DefaultApi.PaymentsClient().RequestPayment(request);
             }
-            catch (Exception e)
+            catch (CheckoutApiException)
             {
-                e.ShouldBeAssignableTo<CheckoutApiException>();
+                // The sandbox may accept or reject the APM request; only an API error is expected.
             }
         }
 

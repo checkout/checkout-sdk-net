@@ -65,9 +65,8 @@ namespace Checkout
                     .Build();
                 throw new XunitException();
             }
-            catch (Exception e)
+            catch (CheckoutArgumentException e)
             {
-                e.ShouldBeAssignableTo(typeof(CheckoutArgumentException));
                 e.Message.ShouldContain("EnvironmentSubdomain is required");
             }
         }
@@ -90,9 +89,8 @@ namespace Checkout
 #pragma warning restore CS0618
                 throw new XunitException();
             }
-            catch (Exception e)
+            catch (CheckoutArgumentException e)
             {
-                e.ShouldBeAssignableTo(typeof(CheckoutArgumentException));
                 e.Message.ShouldContain("cannot both be set");
             }
         }
@@ -112,9 +110,8 @@ namespace Checkout
                     .Build();
                 throw new XunitException();
             }
-            catch (Exception e)
+            catch (CheckoutArgumentException e)
             {
-                e.ShouldBeAssignableTo(typeof(CheckoutArgumentException));
                 e.Message.ShouldContain("invalid environment subdomain");
             }
         }
