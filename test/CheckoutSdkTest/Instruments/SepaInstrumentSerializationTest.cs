@@ -34,6 +34,17 @@ namespace Checkout.Instruments
         }
 
         [Fact]
+        public void ShouldSerializeMandateTypeAndOmitItWhenNotSet()
+        {
+            Serializer.Serialize(new CreateSepaInstrumentData { Type = SepaMandateType.Core })
+                .ShouldBe("{\"type\":\"Core\"}");
+            Serializer.Serialize(new CreateSepaInstrumentData { Type = SepaMandateType.B2B })
+                .ShouldBe("{\"type\":\"B2B\"}");
+            Serializer.Serialize(new CreateSepaInstrumentData { AccountNumber = "FR2810096000509685512959O86" })
+                .ShouldNotContain("\"type\"");
+        }
+
+        [Fact]
         public void ShouldRoundTripSerializeAllPropertiesForCreateSepaInstrumentRequest()
         {
             var original = CreateFullyPopulatedRequest();
