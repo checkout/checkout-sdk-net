@@ -81,6 +81,17 @@ namespace Checkout
 
             protected override SdkCredentials GetSdkCredentials()
             {
+                // Option A of the MSSD review: an explicit authorization URI used to win
+                // silently over the subdomain, producing a half-legacy client. The two are
+                // now mutually exclusive; a custom token host requires the legacy opt-out.
+                if (_authorizationUri != null && GetEnvironmentSubdomain() != null)
+                {
+                    throw new CheckoutArgumentException(
+                        "AuthorizationUri and EnvironmentSubdomain cannot both be set - the token " +
+                        "endpoint is derived from your subdomain. Combine AuthorizationUri with " +
+                        "UseLegacyDomain() if you need a custom token host.");
+                }
+
                 // Resolved locally on every call: caching it in _authorizationUri froze the
                 // first Build()'s host, so a reused builder with a new subdomain split the
                 // auth and api hosts.

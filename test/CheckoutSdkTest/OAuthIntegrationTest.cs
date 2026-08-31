@@ -85,6 +85,21 @@ namespace Checkout
         }
 
         [Fact]
+        public void ShouldRejectAuthorizationUriCombinedWithSubdomain()
+        {
+            var exception = Assert.Throws<CheckoutArgumentException>(() =>
+                CheckoutSdk.Builder()
+                    .OAuth()
+                    .ClientCredentials("client_id", "client_secret")
+                    .AuthorizationUri(new Uri("https://test.checkout.com"))
+                    .EnvironmentSubdomain("vkuhvk4v")
+                    .Environment(Environment.Sandbox)
+                    .Build());
+
+            Assert.Contains("cannot both be set", exception.Message);
+        }
+
+        [Fact]
         public void ShouldFailInitAuthorization_CustomFakeAuthorizationUri()
         {
             try

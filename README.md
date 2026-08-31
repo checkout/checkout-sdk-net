@@ -90,10 +90,9 @@ The SDK supports client credentials OAuth, when initialized as follows:
 ```c#
 ICheckoutApi api = CheckoutSdk.Builder().OAuth()
     .ClientCredentials("client_id", "client_secret")
-    .AuthorizationUri(new Uri("https://access.sandbox.checkout.com/connect/token")) // custom authorization URI, optional
     .Scopes(OAuthScope.Files, OAuthScope.Flow) // array of scopes, optional
     .Environment(Environment.Sandbox)
-    .EnvironmentSubdomain("subdomain") // required, Merchant-specific DNS name, the first 8 characters of your client ID
+    .EnvironmentSubdomain("subdomain") // required, typically your client ID excluding the cli_ prefix
     .LogProvider(logFactory) // optional
     .HttpClientFactory(httpClientFactory) // optional
     .Build();
@@ -150,7 +149,6 @@ For OAuth, the configuration file should include the following properties:
   "Checkout": {
     "ClientId": "client_id",
     "ClientSecret": "client_secret",
-    "AuthorizationUri": "https://access.sandbox.checkout.com/connect/token",
     "Scopes": ["vault", "fx"],
     "Environment": "Sandbox",
     "EnvironmentSubdomain": "subdomain",
