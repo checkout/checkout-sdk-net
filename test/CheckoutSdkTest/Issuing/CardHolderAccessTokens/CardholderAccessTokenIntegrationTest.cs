@@ -14,8 +14,8 @@ namespace Checkout.Issuing
             var request = new CardholderAccessTokenRequest
             {
                 GrantType = "client_credentials",
-                ClientId = System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_ID"),
-                ClientSecret = System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET"),
+                ClientId = System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_ID"),
+                ClientSecret = System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_SECRET"),
                 CardholderId = "crh_xxxxxxxxxxxxxxxxxxx", // Replace with a valid cardholder ID
                 SingleUse = true
             };

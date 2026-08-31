@@ -102,8 +102,8 @@ namespace Checkout.Accounts
             return CheckoutSdk.Builder()
                 .OAuth()
                 .ClientCredentials(
-                    System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_ID"),
-                    System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET"))
+                    System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_ID"),
+                    System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET"))
                 .Scopes(OAuthScope.Marketplace)
                 .LogProvider(logFactory)
                 // The sandbox OAuth clients are not provisioned for the merchant-specific subdomain,
