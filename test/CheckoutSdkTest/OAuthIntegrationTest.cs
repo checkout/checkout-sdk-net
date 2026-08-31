@@ -66,6 +66,7 @@ namespace Checkout
             {
                 var logFactory = CreateLoggerFactory();
 #pragma warning disable CS0618 // fake credentials have no merchant-specific subdomain
+                #pragma warning disable CS0618 // the legacy-domain opt-out is deliberate in this suite
                 CheckoutSdk.Builder()
                     .OAuth()
                     .ClientCredentials("fake", "fake")
@@ -73,6 +74,7 @@ namespace Checkout
                     .UseLegacyDomain()
                     .LogProvider(logFactory)
                     .Build();
+                #pragma warning restore CS0618
 #pragma warning restore CS0618
                 throw new XunitException();
             }
@@ -89,6 +91,7 @@ namespace Checkout
             {
                 var logFactory = CreateLoggerFactory();
 #pragma warning disable CS0618 // custom authorization URI test does not use a merchant-specific subdomain
+                #pragma warning disable CS0618 // the legacy-domain opt-out is deliberate in this suite
                 CheckoutSdk.Builder()
                     .OAuth()
                     .ClientCredentials(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_ID"),
@@ -98,6 +101,7 @@ namespace Checkout
                     .HttpClientFactory(new DefaultHttpClientFactory())
                     .LogProvider(logFactory)
                     .Build();
+                #pragma warning restore CS0618
 #pragma warning restore CS0618
                 throw new XunitException();
             }

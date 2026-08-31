@@ -16,6 +16,7 @@ namespace Checkout
         public async Task ShouldInstantiateClientWithCustomHttpClientFactory()
         {
 #pragma warning disable CS0618 // verifies the deprecated legacy-domain opt-out still targets the default URLs
+            #pragma warning disable CS0618 // the legacy-domain opt-out is deliberate in this suite
             var checkoutApi = CheckoutSdk
                 .Builder()
                 .StaticKeys()
@@ -25,6 +26,7 @@ namespace Checkout
                 .UseLegacyDomain()
                 .HttpClientFactory(new TestingClientFactory())
                 .Build();
+            #pragma warning restore CS0618
 #pragma warning restore CS0618
 
             checkoutApi.ShouldNotBeNull();

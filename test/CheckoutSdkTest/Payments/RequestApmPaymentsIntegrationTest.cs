@@ -122,6 +122,7 @@ namespace Checkout.Payments
         private async Task ShouldMakeTamaraPayment()
         {
             var logFactory = CreateLoggerFactory();
+            #pragma warning disable CS0618 // the legacy-domain opt-out is deliberate in this suite
             ICheckoutApi previewApi = CheckoutSdk.Builder()
                 .OAuth()
                 .ClientCredentials(
@@ -132,10 +133,9 @@ namespace Checkout.Payments
                 // The sandbox OAuth clients are not provisioned for the merchant-specific subdomain,
                 // so the token request would come back invalid_client. Opting out explicitly until
                 // they are.
-#pragma warning disable CS0618
                 .UseLegacyDomain()
-#pragma warning restore CS0618
                 .Build();
+            #pragma warning restore CS0618
 
             var tamaraSource = new RequestTamaraSource();
             tamaraSource.BillingAddress = new Address

@@ -42,14 +42,17 @@ namespace Checkout
         /// <param name="subdomain">The subdomain to prepend</param>
         /// <returns>The transformed URI with subdomain</returns>
         /// <exception cref="CheckoutArgumentException">Thrown when the subdomain is not a valid merchant-specific subdomain</exception>
+        private static readonly Regex SubdomainRegex =
+            new Regex(@"^(?:pl-)?[a-z0-9]+$", RegexOptions.None, TimeSpan.FromMilliseconds(100));
+
         private static Uri CreateUrlWithSubdomain(Uri originalUrl, string subdomain)
         {
-            Regex regex = new Regex(@"^(?:pl-)?[a-z0-9]+$", RegexOptions.None, TimeSpan.FromMilliseconds(100));
-            if (subdomain == null || !regex.IsMatch(subdomain))
+            if (subdomain == null || !SubdomainRegex.IsMatch(subdomain))
             {
                 throw new CheckoutArgumentException(
-                    "invalid environment subdomain - provide your merchant-specific subdomain, the first 8 " +
-                    "characters of your client ID (see https://api-reference.checkout.com/#section/Base-URLs)");
+                    "invalid environment subdomain - provide your merchant-specific subdomain, typically " +
+                    "your client ID excluding the cli_ prefix (see " +
+                    "https://api-reference.checkout.com/#section/Base-URLs)");
             }
 
             UriBuilder merchantUrl = new UriBuilder(originalUrl);

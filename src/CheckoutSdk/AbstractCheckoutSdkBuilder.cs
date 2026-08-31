@@ -20,6 +20,11 @@ namespace Checkout
             return this;
         }
 
+        /// <summary>
+        /// Sets the merchant-specific subdomain, typically your client ID excluding the
+        /// cli_ prefix (Private Link merchants keep their pl- prefix). Required unless
+        /// UseLegacyDomain() is called. See https://api-reference.checkout.com/#section/Base-URLs
+        /// </summary>
         public AbstractCheckoutSdkBuilder<T> EnvironmentSubdomain(string subdomain)
         {
             _subdomain = subdomain;
@@ -81,8 +86,8 @@ namespace Checkout
             if (_subdomain == null && !_useLegacyDomain && RequiresEnvironmentSubdomain)
             {
                 throw new CheckoutArgumentException(
-                    "EnvironmentSubdomain is required - provide your merchant-specific subdomain (the first 8 " +
-                    "characters of your client ID, see https://api-reference.checkout.com/#section/Base-URLs), " +
+                    "EnvironmentSubdomain is required - provide your merchant-specific subdomain (typically " +
+                    "your client ID excluding the cli_ prefix, see https://api-reference.checkout.com/#section/Base-URLs), " +
                     "or call UseLegacyDomain() to opt out only if merchant specific sub domains are causing issues");
             }
         }

@@ -81,15 +81,19 @@ namespace Checkout
 
             protected override SdkCredentials GetSdkCredentials()
             {
-                if (_authorizationUri == null)
+                // Resolved locally on every call: caching it in _authorizationUri froze the
+                // first Build()'s host, so a reused builder with a new subdomain split the
+                // auth and api hosts.
+                var authorizationUri = _authorizationUri;
+                if (authorizationUri == null)
                 {
                     var envSubdomain = GetEnvironmentSubdomain();
-                    _authorizationUri = envSubdomain != null ?
+                    authorizationUri = envSubdomain != null ?
                                         envSubdomain.AuthorizationUri
                                         : Env.GetAttribute<EnvironmentAttribute>().AuthorizationUri;
                 }
 
-                var credentials = new OAuthSdkCredentials(ClientFactory, _authorizationUri, _clientId,
+                var credentials = new OAuthSdkCredentials(ClientFactory, authorizationUri, _clientId,
                     _clientSecret,
                     _scopes);
 

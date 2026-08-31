@@ -88,6 +88,7 @@ namespace Checkout.Accounts
                 IsDraft = true
             };
             
+            #pragma warning disable CS0618 // the legacy-domain opt-out is deliberate in this suite
             var api = CheckoutSdk.Builder().OAuth()
                 .ClientCredentials(
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_ID"),
@@ -98,10 +99,9 @@ namespace Checkout.Accounts
                 // The sandbox OAuth clients are not provisioned for the merchant-specific subdomain,
                 // so the token request would come back invalid_client. Opting out explicitly until
                 // they are.
-#pragma warning disable CS0618
                 .UseLegacyDomain()
-#pragma warning restore CS0618
                 .Build();
+            #pragma warning restore CS0618
             
             var response = await api.AccountsClient().CreateEntity(request, schemaVersion: "2.0");
 
@@ -812,6 +812,7 @@ namespace Checkout.Accounts
         private static CheckoutApi GetAccountsCheckoutApi()
         {
             var logFactory = CreateLoggerFactory();
+            #pragma warning disable CS0618 // the legacy-domain opt-out is deliberate in this suite
             return CheckoutSdk.Builder()
                 .OAuth()
                 .ClientCredentials(
@@ -822,10 +823,9 @@ namespace Checkout.Accounts
                 // The sandbox OAuth clients are not provisioned for the merchant-specific subdomain,
                 // so the token request would come back invalid_client. Opting out explicitly until
                 // they are.
-#pragma warning disable CS0618
                 .UseLegacyDomain()
-#pragma warning restore CS0618
                 .Build() as CheckoutApi;
+            #pragma warning restore CS0618
         }
 
         [Fact(Skip = "Requires a sub-entity with pending requirements")]
