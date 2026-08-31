@@ -12,7 +12,11 @@ namespace Checkout.PaymentMethods.Entities
         [EnumMember(Value = "alma")] Alma,
         [EnumMember(Value = "amex")] Amex,
         [EnumMember(Value = "bancontact")] Bancontact,
+        [EnumMember(Value = "bacs")]
+        Bacs,
         [EnumMember(Value = "bank_redirects")] BankRedirects,
+        [EnumMember(Value = "blik")]
+        Blik,
         [EnumMember(Value = "boost")] Boost,
         [EnumMember(Value = "bpi")] Bpi,
         [EnumMember(Value = "bnpl")] Bnpl,
