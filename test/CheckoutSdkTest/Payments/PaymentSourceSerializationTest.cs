@@ -318,7 +318,8 @@ namespace Checkout.Payments
                 .Deserialize(json, typeof(RequestAPaymentOrPayoutResponseCreated));
 
             response.Source.ShouldNotBeNull();
-            CheckoutUtils.GetEnumMemberValue(response.Source.Type.Value).ShouldBe(type);
+            response.Source.Type.ShouldNotBeNull();
+            CheckoutUtils.GetEnumMemberValue(response.Source.Type.GetValueOrDefault()).ShouldBe(type);
         }
 
         // Every type that PaymentResponseSource maps to PaymentDeclinedSourceResponse must keep the
