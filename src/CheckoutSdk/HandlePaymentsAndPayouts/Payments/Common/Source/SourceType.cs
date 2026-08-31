@@ -4,15 +4,6 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source
 {
     public enum SourceType
     {
-        [EnumMember(Value = "ach")]
-        Ach,
-
-        [EnumMember(Value = "bacs")]
-        Bacs,
-
-        [EnumMember(Value = "bank_account")]
-        BankAccount,
-
         [EnumMember(Value = "card")]
         Card,
 
@@ -138,5 +129,14 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.Common.Source
 
         [EnumMember(Value = "PaymentResponseSource")]
         PaymentResponseSource,
+
+        [EnumMember(Value = "ach")]
+        Ach,
+
+        [EnumMember(Value = "bacs")]
+        Bacs,
+
+        [EnumMember(Value = "bank_account")]
+        BankAccount,
     }
 }
