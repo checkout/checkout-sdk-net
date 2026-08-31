@@ -46,6 +46,19 @@ namespace CheckoutSdkTest
             Assert.Contains("invalid environment subdomain", exception.Message);
         }
 
+        /// <summary>
+        /// A value read from a file often carries a trailing newline; with ^/$ anchors it
+        /// used to pass validation and blow up later as an unparseable host.
+        /// </summary>
+        [Fact]
+        public void ShouldThrowForSubdomainWithTrailingNewline()
+        {
+            var exception = Assert.Throws<CheckoutArgumentException>(
+                () => new EnvironmentSubdomain(Environment.Sandbox, "vkuhvk4v\n"));
+
+            Assert.Contains("invalid environment subdomain", exception.Message);
+        }
+
         [Fact]
         public void ShouldThrowForNullSubdomain()
         {

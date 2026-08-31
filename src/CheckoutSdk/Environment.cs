@@ -43,7 +43,7 @@ namespace Checkout
         /// <returns>The transformed URI with subdomain</returns>
         /// <exception cref="CheckoutArgumentException">Thrown when the subdomain is not a valid merchant-specific subdomain</exception>
         private static readonly Regex SubdomainRegex =
-            new Regex(@"^(?:pl-)?[a-z0-9]+$", RegexOptions.None, TimeSpan.FromMilliseconds(100));
+            new Regex(@"\A(?:pl-)?[a-z0-9]+\z", RegexOptions.None, TimeSpan.FromMilliseconds(100));
 
         private static Uri CreateUrlWithSubdomain(Uri originalUrl, string subdomain)
         {
