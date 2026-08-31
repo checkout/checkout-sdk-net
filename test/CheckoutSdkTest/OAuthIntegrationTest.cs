@@ -65,12 +65,17 @@ namespace Checkout
             try
             {
                 var logFactory = CreateLoggerFactory();
+#pragma warning disable CS0618 // fake credentials have no merchant-specific subdomain
+                #pragma warning disable CS0618 // the legacy-domain opt-out is deliberate in this suite
                 CheckoutSdk.Builder()
                     .OAuth()
                     .ClientCredentials("fake", "fake")
                     .Environment(Environment.Sandbox)
+                    .UseLegacyDomain()
                     .LogProvider(logFactory)
                     .Build();
+                #pragma warning restore CS0618
+#pragma warning restore CS0618
                 throw new XunitException();
             }
             catch (Exception e)
@@ -80,19 +85,39 @@ namespace Checkout
         }
 
         [Fact]
+        public void ShouldRejectAuthorizationUriCombinedWithSubdomain()
+        {
+            var exception = Assert.Throws<CheckoutArgumentException>(() =>
+                CheckoutSdk.Builder()
+                    .OAuth()
+                    .ClientCredentials("client_id", "client_secret")
+                    .AuthorizationUri(new Uri("https://test.checkout.com"))
+                    .EnvironmentSubdomain("vkuhvk4v")
+                    .Environment(Environment.Sandbox)
+                    .Build());
+
+            Assert.Contains("cannot both be set", exception.Message);
+        }
+
+        [Fact]
         public void ShouldFailInitAuthorization_CustomFakeAuthorizationUri()
         {
             try
             {
                 var logFactory = CreateLoggerFactory();
+#pragma warning disable CS0618 // custom authorization URI test does not use a merchant-specific subdomain
+                #pragma warning disable CS0618 // the legacy-domain opt-out is deliberate in this suite
                 CheckoutSdk.Builder()
                     .OAuth()
                     .ClientCredentials(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_ID"),
                         System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET"))
                     .AuthorizationUri(new Uri("https://test.checkout.com"))
+                    .UseLegacyDomain()
                     .HttpClientFactory(new DefaultHttpClientFactory())
                     .LogProvider(logFactory)
                     .Build();
+                #pragma warning restore CS0618
+#pragma warning restore CS0618
                 throw new XunitException();
             }
             catch (Exception e)

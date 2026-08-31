@@ -88,6 +88,7 @@ namespace Checkout.Accounts
                 IsDraft = true
             };
             
+            #pragma warning disable CS0618 // the legacy-domain opt-out is deliberate in this suite
             var api = CheckoutSdk.Builder().OAuth()
                 .ClientCredentials(
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_ID"),
@@ -95,7 +96,12 @@ namespace Checkout.Accounts
                 .Scopes(OAuthScope.Accounts)
                 .Environment(Environment.Sandbox)
                 .HttpClientFactory(new CustomClientFactory("2.0"))
+                // The sandbox OAuth clients are not provisioned for the merchant-specific subdomain,
+                // so the token request would come back invalid_client. Opting out explicitly until
+                // they are.
+                .UseLegacyDomain()
                 .Build();
+            #pragma warning restore CS0618
             
             var response = await api.AccountsClient().CreateEntity(request, schemaVersion: "2.0");
 
@@ -806,6 +812,7 @@ namespace Checkout.Accounts
         private static CheckoutApi GetAccountsCheckoutApi()
         {
             var logFactory = CreateLoggerFactory();
+            #pragma warning disable CS0618 // the legacy-domain opt-out is deliberate in this suite
             return CheckoutSdk.Builder()
                 .OAuth()
                 .ClientCredentials(
@@ -813,7 +820,12 @@ namespace Checkout.Accounts
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_SECRET"))
                 .Scopes(OAuthScope.Accounts)
                 .LogProvider(logFactory)
+                // The sandbox OAuth clients are not provisioned for the merchant-specific subdomain,
+                // so the token request would come back invalid_client. Opting out explicitly until
+                // they are.
+                .UseLegacyDomain()
                 .Build() as CheckoutApi;
+            #pragma warning restore CS0618
         }
 
         [Fact(Skip = "Requires a sub-entity with pending requirements")]

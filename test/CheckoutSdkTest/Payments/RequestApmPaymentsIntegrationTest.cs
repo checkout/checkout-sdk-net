@@ -16,14 +16,15 @@ namespace Checkout.Payments
         [Fact]
         private async Task ShouldMakeAliPayPayment()
         {
-            var source = RequestAlipayPlusSource.RequestAlipayPlusCnSource();
-            source = RequestAlipayPlusSource.RequestAlipayPlusGCashSource();
-            source = RequestAlipayPlusSource.RequestAlipayPlusHkSource();
-            source = RequestAlipayPlusSource.RequestAlipayPlusDanaSource();
-            source = RequestAlipayPlusSource.RequestAlipayPlusKakaoPaySource();
-            source = RequestAlipayPlusSource.RequestAlipayPlusTrueMoneySource();
-            source = RequestAlipayPlusSource.RequestAlipayPlusTngSource();
-            source = RequestAlipayPlusSource.RequestAliPayPlusSource();
+            // Exercise every AliPay+ source factory; the payment itself uses the generic one.
+            RequestAlipayPlusSource.RequestAlipayPlusCnSource();
+            RequestAlipayPlusSource.RequestAlipayPlusGCashSource();
+            RequestAlipayPlusSource.RequestAlipayPlusHkSource();
+            RequestAlipayPlusSource.RequestAlipayPlusDanaSource();
+            RequestAlipayPlusSource.RequestAlipayPlusKakaoPaySource();
+            RequestAlipayPlusSource.RequestAlipayPlusTrueMoneySource();
+            RequestAlipayPlusSource.RequestAlipayPlusTngSource();
+            var source = RequestAlipayPlusSource.RequestAliPayPlusSource();
 
             var request = new PaymentRequest
             {
@@ -39,9 +40,9 @@ namespace Checkout.Payments
             {
                 await DefaultApi.PaymentsClient().RequestPayment(request);
             }
-            catch (Exception e)
+            catch (CheckoutApiException)
             {
-                e.ShouldBeAssignableTo<CheckoutApiException>();
+                // The sandbox may accept or reject the APM request; only an API error is expected.
             }
         }
 
@@ -121,6 +122,7 @@ namespace Checkout.Payments
         private async Task ShouldMakeTamaraPayment()
         {
             var logFactory = CreateLoggerFactory();
+            #pragma warning disable CS0618 // the legacy-domain opt-out is deliberate in this suite
             ICheckoutApi previewApi = CheckoutSdk.Builder()
                 .OAuth()
                 .ClientCredentials(
@@ -128,7 +130,12 @@ namespace Checkout.Payments
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PREVIEW_OAUTH_CLIENT_SECRET"))
                 .Environment(Environment.Sandbox)
                 .LogProvider(logFactory)
+                // The sandbox OAuth clients are not provisioned for the merchant-specific subdomain,
+                // so the token request would come back invalid_client. Opting out explicitly until
+                // they are.
+                .UseLegacyDomain()
                 .Build();
+            #pragma warning restore CS0618
 
             var tamaraSource = new RequestTamaraSource();
             tamaraSource.BillingAddress = new Address
@@ -208,9 +215,9 @@ namespace Checkout.Payments
             {
                 await DefaultApi.PaymentsClient().RequestPayment(request);
             }
-            catch (Exception e)
+            catch (CheckoutApiException)
             {
-                e.ShouldBeAssignableTo<CheckoutApiException>();
+                // The sandbox may accept or reject the APM request; only an API error is expected.
             }
         }
 

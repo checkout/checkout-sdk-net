@@ -122,6 +122,7 @@ namespace Checkout.Issuing
         {
             var logFactory = TestLoggerFactoryHelper.Instance;
             
+            #pragma warning disable CS0618 // the legacy-domain opt-out is deliberate in this suite
             var defaultApi = CheckoutSdk.Builder()
                 .OAuth()
                 .ClientCredentials(
@@ -131,7 +132,12 @@ namespace Checkout.Issuing
                     OAuthScope.IssuingClient, OAuthScope.IssuingTransactionsRead, OAuthScope.Vault)
                 .Environment(Environment.Sandbox)
                 .LogProvider(logFactory)
+                // The sandbox OAuth clients are not provisioned for the merchant-specific subdomain,
+                // so the token request would come back invalid_client. Opting out explicitly until
+                // they are.
+                .UseLegacyDomain()
                 .Build();
+            #pragma warning restore CS0618
 
             return defaultApi;
         }

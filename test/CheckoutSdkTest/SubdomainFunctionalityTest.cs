@@ -36,14 +36,36 @@ namespace CheckoutSdkTest
         }
         
         [Fact]
-        public void ShouldNotAddSubdomainForInvalidSubdomainFormat()
+        public void ShouldThrowForInvalidSubdomainFormat()
         {
             var invalidSubdomain = "invalid_subdomain!";
-            var environmentSubdomain = new EnvironmentSubdomain(Environment.Sandbox, invalidSubdomain);
 
-            // Should fallback to original URLs without subdomain
-            Assert.Equal("https://api.sandbox.checkout.com/", environmentSubdomain.ApiUri.ToString());
-            Assert.Equal("https://access.sandbox.checkout.com/connect/token", environmentSubdomain.AuthorizationUri.ToString());
+            var exception = Assert.Throws<CheckoutArgumentException>(
+                () => new EnvironmentSubdomain(Environment.Sandbox, invalidSubdomain));
+
+            Assert.Contains("invalid environment subdomain", exception.Message);
+        }
+
+        /// <summary>
+        /// A value read from a file often carries a trailing newline; with ^/$ anchors it
+        /// used to pass validation and blow up later as an unparseable host.
+        /// </summary>
+        [Fact]
+        public void ShouldThrowForSubdomainWithTrailingNewline()
+        {
+            var exception = Assert.Throws<CheckoutArgumentException>(
+                () => new EnvironmentSubdomain(Environment.Sandbox, "vkuhvk4v\n"));
+
+            Assert.Contains("invalid environment subdomain", exception.Message);
+        }
+
+        [Fact]
+        public void ShouldThrowForNullSubdomain()
+        {
+            var exception = Assert.Throws<CheckoutArgumentException>(
+                () => new EnvironmentSubdomain(Environment.Sandbox, null));
+
+            Assert.Contains("invalid environment subdomain", exception.Message);
         }
 
         [Fact]

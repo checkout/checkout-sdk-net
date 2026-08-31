@@ -89,23 +89,25 @@ namespace Checkout
                         .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_PUBLIC_KEY"))
                         .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_PREVIOUS_SECRET_KEY"))
                         .Environment(Environment.Sandbox)
-                        //.EnvironmentSubdomain(System.Environment.GetEnvironmentVariable("CHECKOUT_MERCHANT_SUBDOMAIN"))
                         .LogProvider(logFactory)
                         .HttpClientFactory(new DefaultHttpClientFactory())
                         .Build();
                     break;
 
                 case PlatformType.Default:
+                    // Static keys never call the token endpoint, so this platform runs against the
+                    // real merchant subdomain: only the sandbox OAuth clients lack provisioning.
                     DefaultApi = CheckoutSdk.Builder().StaticKeys()
                         .PublicKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_PUBLIC_KEY"))
                         .SecretKey(System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_SECRET_KEY"))
                         .Environment(Environment.Sandbox)
-                        //.EnvironmentSubdomain(System.Environment.GetEnvironmentVariable("CHECKOUT_MERCHANT_SUBDOMAIN"))
+                        .EnvironmentSubdomain(System.Environment.GetEnvironmentVariable("CHECKOUT_MERCHANT_SUBDOMAIN"))
                         .LogProvider(logFactory)
                         .Build();
                     break;
 
                 case PlatformType.DefaultOAuth:
+                    #pragma warning disable CS0618 // the legacy-domain opt-out is deliberate in this suite
                     DefaultApi = CheckoutSdk.Builder().OAuth()
                         .ClientCredentials(
                             System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_CLIENT_ID"),
@@ -125,9 +127,13 @@ namespace Checkout
                             )
                         .Environment(Environment.Sandbox)
                         //.HttpClientFactory(new CustomClientFactory("3.0"))
-                        //.EnvironmentSubdomain(System.Environment.GetEnvironmentVariable("CHECKOUT_MERCHANT_SUBDOMAIN"))
                         .LogProvider(logFactory)
+                        // The sandbox OAuth clients are not provisioned for the merchant-specific subdomain,
+                        // so the token request would come back invalid_client. Opting out explicitly until
+                        // they are.
+                        .UseLegacyDomain()
                         .Build();
+                    #pragma warning restore CS0618
                     break;
 
                 default:
@@ -218,7 +224,7 @@ namespace Checkout
         {
             try
             {
-                T t = await func.Invoke();
+                await func.Invoke();
                 throw new XunitException("Shouldn't get here");
             }
             catch (CheckoutApiException ex)
@@ -233,10 +239,8 @@ namespace Checkout
             {
                 await task;
             }
-            catch (Exception ex)
+            catch (CheckoutApiException ex)
             {
-                ex.ShouldNotBeNull();
-                ex.ShouldBeAssignableTo(typeof(CheckoutApiException));
                 ex.Message.ShouldBe("The API response status code (422) does not indicate success.");
             }
         }
@@ -247,10 +251,8 @@ namespace Checkout
             {
                 await task;
             }
-            catch (Exception ex)
+            catch (CheckoutApiException ex)
             {
-                ex.ShouldNotBeNull();
-                ex.ShouldBeAssignableTo(typeof(CheckoutApiException));
                 ex.Message.ShouldBe("The API response status code (404) does not indicate success.");
             }
         }

@@ -18,6 +18,7 @@ namespace Checkout
                 .PublicKey(ValidDefaultPk)
                 .SecretKey(ValidDefaultSk)
                 .Environment(Environment.Sandbox)
+                .EnvironmentSubdomain("1234doma")
                 .Build();
 
             checkoutApi1.ShouldNotBeNull();
@@ -27,9 +28,92 @@ namespace Checkout
                 .StaticKeys()
                 .SecretKey(ValidDefaultSk)
                 .Environment(Environment.Sandbox)
+                .EnvironmentSubdomain("1234doma")
                 .Build();
 
             checkoutApi2.ShouldNotBeNull();
+        }
+
+        [Fact]
+        private void ShouldCreateStaticKeysCheckoutSdksWithLegacyDomain()
+        {
+#pragma warning disable CS0618 // testing the deprecated legacy-domain opt-out
+            var checkoutApi = CheckoutSdk
+                .Builder()
+                .StaticKeys()
+                .PublicKey(ValidDefaultPk)
+                .SecretKey(ValidDefaultSk)
+                .Environment(Environment.Sandbox)
+                .UseLegacyDomain()
+                .Build();
+#pragma warning restore CS0618
+
+            checkoutApi.ShouldNotBeNull();
+        }
+
+        [Fact]
+        private void ShouldFailToCreateCheckoutSdkWithoutSubdomainOrLegacyDomain()
+        {
+            try
+            {
+                CheckoutSdk
+                    .Builder()
+                    .StaticKeys()
+                    .PublicKey(ValidDefaultPk)
+                    .SecretKey(ValidDefaultSk)
+                    .Environment(Environment.Sandbox)
+                    .Build();
+                throw new XunitException();
+            }
+            catch (CheckoutArgumentException e)
+            {
+                e.Message.ShouldContain("EnvironmentSubdomain is required");
+            }
+        }
+
+        [Fact]
+        private void ShouldFailToCreateCheckoutSdkWithBothSubdomainAndLegacyDomain()
+        {
+            try
+            {
+#pragma warning disable CS0618 // testing the deprecated legacy-domain opt-out
+                CheckoutSdk
+                    .Builder()
+                    .StaticKeys()
+                    .PublicKey(ValidDefaultPk)
+                    .SecretKey(ValidDefaultSk)
+                    .Environment(Environment.Sandbox)
+                    .EnvironmentSubdomain("1234doma")
+                    .UseLegacyDomain()
+                    .Build();
+#pragma warning restore CS0618
+                throw new XunitException();
+            }
+            catch (CheckoutArgumentException e)
+            {
+                e.Message.ShouldContain("cannot both be set");
+            }
+        }
+
+        [Fact]
+        private void ShouldFailToCreateCheckoutSdkWithInvalidSubdomain()
+        {
+            try
+            {
+                CheckoutSdk
+                    .Builder()
+                    .StaticKeys()
+                    .PublicKey(ValidDefaultPk)
+                    .SecretKey(ValidDefaultSk)
+                    .Environment(Environment.Sandbox)
+                    .EnvironmentSubdomain("invalid_subdomain!")
+                    .Build();
+                throw new XunitException();
+            }
+            catch (CheckoutArgumentException e)
+            {
+                e.Message.ShouldContain("invalid environment subdomain");
+            }
         }
 
         [Fact]
@@ -43,6 +127,7 @@ namespace Checkout
                     .PublicKey(InvalidPreviousPk)
                     .SecretKey(ValidDefaultSk)
                     .Environment(Environment.Sandbox)
+                    .EnvironmentSubdomain("1234doma")
                     .Build();
                 throw new XunitException();
             }
@@ -60,6 +145,7 @@ namespace Checkout
                     .PublicKey(ValidDefaultPk)
                     .SecretKey(InvalidDefaultSk)
                     .Environment(Environment.Sandbox)
+                    .EnvironmentSubdomain("1234doma")
                     .Build();
                 throw new XunitException();
             }
@@ -84,13 +170,14 @@ namespace Checkout
                 .PublicKey(ValidDefaultPk)
                 .SecretKey(ValidDefaultSk)
                 .Environment(Environment.Sandbox)
+                .EnvironmentSubdomain("1234doma")
                 .HttpClientFactory(httpClientFactory.Object)
                 .Build();
 
             checkoutApi.ShouldNotBeNull();
             httpClientFactory.Verify(mock => mock.CreateClient());
         }
-        
+
         [Fact]
         private async void ShouldCreateStaticKeysWithSubdomainCheckoutSdks()
         {
@@ -104,7 +191,7 @@ namespace Checkout
                 .Build();
 
             checkoutApi1.ShouldNotBeNull();
-            
+
             var checkoutApi2 = CheckoutSdk
                 .Builder()
                 .StaticKeys()
