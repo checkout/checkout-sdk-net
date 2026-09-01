@@ -384,5 +384,66 @@ namespace Checkout.Payments
             Serializer.Serialize(source).ShouldContain(@"""type"":""" + wire + @"""");
         }
 
+
+        // ------------------------------------------------------------------------
+        // RequestSepaSource
+        // Schema validation tests for RequestSepaSource against PaymentRequestSEPAV4Source, which
+        // declares type, country, account_number, currency, mandate_id, mandate_type,
+        // date_of_signature and account_holder. mandate_type was previously absent from the SDK.
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldSerializeTheSepaSourceMandateType()
+        {
+            var source = new RequestSepaSource
+            {
+                Country = CountryCode.FR,
+                AccountNumber = "FR7630006000011234567890189",
+                Currency = Common.Currency.EUR,
+                MandateId = "123456",
+                MandateType = SepaMandateType.B2B,
+                DateOfSignature = "2022-08-02"
+            };
+
+            var json = Serializer.Serialize(source);
+
+            json.ShouldContain(@"""type"":""sepa""");
+            json.ShouldContain(@"""country"":""FR""");
+            json.ShouldContain(@"""account_number"":""FR7630006000011234567890189""");
+            json.ShouldContain(@"""currency"":""EUR""");
+            json.ShouldContain(@"""mandate_id"":""123456""");
+            json.ShouldContain(@"""mandate_type"":""B2B""");
+            json.ShouldContain(@"""date_of_signature"":""2022-08-02""");
+        }
+
+        [Theory]
+        [InlineData(SepaMandateType.Core, "Core")]
+        [InlineData(SepaMandateType.B2B, "B2B")]
+        public void ShouldMapEverySepaMandateTypeToItsWireValue(SepaMandateType type, string wire)
+        {
+            CheckoutUtils.GetEnumMemberValue(type).ShouldBe(wire);
+            CheckoutUtils.GetEnumFromStringMemberValue<SepaMandateType>(wire).ShouldBe(type);
+        }
+
+        [Fact]
+        public void ShouldNotSendAMandateTypeThatWasNotSet()
+        {
+            var source = new RequestSepaSource { Country = CountryCode.FR };
+
+            Serializer.Serialize(source).ShouldNotContain("mandate_type");
+        }
+
+        [Fact]
+        public void ShouldKeepTheSepaMandateEnumsSeparate()
+        {
+            // The payments source enum and the instruments enum carry the same two values today but
+            // belong to independent schemas. The previous platform's MandateType is a different set
+            // entirely, which is why neither is shared.
+            CheckoutUtils.GetEnumMemberValue(SepaMandateType.Core).ShouldBe("Core");
+            CheckoutUtils.GetEnumMemberValue(Instruments.SepaMandateType.Core).ShouldBe("Core");
+            CheckoutUtils.GetEnumMemberValue(Sources.Previous.MandateType.Single).ShouldBe("single");
+            CheckoutUtils.GetEnumMemberValue(Sources.Previous.MandateType.Recurring).ShouldBe("recurring");
+        }
+
     }
 }
