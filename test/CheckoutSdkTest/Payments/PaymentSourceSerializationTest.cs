@@ -445,5 +445,65 @@ namespace Checkout.Payments
             CheckoutUtils.GetEnumMemberValue(Sources.Previous.MandateType.Recurring).ShouldBe("recurring");
         }
 
+        // ------------------------------------------------------------------------
+        // RequestAchSource.AccountType
+        // PaymentRequestAchSource is the only schema declaring savings / checking /
+        // cash. It previously used Checkout.Common.AccountType, which declares
+        // "current" instead of "checking", so a valid account type could not be sent
+        // and an invalid one was offered.
+        // ------------------------------------------------------------------------
+
+        [Theory]
+        [InlineData(AchSourceAccountType.Savings, "savings")]
+        [InlineData(AchSourceAccountType.Checking, "checking")]
+        [InlineData(AchSourceAccountType.Cash, "cash")]
+        public void ShouldSerializeAchSourceAccountType(AchSourceAccountType accountType, string expected)
+        {
+            var source = new RequestAchSource { AccountType = accountType };
+
+            var json = Serializer.Serialize(source);
+
+            json.ShouldContain("\"account_type\":\"" + expected + "\"");
+        }
+
+        [Fact]
+        public void ShouldDeclareExactlyTheThreeAchSourceAccountTypes()
+        {
+            var values = System.Enum.GetNames(typeof(AchSourceAccountType));
+
+            values.Length.ShouldBe(3);
+            values.ShouldContain("Savings");
+            values.ShouldContain("Checking");
+            values.ShouldContain("Cash");
+        }
+
+        [Fact]
+        public void AchSourceAccountTypeShouldDifferFromTheSharedAccountType()
+        {
+            // The shared enum cannot express "checking" and offers "current", which
+            // PaymentRequestAchSource rejects. If these two are ever unified, this fails.
+            System.Enum.GetNames(typeof(AccountType)).ShouldContain("Current");
+            System.Enum.GetNames(typeof(AccountType)).ShouldNotContain("Checking");
+            System.Enum.GetNames(typeof(AchSourceAccountType)).ShouldNotContain("Current");
+        }
+
+        [Fact]
+        public void ShouldRoundTripAchSourceWithCheckingAccountType()
+        {
+            var original = new RequestAchSource
+            {
+                AccountType = AchSourceAccountType.Checking,
+                Country = CountryCode.US,
+                AccountNumber = "136549956",
+                BankCode = "021000021"
+            };
+
+            var json = Serializer.Serialize(original);
+
+            json.ShouldContain("\"type\":\"ach\"");
+            json.ShouldContain("\"account_type\":\"checking\"");
+            json.ShouldContain("\"account_number\":\"136549956\"");
+            json.ShouldContain("\"bank_code\":\"021000021\"");
+        }
     }
 }
