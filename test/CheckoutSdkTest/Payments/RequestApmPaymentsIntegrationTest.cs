@@ -647,7 +647,7 @@ namespace Checkout.Payments
             {
                 Source = new RequestAchSource
                 {
-                    AccountType = AccountType.Savings,
+                    AccountType = AchSourceAccountType.Savings,
                     Country = CountryCode.GB,
                     AccountNumber = "8784738748973829",
                     BankCode = "BANK",
