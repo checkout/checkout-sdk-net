@@ -627,7 +627,20 @@ namespace Checkout.Payments
                     BankCode = "37040044",
                     MandateId = "man_12321233211",
                     DateOfSignature = ("2023-01-01"),
-                    AccountHolder = GetAccountHolder()
+                    AccountHolder = new SepaSourceAccountHolder
+                    {
+                        FirstName = "John",
+                        LastName = "Smith",
+                        Type = SepaSourceAccountHolderType.Individual,
+                        BillingAddress = new SepaSourceBillingAddress
+                        {
+                            AddressLine1 = "Cloverfield St.",
+                            AddressLine2 = "23A",
+                            City = "London",
+                            Zip = "SW1A 1AA",
+                            Country = CountryCode.GB
+                        }
+                    }
                 },
                 Currency = Currency.EUR,
                 Amount = 10,
@@ -651,7 +664,12 @@ namespace Checkout.Payments
                     Country = CountryCode.GB,
                     AccountNumber = "8784738748973829",
                     BankCode = "BANK",
-                    AccountHolder = GetAccountHolder()
+                    AccountHolder = new AchSourceAccountHolder
+                    {
+                        Type = AccountHolderType.Individual,
+                        FirstName = "John",
+                        LastName = "Smith"
+                    }
                 },
                 Amount = 10L,
                 Currency = Currency.EUR,

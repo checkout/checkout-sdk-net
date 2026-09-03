@@ -59,6 +59,6 @@ namespace Checkout.Payments.Request.Source.Apm
         /// The account holder's personal information.
         /// [Required]
         /// </summary>
-        public AccountHolder AccountHolder { get; set; }
+        public SepaSourceAccountHolder AccountHolder { get; set; }
     }
 }
