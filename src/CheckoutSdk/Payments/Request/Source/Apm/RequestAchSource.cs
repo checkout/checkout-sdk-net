@@ -38,12 +38,10 @@ namespace Checkout.Payments.Request.Source.Apm
         public string BankCode { get; set; }
 
         /// <summary>
-        /// The account holder's details. Maps swagger AccountHolderAch, which declares
-        /// only type, first_name, last_name, company_name, date_of_birth,
-        /// billing_address and identification.
+        /// The account holder's details.
         /// [Required]
         /// </summary>
-        public AccountHolder AccountHolder { get; set; }
+        public AchSourceAccountHolder AccountHolder { get; set; }
 
         public RequestAchSource() : base(PaymentSourceType.Ach)
         {
