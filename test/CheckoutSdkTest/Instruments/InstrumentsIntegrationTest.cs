@@ -47,31 +47,25 @@ namespace Checkout.Instruments
             var request = new CreateSepaInstrumentRequest
             {
                 Type = InstrumentType.Sepa,
-                InstrumentData = new InstrumentData
+                InstrumentData = new CreateSepaInstrumentData
                 {
                     AccountNumber = "FR7630006000011234567890189",
                     Country = CountryCode.FR,
                     Currency = Currency.EUR,
-                    PaymentType = PaymentType.Recurring,
+                    PaymentType = SepaPaymentType.Recurring,
                 },
-                AccountHolder = new AccountHolder
+                AccountHolder = new CreateSepaAccountHolder
                 {
-                    Type = AccountHolderType.Individual,
+                    Type = InstrumentAccountHolderType.Individual,
                     FirstName = "Ali",
                     LastName = "Farid",
-                    DateOfBirth = "1986-01-01T00:00:00.000Z",
-                    BillingAddress = new Address
+                    BillingAddress = new CreateSepaBillingAddress
                     {
                         AddressLine1 = "Rue Exemple",
                         AddressLine2 = "1",
                         City = "Paris",
                         Zip = "1234",
                         Country = CountryCode.FR
-                    },
-                    Phone = new Phone
-                    {
-                        CountryCode = "33",
-                        Number = "123456789"
                     }
                 }
             };

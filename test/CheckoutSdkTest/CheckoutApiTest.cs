@@ -1,4 +1,4 @@
-using Moq;
+﻿using Moq;
 using Shouldly;
 using System.Net.Http;
 using Xunit;
@@ -69,6 +69,7 @@ namespace Checkout
             checkoutApi.BalancesClient().ShouldNotBeNull();
             checkoutApi.TransfersClient().ShouldNotBeNull();
             checkoutApi.MetadataClient().ShouldNotBeNull();
+            checkoutApi.BacsClient().ShouldNotBeNull();
         }
     }
 }

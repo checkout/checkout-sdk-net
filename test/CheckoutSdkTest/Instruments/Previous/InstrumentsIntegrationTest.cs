@@ -22,7 +22,7 @@ namespace Checkout.Instruments.Previous
             createInstrumentResponse.CardCategory.ShouldBe(CardCategory.Consumer);
             createInstrumentResponse.CardType.ShouldBe(CardType.Credit);
             createInstrumentResponse.Customer.ShouldNotBeNull();
-            createInstrumentResponse.Customer.Default.ShouldBeFalse();
+            createInstrumentResponse.Customer.Default.ShouldBe(false);
             createInstrumentResponse.Customer.Email.ShouldNotBeNullOrEmpty();
             createInstrumentResponse.Customer.Id.ShouldNotBeNullOrEmpty();
             createInstrumentResponse.Customer.Name.ShouldNotBeNullOrEmpty();
@@ -45,7 +45,7 @@ namespace Checkout.Instruments.Previous
             retrieveInstrumentResponse.CardCategory.ShouldBe(CardCategory.Consumer);
             retrieveInstrumentResponse.CardType.ShouldBe(CardType.Credit);
             retrieveInstrumentResponse.Customer.ShouldNotBeNull();
-            retrieveInstrumentResponse.Customer.Default.ShouldBeTrue();
+            retrieveInstrumentResponse.Customer.Default.ShouldBe(true);
             retrieveInstrumentResponse.Customer.Email.ShouldNotBeNullOrEmpty();
             retrieveInstrumentResponse.Customer.Id.ShouldNotBeNullOrEmpty();
             retrieveInstrumentResponse.Customer.Name.ShouldNotBeNullOrEmpty();
