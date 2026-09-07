@@ -39,5 +39,36 @@ namespace Checkout.Balances
 
             response.ShouldNotBeNull();
         }
+
+        [Fact]
+        private async Task ShouldRetrieveTopUpInstructions()
+        {
+            var responseAsync = new TopUpInstructionsResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Get<TopUpInstructionsResponse>(
+                        "entities/ent_w4jelhppmfiufdnatam37wrfc4/currency-accounts/ca_g5y7d6jo4e2urgforcbf2ey5jm/top-up-instructions",
+                        It.IsAny<SdkAuthorization>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => responseAsync);
+
+            var response = await _balancesClient.RetrieveTopUpInstructions("ent_w4jelhppmfiufdnatam37wrfc4",
+                "ca_g5y7d6jo4e2urgforcbf2ey5jm");
+
+            response.ShouldNotBeNull();
+            response.ShouldBeSameAs(responseAsync);
+        }
+
+        [Theory]
+        [InlineData(null, "ca_g5y7d6jo4e2urgforcbf2ey5jm")]
+        [InlineData("", "ca_g5y7d6jo4e2urgforcbf2ey5jm")]
+        [InlineData("ent_w4jelhppmfiufdnatam37wrfc4", null)]
+        [InlineData("ent_w4jelhppmfiufdnatam37wrfc4", "")]
+        private async Task ShouldThrowWhenTopUpInstructionsIdentifiersAreMissing(string entityId,
+            string currencyAccountId)
+        {
+            await Should.ThrowAsync<CheckoutArgumentException>(() =>
+                _balancesClient.RetrieveTopUpInstructions(entityId, currencyAccountId));
+        }
     }
 }
