@@ -39,6 +39,7 @@
         [OAuthScope("files:download")] FilesDownload,
         [OAuthScope("balances")] Balances,
         [OAuthScope("balances:view")] BalancesView,
+        [OAuthScope("balances:top-up-instructions")] BalancesTopUpInstructions,
         [OAuthScope("middleware")] Middleware,
         [OAuthScope("middleware:merchants-secret")] MiddlewareMerchantsSecret,
         [OAuthScope("middleware:merchants-public")] MiddlewareMerchantsPublic,
