@@ -10,6 +10,14 @@
     /// <c>compliance-requests:respond</c>, <c>vault:gpayme-enrollment</c> and
     /// <c>vault:tokens-metadata</c>.</para>
     ///
+    /// <para>Five further members -- <c>issuing:card-mgmt</c>, <c>issuing:client</c>,
+    /// <c>marketplace</c>, <c>middleware:gateway</c> and <c>middleware:payment-context</c> --
+    /// appear nowhere in the specification at all, but the authorization server still grants them
+    /// and callers still request them, so they are kept for backward compatibility. Each is marked
+    /// inline. Do not assume a scope is dead because the specification omits it: the sandbox
+    /// payouts client is provisioned for <c>marketplace</c> and answers a request for
+    /// <c>accounts</c> with <c>invalid_scope</c>.</para>
+    ///
     /// <para>Members are ordered alphabetically. The wire value comes from the
     /// <see cref="OAuthScopeAttribute"/>, never from the member name, so a member may be
     /// moved freely -- but note that <c>CheckoutOptions.Scopes</c> is bound from
@@ -54,8 +62,10 @@
         [OAuthScope("gateway:payment-refunds")] GatewayPaymentRefunds,
         [OAuthScope("gateway:payment-voids")] GatewayPaymentVoids,
         [OAuthScope("identity-verification")] IdentityVerification,
+        [OAuthScope("issuing:card-mgmt")] IssuingCard, // not in the spec; kept for backward compatibility
         [OAuthScope("issuing:card-management-read")] IssuingCardManagementRead,
         [OAuthScope("issuing:card-management-write")] IssuingCardManagementWrite,
+        [OAuthScope("issuing:client")] IssuingClient, // not in the spec; kept for backward compatibility
         [OAuthScope("issuing:controls-read")] IssuingControlRead,
         [OAuthScope("issuing:controls-write")] IssuingControlWrite,
         [OAuthScope("issuing-disputes")] IssuingDisputes,
@@ -63,9 +73,12 @@
         [OAuthScope("issuing:disputes-write")] IssuingDisputesWrite,
         [OAuthScope("issuing:transactions-read")] IssuingTransactionsRead,
         [OAuthScope("issuing:transactions-write")] IssuingTransactionsWrite,
+        [OAuthScope("marketplace")] Marketplace, // not in the spec; kept for backward compatibility
         [OAuthScope("middleware")] Middleware,
+        [OAuthScope("middleware:gateway")] MiddlewareGateway, // not in the spec; kept for backward compatibility
         [OAuthScope("middleware:merchants-public")] MiddlewareMerchantsPublic,
         [OAuthScope("middleware:merchants-secret")] MiddlewareMerchantsSecret,
+        [OAuthScope("middleware:payment-context")] MiddlewarePaymentContext, // not in the spec; kept for backward compatibility
         [OAuthScope("Payment Context")] PaymentContext,
         [OAuthScope("payment-sessions")] PaymentSessions,
         [OAuthScope("payments:search")] PaymentsSearch,

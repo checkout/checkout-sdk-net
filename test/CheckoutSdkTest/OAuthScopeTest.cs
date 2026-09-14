@@ -68,10 +68,11 @@ namespace Checkout
             }
         }
 
-        // Two members sharing a wire value means one of them is a copy-paste error. It cannot be
-        // caught by the per-scope assertions above, which only ever read the member they name, and
-        // it is invisible in use: the duplicate is silently collapsed by the ISet<OAuthScope> in
-        // OAuthSdkCredentials, so the caller quietly never requests the scope it asked for.
+        // Two members sharing a wire value means one of them is a copy-paste error, and it cannot
+        // be caught by the per-scope assertions above, which only ever read the member they name.
+        // The consequence is silent in both directions: a caller selecting the mistyped member
+        // requests a scope it did not ask for, and the scope that member was supposed to carry is
+        // left with no member at all, so it becomes unreachable through this enum.
         [Fact]
         public void ShouldNotReuseAWireValueAcrossMembers()
         {
