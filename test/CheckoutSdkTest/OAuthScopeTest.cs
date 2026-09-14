@@ -53,6 +53,25 @@ namespace Checkout
             scope.GetAttribute<OAuthScopeAttribute>().Scope.ShouldBe(expected);
         }
 
+        // These five scopes appear nowhere in the specification -- neither in the clientCredentials
+        // scope map nor in any operation's security requirement -- so a sweep driven by the spec
+        // alone would delete them. They are kept deliberately: the authorization server still
+        // grants them and callers still request them. marketplace is the proof: the sandbox payouts
+        // client is provisioned for it and answers a request for accounts with invalid_scope.
+        //
+        // IssuingCard rather than IssuingCardMgmt: that is the member name this SDK has always
+        // exposed for issuing:card-mgmt, and renaming it would defeat the point of keeping it.
+        [Theory]
+        [InlineData(OAuthScope.IssuingCard, "issuing:card-mgmt")]
+        [InlineData(OAuthScope.IssuingClient, "issuing:client")]
+        [InlineData(OAuthScope.Marketplace, "marketplace")]
+        [InlineData(OAuthScope.MiddlewareGateway, "middleware:gateway")]
+        [InlineData(OAuthScope.MiddlewarePaymentContext, "middleware:payment-context")]
+        public void ShouldRetainTheLegacyScopesTheSpecificationOmits(OAuthScope scope, string expected)
+        {
+            scope.GetAttribute<OAuthScopeAttribute>().Scope.ShouldBe(expected);
+        }
+
         // A member with no [OAuthScope] attribute is not a compile error and not a visible defect:
         // GetAttribute returns null (EnvironmentExtension.cs:14), so the first OAuth token request
         // that includes the member dies with a NullReferenceException from inside GetScopes. This
