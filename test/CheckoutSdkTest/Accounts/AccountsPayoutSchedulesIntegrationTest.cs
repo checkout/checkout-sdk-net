@@ -105,7 +105,9 @@ namespace Checkout.Accounts
                 .ClientCredentials(
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_ID"),
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET"))
-                .Scopes(OAuthScope.Marketplace)
+                // The marketplace scope was retired; both payout-schedules operations document
+                // accounts as their OAuth requirement.
+                .Scopes(OAuthScope.Accounts)
                 .LogProvider(logFactory)
                 // The sandbox OAuth clients are not provisioned for the merchant-specific subdomain,
                 // so the token request would come back invalid_client. Opting out explicitly until

@@ -121,10 +121,14 @@ namespace Checkout
                             OAuthScope.FinancialActions, OAuthScope.Forward, OAuthScope.ForwardSecrets,
                             OAuthScope.PaymentsSearch, OAuthScope.IssuingDisputesRead,
                             OAuthScope.IssuingDisputesWrite, OAuthScope.IssuingTransactionsRead,
-                            OAuthScope.IssuingCard, 
+                            // issuing:card-mgmt and issuing:client were retired: neither is
+                            // declared in the spec's scope map nor requested by any operation. The
+                            // card-management pair replaces the former; the latter has no
+                            // documented equivalent.
+                            OAuthScope.IssuingCardManagementRead,
+                            OAuthScope.IssuingCardManagementWrite,
                             OAuthScope.IssuingControlRead,
-                            OAuthScope.IssuingControlWrite,
-                            OAuthScope.IssuingClient
+                            OAuthScope.IssuingControlWrite
                             )
                         .Environment(Environment.Sandbox)
                         //.HttpClientFactory(new CustomClientFactory("3.0"))

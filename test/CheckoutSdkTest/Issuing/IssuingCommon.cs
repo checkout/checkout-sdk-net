@@ -128,8 +128,12 @@ namespace Checkout.Issuing
                 .ClientCredentials(
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_ID"),
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_SECRET"))
-                .Scopes(OAuthScope.IssuingCard, OAuthScope.IssuingControlRead, OAuthScope.IssuingControlWrite,
-                    OAuthScope.IssuingClient, OAuthScope.IssuingTransactionsRead, OAuthScope.Vault)
+                // issuing:card-mgmt and issuing:client were retired: neither is declared in the
+                // spec's scope map nor requested by any operation. The card-management pair below
+                // replaces the former; the latter has no documented equivalent.
+                .Scopes(OAuthScope.IssuingCardManagementRead, OAuthScope.IssuingCardManagementWrite,
+                    OAuthScope.IssuingControlRead, OAuthScope.IssuingControlWrite,
+                    OAuthScope.IssuingTransactionsRead, OAuthScope.Vault)
                 .Environment(Environment.Sandbox)
                 .LogProvider(logFactory)
                 // The sandbox OAuth clients are not provisioned for the merchant-specific subdomain,
