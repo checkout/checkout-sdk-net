@@ -34,6 +34,7 @@ namespace Checkout
         // the /googlepay/enrollments operations and GET /tokens/{tokenId}/metadata. A client built
         // from the declared map alone would be missing them.
         [Theory]
+        [InlineData(OAuthScope.AgenticInventory, "agentic:inventory")]
         [InlineData(OAuthScope.CardManagement, "card-management")]
         [InlineData(OAuthScope.FlowReflow, "flow:reflow")]
         [InlineData(OAuthScope.GatewayPaymentContexts, "gateway:payment-contexts")]

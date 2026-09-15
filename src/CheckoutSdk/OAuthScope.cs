@@ -27,6 +27,7 @@
     public enum OAuthScope
     {
         [OAuthScope("accounts")] Accounts,
+        [OAuthScope("agentic:inventory")] AgenticInventory,
         [OAuthScope("balances")] Balances,
         [OAuthScope("balances:top-up-instructions")] BalancesTopUpInstructions,
         [OAuthScope("balances:view")] BalancesView,
@@ -62,10 +63,10 @@
         [OAuthScope("gateway:payment-refunds")] GatewayPaymentRefunds,
         [OAuthScope("gateway:payment-voids")] GatewayPaymentVoids,
         [OAuthScope("identity-verification")] IdentityVerification,
-        [OAuthScope("issuing:card-mgmt")] IssuingCard, // not in the spec; kept for backward compatibility
+        [OAuthScope("issuing:card-mgmt")] IssuingCard, // not in spec; kept for backward compat
         [OAuthScope("issuing:card-management-read")] IssuingCardManagementRead,
         [OAuthScope("issuing:card-management-write")] IssuingCardManagementWrite,
-        [OAuthScope("issuing:client")] IssuingClient, // not in the spec; kept for backward compatibility
+        [OAuthScope("issuing:client")] IssuingClient, // not in spec; kept for backward compat
         [OAuthScope("issuing:controls-read")] IssuingControlRead,
         [OAuthScope("issuing:controls-write")] IssuingControlWrite,
         [OAuthScope("issuing-disputes")] IssuingDisputes,
@@ -73,12 +74,12 @@
         [OAuthScope("issuing:disputes-write")] IssuingDisputesWrite,
         [OAuthScope("issuing:transactions-read")] IssuingTransactionsRead,
         [OAuthScope("issuing:transactions-write")] IssuingTransactionsWrite,
-        [OAuthScope("marketplace")] Marketplace, // not in the spec; kept for backward compatibility
+        [OAuthScope("marketplace")] Marketplace, // not in spec; kept for backward compat
         [OAuthScope("middleware")] Middleware,
-        [OAuthScope("middleware:gateway")] MiddlewareGateway, // not in the spec; kept for backward compatibility
+        [OAuthScope("middleware:gateway")] MiddlewareGateway, // not in spec; kept for backward compat
         [OAuthScope("middleware:merchants-public")] MiddlewareMerchantsPublic,
         [OAuthScope("middleware:merchants-secret")] MiddlewareMerchantsSecret,
-        [OAuthScope("middleware:payment-context")] MiddlewarePaymentContext, // not in the spec; kept for backward compatibility
+        [OAuthScope("middleware:payment-context")] MiddlewarePaymentContext, // not in spec; kept for backward compat
         [OAuthScope("Payment Context")] PaymentContext,
         [OAuthScope("payment-sessions")] PaymentSessions,
         [OAuthScope("payments:search")] PaymentsSearch,
