@@ -86,6 +86,13 @@ namespace Checkout.Identities.IdDocumentVerification
                 SdkAuthorization(), cancellationToken);
         }
 
+        /// <summary>
+        /// Retrieves a page of attempts for an ID document verification
+        /// </summary>
+        /// <param name="idDocumentVerificationId">the ID document verification ID</param>
+        /// <param name="query">the pagination query parameters (skip and limit)</param>
+        /// <param name="cancellationToken">the cancellation token</param>
+        /// <returns>the ID document verification attempts response</returns>
         public Task<IdDocumentVerificationAttemptsResponse> GetIdDocumentVerificationAttempts(string idDocumentVerificationId, AttemptsQuery query, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("idDocumentVerificationId", idDocumentVerificationId);
@@ -121,6 +128,15 @@ namespace Checkout.Identities.IdDocumentVerification
                 SdkAuthorization(), cancellationToken);
         }
 
+        /// <summary>
+        /// Retrieves the assets (the front and back images of the document) uploaded for an
+        /// ID document verification attempt. Beta.
+        /// </summary>
+        /// <param name="idDocumentVerificationId">the ID document verification ID</param>
+        /// <param name="attemptId">the attempt ID</param>
+        /// <param name="query">the pagination query parameters (skip and limit)</param>
+        /// <param name="cancellationToken">the cancellation token</param>
+        /// <returns>the ID document verification attempt assets response</returns>
         public Task<IdDocumentVerificationAttemptAssetsResponse> GetIdDocumentVerificationAttemptAssets(string idDocumentVerificationId, string attemptId, AttemptAssetsQuery query = null, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("idDocumentVerificationId", idDocumentVerificationId);

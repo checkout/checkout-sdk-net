@@ -100,6 +100,13 @@ namespace Checkout.Identities.IdentityVerification
                 SdkAuthorization(), cancellationToken);
         }
 
+        /// <summary>
+        /// Retrieves a page of attempts for an identity verification
+        /// </summary>
+        /// <param name="identityVerificationId">the identity verification ID</param>
+        /// <param name="query">the pagination query parameters (skip and limit)</param>
+        /// <param name="cancellationToken">the cancellation token</param>
+        /// <returns>the identity verification attempts response</returns>
         public Task<IdentityVerificationAttemptsResponse> GetIdentityVerificationAttempts(string identityVerificationId, AttemptsQuery query, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("identityVerificationId", identityVerificationId);
