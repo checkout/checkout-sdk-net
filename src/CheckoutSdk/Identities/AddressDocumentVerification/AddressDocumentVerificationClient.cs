@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Checkout.Identities.AddressDocumentVerification.Requests;
 using Checkout.Identities.AddressDocumentVerification.Responses;
+using Checkout.Identities.Entities;
 
 namespace Checkout.Identities.AddressDocumentVerification
 {
@@ -11,6 +12,7 @@ namespace Checkout.Identities.AddressDocumentVerification
         private const string AnonymizePath = "anonymize";
         private const string AttemptsPath = "attempts";
         private const string ReportPath = "pdf-report";
+        private const string AssetsPath = "assets";
 
         public AddressDocumentVerificationClient(IApiClient apiClient, CheckoutConfiguration configuration) :
             base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
@@ -53,6 +55,13 @@ namespace Checkout.Identities.AddressDocumentVerification
                 SdkAuthorization(), cancellationToken);
         }
 
+        public Task<AddressDocumentVerificationAttemptsResponse> GetAddressDocumentVerificationAttempts(string addressDocumentVerificationId, AttemptsQuery query, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("addressDocumentVerificationId", addressDocumentVerificationId);
+            return ApiClient.Query<AddressDocumentVerificationAttemptsResponse>(BuildPath(AddressDocumentVerificationsPath, addressDocumentVerificationId, AttemptsPath),
+                SdkAuthorization(), query, cancellationToken);
+        }
+
         public Task<AddressDocumentVerificationAttemptResponse> GetAddressDocumentVerificationAttempt(string addressDocumentVerificationId, string attemptId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("addressDocumentVerificationId", addressDocumentVerificationId);
@@ -66,6 +75,14 @@ namespace Checkout.Identities.AddressDocumentVerification
             CheckoutUtils.ValidateParams("addressDocumentVerificationId", addressDocumentVerificationId);
             return ApiClient.Get<AddressDocumentVerificationReportResponse>(BuildPath(AddressDocumentVerificationsPath, addressDocumentVerificationId, ReportPath),
                 SdkAuthorization(), cancellationToken);
+        }
+
+        public Task<AddressDocumentVerificationAttemptAssetsResponse> GetAddressDocumentVerificationAttemptAssets(string addressDocumentVerificationId, string attemptId, AttemptAssetsQuery query = null, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("addressDocumentVerificationId", addressDocumentVerificationId);
+            CheckoutUtils.ValidateParams("attemptId", attemptId);
+            return ApiClient.Query<AddressDocumentVerificationAttemptAssetsResponse>(BuildPath(AddressDocumentVerificationsPath, addressDocumentVerificationId, AttemptsPath, attemptId, AssetsPath),
+                SdkAuthorization(), query, cancellationToken);
         }
     }
 }

@@ -2,6 +2,9 @@ using System.Runtime.Serialization;
 
 namespace Checkout.Identities.Entities
 {
+    /// <summary>
+    /// The status of an identity verification.
+    /// </summary>
     public enum IdentityVerificationStatus
     {
         [EnumMember(Value = "approved")]
@@ -10,6 +13,9 @@ namespace Checkout.Identities.Entities
         CaptureInProgress,
         [EnumMember(Value = "checks_in_progress")]
         ChecksInProgress,
+
+        [EnumMember(Value = "created")]
+        Created,
         [EnumMember(Value = "declined")]
         Declined,
         [EnumMember(Value = "inconclusive")]

@@ -100,6 +100,13 @@ namespace Checkout.Identities.IdentityVerification
                 SdkAuthorization(), cancellationToken);
         }
 
+        public Task<IdentityVerificationAttemptsResponse> GetIdentityVerificationAttempts(string identityVerificationId, AttemptsQuery query, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("identityVerificationId", identityVerificationId);
+            return ApiClient.Query<IdentityVerificationAttemptsResponse>(BuildPath(IdentityVerificationsPath, identityVerificationId, AttemptsPath), 
+                SdkAuthorization(), query, cancellationToken);
+        }
+
         /// <summary>
         /// Retrieves a specific attempt for an identity verification
         /// </summary>

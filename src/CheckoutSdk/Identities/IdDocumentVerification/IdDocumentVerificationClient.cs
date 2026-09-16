@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Checkout.Identities.IdDocumentVerification.Requests;
 using Checkout.Identities.IdDocumentVerification.Responses;
+using Checkout.Identities.Entities;
 
 namespace Checkout.Identities.IdDocumentVerification
 {
@@ -11,6 +12,7 @@ namespace Checkout.Identities.IdDocumentVerification
         private const string AnonymizePath = "anonymize";
         private const string AttemptsPath = "attempts";
         private const string ReportPath = "pdf-report";
+        private const string AssetsPath = "assets";
 
         public IdDocumentVerificationClient(IApiClient apiClient, CheckoutConfiguration configuration) :
             base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
@@ -84,6 +86,13 @@ namespace Checkout.Identities.IdDocumentVerification
                 SdkAuthorization(), cancellationToken);
         }
 
+        public Task<IdDocumentVerificationAttemptsResponse> GetIdDocumentVerificationAttempts(string idDocumentVerificationId, AttemptsQuery query, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("idDocumentVerificationId", idDocumentVerificationId);
+            return ApiClient.Query<IdDocumentVerificationAttemptsResponse>(BuildPath(IdDocumentVerificationsPath, idDocumentVerificationId, AttemptsPath), 
+                SdkAuthorization(), query, cancellationToken);
+        }
+
         /// <summary>
         ///     Retrieves a specific attempt for an ID document verification
         /// </summary>
@@ -110,6 +119,14 @@ namespace Checkout.Identities.IdDocumentVerification
             CheckoutUtils.ValidateParams("idDocumentVerificationId", idDocumentVerificationId);
             return ApiClient.Get<IdDocumentVerificationReportResponse>(BuildPath(IdDocumentVerificationsPath, idDocumentVerificationId, ReportPath), 
                 SdkAuthorization(), cancellationToken);
+        }
+
+        public Task<IdDocumentVerificationAttemptAssetsResponse> GetIdDocumentVerificationAttemptAssets(string idDocumentVerificationId, string attemptId, AttemptAssetsQuery query = null, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("idDocumentVerificationId", idDocumentVerificationId);
+            CheckoutUtils.ValidateParams("attemptId", attemptId);
+            return ApiClient.Query<IdDocumentVerificationAttemptAssetsResponse>(BuildPath(IdDocumentVerificationsPath, idDocumentVerificationId, AttemptsPath, attemptId, AssetsPath),
+                SdkAuthorization(), query, cancellationToken);
         }
     }
 }

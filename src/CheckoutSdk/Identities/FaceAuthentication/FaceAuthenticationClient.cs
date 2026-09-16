@@ -85,6 +85,13 @@ namespace Checkout.Identities.FaceAuthentication
                 SdkAuthorization(), cancellationToken);
         }
 
+        public Task<FaceAuthenticationAttemptsResponse> GetFaceAuthenticationAttempts(string faceAuthenticationId, AttemptsQuery query, CancellationToken cancellationToken = default)
+        {
+            CheckoutUtils.ValidateParams("faceAuthenticationId", faceAuthenticationId);
+            return ApiClient.Query<FaceAuthenticationAttemptsResponse>(BuildPath(FaceAuthenticationsPath, faceAuthenticationId, AttemptsPath), 
+                SdkAuthorization(), query, cancellationToken);
+        }
+
         /// <summary>
         ///     Retrieves a specific attempt for a face authentication
         /// </summary>

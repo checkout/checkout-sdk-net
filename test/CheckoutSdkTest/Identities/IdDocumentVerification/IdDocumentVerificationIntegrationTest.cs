@@ -258,13 +258,57 @@ namespace Checkout.Identities.IdDocumentVerification
         private static void ValidateIdDocumentVerificationReport(IdDocumentVerificationReportResponse response)
         {
             response.ShouldNotBeNull();
-            response.SignedUrl.ShouldNotBeNullOrEmpty();
-            response.SignedUrl.ShouldStartWith("https://");
+            response.PdfReport.ShouldNotBeNullOrEmpty();
+            response.PdfReport.ShouldStartWith("https://");
         }
 
         private static string GenerateRandomId()
         {
             return Guid.NewGuid().ToString("N")[..16];
+        }
+        [Fact(Skip = "This test requires valid test environment setup")]
+        private async Task ShouldGetIdDocumentVerificationAttemptAssets()
+        {
+            // Arrange
+            var createdIdDocumentVerification = await DefaultApi.IdDocumentVerificationClient()
+                .CreateIdDocumentVerification(CreateIdDocumentVerificationRequest());
+
+            var createdAttempt = await DefaultApi.IdDocumentVerificationClient()
+                .CreateIdDocumentVerificationAttempt(createdIdDocumentVerification.Id, CreateIdDocumentVerificationAttemptRequest());
+
+            var query = new AttemptAssetsQuery { Skip = 0, Limit = 10 };
+
+            // Act
+            var assets = await DefaultApi.IdDocumentVerificationClient()
+                .GetIdDocumentVerificationAttemptAssets(createdIdDocumentVerification.Id, createdAttempt.Id, query);
+
+            // Assert
+            assets.ShouldNotBeNull();
+            assets.Data.ShouldNotBeNull();
+            assets.TotalCount.ShouldBeGreaterThanOrEqualTo(0);
+            assets.Limit.ShouldBe(10);
+        }
+
+        [Fact(Skip = "This test requires valid test environment setup")]
+        private async Task ShouldGetIdDocumentVerificationAttemptsPaginated()
+        {
+            // Arrange
+            var createdIdDocumentVerification = await DefaultApi.IdDocumentVerificationClient()
+                .CreateIdDocumentVerification(CreateIdDocumentVerificationRequest());
+
+            await DefaultApi.IdDocumentVerificationClient()
+                .CreateIdDocumentVerificationAttempt(createdIdDocumentVerification.Id, CreateIdDocumentVerificationAttemptRequest());
+
+            var query = new AttemptsQuery { Skip = 0, Limit = 5 };
+
+            // Act
+            var attempts = await DefaultApi.IdDocumentVerificationClient()
+                .GetIdDocumentVerificationAttempts(createdIdDocumentVerification.Id, query);
+
+            // Assert
+            attempts.ShouldNotBeNull();
+            attempts.Data.ShouldNotBeNull();
+            attempts.Limit.ShouldBe(5);
         }
     }
 }

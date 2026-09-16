@@ -2,6 +2,9 @@ using System.Runtime.Serialization;
 
 namespace Checkout.Identities.Entities
 {
+    /// <summary>
+    /// The status of a verification attempt.
+    /// </summary>
     public enum AttemptVerificationStatus
     {
         [EnumMember(Value = "capture_aborted")]
@@ -19,6 +22,9 @@ namespace Checkout.Identities.Entities
         [EnumMember(Value = "pending_redirection")]
         PendingRedirection,
         [EnumMember(Value = "capture_refused")]
-        CaptureRefused
+        CaptureRefused,
+
+        [EnumMember(Value = "terminated")]
+        Terminated
     }
 }

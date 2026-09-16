@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Checkout.Identities.IdDocumentVerification.Requests;
 using Checkout.Identities.IdDocumentVerification.Responses;
+using Checkout.Identities.Entities;
 
 namespace Checkout.Identities.IdDocumentVerification
 {
@@ -52,6 +53,15 @@ namespace Checkout.Identities.IdDocumentVerification
         Task<IdDocumentVerificationAttemptsResponse> GetIdDocumentVerificationAttempts(string idDocumentVerificationId, CancellationToken cancellationToken = default);
 
         /// <summary>
+        ///     Retrieves a page of attempts for an ID document verification
+        /// </summary>
+        /// <param name="idDocumentVerificationId">the ID document verification ID</param>
+        /// <param name="query">the pagination query parameters (skip and limit)</param>
+        /// <param name="cancellationToken">the cancellation token</param>
+        /// <returns>the ID document verification attempts response</returns>
+        Task<IdDocumentVerificationAttemptsResponse> GetIdDocumentVerificationAttempts(string idDocumentVerificationId, AttemptsQuery query, CancellationToken cancellationToken = default);
+
+        /// <summary>
         ///     Retrieves a specific attempt for an ID document verification
         /// </summary>
         /// <param name="idDocumentVerificationId">the ID document verification ID</param>
@@ -67,5 +77,17 @@ namespace Checkout.Identities.IdDocumentVerification
         /// <param name="cancellationToken">the cancellation token</param>
         /// <returns>the ID document verification report response</returns>
         Task<IdDocumentVerificationReportResponse> GetIdDocumentVerificationReport(string idDocumentVerificationId, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        ///     Retrieves the assets (the front and back images of the document) uploaded for an
+        ///     ID document verification attempt.
+        ///     Beta.
+        /// </summary>
+        /// <param name="idDocumentVerificationId">the ID document verification ID</param>
+        /// <param name="attemptId">the attempt ID</param>
+        /// <param name="query">the pagination query parameters (skip and limit)</param>
+        /// <param name="cancellationToken">the cancellation token</param>
+        /// <returns>the ID document verification attempt assets response</returns>
+        Task<IdDocumentVerificationAttemptAssetsResponse> GetIdDocumentVerificationAttemptAssets(string idDocumentVerificationId, string attemptId, AttemptAssetsQuery query = null, CancellationToken cancellationToken = default);
     }
 }

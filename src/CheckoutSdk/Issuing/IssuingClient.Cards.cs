@@ -10,6 +10,7 @@ using Checkout.Issuing.Cards.Responses.Create;
 using Checkout.Issuing.Cards.Responses.Credentials;
 using Checkout.Issuing.Cards.Responses.Enrollment;
 using Checkout.Issuing.Cards.Responses.Renew;
+using Checkout.Issuing.Cards.Responses.Update;
 using Checkout.Issuing.Common.Responses;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,16 +41,26 @@ namespace Checkout.Issuing
             );
         }
         
-        public Task<UpdateResponse> UpdateCardDetails(string cardId,
+        public Task<CardUpdateResponse> UpdateCardDetails(string cardId,
             CardsUpdateRequest cardUpdateRequest,
             CancellationToken cancellationToken = default)
         {
+            return UpdateCardDetails(cardId, cardUpdateRequest, null, cancellationToken);
+        }
+
+        public Task<CardUpdateResponse> UpdateCardDetails(string cardId,
+            CardsUpdateRequest cardUpdateRequest,
+            CardUpdateHeaders headers,
+            CancellationToken cancellationToken = default)
+        {
             CheckoutUtils.ValidateParams("cardId", cardId, "cardUpdateRequest", cardUpdateRequest);
-            return ApiClient.Patch<UpdateResponse>(
+            return ApiClient.Patch<CardUpdateResponse>(
                 BuildPath(IssuingPath, CardsPath, cardId),
                 SdkAuthorization(),
                 cardUpdateRequest,
-                cancellationToken
+                cancellationToken,
+                null,
+                headers
             );
         }
 

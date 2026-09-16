@@ -1,6 +1,7 @@
 using Checkout.Identities.Entities;
 using Checkout.Identities.FaceAuthentication.Requests;
 using Checkout.Identities.FaceAuthentication.Responses;
+using Checkout.Common;
 using Shouldly;
 using System;
 using System.Threading.Tasks;
@@ -196,7 +197,7 @@ namespace Checkout.Identities.FaceAuthentication
                 RedirectUrl = "https://example.com/redirect",
                 ClientInformation = new ClientInformation
                 {
-                    PreSelectedResidenceCountry = "US",
+                    PreSelectedResidenceCountry = CountryCode.US,
                     PreSelectedLanguage = "en-US"
                 }
             };
@@ -261,6 +262,24 @@ namespace Checkout.Identities.FaceAuthentication
         private static string GenerateRandomId()
         {
             return Guid.NewGuid().ToString("N")[..16];
+        }
+        [Fact(Skip = "This test requires valid test environment setup")]
+        private async Task ShouldGetFaceAuthenticationAttemptsPaginated()
+        {
+            // Arrange
+            var created = await DefaultApi.FaceAuthenticationClient()
+                .CreateFaceAuthentication(CreateFaceAuthenticationRequest());
+
+            var query = new AttemptsQuery { Skip = 0, Limit = 5 };
+
+            // Act
+            var attempts = await DefaultApi.FaceAuthenticationClient()
+                .GetFaceAuthenticationAttempts(created.Id, query);
+
+            // Assert
+            attempts.ShouldNotBeNull();
+            attempts.Data.ShouldNotBeNull();
+            attempts.Limit.ShouldBe(5);
         }
     }
 }
