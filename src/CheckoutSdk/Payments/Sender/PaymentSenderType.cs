@@ -4,8 +4,11 @@ namespace Checkout.Payments.Sender
 {
     public enum PaymentSenderType
     {
-        [EnumMember(Value = "individual")] Individual,
-        [EnumMember(Value = "corporate")] Corporate,
-        [EnumMember(Value = "instrument")] Instrument
+        [EnumMember(Value = "individual")]
+        Individual,
+        [EnumMember(Value = "corporate")]
+        Corporate,
+        [EnumMember(Value = "instrument")]
+        Instrument
     }
 }

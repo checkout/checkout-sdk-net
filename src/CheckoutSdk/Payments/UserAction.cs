@@ -4,7 +4,9 @@ namespace Checkout.Payments
 {
     public enum UserAction
     {
-        [EnumMember(Value = "PAY_NOW")] PayNow,
-        [EnumMember(Value = "CONTINUE")] Continue,
+        [EnumMember(Value = "PAY_NOW")]
+        PayNow,
+        [EnumMember(Value = "CONTINUE")]
+        Continue,
     }
 }

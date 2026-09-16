@@ -4,8 +4,10 @@ namespace Checkout.Forward.Requests.Sources
 {
     public enum SourceType
     {
-        [EnumMember(Value = "id")] Id,
+        [EnumMember(Value = "id")]
+        Id,
 
-        [EnumMember(Value = "token")] Token
+        [EnumMember(Value = "token")]
+        Token
     }
 }

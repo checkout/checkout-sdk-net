@@ -10,11 +10,13 @@ namespace Checkout.Issuing.ControlGroups.Common
         /// <summary>
         /// The control group fails only if all controls in the group fail.
         /// </summary>
-        [EnumMember(Value = "all_fail")] AllFail,
+        [EnumMember(Value = "all_fail")]
+        AllFail,
         
         /// <summary>
         /// The control group fails if any control in the group fails.
         /// </summary>
-        [EnumMember(Value = "any_fail")] AnyFail
+        [EnumMember(Value = "any_fail")]
+        AnyFail
     }
 }

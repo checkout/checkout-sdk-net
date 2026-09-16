@@ -4,8 +4,11 @@ namespace Checkout.Payments
 {
     public enum TerminalType
     {
-        [EnumMember(Value = "APP")] App,
-        [EnumMember(Value = "WAP")] Wap,
-        [EnumMember(Value = "WEB")] Web,
+        [EnumMember(Value = "APP")]
+        App,
+        [EnumMember(Value = "WAP")]
+        Wap,
+        [EnumMember(Value = "WEB")]
+        Web,
     }
 }

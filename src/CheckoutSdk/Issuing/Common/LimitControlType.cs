@@ -4,7 +4,9 @@ namespace Checkout.Issuing.Common
 {
     public enum LimitControlType
     {
-        [EnumMember(Value = "allow")] Allow,
-        [EnumMember(Value = "block")] Block,
+        [EnumMember(Value = "allow")]
+        Allow,
+        [EnumMember(Value = "block")]
+        Block,
     }
 }

@@ -4,7 +4,9 @@ namespace Checkout.Payments
 {
     public enum OsType
     {
-        [EnumMember(Value = "ANDROID")] Android,
-        [EnumMember(Value = "IOS")] Ios,
+        [EnumMember(Value = "ANDROID")]
+        Android,
+        [EnumMember(Value = "IOS")]
+        Ios,
     }
 }

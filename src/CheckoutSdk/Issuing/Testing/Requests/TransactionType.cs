@@ -4,6 +4,7 @@ namespace Checkout.Issuing.Testing.Requests
 {
     public enum TransactionType
     {
-        [EnumMember(Value = "purchase")] Purchase
+        [EnumMember(Value = "purchase")]
+        Purchase
     }
 }

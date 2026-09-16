@@ -4,8 +4,11 @@ namespace Checkout.Transfers
 {
     public enum TransferType
     {
-        [EnumMember(Value = "commission")] Commission,
-        [EnumMember(Value = "promotion")] Promotion,
-        [EnumMember(Value = "refund")] Refund,
+        [EnumMember(Value = "commission")]
+        Commission,
+        [EnumMember(Value = "promotion")]
+        Promotion,
+        [EnumMember(Value = "refund")]
+        Refund,
     }
 }

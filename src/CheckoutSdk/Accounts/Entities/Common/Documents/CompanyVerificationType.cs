@@ -4,8 +4,10 @@ namespace Checkout.Accounts.Entities.Common.Documents
 {
     public enum CompanyVerificationType
     {
-        [EnumMember(Value = "incorporation_document")] IncorporationDocument,
+        [EnumMember(Value = "incorporation_document")]
+        IncorporationDocument,
         
-        [EnumMember(Value = "articles_of_association")] ArticlesOfAssociation
+        [EnumMember(Value = "articles_of_association")]
+        ArticlesOfAssociation
     }
 }

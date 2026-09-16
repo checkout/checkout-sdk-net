@@ -7,8 +7,10 @@ namespace Checkout.Payments.Setups.Entities
     /// </summary>
     public enum BacsAccountHolderType
     {
-        [EnumMember(Value = "individual")] Individual,
+        [EnumMember(Value = "individual")]
+        Individual,
 
-        [EnumMember(Value = "corporate")] Corporate
+        [EnumMember(Value = "corporate")]
+        Corporate
     }
 }
