@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace Checkout.Payments.Contexts
 {
@@ -17,6 +18,7 @@ namespace Checkout.Payments.Contexts
         /// <summary>
         /// The guest's date of birth in YYYY-MM-DD format
         /// </summary>
-        public DateTime DateOfBirth { get; set; }
+        [JsonConverter(typeof(ShortDateTimeConverter))]
+        public DateTime? DateOfBirth { get; set; }
     }
 }

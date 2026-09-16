@@ -61,8 +61,12 @@ namespace Checkout
                     // Workflows CS2
                     new WorkflowActionTypeResponseConverter(),
                     new WorkflowConditionTypeResponseConverter(),
-                    // Short date format converter (must come before IsoDateTimeConverter)
-                    new ShortDateTimeConverter(),
+                    // Short date format converter (must come before IsoDateTimeConverter).
+                    // Read-only here on purpose: it matches every DateTime, so writing
+                    // yyyy-MM-dd globally would truncate the format: date-time properties
+                    // too. Date-only properties opt in with
+                    // [JsonConverter(typeof(ShortDateTimeConverter))].
+                    new ShortDateTimeConverter(canWrite: false),
                     GetConverterDateTimeToIso(),
                     // Accounts Payout Schedules
                     new GetScheduleResponseTypeConverter(),
@@ -116,48 +120,100 @@ namespace Checkout
                 }
             }
         }
+    }
 
-        private class ShortDateTimeConverter : JsonConverter
+    /// <summary>
+    /// Handles the properties the Checkout.com specification declares as
+    /// <c>"type": "string", "format": "date"</c> (yyyy-MM-dd) rather than
+    /// <c>"format": "date-time"</c> (RFC 3339).
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Used in two modes, because reading and writing have different blast radii:
+    /// </para>
+    /// <list type="bullet">
+    /// <item><b>Globally, read-only</b> (<c>new ShortDateTimeConverter(canWrite: false)</c> in
+    /// <see cref="JsonSerializer"/>). This is load-bearing: <c>IsoDateTimeConverter</c> with the
+    /// SDK's fixed <c>yyyy-MM-ddTHH:mm:ssK</c> format throws on a date-only string, so without
+    /// this every date-only response value would fail to deserialize.</item>
+    /// <item><b>Per property, read and write</b>
+    /// (<c>[JsonConverter(typeof(ShortDateTimeConverter))]</c>). Writing must be opt-in because
+    /// <see cref="CanConvert"/> matches every <see cref="DateTime"/>: enabling it globally would
+    /// also truncate the genuine <c>format: date-time</c> properties.</item>
+    /// </list>
+    /// <para>
+    /// Before the write mode existed, every <see cref="DateTime"/> serialized through
+    /// <c>IsoDateTimeConverter</c>, so a date-only property emitted <c>2026-10-01T00:00:00</c>.
+    /// Tamara rejects that on <c>processing.accommodation_data.check_in_date</c> and the merchant
+    /// sees a gateway 500.
+    /// </para>
+    /// </remarks>
+    public class ShortDateTimeConverter : JsonConverter
+    {
+        private const string DateTimeFormat = "yyyy-MM-dd";
+
+        private readonly bool _canWrite;
+
+        /// <summary>
+        /// Creates a converter that both reads and writes yyyy-MM-dd. This is the constructor
+        /// <c>[JsonConverter(typeof(ShortDateTimeConverter))]</c> uses.
+        /// </summary>
+        public ShortDateTimeConverter() : this(true)
         {
-            private const string DateTimeFormat = "yyyy-MM-dd";
+        }
 
-            public override bool CanConvert(Type objectType)
+        /// <summary>
+        /// Creates a converter with writing explicitly enabled or disabled. The global
+        /// registration must pass <c>false</c>; see the remarks on the class.
+        /// </summary>
+        public ShortDateTimeConverter(bool canWrite)
+        {
+            _canWrite = canWrite;
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(DateTime) || objectType == typeof(DateTime?);
+        }
+
+        public override bool CanRead => true;
+        public override bool CanWrite => _canWrite;
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+        {
+            if (reader.TokenType == JsonToken.Null)
             {
-                return objectType == typeof(DateTime) || objectType == typeof(DateTime?);
+                if (objectType == typeof(DateTime?))
+                    return null;
+                else
+                    throw new JsonSerializationException($"Cannot convert null value to {objectType}.");
             }
 
-            public override bool CanRead => true;
-            public override bool CanWrite => false;
+            var dateString = reader.Value as string;
+            if (dateString == null)
+                return reader.Value; // Already parsed by another converter
 
-            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+            // Only handle short date format (yyyy-MM-dd)
+            if (dateString.Length == 10 && dateString.Count(c => c == '-') == 2)
             {
-                if (reader.TokenType == JsonToken.Null)
-                {
-                    if (objectType == typeof(DateTime?))
-                        return null;
-                    else
-                        throw new JsonSerializationException($"Cannot convert null value to {objectType}.");
-                }
-
-                var dateString = reader.Value as string;
-                if (dateString == null)
-                    return reader.Value; // Already parsed by another converter
-
-                // Only handle short date format (yyyy-MM-dd)
-                if (dateString.Length == 10 && dateString.Count(c => c == '-') == 2)
-                {
-                    if (DateTime.TryParseExact(dateString, DateTimeFormat, null, System.Globalization.DateTimeStyles.None, out var result))
-                        return result;
-                }
-
-                // Let the default converter handle other formats
-                return JsonConvert.DeserializeObject($"\"{dateString}\"", objectType);
+                if (DateTime.TryParseExact(dateString, DateTimeFormat, null, System.Globalization.DateTimeStyles.None, out var result))
+                    return result;
             }
 
-            public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+            // Let the default converter handle other formats
+            return JsonConvert.DeserializeObject($"\"{dateString}\"", objectType);
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+        {
+            if (value == null)
             {
-                throw new NotSupportedException("ShortDateTimeConverter should not handle writing.");
+                writer.WriteNull();
+                return;
             }
+
+            writer.WriteValue(((DateTime)value).ToString(
+                DateTimeFormat, System.Globalization.CultureInfo.InvariantCulture));
         }
     }
 }

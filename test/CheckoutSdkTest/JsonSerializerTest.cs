@@ -290,7 +290,100 @@ namespace Checkout
 
             Assert.NotNull(dummyDate);
             Assert.Equal(new DateTime(2025, 10, 30), dummyDate.Datetime);
-            Assert.Contains("2025-10-30", serializedJson);
+
+            // DummyDateTime.Datetime carries no [JsonConverter], so it uses the GLOBAL
+            // ShortDateTimeConverter registration, which is read-only: the short date parses,
+            // but the value writes back as a full date-time. That asymmetry is deliberate --
+            // see the write-mode section below.
+            //
+            // This was Assert.Contains("2025-10-30", ...), which also passes against
+            // "2025-10-30T00:00:00" and so could not detect a wrong write format either way.
+            Assert.Equal("{\"datetime\":\"2025-10-30T00:00:00\"}", serializedJson);
+        }
+
+        // ------------------------------------------------------------------------
+        // ShortDateTimeConverter write mode
+        // ------------------------------------------------------------------------
+
+        private class ShortDateSubject
+        {
+            [JsonConverter(typeof(ShortDateTimeConverter))]
+            [JsonProperty(PropertyName = "date")]
+            public DateTime? Date { get; set; }
+        }
+
+        private class NonNullableShortDateSubject
+        {
+            [JsonConverter(typeof(ShortDateTimeConverter))]
+            [JsonProperty(PropertyName = "date")]
+            public DateTime Date { get; set; }
+        }
+
+        // The time is deliberately not midnight, so this proves truncation rather than passing
+        // because the caller happened to supply a zero time.
+        [Fact]
+        public void ShouldWriteAnAnnotatedPropertyAsADateOnly()
+        {
+            var json = new JsonSerializer().Serialize(
+                new ShortDateSubject { Date = new DateTime(2026, 10, 1, 13, 45, 30) });
+
+            Assert.Equal("{\"date\":\"2026-10-01\"}", json);
+        }
+
+        [Theory]
+        [InlineData(2026, 1, 9, "2026-01-09")]
+        [InlineData(2024, 2, 29, "2024-02-29")]
+        [InlineData(2026, 12, 31, "2026-12-31")]
+        public void ShouldPadAndWriteEveryDateAsIsoDateOnly(int y, int m, int d, string expected)
+        {
+            var json = new JsonSerializer().Serialize(
+                new ShortDateSubject { Date = new DateTime(y, m, d, 23, 59, 59) });
+
+            Assert.Equal("{\"date\":\"" + expected + "\"}", json);
+        }
+
+        // NullValueHandling.Ignore drops the property before the converter runs. This is the
+        // assertion that would have caught the five non-nullable DateTime properties emitting
+        // "0001-01-01" whenever their parent object was populated.
+        [Fact]
+        public void ShouldOmitAnAnnotatedPropertyWhenNull()
+        {
+            Assert.Equal("{}", new JsonSerializer().Serialize(new ShortDateSubject()));
+        }
+
+        [Fact]
+        public void ShouldWriteTheDefaultDateForANonNullableAnnotatedProperty()
+        {
+            // A non-nullable DateTime cannot be omitted, which is why the SDK's date-only
+            // properties are all nullable.
+            Assert.Equal("{\"date\":\"0001-01-01\"}",
+                new JsonSerializer().Serialize(new NonNullableShortDateSubject()));
+        }
+
+        [Fact]
+        public void ShouldRoundTripAnAnnotatedDateOnlyProperty()
+        {
+            var serializer = new JsonSerializer();
+            var subject = (ShortDateSubject)serializer.Deserialize(
+                "{\"date\":\"2026-10-01\"}", typeof(ShortDateSubject));
+
+            Assert.Equal(new DateTime(2026, 10, 1), subject.Date);
+            Assert.Equal("{\"date\":\"2026-10-01\"}", serializer.Serialize(subject));
+        }
+
+        // The converter must stay opt-in for writing: CanConvert matches every DateTime, so a
+        // global write registration would truncate the genuine format: date-time properties too.
+        [Fact]
+        public void ShouldNotWriteDateOnlyWhenTheConverterIsNotOptedIn()
+        {
+            Assert.False(new ShortDateTimeConverter(canWrite: false).CanWrite);
+            Assert.True(new ShortDateTimeConverter().CanWrite);
+
+            // An un-annotated DateTime keeps its time component.
+            var json = new JsonSerializer().Serialize(
+                new DummyDateTime { Datetime = new DateTime(2026, 10, 1, 13, 45, 30) });
+
+            Assert.Equal("{\"datetime\":\"2026-10-01T13:45:30\"}", json);
         }
 
         [Fact]

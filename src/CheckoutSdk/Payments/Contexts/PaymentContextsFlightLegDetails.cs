@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace Checkout.Payments.Contexts
 {
@@ -27,6 +28,7 @@ namespace Checkout.Payments.Contexts
         /// <summary>
         /// The departure date in YYYY-MM-DD format
         /// </summary>
+        [JsonConverter(typeof(ShortDateTimeConverter))]
         public DateTime? DepartureDate { get; set; }
 
         /// <summary>

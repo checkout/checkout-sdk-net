@@ -1,0 +1,130 @@
+using Shouldly;
+using System;
+using Xunit;
+
+namespace Checkout.Payments.Contexts
+{
+    /// <summary>
+    /// Schema validation tests for Checkout.Payments.Contexts.
+    /// Grouped by domain; each section below covers one subject.
+    /// </summary>
+    public class PaymentContextsSerializationTest
+    {
+        private static readonly JsonSerializer Serializer = new JsonSerializer();
+
+        // ------------------------------------------------------------------------
+        // PaymentContextsCustomerSummary -- format: date properties
+        // ------------------------------------------------------------------------
+
+        // registration_date, first_transaction_date and last_payment_date are all declared
+        // "type": "string", "format": "date". The times supplied below are deliberately not
+        // midnight, so the assertions prove truncation rather than passing because the caller
+        // happened to supply a zero time.
+        [Fact]
+        public void ShouldSerializeCustomerSummaryDatesWithoutATimeComponent()
+        {
+            var json = Serializer.Serialize(new PaymentContextsCustomerSummary
+            {
+                RegistrationDate = new DateTime(2023, 5, 1, 13, 59, 0),
+                FirstTransactionDate = new DateTime(2023, 7, 1, 1, 2, 0),
+                LastPaymentDate = new DateTime(2023, 8, 1, 23, 59, 59)
+            });
+
+            json.ShouldContain("\"registration_date\":\"2023-05-01\"");
+            json.ShouldContain("\"first_transaction_date\":\"2023-07-01\"");
+            json.ShouldContain("\"last_payment_date\":\"2023-08-01\"");
+            json.ShouldNotContain("T13:59");
+            json.ShouldNotContain("T23:59:59");
+        }
+
+        [Fact]
+        public void ShouldOmitCustomerSummaryDatesWhenNotSet()
+        {
+            var json = Serializer.Serialize(new PaymentContextsCustomerSummary());
+
+            json.ShouldNotContain("registration_date");
+            json.ShouldNotContain("first_transaction_date");
+            json.ShouldNotContain("last_payment_date");
+        }
+
+        [Fact]
+        public void ShouldDeserializeCustomerSummaryDatesFromDateOnlyValues()
+        {
+            const string json =
+                "{\"registration_date\":\"2023-05-01\"," +
+                "\"first_transaction_date\":\"2023-07-01\"," +
+                "\"last_payment_date\":\"2023-08-01\"}";
+
+            var summary = (PaymentContextsCustomerSummary)Serializer.Deserialize(
+                json, typeof(PaymentContextsCustomerSummary));
+
+            summary.RegistrationDate.ShouldBe(new DateTime(2023, 5, 1));
+            summary.FirstTransactionDate.ShouldBe(new DateTime(2023, 7, 1));
+            summary.LastPaymentDate.ShouldBe(new DateTime(2023, 8, 1));
+        }
+
+        // ------------------------------------------------------------------------
+        // Airline data -- format: date properties
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldSerializeAirlineDatesWithoutATimeComponent()
+        {
+            Serializer.Serialize(new PaymentContextsTicket
+            {
+                Number = "045-21351455613",
+                IssueDate = new DateTime(2023, 5, 20, 8, 15, 0)
+            }).ShouldContain("\"issue_date\":\"2023-05-20\"");
+
+            Serializer.Serialize(new PaymentContextsPassenger
+            {
+                FirstName = "John",
+                DateOfBirth = new DateTime(1990, 5, 26, 17, 5, 0)
+            }).ShouldContain("\"date_of_birth\":\"1990-05-26\"");
+
+            Serializer.Serialize(new PaymentContextsFlightLegDetails
+            {
+                DepartureDate = new DateTime(2023, 6, 19, 6, 40, 0)
+            }).ShouldContain("\"departure_date\":\"2023-06-19\"");
+        }
+
+        [Fact]
+        public void ShouldOmitAirlineDatesWhenNotSet()
+        {
+            Serializer.Serialize(new PaymentContextsTicket { Number = "1" })
+                .ShouldNotContain("issue_date");
+            Serializer.Serialize(new PaymentContextsPassenger { FirstName = "John" })
+                .ShouldNotContain("date_of_birth");
+            Serializer.Serialize(new PaymentContextsFlightLegDetails())
+                .ShouldNotContain("departure_date");
+        }
+
+        // ------------------------------------------------------------------------
+        // PaymentContextsGuests -- format: date property
+        // ------------------------------------------------------------------------
+
+        // DateOfBirth was a non-nullable DateTime, so NullValueHandling.Ignore could not
+        // suppress it and an unset guest date of birth shipped as "0001-01-01T00:00:00".
+        [Fact]
+        public void ShouldOmitGuestDateOfBirthWhenNotSet()
+        {
+            var json = Serializer.Serialize(new PaymentContextsGuests { FirstName = "Jane" });
+
+            json.ShouldNotContain("date_of_birth");
+            json.ShouldNotContain("0001-01-01");
+        }
+
+        [Fact]
+        public void ShouldSerializeGuestDateOfBirthAsADate()
+        {
+            var json = Serializer.Serialize(new PaymentContextsGuests
+            {
+                FirstName = "Jane",
+                DateOfBirth = new DateTime(1985, 7, 14, 23, 59, 59)
+            });
+
+            json.ShouldContain("\"date_of_birth\":\"1985-07-14\"");
+            json.ShouldNotContain("T23:59:59");
+        }
+    }
+}

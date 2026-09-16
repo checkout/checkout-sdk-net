@@ -163,7 +163,13 @@ namespace Checkout.Payments
                 CheckOutDate = DateTime.Parse("2025-06-05")
             };
 
-            Should.NotThrow(() => Serializer.Serialize(data));
+            var json = Serializer.Serialize(data);
+
+            // check_in_date and check_out_date are format: date, so no time component may reach
+            // the wire. Should.NotThrow alone could never fail, which is how the timestamp bug
+            // survived review.
+            json.ShouldContain("\"check_in_date\":\"2025-06-01\"");
+            json.ShouldContain("\"check_out_date\":\"2025-06-05\"");
         }
 
         [Fact]
@@ -432,6 +438,117 @@ namespace Checkout.Payments
             json.ShouldContain("\"attempts\"");
             json.ShouldContain("\"mastercard\"");
             json.ShouldContain("\"visa\"");
+        }
+
+        // ------------------------------------------------------------------------
+        // format: date properties
+        // ------------------------------------------------------------------------
+
+        // Times are deliberately not midnight, so these prove truncation rather than passing
+        // because the caller happened to supply a zero time.
+        [Fact]
+        public void ShouldSerializeAccommodationDatesWithoutATimeComponent()
+        {
+            var json = Serializer.Serialize(new AccommodationData
+            {
+                Name = "Grand Hotel",
+                CheckInDate = new DateTime(2026, 10, 1, 13, 45, 30),
+                CheckOutDate = new DateTime(2026, 10, 5, 11, 30, 0),
+                Guests = new List<PaymentContextsGuests>
+                {
+                    new PaymentContextsGuests
+                    {
+                        FirstName = "Jane",
+                        DateOfBirth = new DateTime(1985, 7, 14, 23, 59, 59)
+                    }
+                }
+            });
+
+            json.ShouldContain("\"check_in_date\":\"2026-10-01\"");
+            json.ShouldContain("\"check_out_date\":\"2026-10-05\"");
+            json.ShouldContain("\"date_of_birth\":\"1985-07-14\"");
+
+            // Asserted on the specific times supplied rather than a bare "T", because Shouldly's
+            // ShouldNotContain is case-insensitive and would match the "t" in "Grand Hotel".
+            json.ShouldNotContain("T13:45:30");
+            json.ShouldNotContain("T11:30:00");
+            json.ShouldNotContain("T23:59:59");
+        }
+
+        // CheckInDate, CheckOutDate and Guests[].DateOfBirth were non-nullable DateTime, so
+        // NullValueHandling.Ignore could not suppress them: a merchant who populated
+        // accommodation_data at all shipped "0001-01-01T00:00:00" for both dates whether they
+        // meant to or not. This guards the nullability change.
+        [Fact]
+        public void ShouldOmitAccommodationDatesWhenNotSet()
+        {
+            var json = Serializer.Serialize(new AccommodationData { Name = "Grand Hotel" });
+
+            json.ShouldNotContain("check_in_date");
+            json.ShouldNotContain("check_out_date");
+            json.ShouldNotContain("0001-01-01");
+        }
+
+        [Fact]
+        public void ShouldDeserializeAccommodationDatesFromDateOnlyValues()
+        {
+            const string json =
+                "{\"name\":\"Grand Hotel\",\"check_in_date\":\"2026-10-01\"," +
+                "\"check_out_date\":\"2026-10-05\"}";
+
+            var data = (AccommodationData)Serializer.Deserialize(json, typeof(AccommodationData));
+
+            data.CheckInDate.ShouldBe(new DateTime(2026, 10, 1));
+            data.CheckOutDate.ShouldBe(new DateTime(2026, 10, 5));
+        }
+
+        [Fact]
+        public void ShouldSerializeAirlineDatesWithoutATimeComponent()
+        {
+            var leg = Serializer.Serialize(new FlightLegDetails
+            {
+                DepartureDate = new DateTime(2026, 6, 19, 6, 40, 0)
+            });
+            leg.ShouldContain("\"departure_date\":\"2026-06-19\"");
+            leg.ShouldNotContain("T06:40");
+
+            var passenger = Serializer.Serialize(new Passenger
+            {
+                FirstName = "John",
+                DateOfBirth = new DateTime(1990, 5, 26, 17, 5, 0)
+            });
+            passenger.ShouldContain("\"date_of_birth\":\"1990-05-26\"");
+            passenger.ShouldNotContain("T17:05");
+        }
+
+        [Fact]
+        public void ShouldOmitAirlineDatesWhenNotSet()
+        {
+            Serializer.Serialize(new FlightLegDetails()).ShouldNotContain("departure_date");
+            Serializer.Serialize(new Passenger { FirstName = "John" })
+                .ShouldNotContain("date_of_birth");
+        }
+
+        [Fact]
+        public void ShouldSerializeRefundOrderServiceEndsOnAsADate()
+        {
+            var json = Serializer.Serialize(new RefundOrder
+            {
+                Name = "Subscription",
+                ServiceEndsOn = new DateTime(2025, 1, 1, 9, 30, 0)
+            });
+
+            json.ShouldContain("\"service_ends_on\":\"2025-01-01\"");
+            json.ShouldNotContain("T09:30");
+        }
+
+        [Fact]
+        public void ShouldOmitRefundOrderServiceEndsOnWhenNotSet()
+        {
+            var json = Serializer.Serialize(new RefundOrder { Name = "Subscription" });
+
+            json.ShouldNotContain("service_ends_on");
+            json.ShouldNotContain("0001-01-01");
         }
     }
 }

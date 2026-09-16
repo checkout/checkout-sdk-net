@@ -1,5 +1,6 @@
 using System;
 using Checkout.Common;
+using Newtonsoft.Json;
 
 namespace Checkout.Payments
 {
@@ -25,6 +26,7 @@ namespace Checkout.Payments
         /// [Optional]
         /// Format: yyyy-MM-dd
         /// </summary>
+        [JsonConverter(typeof(ShortDateTimeConverter))]
         public DateTime? DateOfBirth { get; set; }
 
         /// <summary>

@@ -1,5 +1,6 @@
 using System;
 using Checkout.Common;
+using Newtonsoft.Json;
 
 namespace Checkout.Payments.Setups.Entities
 {
@@ -13,6 +14,7 @@ namespace Checkout.Payments.Setups.Entities
         /// [Optional]
         /// Format: yyyy-MM-dd
         /// </summary>
+        [JsonConverter(typeof(ShortDateTimeConverter))]
         public DateTime? DateOfBirth { get; set; }
 
         /// <summary>

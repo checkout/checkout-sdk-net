@@ -14,6 +14,7 @@ using SepaSource =
     Checkout.HandlePaymentsAndPayouts.Payments.Common.Source.SepaSource.SepaSource;
 using Shouldly;
 using Xunit;
+using System;
 
 namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseCreated
 {
@@ -348,6 +349,47 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
 
             phone.CountryCode.ShouldBe("+1");
             phone.Number.ShouldBe("415 555 2671");
+        }
+
+        // ------------------------------------------------------------------------
+        // Customer.Summary -- format: date properties
+        // ------------------------------------------------------------------------
+
+        // registration_date, first_transaction_date and last_payment_date are declared
+        // "type": "string", "format": "date", so the API returns them date-only. This is the
+        // response side of the change: the properties now carry ShortDateTimeConverter, which
+        // parses a date-only value and re-emits it without a time component.
+        [Fact]
+        public void ShouldDeserializeCustomerSummaryDatesFromDateOnlyValues()
+        {
+            const string json =
+                "{\"registration_date\":\"2023-05-01\"," +
+                "\"first_transaction_date\":\"2023-07-01\"," +
+                "\"last_payment_date\":\"2023-08-01\"}";
+
+            var summary = (Customer.Summary.Summary)new JsonSerializer()
+                .Deserialize(json, typeof(Customer.Summary.Summary));
+
+            summary.RegistrationDate.ShouldBe(new DateTime(2023, 5, 1));
+            summary.FirstTransactionDate.ShouldBe(new DateTime(2023, 7, 1));
+            summary.LastPaymentDate.ShouldBe(new DateTime(2023, 8, 1));
+        }
+
+        [Fact]
+        public void ShouldSerializeCustomerSummaryDatesWithoutATimeComponent()
+        {
+            var json = new JsonSerializer().Serialize(new Customer.Summary.Summary
+            {
+                RegistrationDate = new DateTime(2023, 5, 1, 13, 59, 0),
+                FirstTransactionDate = new DateTime(2023, 7, 1, 1, 2, 0),
+                LastPaymentDate = new DateTime(2023, 8, 1, 23, 59, 59)
+            });
+
+            json.ShouldContain("\"registration_date\":\"2023-05-01\"");
+            json.ShouldContain("\"first_transaction_date\":\"2023-07-01\"");
+            json.ShouldContain("\"last_payment_date\":\"2023-08-01\"");
+            json.ShouldNotContain("T13:59");
+            json.ShouldNotContain("T23:59:59");
         }
     }
 }

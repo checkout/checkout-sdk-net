@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace Checkout.Payments.Setups.Entities
 {
@@ -14,12 +15,14 @@ namespace Checkout.Payments.Setups.Entities
         /// The date the customer registered their account with the merchant (yyyy-MM-dd).
         /// [Optional]
         /// </summary>
+        [JsonConverter(typeof(ShortDateTimeConverter))]
         public DateTime? RegistrationDate { get; set; }
 
         /// <summary>
         /// The date the customer's account with the merchant was last modified (yyyy-MM-dd).
         /// [Optional]
         /// </summary>
+        [JsonConverter(typeof(ShortDateTimeConverter))]
         public DateTime? LastModified { get; set; }
 
         /// <summary>
@@ -32,12 +35,14 @@ namespace Checkout.Payments.Setups.Entities
         /// The date of the customer's first transaction (yyyy-MM-dd).
         /// [Optional]
         /// </summary>
+        [JsonConverter(typeof(ShortDateTimeConverter))]
         public DateTime? FirstTransactionDate { get; set; }
 
         /// <summary>
         /// The date of the customer's most recent transaction (yyyy-MM-dd).
         /// [Optional]
         /// </summary>
+        [JsonConverter(typeof(ShortDateTimeConverter))]
         public DateTime? LastTransactionDate { get; set; }
 
         /// <summary>

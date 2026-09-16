@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace Checkout.Payments
 {
@@ -10,7 +11,8 @@ namespace Checkout.Payments
 
         public string ServiceClass { get; set; }
 
-        public DateTime DepartureDate { get; set; }
+        [JsonConverter(typeof(ShortDateTimeConverter))]
+        public DateTime? DepartureDate { get; set; }
 
         public string DepartureTime { get; set; }
 

@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.RequestAPaymentOrPayoutResponseCreated.
     Customer.
@@ -15,6 +16,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// [Optional]
         /// <date>
         /// </summary>
+        [JsonConverter(typeof(ShortDateTimeConverter))]
         public DateTime? RegistrationDate { get; set; }
 
         /// <summary>
@@ -22,6 +24,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// [Optional]
         /// <date>
         /// </summary>
+        [JsonConverter(typeof(ShortDateTimeConverter))]
         public DateTime? FirstTransactionDate { get; set; }
 
         /// <summary>
@@ -29,6 +32,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// [Optional]
         /// <date>
         /// </summary>
+        [JsonConverter(typeof(ShortDateTimeConverter))]
         public DateTime? LastPaymentDate { get; set; }
 
         /// <summary>
