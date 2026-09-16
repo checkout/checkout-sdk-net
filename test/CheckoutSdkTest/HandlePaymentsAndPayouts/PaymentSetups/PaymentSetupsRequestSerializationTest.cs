@@ -4,6 +4,7 @@ using Checkout.Payments.Setups.Entities;
 using Checkout.Payments.Setups;
 using Checkout.Payments;
 using SetupAccommodationData = Checkout.Payments.Setups.Entities.AccommodationData;
+using SetupAirlineData = Checkout.Payments.Setups.Entities.AirlineData;
 using Shouldly;
 using System.Collections.Generic;
 using System;
@@ -681,6 +682,117 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             paymentMethods.PayByBank.Action.Banks.Count.ShouldBe(1);
             paymentMethods.PayByBank.Action.Banks[0].DisplayName.ShouldBe("NatWest");
             paymentMethods.Stablecoin.ShouldNotBeNull();
+        }
+
+        // ------------------------------------------------------------------------
+        // Industry - AccommodationData / AirlineData new fields (2026-09-08)
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldRoundTripSerializeIndustryNewFields()
+        {
+            var industry = new Industry
+            {
+                AccommodationData = new SetupAccommodationData
+                {
+                    Name = "Grand Hotel",
+                    TotalNumberOfGuests = 4,
+                    Refundable = true,
+                    DeliveryRecipient = "jane.smith@example.com",
+                    Host = new AccommodationHost
+                    {
+                        RegistrationDate = "2020-01-01",
+                        TotalReservationCount = 25
+                    },
+                    Room = new List<AccommodationRoom>
+                    {
+                        new AccommodationRoom { Rate = 150.00m, NumberOfNights = 5, Type = "deluxe" }
+                    }
+                },
+                AirlineData = new SetupAirlineData
+                {
+                    TotalNumberOfPassengers = 2,
+                    TravelType = "international",
+                    TripType = "round_trip",
+                    Refundable = false,
+                    DeliveryRecipient = "jane.smith@example.com",
+                    Ancillaries = "extra_baggage",
+                    Insurance = new AirlineInsurance
+                    {
+                        Type = "travel",
+                        Company = "Acme Insurance",
+                        Price = new AirlineInsurancePrice { Amount = 25.50m, Currency = Currency.GBP }
+                    }
+                }
+            };
+
+            var json = Serializer.Serialize(industry);
+            var deserialized = (Industry)Serializer.Deserialize(json, typeof(Industry));
+
+            deserialized.AccommodationData.TotalNumberOfGuests.ShouldBe(4);
+            deserialized.AccommodationData.Refundable.ShouldBe(true);
+            deserialized.AccommodationData.DeliveryRecipient.ShouldBe("jane.smith@example.com");
+            deserialized.AccommodationData.Host.ShouldNotBeNull();
+            deserialized.AccommodationData.Host.RegistrationDate.ShouldBe("2020-01-01");
+            deserialized.AccommodationData.Host.TotalReservationCount.ShouldBe(25);
+            deserialized.AccommodationData.Room[0].Type.ShouldBe("deluxe");
+
+            deserialized.AirlineData.ShouldNotBeNull();
+            deserialized.AirlineData.TotalNumberOfPassengers.ShouldBe(2);
+            deserialized.AirlineData.TravelType.ShouldBe("international");
+            deserialized.AirlineData.TripType.ShouldBe("round_trip");
+            deserialized.AirlineData.Refundable.ShouldBe(false);
+            deserialized.AirlineData.DeliveryRecipient.ShouldBe("jane.smith@example.com");
+            deserialized.AirlineData.Ancillaries.ShouldBe("extra_baggage");
+            deserialized.AirlineData.Insurance.ShouldNotBeNull();
+            deserialized.AirlineData.Insurance.Type.ShouldBe("travel");
+            deserialized.AirlineData.Insurance.Company.ShouldBe("Acme Insurance");
+            deserialized.AirlineData.Insurance.Price.Amount.ShouldBe(25.50m);
+            deserialized.AirlineData.Insurance.Price.Currency.ShouldBe(Currency.GBP);
+        }
+
+        [Fact]
+        public void ShouldDeserializeIndustryNewFieldsFromSnakeCaseJson()
+        {
+            const string json = @"{
+                ""accommodation_data"": {
+                    ""name"": ""Grand Hotel"",
+                    ""total_number_of_guests"": 4,
+                    ""refundable"": true,
+                    ""delivery_recipient"": ""jane.smith@example.com"",
+                    ""host"": { ""registration_date"": ""2020-01-01"", ""total_reservation_count"": 25 },
+                    ""room"": [{ ""rate"": 150.00, ""number_of_nights"": 5, ""type"": ""deluxe"" }]
+                },
+                ""airline_data"": {
+                    ""total_number_of_passengers"": 2,
+                    ""travel_type"": ""international"",
+                    ""trip_type"": ""round_trip"",
+                    ""refundable"": false,
+                    ""delivery_recipient"": ""jane.smith@example.com"",
+                    ""ancillaries"": ""extra_baggage"",
+                    ""insurance"": { ""type"": ""travel"", ""company"": ""Acme Insurance"", ""price"": { ""amount"": 25.50, ""currency"": ""GBP"" } }
+                }
+            }";
+
+            var result = (Industry)Serializer.Deserialize(json, typeof(Industry));
+
+            result.AccommodationData.TotalNumberOfGuests.ShouldBe(4);
+            result.AccommodationData.Refundable.ShouldBe(true);
+            result.AccommodationData.DeliveryRecipient.ShouldBe("jane.smith@example.com");
+            result.AccommodationData.Host.RegistrationDate.ShouldBe("2020-01-01");
+            result.AccommodationData.Host.TotalReservationCount.ShouldBe(25);
+            result.AccommodationData.Room[0].Type.ShouldBe("deluxe");
+
+            result.AirlineData.TotalNumberOfPassengers.ShouldBe(2);
+            result.AirlineData.TravelType.ShouldBe("international");
+            result.AirlineData.TripType.ShouldBe("round_trip");
+            result.AirlineData.Refundable.ShouldBe(false);
+            result.AirlineData.DeliveryRecipient.ShouldBe("jane.smith@example.com");
+            result.AirlineData.Ancillaries.ShouldBe("extra_baggage");
+            result.AirlineData.Insurance.Type.ShouldBe("travel");
+            result.AirlineData.Insurance.Company.ShouldBe("Acme Insurance");
+            result.AirlineData.Insurance.Price.Amount.ShouldBe(25.50m);
+            result.AirlineData.Insurance.Price.Currency.ShouldBe(Currency.GBP);
         }
 
         [Fact]

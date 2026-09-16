@@ -60,6 +60,30 @@ namespace Checkout.Payments.Setups.Entities
         /// [Optional]
         /// </summary>
         public IList<AccommodationRoom> Room { get; set; }
+
+        /// <summary>
+        /// The total number of guests on the booking.
+        /// [Optional]
+        /// </summary>
+        public int? TotalNumberOfGuests { get; set; }
+
+        /// <summary>
+        /// Specifies whether the booking is refundable.
+        /// [Optional]
+        /// </summary>
+        public bool? Refundable { get; set; }
+
+        /// <summary>
+        /// The recipient the booking confirmation is delivered to.
+        /// [Optional]
+        /// </summary>
+        public string DeliveryRecipient { get; set; }
+
+        /// <summary>
+        /// Details about the host of the accommodation.
+        /// [Optional]
+        /// </summary>
+        public AccommodationHost Host { get; set; }
     }
 
     public class AccommodationAddress
@@ -123,5 +147,27 @@ namespace Checkout.Payments.Setups.Entities
         /// [Optional]
         /// </summary>
         public int? NumberOfNights { get; set; }
+
+        /// <summary>
+        /// The type of room booked, for example "deluxe".
+        /// [Optional]
+        /// </summary>
+        public string Type { get; set; }
+    }
+
+    public class AccommodationHost
+    {
+        /// <summary>
+        /// The date the host registered (yyyy-MM-dd).
+        /// [Optional]
+        /// Format: date
+        /// </summary>
+        public string RegistrationDate { get; set; }
+
+        /// <summary>
+        /// The total number of reservations made with the host.
+        /// [Optional]
+        /// </summary>
+        public int? TotalReservationCount { get; set; }
     }
 }
