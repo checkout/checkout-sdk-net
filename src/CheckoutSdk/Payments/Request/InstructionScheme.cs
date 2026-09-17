@@ -8,12 +8,15 @@ namespace Checkout.Payments.Request
     public enum InstructionScheme
     {
         /// <summary>SWIFT international transfer.</summary>
-        [EnumMember(Value = "swift")] Swift,
+        [EnumMember(Value = "swift")]
+        Swift,
 
         /// <summary>Local payment scheme.</summary>
-        [EnumMember(Value = "local")] Local,
+        [EnumMember(Value = "local")]
+        Local,
 
         /// <summary>Instant payment scheme.</summary>
-        [EnumMember(Value = "instant")] Instant
+        [EnumMember(Value = "instant")]
+        Instant
     }
 }

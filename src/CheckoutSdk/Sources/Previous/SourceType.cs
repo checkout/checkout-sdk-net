@@ -4,6 +4,7 @@ namespace Checkout.Sources.Previous
 {
     public enum SourceType
     {
-        [EnumMember(Value = "sepa")] Sepa
+        [EnumMember(Value = "sepa")]
+        Sepa
     }
 }

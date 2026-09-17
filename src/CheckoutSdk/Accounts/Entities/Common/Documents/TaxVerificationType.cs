@@ -4,6 +4,7 @@ namespace Checkout.Accounts.Entities.Common.Documents
 {
     public enum TaxVerificationType
     {
-        [EnumMember(Value = "ein_letter")] EinLetter
+        [EnumMember(Value = "ein_letter")]
+        EinLetter
     }
 }

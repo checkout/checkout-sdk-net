@@ -4,8 +4,10 @@ namespace Checkout.Payments.Previous.Request.Source.Apm
 {
     public enum IntegrationType
     {
-        [EnumMember(Value = "direct")] Direct,
+        [EnumMember(Value = "direct")]
+        Direct,
 
-        [EnumMember(Value = "redirect")] Redirect,
+        [EnumMember(Value = "redirect")]
+        Redirect,
     }
 }

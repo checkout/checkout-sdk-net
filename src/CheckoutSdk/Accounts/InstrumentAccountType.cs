@@ -7,8 +7,10 @@ namespace Checkout.Accounts
     /// </summary>
     public enum InstrumentAccountType
     {
-        [EnumMember(Value = "savings")] Savings,
+        [EnumMember(Value = "savings")]
+        Savings,
 
-        [EnumMember(Value = "checking")] Checking
+        [EnumMember(Value = "checking")]
+        Checking
     }
 }

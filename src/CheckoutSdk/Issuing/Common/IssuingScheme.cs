@@ -7,7 +7,9 @@ namespace Checkout.Issuing.Common
     /// </summary>
     public enum IssuingScheme
     {
-        [EnumMember(Value = "mastercard")] Mastercard,
-        [EnumMember(Value = "visa")] Visa
+        [EnumMember(Value = "mastercard")]
+        Mastercard,
+        [EnumMember(Value = "visa")]
+        Visa
     }
 }

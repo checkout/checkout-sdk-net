@@ -10,6 +10,7 @@ namespace Checkout.Payments.Hosted
         [EnumMember(Value = "Payment Received")]
         PaymentReceived,
 
-        [EnumMember(Value = "Expired")] Expired
+        [EnumMember(Value = "Expired")]
+        Expired
     }
 }

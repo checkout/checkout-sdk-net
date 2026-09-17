@@ -4,20 +4,28 @@ namespace Checkout.Forward.Requests
 {
     public enum MethodType
     {
-        [EnumMember(Value = "GET")] Get,
+        [EnumMember(Value = "GET")]
+        Get,
 
-        [EnumMember(Value = "POST")] Post,
+        [EnumMember(Value = "POST")]
+        Post,
 
-        [EnumMember(Value = "PUT")] Put,
+        [EnumMember(Value = "PUT")]
+        Put,
 
-        [EnumMember(Value = "DELETE")] Delete,
+        [EnumMember(Value = "DELETE")]
+        Delete,
 
-        [EnumMember(Value = "PATCH")] Patch,
+        [EnumMember(Value = "PATCH")]
+        Patch,
 
-        [EnumMember(Value = "HEAD")] Head,
+        [EnumMember(Value = "HEAD")]
+        Head,
 
-        [EnumMember(Value = "OPTIONS")] Options,
+        [EnumMember(Value = "OPTIONS")]
+        Options,
 
-        [EnumMember(Value = "TRACE")] Trace
+        [EnumMember(Value = "TRACE")]
+        Trace
     }
 }

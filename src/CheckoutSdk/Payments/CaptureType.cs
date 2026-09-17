@@ -4,7 +4,9 @@ namespace Checkout.Payments
 {
     public enum CaptureType
     {
-        [EnumMember(Value = "NonFinal")] NonFinal,
-        [EnumMember(Value = "Final")] Final,
+        [EnumMember(Value = "NonFinal")]
+        NonFinal,
+        [EnumMember(Value = "Final")]
+        Final,
     }
 }

@@ -4,11 +4,17 @@ namespace Checkout.Payments
 {
     public enum PaymentType
     {
-        [EnumMember(Value = "Regular")] Regular,
-        [EnumMember(Value = "Recurring")] Recurring,
-        [EnumMember(Value = "MOTO")] Moto,
-        [EnumMember(Value = "Installment")] Installment,
-        [EnumMember(Value = "PayLater")] PayLater,
-        [EnumMember(Value = "Unscheduled")] Unscheduled
+        [EnumMember(Value = "Regular")]
+        Regular,
+        [EnumMember(Value = "Recurring")]
+        Recurring,
+        [EnumMember(Value = "MOTO")]
+        Moto,
+        [EnumMember(Value = "Installment")]
+        Installment,
+        [EnumMember(Value = "PayLater")]
+        PayLater,
+        [EnumMember(Value = "Unscheduled")]
+        Unscheduled
     }
 }

@@ -4,8 +4,11 @@ namespace Checkout.Payments
 {
     public enum PreferredSchema
     {
-        [EnumMember(Value = "visa")] Visa,
-        [EnumMember(Value = "mastercard")] Mastercard,
-        [EnumMember(Value = "cartes_bancaires")] CartesBancaires
+        [EnumMember(Value = "visa")]
+        Visa,
+        [EnumMember(Value = "mastercard")]
+        Mastercard,
+        [EnumMember(Value = "cartes_bancaires")]
+        CartesBancaires
     }
 }
