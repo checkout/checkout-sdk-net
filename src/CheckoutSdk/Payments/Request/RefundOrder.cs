@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Checkout.Payments.Request
 {
@@ -107,6 +108,7 @@ namespace Checkout.Payments.Request
         /// [Optional]
         /// Format: date (yyyy-MM-dd)
         /// </summary>
-        public DateTime ServiceEndsOn { get; set; }
+        [JsonConverter(typeof(ShortDateTimeConverter))]
+        public DateTime? ServiceEndsOn { get; set; }
     }
 }

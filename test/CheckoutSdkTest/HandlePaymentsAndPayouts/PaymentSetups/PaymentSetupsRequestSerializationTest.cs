@@ -822,5 +822,85 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             deserialized.AmountAllocations[0].Commission.Amount.ShouldBe(1000);
             deserialized.AmountAllocations[0].Commission.Percentage.ShouldBe(1.125);
         }
+
+        // ------------------------------------------------------------------------
+        // format: date properties
+        // ------------------------------------------------------------------------
+
+        // PaymentSetupMerchantAccount declares registration_date, last_modified,
+        // first_transaction_date and last_transaction_date as format: date. Times are
+        // deliberately not midnight, to prove truncation rather than luck.
+        [Fact]
+        public void ShouldSerializeMerchantAccountDatesWithoutATimeComponent()
+        {
+            var json = Serializer.Serialize(new MerchantAccount
+            {
+                Id = "acct_1",
+                RegistrationDate = new DateTime(2023, 5, 1, 13, 59, 0),
+                LastModified = new DateTime(2023, 5, 1, 8, 30, 0),
+                FirstTransactionDate = new DateTime(2023, 9, 15, 1, 2, 0),
+                LastTransactionDate = new DateTime(2025, 3, 28, 23, 59, 0)
+            });
+
+            json.ShouldContain("\"registration_date\":\"2023-05-01\"");
+            json.ShouldContain("\"last_modified\":\"2023-05-01\"");
+            json.ShouldContain("\"first_transaction_date\":\"2023-09-15\"");
+            json.ShouldContain("\"last_transaction_date\":\"2025-03-28\"");
+            json.ShouldNotContain("T13:59");
+            json.ShouldNotContain("T23:59");
+        }
+
+        [Fact]
+        public void ShouldOmitMerchantAccountDatesWhenNotSet()
+        {
+            var json = Serializer.Serialize(new MerchantAccount { Id = "acct_1" });
+
+            foreach (var key in new[]
+                     {
+                         "registration_date", "last_modified",
+                         "first_transaction_date", "last_transaction_date"
+                     })
+            {
+                json.ShouldNotContain(key);
+            }
+        }
+
+        [Fact]
+        public void ShouldDeserializeMerchantAccountDatesFromDateOnlyValues()
+        {
+            const string json =
+                "{\"id\":\"acct_1\",\"registration_date\":\"2023-05-01\"," +
+                "\"last_modified\":\"2023-05-02\",\"first_transaction_date\":\"2023-09-15\"," +
+                "\"last_transaction_date\":\"2025-03-28\"}";
+
+            var account = (MerchantAccount)Serializer.Deserialize(json, typeof(MerchantAccount));
+
+            account.RegistrationDate.ShouldBe(new DateTime(2023, 5, 1));
+            account.LastModified.ShouldBe(new DateTime(2023, 5, 2));
+            account.FirstTransactionDate.ShouldBe(new DateTime(2023, 9, 15));
+            account.LastTransactionDate.ShouldBe(new DateTime(2025, 3, 28));
+        }
+
+        [Fact]
+        public void ShouldSerializeSubMerchantAndAftDatesWithoutATimeComponent()
+        {
+            Serializer.Serialize(new OrderSubMerchant
+            {
+                Id = "sub_1",
+                RegistrationDate = new DateTime(2023, 1, 15, 12, 0, 0)
+            }).ShouldContain("\"registration_date\":\"2023-01-15\"");
+
+            Serializer.Serialize(new AccountFundingTransactionSender
+            {
+                Reference = "REF-1",
+                DateOfBirth = new DateTime(2000, 1, 1, 6, 30, 0)
+            }).ShouldContain("\"date_of_birth\":\"2000-01-01\"");
+
+            Serializer.Serialize(new AccountFundingTransactionRecipient
+            {
+                FirstName = "Jane",
+                DateOfBirth = new DateTime(2000, 1, 1, 6, 30, 0)
+            }).ShouldContain("\"date_of_birth\":\"2000-01-01\"");
+        }
     }
 }

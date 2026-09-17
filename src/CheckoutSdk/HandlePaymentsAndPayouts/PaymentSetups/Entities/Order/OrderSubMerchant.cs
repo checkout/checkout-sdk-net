@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace Checkout.Payments.Setups.Entities
 {
@@ -26,6 +27,7 @@ namespace Checkout.Payments.Setups.Entities
         /// The registration date of the sub-merchant (yyyy-MM-dd).
         /// [Optional]
         /// </summary>
+        [JsonConverter(typeof(ShortDateTimeConverter))]
         public DateTime? RegistrationDate { get; set; }
     }
 }

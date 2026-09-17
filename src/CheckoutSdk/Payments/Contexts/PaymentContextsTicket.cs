@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace Checkout.Payments.Contexts
 {
@@ -12,6 +13,7 @@ namespace Checkout.Payments.Contexts
         /// <summary>
         /// The date when the ticket was issued in YYYY-MM-DD format
         /// </summary>
+        [JsonConverter(typeof(ShortDateTimeConverter))]
         public DateTime? IssueDate { get; set; }
 
         /// <summary>

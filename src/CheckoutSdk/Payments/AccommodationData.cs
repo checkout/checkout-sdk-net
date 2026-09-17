@@ -2,6 +2,7 @@ using Checkout.Common;
 using Checkout.Payments.Contexts;
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Checkout.Payments
 {
@@ -20,12 +21,14 @@ namespace Checkout.Payments
         /// <summary>
         /// The check-in date in YYYY-MM-DD format
         /// </summary>
-        public DateTime CheckInDate { get; set; }
+        [JsonConverter(typeof(ShortDateTimeConverter))]
+        public DateTime? CheckInDate { get; set; }
 
         /// <summary>
         /// The check-out date in YYYY-MM-DD format
         /// </summary>
-        public DateTime CheckOutDate { get; set; }
+        [JsonConverter(typeof(ShortDateTimeConverter))]
+        public DateTime? CheckOutDate { get; set; }
 
         /// <summary>
         /// The address of the accommodation
