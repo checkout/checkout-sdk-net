@@ -63,6 +63,59 @@ namespace Checkout.Payments.Contexts
             summary.LastPaymentDate.ShouldBe(new DateTime(2023, 8, 1));
         }
 
+        // The spec's CustomerSummary declares eight properties. is_premium_customer,
+        // is_returning_customer and lifetime_value were missing from the SDK, so they were
+        // unsendable
+        [Fact]
+        public void ShouldSerializeEveryCustomerSummaryProperty()
+        {
+            var json = Serializer.Serialize(new PaymentContextsCustomerSummary
+            {
+                RegistrationDate = new DateTime(2023, 5, 1),
+                FirstTransactionDate = new DateTime(2023, 7, 1),
+                LastPaymentDate = new DateTime(2023, 8, 1),
+                TotalOrderCount = 15,
+                LastPaymentAmount = 500,
+                IsPremiumCustomer = true,
+                IsReturningCustomer = true,
+                LifetimeValue = 500
+            });
+
+            json.ShouldContain("\"total_order_count\":15");
+            json.ShouldContain("\"last_payment_amount\":500");
+            json.ShouldContain("\"is_premium_customer\":true");
+            json.ShouldContain("\"is_returning_customer\":true");
+            json.ShouldContain("\"lifetime_value\":500");
+        }
+
+        [Fact]
+        public void ShouldDeserializeEveryCustomerSummaryProperty()
+        {
+            const string json =
+                "{\"total_order_count\":15,\"last_payment_amount\":500.5," +
+                "\"is_premium_customer\":true,\"is_returning_customer\":false," +
+                "\"lifetime_value\":1234.56}";
+
+            var summary = (PaymentContextsCustomerSummary)Serializer.Deserialize(
+                json, typeof(PaymentContextsCustomerSummary));
+
+            summary.TotalOrderCount.ShouldBe(15);
+            summary.LastPaymentAmount.ShouldBe(500.5);
+            summary.IsPremiumCustomer.ShouldBe(true);
+            summary.IsReturningCustomer.ShouldBe(false);
+            summary.LifetimeValue.ShouldBe(1234.56);
+        }
+
+        [Fact]
+        public void ShouldOmitTheNewCustomerSummaryPropertiesWhenNotSet()
+        {
+            var json = Serializer.Serialize(new PaymentContextsCustomerSummary());
+
+            json.ShouldNotContain("is_premium_customer");
+            json.ShouldNotContain("is_returning_customer");
+            json.ShouldNotContain("lifetime_value");
+        }
+
         // ------------------------------------------------------------------------
         // Airline data -- format: date properties
         // ------------------------------------------------------------------------

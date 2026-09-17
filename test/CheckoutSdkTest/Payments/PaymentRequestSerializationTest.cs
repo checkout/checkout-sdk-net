@@ -542,6 +542,62 @@ namespace Checkout.Payments
             json.ShouldNotContain("T09:30");
         }
 
+        // ------------------------------------------------------------------------
+        // FlightLegDetails -- corrected wire names
+        // ------------------------------------------------------------------------
+
+        // class_of_travelling and stop_over_code are the only spellings in the specification;
+        // the SDK's ServiceClass and StopoverCode serialize as service_class and stopover_code,
+        // which the API does not define, so those values were discarded by the gateway. Both old
+        // properties are kept and marked for removal rather than deleted.
+        [Fact]
+        public void ShouldSerializeFlightLegWireNamesTheApiDefines()
+        {
+            var json = Serializer.Serialize(new FlightLegDetails
+            {
+                ClassOfTravelling = "J",
+                StopOverCode = "O"
+            });
+
+            json.ShouldContain("\"class_of_travelling\":\"J\"");
+            json.ShouldContain("\"stop_over_code\":\"O\"");
+        }
+
+        [Fact]
+        public void ShouldOmitTheDeprecatedFlightLegPropertiesWhenNotSet()
+        {
+            var json = Serializer.Serialize(new FlightLegDetails { ClassOfTravelling = "J" });
+
+            json.ShouldNotContain("service_class");
+            json.ShouldNotContain("stopover_code");
+        }
+
+        [Fact]
+        public void ShouldStillSerializeTheDeprecatedFlightLegPropertiesWhenSet()
+        {
+            // Retained for backwards compatibility: a caller still setting them must not break,
+            // even though the API ignores both keys.
+            var json = Serializer.Serialize(new FlightLegDetails
+            {
+                ServiceClass = "J",
+                StopoverCode = "O"
+            });
+
+            json.ShouldContain("\"service_class\":\"J\"");
+            json.ShouldContain("\"stopover_code\":\"O\"");
+        }
+
+        [Fact]
+        public void ShouldDeserializeFlightLegWireNamesTheApiDefines()
+        {
+            const string json = "{\"class_of_travelling\":\"J\",\"stop_over_code\":\"O\"}";
+
+            var leg = (FlightLegDetails)Serializer.Deserialize(json, typeof(FlightLegDetails));
+
+            leg.ClassOfTravelling.ShouldBe("J");
+            leg.StopOverCode.ShouldBe("O");
+        }
+
         [Fact]
         public void ShouldOmitRefundOrderServiceEndsOnWhenNotSet()
         {
