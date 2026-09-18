@@ -20,6 +20,7 @@ using Checkout.Identities.IdDocumentVerification;
 using Checkout.Identities.AddressDocumentVerification;
 using Checkout.Identities.IdentityVerification;
 using Checkout.Instruments;
+using Checkout.Inventory;
 using Checkout.Metadata;
 using Checkout.NetworkTokens;
 using Checkout.OnboardingSimulator;
@@ -77,6 +78,7 @@ namespace Checkout
         private readonly IAgenticCommerceClient _agenticCommerceClient;
         private readonly IOnboardingSimulatorClient _onboardingSimulatorClient;
         private readonly IBacsClient _bacsClient;
+        private readonly IInventoryClient _inventoryClient;
 
         public CheckoutApi(CheckoutConfiguration configuration)
         {
@@ -124,6 +126,7 @@ namespace Checkout
             _agenticCommerceClient = new AgenticCommerceClient(baseApiClient, configuration);
             _onboardingSimulatorClient = new OnboardingSimulatorClient(baseApiClient, configuration);
             _bacsClient = new BacsClient(baseApiClient, configuration);
+            _inventoryClient = new InventoryClient(baseApiClient, configuration);
         }
 
         private static ApiClient BaseApiClient(CheckoutConfiguration configuration)
@@ -465,6 +468,14 @@ namespace Checkout
         public IBacsClient BacsClient()
         {
             return _bacsClient;
+        }
+
+        /// <summary>
+        /// Manages stock levels, atomic multi-variant reservations and per-variant product knowledge.
+        /// </summary>
+        public IInventoryClient InventoryClient()
+        {
+            return _inventoryClient;
         }
     }
 }

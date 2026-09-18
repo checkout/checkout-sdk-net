@@ -20,6 +20,7 @@ using Checkout.Identities.IdDocumentVerification;
 using Checkout.Identities.AddressDocumentVerification;
 using Checkout.Identities.IdentityVerification;
 using Checkout.Instruments;
+using Checkout.Inventory;
 using Checkout.Metadata;
 using Checkout.NetworkTokens;
 using Checkout.OnboardingSimulator;
@@ -224,5 +225,10 @@ namespace Checkout
         /// Sends Bacs Direct Debit pre-notifications.
         /// </summary>
         IBacsClient BacsClient();
+
+        /// <summary>
+        /// Manages stock levels, atomic multi-variant reservations and per-variant product knowledge.
+        /// </summary>
+        IInventoryClient InventoryClient();
     }
 }
