@@ -5,9 +5,12 @@ namespace Checkout.Identities.Entities
     public class SelectedDocument
     {
         /// <summary>
-        /// The applicant's nationality. Standard – ISO alpha-2 country code
+        /// The country that issued the selected document.
+        /// [Optional]
+        /// Standard: ISO 3166-1 alpha-2 country code
+        /// Pattern: ^[A-Za-z]{2}$
         /// </summary>
-        public CountryCode Country { get; set; }
+        public CountryCode? Country { get; set; }
 
         /// <summary>
         /// The type of identity document

@@ -12,7 +12,7 @@ namespace Checkout.Identities.IdentityVerification.Requests
         /// <summary>
         /// The personal details provided by the applicant
         /// </summary>
-        public DeclaredData DeclaredData { get; set; }
+        public IdentityDeclaredData DeclaredData { get; set; }
 
         /// <summary>
         /// The URL to redirect the applicant to after the attempt

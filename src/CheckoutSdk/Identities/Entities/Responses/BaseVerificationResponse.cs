@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Checkout.Identities.Entities.Responses
 {
     /// <summary>
@@ -24,11 +22,5 @@ namespace Checkout.Identities.Entities.Responses
         /// [Required]
         /// </summary>
         public TStatus Status { get; set; }
-        
-        /// <summary>
-        /// One or more codes that provide more information about risks associated with the verification
-        /// [Required]
-        /// </summary>
-        public List<string> RiskLabels { get; set; }
     }
 }

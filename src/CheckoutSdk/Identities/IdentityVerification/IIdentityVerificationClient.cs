@@ -61,6 +61,15 @@ namespace Checkout.Identities.IdentityVerification
         Task<IdentityVerificationAttemptsResponse> GetIdentityVerificationAttempts(string identityVerificationId, CancellationToken cancellationToken = default);
 
         /// <summary>
+        ///     Retrieves a page of attempts for a identity verification
+        /// </summary>
+        /// <param name="identityVerificationId">the identity verification ID</param>
+        /// <param name="query">the pagination query parameters (skip and limit)</param>
+        /// <param name="cancellationToken">the cancellation token</param>
+        /// <returns>the identity verification attempts response</returns>
+        Task<IdentityVerificationAttemptsResponse> GetIdentityVerificationAttempts(string identityVerificationId, AttemptsQuery query, CancellationToken cancellationToken = default);
+
+        /// <summary>
         ///     Retrieves a specific attempt for an identity verification
         /// </summary>
         /// <param name="identityVerificationId">the identity verification ID</param>

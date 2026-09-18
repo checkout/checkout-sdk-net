@@ -53,6 +53,15 @@ namespace Checkout.Identities.FaceAuthentication
         Task<FaceAuthenticationAttemptsResponse> GetFaceAuthenticationAttempts(string faceAuthenticationId, CancellationToken cancellationToken = default);
 
         /// <summary>
+        ///     Retrieves a page of attempts for a face authentication
+        /// </summary>
+        /// <param name="faceAuthenticationId">the face authentication ID</param>
+        /// <param name="query">the pagination query parameters (skip and limit)</param>
+        /// <param name="cancellationToken">the cancellation token</param>
+        /// <returns>the face authentication attempts response</returns>
+        Task<FaceAuthenticationAttemptsResponse> GetFaceAuthenticationAttempts(string faceAuthenticationId, AttemptsQuery query, CancellationToken cancellationToken = default);
+
+        /// <summary>
         ///     Retrieves a specific attempt for a face authentication
         /// </summary>
         /// <param name="faceAuthenticationId">the face authentication ID</param>

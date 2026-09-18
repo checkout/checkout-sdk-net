@@ -5,6 +5,7 @@ using Checkout.Issuing.Cards.Requests.Enrollment;
 using Checkout.Issuing.Cards.Requests.Revoke;
 using Checkout.Issuing.Cards.Requests.Suspend;
 using Checkout.Issuing.Cards.Requests.Update;
+using Checkout.Issuing.Cards.Responses.Update;
 using Checkout.Issuing.Cards.Requests.Renew;
 using Checkout.Issuing.Cards.Responses.Create;
 using Checkout.Issuing.Cards.Responses.Credentials;
@@ -234,10 +235,10 @@ namespace Checkout.Issuing.Cards
         private async Task ShouldUpdateCardDetails()
         {
             var cardUpdateRequest = new CardsUpdateRequest();
-            var updateResponse = new UpdateResponse();
+            var updateResponse = new CardUpdateResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Patch<UpdateResponse>(
+                    apiClient.Patch<CardUpdateResponse>(
                         "issuing/cards/card_id",
                         _authorization,
                         cardUpdateRequest,
@@ -247,7 +248,37 @@ namespace Checkout.Issuing.Cards
 
             IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
 
-            UpdateResponse response = await client.UpdateCardDetails("card_id", cardUpdateRequest, CancellationToken.None);
+            CardUpdateResponse response = await client.UpdateCardDetails("card_id", cardUpdateRequest, CancellationToken.None);
+
+            response.ShouldNotBeNull();
+            response.ShouldBeSameAs(updateResponse);
+        }
+
+        [Fact]
+        private async Task ShouldUpdateCardDetailsWithEncryptedCvvHeaders()
+        {
+            var cardUpdateRequest = new CardsUpdateRequest();
+            var updateResponse = new CardUpdateResponse();
+            var headers = new CardUpdateHeaders
+            {
+                ReturnEncryptedCvv = true,
+                EncryptionKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A"
+            };
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Patch<CardUpdateResponse>(
+                        "issuing/cards/card_id",
+                        _authorization,
+                        cardUpdateRequest,
+                        CancellationToken.None,
+                        null,
+                        headers))
+                .ReturnsAsync(() => updateResponse);
+
+            IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
+
+            CardUpdateResponse response =
+                await client.UpdateCardDetails("card_id", cardUpdateRequest, headers, CancellationToken.None);
 
             response.ShouldNotBeNull();
             response.ShouldBeSameAs(updateResponse);

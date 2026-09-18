@@ -5,8 +5,10 @@ using Checkout.Identities.Entities;
 using Checkout.Identities.IdDocumentVerification.Requests;
 using Checkout.Identities.IdDocumentVerification.Responses;
 using Moq;
+using Checkout.Common;
 using Shouldly;
 using Xunit;
+using DocumentType = Checkout.Identities.Entities.DocumentType;
 
 namespace Checkout.Identities.IdDocumentVerification
 {
@@ -371,7 +373,7 @@ namespace Checkout.Identities.IdDocumentVerification
                 Document = new DocumentDetails
                 {
                     DocumentType = DocumentType.Passport,
-                    DocumentIssuingCountry = "US",
+                    DocumentIssuingCountry = CountryCode.US,
                     FrontImageSignedUrl = "https://example.com/front-image.jpg",
                     FullName = "John Doe",
                     BirthDate = "1990-01-01"
@@ -406,7 +408,7 @@ namespace Checkout.Identities.IdDocumentVerification
         {
             return new IdDocumentVerificationReportResponse
             {
-                SignedUrl = "https://example.com/report.pdf"
+                PdfReport = "https://example.com/report.pdf"
             };
         }
 
@@ -438,7 +440,74 @@ namespace Checkout.Identities.IdDocumentVerification
         private static void ValidateIdDocumentVerificationReportResponse(IdDocumentVerificationReportResponse response)
         {
             response.ShouldNotBeNull();
-            response.SignedUrl.ShouldNotBeNullOrEmpty();
+            response.PdfReport.ShouldNotBeNullOrEmpty();
+        }
+        [Fact]
+        public async Task GetIdDocumentVerificationAttemptAssets_Should_Call_ApiClient_Query()
+        {
+            var query = new AttemptAssetsQuery { Skip = 0, Limit = 10 };
+            var response = new IdDocumentVerificationAttemptAssetsResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Query<IdDocumentVerificationAttemptAssetsResponse>(
+                        $"{IdDocumentVerificationsPath}/{IdDocumentVerificationId}/attempts/{AttemptId}/assets",
+                        _authorization,
+                        query,
+                        CancellationToken.None))
+                .ReturnsAsync(response);
+
+            IIdDocumentVerificationClient client = new IdDocumentVerificationClient(_apiClient.Object, _configuration.Object);
+
+            IdDocumentVerificationAttemptAssetsResponse result = await client.GetIdDocumentVerificationAttemptAssets(
+                IdDocumentVerificationId, AttemptId, query, CancellationToken.None);
+
+            result.ShouldNotBeNull();
+            result.ShouldBeSameAs(response);
+        }
+
+        [Fact]
+        public async Task GetIdDocumentVerificationAttemptAssets_Should_Throw_When_VerificationId_Null()
+        {
+            IIdDocumentVerificationClient client = new IdDocumentVerificationClient(_apiClient.Object, _configuration.Object);
+
+            var exception = await Should.ThrowAsync<CheckoutArgumentException>(async () =>
+                await client.GetIdDocumentVerificationAttemptAssets(null, AttemptId, null, CancellationToken.None));
+
+            exception.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public async Task GetIdDocumentVerificationAttemptAssets_Should_Throw_When_AttemptId_Null()
+        {
+            IIdDocumentVerificationClient client = new IdDocumentVerificationClient(_apiClient.Object, _configuration.Object);
+
+            var exception = await Should.ThrowAsync<CheckoutArgumentException>(async () =>
+                await client.GetIdDocumentVerificationAttemptAssets(IdDocumentVerificationId, null, null, CancellationToken.None));
+
+            exception.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public async Task GetIdDocumentVerificationAttempts_Should_Call_ApiClient_Query_When_Paginated()
+        {
+            var query = new AttemptsQuery { Skip = 6, Limit = 5 };
+            var response = new IdDocumentVerificationAttemptsResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Query<IdDocumentVerificationAttemptsResponse>(
+                        $"{IdDocumentVerificationsPath}/{IdDocumentVerificationId}/attempts",
+                        _authorization,
+                        query,
+                        CancellationToken.None))
+                .ReturnsAsync(response);
+
+            IIdDocumentVerificationClient client = new IdDocumentVerificationClient(_apiClient.Object, _configuration.Object);
+
+            IdDocumentVerificationAttemptsResponse result = await client.GetIdDocumentVerificationAttempts(
+                IdDocumentVerificationId, query, CancellationToken.None);
+
+            result.ShouldNotBeNull();
+            result.ShouldBeSameAs(response);
         }
     }
 }

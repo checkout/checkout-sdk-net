@@ -10,6 +10,7 @@ using Checkout.Issuing.Cards.Responses.Create;
 using Checkout.Issuing.Cards.Responses.Credentials;
 using Checkout.Issuing.Cards.Responses.Enrollment;
 using Checkout.Issuing.Cards.Responses.Renew;
+using Checkout.Issuing.Cards.Responses.Update;
 using Checkout.Issuing.Common.Responses;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,16 +41,44 @@ namespace Checkout.Issuing
             );
         }
         
-        public Task<UpdateResponse> UpdateCardDetails(string cardId,
+        /// <summary>
+        /// Updates a card you issued previously.
+        /// </summary>
+        /// <param name="cardId">the card ID</param>
+        /// <param name="cardUpdateRequest">the card fields to update</param>
+        /// <param name="cancellationToken">the cancellation token</param>
+        /// <returns>the card update response</returns>
+        public Task<CardUpdateResponse> UpdateCardDetails(string cardId,
             CardsUpdateRequest cardUpdateRequest,
             CancellationToken cancellationToken = default)
         {
+            return UpdateCardDetails(cardId, cardUpdateRequest, null, cancellationToken);
+        }
+
+        /// <summary>
+        /// Updates a card you issued previously, sending the optional return-encrypted-cvv and
+        /// Encryption-Key headers. Set return-encrypted-cvv to true to receive the card's
+        /// encrypted CVV in the response; the API returns a 422 with error code
+        /// encryption_key_required if Encryption-Key is not also supplied.
+        /// </summary>
+        /// <param name="cardId">the card ID</param>
+        /// <param name="cardUpdateRequest">the card fields to update</param>
+        /// <param name="headers">the optional return-encrypted-cvv and Encryption-Key headers</param>
+        /// <param name="cancellationToken">the cancellation token</param>
+        /// <returns>the card update response</returns>
+        public Task<CardUpdateResponse> UpdateCardDetails(string cardId,
+            CardsUpdateRequest cardUpdateRequest,
+            CardUpdateHeaders headers,
+            CancellationToken cancellationToken = default)
+        {
             CheckoutUtils.ValidateParams("cardId", cardId, "cardUpdateRequest", cardUpdateRequest);
-            return ApiClient.Patch<UpdateResponse>(
+            return ApiClient.Patch<CardUpdateResponse>(
                 BuildPath(IssuingPath, CardsPath, cardId),
                 SdkAuthorization(),
                 cardUpdateRequest,
-                cancellationToken
+                cancellationToken,
+                null,
+                headers
             );
         }
 

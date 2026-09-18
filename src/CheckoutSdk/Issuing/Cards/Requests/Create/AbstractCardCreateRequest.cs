@@ -46,22 +46,25 @@ namespace Checkout.Issuing.Cards.Requests.Create
         public CardMetadata Metadata { get; set; }
 
         /// <summary>
-        /// Date for the card to be automatically revoked. Must be after the current date and date only in the
-        /// form yyyy-mm-dd.
+        /// Date scheduling the card's automatic revocation.
+        /// Supported format: YYYY-MM-DD (time is midnight UTC).
         /// [Optional]
-        /// Format: yyyy-MM-dd
+        /// Format: date
+        /// Example: 2027-03-12
         /// </summary>
         public string RevocationDate { get; set; }
 
         /// <summary>
-        /// ISO 8601 date scheduling the card's activation. Two formats are supported:
+        /// Date scheduling the card's first activation. Only applies to the initial activation of a card.
+        /// Two formats are supported:
         /// - Date only: YYYY-MM-DD (treated as midnight UTC)
-        /// - Date with round hour: YYYY-MM-DDTHH:mmZ (UTC) or YYYY-MM-DDTHH:mm±HH:mm (offset)
+        /// - Date with round hour: YYYY-MM-DDTHH:mmZ (UTC) or YYYY-MM-DDTHH:mm+HH:mm (offset)
         /// Only round hours are allowed when a time is provided (HH:00). The value must be at least the next
         /// round hour after the request time.
         /// [Optional]
+        /// Example: 2026-06-01T10:00Z
         /// </summary>
-        public string ActivationDate { get; set; }
+        public string ScheduledActivationDate { get; set; }
 
         /// <summary>
         /// The name to display on the card.

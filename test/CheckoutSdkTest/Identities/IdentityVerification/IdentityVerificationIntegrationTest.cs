@@ -1,6 +1,7 @@
 using Checkout.Identities.Entities;
 using Checkout.Identities.IdentityVerification.Requests;
 using Checkout.Identities.IdentityVerification.Responses;
+using Checkout.Common;
 using Shouldly;
 using System;
 using System.Threading.Tasks;
@@ -265,7 +266,7 @@ namespace Checkout.Identities.IdentityVerification
                 ApplicantId = GenerateRandomId(),
                 UserJourneyId = GenerateRandomId(),
                 RedirectUrl = "https://example.com/redirect",
-                DeclaredData = new DeclaredData
+                DeclaredData = new IdentityDeclaredData
                 {
                     Name = "John Doe"
                 }
@@ -278,7 +279,7 @@ namespace Checkout.Identities.IdentityVerification
             {
                 ApplicantId = GenerateRandomId(),
                 UserJourneyId = GenerateRandomId(),
-                DeclaredData = new DeclaredData
+                DeclaredData = new IdentityDeclaredData
                 {
                     Name = "John Doe"
                 }
@@ -290,9 +291,9 @@ namespace Checkout.Identities.IdentityVerification
             return new IdentityVerificationAttemptRequest
             {
                 RedirectUrl = "https://example.com/redirect",
-                ClientInformation = new ClientInformation
+                ClientInformation = new IdentityVerificationClientInformation
                 {
-                    PreSelectedResidenceCountry = "US",
+                    PreSelectedResidenceCountry = CountryCode.US,
                     PreSelectedLanguage = "en-US"
                 }
             };
@@ -391,13 +392,31 @@ namespace Checkout.Identities.IdentityVerification
         private static void ValidateIdentityVerificationReport(IdentityVerificationReportResponse response)
         {
             response.ShouldNotBeNull();
-            response.SignedUrl.ShouldNotBeNullOrEmpty();
-            response.SignedUrl.ShouldStartWith("https://");
+            response.PdfReport.ShouldNotBeNullOrEmpty();
+            response.PdfReport.ShouldStartWith("https://");
         }
 
         private static string GenerateRandomId()
         {
             return Guid.NewGuid().ToString("N")[..16];
+        }
+        [Fact(Skip = "This test requires valid test environment setup")]
+        private async Task ShouldGetIdentityVerificationAttemptsPaginated()
+        {
+            // Arrange
+            var created = await DefaultApi.IdentityVerificationClient()
+                .CreateIdentityVerification(CreateIdentityVerificationRequest());
+
+            var query = new AttemptsQuery { Skip = 0, Limit = 5 };
+
+            // Act
+            var attempts = await DefaultApi.IdentityVerificationClient()
+                .GetIdentityVerificationAttempts(created.Id, query);
+
+            // Assert
+            attempts.ShouldNotBeNull();
+            attempts.Data.ShouldNotBeNull();
+            attempts.Limit.ShouldBe(5);
         }
     }
 }

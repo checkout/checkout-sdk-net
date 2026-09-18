@@ -8,9 +8,10 @@ namespace Checkout.Identities.Entities.Responses
     public class BaseReportResponse : Resource
     {
         /// <summary>
-        /// The pre-signed URL to the PDF report
+        /// The pre-signed URL to the PDF report.
         /// [Required]
+        /// Format: uri
         /// </summary>
-        public string SignedUrl { get; set; }
+        public string PdfReport { get; set; }
     }
 }
