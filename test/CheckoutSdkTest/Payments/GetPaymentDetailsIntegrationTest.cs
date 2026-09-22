@@ -2,7 +2,6 @@ using Checkout.Common;
 using Checkout.Payments.Response;
 using Checkout.Payments.Response.Source;
 using Shouldly;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -62,30 +61,11 @@ namespace Checkout.Payments
             {
                 _ = payment.Processing.SchemeTransactionLinkId;
 
-                //airline_data[].passenger is an array on the wire. AirlineData.Passenger was a
-                //single object, so this call used to throw for any payment carrying passenger
-                //data. A card payment has no airline data, so the assertion that matters here is
-                //that the response deserializes at all and that the property is a list.
-                if (payment.Processing.AirlineData != null)
-                {
-                    foreach (var airline in payment.Processing.AirlineData)
-                    {
-                        if (airline.Passenger != null)
-                        {
-                            airline.Passenger.ShouldBeAssignableTo<IList<Passenger>>();
-                        }
-                    }
-                }
-
-                if (payment.Processing.AccommodationData != null)
-                {
-                    foreach (var stay in payment.Processing.AccommodationData)
-                    {
-                        //state and country are free-form strings, not country-code enums.
-                        _ = stay.State;
-                        _ = stay.Country;
-                    }
-                }
+                //A card payment never carries airline or accommodation data, so there is nothing
+                //to assert about them here. The cardinality of
+                //processing.airline_data[].passenger is covered where it can actually fail:
+                //JsonSerializerTest.ShouldDeserializeGetPaymentResponseWithAirlinePassengerArray
+                //and the PaymentProcessingSerializationTest airline section.
             }
             //Risk
             payment.Risk.Flagged.ShouldBe(false);

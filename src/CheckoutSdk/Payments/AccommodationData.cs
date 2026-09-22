@@ -90,24 +90,24 @@ namespace Checkout.Payments
         /// Contains information about the guests staying at the accommodation.
         /// [Optional]
         /// </summary>
-        public List<PaymentContextsGuests> Guests { get; set; }
+        public IList<PaymentContextsGuests> Guests { get; set; }
 
         /// <summary>
         /// Contains information about the rooms booked by the customer.
         /// [Optional]
         /// </summary>
-        public List<PaymentContextsAccommodationRoom> Room { get; set; }
+        public IList<PaymentContextsAccommodationRoom> Room { get; set; }
 
         /// <summary>
         /// The property's phone information.
         /// [Optional]
         /// </summary>
-        public List<AccommodationPhone> PropertyPhone { get; set; }
+        public IList<AccommodationPhone> PropertyPhone { get; set; }
 
         /// <summary>
         /// The customer service phone information.
         /// [Optional]
         /// </summary>
-        public List<AccommodationPhone> CustomerServicePhone { get; set; }
+        public IList<AccommodationPhone> CustomerServicePhone { get; set; }
     }
 }

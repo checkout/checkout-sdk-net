@@ -1,5 +1,7 @@
 using Checkout.Common;
 using Checkout.Payments.Setups.Entities;
+using Checkout.Payments.Setups.Requests;
+using Checkout.Payments.Setups.Responses;
 using Checkout.Payments.Setups;
 using Checkout.Payments;
 using SetupAccommodationData = Checkout.Payments.Setups.Entities.AccommodationData;

@@ -2,6 +2,8 @@ using Checkout.Common;
 using Checkout.Payments;
 using Checkout.Payments.Setups;
 using Checkout.Payments.Setups.Entities;
+using Checkout.Payments.Setups.Requests;
+using Checkout.Payments.Setups.Responses;
 using Shouldly;
 using System.Threading.Tasks;
 using Xunit;

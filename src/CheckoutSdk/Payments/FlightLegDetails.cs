@@ -3,6 +3,9 @@ using Newtonsoft.Json;
 
 namespace Checkout.Payments
 {
+    /// <summary>
+    /// Contains information about a flight leg booked by the customer.
+    /// </summary>
     public class FlightLegDetails
     {
         /// <summary>
