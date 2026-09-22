@@ -14,6 +14,9 @@ using Checkout.Payments.Response;
 using Checkout.Payments.Response.Source;
 using Checkout.Payments.Response.Source.Contexts;
 using Checkout.Payments.Sender;
+using System.Collections.Generic;
+using System.IO;
+using Checkout.Payments;
 using Shouldly;
 using System;
 using Xunit;
@@ -434,6 +437,216 @@ namespace Checkout
             var source = (CardResponseSource)new JsonSerializer().Deserialize(json, typeof(CardResponseSource));
             source.CardType.ShouldBe(CardType.Unknown);
             source.CardCategory.ShouldBe(CardCategory.Unknown);
+        }
+
+
+        // ------------------------------------------------------------------------
+        // processing.airline_data[].passenger cardinality, on the full response envelope
+        //
+        // GET /payments/{id} deserializes into GetPaymentResponse, whose Processing is a
+        // ProcessingData. AirlineData.Passenger was a single Passenger, so the whole call threw
+        // "cannot deserialize the current JSON array" for any payment carrying passenger data.
+        // The tests below drive the real envelope, not the nested type in isolation.
+        // ------------------------------------------------------------------------
+
+        private const string GetPaymentResponseWithAirlineJson = @"{
+            ""id"": ""pay_mbabizu24mvu3mela5njyhpit4"",
+            ""amount"": 6540,
+            ""currency"": ""USD"",
+            ""approved"": true,
+            ""status"": ""Captured"",
+            ""reference"": ""ORD-5023-4E89"",
+            ""processing"": {
+                ""retrieval_reference_number"": ""909913440644"",
+                ""airline_data"": [
+                  {
+                    ""ticket"": {
+                      ""number"": ""045-21351455613"",
+                      ""issue_date"": ""2023-05-20"",
+                      ""issuing_carrier_code"": ""AI"",
+                      ""travel_package_indicator"": ""B"",
+                      ""travel_agency_name"": ""World Tours"",
+                      ""travel_agency_code"": ""01""
+                    },
+                    ""passenger"": [
+                      {
+                        ""first_name"": ""John"",
+                        ""last_name"": ""White"",
+                        ""date_of_birth"": ""1990-05-26"",
+                        ""address"": { ""country"": ""US"" }
+                      },
+                      {
+                        ""first_name"": ""Jane"",
+                        ""last_name"": ""White"",
+                        ""date_of_birth"": ""1992-01-03"",
+                        ""address"": { ""country"": ""GB"" }
+                      }
+                    ],
+                    ""flight_leg_details"": [
+                      {
+                        ""flight_number"": ""101"",
+                        ""carrier_code"": ""BA"",
+                        ""class_of_travelling"": ""J"",
+                        ""departure_airport"": ""LHR"",
+                        ""departure_date"": ""2023-06-19"",
+                        ""departure_time"": ""15:30"",
+                        ""arrival_airport"": ""LAX"",
+                        ""stop_over_code"": ""x"",
+                        ""fare_basis_code"": ""SPRSVR""
+                      }
+                    ]
+                  }
+                ],
+                ""accommodation_data"": [
+                  {
+                    ""name"": ""The Sea View Hotel"",
+                    ""check_in_date"": ""2023-06-20"",
+                    ""check_out_date"": ""2023-06-23"",
+                    ""state"": ""FL"",
+                    ""country"": ""USA"",
+                    ""city"": ""Los Angeles"",
+                    ""room"": [ { ""rate"": ""70"", ""number_of_nights_at_room_rate"": ""3"" } ]
+                  }
+                ]
+            }
+        }";
+
+        [Fact]
+        public void ShouldDeserializeGetPaymentResponseWithAirlinePassengerArray()
+        {
+            var response = (GetPaymentResponse)new JsonSerializer()
+                .Deserialize(GetPaymentResponseWithAirlineJson, typeof(GetPaymentResponse));
+
+            response.ShouldNotBeNull();
+            response.Id.ShouldBe("pay_mbabizu24mvu3mela5njyhpit4");
+            response.Processing.ShouldNotBeNull();
+            response.Processing.RetrievalReferenceNumber.ShouldBe("909913440644");
+
+            response.Processing.AirlineData.Count.ShouldBe(1);
+            var airline = response.Processing.AirlineData[0];
+
+            airline.Ticket.Number.ShouldBe("045-21351455613");
+            airline.Ticket.IssueDate.ShouldBe(new DateTime(2023, 5, 20));
+
+            // Two passengers, so a single-object model could not have held this even by accident.
+            airline.Passenger.Count.ShouldBe(2);
+            airline.Passenger[0].FirstName.ShouldBe("John");
+            airline.Passenger[0].Address.Country.ShouldBe(CountryCode.US);
+            airline.Passenger[1].FirstName.ShouldBe("Jane");
+            airline.Passenger[1].DateOfBirth.ShouldBe(new DateTime(1992, 1, 3));
+            airline.Passenger[1].Address.Country.ShouldBe(CountryCode.GB);
+
+            airline.FlightLegDetails[0].FlightNumber.ShouldBe("101");
+            airline.FlightLegDetails[0].ClassOfTravelling.ShouldBe("J");
+            airline.FlightLegDetails[0].StopOverCode.ShouldBe("x");
+
+            response.Processing.AccommodationData.Count.ShouldBe(1);
+            response.Processing.AccommodationData[0].State.ShouldBe("FL");
+            response.Processing.AccommodationData[0].Country.ShouldBe("USA");
+            response.Processing.AccommodationData[0].Room[0].NumberOfNightsAtRoomRate.ShouldBe("3");
+        }
+
+        [Fact]
+        public void ShouldDeserializeGetPaymentResponseWithAirlinePassengerAsASingleObject()
+        {
+            const string json = @"{
+                ""id"": ""pay_mbabizu24mvu3mela5njyhpit4"",
+                ""processing"": {
+                    ""airline_data"": [
+                      {
+                        ""ticket"": { ""number"": ""045-21351455613"" },
+                        ""passenger"": { ""first_name"": ""John"", ""date_of_birth"": ""1990-05-26"" }
+                      }
+                    ]
+                }
+            }";
+
+            var response = (GetPaymentResponse)new JsonSerializer()
+                .Deserialize(json, typeof(GetPaymentResponse));
+
+            response.Processing.AirlineData[0].Passenger.Count.ShouldBe(1);
+            response.Processing.AirlineData[0].Passenger[0].FirstName.ShouldBe("John");
+            response.Processing.AirlineData[0].Passenger[0].DateOfBirth
+                .ShouldBe(new DateTime(1990, 5, 26));
+        }
+
+        // ------------------------------------------------------------------------
+        // SingleOrArrayConverter
+        // ------------------------------------------------------------------------
+
+        private class SingleOrArrayHolder
+        {
+            [JsonConverter(typeof(SingleOrArrayConverter<Passenger>))]
+            public IList<Passenger> Passenger { get; set; }
+        }
+
+        // CanWrite must stay false. Newtonsoft only routes writes through WriteJson when a
+        // converter reports it can write, so false is what makes serialization fall back to the
+        // default list serializer and always emit an array. Flipping it to true would make every
+        // request carrying airline data throw NotSupportedException.
+        [Fact]
+        public void ShouldNotClaimToBeAbleToWrite()
+        {
+            new SingleOrArrayConverter<Passenger>().CanWrite.ShouldBeFalse();
+            new SingleOrArrayConverter<Passenger>().CanRead.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void ShouldThrowIfWriteJsonIsEverCalledDirectly()
+        {
+            var converter = new SingleOrArrayConverter<Passenger>();
+
+            Should.Throw<NotSupportedException>(() =>
+                converter.WriteJson(new JsonTextWriter(new StringWriter()), null,
+                    new Newtonsoft.Json.JsonSerializer()));
+        }
+
+        [Fact]
+        public void ShouldConvertOnlyForTheMatchingListType()
+        {
+            var converter = new SingleOrArrayConverter<Passenger>();
+
+            converter.CanConvert(typeof(IList<Passenger>)).ShouldBeTrue();
+            converter.CanConvert(typeof(List<Passenger>)).ShouldBeTrue();
+            converter.CanConvert(typeof(Passenger)).ShouldBeFalse();
+            converter.CanConvert(typeof(string)).ShouldBeFalse();
+        }
+
+        // The converter delegates element deserialization to the supplied serializer, so the
+        // global snake_case naming strategy and ShortDateTimeConverter still apply to T. It must
+        // never map property names itself.
+        [Fact]
+        public void ShouldHonourTheGlobalNamingPolicyAndDateConverterForElements()
+        {
+            const string json =
+                @"{""passenger"":{""first_name"":""John"",""last_name"":""White"",""date_of_birth"":""1990-05-26""}}";
+
+            var holder = (SingleOrArrayHolder)new JsonSerializer()
+                .Deserialize(json, typeof(SingleOrArrayHolder));
+
+            holder.Passenger.Count.ShouldBe(1);
+            holder.Passenger[0].FirstName.ShouldBe("John");
+            holder.Passenger[0].LastName.ShouldBe("White");
+            holder.Passenger[0].DateOfBirth.ShouldBe(new DateTime(1990, 5, 26));
+        }
+
+        [Fact]
+        public void ShouldReadAnEmptyArrayAsAnEmptyList()
+        {
+            var holder = (SingleOrArrayHolder)new JsonSerializer()
+                .Deserialize(@"{""passenger"":[]}", typeof(SingleOrArrayHolder));
+
+            holder.Passenger.ShouldNotBeNull();
+            holder.Passenger.Count.ShouldBe(0);
+        }
+
+        [Fact]
+        public void ShouldReadNullAsNull()
+        {
+            var holder = (SingleOrArrayHolder)new JsonSerializer()
+                .Deserialize(@"{""passenger"":null}", typeof(SingleOrArrayHolder));
+
+            holder.Passenger.ShouldBeNull();
         }
 
     }

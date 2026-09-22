@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Checkout.Common;
 using Checkout.Payments.Setups.Entities;
 
-namespace Checkout.Payments.Setups
+namespace Checkout.Payments.Setups.Responses
 {
     /// <summary>
     /// Payment setup confirmation response
