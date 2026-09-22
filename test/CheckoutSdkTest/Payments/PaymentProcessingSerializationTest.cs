@@ -1,4 +1,5 @@
 using Checkout.Common;
+using Checkout.Payments.Contexts;
 using Checkout.Payments.Response;
 using Checkout.Payments;
 using Shouldly;
@@ -258,9 +259,36 @@ namespace Checkout.Payments
                         BookingReference = "BR-001",
                         CheckInDate = DateTime.Parse("2026-08-01"),
                         CheckOutDate = DateTime.Parse("2026-08-05"),
+                        Address = new Address { AddressLine1 = "123 Beach Road", Zip = "10001" },
+                        State = "FL",
+                        Country = "USA",
                         City = "London",
-                        Country = CountryCode.GB,
-                        NumberOfRooms = 2
+                        NumberOfRooms = 2,
+                        Guests = new List<PaymentContextsGuests>
+                        {
+                            new PaymentContextsGuests
+                            {
+                                FirstName = "Jane",
+                                LastName = "Doe",
+                                DateOfBirth = DateTime.Parse("1985-07-14")
+                            }
+                        },
+                        Room = new List<PaymentContextsAccommodationRoom>
+                        {
+                            new PaymentContextsAccommodationRoom
+                            {
+                                Rate = "70",
+                                NumberOfNightsAtRoomRate = "3"
+                            }
+                        },
+                        PropertyPhone = new List<AccommodationPhone>
+                        {
+                            new AccommodationPhone { CountryCode = "44", Number = "7123456789" }
+                        },
+                        CustomerServicePhone = new List<AccommodationPhone>
+                        {
+                            new AccommodationPhone { CountryCode = "44", Number = "7987654321" }
+                        }
                     }
                 },
                 AirlineData = new List<AirlineData>
@@ -269,9 +297,37 @@ namespace Checkout.Payments
                     {
                         Ticket = new Ticket
                         {
-                            Number = "045-21351455",
-                            IssueDate = "2026-08-01",
-                            IssuingCarrierCode = "AA"
+                            Number = "045-21351455613",
+                            IssueDate = DateTime.Parse("2026-08-01"),
+                            IssuingCarrierCode = "AI",
+                            TravelPackageIndicator = "B",
+                            TravelAgencyName = "World Tours",
+                            TravelAgencyCode = "01"
+                        },
+                        Passenger = new List<Passenger>
+                        {
+                            new Passenger
+                            {
+                                FirstName = "John",
+                                LastName = "White",
+                                DateOfBirth = DateTime.Parse("1990-05-26"),
+                                Address = new PassengerAddress { Country = CountryCode.US }
+                            }
+                        },
+                        FlightLegDetails = new List<FlightLegDetails>
+                        {
+                            new FlightLegDetails
+                            {
+                                FlightNumber = "101",
+                                CarrierCode = "BA",
+                                ClassOfTravelling = "J",
+                                DepartureAirport = "LHR",
+                                DepartureDate = DateTime.Parse("2026-08-02"),
+                                DepartureTime = "15:30",
+                                ArrivalAirport = "LAX",
+                                StopOverCode = "x",
+                                FareBasisCode = "SPRSVR"
+                            }
                         }
                     }
                 },
@@ -340,8 +396,26 @@ namespace Checkout.Payments
             deserialized.AccommodationData.Count.ShouldBe(1);
             deserialized.AccommodationData[0].Name.ShouldBe("Hotel California");
             deserialized.AccommodationData[0].City.ShouldBe("London");
+            deserialized.AccommodationData[0].State.ShouldBe("FL");
+            deserialized.AccommodationData[0].Country.ShouldBe("USA");
+            deserialized.AccommodationData[0].Guests.Count.ShouldBe(1);
+            deserialized.AccommodationData[0].Guests[0].DateOfBirth.ShouldBe(new DateTime(1985, 7, 14));
+            deserialized.AccommodationData[0].Room.Count.ShouldBe(1);
+            deserialized.AccommodationData[0].Room[0].NumberOfNightsAtRoomRate.ShouldBe("3");
+            deserialized.AccommodationData[0].PropertyPhone.Count.ShouldBe(1);
+            deserialized.AccommodationData[0].PropertyPhone[0].Number.ShouldBe("7123456789");
+            deserialized.AccommodationData[0].CustomerServicePhone.Count.ShouldBe(1);
+            deserialized.AccommodationData[0].CustomerServicePhone[0].Number.ShouldBe("7987654321");
             deserialized.AirlineData.Count.ShouldBe(1);
-            deserialized.AirlineData[0].Ticket.Number.ShouldBe("045-21351455");
+            deserialized.AirlineData[0].Ticket.Number.ShouldBe("045-21351455613");
+            deserialized.AirlineData[0].Ticket.IssueDate.ShouldBe(new DateTime(2026, 8, 1));
+            deserialized.AirlineData[0].Passenger.Count.ShouldBe(1);
+            deserialized.AirlineData[0].Passenger[0].FirstName.ShouldBe("John");
+            deserialized.AirlineData[0].Passenger[0].DateOfBirth.ShouldBe(new DateTime(1990, 5, 26));
+            deserialized.AirlineData[0].FlightLegDetails.Count.ShouldBe(1);
+            deserialized.AirlineData[0].FlightLegDetails[0].FlightNumber.ShouldBe("101");
+            deserialized.AirlineData[0].FlightLegDetails[0].ClassOfTravelling.ShouldBe("J");
+            deserialized.AirlineData[0].FlightLegDetails[0].StopOverCode.ShouldBe("x");
             deserialized.SchemeTransactionLinkId.ShouldBe(original.SchemeTransactionLinkId);
         }
 
@@ -564,5 +638,362 @@ namespace Checkout.Payments
             result.ForeignRetailerAmount.ShouldBe(200L);
             result.ServiceType.ShouldBe(AchServiceType.Standard);
         }
+
+        // ------------------------------------------------------------------------
+        // AirlineData and AccommodationData cardinality
+        //
+        // processing.airline_data[].passenger is an array. AirlineData.Passenger was typed as a
+        // single Passenger, so every GET /payments/{id} response carrying passenger data failed
+        // to deserialize. Reported internally against another SDK; .NET carried the same defect
+        // and additionally sent a single object on POST /payments, a shape the API never read.
+        //
+        // The fixture below is the swagger AirlineData / AccommodationData example values, and is
+        // shared byte for byte with the equivalent test in the other SDKs so that seven languages
+        // assert against one wire shape.
+        // ------------------------------------------------------------------------
+
+        private const string AirlineAndAccommodationJson = @"{
+            ""airline_data"": [
+              {
+                ""ticket"": {
+                  ""number"": ""045-21351455613"",
+                  ""issue_date"": ""2023-05-20"",
+                  ""issuing_carrier_code"": ""AI"",
+                  ""travel_package_indicator"": ""B"",
+                  ""travel_agency_name"": ""World Tours"",
+                  ""travel_agency_code"": ""01""
+                },
+                ""passenger"": [
+                  {
+                    ""first_name"": ""John"",
+                    ""last_name"": ""White"",
+                    ""date_of_birth"": ""1990-05-26"",
+                    ""address"": { ""country"": ""US"" }
+                  }
+                ],
+                ""flight_leg_details"": [
+                  {
+                    ""flight_number"": ""101"",
+                    ""carrier_code"": ""BA"",
+                    ""class_of_travelling"": ""J"",
+                    ""departure_airport"": ""LHR"",
+                    ""departure_date"": ""2023-06-19"",
+                    ""departure_time"": ""15:30"",
+                    ""arrival_airport"": ""LAX"",
+                    ""stop_over_code"": ""x"",
+                    ""fare_basis_code"": ""SPRSVR""
+                  }
+                ]
+              }
+            ],
+            ""accommodation_data"": [
+              {
+                ""name"": ""The Sea View Hotel"",
+                ""booking_reference"": ""HOTEL123"",
+                ""check_in_date"": ""2023-06-20"",
+                ""check_out_date"": ""2023-06-23"",
+                ""address"": { ""address_line1"": ""123 Beach Road"", ""zip"": ""10001"" },
+                ""state"": ""FL"",
+                ""country"": ""USA"",
+                ""city"": ""Los Angeles"",
+                ""number_of_rooms"": 2,
+                ""guests"": [
+                  { ""first_name"": ""Jane"", ""last_name"": ""Doe"", ""date_of_birth"": ""1985-07-14"" }
+                ],
+                ""room"": [
+                  { ""rate"": ""70"", ""number_of_nights_at_room_rate"": ""3"" }
+                ],
+                ""property_phone"": [ { ""country_code"": ""44"", ""number"": ""7123456789"" } ],
+                ""customer_service_phone"": [ { ""country_code"": ""44"", ""number"": ""7987654321"" } ]
+              }
+            ]
+        }";
+
+        [Fact]
+        public void ShouldDeserializeAirlineDataWithPassengerAsAnArray()
+        {
+            var result = (ProcessingData)Serializer.Deserialize(
+                AirlineAndAccommodationJson, typeof(ProcessingData));
+
+            result.ShouldNotBeNull();
+            result.AirlineData.ShouldNotBeNull();
+            result.AirlineData.Count.ShouldBe(1);
+
+            var airline = result.AirlineData[0];
+
+            airline.Ticket.ShouldNotBeNull();
+            airline.Ticket.Number.ShouldBe("045-21351455613");
+            airline.Ticket.IssueDate.ShouldBe(new DateTime(2023, 5, 20));
+            airline.Ticket.IssuingCarrierCode.ShouldBe("AI");
+            airline.Ticket.TravelPackageIndicator.ShouldBe("B");
+            airline.Ticket.TravelAgencyName.ShouldBe("World Tours");
+            airline.Ticket.TravelAgencyCode.ShouldBe("01");
+
+            airline.Passenger.ShouldNotBeNull();
+            airline.Passenger.Count.ShouldBe(1);
+            airline.Passenger[0].FirstName.ShouldBe("John");
+            airline.Passenger[0].LastName.ShouldBe("White");
+            airline.Passenger[0].DateOfBirth.ShouldBe(new DateTime(1990, 5, 26));
+            airline.Passenger[0].Address.ShouldNotBeNull();
+            airline.Passenger[0].Address.Country.ShouldBe(CountryCode.US);
+
+            airline.FlightLegDetails.ShouldNotBeNull();
+            airline.FlightLegDetails.Count.ShouldBe(1);
+
+            var leg = airline.FlightLegDetails[0];
+
+            // flight_number is a string in the spec, not an integer.
+            leg.FlightNumber.ShouldBe("101");
+            leg.CarrierCode.ShouldBe("BA");
+            // class_of_travelling, double l. The SDK used to ship service_class.
+            leg.ClassOfTravelling.ShouldBe("J");
+            leg.DepartureAirport.ShouldBe("LHR");
+            leg.DepartureDate.ShouldBe(new DateTime(2023, 6, 19));
+            leg.DepartureTime.ShouldBe("15:30");
+            leg.ArrivalAirport.ShouldBe("LAX");
+            // stop_over_code, three tokens. The SDK used to ship stopover_code.
+            leg.StopOverCode.ShouldBe("x");
+            leg.FareBasisCode.ShouldBe("SPRSVR");
+        }
+
+        [Fact]
+        public void ShouldDeserializeAccommodationDataFromTheSameFixture()
+        {
+            var result = (ProcessingData)Serializer.Deserialize(
+                AirlineAndAccommodationJson, typeof(ProcessingData));
+
+            result.AccommodationData.ShouldNotBeNull();
+            result.AccommodationData.Count.ShouldBe(1);
+
+            var stay = result.AccommodationData[0];
+
+            stay.Name.ShouldBe("The Sea View Hotel");
+            stay.BookingReference.ShouldBe("HOTEL123");
+            stay.CheckInDate.ShouldBe(new DateTime(2023, 6, 20));
+            stay.CheckOutDate.ShouldBe(new DateTime(2023, 6, 23));
+            stay.Address.ShouldNotBeNull();
+            stay.Address.AddressLine1.ShouldBe("123 Beach Road");
+            stay.Address.Zip.ShouldBe("10001");
+            stay.City.ShouldBe("Los Angeles");
+            stay.NumberOfRooms.ShouldBe(2);
+
+            // state and country are free-form strings. Typed as the CountryCode enum they could
+            // not carry "FL", a US state, or "USA", a three-letter code.
+            stay.State.ShouldBe("FL");
+            stay.Country.ShouldBe("USA");
+
+            stay.Guests.ShouldNotBeNull();
+            stay.Guests.Count.ShouldBe(1);
+            stay.Guests[0].FirstName.ShouldBe("Jane");
+            stay.Guests[0].LastName.ShouldBe("Doe");
+            stay.Guests[0].DateOfBirth.ShouldBe(new DateTime(1985, 7, 14));
+
+            stay.Room.ShouldNotBeNull();
+            stay.Room.Count.ShouldBe(1);
+            stay.Room[0].Rate.ShouldBe("70");
+            // number_of_nights_at_room_rate is a string in the spec, not an integer.
+            stay.Room[0].NumberOfNightsAtRoomRate.ShouldBe("3");
+
+            stay.PropertyPhone.ShouldNotBeNull();
+            stay.PropertyPhone.Count.ShouldBe(1);
+            stay.PropertyPhone[0].CountryCode.ShouldBe("44");
+            stay.PropertyPhone[0].Number.ShouldBe("7123456789");
+
+            stay.CustomerServicePhone.ShouldNotBeNull();
+            stay.CustomerServicePhone.Count.ShouldBe(1);
+            stay.CustomerServicePhone[0].CountryCode.ShouldBe("44");
+            stay.CustomerServicePhone[0].Number.ShouldBe("7987654321");
+        }
+
+        // The same fixture with passenger replaced by its first element, unchanged. This is the
+        // shape PayPal sends; the spec allows it on PaymentInterfacesProcessingAirlineData with
+        // the note "PayPal requires a single object".
+        [Fact]
+        public void ShouldDeserializeAirlineDataWithPassengerAsASingleObject()
+        {
+            const string json = @"{
+                ""airline_data"": [
+                  {
+                    ""ticket"": { ""number"": ""045-21351455613"" },
+                    ""passenger"": {
+                      ""first_name"": ""John"",
+                      ""last_name"": ""White"",
+                      ""date_of_birth"": ""1990-05-26"",
+                      ""address"": { ""country"": ""US"" }
+                    }
+                  }
+                ]
+            }";
+
+            var result = (ProcessingData)Serializer.Deserialize(json, typeof(ProcessingData));
+
+            result.AirlineData.Count.ShouldBe(1);
+
+            // Normalized to a one-element list, so callers only handle one shape.
+            result.AirlineData[0].Passenger.ShouldNotBeNull();
+            result.AirlineData[0].Passenger.Count.ShouldBe(1);
+            result.AirlineData[0].Passenger[0].FirstName.ShouldBe("John");
+            result.AirlineData[0].Passenger[0].LastName.ShouldBe("White");
+            result.AirlineData[0].Passenger[0].DateOfBirth.ShouldBe(new DateTime(1990, 5, 26));
+            result.AirlineData[0].Passenger[0].Address.Country.ShouldBe(CountryCode.US);
+        }
+
+        [Fact]
+        public void ShouldDeserializeAirlineDataWithNoPassengerAtAll()
+        {
+            const string json = @"{
+                ""airline_data"": [ { ""ticket"": { ""number"": ""045"" }, ""passenger"": null } ]
+            }";
+
+            var result = (ProcessingData)Serializer.Deserialize(json, typeof(ProcessingData));
+
+            result.AirlineData.Count.ShouldBe(1);
+            result.AirlineData[0].Passenger.ShouldBeNull();
+        }
+
+        // Regression: GET /payments/{id} used to throw when processing.airline_data[].passenger
+        // came back as an array, because AirlineData.Passenger was a single Passenger.
+        // Reported internally.
+        [Fact]
+        public void ShouldNotThrowDeserializingAPaymentDetailsAirlinePassengerArray()
+        {
+            Should.NotThrow(() => Serializer.Deserialize(
+                AirlineAndAccommodationJson, typeof(ProcessingData)));
+        }
+
+        // Guards the converter's CanWrite => false. If a writer is ever enabled on
+        // SingleOrArrayConverter, every request carrying airline data throws here instead of in
+        // a merchant's integration.
+        [Fact]
+        public void ShouldAlwaysSerializePassengerAsAnArray()
+        {
+            var settings = new ProcessingSettings
+            {
+                AirlineData = new List<AirlineData>
+                {
+                    new AirlineData
+                    {
+                        Passenger = new List<Passenger>
+                        {
+                            new Passenger { FirstName = "John", LastName = "White" }
+                        }
+                    }
+                }
+            };
+
+            var json = Serializer.Serialize(settings);
+
+            json.ShouldContain("\"passenger\":[{");
+            json.ShouldNotContain("\"passenger\":{");
+        }
+
+        [Fact]
+        public void ShouldRoundTripSerializeAirlineDataPassengerArray()
+        {
+            var original = new ProcessingData
+            {
+                AirlineData = new List<AirlineData>
+                {
+                    new AirlineData
+                    {
+                        Ticket = new Ticket
+                        {
+                            Number = "045-21351455613",
+                            IssueDate = new DateTime(2023, 5, 20)
+                        },
+                        Passenger = new List<Passenger>
+                        {
+                            new Passenger
+                            {
+                                FirstName = "John",
+                                DateOfBirth = new DateTime(1990, 5, 26)
+                            },
+                            new Passenger { FirstName = "Jane" }
+                        },
+                        FlightLegDetails = new List<FlightLegDetails>
+                        {
+                            new FlightLegDetails
+                            {
+                                FlightNumber = "101",
+                                ClassOfTravelling = "J",
+                                StopOverCode = "x",
+                                DepartureDate = new DateTime(2023, 6, 19)
+                            }
+                        }
+                    }
+                }
+            };
+
+            var json = Serializer.Serialize(original);
+            var result = (ProcessingData)Serializer.Deserialize(json, typeof(ProcessingData));
+
+            result.AirlineData.Count.ShouldBe(1);
+            result.AirlineData[0].Passenger.Count.ShouldBe(2);
+            result.AirlineData[0].Passenger[0].FirstName.ShouldBe("John");
+            result.AirlineData[0].Passenger[0].DateOfBirth.ShouldBe(new DateTime(1990, 5, 26));
+            result.AirlineData[0].Passenger[1].FirstName.ShouldBe("Jane");
+            result.AirlineData[0].Ticket.Number.ShouldBe("045-21351455613");
+            result.AirlineData[0].Ticket.IssueDate.ShouldBe(new DateTime(2023, 5, 20));
+            result.AirlineData[0].FlightLegDetails[0].FlightNumber.ShouldBe("101");
+            result.AirlineData[0].FlightLegDetails[0].ClassOfTravelling.ShouldBe("J");
+            result.AirlineData[0].FlightLegDetails[0].StopOverCode.ShouldBe("x");
+            result.AirlineData[0].FlightLegDetails[0].DepartureDate.ShouldBe(new DateTime(2023, 6, 19));
+        }
+
+        // Asserts on the serialized string, so a future rename cannot pass silently. These four
+        // keys were all wrong at some point and each one was dropped by the gateway.
+        [Fact]
+        public void ShouldSerializeAirlineKeysExactlyAsTheSpecNamesThem()
+        {
+            var json = Serializer.Serialize(new AirlineData
+            {
+                Ticket = new Ticket { IssueDate = new DateTime(2023, 5, 20) },
+                Passenger = new List<Passenger> { new Passenger { FirstName = "John" } },
+                FlightLegDetails = new List<FlightLegDetails>
+                {
+                    new FlightLegDetails
+                    {
+                        FlightNumber = "101",
+                        ClassOfTravelling = "J",
+                        StopOverCode = "x",
+                        DepartureDate = new DateTime(2023, 6, 19)
+                    }
+                }
+            });
+
+            json.ShouldContain("\"class_of_travelling\":\"J\"");
+            json.ShouldContain("\"stop_over_code\":\"x\"");
+            json.ShouldContain("\"flight_number\":\"101\"");
+            json.ShouldContain("\"issue_date\":\"2023-05-20\"");
+            json.ShouldContain("\"departure_date\":\"2023-06-19\"");
+
+            // The deprecated members map to keys the API does not define.
+            json.ShouldNotContain("service_class");
+            json.ShouldNotContain("\"stopover_code\"");
+        }
+
+        [Fact]
+        public void ShouldSerializeAccommodationStateAndCountryAsFreeFormStrings()
+        {
+            var json = Serializer.Serialize(new AccommodationData
+            {
+                Name = "The Sea View Hotel",
+                State = "FL",
+                Country = "USA",
+                Room = new List<PaymentContextsAccommodationRoom>
+                {
+                    new PaymentContextsAccommodationRoom
+                    {
+                        Rate = "70",
+                        NumberOfNightsAtRoomRate = "3"
+                    }
+                }
+            });
+
+            json.ShouldContain("\"state\":\"FL\"");
+            json.ShouldContain("\"country\":\"USA\"");
+            json.ShouldContain("\"number_of_nights_at_room_rate\":\"3\"");
+        }
+
     }
 }

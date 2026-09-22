@@ -190,8 +190,8 @@ namespace Checkout.Payments
                     Zip = "EC1A 1BB",
                     Country = CountryCode.GB
                 },
-                State = CountryCode.GB,
-                Country = CountryCode.GB,
+                State = "FL",
+                Country = "USA",
                 City = "London",
                 NumberOfRooms = 2,
                 Guests = new List<PaymentContextsGuests>
@@ -208,7 +208,7 @@ namespace Checkout.Payments
                     new PaymentContextsAccommodationRoom
                     {
                         Rate = "150.00",
-                        NumberOfNightsAtRoomRate = 4
+                        NumberOfNightsAtRoomRate = "4"
                     }
                 },
                 PropertyPhone = new List<AccommodationPhone>
@@ -546,10 +546,10 @@ namespace Checkout.Payments
         // FlightLegDetails -- corrected wire names
         // ------------------------------------------------------------------------
 
-        // class_of_travelling and stop_over_code are the only spellings in the specification;
-        // the SDK's ServiceClass and StopoverCode serialize as service_class and stopover_code,
-        // which the API does not define, so those values were discarded by the gateway. Both old
-        // properties are kept and marked for removal rather than deleted.
+        // class_of_travelling and stop_over_code are the only spellings in the specification.
+        // The SDK used to expose StopoverCode, which serialized as stopover_code, a key the API
+        // does not define, so the value was discarded by the gateway; it has been removed. The
+        // equivalent ServiceClass is still present but marked obsolete.
         [Fact]
         public void ShouldSerializeFlightLegWireNamesTheApiDefines()
         {
@@ -564,27 +564,40 @@ namespace Checkout.Payments
         }
 
         [Fact]
-        public void ShouldOmitTheDeprecatedFlightLegPropertiesWhenNotSet()
+        public void ShouldOmitTheDeprecatedFlightLegPropertyWhenNotSet()
         {
             var json = Serializer.Serialize(new FlightLegDetails { ClassOfTravelling = "J" });
 
             json.ShouldNotContain("service_class");
-            json.ShouldNotContain("stopover_code");
+        }
+
+        // StopoverCode was removed, so stopover_code is now unreachable: there is no longer any
+        // way for a caller to put that key on the wire.
+        [Fact]
+        public void ShouldNeverSerializeTheRemovedStopoverCodeKey()
+        {
+            var json = Serializer.Serialize(new FlightLegDetails
+            {
+                ClassOfTravelling = "J",
+                StopOverCode = "O"
+            });
+
+            json.ShouldContain("\"stop_over_code\":\"O\"");
+            json.ShouldNotContain("\"stopover_code\"");
+
+            typeof(FlightLegDetails).GetProperty("StopoverCode").ShouldBeNull();
         }
 
         [Fact]
-        public void ShouldStillSerializeTheDeprecatedFlightLegPropertiesWhenSet()
+        public void ShouldStillSerializeTheDeprecatedFlightLegPropertyWhenSet()
         {
-            // Retained for backwards compatibility: a caller still setting them must not break,
-            // even though the API ignores both keys.
-            var json = Serializer.Serialize(new FlightLegDetails
-            {
-                ServiceClass = "J",
-                StopoverCode = "O"
-            });
+            // Retained for backwards compatibility: a caller still setting it must not break,
+            // even though the API ignores the key.
+#pragma warning disable CS0618 // the point of this test is the deprecated member
+            var json = Serializer.Serialize(new FlightLegDetails { ServiceClass = "J" });
+#pragma warning restore CS0618
 
             json.ShouldContain("\"service_class\":\"J\"");
-            json.ShouldContain("\"stopover_code\":\"O\"");
         }
 
         [Fact]
