@@ -81,7 +81,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                     ]
                 },
                 ""industry"": {
-                    ""accommodation_data"": {
+                    ""accommodation"": [{
                         ""name"": ""Alpine Lodge"",
                         ""booking_reference"": ""BK-RESP-001"",
                         ""check_in_date"": ""2025-12-20"",
@@ -100,7 +100,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                         ""room"": [
                             { ""rate"": 180.00, ""number_of_nights"": 7 }
                         ]
-                    }
+                    }]
                 },
                 ""payment_methods"": {
                     ""klarna"": {
@@ -186,21 +186,21 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.Order.SubMerchants[0].RegistrationDate.ShouldBe(new DateTime(2020, 1, 1));
 
             // Industry
-            result.Industry.AccommodationData.Name.ShouldBe("Alpine Lodge");
-            result.Industry.AccommodationData.BookingReference.ShouldBe("BK-RESP-001");
-            result.Industry.AccommodationData.CheckInDate.ShouldBe("2025-12-20");
-            result.Industry.AccommodationData.CheckOutDate.ShouldBe("2025-12-27");
-            result.Industry.AccommodationData.NumberOfRooms.ShouldBe(3);
-            result.Industry.AccommodationData.Address.AddressLine1.ShouldBe("5 Mountain Rd");
-            result.Industry.AccommodationData.Address.City.ShouldBe("Innsbruck");
-            result.Industry.AccommodationData.Address.State.ShouldBe("Tyrol");
-            result.Industry.AccommodationData.Address.Country.ShouldBe(CountryCode.AT);
-            result.Industry.AccommodationData.Address.Zip.ShouldBe("6020");
-            result.Industry.AccommodationData.Guests[0].FirstName.ShouldBe("Max");
-            result.Industry.AccommodationData.Guests[0].LastName.ShouldBe("Mustermann");
-            result.Industry.AccommodationData.Guests[0].DateOfBirth.ShouldBe("1988-11-05");
-            result.Industry.AccommodationData.Room[0].Rate.ShouldBe(180.00m);
-            result.Industry.AccommodationData.Room[0].NumberOfNights.ShouldBe(7);
+            result.Industry.Accommodation[0].Name.ShouldBe("Alpine Lodge");
+            result.Industry.Accommodation[0].BookingReference.ShouldBe("BK-RESP-001");
+            result.Industry.Accommodation[0].CheckInDate.ShouldBe("2025-12-20");
+            result.Industry.Accommodation[0].CheckOutDate.ShouldBe("2025-12-27");
+            result.Industry.Accommodation[0].NumberOfRooms.ShouldBe(3);
+            result.Industry.Accommodation[0].Address.AddressLine1.ShouldBe("5 Mountain Rd");
+            result.Industry.Accommodation[0].Address.City.ShouldBe("Innsbruck");
+            result.Industry.Accommodation[0].Address.State.ShouldBe("Tyrol");
+            result.Industry.Accommodation[0].Address.Country.ShouldBe(CountryCode.AT);
+            result.Industry.Accommodation[0].Address.Zip.ShouldBe("6020");
+            result.Industry.Accommodation[0].Guests[0].FirstName.ShouldBe("Max");
+            result.Industry.Accommodation[0].Guests[0].LastName.ShouldBe("Mustermann");
+            result.Industry.Accommodation[0].Guests[0].DateOfBirth.ShouldBe("1988-11-05");
+            result.Industry.Accommodation[0].Room[0].Rate.ShouldBe(180.00m);
+            result.Industry.Accommodation[0].Room[0].NumberOfNights.ShouldBe(7);
 
             // PaymentMethods - Klarna
             result.PaymentMethods.Klarna.Status.ShouldBe(PaymentMethodStatus.Available);
@@ -298,28 +298,31 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                 },
                 Industry = new Industry
                 {
-                    AccommodationData = new SetupAccommodationData
+                    Accommodation = new List<SetupAccommodationData>
                     {
-                        Name = "Roundtrip Hotel",
-                        BookingReference = "BK-RT",
-                        CheckInDate = "2025-08-01",
-                        CheckOutDate = "2025-08-03",
-                        NumberOfRooms = 1,
-                        Address = new AccommodationAddress
+                        new SetupAccommodationData
                         {
-                            AddressLine1 = "1 RT Rd",
-                            City = "London",
-                            State = "London",
-                            Country = CountryCode.GB,
-                            Zip = "SW1A 1AA"
-                        },
-                        Guests = new List<AccommodationGuest>
-                        {
-                            new AccommodationGuest { FirstName = "Round", LastName = "Trip", DateOfBirth = "1992-01-01" }
-                        },
-                        Room = new List<AccommodationRoom>
-                        {
-                            new AccommodationRoom { Rate = 99.99m, NumberOfNights = 2 }
+                            Name = "Roundtrip Hotel",
+                            BookingReference = "BK-RT",
+                            CheckInDate = "2025-08-01",
+                            CheckOutDate = "2025-08-03",
+                            NumberOfRooms = 1,
+                            Address = new AccommodationAddress
+                            {
+                                AddressLine1 = "1 RT Rd",
+                                City = "London",
+                                State = "London",
+                                Country = CountryCode.GB,
+                                Zip = "SW1A 1AA"
+                            },
+                            Guests = new List<AccommodationGuest>
+                            {
+                                new AccommodationGuest { FirstName = "Round", LastName = "Trip", DateOfBirth = "1992-01-01" }
+                            },
+                            Room = new List<AccommodationRoom>
+                            {
+                                new AccommodationRoom { Rate = 99.99m, NumberOfNights = 2 }
+                            }
                         }
                     }
                 },
@@ -386,21 +389,21 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             deserialized.Order.TaxAmount.ShouldBe(1250L);
 
             // Industry
-            deserialized.Industry.AccommodationData.Name.ShouldBe("Roundtrip Hotel");
-            deserialized.Industry.AccommodationData.BookingReference.ShouldBe("BK-RT");
-            deserialized.Industry.AccommodationData.CheckInDate.ShouldBe("2025-08-01");
-            deserialized.Industry.AccommodationData.CheckOutDate.ShouldBe("2025-08-03");
-            deserialized.Industry.AccommodationData.NumberOfRooms.ShouldBe(1);
-            deserialized.Industry.AccommodationData.Address.AddressLine1.ShouldBe("1 RT Rd");
-            deserialized.Industry.AccommodationData.Address.City.ShouldBe("London");
-            deserialized.Industry.AccommodationData.Address.State.ShouldBe("London");
-            deserialized.Industry.AccommodationData.Address.Country.ShouldBe(CountryCode.GB);
-            deserialized.Industry.AccommodationData.Address.Zip.ShouldBe("SW1A 1AA");
-            deserialized.Industry.AccommodationData.Guests[0].FirstName.ShouldBe("Round");
-            deserialized.Industry.AccommodationData.Guests[0].LastName.ShouldBe("Trip");
-            deserialized.Industry.AccommodationData.Guests[0].DateOfBirth.ShouldBe("1992-01-01");
-            deserialized.Industry.AccommodationData.Room[0].Rate.ShouldBe(99.99m);
-            deserialized.Industry.AccommodationData.Room[0].NumberOfNights.ShouldBe(2);
+            deserialized.Industry.Accommodation[0].Name.ShouldBe("Roundtrip Hotel");
+            deserialized.Industry.Accommodation[0].BookingReference.ShouldBe("BK-RT");
+            deserialized.Industry.Accommodation[0].CheckInDate.ShouldBe("2025-08-01");
+            deserialized.Industry.Accommodation[0].CheckOutDate.ShouldBe("2025-08-03");
+            deserialized.Industry.Accommodation[0].NumberOfRooms.ShouldBe(1);
+            deserialized.Industry.Accommodation[0].Address.AddressLine1.ShouldBe("1 RT Rd");
+            deserialized.Industry.Accommodation[0].Address.City.ShouldBe("London");
+            deserialized.Industry.Accommodation[0].Address.State.ShouldBe("London");
+            deserialized.Industry.Accommodation[0].Address.Country.ShouldBe(CountryCode.GB);
+            deserialized.Industry.Accommodation[0].Address.Zip.ShouldBe("SW1A 1AA");
+            deserialized.Industry.Accommodation[0].Guests[0].FirstName.ShouldBe("Round");
+            deserialized.Industry.Accommodation[0].Guests[0].LastName.ShouldBe("Trip");
+            deserialized.Industry.Accommodation[0].Guests[0].DateOfBirth.ShouldBe("1992-01-01");
+            deserialized.Industry.Accommodation[0].Room[0].Rate.ShouldBe(99.99m);
+            deserialized.Industry.Accommodation[0].Room[0].NumberOfNights.ShouldBe(2);
 
             // Paypal
             deserialized.PaymentMethods.Paypal.Status.ShouldBe(PaymentMethodStatus.Available);
