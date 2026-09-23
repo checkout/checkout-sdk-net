@@ -5,8 +5,10 @@ using Checkout.Identities.Entities;
 using Checkout.Identities.IdentityVerification.Requests;
 using Checkout.Identities.IdentityVerification.Responses;
 using Moq;
+using Checkout.Common;
 using Shouldly;
 using Xunit;
+using DocumentType = Checkout.Identities.Entities.DocumentType;
 
 namespace Checkout.Identities.IdentityVerification
 {
@@ -437,7 +439,7 @@ namespace Checkout.Identities.IdentityVerification
                 ApplicantId = "app_12345",
                 UserJourneyId = "uj_67890",
                 RedirectUrl = "https://example.com/redirect",
-                DeclaredData = new DeclaredData
+                DeclaredData = new IdentityDeclaredData
                 {
                     Name = "John Doe"
                 }
@@ -450,7 +452,7 @@ namespace Checkout.Identities.IdentityVerification
             {
                 ApplicantId = "app_12345",
                 UserJourneyId = "uj_67890",
-                DeclaredData = new DeclaredData
+                DeclaredData = new IdentityDeclaredData
                 {
                     Name = "John Doe"
                 }
@@ -462,9 +464,9 @@ namespace Checkout.Identities.IdentityVerification
             return new IdentityVerificationAttemptRequest
             {
                 RedirectUrl = "https://example.com/redirect",
-                ClientInformation = new ClientInformation
+                ClientInformation = new IdentityVerificationClientInformation
                 {
-                    PreSelectedResidenceCountry = "US",
+                    PreSelectedResidenceCountry = CountryCode.US,
                     PreSelectedLanguage = "en-US"
                 }
             };
@@ -479,7 +481,7 @@ namespace Checkout.Identities.IdentityVerification
                 ApplicantId = "app_12345",
                 Status = IdentityVerificationStatus.Pending,
                 RedirectUrl = "https://example.com/redirect",
-                DeclaredData = new DeclaredData
+                DeclaredData = new IdentityDeclaredData
                 {
                     Name = "John Doe"
                 },
@@ -488,7 +490,7 @@ namespace Checkout.Identities.IdentityVerification
                     new DocumentDetails
                     {
                         DocumentType = DocumentType.Passport,
-                        DocumentIssuingCountry = "US",
+                        DocumentIssuingCountry = CountryCode.US,
                         FrontImageSignedUrl = "https://example.com/front-image.jpg",
                         FullName = "John Doe",
                         BirthDate = "1990-01-01"
@@ -514,7 +516,7 @@ namespace Checkout.Identities.IdentityVerification
                 UserJourneyId = "uj_67890",
                 ApplicantId = "app_12345",
                 Status = IdentityVerificationStatus.Pending,
-                DeclaredData = new DeclaredData
+                DeclaredData = new IdentityDeclaredData
                 {
                     Name = "John Doe"
                 },
@@ -523,7 +525,7 @@ namespace Checkout.Identities.IdentityVerification
                     new DocumentDetails
                     {
                         DocumentType = DocumentType.Passport,
-                        DocumentIssuingCountry = "US",
+                        DocumentIssuingCountry = CountryCode.US,
                         FrontImageSignedUrl = "https://example.com/front-image.jpg",
                         FullName = "John Doe",
                         BirthDate = "1990-01-01"
@@ -548,12 +550,12 @@ namespace Checkout.Identities.IdentityVerification
                 Id = AttemptId,
                 Status = AttemptVerificationStatus.Completed,
                 RedirectUrl = "https://example.com/redirect",
-                ClientInformation = new ClientInformation
+                ClientInformation = new IdentityVerificationClientInformation
                 {
-                    PreSelectedResidenceCountry = "US",
+                    PreSelectedResidenceCountry = CountryCode.US,
                     PreSelectedLanguage = "en-US"
                 },
-                DeclaredData = new DeclaredData
+                DeclaredData = new IdentityDeclaredData
                 {
                     Name = "John Doe"
                 }
@@ -578,7 +580,7 @@ namespace Checkout.Identities.IdentityVerification
         {
             return new IdentityVerificationReportResponse
             {
-                SignedUrl = "https://example.com/report.pdf"
+                PdfReport = "https://example.com/report.pdf"
             };
         }
 
@@ -650,7 +652,28 @@ namespace Checkout.Identities.IdentityVerification
         private static void ValidateIdentityVerificationReportResponse(IdentityVerificationReportResponse response)
         {
             response.ShouldNotBeNull();
-            response.SignedUrl.ShouldNotBeNullOrEmpty();
+            response.PdfReport.ShouldNotBeNullOrEmpty();
+        }
+        [Fact]
+        public async Task GetIdentityVerificationAttempts_Should_Call_ApiClient_Query_When_Paginated()
+        {
+            var query = new AttemptsQuery { Skip = 6, Limit = 5 };
+            var response = new IdentityVerificationAttemptsResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Query<IdentityVerificationAttemptsResponse>(
+                        $"{IdentityVerificationsPath}/{IdentityVerificationId}/attempts",
+                        _authorization,
+                        query,
+                        CancellationToken.None))
+                .ReturnsAsync(response);
+
+            IIdentityVerificationClient client = new IdentityVerificationClient(_apiClient.Object, _configuration.Object);
+
+            IdentityVerificationAttemptsResponse result = await client.GetIdentityVerificationAttempts(IdentityVerificationId, query, CancellationToken.None);
+
+            result.ShouldNotBeNull();
+            result.ShouldBeSameAs(response);
         }
     }
 }

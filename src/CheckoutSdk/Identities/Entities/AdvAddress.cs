@@ -1,3 +1,4 @@
+using Checkout.Common;
 namespace Checkout.Identities.Entities
 {
     /// <summary>
@@ -31,8 +32,11 @@ namespace Checkout.Identities.Entities
         public string Zip { get; set; }
 
         /// <summary>
-        /// The two-letter ISO country code of the address. (max 2 characters)
+        /// The two-letter ISO country code of the address.
+        /// [Optional]
+        /// Standard: ISO 3166-1 alpha-2 country code
+        /// max 2 characters
         /// </summary>
-        public string Country { get; set; }
+        public CountryCode? Country { get; set; }
     }
 }

@@ -56,7 +56,11 @@ namespace Checkout.Payments
                         }
                     },
                 Amount = 10,
-                Currency = Currency.EUR,
+                // The sandbox currency account this test draws from (ca_qcc7x4...) settles GBP.
+                // Asking for EUR is rejected with a 422 carrying an empty error_codes array, so
+                // the cause is not visible in the response. GBP also matches the GB sender and
+                // billing addresses below.
+                Currency = Currency.GBP,
                 Reference = "Pay-out to Card - Money Transfer",
                 BillingDescriptor = new PayoutBillingDescriptor {Reference = "Pay-out to Card - Money Transfer"},
                 Sender = new PaymentIndividualSender

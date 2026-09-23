@@ -147,5 +147,65 @@ namespace Checkout.Identities.AddressDocumentVerification
 
             result.ShouldBeSameAs(response);
         }
+        [Fact]
+        public async Task GetAddressDocumentVerificationAttemptAssets_Should_Call_ApiClient_Query()
+        {
+            var query = new AttemptAssetsQuery { Skip = 0, Limit = 10 };
+            var response = new AddressDocumentVerificationAttemptAssetsResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Query<AddressDocumentVerificationAttemptAssetsResponse>(
+                        $"{AddressDocumentVerificationsPath}/{AddressDocumentVerificationId}/attempts/{AttemptId}/assets",
+                        _authorization,
+                        query,
+                        CancellationToken.None))
+                .ReturnsAsync(response);
+
+            var result = await Client().GetAddressDocumentVerificationAttemptAssets(
+                AddressDocumentVerificationId, AttemptId, query, CancellationToken.None);
+
+            result.ShouldNotBeNull();
+            result.ShouldBeSameAs(response);
+        }
+
+        [Fact]
+        public async Task GetAddressDocumentVerificationAttemptAssets_Should_Throw_When_VerificationId_Null()
+        {
+            var exception = await Should.ThrowAsync<CheckoutArgumentException>(async () =>
+                await Client().GetAddressDocumentVerificationAttemptAssets(null, AttemptId, null, CancellationToken.None));
+
+            exception.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public async Task GetAddressDocumentVerificationAttemptAssets_Should_Throw_When_AttemptId_Null()
+        {
+            var exception = await Should.ThrowAsync<CheckoutArgumentException>(async () =>
+                await Client().GetAddressDocumentVerificationAttemptAssets(
+                    AddressDocumentVerificationId, null, null, CancellationToken.None));
+
+            exception.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public async Task GetAddressDocumentVerificationAttempts_Should_Call_ApiClient_Query_When_Paginated()
+        {
+            var query = new AttemptsQuery { Skip = 6, Limit = 5 };
+            var response = new AddressDocumentVerificationAttemptsResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Query<AddressDocumentVerificationAttemptsResponse>(
+                        $"{AddressDocumentVerificationsPath}/{AddressDocumentVerificationId}/attempts",
+                        _authorization,
+                        query,
+                        CancellationToken.None))
+                .ReturnsAsync(response);
+
+            var result = await Client().GetAddressDocumentVerificationAttempts(
+                AddressDocumentVerificationId, query, CancellationToken.None);
+
+            result.ShouldNotBeNull();
+            result.ShouldBeSameAs(response);
+        }
     }
 }

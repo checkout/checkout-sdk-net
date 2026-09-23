@@ -1,5 +1,9 @@
+using Checkout.Common;
 namespace Checkout.Identities.Entities
 {
+    /// <summary>
+    /// The applicant's identity document details.
+    /// </summary>
     public class DocumentDetails
     {
         /// <summary>
@@ -9,10 +13,12 @@ namespace Checkout.Identities.Entities
         public DocumentType DocumentType { get; set; }
 
         /// <summary>
-        /// The document issuing country
+        /// The country that issued the document.
         /// [Required]
+        /// Standard: ISO 3166-1 alpha-2 country code
+        /// Pattern: ^[A-Za-z]{2}$
         /// </summary>
-        public string DocumentIssuingCountry { get; set; }
+        public CountryCode? DocumentIssuingCountry { get; set; }
 
         /// <summary>
         /// The pre-signed URL to the captured image of the front of the document
@@ -53,9 +59,12 @@ namespace Checkout.Identities.Entities
         public string BirthPlace { get; set; }
 
         /// <summary>
-        /// The applicant's nationality (ISO alpha-2 country code)
+        /// The applicant's nationality.
+        /// [Optional]
+        /// Standard: ISO 3166-1 alpha-2 country code
+        /// Pattern: ^[A-Za-z]{2}$
         /// </summary>
-        public string Nationality { get; set; }
+        public CountryCode? Nationality { get; set; }
 
         /// <summary>
         /// The applicant's gender
@@ -96,6 +105,42 @@ namespace Checkout.Identities.Entities
         /// The machine-readable zone (MRZ) data extracted from the document
         /// </summary>
         public string DocumentMrz { get; set; }
+
+        /// <summary>
+        /// The address extracted from the document.
+        /// [Optional]
+        /// max 1000 characters
+        /// Example: 123 Main Street, London, SW1A 1AA
+        /// </summary>
+        public string Address { get; set; }
+
+        /// <summary>
+        /// The date the residence permit was obtained, extracted from the document.
+        /// [Optional]
+        /// Format: date (YYYY-MM-DD)
+        /// </summary>
+        public string PermitObtainingDate { get; set; }
+
+        /// <summary>
+        /// The residence permit expiry date extracted from the document.
+        /// [Optional]
+        /// Format: date (YYYY-MM-DD)
+        /// </summary>
+        public string PermitExpiryDate { get; set; }
+
+        /// <summary>
+        /// The detailed residence permit type extracted from the document.
+        /// [Optional]
+        /// max 255 characters
+        /// </summary>
+        public string PermitTypeDetailed { get; set; }
+
+        /// <summary>
+        /// The residence permit remarks extracted from the document.
+        /// [Optional]
+        /// max 255 characters
+        /// </summary>
+        public string PermitTypeRemarks { get; set; }
 
         /// <summary>
         /// The pre-signed URL to the captured image of the back of the document

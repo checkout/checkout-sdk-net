@@ -367,7 +367,7 @@ namespace Checkout.Identities.FaceAuthentication
                 RedirectUrl = "https://example.com/redirect",
                 ClientInformation = new ClientInformation
                 {
-                    PreSelectedResidenceCountry = "US",
+                    PreSelectedResidenceCountry = CountryCode.US,
                     PreSelectedLanguage = "en-US"
                 }
             };
@@ -397,7 +397,7 @@ namespace Checkout.Identities.FaceAuthentication
                 RedirectUrl = "https://example.com/redirect",
                 ClientInformation = new ClientInformation
                 {
-                    PreSelectedResidenceCountry = "US",
+                    PreSelectedResidenceCountry = CountryCode.US,
                     PreSelectedLanguage = "en-US"
                 }
             };
@@ -470,6 +470,27 @@ namespace Checkout.Identities.FaceAuthentication
             response.TotalCount.ShouldBeGreaterThanOrEqualTo(0);
             response.Skip.ShouldBeGreaterThanOrEqualTo(0);
             response.Limit.ShouldBeGreaterThanOrEqualTo(0);
+        }
+        [Fact]
+        public async Task GetFaceAuthenticationAttempts_Should_Call_ApiClient_Query_When_Paginated()
+        {
+            var query = new AttemptsQuery { Skip = 6, Limit = 5 };
+            var response = new FaceAuthenticationAttemptsResponse();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Query<FaceAuthenticationAttemptsResponse>(
+                        $"{FaceAuthenticationsPath}/{FaceAuthenticationId}/attempts",
+                        _authorization,
+                        query,
+                        CancellationToken.None))
+                .ReturnsAsync(response);
+
+            IFaceAuthenticationClient client = new FaceAuthenticationClient(_apiClient.Object, _configuration.Object);
+
+            FaceAuthenticationAttemptsResponse result = await client.GetFaceAuthenticationAttempts(FaceAuthenticationId, query, CancellationToken.None);
+
+            result.ShouldNotBeNull();
+            result.ShouldBeSameAs(response);
         }
     }
 }

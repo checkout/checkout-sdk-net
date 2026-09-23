@@ -17,7 +17,7 @@ namespace Checkout.Identities.IdentityVerification.Requests
         /// The personal details provided by the applicant
         /// [Required]
         /// </summary>
-        public DeclaredData DeclaredData { get; set; }
+        public IdentityDeclaredData DeclaredData { get; set; }
 
         /// <summary>
         /// Your configuration ID
