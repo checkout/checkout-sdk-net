@@ -11,7 +11,12 @@ namespace Checkout.Issuing.Common.Responses
 
         public override bool CanConvert(Type objectType)
         {
-            return typeof(AbstractCardResponse).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo());
+            // Only handle requests for the abstract, polymorphic get-card-response shape.
+            // Concrete subclasses that are not part of the virtual/physical discriminator
+            // (e.g. CardsUpdateResponse, which shares AbstractCardResponse's field set but is
+            // its own response type) must be deserialized normally, without re-dispatching by
+            // the "type" discriminator.
+            return objectType == typeof(AbstractCardResponse);
         }
 
         public override object ReadJson(

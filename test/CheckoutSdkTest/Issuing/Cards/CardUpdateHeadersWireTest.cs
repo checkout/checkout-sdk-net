@@ -18,9 +18,7 @@ namespace Checkout.Issuing.Cards
     /// Verifies the <c>return-encrypted-cvv</c> and <c>Encryption-Key</c> headers on the actual
     /// outgoing HTTP request.
     ///
-    /// The two pre-existing tests for this feature both bypass the code that emits headers:
-    /// <c>CardUpdateResponseSerializationTest</c> asserts the JSON serialization of
-    /// <see cref="CardUpdateHeaders"/>, which headers never pass through, and
+    /// The other pre-existing test for this feature bypasses the code that emits headers:
     /// <c>CardClientTest</c> mocks <see cref="IApiClient"/> and so only proves the object was
     /// handed over. Headers are actually applied by reflection in <c>ApiClient</c>, using
     /// <c>ResolveHeaderValue</c> and <c>GetJsonPropertyName</c>. Nothing covered that path, which
@@ -54,7 +52,7 @@ namespace Checkout.Issuing.Cards
                 .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent(
-                        "{\"last_modified_date\":\"2026-06-01T10:00:00Z\",\"encrypted_cvv\":\"oJMoNMEEUiQKYOsQ4Zd\"}",
+                        "{\"last_modified_date\":\"2026-06-01T10:00:00Z\"}",
                         Encoding.UTF8,
                         "application/json")
                 });
@@ -68,8 +66,8 @@ namespace Checkout.Issuing.Cards
             _authorization = new SdkAuthorization(PlatformType.Default, ValidSandboxSk);
         }
 
-        private Task<CardUpdateResponse> Patch(CardUpdateHeaders headers) =>
-            _apiClient.Patch<CardUpdateResponse>(
+        private Task<CardsUpdateResponse> Patch(CardUpdateHeaders headers) =>
+            _apiClient.Patch<CardsUpdateResponse>(
                 $"issuing/cards/{CardId}",
                 _authorization,
                 new CardsUpdateRequest { Reference = "X-123456-N11" },
@@ -153,12 +151,15 @@ namespace Checkout.Issuing.Cards
             CapturedHeader("Encryption-Key").ShouldBeNull();
         }
 
+        // The 2026-09-17 spec (INT-1700) removed encrypted_cvv from update-card-response
+        // entirely, so these headers no longer make the response carry it (added by INT-1695,
+        // when the field still existed). Header transmission itself is still covered above.
         [Fact]
-        public async Task ShouldReadEncryptedCvvFromTheResponse()
+        public async Task ShouldReadLastModifiedDateFromTheResponse()
         {
             var response = await Patch(new CardUpdateHeaders { ReturnEncryptedCvv = true, EncryptionKey = PublicKey });
 
-            response.EncryptedCvv.ShouldBe("oJMoNMEEUiQKYOsQ4Zd");
+            response.LastModifiedDate.ShouldNotBeNull();
         }
 
         public void Dispose()
