@@ -861,11 +861,12 @@ namespace Checkout.Payments
                 AirlineAndAccommodationJson, typeof(ProcessingData)));
         }
 
-        // Guards the converter's CanWrite => false. If a writer is ever enabled on
-        // SingleOrArrayConverter, every request carrying airline data throws here instead of in
-        // a merchant's integration.
+        // Pins the outbound cardinality against the live API: an object is accepted on every
+        // request surface, an array only on POST /payments. Hosted payments, payment links and
+        // payment contexts all reject the array form, and ProcessingSettings is shared with
+        // hosted payments and payment links, so "always an array" would break them.
         [Fact]
-        public void ShouldAlwaysSerializePassengerAsAnArray()
+        public void ShouldSerializeASinglePassengerAsAnObject()
         {
             var settings = new ProcessingSettings
             {
@@ -883,8 +884,48 @@ namespace Checkout.Payments
 
             var json = Serializer.Serialize(settings);
 
+            json.ShouldContain("\"passenger\":{");
+            json.ShouldNotContain("\"passenger\":[");
+        }
+
+        [Fact]
+        public void ShouldSerializeSeveralPassengersAsAnArray()
+        {
+            var settings = new ProcessingSettings
+            {
+                AirlineData = new List<AirlineData>
+                {
+                    new AirlineData
+                    {
+                        Passenger = new List<Passenger>
+                        {
+                            new Passenger { FirstName = "John" },
+                            new Passenger { FirstName = "Jane" }
+                        }
+                    }
+                }
+            };
+
+            var json = Serializer.Serialize(settings);
+
             json.ShouldContain("\"passenger\":[{");
-            json.ShouldNotContain("\"passenger\":{");
+        }
+
+        // An empty array and an explicit null are both rejected with
+        // processing_airline_data_0_passenger_invalid, so the key must be absent.
+        [Fact]
+        public void ShouldOmitPassengerWhenThereAreNone()
+        {
+            var json = Serializer.Serialize(new AirlineData
+            {
+                Ticket = new Ticket { Number = "045" },
+                Passenger = new List<Passenger>()
+            });
+
+            json.ShouldNotContain("passenger");
+
+            Serializer.Serialize(new AirlineData { Ticket = new Ticket { Number = "045" } })
+                .ShouldNotContain("passenger");
         }
 
         [Fact]

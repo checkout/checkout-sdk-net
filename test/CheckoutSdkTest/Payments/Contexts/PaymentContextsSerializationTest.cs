@@ -189,7 +189,7 @@ namespace Checkout.Payments.Contexts
         // ------------------------------------------------------------------------
 
         [Fact]
-        public void ShouldSerializeAirlineTicketAsAnObjectAndPassengerAsAnArray()
+        public void ShouldSerializeAirlineTicketAndASinglePassengerAsObjects()
         {
             var json = Serializer.Serialize(new PaymentContextsAirlineData
             {
@@ -215,7 +215,9 @@ namespace Checkout.Payments.Contexts
 
             json.ShouldContain("\"ticket\":{");
             json.ShouldNotContain("\"ticket\":[");
-            json.ShouldContain("\"passenger\":[{");
+            // POST /payment-contexts rejects the array form of passenger with
+            // passenger_required, so one passenger serializes as an object.
+            json.ShouldContain("\"passenger\":{");
             json.ShouldContain("\"class_of_travelling\":\"J\"");
             json.ShouldContain("\"stop_over_code\":\"x\"");
             json.ShouldContain("\"flight_number\":\"101\"");

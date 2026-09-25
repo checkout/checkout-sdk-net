@@ -580,25 +580,54 @@ namespace Checkout
             public IList<Passenger> Passenger { get; set; }
         }
 
-        // CanWrite must stay false. Newtonsoft only routes writes through WriteJson when a
-        // converter reports it can write, so false is what makes serialization fall back to the
-        // default list serializer and always emit an array. Flipping it to true would make every
-        // request carrying airline data throw NotSupportedException.
+        // The converter both reads and writes. Writing is what applies the cardinality rule the
+        // live API requires: an object for one passenger, an array only for several.
         [Fact]
-        public void ShouldNotClaimToBeAbleToWrite()
+        public void ShouldReadAndWrite()
         {
-            new SingleOrArrayConverter<Passenger>().CanWrite.ShouldBeFalse();
             new SingleOrArrayConverter<Passenger>().CanRead.ShouldBeTrue();
+            new SingleOrArrayConverter<Passenger>().CanWrite.ShouldBeTrue();
         }
 
         [Fact]
-        public void ShouldThrowIfWriteJsonIsEverCalledDirectly()
+        public void ShouldWriteASinglePassengerAsAnObjectAndSeveralAsAnArray()
         {
-            var converter = new SingleOrArrayConverter<Passenger>();
+            var one = new JsonSerializer().Serialize(new SingleOrArrayHolder
+            {
+                Passenger = new List<Passenger> { new Passenger { FirstName = "John" } }
+            });
+            one.ShouldContain("\"passenger\":{");
+            one.ShouldNotContain("\"passenger\":[");
 
-            Should.Throw<NotSupportedException>(() =>
-                converter.WriteJson(new JsonTextWriter(new StringWriter()), null,
-                    new Newtonsoft.Json.JsonSerializer()));
+            var many = new JsonSerializer().Serialize(new SingleOrArrayHolder
+            {
+                Passenger = new List<Passenger>
+                {
+                    new Passenger { FirstName = "John" },
+                    new Passenger { FirstName = "Jane" }
+                }
+            });
+            many.ShouldContain("\"passenger\":[{");
+        }
+
+        [Fact]
+        public void ShouldRoundTripASinglePassengerThroughTheObjectForm()
+        {
+            var original = new SingleOrArrayHolder
+            {
+                Passenger = new List<Passenger>
+                {
+                    new Passenger { FirstName = "John", DateOfBirth = new DateTime(1990, 5, 26) }
+                }
+            };
+
+            var json = new JsonSerializer().Serialize(original);
+            var result = (SingleOrArrayHolder)new JsonSerializer()
+                .Deserialize(json, typeof(SingleOrArrayHolder));
+
+            result.Passenger.Count.ShouldBe(1);
+            result.Passenger[0].FirstName.ShouldBe("John");
+            result.Passenger[0].DateOfBirth.ShouldBe(new DateTime(1990, 5, 26));
         }
 
         [Fact]

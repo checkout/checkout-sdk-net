@@ -21,12 +21,28 @@ namespace Checkout
     /// normalizing to a list loses nothing.
     /// </para>
     /// <para>
-    /// <b><see cref="CanWrite"/> is deliberately <c>false</c>.</b> Newtonsoft only routes writes
-    /// through <see cref="WriteJson"/> when a converter reports that it can write, so leaving it
-    /// false hands serialization back to the default list serializer and the SDK always emits an
-    /// array. That is the only valid outbound shape for <c>AirlineData</c> and a valid one for
-    /// <c>PaymentInterfacesProcessingAirlineData</c>. Setting it to <c>true</c> would make every
-    /// request carrying airline data throw.
+    /// <b>The outbound shape is not simply "always an array".</b> The live API does not match the
+    /// specification in either direction. Verified against the sandbox on 2026-09-25 with a
+    /// complete <c>airline_data</c> block:
+    /// </para>
+    /// <list type="table">
+    /// <item><term><c>POST /payments</c></term><description>object 201, array 201</description></item>
+    /// <item><term><c>POST /hosted-payments</c></term><description>object accepted, array 422 <c>processing_airline_data_0_passenger_invalid</c></description></item>
+    /// <item><term><c>POST /payment-links</c></term><description>object accepted, array 422 <c>processing_airline_data_0_passenger_invalid</c></description></item>
+    /// <item><term><c>POST /payment-contexts</c></term><description>object 201, array 422 <c>passenger_required</c></description></item>
+    /// </list>
+    /// <para>
+    /// A single object is therefore accepted on every request surface, and an array only on
+    /// <c>POST /payments</c>. <see cref="Checkout.Payments.ProcessingSettings"/> is shared by
+    /// <c>POST /payments</c>, hosted payments and payment links, so always emitting an array
+    /// would break the latter two. <see cref="WriteJson"/> emits an object for a single passenger
+    /// and an array only for several, which is the only shape combination the API accepts.
+    /// </para>
+    /// <para>
+    /// An empty array and an explicit <c>null</c> are both rejected with
+    /// <c>processing_airline_data_0_passenger_invalid</c>, so the property must be omitted when
+    /// there are no passengers. A converter cannot skip a property, so the owning classes do that
+    /// with a <c>ShouldSerialize</c> method.
     /// </para>
     /// <para>
     /// Element deserialization is delegated to the supplied
@@ -40,7 +56,7 @@ namespace Checkout
     {
         public override bool CanRead => true;
 
-        public override bool CanWrite => false;
+        public override bool CanWrite => true;
 
         public override bool CanConvert(Type objectType)
         {
@@ -67,9 +83,24 @@ namespace Checkout
         public override void WriteJson(JsonWriter writer, object value,
             Newtonsoft.Json.JsonSerializer serializer)
         {
-            throw new NotSupportedException(
-                $"{nameof(SingleOrArrayConverter<T>)} is read-only. CanWrite is false so that " +
-                "serialization falls back to the default list serializer, which always emits an array.");
+            var values = value as IList<T>;
+
+            if (values == null || values.Count == 0)
+            {
+                // Unreachable when the owning class declares ShouldSerialize for the property.
+                // Kept as a guard: an empty array and a null are both rejected by the API, so
+                // null is the least-wrong fallback if a caller bypasses that.
+                writer.WriteNull();
+                return;
+            }
+
+            if (values.Count == 1)
+            {
+                serializer.Serialize(writer, values[0]);
+                return;
+            }
+
+            serializer.Serialize(writer, values);
         }
     }
 }

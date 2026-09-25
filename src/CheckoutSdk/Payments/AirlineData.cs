@@ -19,10 +19,15 @@ namespace Checkout.Payments
         /// [Optional]
         /// </summary>
         /// <remarks>
-        /// The API returns this as an array. Some payment methods, PayPal among them, send a
-        /// single object instead, which the specification allows on the payment sessions, hosted
-        /// payments and payment links interfaces. Both shapes deserialize here; a single object
-        /// becomes a one-element list. Serialization always emits an array.
+        /// The <c>GET /payments/{id}</c> response returns this as an array, and some payment
+        /// methods return a single object. Both shapes deserialize here; a single object becomes
+        /// a one-element list.
+        /// <para>
+        /// Serialization emits an <b>object</b> for one passenger and an array only for several,
+        /// because the live API accepts an object on every request surface but an array only on
+        /// <c>POST /payments</c>. See <see cref="SingleOrArrayConverter{T}"/> for the
+        /// sandbox-verified matrix.
+        /// </para>
         /// </remarks>
         [JsonConverter(typeof(SingleOrArrayConverter<Passenger>))]
         public IList<Passenger> Passenger { get; set; }
@@ -32,5 +37,18 @@ namespace Checkout.Payments
         /// [Optional]
         /// </summary>
         public IList<FlightLegDetails> FlightLegDetails { get; set; }
+
+        /// <summary>
+        /// Omits <c>passenger</c> entirely when there are no passengers.
+        /// </summary>
+        /// <remarks>
+        /// Newtonsoft honours <c>ShouldSerializePassenger</c>. Both an empty array and an explicit
+        /// null are rejected with <c>processing_airline_data_0_passenger_invalid</c>, so the
+        /// property has to be absent rather than empty.
+        /// </remarks>
+        public bool ShouldSerializePassenger()
+        {
+            return Passenger != null && Passenger.Count > 0;
+        }
     }
 }
