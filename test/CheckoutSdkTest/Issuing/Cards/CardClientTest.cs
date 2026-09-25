@@ -5,12 +5,13 @@ using Checkout.Issuing.Cards.Requests.Enrollment;
 using Checkout.Issuing.Cards.Requests.Revoke;
 using Checkout.Issuing.Cards.Requests.Suspend;
 using Checkout.Issuing.Cards.Requests.Update;
-using Checkout.Issuing.Cards.Responses.Update;
 using Checkout.Issuing.Cards.Requests.Renew;
 using Checkout.Issuing.Cards.Responses.Create;
 using Checkout.Issuing.Cards.Responses.Credentials;
 using Checkout.Issuing.Cards.Responses.Enrollment;
+using Checkout.Issuing.Cards.Responses.Activate;
 using Checkout.Issuing.Cards.Responses.Renew;
+using Checkout.Issuing.Cards.Responses.Update;
 using Checkout.Issuing.Common.Responses;
 using Moq;
 using Shouldly;
@@ -147,10 +148,10 @@ namespace Checkout.Issuing.Cards
         [Fact]
         private async Task ShouldActivateCard()
         {
-            Resource response = new Resource();
+            ActivateCardResponse response = new ActivateCardResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Post<Resource>("issuing/cards/card_id/activate",
+                    apiClient.Post<ActivateCardResponse>("issuing/cards/card_id/activate",
                         _authorization,
                         null,
                         CancellationToken.None,
@@ -159,7 +160,7 @@ namespace Checkout.Issuing.Cards
 
             IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
 
-            Resource getResponse = await client.ActivateCard("card_id");
+            ActivateCardResponse getResponse = await client.ActivateCard("card_id");
 
             getResponse.ShouldNotBeNull();
             getResponse.ShouldBeSameAs(response);
@@ -235,10 +236,10 @@ namespace Checkout.Issuing.Cards
         private async Task ShouldUpdateCardDetails()
         {
             var cardUpdateRequest = new CardsUpdateRequest();
-            var updateResponse = new CardUpdateResponse();
+            var updateResponse = new CardsUpdateResponse();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Patch<CardUpdateResponse>(
+                    apiClient.Patch<CardsUpdateResponse>(
                         "issuing/cards/card_id",
                         _authorization,
                         cardUpdateRequest,
@@ -248,17 +249,20 @@ namespace Checkout.Issuing.Cards
 
             IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
 
-            CardUpdateResponse response = await client.UpdateCardDetails("card_id", cardUpdateRequest, CancellationToken.None);
+            CardsUpdateResponse response = await client.UpdateCardDetails("card_id", cardUpdateRequest, CancellationToken.None);
 
             response.ShouldNotBeNull();
             response.ShouldBeSameAs(updateResponse);
         }
 
+        // The 2026-09-17 spec (INT-1700) removed encrypted_cvv from update-card-response
+        // entirely, so this only verifies the headers reach the ApiClient call, not that the
+        // response carries an encrypted CVV (added by INT-1695, when the field still existed).
         [Fact]
-        private async Task ShouldUpdateCardDetailsWithEncryptedCvvHeaders()
+        private async Task ShouldUpdateCardDetailsWithEncryptionHeaders()
         {
             var cardUpdateRequest = new CardsUpdateRequest();
-            var updateResponse = new CardUpdateResponse();
+            var updateResponse = new CardsUpdateResponse();
             var headers = new CardUpdateHeaders
             {
                 ReturnEncryptedCvv = true,
@@ -266,7 +270,7 @@ namespace Checkout.Issuing.Cards
             };
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Patch<CardUpdateResponse>(
+                    apiClient.Patch<CardsUpdateResponse>(
                         "issuing/cards/card_id",
                         _authorization,
                         cardUpdateRequest,
@@ -277,7 +281,7 @@ namespace Checkout.Issuing.Cards
 
             IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
 
-            CardUpdateResponse response =
+            CardsUpdateResponse response =
                 await client.UpdateCardDetails("card_id", cardUpdateRequest, headers, CancellationToken.None);
 
             response.ShouldNotBeNull();
