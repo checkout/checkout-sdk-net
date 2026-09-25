@@ -3,13 +3,16 @@ using Newtonsoft.Json;
 
 namespace Checkout.Payments
 {
+    /// <summary>
+    /// Contains information about a flight leg booked by the customer.
+    /// </summary>
     public class FlightLegDetails
     {
         /// <summary>
         /// The flight identifier.
         /// [Optional]
         /// </summary>
-        public long? FlightNumber { get; set; }
+        public string FlightNumber { get; set; }
 
         /// <summary>
         /// The IATA 2-letter accounting code (PAX) that identifies the carrier.
@@ -72,14 +75,7 @@ namespace Checkout.Payments
         /// discarded by the gateway. Use <see cref="ClassOfTravelling"/> instead, which maps the
         /// spec property <c>class_of_travelling</c>.
         /// </summary>
+        [Obsolete("Not defined by the API, the gateway discards it. Use ClassOfTravelling, which maps class_of_travelling.")]
         public string ServiceClass { get; set; }
-
-        /// <summary>
-        /// Not in the current spec, will be removed in a future version.
-        /// Serializes as <c>stopover_code</c>, which the API does not define, so the value is
-        /// discarded by the gateway. Use <see cref="StopOverCode"/> instead, which maps the spec
-        /// property <c>stop_over_code</c>.
-        /// </summary>
-        public string StopoverCode { get; set; }
     }
 }

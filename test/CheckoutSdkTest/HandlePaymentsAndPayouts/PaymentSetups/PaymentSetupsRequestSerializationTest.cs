@@ -1,6 +1,8 @@
 using Checkout.Common;
 using Checkout.Payments.Contexts;
 using Checkout.Payments.Setups.Entities;
+using Checkout.Payments.Setups.Requests;
+using Checkout.Payments.Setups.Responses;
 using Checkout.Payments.Setups;
 using Checkout.Payments;
 using SetupAccommodationData = Checkout.Payments.Setups.Entities.AccommodationData;
@@ -96,27 +98,27 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
 
             // Industry
             deserialized.Industry.ShouldNotBeNull();
-            deserialized.Industry.AccommodationData.ShouldNotBeNull();
-            deserialized.Industry.AccommodationData.Name.ShouldBe("Grand Hotel");
-            deserialized.Industry.AccommodationData.BookingReference.ShouldBe("BK-12345");
-            deserialized.Industry.AccommodationData.CheckInDate.ShouldBe("2025-06-15");
-            deserialized.Industry.AccommodationData.CheckOutDate.ShouldBe("2025-06-20");
-            deserialized.Industry.AccommodationData.NumberOfRooms.ShouldBe(2);
-            deserialized.Industry.AccommodationData.Address.ShouldNotBeNull();
-            deserialized.Industry.AccommodationData.Address.AddressLine1.ShouldBe("10 Hotel Rd");
-            deserialized.Industry.AccommodationData.Address.City.ShouldBe("London");
-            deserialized.Industry.AccommodationData.Address.State.ShouldBe("England");
-            deserialized.Industry.AccommodationData.Address.Country.ShouldBe(CountryCode.GB);
-            deserialized.Industry.AccommodationData.Address.Zip.ShouldBe("EC1A 1BB");
-            deserialized.Industry.AccommodationData.Guests.ShouldNotBeNull();
-            deserialized.Industry.AccommodationData.Guests.Count.ShouldBe(1);
-            deserialized.Industry.AccommodationData.Guests[0].FirstName.ShouldBe("John");
-            deserialized.Industry.AccommodationData.Guests[0].LastName.ShouldBe("Doe");
-            deserialized.Industry.AccommodationData.Guests[0].DateOfBirth.ShouldBe("1990-05-20");
-            deserialized.Industry.AccommodationData.Room.ShouldNotBeNull();
-            deserialized.Industry.AccommodationData.Room.Count.ShouldBe(1);
-            deserialized.Industry.AccommodationData.Room[0].Rate.ShouldBe(150.00m);
-            deserialized.Industry.AccommodationData.Room[0].NumberOfNights.ShouldBe(5);
+            deserialized.Industry.Accommodation[0].ShouldNotBeNull();
+            deserialized.Industry.Accommodation[0].Name.ShouldBe("Grand Hotel");
+            deserialized.Industry.Accommodation[0].BookingReference.ShouldBe("BK-12345");
+            deserialized.Industry.Accommodation[0].CheckInDate.ShouldBe("2025-06-15");
+            deserialized.Industry.Accommodation[0].CheckOutDate.ShouldBe("2025-06-20");
+            deserialized.Industry.Accommodation[0].NumberOfRooms.ShouldBe(2);
+            deserialized.Industry.Accommodation[0].Address.ShouldNotBeNull();
+            deserialized.Industry.Accommodation[0].Address.AddressLine1.ShouldBe("10 Hotel Rd");
+            deserialized.Industry.Accommodation[0].Address.City.ShouldBe("London");
+            deserialized.Industry.Accommodation[0].Address.State.ShouldBe("England");
+            deserialized.Industry.Accommodation[0].Address.Country.ShouldBe(CountryCode.GB);
+            deserialized.Industry.Accommodation[0].Address.Zip.ShouldBe("EC1A 1BB");
+            deserialized.Industry.Accommodation[0].Guests.ShouldNotBeNull();
+            deserialized.Industry.Accommodation[0].Guests.Count.ShouldBe(1);
+            deserialized.Industry.Accommodation[0].Guests[0].FirstName.ShouldBe("John");
+            deserialized.Industry.Accommodation[0].Guests[0].LastName.ShouldBe("Doe");
+            deserialized.Industry.Accommodation[0].Guests[0].DateOfBirth.ShouldBe("1990-05-20");
+            deserialized.Industry.Accommodation[0].Room.ShouldNotBeNull();
+            deserialized.Industry.Accommodation[0].Room.Count.ShouldBe(1);
+            deserialized.Industry.Accommodation[0].Room[0].Rate.ShouldBe(150.00m);
+            deserialized.Industry.Accommodation[0].Room[0].NumberOfNights.ShouldBe(5);
 
             // PaymentMethods
             deserialized.PaymentMethods.ShouldNotBeNull();
@@ -234,7 +236,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                     ]
                 },
                 ""industry"": {
-                    ""accommodation_data"": {
+                    ""accommodation"": [{
                         ""name"": ""Beach Resort"",
                         ""booking_reference"": ""BK-999"",
                         ""check_in_date"": ""2025-07-01"",
@@ -249,7 +251,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                         },
                         ""guests"": [{ ""first_name"": ""Jane"", ""last_name"": ""Smith"", ""date_of_birth"": ""1985-03-10"" }],
                         ""room"": [{ ""rate"": 200.50, ""number_of_nights"": 4 }]
-                    }
+                    }]
                 },
                 ""payment_methods"": {
                     ""klarna"": {
@@ -337,21 +339,21 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.Order.SubMerchants[0].RegistrationDate.ShouldBe(new DateTime(2023, 1, 1));
 
             // Industry - AccommodationData
-            result.Industry.AccommodationData.Name.ShouldBe("Beach Resort");
-            result.Industry.AccommodationData.BookingReference.ShouldBe("BK-999");
-            result.Industry.AccommodationData.CheckInDate.ShouldBe("2025-07-01");
-            result.Industry.AccommodationData.CheckOutDate.ShouldBe("2025-07-05");
-            result.Industry.AccommodationData.NumberOfRooms.ShouldBe(1);
-            result.Industry.AccommodationData.Address.AddressLine1.ShouldBe("1 Beach Rd");
-            result.Industry.AccommodationData.Address.City.ShouldBe("Miami");
-            result.Industry.AccommodationData.Address.State.ShouldBe("FL");
-            result.Industry.AccommodationData.Address.Country.ShouldBe(CountryCode.US);
-            result.Industry.AccommodationData.Address.Zip.ShouldBe("33101");
-            result.Industry.AccommodationData.Guests[0].FirstName.ShouldBe("Jane");
-            result.Industry.AccommodationData.Guests[0].LastName.ShouldBe("Smith");
-            result.Industry.AccommodationData.Guests[0].DateOfBirth.ShouldBe("1985-03-10");
-            result.Industry.AccommodationData.Room[0].Rate.ShouldBe(200.50m);
-            result.Industry.AccommodationData.Room[0].NumberOfNights.ShouldBe(4);
+            result.Industry.Accommodation[0].Name.ShouldBe("Beach Resort");
+            result.Industry.Accommodation[0].BookingReference.ShouldBe("BK-999");
+            result.Industry.Accommodation[0].CheckInDate.ShouldBe("2025-07-01");
+            result.Industry.Accommodation[0].CheckOutDate.ShouldBe("2025-07-05");
+            result.Industry.Accommodation[0].NumberOfRooms.ShouldBe(1);
+            result.Industry.Accommodation[0].Address.AddressLine1.ShouldBe("1 Beach Rd");
+            result.Industry.Accommodation[0].Address.City.ShouldBe("Miami");
+            result.Industry.Accommodation[0].Address.State.ShouldBe("FL");
+            result.Industry.Accommodation[0].Address.Country.ShouldBe(CountryCode.US);
+            result.Industry.Accommodation[0].Address.Zip.ShouldBe("33101");
+            result.Industry.Accommodation[0].Guests[0].FirstName.ShouldBe("Jane");
+            result.Industry.Accommodation[0].Guests[0].LastName.ShouldBe("Smith");
+            result.Industry.Accommodation[0].Guests[0].DateOfBirth.ShouldBe("1985-03-10");
+            result.Industry.Accommodation[0].Room[0].Rate.ShouldBe(200.50m);
+            result.Industry.Accommodation[0].Room[0].NumberOfNights.ShouldBe(4);
 
             // PaymentMethods - Klarna
             result.PaymentMethods.Klarna.Status.ShouldBe(PaymentMethodStatus.Available);
@@ -463,28 +465,31 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                 },
                 Industry = new Industry
                 {
-                    AccommodationData = new SetupAccommodationData
+                    Accommodation = new List<SetupAccommodationData>
                     {
-                        Name = "Grand Hotel",
-                        BookingReference = "BK-12345",
-                        CheckInDate = "2025-06-15",
-                        CheckOutDate = "2025-06-20",
-                        NumberOfRooms = 2,
-                        Address = new AccommodationAddress
+                        new SetupAccommodationData
                         {
-                            AddressLine1 = "10 Hotel Rd",
-                            City = "London",
-                            State = "England",
-                            Country = CountryCode.GB,
-                            Zip = "EC1A 1BB"
-                        },
-                        Guests = new List<AccommodationGuest>
-                        {
-                            new AccommodationGuest { FirstName = "John", LastName = "Doe", DateOfBirth = "1990-05-20" }
-                        },
-                        Room = new List<AccommodationRoom>
-                        {
-                            new AccommodationRoom { Rate = 150.00m, NumberOfNights = 5 }
+                            Name = "Grand Hotel",
+                            BookingReference = "BK-12345",
+                            CheckInDate = "2025-06-15",
+                            CheckOutDate = "2025-06-20",
+                            NumberOfRooms = 2,
+                            Address = new AccommodationAddress
+                            {
+                                AddressLine1 = "10 Hotel Rd",
+                                City = "London",
+                                State = "England",
+                                Country = CountryCode.GB,
+                                Zip = "EC1A 1BB"
+                            },
+                            Guests = new List<AccommodationGuest>
+                            {
+                                new AccommodationGuest { FirstName = "John", LastName = "Doe", DateOfBirth = "1990-05-20" }
+                            },
+                            Room = new List<AccommodationRoom>
+                            {
+                                new AccommodationRoom { Rate = 150.00m, NumberOfNights = 5 }
+                            }
                         }
                     }
                 },
@@ -693,35 +698,41 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
         {
             var industry = new Industry
             {
-                AccommodationData = new SetupAccommodationData
+                Accommodation = new List<SetupAccommodationData>
                 {
-                    Name = "Grand Hotel",
-                    TotalNumberOfGuests = 4,
-                    Refundable = true,
-                    DeliveryRecipient = "jane.smith@example.com",
-                    Host = new AccommodationHost
+                    new SetupAccommodationData
                     {
-                        RegistrationDate = "2020-01-01",
-                        TotalReservationCount = 25
-                    },
-                    Room = new List<AccommodationRoom>
-                    {
-                        new AccommodationRoom { Rate = 150.00m, NumberOfNights = 5, Type = "deluxe" }
+                        Name = "Grand Hotel",
+                        TotalNumberOfGuests = 4,
+                        Refundable = true,
+                        DeliveryRecipient = "jane.smith@example.com",
+                        Host = new AccommodationHost
+                        {
+                            RegistrationDate = "2020-01-01",
+                            TotalReservationCount = 25
+                        },
+                        Room = new List<AccommodationRoom>
+                        {
+                            new AccommodationRoom { Rate = 150.00m, NumberOfNights = 5, Type = "deluxe" }
+                        }
                     }
                 },
-                AirlineData = new SetupAirlineData
+                Airline = new List<SetupAirlineData>
                 {
-                    TotalNumberOfPassengers = 2,
-                    TravelType = "international",
-                    TripType = "round_trip",
-                    Refundable = false,
-                    DeliveryRecipient = "jane.smith@example.com",
-                    Ancillaries = "extra_baggage",
-                    Insurance = new AirlineInsurance
+                    new SetupAirlineData
                     {
-                        Type = "travel",
-                        Company = "Acme Insurance",
-                        Price = new AirlineInsurancePrice { Amount = 25.50m, Currency = Currency.GBP }
+                        TotalNumberOfPassengers = 2,
+                        TravelType = "international",
+                        TripType = "round_trip",
+                        Refundable = false,
+                        DeliveryRecipient = "jane.smith@example.com",
+                        Ancillaries = "extra_baggage",
+                        Insurance = new AirlineInsurance
+                        {
+                            Type = "travel",
+                            Company = "Acme Insurance",
+                            Price = new AirlineInsurancePrice { Amount = 25.50m, Currency = Currency.GBP }
+                        }
                     }
                 }
             };
@@ -729,41 +740,41 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             var json = Serializer.Serialize(industry);
             var deserialized = (Industry)Serializer.Deserialize(json, typeof(Industry));
 
-            deserialized.AccommodationData.TotalNumberOfGuests.ShouldBe(4);
-            deserialized.AccommodationData.Refundable.ShouldBe(true);
-            deserialized.AccommodationData.DeliveryRecipient.ShouldBe("jane.smith@example.com");
-            deserialized.AccommodationData.Host.ShouldNotBeNull();
-            deserialized.AccommodationData.Host.RegistrationDate.ShouldBe("2020-01-01");
-            deserialized.AccommodationData.Host.TotalReservationCount.ShouldBe(25);
-            deserialized.AccommodationData.Room[0].Type.ShouldBe("deluxe");
+            deserialized.Accommodation[0].TotalNumberOfGuests.ShouldBe(4);
+            deserialized.Accommodation[0].Refundable.ShouldBe(true);
+            deserialized.Accommodation[0].DeliveryRecipient.ShouldBe("jane.smith@example.com");
+            deserialized.Accommodation[0].Host.ShouldNotBeNull();
+            deserialized.Accommodation[0].Host.RegistrationDate.ShouldBe("2020-01-01");
+            deserialized.Accommodation[0].Host.TotalReservationCount.ShouldBe(25);
+            deserialized.Accommodation[0].Room[0].Type.ShouldBe("deluxe");
 
-            deserialized.AirlineData.ShouldNotBeNull();
-            deserialized.AirlineData.TotalNumberOfPassengers.ShouldBe(2);
-            deserialized.AirlineData.TravelType.ShouldBe("international");
-            deserialized.AirlineData.TripType.ShouldBe("round_trip");
-            deserialized.AirlineData.Refundable.ShouldBe(false);
-            deserialized.AirlineData.DeliveryRecipient.ShouldBe("jane.smith@example.com");
-            deserialized.AirlineData.Ancillaries.ShouldBe("extra_baggage");
-            deserialized.AirlineData.Insurance.ShouldNotBeNull();
-            deserialized.AirlineData.Insurance.Type.ShouldBe("travel");
-            deserialized.AirlineData.Insurance.Company.ShouldBe("Acme Insurance");
-            deserialized.AirlineData.Insurance.Price.Amount.ShouldBe(25.50m);
-            deserialized.AirlineData.Insurance.Price.Currency.ShouldBe(Currency.GBP);
+            deserialized.Airline[0].ShouldNotBeNull();
+            deserialized.Airline[0].TotalNumberOfPassengers.ShouldBe(2);
+            deserialized.Airline[0].TravelType.ShouldBe("international");
+            deserialized.Airline[0].TripType.ShouldBe("round_trip");
+            deserialized.Airline[0].Refundable.ShouldBe(false);
+            deserialized.Airline[0].DeliveryRecipient.ShouldBe("jane.smith@example.com");
+            deserialized.Airline[0].Ancillaries.ShouldBe("extra_baggage");
+            deserialized.Airline[0].Insurance.ShouldNotBeNull();
+            deserialized.Airline[0].Insurance.Type.ShouldBe("travel");
+            deserialized.Airline[0].Insurance.Company.ShouldBe("Acme Insurance");
+            deserialized.Airline[0].Insurance.Price.Amount.ShouldBe(25.50m);
+            deserialized.Airline[0].Insurance.Price.Currency.ShouldBe(Currency.GBP);
         }
 
         [Fact]
         public void ShouldDeserializeIndustryNewFieldsFromSnakeCaseJson()
         {
             const string json = @"{
-                ""accommodation_data"": {
+                ""accommodation"": [{
                     ""name"": ""Grand Hotel"",
                     ""total_number_of_guests"": 4,
                     ""refundable"": true,
                     ""delivery_recipient"": ""jane.smith@example.com"",
                     ""host"": { ""registration_date"": ""2020-01-01"", ""total_reservation_count"": 25 },
                     ""room"": [{ ""rate"": 150.00, ""number_of_nights"": 5, ""type"": ""deluxe"" }]
-                },
-                ""airline_data"": {
+                }],
+                ""airline"": [{
                     ""total_number_of_passengers"": 2,
                     ""travel_type"": ""international"",
                     ""trip_type"": ""round_trip"",
@@ -771,28 +782,28 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                     ""delivery_recipient"": ""jane.smith@example.com"",
                     ""ancillaries"": ""extra_baggage"",
                     ""insurance"": { ""type"": ""travel"", ""company"": ""Acme Insurance"", ""price"": { ""amount"": 25.50, ""currency"": ""GBP"" } }
-                }
+                }]
             }";
 
             var result = (Industry)Serializer.Deserialize(json, typeof(Industry));
 
-            result.AccommodationData.TotalNumberOfGuests.ShouldBe(4);
-            result.AccommodationData.Refundable.ShouldBe(true);
-            result.AccommodationData.DeliveryRecipient.ShouldBe("jane.smith@example.com");
-            result.AccommodationData.Host.RegistrationDate.ShouldBe("2020-01-01");
-            result.AccommodationData.Host.TotalReservationCount.ShouldBe(25);
-            result.AccommodationData.Room[0].Type.ShouldBe("deluxe");
+            result.Accommodation[0].TotalNumberOfGuests.ShouldBe(4);
+            result.Accommodation[0].Refundable.ShouldBe(true);
+            result.Accommodation[0].DeliveryRecipient.ShouldBe("jane.smith@example.com");
+            result.Accommodation[0].Host.RegistrationDate.ShouldBe("2020-01-01");
+            result.Accommodation[0].Host.TotalReservationCount.ShouldBe(25);
+            result.Accommodation[0].Room[0].Type.ShouldBe("deluxe");
 
-            result.AirlineData.TotalNumberOfPassengers.ShouldBe(2);
-            result.AirlineData.TravelType.ShouldBe("international");
-            result.AirlineData.TripType.ShouldBe("round_trip");
-            result.AirlineData.Refundable.ShouldBe(false);
-            result.AirlineData.DeliveryRecipient.ShouldBe("jane.smith@example.com");
-            result.AirlineData.Ancillaries.ShouldBe("extra_baggage");
-            result.AirlineData.Insurance.Type.ShouldBe("travel");
-            result.AirlineData.Insurance.Company.ShouldBe("Acme Insurance");
-            result.AirlineData.Insurance.Price.Amount.ShouldBe(25.50m);
-            result.AirlineData.Insurance.Price.Currency.ShouldBe(Currency.GBP);
+            result.Airline[0].TotalNumberOfPassengers.ShouldBe(2);
+            result.Airline[0].TravelType.ShouldBe("international");
+            result.Airline[0].TripType.ShouldBe("round_trip");
+            result.Airline[0].Refundable.ShouldBe(false);
+            result.Airline[0].DeliveryRecipient.ShouldBe("jane.smith@example.com");
+            result.Airline[0].Ancillaries.ShouldBe("extra_baggage");
+            result.Airline[0].Insurance.Type.ShouldBe("travel");
+            result.Airline[0].Insurance.Company.ShouldBe("Acme Insurance");
+            result.Airline[0].Insurance.Price.Amount.ShouldBe(25.50m);
+            result.Airline[0].Insurance.Price.Currency.ShouldBe(Currency.GBP);
         }
 
         [Fact]
@@ -902,5 +913,100 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                 DateOfBirth = new DateTime(2000, 1, 1, 6, 30, 0)
             }).ShouldContain("\"date_of_birth\":\"2000-01-01\"");
         }
+
+        // ------------------------------------------------------------------------
+        // Industry -- wire names and cardinality
+        //
+        // The spec names these industry.airline and industry.accommodation, and both are arrays.
+        // Industry modelled them as single objects called AirlineData and AccommodationData, so
+        // they serialized as the objects airline_data and accommodation_data: keys the API does
+        // not define. Industry-specific data on payment setups therefore never reached the
+        // gateway. Same defect class as the payments.AirlineData cardinality bug, and the same
+        // one the Go SDK fixed in 3.4.0.
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldSerializeIndustryUnderTheKeysTheSpecNames()
+        {
+            var json = Serializer.Serialize(new Industry
+            {
+                Airline = new List<SetupAirlineData>
+                {
+                    new SetupAirlineData { TravelType = "international" }
+                },
+                Accommodation = new List<SetupAccommodationData>
+                {
+                    new SetupAccommodationData { Name = "Grand Hotel" }
+                }
+            });
+
+            json.ShouldContain("\"airline\":[{");
+            json.ShouldContain("\"accommodation\":[{");
+
+            // The keys the SDK used to send, which the API never defined.
+            json.ShouldNotContain("airline_data");
+            json.ShouldNotContain("accommodation_data");
+        }
+
+        [Fact]
+        public void ShouldSerializeMultipleIndustryEntries()
+        {
+            var json = Serializer.Serialize(new Industry
+            {
+                Airline = new List<SetupAirlineData>
+                {
+                    new SetupAirlineData { TravelType = "domestic" },
+                    new SetupAirlineData { TravelType = "international" }
+                },
+                Accommodation = new List<SetupAccommodationData>
+                {
+                    new SetupAccommodationData { Name = "Grand Hotel" },
+                    new SetupAccommodationData { Name = "Alpine Lodge" }
+                }
+            });
+
+            var result = (Industry)Serializer.Deserialize(json, typeof(Industry));
+
+            result.Airline.Count.ShouldBe(2);
+            result.Airline[0].TravelType.ShouldBe("domestic");
+            result.Airline[1].TravelType.ShouldBe("international");
+            result.Accommodation.Count.ShouldBe(2);
+            result.Accommodation[0].Name.ShouldBe("Grand Hotel");
+            result.Accommodation[1].Name.ShouldBe("Alpine Lodge");
+        }
+
+        [Fact]
+        public void ShouldDeserializeIndustryFromTheSpecKeysAsArrays()
+        {
+            const string json = @"{
+                ""airline"": [
+                  { ""travel_type"": ""international"", ""trip_type"": ""round_trip"" }
+                ],
+                ""accommodation"": [
+                  { ""name"": ""Grand Hotel"", ""number_of_rooms"": 2 }
+                ]
+            }";
+
+            var result = (Industry)Serializer.Deserialize(json, typeof(Industry));
+
+            result.Airline.ShouldNotBeNull();
+            result.Airline.Count.ShouldBe(1);
+            result.Airline[0].TravelType.ShouldBe("international");
+            result.Airline[0].TripType.ShouldBe("round_trip");
+            result.Accommodation.ShouldNotBeNull();
+            result.Accommodation.Count.ShouldBe(1);
+            result.Accommodation[0].Name.ShouldBe("Grand Hotel");
+            result.Accommodation[0].NumberOfRooms.ShouldBe(2);
+        }
+
+        [Fact]
+        public void ShouldOmitIndustryKeysWhenNotSet()
+        {
+            var json = Serializer.Serialize(new Industry());
+
+            json.ShouldNotContain("airline");
+            json.ShouldNotContain("accommodation");
+        }
+
     }
 }
