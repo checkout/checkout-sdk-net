@@ -595,9 +595,11 @@ namespace Checkout
         public void ShouldThrowIfWriteJsonIsEverCalledDirectly()
         {
             var converter = new SingleOrArrayConverter<Passenger>();
+            using var stringWriter = new StringWriter();
+            using var jsonWriter = new JsonTextWriter(stringWriter);
 
             Should.Throw<NotSupportedException>(() =>
-                converter.WriteJson(new JsonTextWriter(new StringWriter()), null,
+                converter.WriteJson(jsonWriter, null,
                     new Newtonsoft.Json.JsonSerializer()));
         }
 
