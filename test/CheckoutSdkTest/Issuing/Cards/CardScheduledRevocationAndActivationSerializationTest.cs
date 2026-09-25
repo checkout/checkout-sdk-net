@@ -203,5 +203,34 @@ namespace Checkout.Issuing.Cards
             response.LastActivatedOn.ShouldBe(new DateTime(2019, 9, 10, 10, 11, 12, DateTimeKind.Utc));
             response.LastModifiedDate.ShouldBe(new DateTime(2026, 9, 17, 10, 11, 12, DateTimeKind.Utc));
         }
+
+        [Fact]
+        public void ShouldRoundTripSerializeIsSingleUseOnUpdateResponse()
+        {
+            var original = new CardsUpdateResponse
+            {
+                Id = "crd_test",
+                IsSingleUse = true
+            };
+
+            var deserialized = (CardsUpdateResponse)_serializer
+                .Deserialize(_serializer.Serialize(original), typeof(CardsUpdateResponse));
+
+            deserialized.IsSingleUse.ShouldBe(original.IsSingleUse);
+        }
+
+        [Fact]
+        public void ShouldDeserializeIsSingleUseSwaggerExampleOnUpdateResponse()
+        {
+            const string json = @"{
+                ""type"": ""virtual"",
+                ""id"": ""crd_test"",
+                ""is_single_use"": true
+            }";
+
+            var response = (CardsUpdateResponse)_serializer.Deserialize(json, typeof(CardsUpdateResponse));
+
+            response.IsSingleUse.ShouldBe(true);
+        }
     }
 }

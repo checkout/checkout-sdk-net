@@ -12,5 +12,12 @@ namespace Checkout.Issuing.Cards.Responses.Update
         public CardsUpdateResponse() : base(null)
         {
         }
+
+        /// <summary>
+        /// Specifies whether the virtual card is set to expire after a single use.
+        /// [Optional] Only present when the underlying card is virtual; physical cards never
+        /// return this field.
+        /// </summary>
+        public bool? IsSingleUse { get; set; }
     }
 }
