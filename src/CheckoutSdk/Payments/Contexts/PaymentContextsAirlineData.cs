@@ -39,8 +39,8 @@ namespace Checkout.Payments.Contexts
         /// <summary>
         /// Omits <c>passenger</c> entirely when there are no passengers.
         /// </summary>
-        /// <remarks>nsoft hono
-        /// Newtours <c>ShouldSerializePassenger</c>. Both an empty array and an explicit
+        /// <remarks>
+        /// Newtonsoft honours <c>ShouldSerializePassenger</c>. Both an empty array and an explicit
         /// null are rejected with <c>processing_airline_data_0_passenger_invalid</c>, so the
         /// property has to be absent rather than empty.
         /// </remarks>
