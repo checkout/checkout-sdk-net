@@ -1,4 +1,5 @@
 using Checkout.Issuing.Common;
+using System;
 
 namespace Checkout.Issuing.Cards.Requests.Create
 {
@@ -49,10 +50,18 @@ namespace Checkout.Issuing.Cards.Requests.Create
         /// Date scheduling the card's automatic revocation.
         /// Supported format: YYYY-MM-DD (time is midnight UTC).
         /// [Optional]
-        /// Format: date
-        /// Example: 2027-03-12
+        /// [Deprecated] Use <see cref="ScheduledRevocationDate"/> instead.
+        /// Format: yyyy-MM-dd
         /// </summary>
+        [Obsolete("This property is deprecated. Use ScheduledRevocationDate instead.")]
         public string RevocationDate { get; set; }
+
+        /// <summary>
+        /// The card will be revoked at midnight UTC on the date specified.
+        /// [Optional]
+        /// Format: yyyy-MM-dd
+        /// </summary>
+        public string ScheduledRevocationDate { get; set; }
 
         /// <summary>
         /// Date scheduling the card's first activation. Only applies to the initial activation of a card.

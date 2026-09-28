@@ -128,10 +128,18 @@ namespace Checkout.Issuing.Common.Responses
         /// Date scheduling the card's automatic revocation.
         /// Supported format: YYYY-MM-DD (time is midnight UTC).
         /// [Optional]
-        /// Format: date
-        /// Example: 2027-03-12
+        /// [Deprecated] Use <see cref="ScheduledRevocationDate"/> instead.
+        /// Format: yyyy-MM-dd
         /// </summary>
+        [Obsolete("This property is deprecated. Use ScheduledRevocationDate instead.")]
         public string RevocationDate { get; set; }
+
+        /// <summary>
+        /// The card will be revoked at midnight UTC on the date specified.
+        /// [Optional]
+        /// Format: yyyy-MM-dd
+        /// </summary>
+        public string ScheduledRevocationDate { get; set; }
 
         /// <summary>
         /// Date scheduling the card's first activation. Only applies to the initial activation of a card.
@@ -144,6 +152,14 @@ namespace Checkout.Issuing.Common.Responses
         /// Example: 2026-06-01T10:00Z
         /// </summary>
         public string ScheduledActivationDate { get; set; }
+
+        /// <summary>
+        /// The date and time the card was last activated. If the card has never been activated, this field
+        /// returns null.
+        /// [Optional, read-only]
+        /// Format: date-time (RFC 3339)
+        /// </summary>
+        public DateTime? LastActivatedOn { get; set; }
 
         /// <summary>
         /// When a card is renewed, the unique identifier of the first card in the renewal history.

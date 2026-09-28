@@ -1,9 +1,19 @@
 using Checkout.Issuing.Common;
+using System;
 
 namespace Checkout.Issuing.Cards.Requests.Update
 {
     public class CardsUpdateRequest
     {
+        /// <summary>
+        /// Set the card's status to <c>active</c> to reactivate an <c>inactive</c> or <c>suspended</c> card.
+        /// If you submit this field, you cannot also specify <see cref="ScheduledActivationDate"/>; doing so
+        /// returns a <c>scheduled_activation_date_conflicts_with_activation</c> error.
+        /// [Optional]
+        /// Enum: "active"
+        /// </summary>
+        public CardStatus? Status { get; set; }
+
         /// <summary>
         /// Your reference.
         /// [Optional]
@@ -48,9 +58,18 @@ namespace Checkout.Issuing.Cards.Requests.Update
         /// Date scheduling the card's automatic revocation.
         /// Supported format: YYYY-MM-DD (time is midnight UTC).
         /// [Optional]
-        /// Format: date
-        /// Example: 2027-03-12
+        /// [Deprecated] Use <see cref="ScheduledRevocationDate"/> instead. If both fields are provided,
+        /// <see cref="ScheduledRevocationDate"/> overrides this value.
+        /// Format: yyyy-MM-dd
         /// </summary>
+        [Obsolete("This property is deprecated. Use ScheduledRevocationDate instead.")]
         public string RevocationDate { get; set; }
+
+        /// <summary>
+        /// The card will be revoked at midnight UTC on the date specified.
+        /// [Optional]
+        /// Format: yyyy-MM-dd
+        /// </summary>
+        public string ScheduledRevocationDate { get; set; }
     }
 }

@@ -9,7 +9,9 @@ using Checkout.Issuing.Cards.Requests.Suspend;
 using Checkout.Issuing.Cards.Requests.Update;
 using Checkout.Issuing.Cards.Responses.Create;
 using Checkout.Issuing.Cards.Responses.Credentials;
+using Checkout.Issuing.Cards.Responses.Activate;
 using Checkout.Issuing.Cards.Responses.Enrollment;
+using Checkout.Issuing.Cards.Responses.Update;
 using Checkout.Issuing.Common;
 using Checkout.Issuing.Common.Responses;
 using Shouldly;
@@ -219,12 +221,13 @@ namespace Checkout.Issuing.Cards
         {
             AbstractCardCreateResponse abstractCard = _abstractCardRequest;
 
-            Resource getResponse = await Api.IssuingClient().ActivateCard(abstractCard.Id);
+            ActivateCardResponse getResponse = await Api.IssuingClient().ActivateCard(abstractCard.Id);
 
             getResponse.HttpStatusCode.ShouldBe(200);
             getResponse.Body.ShouldNotBeNull();
             getResponse.ResponseHeaders.ShouldNotBeNull();
             getResponse.Links.ShouldNotBeNull();
+            getResponse.LastActivatedOn.ShouldNotBeNull();
 
             AbstractCardResponse carDetailsResponse = await Api.IssuingClient().GetCardDetails(abstractCard.Id);
 
