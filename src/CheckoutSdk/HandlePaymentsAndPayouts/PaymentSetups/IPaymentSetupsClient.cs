@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using Checkout.Payments.Setups.Requests;
+using Checkout.Payments.Setups.Responses;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 

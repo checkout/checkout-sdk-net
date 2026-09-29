@@ -85,31 +85,36 @@ namespace Checkout.Payments
                                 new Ticket
                                 {
                                     Number = "123456",
-                                    IssueDate = "SATE",
+                                    IssueDate = new DateTime(2026, 8, 1),
                                     IssuingCarrierCode = "ST",
+                                    TravelPackageIndicator = "B",
                                     TravelAgencyName = "AGENCY",
                                     TravelAgencyCode = "CODE"
                                 },
-                            Passenger =
+                            // passenger is an array on the wire. It was a single object here,
+                            // which is the shape the API never accepted.
+                            Passenger = new List<Passenger>
+                            {
                                 new Passenger
                                 {
                                     FirstName = "passenger",
                                     LastName = "test",
                                     DateOfBirth = new DateTime(2001, 1, 1),
                                     Address = new PassengerAddress { Country = CountryCode.AC }
-                                },
+                                }
+                            },
                             FlightLegDetails = new List<FlightLegDetails>
                             {
                                 new FlightLegDetails
                                 {
-                                    FlightNumber = 123,
+                                    FlightNumber = "123",
                                     CarrierCode = "code",
-                                    ServiceClass = "class",
+                                    ClassOfTravelling = "J",
                                     DepartureDate = DateTime.Now,
                                     DepartureTime = "time",
                                     DepartureAirport = "airport",
                                     ArrivalAirport = "arrival",
-                                    StopoverCode = "StopoverCode",
+                                    StopOverCode = "x",
                                     FareBasisCode = "basis"
                                 }
                             }

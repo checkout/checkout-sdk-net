@@ -3,6 +3,13 @@ using System.Collections.Generic;
 
 namespace Checkout.Payments.Response
 {
+    /// <summary>
+    /// Returns information related to the processing of the payment.
+    /// </summary>
+    /// <remarks>
+    /// The response counterpart of <see cref="ProcessingSettings"/>, returned under
+    /// <c>processing</c> on <c>GET /payments/{id}</c>.
+    /// </remarks>
     public class ProcessingData
     {
         /// <summary>
@@ -35,7 +42,7 @@ namespace Checkout.Payments.Response
         /// Total tax amount of the order.
         /// [Optional]
         /// </summary>
-        public long? TaxAmount { get; set; }
+        public decimal? TaxAmount { get; set; }
 
         /// <summary>
         /// The country where the purchase was made.

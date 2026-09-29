@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using Checkout.Payments.Setups.Requests;
+using Checkout.Payments.Setups.Responses;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Checkout.Payments.Setups

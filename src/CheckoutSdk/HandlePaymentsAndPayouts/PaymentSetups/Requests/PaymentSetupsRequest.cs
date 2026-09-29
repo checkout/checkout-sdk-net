@@ -1,7 +1,7 @@
 using Checkout.Common;
 using Checkout.Payments.Setups.Entities;
 
-namespace Checkout.Payments.Setups
+namespace Checkout.Payments.Setups.Requests
 {
     /// <summary>
     /// Creates a Payment Setup.

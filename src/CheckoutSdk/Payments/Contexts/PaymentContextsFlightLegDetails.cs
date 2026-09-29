@@ -3,51 +3,69 @@ using Newtonsoft.Json;
 
 namespace Checkout.Payments.Contexts
 {
+    /// <summary>
+    /// Contains information about a flight leg booked by the customer.
+    /// </summary>
     public class PaymentContextsFlightLegDetails
     {
         /// <summary>
-        /// The flight number for this leg of the journey
+        /// The flight identifier.
+        /// [Optional]
         /// </summary>
         public string FlightNumber { get; set; }
 
         /// <summary>
-        /// The IATA code of the airline operating this flight leg
+        /// The IATA 2-letter accounting code (PAX) that identifies the carrier.
+        /// This field is required if the airline data includes leg details.
+        /// [Optional]
         /// </summary>
         public string CarrierCode { get; set; }
 
         /// <summary>
-        /// The class of service (e.g., Y for Economy, C for Business, F for First)
+        /// A one-letter travel class identifier. The following are common:
+        /// F = First class, J = Business class, Y = Economy class, W = Premium economy.
+        /// [Optional]
         /// </summary>
         public string ClassOfTravelling { get; set; }
 
         /// <summary>
-        /// The IATA code of the departure airport
+        /// The IATA three-letter airport code of the departure airport.
+        /// This field is required if the airline data includes leg details.
+        /// [Optional]
         /// </summary>
         public string DepartureAirport { get; set; }
 
         /// <summary>
-        /// The departure date in YYYY-MM-DD format
+        /// The date of the scheduled take off.
+        /// [Optional]
+        /// Format: yyyy-MM-dd
         /// </summary>
         [JsonConverter(typeof(ShortDateTimeConverter))]
         public DateTime? DepartureDate { get; set; }
 
         /// <summary>
-        /// The departure time in HH:MM format
+        /// The time of the scheduled take off.
+        /// [Optional]
         /// </summary>
         public string DepartureTime { get; set; }
 
         /// <summary>
-        /// The IATA code of the arrival airport
+        /// The IATA 3-letter airport code of the destination airport.
+        /// This field is required if the airline data includes leg details.
+        /// [Optional]
         /// </summary>
         public string ArrivalAirport { get; set; }
 
         /// <summary>
-        /// Code indicating if there are stopovers (O for stopover, X for no stopover)
+        /// A one-letter code that indicates whether the passenger is entitled to make a stopover.
+        /// Can be a space, O if the passenger is entitled to make a stopover, or X if they are not.
+        /// [Optional]
         /// </summary>
         public string StopOverCode { get; set; }
 
         /// <summary>
-        /// The fare basis code that determines the fare rules and restrictions
+        /// The fare basis code, alphanumeric.
+        /// [Optional]
         /// </summary>
         public string FareBasisCode { get; set; }
     }

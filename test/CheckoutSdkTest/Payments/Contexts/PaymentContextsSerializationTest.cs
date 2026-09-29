@@ -1,5 +1,6 @@
 using Shouldly;
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Checkout.Payments.Contexts
@@ -179,5 +180,136 @@ namespace Checkout.Payments.Contexts
             json.ShouldContain("\"date_of_birth\":\"1985-07-14\"");
             json.ShouldNotContain("T23:59:59");
         }
+
+        // ------------------------------------------------------------------------
+        // PaymentContextsAirlineData -- cardinality
+        //
+        // The spec's airline_data[].ticket is a single object and passenger is an array.
+        // Ticket was typed IList<PaymentContextsTicket>, so the SDK sent ticket as an array.
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldSerializeAirlineTicketAndASinglePassengerAsObjects()
+        {
+            var json = Serializer.Serialize(new PaymentContextsAirlineData
+            {
+                Ticket = new PaymentContextsTicket
+                {
+                    Number = "045-21351455613",
+                    IssueDate = new DateTime(2023, 5, 20)
+                },
+                Passenger = new List<PaymentContextsPassenger>
+                {
+                    new PaymentContextsPassenger { FirstName = "John" }
+                },
+                FlightLegDetails = new List<PaymentContextsFlightLegDetails>
+                {
+                    new PaymentContextsFlightLegDetails
+                    {
+                        FlightNumber = "101",
+                        ClassOfTravelling = "J",
+                        StopOverCode = "x"
+                    }
+                }
+            });
+
+            json.ShouldContain("\"ticket\":{");
+            json.ShouldNotContain("\"ticket\":[");
+            // POST /payment-contexts rejects the array form of passenger with
+            // passenger_required, so one passenger serializes as an object.
+            json.ShouldContain("\"passenger\":{");
+            json.ShouldContain("\"class_of_travelling\":\"J\"");
+            json.ShouldContain("\"stop_over_code\":\"x\"");
+            json.ShouldContain("\"flight_number\":\"101\"");
+        }
+
+        [Fact]
+        public void ShouldDeserializeAirlineTicketFromAnObject()
+        {
+            const string json = @"{
+                ""ticket"": { ""number"": ""045-21351455613"", ""issue_date"": ""2023-05-20"" },
+                ""passenger"": [ { ""first_name"": ""John"" } ]
+            }";
+
+            var result = (PaymentContextsAirlineData)Serializer.Deserialize(
+                json, typeof(PaymentContextsAirlineData));
+
+            result.Ticket.ShouldNotBeNull();
+            result.Ticket.Number.ShouldBe("045-21351455613");
+            result.Ticket.IssueDate.ShouldBe(new DateTime(2023, 5, 20));
+            result.Passenger.Count.ShouldBe(1);
+            result.Passenger[0].FirstName.ShouldBe("John");
+        }
+
+        // PayPal is a payment-contexts payment method and returns passenger as a bare object.
+        [Fact]
+        public void ShouldDeserializeAirlinePassengerFromASingleObject()
+        {
+            const string json = @"{
+                ""ticket"": { ""number"": ""045"" },
+                ""passenger"": { ""first_name"": ""John"", ""date_of_birth"": ""1990-05-26"" }
+            }";
+
+            var result = (PaymentContextsAirlineData)Serializer.Deserialize(
+                json, typeof(PaymentContextsAirlineData));
+
+            result.Passenger.ShouldNotBeNull();
+            result.Passenger.Count.ShouldBe(1);
+            result.Passenger[0].FirstName.ShouldBe("John");
+            result.Passenger[0].DateOfBirth.ShouldBe(new DateTime(1990, 5, 26));
+        }
+
+        [Fact]
+        public void ShouldRoundTripSerializeAirlineData()
+        {
+            var original = new PaymentContextsAirlineData
+            {
+                Ticket = new PaymentContextsTicket { Number = "045", TravelPackageIndicator = "B" },
+                Passenger = new List<PaymentContextsPassenger>
+                {
+                    new PaymentContextsPassenger { FirstName = "John" },
+                    new PaymentContextsPassenger { FirstName = "Jane" }
+                }
+            };
+
+            var json = Serializer.Serialize(original);
+            var result = (PaymentContextsAirlineData)Serializer.Deserialize(
+                json, typeof(PaymentContextsAirlineData));
+
+            result.Ticket.Number.ShouldBe("045");
+            result.Ticket.TravelPackageIndicator.ShouldBe("B");
+            result.Passenger.Count.ShouldBe(2);
+            result.Passenger[1].FirstName.ShouldBe("Jane");
+        }
+
+        // ------------------------------------------------------------------------
+        // PaymentContextsAccommodationRoom -- number_of_nights_at_room_rate is a string
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldSerializeNumberOfNightsAtRoomRateAsAString()
+        {
+            var json = Serializer.Serialize(new PaymentContextsAccommodationRoom
+            {
+                Rate = "70",
+                NumberOfNightsAtRoomRate = "3"
+            });
+
+            json.ShouldContain("\"rate\":\"70\"");
+            json.ShouldContain("\"number_of_nights_at_room_rate\":\"3\"");
+        }
+
+        [Fact]
+        public void ShouldDeserializeNumberOfNightsAtRoomRateFromAString()
+        {
+            const string json = @"{ ""rate"": ""70"", ""number_of_nights_at_room_rate"": ""3"" }";
+
+            var result = (PaymentContextsAccommodationRoom)Serializer.Deserialize(
+                json, typeof(PaymentContextsAccommodationRoom));
+
+            result.Rate.ShouldBe("70");
+            result.NumberOfNightsAtRoomRate.ShouldBe("3");
+        }
+
     }
 }

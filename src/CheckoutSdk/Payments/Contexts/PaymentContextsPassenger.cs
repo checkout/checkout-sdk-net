@@ -1,30 +1,37 @@
-using Checkout.Common;
 using System;
 using Newtonsoft.Json;
 
 namespace Checkout.Payments.Contexts
 {
+    /// <summary>
+    /// Contains information about a passenger on the flight.
+    /// </summary>
     public class PaymentContextsPassenger
     {
         /// <summary>
-        /// The passenger's first name as it appears on their travel document
+        /// The passenger's first name.
+        /// [Optional]
         /// </summary>
         public string FirstName { get; set; }
 
         /// <summary>
-        /// The passenger's last name as it appears on their travel document
+        /// The passenger's last name.
+        /// [Optional]
         /// </summary>
         public string LastName { get; set; }
 
         /// <summary>
-        /// The passenger's date of birth in YYYY-MM-DD format
+        /// The passenger's date of birth.
+        /// [Optional]
+        /// Format: yyyy-MM-dd
         /// </summary>
         [JsonConverter(typeof(ShortDateTimeConverter))]
         public DateTime? DateOfBirth { get; set; }
 
         /// <summary>
-        /// The passenger's address information
+        /// Contains information about the passenger's address.
+        /// [Optional]
         /// </summary>
-        public Address Address { get; set; }
+        public PassengerAddress Address { get; set; }
     }
 }

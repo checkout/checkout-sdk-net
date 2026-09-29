@@ -60,6 +60,12 @@ namespace Checkout.Payments
             if (payment.Processing != null)
             {
                 _ = payment.Processing.SchemeTransactionLinkId;
+
+                //A card payment never carries airline or accommodation data, so there is nothing
+                //to assert about them here. The cardinality of
+                //processing.airline_data[].passenger is covered where it can actually fail:
+                //JsonSerializerTest.ShouldDeserializeGetPaymentResponseWithAirlinePassengerArray
+                //and the PaymentProcessingSerializationTest airline section.
             }
             //Risk
             payment.Risk.Flagged.ShouldBe(false);
