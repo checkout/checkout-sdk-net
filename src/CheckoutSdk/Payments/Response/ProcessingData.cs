@@ -42,7 +42,7 @@ namespace Checkout.Payments.Response
         /// Total tax amount of the order.
         /// [Optional]
         /// </summary>
-        public long? TaxAmount { get; set; }
+        public decimal? TaxAmount { get; set; }
 
         /// <summary>
         /// The country where the purchase was made.

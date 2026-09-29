@@ -30,6 +30,47 @@ namespace Checkout
             public DateTime Datetime { get; set; }
         }
 
+        // The swagger types tax_amount, discount_amount, shipping_amount, shipping_tax_amount,
+        // duty_amount and original_order_amount as `number`, not `integer`, and the live API
+        // honours that: POST /payments with "tax_amount": 10.5 returns 201 and GET /payments/{id}
+        // echoes 10.5 back. While these were long?, Newtonsoft silently truncated 10.5 to 10, so
+        // the merchant lost data with no error anywhere. Keep them decimal?.
+        [Fact]
+        public void ShouldDeserializeFractionalProcessingAmounts()
+        {
+            const string json = "{\"tax_amount\":10.5,\"discount_amount\":0.25," +
+                                "\"shipping_amount\":3.75,\"shipping_tax_amount\":1.5," +
+                                "\"duty_amount\":2.05,\"original_order_amount\":99.99}";
+
+            var settings = (ProcessingSettings)new JsonSerializer()
+                .Deserialize(json, typeof(ProcessingSettings));
+
+            settings.TaxAmount.ShouldBe(10.5m);
+            settings.DiscountAmount.ShouldBe(0.25m);
+            settings.ShippingAmount.ShouldBe(3.75m);
+            settings.ShippingTaxAmount.ShouldBe(1.5m);
+            settings.DutyAmount.ShouldBe(2.05m);
+            settings.OriginalOrderAmount.ShouldBe(99.99m);
+        }
+
+        [Fact]
+        public void ShouldDeserializeFractionalTaxAmountOnProcessingData()
+        {
+            var data = (Checkout.Payments.Response.ProcessingData)new JsonSerializer()
+                .Deserialize("{\"tax_amount\":10.5}", typeof(Checkout.Payments.Response.ProcessingData));
+
+            data.TaxAmount.ShouldBe(10.5m);
+        }
+
+        [Fact]
+        public void ShouldStillDeserializeWholeProcessingAmounts()
+        {
+            var settings = (ProcessingSettings)new JsonSerializer()
+                .Deserialize("{\"tax_amount\":3000}", typeof(ProcessingSettings));
+
+            settings.TaxAmount.ShouldBe(3000m);
+        }
+
         [Fact]
         public void ShouldDeserializeDefaultGetPaymentResponseIndividualSender()
         {

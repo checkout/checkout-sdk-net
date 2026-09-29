@@ -18,19 +18,19 @@ namespace Checkout.Payments.Contexts
         /// The discount amount the merchant applied to the transaction.
         /// [Optional]
         /// </summary>
-        public long? DiscountAmount { get; set; }
+        public decimal? DiscountAmount { get; set; }
 
         /// <summary>
         /// The total freight or shipping and handling charges for the transaction.
         /// [Optional]
         /// </summary>
-        public long? ShippingAmount { get; set; }
+        public decimal? ShippingAmount { get; set; }
 
         /// <summary>
         /// The total tax amount for the transaction, in the minor currency unit.
         /// [Optional]
         /// </summary>
-        public long? TaxAmount { get; set; }
+        public decimal? TaxAmount { get; set; }
 
         /// <summary>
         /// Invoice ID number.

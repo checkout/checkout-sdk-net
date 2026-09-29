@@ -27,21 +27,21 @@ namespace Checkout.Payments
         /// [Optional]
         /// minimum 0
         /// </summary>
-        public long? DiscountAmount { get; set; }
+        public decimal? DiscountAmount { get; set; }
 
         /// <summary>
         /// The total freight or shipping and handling charges for the transaction.
         /// [Optional]
         /// minimum 0
         /// </summary>
-        public long? ShippingAmount { get; set; }
+        public decimal? ShippingAmount { get; set; }
 
         /// <summary>
         /// The total amount of sales tax on the total purchase amount.
         /// [Optional]
         /// minimum 0
         /// </summary>
-        public long? TaxAmount { get; set; }
+        public decimal? TaxAmount { get; set; }
 
         /// <summary>
         /// Invoice ID number.
@@ -110,14 +110,14 @@ namespace Checkout.Payments
         /// [Optional]
         /// minimum 0
         /// </summary>
-        public long? DutyAmount { get; set; }
+        public decimal? DutyAmount { get; set; }
 
         /// <summary>
         /// The tax amount of the freight or shipping and handling charges for the transaction.
         /// [Optional]
         /// minimum 0
         /// </summary>
-        public long? ShippingTaxAmount { get; set; }
+        public decimal? ShippingTaxAmount { get; set; }
 
         /// <summary>
         /// The two-letter ISO country code of the purchase country.
@@ -146,7 +146,7 @@ namespace Checkout.Payments
         /// [Optional]
         /// minimum 0
         /// </summary>
-        public long? OriginalOrderAmount { get; set; }
+        public decimal? OriginalOrderAmount { get; set; }
 
         /// <summary>
         /// Merchant receipt ID.
