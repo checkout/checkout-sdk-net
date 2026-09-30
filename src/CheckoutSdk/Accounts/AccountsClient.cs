@@ -220,7 +220,8 @@ namespace Checkout.Accounts
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("accountsFileRequest", accountsFileRequest);
-            return await ApiClient.Post<UploadFileResponse>(
+            // Served from the Files API host, like SubmitFile; the main API host returns 404.
+            return await FilesApiClient.Post<UploadFileResponse>(
                 BuildPath(EntitiesPath, entityId, FilesPath),
                 SdkAuthorization(),
                 accountsFileRequest,
@@ -233,7 +234,8 @@ namespace Checkout.Accounts
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("entityId", entityId, "fileId", fileId);
-            return await ApiClient.Get<FileDetailsResponse>(
+            // Served from the Files API host, like UploadFile.
+            return await FilesApiClient.Get<FileDetailsResponse>(
                 BuildPath(EntitiesPath, entityId, FilesPath, fileId),
                 SdkAuthorization(),
                 cancellationToken);

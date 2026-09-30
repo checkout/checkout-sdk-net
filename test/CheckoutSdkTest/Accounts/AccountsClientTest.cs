@@ -510,7 +510,7 @@ namespace Checkout.Accounts
             var request = new AccountsFileRequest();
             var responseObject = new UploadFileResponse { Id = "file_id" };
 
-            _apiClient
+            _apiFilesClient
                 .Setup(x =>
                     x.Post<UploadFileResponse>(
                         "entities/entity_id/files",
@@ -531,7 +531,7 @@ namespace Checkout.Accounts
         {
             var responseObject = new FileDetailsResponse { Id = "file_id" };
 
-            _apiClient
+            _apiFilesClient
                 .Setup(x =>
                     x.Get<FileDetailsResponse>(
                         "entities/entity_id/files/file_id",

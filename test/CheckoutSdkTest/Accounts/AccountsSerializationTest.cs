@@ -3,8 +3,10 @@ using Checkout.Accounts.Entities.Common.Documents;
 using Checkout.Accounts.Entities.Common;
 using Checkout.Accounts.Entities.Request;
 using Checkout.Common;
+using Newtonsoft.Json.Linq;
 using Shouldly;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Checkout.Accounts
@@ -163,6 +165,150 @@ namespace Checkout.Accounts
 
             json.ShouldContain("\"financial_statements\"");
             json.ShouldContain("\"front\"");
+        }
+
+        // ------------------------------------------------------------------------
+        // Representative documents (company.representatives[].documents)
+        // The EEA Sole Trader (3.0) keys, the company-variant certified authorised
+        // signatory, and the v2.0 US representative identification. The representative
+        // object is strict on the API, so the exact key set matters.
+        // ------------------------------------------------------------------------
+
+        // Regression: EEA Sole Trader (3.0) needs proof_of_residential_address and
+        // proof_of_registration on the representative, with bank_verification alone at the top level.
+        [Fact]
+        public void ShouldSerializeEeaSoleTraderRepresentativeDocuments()
+        {
+            var request = new OnboardEntityRequest
+            {
+                Reference = "ref_sole_trader",
+                Company = new Company
+                {
+                    BusinessType = BusinessType.IndividualOrSoleProprietorship,
+                    Representatives = new List<Representative>
+                    {
+                        new Representative
+                        {
+                            Individual = new Individual { FirstName = "Jane", LastName = "Doe" },
+                            Roles = new List<EntityRoles> { EntityRoles.Ubo },
+                            Documents = BuildEeaSoleTraderRepresentativeDocuments()
+                        }
+                    }
+                },
+                Documents = new Checkout.Accounts.Entities.Common.Documents.Documents
+                {
+                    BankVerification = new BankVerification
+                    {
+                        Type = BankVerificationType.BankStatement, Front = "file_bankverificationaaaaaaaaaa"
+                    }
+                }
+            };
+
+            var body = Serializer.Serialize(request);
+            var json = JObject.Parse(body);
+
+            JToken.DeepEquals(json["company"]["representatives"][0]["documents"], JObject.Parse(@"{
+                ""identity_verification"":        { ""type"": ""passport"",                    ""front"": ""file_identityverificationaaaaaa"" },
+                ""proof_of_residential_address"": { ""type"": ""proof_of_address"",            ""front"": ""file_proofofresidentialaddressa"" },
+                ""proof_of_registration"":        { ""type"": ""extract_from_trade_register"", ""front"": ""file_proofofregistrationaaaaaaa"" }
+            }")).ShouldBeTrue();
+            ((JObject)json["documents"]).Properties().Select(p => p.Name)
+                .ShouldBe(new[] { "bank_verification" });
+
+            // Key-level check on the raw body, so a naming-strategy change cannot pass silently.
+            body.ShouldContain("\"proof_of_residential_address\":{");
+            body.ShouldContain("\"proof_of_registration\":{");
+        }
+
+        [Fact]
+        public void ShouldRoundTripRepresentativeDocuments()
+        {
+            var original = new Representative
+            {
+                Roles = new List<EntityRoles> { EntityRoles.Ubo },
+                Documents = BuildEeaSoleTraderRepresentativeDocuments()
+            };
+
+            var deserialized = (Representative)Serializer
+                .Deserialize(Serializer.Serialize(original), typeof(Representative));
+
+            var documents = deserialized.Documents;
+            documents.IdentityVerification.Type.ShouldBe(IdentityVerificationType.Passport);
+            documents.IdentityVerification.Front.ShouldBe("file_identityverificationaaaaaa");
+            documents.ProofOfResidentialAddress.Type.ShouldBe(ProofOfResidentialAddressType.ProofOfAddress);
+            documents.ProofOfResidentialAddress.Front.ShouldBe("file_proofofresidentialaddressa");
+            documents.ProofOfRegistration.Type.ShouldBe(ProofOfRegistrationType.ExtractFromTradeRegister);
+            documents.ProofOfRegistration.Front.ShouldBe("file_proofofregistrationaaaaaaa");
+        }
+
+        [Fact]
+        public void ShouldDeserializeProofOfRegistrationOtherType()
+        {
+            const string json =
+                @"{ ""proof_of_registration"": { ""type"": ""other"", ""front"": ""file_proofofregistrationaaaaaaa"" } }";
+
+            var documents = (Checkout.Accounts.Entities.Common.Documents.Documents)Serializer
+                .Deserialize(json, typeof(Checkout.Accounts.Entities.Common.Documents.Documents));
+
+            documents.ProofOfRegistration.Type.ShouldBe(ProofOfRegistrationType.Other);
+        }
+
+        [Fact]
+        public void ShouldSerializeCertifiedAuthorisedSignatoryWithTypeAndFrontOnly()
+        {
+            var representative = new Representative
+            {
+                Roles = new List<EntityRoles> { EntityRoles.LegalRepresentative },
+                Documents = new Checkout.Accounts.Entities.Common.Documents.Documents
+                {
+                    CertifiedAuthorisedSignatory = new CertifiedAuthorisedSignatory
+                    {
+                        Type = CertifiedAuthorisedSignatoryType.PowerOfAttorney,
+                        Front = "file_signatoryaaaaaaaaaaaaaaaaa"
+                    }
+                }
+            };
+
+            var json = JObject.Parse(Serializer.Serialize(representative));
+
+            JToken.DeepEquals(json["documents"], JObject.Parse(@"{
+                ""certified_authorised_signatory"": { ""type"": ""power_of_attorney"", ""front"": ""file_signatoryaaaaaaaaaaaaaaaaa"" }
+            }")).ShouldBeTrue();
+        }
+
+        [Fact]
+        public void ShouldSerializeV2UsRepresentativeIdentification()
+        {
+            var representative = new Representative
+            {
+                FirstName = "John",
+                LastName = "Doe",
+                Identification = new Identification { NationalIdNumber = "123456789" }
+            };
+
+            var json = JObject.Parse(Serializer.Serialize(representative));
+
+            JToken.DeepEquals(json["identification"], JObject.Parse(@"{ ""national_id_number"": ""123456789"" }"))
+                .ShouldBeTrue();
+        }
+
+        private static Checkout.Accounts.Entities.Common.Documents.Documents BuildEeaSoleTraderRepresentativeDocuments()
+        {
+            return new Checkout.Accounts.Entities.Common.Documents.Documents
+            {
+                IdentityVerification = new IdentityVerification
+                {
+                    Type = IdentityVerificationType.Passport, Front = "file_identityverificationaaaaaa"
+                },
+                ProofOfResidentialAddress = new ProofOfResidentialAddress
+                {
+                    Type = ProofOfResidentialAddressType.ProofOfAddress, Front = "file_proofofresidentialaddressa"
+                },
+                ProofOfRegistration = new ProofOfRegistration
+                {
+                    Type = ProofOfRegistrationType.ExtractFromTradeRegister, Front = "file_proofofregistrationaaaaaaa"
+                }
+            };
         }
 
         // ------------------------------------------------------------------------

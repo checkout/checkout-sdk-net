@@ -630,6 +630,149 @@ namespace Checkout.Accounts
             instrumentResponse.Id.ShouldNotBeNull();
         }
 
+        // The representative's documents on schema 3.0. The sandbox platform resolves to a company
+        // variant (GB/US scope, USD only), where identity_verification and
+        // certified_authorised_signatory are the representative documents the API accepts; the EEA
+        // Sole Trader keys are covered by AccountsSerializationTest, since this platform rejects them.
+        [Fact]
+        public async Task ShouldCreateEntityWithRepresentativeDocuments()
+        {
+            CheckoutApi api = GetAccountsCheckoutApi();
+
+            var identityFile = await SubmitAccountsFile(api, AccountsFilePurpose.IdentityVerification);
+            var signatoryFile = await SubmitAccountsFile(api, AccountsFilePurpose.CertifiedAuthorisedSignatory);
+
+            var entityRequest = BuildCompanyV3Request();
+            entityRequest.Company.Representatives[0].Documents = new Entities.Common.Documents.Documents
+            {
+                IdentityVerification = new IdentityVerification
+                {
+                    Type = IdentityVerificationType.Passport, Front = identityFile.Id
+                },
+                CertifiedAuthorisedSignatory = new CertifiedAuthorisedSignatory
+                {
+                    Type = CertifiedAuthorisedSignatoryType.PowerOfAttorney, Front = signatoryFile.Id
+                }
+            };
+
+            var entityResponse = await api.AccountsClient().CreateEntity(entityRequest);
+            entityResponse.ShouldNotBeNull();
+            entityResponse.Id.ShouldNotBeNull();
+
+            // The documents are linked on the representative, not dropped: the API echoes them back.
+            var details = await api.AccountsClient().GetEntity(entityResponse.Id);
+            var linked = details.Company.Representatives[0].Documents;
+            linked.IdentityVerification.Type.ShouldBe(IdentityVerificationType.Passport);
+            linked.IdentityVerification.Front.ShouldBe(identityFile.Id);
+            linked.CertifiedAuthorisedSignatory.Type.ShouldBe(CertifiedAuthorisedSignatoryType.PowerOfAttorney);
+            linked.CertifiedAuthorisedSignatory.Front.ShouldBe(signatoryFile.Id);
+        }
+
+        // The two EEA Sole Trader representative documents need their own upload purposes before
+        // they can be linked. Goes through POST /entities/{id}/files, the endpoint whose request
+        // schema (PlatformsFileUpload) defines the purpose enum.
+        [Fact]
+        public async Task ShouldUploadRepresentativeProofFiles()
+        {
+            CheckoutApi api = GetAccountsCheckoutApi();
+            var entityResponse = await api.AccountsClient().CreateEntity(BuildCompanyV3Request());
+
+            foreach (var purpose in new[]
+                     {
+                         AccountsFilePurpose.ProofOfResidentialAddress, AccountsFilePurpose.ProofOfRegistration
+                     })
+            {
+                var uploadResponse = await api.AccountsClient()
+                    .UploadFile(entityResponse.Id, new AccountsFileRequest { Purpose = purpose });
+                uploadResponse.ShouldNotBeNull();
+                uploadResponse.Id.ShouldNotBeNull();
+
+                var fileDetails = await api.AccountsClient().RetrieveFile(entityResponse.Id, uploadResponse.Id);
+                fileDetails.ShouldNotBeNull();
+                fileDetails.Purpose.ShouldBe(purpose);
+            }
+        }
+
+        // A schema 3.0 company request the sandbox platform accepts: every currency sits inside its
+        // USD-only currency scope, including the processing details currency.
+        private static OnboardEntityRequest BuildCompanyV3Request()
+        {
+            return new OnboardEntityRequest
+            {
+                Reference = RandomString(15),
+                ContactDetails = new ContactDetails
+                {
+                    Phone = new Phone { CountryCode = "GB", Number = "2072343000" },
+                    EmailAddresses = new EmailAddresses { Primary = GenerateRandomEmail() }
+                },
+                Profile = new Profile
+                {
+                    Urls = new List<string> { "https://www.example-test-entity.com" },
+                    Mccs = new List<string> { "0742" },
+                    DefaultHoldingCurrency = Currency.USD,
+                    HoldingCurrencies = new List<Currency> { Currency.USD }
+                },
+                Company = new Company
+                {
+                    BusinessRegistrationNumber = "01234567",
+                    BusinessType = BusinessType.LimitedCompany,
+                    LegalName = "Test Sub-Entity Company Inc.",
+                    TradingName = "Test Sub-Entity Trading",
+                    DateOfIncorporation = new DateOfIncorporation { Day = 1, Month = 6, Year = 2010 },
+                    PrincipalAddress = GetAddress(),
+                    RegisteredAddress = GetAddress(),
+                    Representatives = new List<Representative>
+                    {
+                        new Representative
+                        {
+                            Individual = new Individual
+                            {
+                                FirstName = "John",
+                                LastName = "Representative",
+                                DateOfBirth = new DateOfBirth { Day = 5, Month = 6, Year = 1996 },
+                                PlaceOfBirth = new PlaceOfBirth { Country = CountryCode.GB },
+                                Address = GetAddress()
+                            },
+                            Roles = new List<EntityRoles>
+                            {
+                                EntityRoles.Ubo, EntityRoles.AuthorisedSignatory,
+                                EntityRoles.Director, EntityRoles.ControlPerson
+                            }
+                        }
+                    }
+                },
+                ProcessingDetails = new ProcessingDetails
+                {
+                    AnnualProcessingVolume = 1000000,
+                    AverageTransactionValue = 5000,
+                    AverageOrderFulfillmentTime = 3,
+                    Currency = Currency.USD,
+                    TargetCountries = new List<string> { "GB" },
+                    Payments = new ProcessingDetailsPayments
+                    {
+                        Ach = new ProcessingDetailsAch
+                        {
+                            AnnualAchVolume = 1000000,
+                            AverageAchTransactionSize = 5000,
+                            EstimatedMonthlyCreditVolume = 100000,
+                            AverageCreditAmount = 5000
+                        }
+                    }
+                }
+            };
+        }
+
+        private static async Task<IdResponse> SubmitAccountsFile(CheckoutApi api, AccountsFilePurpose purpose)
+        {
+            var fileResponse = await api.AccountsClient().SubmitFile(new AccountsFileRequest
+            {
+                File = "./Resources/checkout.jpeg", ContentType = new ContentType("image/jpeg"), Purpose = purpose
+            });
+            fileResponse.ShouldNotBeNull();
+            fileResponse.Id.ShouldNotBeNull();
+            return fileResponse;
+        }
+
         private static ContactDetails BuildContactDetails()
         {
             return new ContactDetails
@@ -818,7 +961,7 @@ namespace Checkout.Accounts
                 .ClientCredentials(
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_ID"),
                     System.Environment.GetEnvironmentVariable("CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_SECRET"))
-                .Scopes(OAuthScope.Accounts)
+                .Scopes(OAuthScope.Accounts, OAuthScope.Files)
                 .LogProvider(logFactory)
                 // The sandbox OAuth clients are not provisioned for the merchant-specific subdomain,
                 // so the token request would come back invalid_client. Opting out explicitly until
