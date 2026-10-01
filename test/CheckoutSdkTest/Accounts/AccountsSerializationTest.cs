@@ -2,6 +2,7 @@ using Checkout.Accounts.Entities.Common.Company;
 using Checkout.Accounts.Entities.Common.Documents;
 using Checkout.Accounts.Entities.Common;
 using Checkout.Accounts.Entities.Request;
+using Checkout.Accounts.Entities.Response;
 using Checkout.Common;
 using Newtonsoft.Json.Linq;
 using Shouldly;
@@ -371,6 +372,32 @@ namespace Checkout.Accounts
                     Type = ProofOfRegistrationType.ExtractFromTradeRegister, Front = "file_proofofregistrationaaaaaaa"
                 }
             };
+        }
+
+        // ------------------------------------------------------------------------
+        // OnboardEntityDetailsResponse.ProcessingDetails
+        // Regression: the amounts are integers in minor units with no maximum. Typed as
+        // int, any value above 2,147,483,647 (about 21.4 million in a two-decimal
+        // currency) made the whole GET /accounts/entities/{id} fail to deserialize.
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldDeserializeProcessingDetailsAmountsAboveIntRange()
+        {
+            const string json = @"{ ""processing_details"": {
+                ""settlement_country"": ""GB"", ""target_countries"": [""GB""], ""currency"": ""USD"",
+                ""annual_processing_volume"": 3000000000,
+                ""average_transaction_value"": 2500000000,
+                ""highest_transaction_value"": 9000000000 } }";
+
+            var response = (OnboardEntityDetailsResponse)Serializer.Deserialize(json, typeof(OnboardEntityDetailsResponse));
+
+            response.ProcessingDetails.AnnualProcessingVolume.ShouldBe(3000000000L);
+            response.ProcessingDetails.AverageTransactionValue.ShouldBe(2500000000L);
+            response.ProcessingDetails.HighestTransactionValue.ShouldBe(9000000000L);
+            response.ProcessingDetails.Currency.ShouldBe(Currency.USD);
+            response.ProcessingDetails.SettlementCountry.ShouldBe("GB");
+            response.ProcessingDetails.TargetCountries.ShouldBe(new[] { "GB" });
         }
 
         // ------------------------------------------------------------------------

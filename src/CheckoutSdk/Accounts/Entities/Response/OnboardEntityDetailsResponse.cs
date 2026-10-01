@@ -1,7 +1,6 @@
 ﻿using Checkout.Accounts.Entities.Common;
 using Checkout.Accounts.Entities.Common.Company;
 using Checkout.Accounts.Entities.Common.ContactDetails;
-using Checkout.Accounts.Entities.Request;
 using Checkout.Common;
 using System.Collections.Generic;
 
@@ -60,9 +59,10 @@ namespace Checkout.Accounts.Entities.Response
         public Individual Individual { get; set; }
 
         /// <summary>
-        /// The sub-entity's expected processing (Accounts API v3.0).
+        /// The sub-entity's expected processing (Accounts API v3.0). Amounts are <c>long</c>; see
+        /// <see cref="EntityProcessingDetails"/>.
         /// </summary>
-        public ProcessingDetails ProcessingDetails { get; set; }
+        public EntityProcessingDetails ProcessingDetails { get; set; }
 
         /// <summary>
         /// The top-level documents used to support the verification of the sub-entity's details.
