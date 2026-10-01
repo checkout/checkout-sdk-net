@@ -219,7 +219,7 @@ namespace Checkout.Accounts
             AccountsFileRequest accountsFileRequest,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("accountsFileRequest", accountsFileRequest);
+            CheckoutUtils.ValidateParams("entityId", entityId, "accountsFileRequest", accountsFileRequest);
             // Served from the Files API host, like SubmitFile; the main API host returns 404.
             return await FilesApiClient.Post<UploadFileResponse>(
                 BuildPath(EntitiesPath, entityId, FilesPath),

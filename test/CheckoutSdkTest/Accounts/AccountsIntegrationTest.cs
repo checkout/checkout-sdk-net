@@ -337,51 +337,26 @@ namespace Checkout.Accounts
             ex.ErrorDetails["id"].ShouldBe(entityId);
         }
 
-        [Fact(Skip = "unavailable")]
+        [Fact]
         public async Task ShouldCreateEntityUploadAndRetrieveFile()
         {
-            var entityRequest = new OnboardEntityRequest
-            {
-                Reference = RandomString(15),
-                Draft = true,
-                ContactDetails =
-                    new ContactDetails
-                    {
-                        Phone = new Phone { CountryCode = "GI", Number = "123456789" },
-                        EmailAddresses = new EmailAddresses { Primary = "admin@example.com" }
-                    },
-                Profile =
-                    new Profile
-                    {
-                        Urls = new List<string> { "http://example.com" },
-                        Mccs = new List<string> { "4814" },
-                        HoldingCurrencies = new List<Currency> { Currency.GBP }
-                    },
-                Company = new Company
-                {
-                    LegalName = "Test Company",
-                    TradingName = "Test Trading",
-                    BusinessRegistrationNumber = "AC123456",
-                    DateOfIncorporation = new DateOfIncorporation { Day = 1, Month = 1, Year = 2020 },
-                    PrincipalAddress = GetAddress(),
-                    RegisteredAddress = GetAddress(),
-                }
-            };
-
-            var entityResponse = await DefaultApi.AccountsClient().CreateEntity(entityRequest, schemaVersion: "2.0");
+            // Onboards through the accounts-scoped client with a request inside the sandbox's USD-only
+            // currency scope: the schema 2.0 request previously used here is rejected at creation.
+            CheckoutApi api = GetAccountsCheckoutApi();
+            var entityResponse = await api.AccountsClient().CreateEntity(BuildCompanyV3Request());
 
             entityResponse.ShouldNotBeNull();
             entityResponse.Id.ShouldNotBeNullOrEmpty();
 
             var fileRequest = new AccountsFileRequest { Purpose = AccountsFilePurpose.IdentityVerification };
 
-            var uploadResponse = await DefaultApi.AccountsClient()
+            var uploadResponse = await api.AccountsClient()
                 .UploadFile(entityResponse.Id, fileRequest);
 
             uploadResponse.ShouldNotBeNull();
             uploadResponse.Id.ShouldNotBeNullOrEmpty();
 
-            var retrievedFile = await DefaultApi.AccountsClient()
+            var retrievedFile = await api.AccountsClient()
                 .RetrieveFile(entityResponse.Id, uploadResponse.Id);
 
             retrievedFile.ShouldNotBeNull();
@@ -528,7 +503,7 @@ namespace Checkout.Accounts
         // Accounts API schema_version 3.0: onboards a company whose representative carries a nested
         // Individual + Roles, plus the required ProcessingDetails. Mirrors the 2.0 test above but uses
         // the SDK default schema (3.0) and the accounts-scoped OAuth client.
-        [Fact(Skip = "Schema 3.0 onboarding pending sandbox account currency-scope confirmation")]
+        [Fact]
         private async Task ShouldCreateAndRetrievePaymentInstrumentCompanyV3()
         {
             CheckoutApi api = GetAccountsCheckoutApi();
@@ -541,8 +516,8 @@ namespace Checkout.Accounts
                     Phone = new Phone { CountryCode = "GB", Number = "2345678910" },
                     EmailAddresses = new EmailAddresses { Primary = GenerateRandomEmail() }
                 },
-                // Holding-currency scope is configured on the platform (USD); processing currency
-                // reflects the sub-entity region (GBP) — the two are independent.
+                // Every currency on this request has to sit inside the platform's currency scope,
+                // which is USD only; that includes the processing details currency below.
                 Profile = new Profile
                 {
                     Urls = new List<string> { "https://www.superheroexample.com" },
@@ -585,7 +560,7 @@ namespace Checkout.Accounts
                     AverageTransactionValue = 5000,
                     AverageOrderFulfillmentTime = 3,
                     HighestTransactionValue = 25000,
-                    Currency = Currency.GBP,
+                    Currency = Currency.USD,
                     SettlementCountry = "GB",
                     TargetCountries = new List<string> { "GB" },
                     Payments = new ProcessingDetailsPayments

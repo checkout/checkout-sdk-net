@@ -71,6 +71,9 @@ namespace Checkout.Accounts.Entities.Common.Company
         /// <summary>
         /// The controlling company, when the representative is a company rather than an individual.
         /// [Required] for a controlling company representative (EEA and GB Company Full (3.0) only).
+        /// The API reads only three fields here, all [Required]: <see cref="Company.LegalName"/>,
+        /// <see cref="Company.TradingName"/> and <see cref="Company.RegisteredAddress"/>. Leave the
+        /// other <see cref="Company"/> properties unset.
         /// </summary>
         public Company Company { get; set; }
 

@@ -507,7 +507,7 @@ namespace Checkout.Accounts
         [Fact]
         private async Task ShouldUploadFile()
         {
-            var request = new AccountsFileRequest();
+            var request = new AccountsFileRequest { Purpose = AccountsFilePurpose.ProofOfRegistration };
             var responseObject = new UploadFileResponse { Id = "file_id" };
 
             _apiFilesClient
@@ -524,6 +524,14 @@ namespace Checkout.Accounts
 
             response.ShouldNotBeNull();
             response.ShouldBe(responseObject);
+        }
+
+        [Fact]
+        private async Task ShouldNotUploadFileWithoutEntityId()
+        {
+            await Should.ThrowAsync<CheckoutArgumentException>(() =>
+                _accountsClient.UploadFile(null,
+                    new AccountsFileRequest { Purpose = AccountsFilePurpose.ProofOfRegistration }));
         }
         
         [Fact]

@@ -20,6 +20,17 @@ namespace Checkout.Accounts.Entities.Common.ContactDetails
         /// On v3.0, <see cref="Phone.CountryCode"/> is required and is the ISO 3166-1 alpha-2 country
         /// where the number is registered (for example "FR"), not the dialling code. v2.0 takes
         /// <see cref="Phone.Number"/> only.
+        /// <see cref="Phone.Number"/> is the number without the country calling code, and its format
+        /// depends on the variant (the shared <see cref="Phone"/> documents the payments rules, not
+        /// these):
+        /// <list type="bullet">
+        /// <item><description>v3.0 EEA: ^[0-9]{6,13}$, min 6 characters, max 13 characters</description></item>
+        /// <item><description>v3.0 GB: ^[0-9]{7,11}$, min 7 characters, max 11 characters</description></item>
+        /// <item><description>v3.0 US and US ISV Seller: ^[1-9][0-9]{9,16}$, min 10 characters, max 16
+        /// characters</description></item>
+        /// <item><description>v2.0: ^[1-9][0-9]{7,15}$, min 8 characters, max 16 characters; on the US
+        /// v2.0 variants ^[2-9]{1}[0-9]{9,15}$, min 10 characters</description></item>
+        /// </list>
         /// </summary>
         public Phone Phone { get; set; }
 

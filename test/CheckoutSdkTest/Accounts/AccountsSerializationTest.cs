@@ -292,6 +292,68 @@ namespace Checkout.Accounts
                 .ShouldBeTrue();
         }
 
+        // Every property of Documents, so a naming-strategy change on any key (the digit in
+        // additional_document1 included) cannot pass silently, then a full round trip.
+        [Fact]
+        public void ShouldSerializeAndRoundTripEveryDocumentsProperty()
+        {
+            const string file = "file_aaaaaaaaaaaaaaaaaaaaaaaaaa";
+            var documents = new Checkout.Accounts.Entities.Common.Documents.Documents
+            {
+                ArticlesOfAssociation = new ArticlesOfAssociation
+                    { Type = ArticlesOfAssociationType.ArticlesOfAssociation, Front = file },
+                ShareholderStructure = new ShareholderStructure
+                    { Type = ShareholderStructureType.CertifiedShareholderStructure, Front = file },
+                CompanyVerification = new CompanyVerification
+                    { Type = CompanyVerificationType.IncorporationDocument, Front = file },
+                BankVerification = new BankVerification { Type = BankVerificationType.BankStatement, Front = file },
+                ProofOfLegality = new ProofOfLegality { Type = ProofOfLegalityType.ProofOfLegality, Front = file },
+                ProofOfPrincipalAddress = new ProofOfPrincipalAddress
+                    { Type = ProofOfPrincipalAddressType.ProofOfAddress, Front = file },
+                AdditionalDocument1 = new AdditionalDocument { Front = file },
+                AdditionalDocument2 = new AdditionalDocument { Front = file },
+                AdditionalDocument3 = new AdditionalDocument { Front = file },
+                TaxVerification = new TaxVerification { Type = TaxVerificationType.EinLetter, Front = file },
+                FinancialVerification = new FinancialVerification
+                    { Type = FinancialVerificationType.FinancialStatement, Front = file },
+                FinancialStatements = new FinancialStatements
+                    { Type = FinancialStatementsType.FinancialStatements, Front = file },
+                IdentityVerification = new IdentityVerification
+                    { Type = IdentityVerificationType.Passport, Front = file, Back = file },
+                CertifiedAuthorisedSignatory = new CertifiedAuthorisedSignatory
+                    { Type = CertifiedAuthorisedSignatoryType.PowerOfAttorney, Front = file },
+                ProofOfResidentialAddress = new ProofOfResidentialAddress
+                    { Type = ProofOfResidentialAddressType.ProofOfAddress, Front = file },
+                ProofOfRegistration = new ProofOfRegistration
+                    { Type = ProofOfRegistrationType.ExtractFromTradeRegister, Front = file }
+            };
+
+            var json = Serializer.Serialize(documents);
+
+            JToken.DeepEquals(JObject.Parse(json), JObject.Parse(@"{
+                ""articles_of_association"":        { ""type"": ""articles_of_association"",         ""front"": ""file_aaaaaaaaaaaaaaaaaaaaaaaaaa"" },
+                ""shareholder_structure"":          { ""type"": ""certified_shareholder_structure"", ""front"": ""file_aaaaaaaaaaaaaaaaaaaaaaaaaa"" },
+                ""company_verification"":           { ""type"": ""incorporation_document"",          ""front"": ""file_aaaaaaaaaaaaaaaaaaaaaaaaaa"" },
+                ""bank_verification"":              { ""type"": ""bank_statement"",                  ""front"": ""file_aaaaaaaaaaaaaaaaaaaaaaaaaa"" },
+                ""proof_of_legality"":              { ""type"": ""proof_of_legality"",               ""front"": ""file_aaaaaaaaaaaaaaaaaaaaaaaaaa"" },
+                ""proof_of_principal_address"":     { ""type"": ""proof_of_address"",                ""front"": ""file_aaaaaaaaaaaaaaaaaaaaaaaaaa"" },
+                ""additional_document1"":           { ""front"": ""file_aaaaaaaaaaaaaaaaaaaaaaaaaa"" },
+                ""additional_document2"":           { ""front"": ""file_aaaaaaaaaaaaaaaaaaaaaaaaaa"" },
+                ""additional_document3"":           { ""front"": ""file_aaaaaaaaaaaaaaaaaaaaaaaaaa"" },
+                ""tax_verification"":               { ""type"": ""ein_letter"",                      ""front"": ""file_aaaaaaaaaaaaaaaaaaaaaaaaaa"" },
+                ""financial_verification"":         { ""type"": ""financial_statement"",             ""front"": ""file_aaaaaaaaaaaaaaaaaaaaaaaaaa"" },
+                ""financial_statements"":           { ""type"": ""financial_statements"",            ""front"": ""file_aaaaaaaaaaaaaaaaaaaaaaaaaa"" },
+                ""identity_verification"":          { ""type"": ""passport"", ""front"": ""file_aaaaaaaaaaaaaaaaaaaaaaaaaa"", ""back"": ""file_aaaaaaaaaaaaaaaaaaaaaaaaaa"" },
+                ""certified_authorised_signatory"": { ""type"": ""power_of_attorney"",               ""front"": ""file_aaaaaaaaaaaaaaaaaaaaaaaaaa"" },
+                ""proof_of_residential_address"":   { ""type"": ""proof_of_address"",                ""front"": ""file_aaaaaaaaaaaaaaaaaaaaaaaaaa"" },
+                ""proof_of_registration"":          { ""type"": ""extract_from_trade_register"",     ""front"": ""file_aaaaaaaaaaaaaaaaaaaaaaaaaa"" }
+            }")).ShouldBeTrue(json);
+
+            var roundTripped = (Checkout.Accounts.Entities.Common.Documents.Documents)Serializer
+                .Deserialize(json, typeof(Checkout.Accounts.Entities.Common.Documents.Documents));
+            Serializer.Serialize(roundTripped).ShouldBe(json);
+        }
+
         private static Checkout.Accounts.Entities.Common.Documents.Documents BuildEeaSoleTraderRepresentativeDocuments()
         {
             return new Checkout.Accounts.Entities.Common.Documents.Documents
