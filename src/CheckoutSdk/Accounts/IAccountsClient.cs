@@ -76,15 +76,46 @@ namespace Checkout.Accounts
             UpdateScheduleRequest updateScheduleRequest,
             CancellationToken cancellationToken = default);
         
+        /// <summary>
+        /// Uploads a file to the Files API (POST /files on the Files host), as a multipart request.
+        /// The returned ID is what document <c>front</c> and <c>back</c> properties take.
+        /// </summary>
+        /// <param name="accountsFileRequest">The path to the file, its content type, and its purpose.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>The ID of the uploaded file.</returns>
         Task<IdResponse> SubmitFile(
             AccountsFileRequest accountsFileRequest,
             CancellationToken cancellationToken = default);
-        
+
+        /// <summary>
+        /// Creates a file upload for a sub-entity (POST /entities/{entityId}/files on the Files host).
+        /// The response carries the file ID and an upload link; the file content itself is sent to
+        /// that link, not in this request.
+        /// The endpoint takes <see cref="AccountsFileRequest.Purpose"/> only; leave
+        /// <see cref="Common.AbstractFileRequest.File"/> and
+        /// <see cref="Common.AbstractFileRequest.ContentType"/> unset.
+        /// <see cref="AccountsFileRequest.Purpose"/> is required by the API, and because it is a
+        /// non-nullable enum an unset value is sent as its default,
+        /// <see cref="AccountsFilePurpose.AdditionalDocument"/>: always set it explicitly.
+        /// </summary>
+        /// <param name="entityId">The ID of the sub-entity.</param>
+        /// <param name="accountsFileRequest">The purpose of the file upload.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>The file ID, the maximum size allowed, the MIME types allowed for the purpose, and the
+        /// upload link.</returns>
         Task<UploadFileResponse> UploadFile(
             string entityId,
             AccountsFileRequest accountsFileRequest,
             CancellationToken cancellationToken = default);
-        
+
+        /// <summary>
+        /// Retrieves the details of a sub-entity's file (GET /entities/{entityId}/files/{fileId} on the
+        /// Files host).
+        /// </summary>
+        /// <param name="entityId">The ID of the sub-entity.</param>
+        /// <param name="fileId">The ID of the file.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>The file's status, size, MIME type, upload date and purpose.</returns>
         Task<FileDetailsResponse> RetrieveFile(
             string entityId,
             string fileId,

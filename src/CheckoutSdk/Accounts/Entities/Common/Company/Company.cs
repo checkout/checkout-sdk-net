@@ -1,4 +1,5 @@
 using Checkout.Common;
+using System;
 using System.Collections.Generic;
 
 namespace Checkout.Accounts.Entities.Common.Company
@@ -78,8 +79,10 @@ namespace Checkout.Accounts.Entities.Common.Company
         // Unknown
 
         /// <summary>
-        /// A legal document used to verify the company.
+        /// Not defined by any Accounts API company schema; the API does not read it. Company documents
+        /// go on the top-level request documents instead. Retained so existing code keeps compiling.
         /// </summary>
+        [Obsolete("Not defined by any Accounts API company schema. Will be removed in a future major version.")]
         public EntityDocument Document { get; set; }
 
         /// <summary>

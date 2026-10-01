@@ -162,17 +162,11 @@ namespace Checkout.Accounts
                             Roles = new List<EntityRoles> {EntityRoles.Ubo}
                         }
                     },
-                    Document = new EntityDocument(),
                     FinancialDetails = new FinancialDetails
                     {
                         AnnualProcessingVolume = 1,
                         AverageTransactionValue = 1,
-                        HighestTransactionValue = 1,
-                        Documents = new FinancialDocuments
-                        {
-                            BankStatement = new EntityDocument(),
-                            FinancialStatement = new EntityDocument()
-                        }
+                        HighestTransactionValue = 1
                     }
                 },
                 Individual = null
@@ -229,17 +223,11 @@ namespace Checkout.Accounts
                             Roles = new List<EntityRoles> {EntityRoles.Ubo}
                         }
                     },
-                    Document = new EntityDocument(),
                     FinancialDetails = new FinancialDetails
                     {
                         AnnualProcessingVolume = 1,
                         AverageTransactionValue = 1,
-                        HighestTransactionValue = 1,
-                        Documents = new FinancialDocuments
-                        {
-                            BankStatement = new EntityDocument(),
-                            FinancialStatement = new EntityDocument()
-                        }
+                        HighestTransactionValue = 1
                     }
                 },
                 Individual = null
@@ -507,10 +495,10 @@ namespace Checkout.Accounts
         [Fact]
         private async Task ShouldUploadFile()
         {
-            var request = new AccountsFileRequest();
+            var request = new AccountsFileRequest { Purpose = AccountsFilePurpose.ProofOfRegistration };
             var responseObject = new UploadFileResponse { Id = "file_id" };
 
-            _apiClient
+            _apiFilesClient
                 .Setup(x =>
                     x.Post<UploadFileResponse>(
                         "entities/entity_id/files",
@@ -525,13 +513,21 @@ namespace Checkout.Accounts
             response.ShouldNotBeNull();
             response.ShouldBe(responseObject);
         }
+
+        [Fact]
+        private async Task ShouldNotUploadFileWithoutEntityId()
+        {
+            await Should.ThrowAsync<CheckoutArgumentException>(() =>
+                _accountsClient.UploadFile(null,
+                    new AccountsFileRequest { Purpose = AccountsFilePurpose.ProofOfRegistration }));
+        }
         
         [Fact]
         private async Task ShouldRetrieveFile()
         {
             var responseObject = new FileDetailsResponse { Id = "file_id" };
 
-            _apiClient
+            _apiFilesClient
                 .Setup(x =>
                     x.Get<FileDetailsResponse>(
                         "entities/entity_id/files/file_id",

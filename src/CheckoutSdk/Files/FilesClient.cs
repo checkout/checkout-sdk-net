@@ -19,6 +19,12 @@ namespace Checkout.Files
 
         private readonly IApiClient _filesApiClient;
 
+        /// <summary>
+        /// The client for the Files API host (files.checkout.com / files.sandbox.checkout.com), for
+        /// endpoints the spec serves from there rather than from the main API host.
+        /// </summary>
+        protected IApiClient FilesApiClient => _filesApiClient;
+
         public FilesClient(
             IApiClient apiClient,
             IApiClient filesApiClient,
