@@ -242,7 +242,6 @@ namespace Checkout.Accounts
                         Zip = "W1T 4TJ",
                         Country = CountryCode.GB
                     },
-                    NationalTaxId = "TAX123456",
                     DateOfBirth = new DateOfBirth { Day = 5, Month = 6, Year = 1996 },
                     Identification = new Identification { NationalIdNumber = "AB123456C" },
                 },
@@ -273,7 +272,6 @@ namespace Checkout.Accounts
             entityDetailsResponse.Individual.FirstName.ShouldBe(onboardEntityRequest.Individual.FirstName);
             entityDetailsResponse.Individual.LastName.ShouldBe(onboardEntityRequest.Individual.LastName);
             entityDetailsResponse.Individual.TradingName.ShouldBe(onboardEntityRequest.Individual.TradingName);
-            entityDetailsResponse.Individual.NationalTaxId.ShouldBe(onboardEntityRequest.Individual.NationalTaxId);
 
             onboardEntityRequest.Individual.FirstName = "John";
 
@@ -313,7 +311,6 @@ namespace Checkout.Accounts
                         Zip = "W1T 4TJ",
                         Country = CountryCode.GB
                     },
-                    NationalTaxId = "TAX123456",
                     DateOfBirth = new DateOfBirth { Day = 5, Month = 6, Year = 1996 },
                     Identification = new Identification { NationalIdNumber = "AB123456C" },
                 },

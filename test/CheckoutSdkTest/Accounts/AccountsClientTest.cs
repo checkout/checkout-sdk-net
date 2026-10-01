@@ -162,17 +162,11 @@ namespace Checkout.Accounts
                             Roles = new List<EntityRoles> {EntityRoles.Ubo}
                         }
                     },
-                    Document = new EntityDocument(),
                     FinancialDetails = new FinancialDetails
                     {
                         AnnualProcessingVolume = 1,
                         AverageTransactionValue = 1,
-                        HighestTransactionValue = 1,
-                        Documents = new FinancialDocuments
-                        {
-                            BankStatement = new EntityDocument(),
-                            FinancialStatement = new EntityDocument()
-                        }
+                        HighestTransactionValue = 1
                     }
                 },
                 Individual = null
@@ -229,17 +223,11 @@ namespace Checkout.Accounts
                             Roles = new List<EntityRoles> {EntityRoles.Ubo}
                         }
                     },
-                    Document = new EntityDocument(),
                     FinancialDetails = new FinancialDetails
                     {
                         AnnualProcessingVolume = 1,
                         AverageTransactionValue = 1,
-                        HighestTransactionValue = 1,
-                        Documents = new FinancialDocuments
-                        {
-                            BankStatement = new EntityDocument(),
-                            FinancialStatement = new EntityDocument()
-                        }
+                        HighestTransactionValue = 1
                     }
                 },
                 Individual = null
