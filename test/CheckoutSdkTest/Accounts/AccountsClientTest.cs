@@ -485,7 +485,9 @@ namespace Checkout.Accounts
                 {
                     File = "./Resources/checkout.jpeg",
                     ContentType = null,
+#pragma warning disable CS0618 // retained to keep covering the deprecated purpose
                     Purpose = AccountsFilePurpose.Identification
+#pragma warning restore CS0618
                 });
 
             response.ShouldNotBeNull();

@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Checkout.Accounts
 {
@@ -19,6 +20,11 @@ namespace Checkout.Accounts
         [EnumMember(Value = "company_ownership")]
         CompanyOwnership,
 
+        /// <summary>
+        /// Not an onboarding upload purpose: the Accounts API file upload does not accept
+        /// <c>identification</c>. Use <see cref="IdentityVerification"/> for identity documents.
+        /// </summary>
+        [Obsolete("Not an Accounts API onboarding upload purpose. Use IdentityVerification instead. Will be removed in a future major version.")]
         [EnumMember(Value = "identification")]
         Identification,
         

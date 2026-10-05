@@ -41,10 +41,13 @@ namespace Checkout.Accounts.Entities.Common.Company
         public IList<EntityRoles> Roles { get; set; }
 
         /// <summary>
-        /// Verification documents for the individual representative. The API validates this object
-        /// strictly on v3.0: it accepts only <c>identity_verification</c>,
-        /// <c>certified_authorised_signatory</c>, <c>proof_of_residential_address</c> and
-        /// <c>proof_of_registration</c>, and rejects any other key. See
+        /// Verification documents for the individual representative. The schema defines only
+        /// <c>identity_verification</c>, <c>certified_authorised_signatory</c> (EEA, GB and US Company
+        /// Full (3.0) and US ISV Seller Company (3.0)), <c>proof_of_residential_address</c> and
+        /// <c>proof_of_registration</c> (EEA Sole Trader Full (3.0)). The API validates it strictly,
+        /// rejecting any key the variant does not define, only on the EEA, GB and US Company Full (3.0)
+        /// person of interest and the EEA, GB and US Sole Trader Full (3.0) variants; it is not strict
+        /// on the US ISV Seller variants (3.0) or on any v2.0 variant. See
         /// <see cref="Documents.Documents"/> for which apply to each variant.
         /// [Required] for the EEA, GB and US Sole Trader Full (3.0) variants and EEA Company Full
         /// (2.0); [Optional] otherwise.

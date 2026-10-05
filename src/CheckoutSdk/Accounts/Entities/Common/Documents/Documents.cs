@@ -8,9 +8,13 @@ namespace Checkout.Accounts.Entities.Common.Documents
     /// The API ignores keys it does not recognise here rather than rejecting them, so a misplaced
     /// document is dropped silently.</description></item>
     /// <item><description>A representative's <c>documents</c> (<see cref="Company.Representative.Documents"/>).
-    /// This object is strict: it accepts only <see cref="IdentityVerification"/>,
-    /// <see cref="CertifiedAuthorisedSignatory"/>, <see cref="ProofOfResidentialAddress"/> and
-    /// <see cref="ProofOfRegistration"/>, and rejects any other key.</description></item>
+    /// It defines only <see cref="IdentityVerification"/>, <see cref="CertifiedAuthorisedSignatory"/>
+    /// (EEA, GB and US Company Full (3.0) and US ISV Seller Company (3.0)),
+    /// <see cref="ProofOfResidentialAddress"/> and <see cref="ProofOfRegistration"/> (EEA Sole Trader
+    /// Full (3.0)). The schema is strict, rejecting any key the variant does not define, only on the
+    /// EEA, GB and US Company Full (3.0) person of interest and the EEA, GB and US Sole Trader Full
+    /// (3.0) variants; it is not strict on the US ISV Seller variants (3.0) or on any v2.0
+    /// variant.</description></item>
     /// </list>
     /// Each property below says which of the two it belongs to.
     /// </summary>

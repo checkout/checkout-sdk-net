@@ -9,7 +9,9 @@ namespace Checkout.Accounts.Entities.Common.ContactDetails
     {
         /// <summary>
         /// The details of the user responsible for onboarding the sub-entity.
-        /// [Optional] (not part of the US ISV Seller variants)
+        /// [Required] in the hosted onboarding invite request, together with <c>reference</c> and
+        /// <c>is_draft</c>, where it is the only contact detail; [Optional] in the full onboarding
+        /// requests (every Full and Lite variant); not part of the US ISV Seller variants.
         /// </summary>
         public Invitee Invitee { get; set; }
 
