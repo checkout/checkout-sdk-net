@@ -391,5 +391,67 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
             json.ShouldNotContain("T13:59");
             json.ShouldNotContain("T23:59:59");
         }
+
+        // ------------------------------------------------------------------------
+        // Risk
+        // Returns the payment's risk assessment results. score is type number,
+        // min 0, max 100, so a fractional value must deserialize without rounding.
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldDeserializeRiskWithFractionalScoreWithoutRounding()
+        {
+            const string json = "{\"id\":\"pay_123\",\"risk\":{\"flagged\":true,\"score\":22.5}}";
+
+            var response = (RequestAPaymentOrPayoutResponseCreated)new JsonSerializer()
+                .Deserialize(json, typeof(RequestAPaymentOrPayoutResponseCreated));
+
+            response.Risk.ShouldNotBeNull();
+            response.Risk.Flagged.ShouldBe(true);
+            response.Risk.Score.ShouldBe(22.5);
+        }
+
+        [Fact]
+        public void ShouldDeserializeRiskSwaggerExample()
+        {
+            const string json = "{\"id\":\"pay_123\",\"risk\":{\"flagged\":true,\"score\":22}}";
+
+            var response = (RequestAPaymentOrPayoutResponseCreated)new JsonSerializer()
+                .Deserialize(json, typeof(RequestAPaymentOrPayoutResponseCreated));
+
+            response.Risk.Score.ShouldBe(22.0);
+        }
+
+        [Fact]
+        public void ShouldDeserializeRiskBoundaryScores()
+        {
+            var serializer = new JsonSerializer();
+
+            ((Risk.Risk)serializer.Deserialize("{\"score\":0}", typeof(Risk.Risk))).Score.ShouldBe(0.0);
+            ((Risk.Risk)serializer.Deserialize("{\"score\":100}", typeof(Risk.Risk))).Score.ShouldBe(100.0);
+        }
+
+        [Fact]
+        public void ShouldDeserializeRiskWithNullScore()
+        {
+            var risk = (Risk.Risk)new JsonSerializer().Deserialize("{\"flagged\":false}", typeof(Risk.Risk));
+
+            risk.Flagged.ShouldBe(false);
+            risk.Score.ShouldBeNull();
+        }
+
+        [Fact]
+        public void ShouldRoundTripRiskAllProperties()
+        {
+            var serializer = new JsonSerializer();
+            var original = new Risk.Risk { Flagged = true, Score = 22.5 };
+
+            var json = serializer.Serialize(original);
+            var deserialized = (Risk.Risk)serializer.Deserialize(json, typeof(Risk.Risk));
+
+            json.ShouldContain("\"score\":22.5");
+            deserialized.Flagged.ShouldBe(original.Flagged);
+            deserialized.Score.ShouldBe(original.Score);
+        }
     }
 }
