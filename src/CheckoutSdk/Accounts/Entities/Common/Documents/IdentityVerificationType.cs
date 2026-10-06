@@ -2,6 +2,9 @@ using System.Runtime.Serialization;
 
 namespace Checkout.Accounts.Entities.Common.Documents
 {
+    /// <summary>
+    /// The document types accepted to confirm an individual's identity.
+    /// </summary>
     public enum IdentityVerificationType
     {
         [EnumMember(Value = "passport")]
