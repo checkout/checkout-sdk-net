@@ -1,3 +1,5 @@
+// Customer.BillingAddress is obsolete (outside the spec customer) but kept covered until it is removed.
+#pragma warning disable CS0618
 using Checkout.Common;
 using Checkout.Payments.Contexts;
 using Checkout.Payments.Setups.Entities;

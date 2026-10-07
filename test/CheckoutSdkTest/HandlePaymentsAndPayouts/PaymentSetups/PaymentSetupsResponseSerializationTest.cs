@@ -1,3 +1,5 @@
+// Customer.BillingAddress is obsolete (outside the spec customer) but kept covered until it is removed.
+#pragma warning disable CS0618
 using Checkout.Common;
 using Checkout.Payments.Setups.Entities;
 using Checkout.Payments.Setups.Requests;
@@ -458,6 +460,101 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.Customer.Email.ShouldNotBeNull();
             result.Customer.Email.Address.ShouldBe("johnsmith@example.com");
             result.Customer.Email.Verified.ShouldBe(true);
+        }
+
+        // ------------------------------------------------------------------------
+        // Customer
+        // PaymentSetup.customer: all 8 spec properties, including id and country,
+        // which the model did not carry before.
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldRoundTripCustomerWithEveryProperty()
+        {
+            var original = new Customer
+            {
+                Id = "cus_123456789",
+                Country = CountryCode.GB,
+                TaxNumber = "GB123456789",
+                Name = "John Smith",
+                Email = new CustomerEmail { Address = "johnsmith@example.com", Verified = true },
+                Phone = new Phone { CountryCode = "+44", Number = "207 946 0000" },
+                Device = new CustomerDevice
+                {
+                    Locale = "en_GB",
+                    Fingerprint = "fp_abc123xyz",
+                    Ipv4 = "203.0.113.0",
+                    Ipv6 = "2001:db8:85a3::8a2e:370:7334",
+                    Client = CustomerDeviceClient.Web,
+                    Os = CustomerDeviceOs.Android
+                },
+                MerchantAccount = new MerchantAccount
+                {
+                    Id = "acc_123",
+                    RegistrationDate = new DateTime(2023, 1, 15),
+                    LastModified = new DateTime(2024, 3, 10),
+                    ReturningCustomer = true,
+                    FirstTransactionDate = new DateTime(2023, 2, 20),
+                    LastTransactionDate = new DateTime(2024, 3, 9),
+                    TotalOrderCount = 5,
+                    LastPaymentAmount = 1000
+                }
+            };
+
+            var json = Serializer.Serialize(original);
+            var customer = Newtonsoft.Json.Linq.JObject.Parse(json);
+
+            customer.Count.ShouldBe(8);
+            ((string)customer["id"]).ShouldBe("cus_123456789");
+            ((string)customer["country"]).ShouldBe("GB");
+            ((string)customer["tax_number"]).ShouldBe("GB123456789");
+            customer.ContainsKey("billing_address").ShouldBeFalse();
+
+            var copy = (Customer)Serializer.Deserialize(json, typeof(Customer));
+            copy.Id.ShouldBe(original.Id);
+            copy.Country.ShouldBe(original.Country);
+            copy.TaxNumber.ShouldBe(original.TaxNumber);
+            copy.Name.ShouldBe(original.Name);
+            copy.Email.Address.ShouldBe(original.Email.Address);
+            copy.Email.Verified.ShouldBe(original.Email.Verified);
+            copy.Phone.CountryCode.ShouldBe(original.Phone.CountryCode);
+            copy.Phone.Number.ShouldBe(original.Phone.Number);
+            copy.Device.Client.ShouldBe(original.Device.Client);
+            copy.Device.Os.ShouldBe(original.Device.Os);
+            copy.MerchantAccount.Id.ShouldBe(original.MerchantAccount.Id);
+            copy.MerchantAccount.RegistrationDate.ShouldBe(original.MerchantAccount.RegistrationDate);
+            copy.MerchantAccount.LastModified.ShouldBe(original.MerchantAccount.LastModified);
+            copy.MerchantAccount.ReturningCustomer.ShouldBe(original.MerchantAccount.ReturningCustomer);
+            copy.MerchantAccount.FirstTransactionDate.ShouldBe(original.MerchantAccount.FirstTransactionDate);
+            copy.MerchantAccount.LastTransactionDate.ShouldBe(original.MerchantAccount.LastTransactionDate);
+            copy.MerchantAccount.TotalOrderCount.ShouldBe(original.MerchantAccount.TotalOrderCount);
+            copy.MerchantAccount.LastPaymentAmount.ShouldBe(original.MerchantAccount.LastPaymentAmount);
+        }
+
+        [Fact]
+        public void ShouldDeserializeCustomerSwaggerExample()
+        {
+            const string json = @"{
+                ""country"": ""GB"",
+                ""id"": ""cus_123456789"",
+                ""email"": { ""address"": ""johnsmith@example.com"", ""verified"": true },
+                ""name"": ""John Smith"",
+                ""tax_number"": ""GB123456789"",
+                ""phone"": { ""country_code"": ""+44"", ""number"": ""207 946 0000"" },
+                ""device"": { ""locale"": ""en_GB"" }
+            }";
+
+            var customer = (Customer)Serializer.Deserialize(json, typeof(Customer));
+
+            customer.Country.ShouldBe(CountryCode.GB);
+            customer.Id.ShouldBe("cus_123456789");
+            customer.TaxNumber.ShouldBe("GB123456789");
+            customer.Name.ShouldBe("John Smith");
+            customer.Email.Address.ShouldBe("johnsmith@example.com");
+            customer.Email.Verified.ShouldBe(true);
+            customer.Phone.CountryCode.ShouldBe("+44");
+            customer.Phone.Number.ShouldBe("207 946 0000");
+            customer.Device.Locale.ShouldBe("en_GB");
         }
     }
 }

@@ -96,6 +96,96 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             response.Currency.ShouldBe(paymentSetupsRequest.Currency);
         }
 
+        [Fact]
+        public async Task CreatePaymentSetupWithDeviceDetails_ShouldEchoDeviceAndReadEveryStatus()
+        {
+            // Arrange
+            var request = CreateCashAppPaymentSetupsRequest();
+
+            // Act
+            var created = await DefaultApi.PaymentSetupsClient().CreatePaymentSetup(request);
+            var fetched = await DefaultApi.PaymentSetupsClient().GetPaymentSetup(created.Id);
+
+            // Assert
+            var device = fetched.Customer.Device;
+            device.Locale.ShouldBe("en_US");
+            device.Fingerprint.ShouldBe("fp_abc123xyz");
+            device.Ipv4.ShouldBe("203.0.113.0");
+            device.Client.ShouldBe(CustomerDeviceClient.Web);
+            device.Os.ShouldBe(CustomerDeviceOs.Ios);
+
+            // A status value the SDK does not model reads as null and is then dropped on write, so
+            // every payment method the API returned must still carry its status here.
+            var methods = Newtonsoft.Json.Linq.JObject.Parse(new JsonSerializer().Serialize(fetched.PaymentMethods));
+            methods.Count.ShouldBeGreaterThan(0);
+            foreach (var method in methods.Properties())
+            {
+                ((Newtonsoft.Json.Linq.JObject)method.Value).ContainsKey("status")
+                    .ShouldBeTrue(method.Name + " lost its status");
+            }
+        }
+
+        [Fact]
+        public async Task CreatePaymentSetupWithCustomerIdentifiers_ShouldEchoThem()
+        {
+            // Arrange
+            var request = CreateValidPaymentSetupsRequest();
+            request.Customer.Id = "cus_123456789";
+            request.Customer.Country = CountryCode.GB;
+            request.Customer.TaxNumber = "GB123456789";
+
+            // Act
+            var created = await DefaultApi.PaymentSetupsClient().CreatePaymentSetup(request);
+            var fetched = await DefaultApi.PaymentSetupsClient().GetPaymentSetup(created.Id);
+
+            // Assert
+            fetched.Customer.Id.ShouldBe("cus_123456789");
+            fetched.Customer.Country.ShouldBe(CountryCode.GB);
+            fetched.Customer.TaxNumber.ShouldBe("GB123456789");
+        }
+
+        [Fact(Skip = "Requires a sandbox processing channel with Cash App Pay enabled")]
+        public async Task CreatePaymentSetupWithCashApp_ShouldReturnCashAppDetails()
+        {
+            // Arrange
+            var request = CreateCashAppPaymentSetupsRequest();
+
+            // Act
+            var created = await DefaultApi.PaymentSetupsClient().CreatePaymentSetup(request);
+            var fetched = await DefaultApi.PaymentSetupsClient().GetPaymentSetup(created.Id);
+
+            // Assert
+            created.AvailablePaymentMethods.ShouldContain("cashapp");
+            var cashApp = fetched.PaymentMethods.CashApp;
+            cashApp.ShouldNotBeNull();
+            cashApp.Status.ShouldNotBeNull();
+            cashApp.Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
+            cashApp.CustomerProfileSharing.ShouldBe(true);
+        }
+
+        private PaymentSetupsRequest CreateCashAppPaymentSetupsRequest()
+        {
+            var request = CreateValidPaymentSetupsRequest();
+            request.Currency = Currency.USD;
+            request.PaymentMethods = new Checkout.Payments.Setups.Entities.PaymentMethods
+            {
+                CashApp = new CashApp
+                {
+                    Initialization = PaymentMethodInitialization.Enabled,
+                    CustomerProfileSharing = true
+                }
+            };
+            request.Customer.Device = new CustomerDevice
+            {
+                Locale = "en_US",
+                Fingerprint = "fp_abc123xyz",
+                Ipv4 = "203.0.113.0",
+                Client = CustomerDeviceClient.Web,
+                Os = CustomerDeviceOs.Ios
+            };
+            return request;
+        }
+
         private PaymentSetupsRequest CreateValidPaymentSetupsRequest()
         {
             return new PaymentSetupsRequest

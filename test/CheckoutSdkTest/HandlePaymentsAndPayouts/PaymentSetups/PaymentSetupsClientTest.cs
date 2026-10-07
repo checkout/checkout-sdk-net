@@ -131,6 +131,30 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             response.Id.ShouldBe("pay_test_confirm_111");
         }
 
+        [Fact]
+        public async Task ConfirmPaymentSetup_WithCashApp_ShouldCallCashAppConfirmPath()
+        {
+            // Arrange
+            var paymentSetupId = "ps_test_12345";
+            var expectedResponse = new PaymentSetupsConfirmResponse { Id = "pay_test_confirm_cashapp" };
+
+            _apiClient.Setup(apiClient => apiClient.Post<PaymentSetupsConfirmResponse>(
+                    $"payments/setups/{paymentSetupId}/confirm/cashapp",
+                    _authorization,
+                    It.IsAny<object>(),
+                    It.IsAny<CancellationToken>(),
+                    It.IsAny<string>()))
+                .ReturnsAsync(expectedResponse);
+
+            IPaymentSetupsClient paymentSetupsClient = new PaymentSetupsClient(_apiClient.Object, _configuration.Object);
+
+            // Act
+            var response = await paymentSetupsClient.ConfirmPaymentSetup(paymentSetupId, "cashapp");
+
+            // Assert
+            response.ShouldBeSameAs(expectedResponse);
+        }
+
         private PaymentSetupsRequest CreateValidPaymentSetupsRequest()
         {
             return new PaymentSetupsRequest

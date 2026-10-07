@@ -8,19 +8,25 @@ namespace Checkout.Payments.Setups.Entities
     public abstract class PaymentMethodBase
     {
         /// <summary>
-        /// The payment method's status
+        /// The payment method status.
+        /// [Optional]
+        /// readOnly
+        /// Enum: "unavailable" "action_required" "ready" "initialization_required" "invalid"
         /// </summary>
         public PaymentMethodStatus? Status { get; set; }
 
         /// <summary>
-        /// Configuration flags for the payment method
+        /// The list of error codes or indicators that highlight missing or invalid information.
+        /// [Optional]
+        /// readOnly
         /// </summary>
         public IList<string> Flags { get; set; }
 
         /// <summary>
+        /// The initialization state of the payment method. When you create a Payment Setup, this
+        /// defaults to disabled.
+        /// [Optional]
         /// Default: "disabled"
-        /// The initialization state of the payment method.
-        /// When you create a Payment Setup, this defaults to disabled.
         /// Enum: "disabled" "enabled"
         /// </summary>
         public PaymentMethodInitialization Initialization { get; set; } = PaymentMethodInitialization.Disabled;
