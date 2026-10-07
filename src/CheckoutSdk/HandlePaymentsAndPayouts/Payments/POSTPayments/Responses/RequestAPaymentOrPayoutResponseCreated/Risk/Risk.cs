@@ -15,8 +15,9 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
         /// <summary>
         /// The risk score calculated by our Fraud Detection engine. Absent if not enough data provided.
         /// [Optional]
+        /// Decimal number, for example 22.5
         /// [ 0 .. 100 ]
         /// </summary>
-        public int? Score { get; set; }
+        public double? Score { get; set; }
     }
 }
