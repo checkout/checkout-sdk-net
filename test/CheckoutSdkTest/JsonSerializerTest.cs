@@ -1,4 +1,5 @@
 using Checkout.Accounts.Entities.Common.Company;
+using Checkout.Accounts.Entities.Common.Documents;
 using Checkout.Accounts.Entities.Response;
 using Checkout.Common;
 using Checkout.Financial;
@@ -223,6 +224,7 @@ namespace Checkout
                     typeof(OnboardEntityDetailsResponse));
             onboardEntityDetailsResponse.ShouldNotBeNull();
             onboardEntityDetailsResponse.Company.BusinessType.ShouldBeOfType<BusinessType>();
+            ShouldCarryCompanyV3Documents(onboardEntityDetailsResponse);
         }
         
         [Fact]
@@ -234,6 +236,34 @@ namespace Checkout
                     typeof(OnboardEntityDetailsResponse));
             onboardEntityDetailsResponse.ShouldNotBeNull();
             onboardEntityDetailsResponse.Company.BusinessType.ShouldBeOfType<BusinessType>();
+            ShouldCarryCompanyV3Documents(onboardEntityDetailsResponse);
+        }
+
+        // The two Company Full (3.0) fixtures share one document set: the representative's
+        // identity_verification and certified_authorised_signatory, and the top-level company
+        // documents including the three front-only additional documents.
+        private static void ShouldCarryCompanyV3Documents(OnboardEntityDetailsResponse response)
+        {
+            const string fileId = "stringstringstringstringstrings";
+
+            var representativeDocuments = response.Company.Representatives[0].Documents;
+            representativeDocuments.IdentityVerification.Type.ShouldBe(IdentityVerificationType.Passport);
+            representativeDocuments.IdentityVerification.Front.ShouldBe(fileId);
+            representativeDocuments.IdentityVerification.Back.ShouldBe(fileId);
+            representativeDocuments.CertifiedAuthorisedSignatory.Type
+                .ShouldBe(CertifiedAuthorisedSignatoryType.PowerOfAttorney);
+            representativeDocuments.CertifiedAuthorisedSignatory.Front.ShouldBe(fileId);
+
+            var documents = response.Documents;
+            documents.CompanyVerification.Type.ShouldBe(CompanyVerificationType.IncorporationDocument);
+            documents.ArticlesOfAssociation.Type.ShouldBe(ArticlesOfAssociationType.MemorandumOfAssociation);
+            documents.BankVerification.Type.ShouldBe(BankVerificationType.BankStatement);
+            documents.ShareholderStructure.Type.ShouldBe(ShareholderStructureType.CertifiedShareholderStructure);
+            documents.ProofOfLegality.Type.ShouldBe(ProofOfLegalityType.ProofOfLegality);
+            documents.ProofOfPrincipalAddress.Type.ShouldBe(ProofOfPrincipalAddressType.ProofOfAddress);
+            documents.AdditionalDocument1.Front.ShouldBe(fileId);
+            documents.AdditionalDocument2.Front.ShouldBe(fileId);
+            documents.AdditionalDocument3.Front.ShouldBe(fileId);
         }
         
         [Fact]
