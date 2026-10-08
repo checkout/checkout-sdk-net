@@ -14,7 +14,7 @@ namespace Checkout.Balances
         //
         // Covers GET /entities/{entityId}/currency-accounts/{currencyAccountId}/top-up-instructions.
         // Every value below is taken from the spec's field-level "example" values in
-        // shared/swagger-latest.json; the response schema carries no top-level example.
+        // the API reference; the response schema carries no top-level example.
         //
         // The spec is explicit that neither funding rail is guaranteed: TopUpBankDetails declares
         // no "required" array at all, so domestic-only, international-only and empty bank_details
@@ -287,11 +287,10 @@ namespace Checkout.Balances
         // BalancesResponse / CurrencyAccountBalance / Balances / CollateralBreakdown
         //
         // Covers GET /balances/{id}. Values are the spec's field-level "example" values for the
-        // Balance and collateral_breakdown schemas in shared/swagger-latest.json.
+        // Balance and collateral_breakdown schemas in the API reference.
         //
-        // Added when Balance.operational was found missing from the SDK during the INT-1692
-        // review; review-integrity.mdc section 9 requires a serialization test for a new property
-        // on an existing class.
+        // Covers every property, including Balance.Operational, so a property missing from the
+        // model fails here instead of being silently dropped.
         // ------------------------------------------------------------------------
 
         [Fact]
