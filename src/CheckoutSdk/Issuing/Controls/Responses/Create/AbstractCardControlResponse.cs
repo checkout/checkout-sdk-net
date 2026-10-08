@@ -1,3 +1,4 @@
+using Checkout.Common;
 using Checkout.Issuing.Common;
 
 namespace Checkout.Issuing.Controls.Responses.Create
@@ -5,8 +6,10 @@ namespace Checkout.Issuing.Controls.Responses.Create
     /// <summary>
     /// A card control returned by the create, get, list and update control operations,
     /// discriminated on control_type.
+    /// Links (_links, ControlLinks with the self link to the control's details) are returned by the create
+    /// operation only; get, list and update leave Links empty.
     /// </summary>
-    public abstract class AbstractCardControlResponse : HttpMetadata
+    public abstract class AbstractCardControlResponse : Resource
     {
         /// <summary>
         /// The control's type.
