@@ -112,7 +112,8 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             var paymentMethodName = "card";
             var expectedResponse = new PaymentSetupsConfirmResponse { Id = "pay_test_confirm_111" };
 
-            // El método ConfirmPaymentSetup usa Post con 3 parámetros: path, authorization, cancellationToken
+            // IApiClient.Post has five parameters (path, authorization, request, cancellationToken,
+            // idempotencyKey); the mock matches all five, with any request body.
             _apiClient.Setup(apiClient => apiClient.Post<PaymentSetupsConfirmResponse>(
                     $"payments/setups/{paymentSetupId}/confirm/{paymentMethodName}",
                     _authorization,
@@ -129,6 +130,57 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             // Assert
             response.ShouldNotBeNull();
             response.Id.ShouldBe("pay_test_confirm_111");
+        }
+
+        [Fact]
+        public async Task ConfirmPaymentSetup_WithCashApp_ShouldCallCashAppConfirmPath()
+        {
+            // Arrange
+            var paymentSetupId = "ps_test_12345";
+            var expectedResponse = new PaymentSetupsConfirmResponse { Id = "pay_test_confirm_cashapp" };
+
+            _apiClient.Setup(apiClient => apiClient.Post<PaymentSetupsConfirmResponse>(
+                    $"payments/setups/{paymentSetupId}/confirm/cashapp",
+                    _authorization,
+                    It.IsAny<object>(),
+                    It.IsAny<CancellationToken>(),
+                    It.IsAny<string>()))
+                .ReturnsAsync(expectedResponse);
+
+            IPaymentSetupsClient paymentSetupsClient = new PaymentSetupsClient(_apiClient.Object, _configuration.Object);
+
+            // Act
+            var response = await paymentSetupsClient.ConfirmPaymentSetup(paymentSetupId, "cashapp");
+
+            // Assert
+            response.ShouldBeSameAs(expectedResponse);
+        }
+
+        [Fact]
+        public async Task ConfirmPaymentSetup_ShouldSendNoBodyAndPassTheCancellationToken()
+        {
+            // Arrange
+            var paymentSetupId = "ps_test_12345";
+            var expectedResponse = new PaymentSetupsConfirmResponse { Id = "pay_test_confirm_token" };
+            var cancellationToken = new CancellationTokenSource().Token;
+
+            // Exact arguments: the confirm endpoint takes no body, and the caller's token must reach
+            // the HTTP call rather than being bound to the request parameter.
+            _apiClient.Setup(apiClient => apiClient.Post<PaymentSetupsConfirmResponse>(
+                    $"payments/setups/{paymentSetupId}/confirm/cashapp",
+                    _authorization,
+                    null,
+                    cancellationToken,
+                    null))
+                .ReturnsAsync(expectedResponse);
+
+            IPaymentSetupsClient paymentSetupsClient = new PaymentSetupsClient(_apiClient.Object, _configuration.Object);
+
+            // Act
+            var response = await paymentSetupsClient.ConfirmPaymentSetup(paymentSetupId, "cashapp", cancellationToken);
+
+            // Assert
+            response.ShouldBeSameAs(expectedResponse);
         }
 
         private PaymentSetupsRequest CreateValidPaymentSetupsRequest()

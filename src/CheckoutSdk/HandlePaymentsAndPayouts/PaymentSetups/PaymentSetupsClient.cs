@@ -86,8 +86,9 @@ namespace Checkout.Payments.Setups
             return ApiClient.Post<PaymentSetupsConfirmResponse>(
                 BuildPath(PaymentsPath, SetupsPath, id, ConfirmPath, paymentMethodName),
                 SdkAuthorization(),
-                cancellationToken
-            );  
+                request: null,
+                cancellationToken: cancellationToken
+            );
         }
     }
 }

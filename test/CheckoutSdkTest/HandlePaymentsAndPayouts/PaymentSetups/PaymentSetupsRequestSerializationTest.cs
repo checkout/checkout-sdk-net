@@ -1,3 +1,5 @@
+// Customer.BillingAddress is obsolete (outside the spec customer) but kept covered until it is removed.
+#pragma warning disable CS0618
 using Checkout.Common;
 using Checkout.Payments.Contexts;
 using Checkout.Payments.Setups.Entities;
@@ -179,6 +181,18 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             deserialized.PaymentMethods.Paypal.Action.ShouldNotBeNull();
             deserialized.PaymentMethods.Paypal.Action.Type.ShouldBe("redirect");
             deserialized.PaymentMethods.Paypal.Action.OrderId.ShouldBe("PAYPAL-ORD-789");
+
+            // Cash App Pay, customer identifiers and the device fields
+            deserialized.Customer.Id.ShouldBe("cus_123456789");
+            deserialized.Customer.Country.ShouldBe(CountryCode.GB);
+            deserialized.Customer.Device.Fingerprint.ShouldBe("fp_abc123xyz");
+            deserialized.Customer.Device.Ipv4.ShouldBe("203.0.113.0");
+            deserialized.Customer.Device.Ipv6.ShouldBe("2001:db8:85a3::8a2e:370:7334");
+            deserialized.Customer.Device.Client.ShouldBe(CustomerDeviceClient.Web);
+            deserialized.Customer.Device.Os.ShouldBe(CustomerDeviceOs.Android);
+            deserialized.PaymentMethods.CashApp.ShouldNotBeNull();
+            deserialized.PaymentMethods.CashApp.Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
+            deserialized.PaymentMethods.CashApp.CustomerProfileSharing.ShouldBe(true);
         }
 
         [Fact]
@@ -420,6 +434,8 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                 },
                 Customer = new Customer
                 {
+                    Id = "cus_123456789",
+                    Country = CountryCode.GB,
                     Name = "John Doe",
                     TaxNumber = "TAX-123456",
                     Email = new CustomerEmail { Address = "john@example.com", Verified = true },
@@ -429,7 +445,15 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                         AddressLine1 = "1 London St",
                         Country = CountryCode.GB
                     },
-                    Device = new CustomerDevice { Locale = "en-GB" },
+                    Device = new CustomerDevice
+                    {
+                        Locale = "en-GB",
+                        Fingerprint = "fp_abc123xyz",
+                        Ipv4 = "203.0.113.0",
+                        Ipv6 = "2001:db8:85a3::8a2e:370:7334",
+                        Client = CustomerDeviceClient.Web,
+                        Os = CustomerDeviceOs.Android
+                    },
                     MerchantAccount = new MerchantAccount
                     {
                         Id = "cust_001",
@@ -555,6 +579,11 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                             Type = "redirect",
                             OrderId = "PAYPAL-ORD-789"
                         }
+                    },
+                    CashApp = new CashApp
+                    {
+                        Initialization = PaymentMethodInitialization.Enabled,
+                        CustomerProfileSharing = true
                     }
                 }
             };
