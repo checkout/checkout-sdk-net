@@ -216,6 +216,34 @@ namespace Checkout.Issuing.Controls
         }
 
         // ------------------------------------------------------------------------
+        // Create control response (add-control-response)
+        // The create operation also returns _links (ControlLinks).
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldDeserializeLinksForCreateCardControlResponse()
+        {
+            const string json = @"{
+                ""id"": ""ctr_gp7vkmxayztufjz6top5bjcdra"",
+                ""target_id"": ""crd_fa6psq42dcdd6fdn5gifcq1491"",
+                ""description"": ""Allow the card to be used only in AZ Pizza"",
+                ""control_type"": ""mid_limit"",
+                ""is_editable"": true,
+                ""created_date"": ""2023-03-12T18:20:12.0000000+00:00"",
+                ""last_modified_date"": ""2023-03-12T18:20:12.0000000+00:00"",
+                ""mid_limit"": { ""type"": ""allow"", ""mid_list"": [""593278""] },
+                ""_links"": { ""self"": { ""href"": ""https://api.checkout.com/issuing/controls/ctr_gp7vkmxayztufjz6top5bjcdra"" } }
+            }";
+
+            var response = (AbstractCardControlResponse)Serializer.Deserialize(json, typeof(AbstractCardControlResponse));
+
+            var mid = response.ShouldBeOfType<MidCardControlResponse>();
+            AssertBase(mid, IssuingControlType.MidLimit, "Allow the card to be used only in AZ Pizza");
+            mid.GetSelfLink().ShouldNotBeNull();
+            mid.GetSelfLink().Href.ShouldBe("https://api.checkout.com/issuing/controls/ctr_gp7vkmxayztufjz6top5bjcdra");
+        }
+
+        // ------------------------------------------------------------------------
         // CardControlsQueryResponse
         // The list operation returns the same discriminated subtypes.
         // ------------------------------------------------------------------------
