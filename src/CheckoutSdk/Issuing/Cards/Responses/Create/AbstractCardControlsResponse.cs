@@ -1,4 +1,5 @@
 using Checkout.Issuing.Common;
+using System;
 
 namespace Checkout.Issuing.Cards.Responses.Create
 {
@@ -26,9 +27,10 @@ namespace Checkout.Issuing.Cards.Responses.Create
 
         /// <summary>
         /// The ID of the card the control applies to.
-        /// Not defined for card create responses; kept for compatibility and normally null.
+        /// Not returned by the API in this response; still deserialized if present, otherwise null.
         /// [Optional]
         /// </summary>
+        [Obsolete("Not returned by the API in this response. Will be removed in the next major version.")]
         public string TargetId { get; set; }
 
         /// <summary>
@@ -40,16 +42,18 @@ namespace Checkout.Issuing.Cards.Responses.Create
 
         /// <summary>
         /// The date and time the control was created.
-        /// Not defined for card create responses; kept for compatibility and normally null.
+        /// Not returned by the API in this response; still deserialized if present, otherwise null.
         /// [Optional]
         /// </summary>
+        [Obsolete("Not returned by the API in this response. Will be removed in the next major version.")]
         public string CreatedDate { get; set; }
 
         /// <summary>
         /// The date and time the control was last modified.
-        /// Not defined for card create responses; kept for compatibility and normally null.
+        /// Not returned by the API in this response; still deserialized if present, otherwise null.
         /// [Optional]
         /// </summary>
+        [Obsolete("Not returned by the API in this response. Will be removed in the next major version.")]
         public string LastModifiedDate { get; set; }
 
         /// <summary>
