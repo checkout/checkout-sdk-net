@@ -197,7 +197,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             cashApp.Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
             cashApp.CustomerProfileSharing.ShouldBe(true);
             cashApp.Reference.ShouldBe("ORDER-99");
-            cashApp.Action.Type.ShouldBe("redirect");
+            cashApp.Action.Type.ShouldBe(CashAppActionType.Redirect);
             cashApp.Action.RedirectUrl.ShouldBe(RedirectUrl);
 
             var profile = cashApp.CustomerProfile;
@@ -262,17 +262,38 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
 
             var copy = (CashApp)Serializer.Deserialize(json, typeof(CashApp));
             copy.Status.ShouldBe(original.Status);
+            copy.Flags.ShouldBe(original.Flags);
             copy.Initialization.ShouldBe(original.Initialization);
             copy.CustomerProfileSharing.ShouldBe(original.CustomerProfileSharing);
             copy.Reference.ShouldBe(original.Reference);
             copy.Action.Type.ShouldBe(original.Action.Type);
             copy.Action.RedirectUrl.ShouldBe(original.Action.RedirectUrl);
-            copy.CustomerProfile.CustomerId.ShouldBe(original.CustomerProfile.CustomerId);
-            copy.CustomerProfile.BirthDate.ShouldBe(original.CustomerProfile.BirthDate);
-            copy.CustomerProfile.CustomerSince.ShouldBe(original.CustomerProfile.CustomerSince);
-            copy.CustomerProfile.Address.AddressLine1.ShouldBe(original.CustomerProfile.Address.AddressLine1);
-            copy.CustomerProfile.Address.AdministrativeDistrictLevel1.ShouldBe(original.CustomerProfile.Address.AdministrativeDistrictLevel1);
-            copy.CustomerProfile.Address.Country.ShouldBe(original.CustomerProfile.Address.Country);
+
+            var copyProfile = copy.CustomerProfile;
+            var originalProfile = original.CustomerProfile;
+            copyProfile.CustomerId.ShouldBe(originalProfile.CustomerId);
+            copyProfile.Cashtag.ShouldBe(originalProfile.Cashtag);
+            copyProfile.ReferenceId.ShouldBe(originalProfile.ReferenceId);
+            copyProfile.FullName.ShouldBe(originalProfile.FullName);
+            copyProfile.GivenName.ShouldBe(originalProfile.GivenName);
+            copyProfile.MiddleName.ShouldBe(originalProfile.MiddleName);
+            copyProfile.FamilyName.ShouldBe(originalProfile.FamilyName);
+            copyProfile.Suffix.ShouldBe(originalProfile.Suffix);
+            copyProfile.BirthDate.ShouldBe(originalProfile.BirthDate);
+            copyProfile.PhoneNumber.ShouldBe(originalProfile.PhoneNumber);
+            copyProfile.EmailAddress.ShouldBe(originalProfile.EmailAddress);
+            copyProfile.CustomerSince.ShouldBe(originalProfile.CustomerSince);
+
+            var copyAddress = copyProfile.Address;
+            var originalAddress = originalProfile.Address;
+            copyAddress.AddressLine1.ShouldBe(originalAddress.AddressLine1);
+            copyAddress.AddressLine2.ShouldBe(originalAddress.AddressLine2);
+            copyAddress.AddressLine3.ShouldBe(originalAddress.AddressLine3);
+            copyAddress.Locality.ShouldBe(originalAddress.Locality);
+            copyAddress.Sublocality.ShouldBe(originalAddress.Sublocality);
+            copyAddress.AdministrativeDistrictLevel1.ShouldBe(originalAddress.AdministrativeDistrictLevel1);
+            copyAddress.PostalCode.ShouldBe(originalAddress.PostalCode);
+            copyAddress.Country.ShouldBe(originalAddress.Country);
         }
 
         [Fact]
@@ -285,7 +306,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
 
             cashApp.Status.ShouldBe(PaymentMethodStatus.ActionRequired);
             cashApp.Reference.ShouldBe("ORDER-99");
-            cashApp.Action.Type.ShouldBe("redirect");
+            cashApp.Action.Type.ShouldBe(CashAppActionType.Redirect);
             cashApp.Action.RedirectUrl.ShouldBe(RedirectUrl);
         }
 

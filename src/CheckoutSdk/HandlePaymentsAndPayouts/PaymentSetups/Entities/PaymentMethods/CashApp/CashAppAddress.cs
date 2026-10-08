@@ -16,7 +16,7 @@ namespace Checkout.Payments.Setups.Entities
         /// [Optional]
         /// readOnly
         /// </summary>
-        [JsonProperty("address_line_1")]
+        [JsonProperty(PropertyName = "address_line_1")]
         public string AddressLine1 { get; set; }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace Checkout.Payments.Setups.Entities
         /// [Optional]
         /// readOnly
         /// </summary>
-        [JsonProperty("address_line_2")]
+        [JsonProperty(PropertyName = "address_line_2")]
         public string AddressLine2 { get; set; }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace Checkout.Payments.Setups.Entities
         /// [Optional]
         /// readOnly
         /// </summary>
-        [JsonProperty("address_line_3")]
+        [JsonProperty(PropertyName = "address_line_3")]
         public string AddressLine3 { get; set; }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Checkout.Payments.Setups.Entities
         /// [Optional]
         /// readOnly
         /// </summary>
-        [JsonProperty("administrative_district_level_1")]
+        [JsonProperty(PropertyName = "administrative_district_level_1")]
         public string AdministrativeDistrictLevel1 { get; set; }
 
         /// <summary>

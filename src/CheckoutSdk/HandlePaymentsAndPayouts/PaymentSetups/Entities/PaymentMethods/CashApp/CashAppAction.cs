@@ -11,7 +11,7 @@ namespace Checkout.Payments.Setups.Entities
         /// readOnly
         /// Enum: "redirect"
         /// </summary>
-        public string Type { get; set; }
+        public CashAppActionType? Type { get; set; }
 
         /// <summary>
         /// The URL to redirect the customer to so they can authorize the payment with Cash App.

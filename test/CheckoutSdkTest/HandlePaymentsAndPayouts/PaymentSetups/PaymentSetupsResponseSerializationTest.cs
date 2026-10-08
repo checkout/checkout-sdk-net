@@ -541,7 +541,17 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                 ""name"": ""John Smith"",
                 ""tax_number"": ""GB123456789"",
                 ""phone"": { ""country_code"": ""+44"", ""number"": ""207 946 0000"" },
-                ""device"": { ""locale"": ""en_GB"" }
+                ""device"": { ""locale"": ""en_GB"" },
+                ""merchant_account"": {
+                    ""id"": ""1234"",
+                    ""registration_date"": ""2023-05-01T00:00:00.0000000"",
+                    ""last_modified"": ""2023-05-01T00:00:00.0000000"",
+                    ""returning_customer"": true,
+                    ""first_transaction_date"": ""2023-09-15T00:00:00.0000000"",
+                    ""last_transaction_date"": ""2025-03-28T00:00:00.0000000"",
+                    ""total_order_count"": 6,
+                    ""last_payment_amount"": 55.99
+                }
             }";
 
             var customer = (Customer)Serializer.Deserialize(json, typeof(Customer));
@@ -555,6 +565,14 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             customer.Phone.CountryCode.ShouldBe("+44");
             customer.Phone.Number.ShouldBe("207 946 0000");
             customer.Device.Locale.ShouldBe("en_GB");
+            customer.MerchantAccount.Id.ShouldBe("1234");
+            customer.MerchantAccount.RegistrationDate.ShouldBe(new DateTime(2023, 5, 1));
+            customer.MerchantAccount.LastModified.ShouldBe(new DateTime(2023, 5, 1));
+            customer.MerchantAccount.ReturningCustomer.ShouldBe(true);
+            customer.MerchantAccount.FirstTransactionDate.ShouldBe(new DateTime(2023, 9, 15));
+            customer.MerchantAccount.LastTransactionDate.ShouldBe(new DateTime(2025, 3, 28));
+            customer.MerchantAccount.TotalOrderCount.ShouldBe(6);
+            customer.MerchantAccount.LastPaymentAmount.ShouldBe(55.99m);
         }
     }
 }

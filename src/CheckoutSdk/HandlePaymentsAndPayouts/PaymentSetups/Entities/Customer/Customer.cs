@@ -34,11 +34,11 @@ namespace Checkout.Payments.Setups.Entities
         public Phone Phone { get; set; }
 
         /// <summary>
-        /// The customer's billing address. Not part of the Payment Setup customer schema; send the
-        /// billing details through PaymentSetupsRequest.Billing instead.
+        /// The customer's billing address. Removed from the Payment Setup customer schema on
+        /// 2026-04-08; send the billing details through PaymentSetupsRequest.Billing instead.
         /// [Optional]
         /// </summary>
-        [Obsolete("Not part of the Payment Setup customer schema; use PaymentSetupsRequest.Billing.")]
+        [Obsolete("Removed from the Payment Setup customer schema on 2026-04-08. Use PaymentSetupsRequest.Billing instead. Will be removed in a future major version.")]
         public Address BillingAddress { get; set; }
 
         /// <summary>

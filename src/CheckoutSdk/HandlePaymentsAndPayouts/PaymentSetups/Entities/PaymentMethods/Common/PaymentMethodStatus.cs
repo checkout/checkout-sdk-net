@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.Serialization;
 
 namespace Checkout.Payments.Setups.Entities
@@ -9,15 +10,18 @@ namespace Checkout.Payments.Setups.Entities
     public enum PaymentMethodStatus
     {
         /// <summary>
-        /// Not defined by the current API specification. Kept for backward compatibility.
+        /// Removed from the Payment Setups API specification on 2026-05-19. Kept for backward
+        /// compatibility.
         /// </summary>
+        [Obsolete("Removed from the Payment Setups API specification on 2026-05-19. Will be removed in a future major version.")]
         [EnumMember(Value = "available")]
         Available,
 
         /// <summary>
-        /// Not defined by the current API specification; the API returns action_required. Kept for
-        /// backward compatibility.
+        /// Removed from the Payment Setups API specification on 2026-01-27; the API returns
+        /// action_required instead. Kept for backward compatibility.
         /// </summary>
+        [Obsolete("Removed from the Payment Setups API specification on 2026-01-27. Use ActionRequired instead. Will be removed in a future major version.")]
         [EnumMember(Value = "requires_action")]
         RequiresAction,
 

@@ -73,7 +73,7 @@ namespace Checkout.Payments.Setups.Entities
         /// cash_app.
         /// [Optional]
         /// </summary>
-        [JsonProperty("cashapp")]
+        [JsonProperty(PropertyName = "cashapp")]
         public CashApp CashApp { get; set; }
     }
 }
