@@ -112,7 +112,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             var paymentMethodName = "card";
             var expectedResponse = new PaymentSetupsConfirmResponse { Id = "pay_test_confirm_111" };
 
-            // El método ConfirmPaymentSetup usa Post con 3 parámetros: path, authorization, cancellationToken
+            // The method ConfirmPaymentSetup uses Post with 3 parameters: path, authorization, cancellationToken
             _apiClient.Setup(apiClient => apiClient.Post<PaymentSetupsConfirmResponse>(
                     $"payments/setups/{paymentSetupId}/confirm/{paymentMethodName}",
                     _authorization,
