@@ -68,7 +68,9 @@ namespace Checkout.Issuing.Cards.Responses.Create
 
         private static string GetSourceType(JToken jObject)
         {
-            return jObject.SelectToken(CheckoutUtils.Type)?.Value<string>()?.ToLowerInvariant();
+            // The spec discriminates card controls on control_type; type is kept as a fallback.
+            var token = jObject.SelectToken(CheckoutUtils.ControlType) ?? jObject.SelectToken(CheckoutUtils.Type);
+            return token?.Value<string>()?.ToLowerInvariant();
         }
     }
 }
