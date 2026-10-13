@@ -4,15 +4,25 @@ namespace Checkout.Issuing.Common
 {
     /// <summary>
     /// The velocity limit, which determines how much a target card can spend over a given timeframe.
-    /// </summary> 
+    /// </summary>
     public class VelocityLimit
     {
         /// <summary>
         /// The amount the target can spend, in minor units.
-        /// >= 0
         /// [Required]
+        /// Format: int64
+        /// min 0
         /// </summary>
         public long? AmountLimit { get; set; }
+
+        /// <summary>
+        /// The remaining amount that can be spent, in minor units.
+        /// Returned on get and update control responses only; leave it null on requests (null values are not sent).
+        /// [Optional]
+        /// Format: int64
+        /// min 0
+        /// </summary>
+        public long? AmountRemaining { get; set; }
 
         /// <summary>
         /// The period of time over which the specified amount_limit can be spent.
@@ -26,7 +36,7 @@ namespace Checkout.Issuing.Common
         /// [Optional]
         /// </summary>
         public IList<string> MccList { get; set; }
-        
+
         /// <summary>
         /// The list of merchant identification (MID) codes to allow or block transactions from.
         /// You can provide either mcc_list or mid_list, but not both.
