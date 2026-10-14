@@ -50,6 +50,7 @@ jobs:
           5.0.x
           6.0.x
           8.0.x
+          10.0.x
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
@@ -64,8 +65,10 @@ jobs:
 
         # Details on CodeQL's query packs refer to : https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
         # queries: security-extended,security-and-quality
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v3
+    # Explicit build instead of autobuild: autobuild installs the exact SDK pinned in
+    # global.json into its own folder, which can miss the newest target framework.
+    - name: Build
+      run: dotnet build --configuration Release
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3

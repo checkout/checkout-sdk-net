@@ -11,6 +11,12 @@
 
 ## Getting started 
 
+> **.NET 10 is now supported!**
+>  <br/><br/>
+> The SDK now targets .NET 10 (`net10.0`) alongside .NET 8, .NET 6, .NET 5, .NET Standard 2.0 and .NET Framework 4.5. <br/>
+> On .NET 10 the SDK uses the 10.0 releases of the `Microsoft.Extensions` packages, and the test suite runs on .NET 10 in CI. <br/>
+> No code changes are needed: update the package and NuGet picks the `net10.0` build automatically.
+
 > **Version 5.0.0 is here!**
 >  <br/><br/>
 > We've enhanced the SDK with .NET 8 support and comprehensive coverage of all current API modules. <br/>
