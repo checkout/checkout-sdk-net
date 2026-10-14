@@ -56,9 +56,12 @@ namespace Checkout.Payments.Setups.Entities
         public CardPresent CardPresent { get; set; }
 
         /// <summary>
-        /// The Pay by Bank (Open Banking) payment method's details and configuration.
+        /// The Pay by Bank (Open Banking) payment method's details and configuration. The wire key is the single
+        /// word paybybank, so it is set explicitly: the snake case naming strategy would turn PayByBank into
+        /// pay_by_bank, which the API ignores.
         /// [Optional]
         /// </summary>
+        [JsonProperty(PropertyName = "paybybank")]
         public PayByBank PayByBank { get; set; }
 
         /// <summary>
