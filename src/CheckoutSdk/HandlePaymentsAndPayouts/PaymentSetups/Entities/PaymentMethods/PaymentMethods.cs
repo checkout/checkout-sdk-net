@@ -8,6 +8,18 @@ namespace Checkout.Payments.Setups.Entities
     public class PaymentMethods
     {
         /// <summary>
+        /// The payment method that automatically confirms the payment when it is ready, for example card.
+        /// [Optional]
+        /// </summary>
+        public string AutoConfirm { get; set; }
+
+        /// <summary>
+        /// The instrument payment method's details and configuration.
+        /// [Optional]
+        /// </summary>
+        public PaymentSetupInstrument Instrument { get; set; }
+
+        /// <summary>
         /// The Klarna payment method's details and configuration.
         /// [Optional]
         /// </summary>
@@ -78,5 +90,29 @@ namespace Checkout.Payments.Setups.Entities
         /// </summary>
         [JsonProperty(PropertyName = "cashapp")]
         public CashApp CashApp { get; set; }
+
+        /// <summary>
+        /// The Google Pay payment method's details and configuration. The wire key is the single word
+        /// googlepay, so it is set explicitly: the snake case naming strategy would turn GooglePay into
+        /// google_pay.
+        /// [Optional]
+        /// </summary>
+        [JsonProperty(PropertyName = "googlepay")]
+        public GooglePay GooglePay { get; set; }
+
+        /// <summary>
+        /// The Apple Pay payment method's details and configuration. The wire key is the single word
+        /// applepay, so it is set explicitly: the snake case naming strategy would turn ApplePay into
+        /// apple_pay.
+        /// [Optional]
+        /// </summary>
+        [JsonProperty(PropertyName = "applepay")]
+        public ApplePay ApplePay { get; set; }
+
+        /// <summary>
+        /// The Card payment method's details and configuration.
+        /// [Optional]
+        /// </summary>
+        public Card Card { get; set; }
     }
 }
