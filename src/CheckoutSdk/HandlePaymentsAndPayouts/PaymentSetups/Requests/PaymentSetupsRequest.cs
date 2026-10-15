@@ -114,5 +114,11 @@ namespace Checkout.Payments.Setups.Requests
         /// [Optional]
         /// </summary>
         public PaymentSetupTerminal Terminal { get; set; }
+
+        /// <summary>
+        /// Risk assessment settings for the Payment Setup.
+        /// [Optional]
+        /// </summary>
+        public PaymentSetupRisk Risk { get; set; }
     }
 }

@@ -592,7 +592,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
         // ------------------------------------------------------------------------
         // PaymentSetupsNewFields
         // Covers the 2026-06-29 PaymentSetup additions: billing_descriptor, presentment_details, terminal,
-        // latest_payment, the bacs/card_present/pay_by_bank/stablecoin payment methods, and order amount_allocations.
+        // latest_payment, the bacs/card_present/paybybank/stablecoin payment methods, and order amount_allocations.
         // ------------------------------------------------------------------------
 
         [Fact]
@@ -683,7 +683,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
 
             json.ShouldContain("\"bacs\"");
             json.ShouldContain("\"card_present\"");
-            json.ShouldContain("\"pay_by_bank\"");
+            json.ShouldContain("\"paybybank\"");
             json.ShouldContain("\"stablecoin\"");
             json.ShouldContain("\"account_holder\"");
             json.ShouldContain("\"select_bank\"");
@@ -695,7 +695,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             const string json = @"{
                 ""bacs"": { ""instrument_id"": ""src_test"", ""account_holder"": { ""type"": ""corporate"", ""company_name"": ""Acme Ltd"" }, ""country"": ""GB"", ""currency"": ""GBP"", ""allow_partial_match"": true },
                 ""card_present"": { ""entry_mode"": ""contactless"", ""store_for_future_use"": true },
-                ""pay_by_bank"": { ""bank_id"": ""ob-natwest"", ""action"": { ""type"": ""select_bank"", ""banks"": [{ ""bank_id"": ""ob-natwest"", ""display_name"": ""NatWest"", ""available"": true }] } },
+                ""paybybank"": { ""bank_id"": ""ob-natwest"", ""action"": { ""type"": ""select_bank"", ""banks"": [{ ""bank_id"": ""ob-natwest"", ""display_name"": ""NatWest"", ""available"": true }] } },
                 ""stablecoin"": { ""status"": ""available"" }
             }";
 
