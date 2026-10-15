@@ -198,6 +198,42 @@ namespace Checkout
         }
 
         [Fact]
+        public async Task ShouldNotUseADisposedFactoryWhenSetLogFactoryRacesGetLogger()
+        {
+            // SetLogFactory disposes the previous factory. A GetLogger call running at the
+            // same time must never create its logger from that disposed factory.
+            var exceptions = new ConcurrentQueue<Exception>();
+            var stop = DateTime.UtcNow.AddSeconds(2);
+
+            var setter = Task.Run(() =>
+            {
+                while (DateTime.UtcNow < stop)
+                {
+                    LogProvider.SetLogFactory(new LoggerFactory());
+                }
+            });
+            var getters = Enumerable.Range(0, 4).Select(_ => Task.Run(() =>
+            {
+                while (DateTime.UtcNow < stop)
+                {
+                    try
+                    {
+                        LogProvider.GetLogger(typeof(LogProviderTests));
+                    }
+                    catch (Exception ex)
+                    {
+                        exceptions.Enqueue(ex);
+                    }
+                }
+            })).ToArray();
+
+            await Task.WhenAll(getters.Append(setter));
+            LogProvider.SetLogFactory(_loggerFactory);
+
+            Assert.Empty(exceptions);
+        }
+
+        [Fact]
         public void ShouldHandleNonDisposableLoggerFactoryCorrectly()
         {
             // Test that our NonDisposableLoggerFactory works as expected

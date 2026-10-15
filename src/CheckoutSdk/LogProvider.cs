@@ -47,14 +47,13 @@ namespace Checkout
             return _loggers.GetOrAdd(loggerType, type =>
                 new Lazy<ILogger>(() =>
                 {
-                    ILoggerFactory factory;
+                    var name = type.FullName ?? type.Name;
+                    // CreateLogger runs under the lock: SetLogFactory disposes the previous
+                    // factory under the same lock, so it cannot be disposed mid-call.
                     lock (SyncRoot)
                     {
-                        factory = _loggerFactory;
+                        return _loggerFactory.CreateLogger(name) ?? NullLogger.Instance;
                     }
-
-                    var name = type.FullName ?? type.Name;
-                    return factory.CreateLogger(name) ?? NullLogger.Instance;
                 }, LazyThreadSafetyMode.ExecutionAndPublication)
             ).Value;
         }

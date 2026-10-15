@@ -62,4 +62,4 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          dotnet test
+          dotnet test test/CheckoutSdkTest --framework ${{ matrix.framework }}
