@@ -42,10 +42,11 @@ namespace Checkout.Payments.Setups.Entities
 
         /// <summary>
         /// The list of supported card scheme names.
+        /// A scheme the SDK does not know yet deserializes as null instead of failing the response.
         /// [Optional]
         /// readOnly
         /// </summary>
-        public IList<PaymentSetupScheme> Schemes { get; set; }
+        public IList<PaymentSetupScheme?> Schemes { get; set; }
 
         /// <summary>
         /// The preferred card scheme to process the payment.

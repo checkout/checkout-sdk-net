@@ -687,6 +687,28 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             AssertCardWalletsInstrumentSettingsAndMetadata(copy.PaymentMethods, copy.Settings, copy.Metadata);
         }
 
+        [Fact]
+        public void ShouldNotFailOnAnUnknownSchemeForPaymentSetupsResponse()
+        {
+            // schemes is read-only and the scheme list grows over time: a value the SDK does not know
+            // yet must not break the whole response.
+            const string json = @"{
+                ""id"": ""ps_2Un2jYAVxLsfUfpOvLhEHRW8Ft1"",
+                ""payment_methods"": {
+                    ""card"": { ""status"": ""ready"", ""schemes"": [""visa"", ""elo""] },
+                    ""applepay"": { ""status"": ""ready"", ""schemes"": [""elo"", ""mastercard""] },
+                    ""googlepay"": { ""status"": ""ready"", ""schemes"": [""visa"", ""elo""] }
+                }
+            }";
+
+            var response = (PaymentSetupsResponse)Serializer.Deserialize(json, typeof(PaymentSetupsResponse));
+
+            response.Id.ShouldBe("ps_2Un2jYAVxLsfUfpOvLhEHRW8Ft1");
+            response.PaymentMethods.Card.Schemes.ShouldBe(new List<PaymentSetupScheme?> { PaymentSetupScheme.Visa, null });
+            response.PaymentMethods.ApplePay.Schemes.ShouldBe(new List<PaymentSetupScheme?> { null, PaymentSetupScheme.Mastercard });
+            response.PaymentMethods.GooglePay.Schemes.ShouldBe(new List<PaymentSetupScheme?> { PaymentSetupScheme.Visa, null });
+        }
+
         private static void AssertCardWalletsInstrumentSettingsAndMetadata(
             Checkout.Payments.Setups.Entities.PaymentMethods methods, Settings settings,
             IDictionary<string, object> metadata)
@@ -720,7 +742,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             card.AccountHolder.MiddleName.ShouldBe("Paul");
             card.AccountHolder.CompanyName.ShouldBe("Acme Ltd");
             card.AccountHolder.AccountNameInquiry.ShouldBe(false);
-            card.Schemes.ShouldBe(new List<PaymentSetupScheme>
+            card.Schemes.ShouldBe(new List<PaymentSetupScheme?>
             {
                 PaymentSetupScheme.Accel, PaymentSetupScheme.Amex, PaymentSetupScheme.CartesBancaires,
                 PaymentSetupScheme.ChinaUnionPay, PaymentSetupScheme.Diners, PaymentSetupScheme.Discover,
@@ -738,7 +760,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             applePay.Phone.Number.ShouldBe("207 946 0000");
             applePay.AccountHolder.Type.ShouldBe(PaymentSetupCardAccountHolderType.Individual);
             applePay.AccountHolder.FirstName.ShouldBe("John");
-            applePay.Schemes.ShouldBe(new List<PaymentSetupScheme> { PaymentSetupScheme.Visa, PaymentSetupScheme.Mastercard });
+            applePay.Schemes.ShouldBe(new List<PaymentSetupScheme?> { PaymentSetupScheme.Visa, PaymentSetupScheme.Mastercard });
             applePay.PreferredScheme.ShouldBe(PreferredSchema.Visa);
 
             var googlePay = methods.GooglePay;
@@ -749,7 +771,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             googlePay.Phone.CountryCode.ShouldBe("+44");
             googlePay.AccountHolder.Type.ShouldBe(PaymentSetupCardAccountHolderType.Corporate);
             googlePay.AccountHolder.CompanyName.ShouldBe("Acme Ltd");
-            googlePay.Schemes.ShouldBe(new List<PaymentSetupScheme> { PaymentSetupScheme.Mastercard });
+            googlePay.Schemes.ShouldBe(new List<PaymentSetupScheme?> { PaymentSetupScheme.Mastercard });
             googlePay.PreferredScheme.ShouldBe(PreferredSchema.Mastercard);
 
             settings.SuccessUrl.ShouldBe("https://example.com/payments/success");
