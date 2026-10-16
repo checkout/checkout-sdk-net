@@ -1,5 +1,10 @@
+using System.Collections.Generic;
+
 namespace Checkout.Payments.Setups.Entities
 {
+    /// <summary>
+    /// Settings for the Payment Setup.
+    /// </summary>
     public class Settings
     {
         /// <summary>
@@ -7,7 +12,7 @@ namespace Checkout.Payments.Setups.Entities
         /// For payment methods with a redirect, this value overrides the default success redirect URL configured on your account.
         /// [Optional]
         /// Format: uri
-        /// &lt;= 255 characters
+        /// max 255 characters
         /// </summary>
         public string SuccessUrl { get; set; }
 
@@ -16,7 +21,7 @@ namespace Checkout.Payments.Setups.Entities
         /// For payment methods with a redirect, this value overrides the default failure redirect URL configured on your account.
         /// [Optional]
         /// Format: uri
-        /// &lt;= 255 characters
+        /// max 255 characters
         /// </summary>
         public string FailureUrl { get; set; }
 
@@ -26,5 +31,11 @@ namespace Checkout.Payments.Setups.Entities
         /// Default: true
         /// </summary>
         public bool? Capture { get; set; }
+
+        /// <summary>
+        /// The list of payment methods excluded from the Payment Setup.
+        /// [Optional]
+        /// </summary>
+        public IList<string> ExcludedPaymentMethods { get; set; }
     }
 }

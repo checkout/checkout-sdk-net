@@ -574,5 +574,215 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             customer.MerchantAccount.TotalOrderCount.ShouldBe(6);
             customer.MerchantAccount.LastPaymentAmount.ShouldBe(55.99m);
         }
+
+        // ------------------------------------------------------------------------
+        // PaymentSetupsResponse: card, wallets, instrument, auto_confirm, settings and metadata
+        // Covers the response side of payment_methods.card, applepay, googlepay, instrument and
+        // auto_confirm (including their readOnly status, flags, schemes, card details and instrument
+        // action), settings.excluded_payment_methods and the top-level metadata.
+        // ------------------------------------------------------------------------
+
+        private const string CardWalletsAndMetadataResponseJson = @"{
+            ""id"": ""psu_y3oqhf46pyzuxjbcn2giaqnb44"",
+            ""processing_channel_id"": ""pc_q4dbxom5jbgudnjzjpz7j2z6uq"",
+            ""amount"": 10000,
+            ""currency"": ""GBP"",
+            ""payment_methods"": {
+                ""auto_confirm"": ""card"",
+                ""instrument"": {
+                    ""status"": ""action_required"",
+                    ""flags"": [""instrument_not_set""],
+                    ""id"": ""src_wmlfc3zttb4uzmk6snpwb43jbi"",
+                    ""type"": ""bacs"",
+                    ""action"": { ""type"": ""set_instrument"" }
+                },
+                ""card"": {
+                    ""status"": ""ready"",
+                    ""flags"": [],
+                    ""token"": { ""id"": ""tok_ubfj2q76miwundwlk72vxt2i7q"" },
+                    ""details"": {
+                        ""last4"": ""4242"",
+                        ""bin"": ""424242"",
+                        ""scheme"": ""visa"",
+                        ""expiry_month"": 12,
+                        ""expiry_year"": 2030,
+                        ""expires_on"": ""2026-06-01T12:00:00Z"",
+                        ""allow_update"": false
+                    },
+                    ""phone"": { ""country_code"": ""+44"", ""number"": ""207 946 0000"" },
+                    ""account_holder"": {
+                        ""type"": ""government"",
+                        ""first_name"": ""John"",
+                        ""last_name"": ""Smith"",
+                        ""middle_name"": ""Paul"",
+                        ""company_name"": ""Acme Ltd"",
+                        ""account_name_inquiry"": false
+                    },
+                    ""schemes"": [""accel"", ""amex"", ""cartes_bancaires"", ""china_union_pay"", ""diners"", ""discover"", ""jcb"", ""mada"", ""maestro"", ""mastercard"", ""nyce"", ""omannet"", ""pulse"", ""shazam"", ""star"", ""upi"", ""visa""],
+                    ""preferred_scheme"": ""cartes_bancaires""
+                },
+                ""applepay"": {
+                    ""status"": ""initialization_required"",
+                    ""token"": { ""id"": ""tok_ubfj2q76miwundwlk72vxt2i7q"", ""expires_on"": ""2026-06-01T12:00:00Z"" },
+                    ""phone"": { ""country_code"": ""+44"", ""number"": ""207 946 0000"" },
+                    ""account_holder"": { ""type"": ""individual"", ""first_name"": ""John"" },
+                    ""schemes"": [""visa"", ""mastercard""],
+                    ""preferred_scheme"": ""visa""
+                },
+                ""googlepay"": {
+                    ""status"": ""invalid"",
+                    ""flags"": [""token_expired""],
+                    ""token"": { ""id"": ""tok_ubfj2q76miwundwlk72vxt2i7q"", ""expires_on"": ""2026-06-01T12:00:00Z"" },
+                    ""phone"": { ""country_code"": ""+44"", ""number"": ""207 946 0000"" },
+                    ""account_holder"": { ""type"": ""corporate"", ""company_name"": ""Acme Ltd"" },
+                    ""schemes"": [""mastercard""],
+                    ""preferred_scheme"": ""mastercard""
+                }
+            },
+            ""settings"": {
+                ""success_url"": ""https://example.com/payments/success"",
+                ""failure_url"": ""https://example.com/payments/fail"",
+                ""capture"": true,
+                ""excluded_payment_methods"": [""card"", ""klarna"", ""stcpay""]
+            },
+            ""metadata"": { ""coupon_code"": ""NY2018"", ""partner_id"": 123989, ""vip"": true }
+        }";
+
+        [Fact]
+        public void ShouldDeserializeCardWalletsInstrumentSettingsAndMetadataForPaymentSetupsResponse()
+        {
+            var response =
+                (PaymentSetupsResponse)Serializer.Deserialize(CardWalletsAndMetadataResponseJson, typeof(PaymentSetupsResponse));
+
+            AssertCardWalletsInstrumentSettingsAndMetadata(response.PaymentMethods, response.Settings, response.Metadata);
+        }
+
+        [Fact]
+        public void ShouldDeserializeCardWalletsInstrumentSettingsAndMetadataForPaymentSetupsConfirmResponse()
+        {
+            var response = (PaymentSetupsConfirmResponse)Serializer.Deserialize(CardWalletsAndMetadataResponseJson,
+                typeof(PaymentSetupsConfirmResponse));
+
+            AssertCardWalletsInstrumentSettingsAndMetadata(response.PaymentMethods, response.Settings, response.Metadata);
+        }
+
+        [Fact]
+        public void ShouldRoundTripCardWalletsInstrumentSettingsAndMetadataForPaymentSetupsResponse()
+        {
+            var original =
+                (PaymentSetupsResponse)Serializer.Deserialize(CardWalletsAndMetadataResponseJson, typeof(PaymentSetupsResponse));
+
+            var json = Serializer.Serialize(original);
+            var copy = (PaymentSetupsResponse)Serializer.Deserialize(json, typeof(PaymentSetupsResponse));
+
+            json.ShouldContain("\"auto_confirm\":\"card\"");
+            json.ShouldContain("\"applepay\":{");
+            json.ShouldContain("\"googlepay\":{");
+            json.ShouldContain("\"last4\":\"4242\"");
+            json.ShouldContain("\"action\":{\"type\":\"set_instrument\"}");
+            json.ShouldContain("\"status\":\"initialization_required\"");
+            json.ShouldContain("\"schemes\":[\"mastercard\"]");
+            json.ShouldContain("\"excluded_payment_methods\":[\"card\",\"klarna\",\"stcpay\"]");
+            json.ShouldContain("\"metadata\":{\"coupon_code\":\"NY2018\",\"partner_id\":123989,\"vip\":true}");
+            AssertCardWalletsInstrumentSettingsAndMetadata(copy.PaymentMethods, copy.Settings, copy.Metadata);
+        }
+
+        [Fact]
+        public void ShouldNotFailOnAnUnknownSchemeForPaymentSetupsResponse()
+        {
+            // schemes is read-only and the scheme list grows over time: a value the SDK does not know
+            // yet must not break the whole response.
+            const string json = @"{
+                ""id"": ""ps_2Un2jYAVxLsfUfpOvLhEHRW8Ft1"",
+                ""payment_methods"": {
+                    ""card"": { ""status"": ""ready"", ""schemes"": [""visa"", ""elo""] },
+                    ""applepay"": { ""status"": ""ready"", ""schemes"": [""elo"", ""mastercard""] },
+                    ""googlepay"": { ""status"": ""ready"", ""schemes"": [""visa"", ""elo""] }
+                }
+            }";
+
+            var response = (PaymentSetupsResponse)Serializer.Deserialize(json, typeof(PaymentSetupsResponse));
+
+            response.Id.ShouldBe("ps_2Un2jYAVxLsfUfpOvLhEHRW8Ft1");
+            response.PaymentMethods.Card.Schemes.ShouldBe(new List<PaymentSetupScheme?> { PaymentSetupScheme.Visa, null });
+            response.PaymentMethods.ApplePay.Schemes.ShouldBe(new List<PaymentSetupScheme?> { null, PaymentSetupScheme.Mastercard });
+            response.PaymentMethods.GooglePay.Schemes.ShouldBe(new List<PaymentSetupScheme?> { PaymentSetupScheme.Visa, null });
+        }
+
+        private static void AssertCardWalletsInstrumentSettingsAndMetadata(
+            Checkout.Payments.Setups.Entities.PaymentMethods methods, Settings settings,
+            IDictionary<string, object> metadata)
+        {
+            var expiresOn = new DateTime(2026, 6, 1, 12, 0, 0, DateTimeKind.Utc);
+
+            methods.AutoConfirm.ShouldBe("card");
+
+            methods.Instrument.Status.ShouldBe(PaymentMethodStatus.ActionRequired);
+            methods.Instrument.Flags.ShouldBe(new List<string> { "instrument_not_set" });
+            methods.Instrument.Id.ShouldBe("src_wmlfc3zttb4uzmk6snpwb43jbi");
+            methods.Instrument.Type.ShouldBe("bacs");
+            methods.Instrument.Action.Type.ShouldBe(PaymentSetupInstrumentActionType.SetInstrument);
+
+            var card = methods.Card;
+            card.Status.ShouldBe(PaymentMethodStatus.Ready);
+            card.Flags.ShouldBeEmpty();
+            card.Token.Id.ShouldBe("tok_ubfj2q76miwundwlk72vxt2i7q");
+            card.Details.Last4.ShouldBe("4242");
+            card.Details.Bin.ShouldBe("424242");
+            card.Details.Scheme.ShouldBe("visa");
+            card.Details.ExpiryMonth.ShouldBe(12);
+            card.Details.ExpiryYear.ShouldBe(2030);
+            card.Details.ExpiresOn.ShouldBe(expiresOn);
+            card.Details.AllowUpdate.ShouldBe(false);
+            card.Phone.CountryCode.ShouldBe("+44");
+            card.Phone.Number.ShouldBe("207 946 0000");
+            card.AccountHolder.Type.ShouldBe(PaymentSetupCardAccountHolderType.Government);
+            card.AccountHolder.FirstName.ShouldBe("John");
+            card.AccountHolder.LastName.ShouldBe("Smith");
+            card.AccountHolder.MiddleName.ShouldBe("Paul");
+            card.AccountHolder.CompanyName.ShouldBe("Acme Ltd");
+            card.AccountHolder.AccountNameInquiry.ShouldBe(false);
+            card.Schemes.ShouldBe(new List<PaymentSetupScheme?>
+            {
+                PaymentSetupScheme.Accel, PaymentSetupScheme.Amex, PaymentSetupScheme.CartesBancaires,
+                PaymentSetupScheme.ChinaUnionPay, PaymentSetupScheme.Diners, PaymentSetupScheme.Discover,
+                PaymentSetupScheme.Jcb, PaymentSetupScheme.Mada, PaymentSetupScheme.Maestro,
+                PaymentSetupScheme.Mastercard, PaymentSetupScheme.Nyce, PaymentSetupScheme.Omannet,
+                PaymentSetupScheme.Pulse, PaymentSetupScheme.Shazam, PaymentSetupScheme.Star,
+                PaymentSetupScheme.Upi, PaymentSetupScheme.Visa
+            });
+            card.PreferredScheme.ShouldBe(PreferredSchema.CartesBancaires);
+
+            var applePay = methods.ApplePay;
+            applePay.Status.ShouldBe(PaymentMethodStatus.InitializationRequired);
+            applePay.Token.Id.ShouldBe("tok_ubfj2q76miwundwlk72vxt2i7q");
+            applePay.Token.ExpiresOn.ShouldBe(expiresOn);
+            applePay.Phone.Number.ShouldBe("207 946 0000");
+            applePay.AccountHolder.Type.ShouldBe(PaymentSetupCardAccountHolderType.Individual);
+            applePay.AccountHolder.FirstName.ShouldBe("John");
+            applePay.Schemes.ShouldBe(new List<PaymentSetupScheme?> { PaymentSetupScheme.Visa, PaymentSetupScheme.Mastercard });
+            applePay.PreferredScheme.ShouldBe(PreferredSchema.Visa);
+
+            var googlePay = methods.GooglePay;
+            googlePay.Status.ShouldBe(PaymentMethodStatus.Invalid);
+            googlePay.Flags.ShouldBe(new List<string> { "token_expired" });
+            googlePay.Token.Id.ShouldBe("tok_ubfj2q76miwundwlk72vxt2i7q");
+            googlePay.Token.ExpiresOn.ShouldBe(expiresOn);
+            googlePay.Phone.CountryCode.ShouldBe("+44");
+            googlePay.AccountHolder.Type.ShouldBe(PaymentSetupCardAccountHolderType.Corporate);
+            googlePay.AccountHolder.CompanyName.ShouldBe("Acme Ltd");
+            googlePay.Schemes.ShouldBe(new List<PaymentSetupScheme?> { PaymentSetupScheme.Mastercard });
+            googlePay.PreferredScheme.ShouldBe(PreferredSchema.Mastercard);
+
+            settings.SuccessUrl.ShouldBe("https://example.com/payments/success");
+            settings.FailureUrl.ShouldBe("https://example.com/payments/fail");
+            settings.Capture.ShouldBe(true);
+            settings.ExcludedPaymentMethods.ShouldBe(new List<string> { "card", "klarna", "stcpay" });
+
+            metadata.Count.ShouldBe(3);
+            metadata["coupon_code"].ShouldBe("NY2018");
+            metadata["partner_id"].ShouldBe(123989L);
+            metadata["vip"].ShouldBe(true);
+        }
     }
 }
