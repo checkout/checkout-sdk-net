@@ -772,7 +772,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             googlePay.AccountHolder.Type.ShouldBe(PaymentSetupCardAccountHolderType.Corporate);
             googlePay.AccountHolder.CompanyName.ShouldBe("Acme Ltd");
             googlePay.Schemes.ShouldBe(new List<PaymentSetupScheme?> { PaymentSetupScheme.Mastercard });
-            googlePay.PreferredScheme.ShouldBe(PreferredSchema.Mastercard);
+            googlePay.PreferredScheme.ShouldBe(GooglePayPreferredScheme.Mastercard);
 
             settings.SuccessUrl.ShouldBe("https://example.com/payments/success");
             settings.FailureUrl.ShouldBe("https://example.com/payments/fail");

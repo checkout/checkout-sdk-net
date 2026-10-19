@@ -50,9 +50,9 @@ namespace Checkout.Payments.Setups.Entities
         public IList<PaymentSetupScheme?> Schemes { get; set; }
 
         /// <summary>
-        /// The preferred card scheme to process the payment. Google Pay accepts only visa and mastercard.
+        /// The preferred card scheme to process the payment.
         /// [Optional]
         /// </summary>
-        public PreferredSchema? PreferredScheme { get; set; }
+        public GooglePayPreferredScheme? PreferredScheme { get; set; }
     }
 }

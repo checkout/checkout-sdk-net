@@ -36,7 +36,8 @@ namespace Checkout.Payments.Setups.Requests
         /// You must provide this field for card payments in which the cardholder is not present. For example, if the
         /// transaction is a recurring payment, or a mail order/telephone order (MOTO) payment.
         /// [Optional]
-        /// Default: regular
+        /// Enum: "Regular" "Recurring" "MOTO" "Installment" "PayLater" "Unscheduled"
+        /// Default: Regular
         /// </summary>
         public PaymentType? PaymentType { get; set; } = Payments.PaymentType.Regular;
 

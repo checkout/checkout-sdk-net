@@ -7,6 +7,7 @@ using Checkout.Payments.Setups.Requests;
 using Checkout.Payments.Setups.Responses;
 using Checkout.Payments.Setups;
 using Checkout.Payments;
+using Newtonsoft.Json.Linq;
 using SetupAccommodationData = Checkout.Payments.Setups.Entities.AccommodationData;
 using SetupAirlineData = Checkout.Payments.Setups.Entities.AirlineData;
 using SetupApplePay = Checkout.Payments.Setups.Entities.ApplePay;
@@ -1104,7 +1105,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             googlePay.StoreForFutureUse.ShouldBe(true);
             googlePay.Phone.CountryCode.ShouldBe("+44");
             AssertCardAccountHolderForPaymentSetupsRequest(googlePay.AccountHolder);
-            googlePay.PreferredScheme.ShouldBe(PreferredSchema.Mastercard);
+            googlePay.PreferredScheme.ShouldBe(GooglePayPreferredScheme.Mastercard);
         }
 
         [Fact]
@@ -1142,6 +1143,39 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
 
             // The card, wallet and instrument methods have no initialization in the spec, so none is sent.
             json.ShouldNotContain("\"initialization\"");
+        }
+
+        [Fact]
+        public void ShouldNestCardTokenAndDetailsAndWalletTokensForPaymentSetupsRequest()
+        {
+            var json = Serializer.Serialize(CreateRequestWithCardWalletsAndMetadata());
+            var methods = JObject.Parse(json)["payment_methods"];
+
+            var card = methods["card"];
+            card["token"]["id"].ToString().ShouldBe("tok_ubfj2q76miwundwlk72vxt2i7q");
+            card["details"]["number"].ToString().ShouldBe("4242424242424242");
+            card["details"]["cvv"].ToString().ShouldBe("100");
+            card["number"].ShouldBeNull();
+            card["cvv"].ShouldBeNull();
+
+            foreach (var wallet in new[] { "applepay", "googlepay" })
+            {
+                var token = methods[wallet]["token"];
+                token.Type.ShouldBe(JTokenType.Object);
+                token["id"].ToString().ShouldBe("tok_ubfj2q76miwundwlk72vxt2i7q");
+                token["expires_on"].ShouldNotBeNull();
+                methods[wallet]["expires_on"].ShouldBeNull();
+            }
+        }
+
+        [Fact]
+        public void ShouldWriteEveryGooglePayPreferredSchemeForPaymentSetupsRequest()
+        {
+            Enum.GetValues(typeof(GooglePayPreferredScheme)).Length.ShouldBe(2);
+            Serializer.Serialize(new SetupGooglePay { PreferredScheme = GooglePayPreferredScheme.Visa })
+                .ShouldContain("\"preferred_scheme\":\"visa\"");
+            Serializer.Serialize(new SetupGooglePay { PreferredScheme = GooglePayPreferredScheme.Mastercard })
+                .ShouldContain("\"preferred_scheme\":\"mastercard\"");
         }
 
         [Fact]
@@ -1296,7 +1330,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                         StoreForFutureUse = true,
                         Phone = phone,
                         AccountHolder = CreateCardAccountHolderForPaymentSetupsRequest(),
-                        PreferredScheme = PreferredSchema.Mastercard
+                        PreferredScheme = GooglePayPreferredScheme.Mastercard
                     }
                 }
             };
