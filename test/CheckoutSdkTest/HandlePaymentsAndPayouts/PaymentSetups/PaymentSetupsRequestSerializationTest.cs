@@ -7,8 +7,12 @@ using Checkout.Payments.Setups.Requests;
 using Checkout.Payments.Setups.Responses;
 using Checkout.Payments.Setups;
 using Checkout.Payments;
+using Newtonsoft.Json.Linq;
 using SetupAccommodationData = Checkout.Payments.Setups.Entities.AccommodationData;
 using SetupAirlineData = Checkout.Payments.Setups.Entities.AirlineData;
+using SetupApplePay = Checkout.Payments.Setups.Entities.ApplePay;
+using SetupCard = Checkout.Payments.Setups.Entities.Card;
+using SetupGooglePay = Checkout.Payments.Setups.Entities.GooglePay;
 using Shouldly;
 using System.Collections.Generic;
 using System;
@@ -1037,5 +1041,299 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             json.ShouldNotContain("accommodation");
         }
 
+        // ------------------------------------------------------------------------
+        // PaymentSetupsRequest: card, wallets, instrument, auto_confirm, settings and metadata
+        // Covers the request side of the PaymentSetup properties the model did not carry:
+        // payment_methods.card, applepay, googlepay, instrument and auto_confirm,
+        // settings.excluded_payment_methods and the top-level metadata.
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldRoundTripCardWalletsInstrumentSettingsAndMetadataForPaymentSetupsRequest()
+        {
+            var original = CreateRequestWithCardWalletsAndMetadata();
+
+            var json = Serializer.Serialize(original);
+            var copy = (PaymentSetupsRequest)Serializer.Deserialize(json, typeof(PaymentSetupsRequest));
+
+            copy.Settings.ExcludedPaymentMethods.ShouldBe(new List<string> { "card", "klarna", "stcpay" });
+            copy.Metadata.Count.ShouldBe(3);
+            copy.Metadata["coupon_code"].ShouldBe("NY2018");
+            copy.Metadata["partner_id"].ShouldBe(123989L);
+            copy.Metadata["vip"].ShouldBe(true);
+
+            var methods = copy.PaymentMethods;
+            methods.AutoConfirm.ShouldBe("card");
+            methods.Instrument.Id.ShouldBe("src_wmlfc3zttb4uzmk6snpwb43jbi");
+
+            var card = methods.Card;
+            card.Token.Id.ShouldBe("tok_ubfj2q76miwundwlk72vxt2i7q");
+            card.Details.Number.ShouldBe("4242424242424242");
+            card.Details.ExpiryMonth.ShouldBe(12);
+            card.Details.ExpiryYear.ShouldBe(2030);
+            card.Details.Name.ShouldBe("John Smith");
+            card.Details.Cvv.ShouldBe("100");
+            card.Details.Stored.ShouldBe(true);
+            card.Details.AllowUpdate.ShouldBe(true);
+            card.StoreForFutureUse.ShouldBe(true);
+            card.Phone.CountryCode.ShouldBe("+44");
+            card.Phone.Number.ShouldBe("207 946 0000");
+            AssertCardAccountHolderForPaymentSetupsRequest(card.AccountHolder);
+            card.PreferredScheme.ShouldBe(PreferredSchema.CartesBancaires);
+
+            var applePay = methods.ApplePay;
+            applePay.TokenData.Version.ShouldBe("EC_v1");
+            applePay.TokenData.Data.ShouldBe("t7GeajLB9skXB6QSWfEpPA4WPhDqB7ekdd");
+            applePay.TokenData.Signature.ShouldBe("MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglg");
+            applePay.TokenData.Header.EphemeralPublicKey.ShouldBe("MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEX");
+            applePay.TokenData.Header.PublicKeyHash.ShouldBe("tqYV+tmG9aMh+l/K6cicUnPqkb1gUiLjSTM9gEz6Nl0=");
+            applePay.TokenData.Header.TransactionId.ShouldBe("3cee89679130a4b2617c76118a1790e7");
+            applePay.Token.Id.ShouldBe("tok_ubfj2q76miwundwlk72vxt2i7q");
+            applePay.Token.ExpiresOn.ShouldBe(new DateTime(2026, 6, 1, 12, 0, 0, DateTimeKind.Utc));
+            applePay.StoreForFutureUse.ShouldBe(false);
+            applePay.Phone.Number.ShouldBe("207 946 0000");
+            AssertCardAccountHolderForPaymentSetupsRequest(applePay.AccountHolder);
+            applePay.PreferredScheme.ShouldBe(PreferredSchema.Visa);
+
+            var googlePay = methods.GooglePay;
+            googlePay.TokenData.ProtocolVersion.ShouldBe("ECv2");
+            googlePay.TokenData.Signature.ShouldBe("MEQCIH6Q4OwQ0jAceFEkGF0JID6sJNXxOEi4r+mA7biRxqBQAiAondqoUpU");
+            googlePay.TokenData.SignedMessage.ShouldBe("{\"encryptedMessage\":\"ZW5jcnlwdGVk\",\"ephemeralPublicKey\":\"BOdoXP\",\"tag\":\"T3c=\"}");
+            googlePay.TokenData.TokenizationKey.ShouldBe("pk_sbox_xg66bnn6tpspd6pt3psc7otrqa");
+            googlePay.Token.Id.ShouldBe("tok_ubfj2q76miwundwlk72vxt2i7q");
+            googlePay.Token.ExpiresOn.ShouldBe(new DateTime(2026, 6, 1, 12, 0, 0, DateTimeKind.Utc));
+            googlePay.StoreForFutureUse.ShouldBe(true);
+            googlePay.Phone.CountryCode.ShouldBe("+44");
+            AssertCardAccountHolderForPaymentSetupsRequest(googlePay.AccountHolder);
+            googlePay.PreferredScheme.ShouldBe(GooglePayPreferredScheme.Mastercard);
+        }
+
+        [Fact]
+        public void ShouldWriteSpecWireKeysForCardWalletsInstrumentSettingsAndMetadataForPaymentSetupsRequest()
+        {
+            var json = Serializer.Serialize(CreateRequestWithCardWalletsAndMetadata());
+
+            json.ShouldContain("\"auto_confirm\":\"card\"");
+            json.ShouldContain("\"instrument\":{\"id\":\"src_wmlfc3zttb4uzmk6snpwb43jbi\"}");
+            json.ShouldContain("\"card\":{");
+            json.ShouldContain("\"applepay\":{");
+            json.ShouldContain("\"googlepay\":{");
+            json.ShouldNotContain("\"apple_pay\"");
+            json.ShouldNotContain("\"google_pay\"");
+            json.ShouldContain("\"token_data\":{");
+            json.ShouldContain("\"header\":{\"ephemeral_public_key\"");
+            json.ShouldContain("\"public_key_hash\"");
+            json.ShouldContain("\"transaction_id\"");
+            json.ShouldContain("\"protocol_version\":\"ECv2\"");
+            json.ShouldContain("\"signed_message\"");
+            json.ShouldContain("\"tokenization_key\"");
+            json.ShouldContain("\"expires_on\":\"2026-06-01T12:00:00Z\"");
+            json.ShouldContain("\"expiry_month\":12");
+            json.ShouldContain("\"expiry_year\":2030");
+            json.ShouldContain("\"cvv\":\"100\"");
+            json.ShouldContain("\"stored\":true");
+            json.ShouldContain("\"allow_update\":true");
+            json.ShouldContain("\"store_for_future_use\":true");
+            json.ShouldContain("\"account_holder\":{\"type\":\"corporate\"");
+            json.ShouldContain("\"middle_name\":\"Paul\"");
+            json.ShouldContain("\"account_name_inquiry\":true");
+            json.ShouldContain("\"preferred_scheme\":\"cartes_bancaires\"");
+            json.ShouldContain("\"excluded_payment_methods\":[\"card\",\"klarna\",\"stcpay\"]");
+            json.ShouldContain("\"metadata\":{\"coupon_code\":\"NY2018\",\"partner_id\":123989,\"vip\":true}");
+
+            // The card, wallet and instrument methods have no initialization in the spec, so none is sent.
+            json.ShouldNotContain("\"initialization\"");
+        }
+
+        [Fact]
+        public void ShouldNestCardTokenAndDetailsAndWalletTokensForPaymentSetupsRequest()
+        {
+            var json = Serializer.Serialize(CreateRequestWithCardWalletsAndMetadata());
+            var methods = JObject.Parse(json)["payment_methods"];
+
+            var card = methods["card"];
+            card["token"]["id"].ToString().ShouldBe("tok_ubfj2q76miwundwlk72vxt2i7q");
+            card["details"]["number"].ToString().ShouldBe("4242424242424242");
+            card["details"]["cvv"].ToString().ShouldBe("100");
+            card["number"].ShouldBeNull();
+            card["cvv"].ShouldBeNull();
+
+            foreach (var wallet in new[] { "applepay", "googlepay" })
+            {
+                var token = methods[wallet]["token"];
+                token.Type.ShouldBe(JTokenType.Object);
+                token["id"].ToString().ShouldBe("tok_ubfj2q76miwundwlk72vxt2i7q");
+                token["expires_on"].ShouldNotBeNull();
+                methods[wallet]["expires_on"].ShouldBeNull();
+            }
+        }
+
+        [Fact]
+        public void ShouldWriteEveryGooglePayPreferredSchemeForPaymentSetupsRequest()
+        {
+            Enum.GetValues(typeof(GooglePayPreferredScheme)).Length.ShouldBe(2);
+            Serializer.Serialize(new SetupGooglePay { PreferredScheme = GooglePayPreferredScheme.Visa })
+                .ShouldContain("\"preferred_scheme\":\"visa\"");
+            Serializer.Serialize(new SetupGooglePay { PreferredScheme = GooglePayPreferredScheme.Mastercard })
+                .ShouldContain("\"preferred_scheme\":\"mastercard\"");
+        }
+
+        [Fact]
+        public void ShouldDeserializeSwaggerExampleForCardWalletsInstrumentSettingsAndMetadataForPaymentSetupsRequest()
+        {
+            const string json = @"{
+                ""processing_channel_id"": ""pc_q4dbxom5jbgudnjzjpz7j2z6uq"",
+                ""amount"": 10000,
+                ""currency"": ""GBP"",
+                ""payment_methods"": {
+                    ""auto_confirm"": ""card"",
+                    ""instrument"": { ""id"": ""src_wmlfc3zttb4uzmk6snpwb43jbi"" },
+                    ""card"": {
+                        ""details"": { ""number"": ""4242424242424242"", ""expiry_month"": 12, ""expiry_year"": 2030, ""cvv"": ""100"" },
+                        ""phone"": { ""country_code"": ""+44"", ""number"": ""207 946 0000"" },
+                        ""preferred_scheme"": ""visa""
+                    },
+                    ""applepay"": { ""token"": { ""id"": ""tok_ubfj2q76miwundwlk72vxt2i7q"" }, ""phone"": { ""country_code"": ""+44"", ""number"": ""207 946 0000"" } },
+                    ""googlepay"": { ""token_data"": { ""protocol_version"": ""ECv2"", ""signature"": ""sig"", ""signed_message"": ""msg"" }, ""phone"": { ""country_code"": ""+44"", ""number"": ""207 946 0000"" } }
+                },
+                ""settings"": {
+                    ""success_url"": ""https://example.com/payments/success"",
+                    ""failure_url"": ""https://example.com/payments/fail"",
+                    ""capture"": true,
+                    ""excluded_payment_methods"": [""card"", ""klarna"", ""stcpay""]
+                },
+                ""metadata"": { ""coupon_code"": ""NY2018"", ""partner_id"": 123989 }
+            }";
+
+            var request = (PaymentSetupsRequest)Serializer.Deserialize(json, typeof(PaymentSetupsRequest));
+
+            request.PaymentMethods.AutoConfirm.ShouldBe("card");
+            request.PaymentMethods.Instrument.Id.ShouldBe("src_wmlfc3zttb4uzmk6snpwb43jbi");
+            request.PaymentMethods.Card.Details.Number.ShouldBe("4242424242424242");
+            request.PaymentMethods.Card.Details.ExpiryMonth.ShouldBe(12);
+            request.PaymentMethods.Card.Details.ExpiryYear.ShouldBe(2030);
+            request.PaymentMethods.Card.Details.Cvv.ShouldBe("100");
+            request.PaymentMethods.Card.Phone.CountryCode.ShouldBe("+44");
+            request.PaymentMethods.Card.Phone.Number.ShouldBe("207 946 0000");
+            request.PaymentMethods.Card.PreferredScheme.ShouldBe(PreferredSchema.Visa);
+            request.PaymentMethods.ApplePay.Token.Id.ShouldBe("tok_ubfj2q76miwundwlk72vxt2i7q");
+            request.PaymentMethods.ApplePay.Phone.Number.ShouldBe("207 946 0000");
+            request.PaymentMethods.GooglePay.TokenData.ProtocolVersion.ShouldBe("ECv2");
+            request.PaymentMethods.GooglePay.TokenData.Signature.ShouldBe("sig");
+            request.PaymentMethods.GooglePay.TokenData.SignedMessage.ShouldBe("msg");
+            request.PaymentMethods.GooglePay.Phone.CountryCode.ShouldBe("+44");
+            request.Settings.SuccessUrl.ShouldBe("https://example.com/payments/success");
+            request.Settings.FailureUrl.ShouldBe("https://example.com/payments/fail");
+            request.Settings.Capture.ShouldBe(true);
+            request.Settings.ExcludedPaymentMethods.ShouldBe(new List<string> { "card", "klarna", "stcpay" });
+            request.Metadata["coupon_code"].ShouldBe("NY2018");
+            request.Metadata["partner_id"].ShouldBe(123989L);
+        }
+
+        private static PaymentSetupCardAccountHolder CreateCardAccountHolderForPaymentSetupsRequest()
+        {
+            return new PaymentSetupCardAccountHolder
+            {
+                Type = PaymentSetupCardAccountHolderType.Corporate,
+                FirstName = "John",
+                LastName = "Smith",
+                MiddleName = "Paul",
+                CompanyName = "Acme Ltd",
+                AccountNameInquiry = true
+            };
+        }
+
+        private static void AssertCardAccountHolderForPaymentSetupsRequest(PaymentSetupCardAccountHolder accountHolder)
+        {
+            accountHolder.Type.ShouldBe(PaymentSetupCardAccountHolderType.Corporate);
+            accountHolder.FirstName.ShouldBe("John");
+            accountHolder.LastName.ShouldBe("Smith");
+            accountHolder.MiddleName.ShouldBe("Paul");
+            accountHolder.CompanyName.ShouldBe("Acme Ltd");
+            accountHolder.AccountNameInquiry.ShouldBe(true);
+        }
+
+        private static PaymentSetupsRequest CreateRequestWithCardWalletsAndMetadata()
+        {
+            var phone = new Phone { CountryCode = "+44", Number = "207 946 0000" };
+            var walletToken = new WalletToken
+            {
+                Id = "tok_ubfj2q76miwundwlk72vxt2i7q",
+                ExpiresOn = new DateTime(2026, 6, 1, 12, 0, 0, DateTimeKind.Utc)
+            };
+
+            return new PaymentSetupsRequest
+            {
+                ProcessingChannelId = "pc_q4dbxom5jbgudnjzjpz7j2z6uq",
+                Amount = 10000,
+                Currency = Currency.GBP,
+                Settings = new Settings
+                {
+                    ExcludedPaymentMethods = new List<string> { "card", "klarna", "stcpay" }
+                },
+                Metadata = new Dictionary<string, object>
+                {
+                    { "coupon_code", "NY2018" }, { "partner_id", 123989 }, { "vip", true }
+                },
+                PaymentMethods = new Checkout.Payments.Setups.Entities.PaymentMethods
+                {
+                    AutoConfirm = "card",
+                    Instrument = new PaymentSetupInstrument { Id = "src_wmlfc3zttb4uzmk6snpwb43jbi" },
+                    Card = new SetupCard
+                    {
+                        Token = new CardToken { Id = "tok_ubfj2q76miwundwlk72vxt2i7q" },
+                        Details = new CardDetails
+                        {
+                            Number = "4242424242424242",
+                            ExpiryMonth = 12,
+                            ExpiryYear = 2030,
+                            Name = "John Smith",
+                            Cvv = "100",
+                            Stored = true,
+                            AllowUpdate = true
+                        },
+                        StoreForFutureUse = true,
+                        Phone = phone,
+                        AccountHolder = CreateCardAccountHolderForPaymentSetupsRequest(),
+                        PreferredScheme = PreferredSchema.CartesBancaires
+                    },
+                    ApplePay = new SetupApplePay
+                    {
+                        TokenData = new ApplePayTokenData
+                        {
+                            Version = "EC_v1",
+                            Data = "t7GeajLB9skXB6QSWfEpPA4WPhDqB7ekdd",
+                            Signature = "MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglg",
+                            Header = new ApplePayTokenDataHeader
+                            {
+                                EphemeralPublicKey = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEX",
+                                PublicKeyHash = "tqYV+tmG9aMh+l/K6cicUnPqkb1gUiLjSTM9gEz6Nl0=",
+                                TransactionId = "3cee89679130a4b2617c76118a1790e7"
+                            }
+                        },
+                        Token = walletToken,
+                        StoreForFutureUse = false,
+                        Phone = phone,
+                        AccountHolder = CreateCardAccountHolderForPaymentSetupsRequest(),
+                        PreferredScheme = PreferredSchema.Visa
+                    },
+                    GooglePay = new SetupGooglePay
+                    {
+                        TokenData = new GooglePayTokenData
+                        {
+                            ProtocolVersion = "ECv2",
+                            Signature = "MEQCIH6Q4OwQ0jAceFEkGF0JID6sJNXxOEi4r+mA7biRxqBQAiAondqoUpU",
+                            SignedMessage = "{\"encryptedMessage\":\"ZW5jcnlwdGVk\",\"ephemeralPublicKey\":\"BOdoXP\",\"tag\":\"T3c=\"}",
+                            TokenizationKey = "pk_sbox_xg66bnn6tpspd6pt3psc7otrqa"
+                        },
+                        Token = walletToken,
+                        StoreForFutureUse = true,
+                        Phone = phone,
+                        AccountHolder = CreateCardAccountHolderForPaymentSetupsRequest(),
+                        PreferredScheme = GooglePayPreferredScheme.Mastercard
+                    }
+                }
+            };
+        }
     }
 }

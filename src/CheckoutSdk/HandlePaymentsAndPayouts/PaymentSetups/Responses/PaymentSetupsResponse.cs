@@ -5,22 +5,22 @@ using Checkout.Payments.Setups.Entities;
 namespace Checkout.Payments.Setups.Responses
 {
     /// <summary>
-    /// Beta
+    /// A Payment Setup, as returned when you create, update or get it.
+    /// [Beta]
     /// </summary>
     public class PaymentSetupsResponse : Resource
     {
         /// <summary>
-        /// The payment's unique identifier
-        /// [Required] readOnly
-        /// ^(pay)_(\w{26})$
-        /// 30 characters
+        /// The unique identifier of the Payment Setup.
+        /// [Optional]
+        /// readOnly
         /// </summary>
         public string Id { get; set; }
 
         /// <summary>
-        /// The processing channel to use for the payment
-        /// ^(pc)_(\w{26})$
+        /// The processing channel to use for the payment.
         /// [Required]
+        /// ^(pc)_(\w{26})$
         /// </summary>
         public string ProcessingChannelId { get; set; }
 
@@ -41,51 +41,52 @@ namespace Checkout.Payments.Setups.Responses
         /// <summary>
         /// The type of payment.
         /// You must provide this field for card payments in which the cardholder is not present. For example, if the
-        /// transaction is a recurring payment, or a mail order/telephone order (MOTO) payment
+        /// transaction is a recurring payment, or a mail order/telephone order (MOTO) payment.
         /// [Optional]
+        /// Default: Regular
         /// </summary>
         public PaymentType? PaymentType { get; set; } = Payments.PaymentType.Regular;
 
         /// <summary>
         /// A reference you can use to identify the payment. For example, an order number.
-        /// &lt;= 80 characters
         /// [Optional]
+        /// max 80 characters
         /// </summary>
         public string Reference { get; set; }
 
         /// <summary>
-        /// A description of the payment
-        /// &lt;= 100 characters
+        /// A description of the payment.
         /// [Optional]
+        /// max 100 characters
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// The payment methods that are enabled on your account and available for use
+        /// The payment methods that are enabled on your account and available for use.
         /// [Optional]
         /// </summary>
         public Entities.PaymentMethods PaymentMethods { get; set; }
 
         /// <summary>
-        /// Settings for the Payment Setup
+        /// Settings for the Payment Setup.
         /// [Optional]
         /// </summary>
         public Settings Settings { get; set; }
 
         /// <summary>
-        /// The customer's details
+        /// The customer's details.
         /// [Optional]
         /// </summary>
         public Customer Customer { get; set; }
 
         /// <summary>
-        /// The customer's order details
+        /// The customer's order details.
         /// [Optional]
         /// </summary>
         public Order Order { get; set; }
 
         /// <summary>
-        /// Details for specific industries, including airline and accommodation industries
+        /// Industry-specific information, including airline and accommodation data.
         /// [Optional]
         /// </summary>
         public Industry Industry { get; set; }
@@ -99,7 +100,8 @@ namespace Checkout.Payments.Setups.Responses
         /// <summary>
         /// An ordered list of available payment method names. The order indicates the recommended
         /// presentation priority, with the first item being the highest priority.
-        /// [Optional] readOnly
+        /// [Optional]
+        /// readOnly
         /// </summary>
         public IList<string> AvailablePaymentMethods { get; set; }
 
@@ -116,9 +118,10 @@ namespace Checkout.Payments.Setups.Responses
         public PaymentSetupBillingDescriptor BillingDescriptor { get; set; }
 
         /// <summary>
-        /// The latest payment response from the gateway, populated when auto-confirm succeeds during setup
-        /// creation. For the full response schema, see Request a Payment or Payout.
-        /// [Optional] readOnly
+        /// The latest payment for this setup. Returned after a successful confirmation, including auto-confirm
+        /// during setup creation. For the full response schema, see Get payment details.
+        /// [Optional]
+        /// readOnly
         /// </summary>
         public object LatestPayment { get; set; }
 
@@ -140,5 +143,13 @@ namespace Checkout.Payments.Setups.Responses
         /// [Optional]
         /// </summary>
         public PaymentSetupRisk Risk { get; set; }
+
+        /// <summary>
+        /// A set of key/value pairs you can attach to a payment. It can be useful for storing additional
+        /// information about the payment. Each value is a string (max 255 characters), a number or a boolean.
+        /// [Optional]
+        /// max 20 properties
+        /// </summary>
+        public IDictionary<string, object> Metadata { get; set; }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Checkout.Common;
 using Checkout.Payments.Setups.Entities;
 
@@ -25,11 +26,11 @@ namespace Checkout.Payments.Setups.Requests
         public long? Amount { get; set; }
 
         /// <summary>
-        /// The currency of the payment, as a three-letter ISO currency code
+        /// The currency of the payment, as a three-letter ISO currency code.
         /// [Required]
         /// </summary>
         public Currency? Currency { get; set; }
-        
+
         /// <summary>
         /// The type of payment.
         /// You must provide this field for card payments in which the cardholder is not present. For example, if the
@@ -41,45 +42,45 @@ namespace Checkout.Payments.Setups.Requests
         public PaymentType? PaymentType { get; set; } = Payments.PaymentType.Regular;
 
         /// <summary>
-        /// A reference you can use to identify the payment. For example, an order number
-        /// &lt;= 80 characters
+        /// A reference you can use to identify the payment. For example, an order number.
         /// [Optional]
+        /// max 80 characters
         /// </summary>
         public string Reference { get; set; }
 
         /// <summary>
         /// A description of the payment.
-        /// &lt;= 100 characters
         /// [Optional]
+        /// max 100 characters
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// The payment methods that are enabled on your account and available for use
+        /// The payment methods that are enabled on your account and available for use.
         /// [Optional]
         /// </summary>
         public Entities.PaymentMethods PaymentMethods { get; set; }
 
         /// <summary>
-        /// Settings for the Payment Setup
+        /// Settings for the Payment Setup.
         /// [Optional]
         /// </summary>
         public Settings Settings { get; set; }
 
         /// <summary>
-        /// The customer's details
+        /// The customer's details.
         /// [Optional]
         /// </summary>
         public Customer Customer { get; set; }
 
         /// <summary>
-        /// The customer's order details
+        /// The customer's order details.
         /// [Optional]
         /// </summary>
         public Order Order { get; set; }
 
         /// <summary>
-        /// Details for specific industries, including airline and accommodation industries
+        /// Industry-specific information, including airline and accommodation data.
         /// [Optional]
         /// </summary>
         public Industry Industry { get; set; }
@@ -120,5 +121,13 @@ namespace Checkout.Payments.Setups.Requests
         /// [Optional]
         /// </summary>
         public PaymentSetupRisk Risk { get; set; }
+
+        /// <summary>
+        /// A set of key/value pairs you can attach to a payment. It can be useful for storing additional
+        /// information about the payment. Each value is a string (max 255 characters), a number or a boolean.
+        /// [Optional]
+        /// max 20 properties
+        /// </summary>
+        public IDictionary<string, object> Metadata { get; set; }
     }
 }
