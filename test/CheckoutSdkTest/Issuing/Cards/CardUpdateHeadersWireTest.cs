@@ -17,8 +17,9 @@ using Xunit;
 namespace Checkout.Issuing.Cards
 {
     /// <summary>
-    /// Verifies the <c>return-encrypted-cvv</c> and <c>Encryption-Key</c> headers on the actual
-    /// outgoing HTTP request.
+    /// Verifies the deprecated <c>return-encrypted-cvv</c> and <c>Encryption-Key</c> headers on
+    /// the actual outgoing HTTP request. The API no longer documents them and ignores them, but
+    /// the SDK still sends them when set until the next major version.
     ///
     /// The other pre-existing test for this feature bypasses the code that emits headers:
     /// <c>CardClientTest</c> mocks <see cref="IApiClient"/> and so only proves the object was
@@ -83,8 +84,7 @@ namespace Checkout.Issuing.Cards
                 : null;
 
         /// <summary>
-        /// The spec types return-encrypted-cvv as a boolean and spells its values "true" and
-        /// "false". bool.ToString() in .NET returns "True", and header values are not JSON, so
+        /// return-encrypted-cvv is a boolean header, sent as "true" or "false". bool.ToString() in .NET returns "True", and header values are not JSON, so
         /// nothing downstream lower-cases them.
         /// </summary>
         [Fact]
@@ -105,8 +105,8 @@ namespace Checkout.Issuing.Cards
         }
 
         /// <summary>
-        /// Both names are case sensitive in the spec: return-encrypted-cvv is lower case and
-        /// Encryption-Key is title case. They come from the Newtonsoft JsonProperty attributes on
+        /// The header names are sent exactly as the API historically defined them:
+        /// return-encrypted-cvv in lower case and Encryption-Key in title case. They come from the Newtonsoft JsonProperty attributes on
         /// the container, resolved by GetJsonPropertyName.
         /// </summary>
         [Fact]

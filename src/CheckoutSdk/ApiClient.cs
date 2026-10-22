@@ -448,8 +448,7 @@ namespace Checkout
 
             // bool.ToString() returns "True"/"False", capitalised. Header values are not JSON, so
             // nothing downstream lower-cases them: a boolean header would reach the wire as
-            // "True". The spec spells these values "true"/"false" (for example the
-            // return-encrypted-cvv header on PATCH /issuing/cards/{cardId}), and a strict
+            // "True". HTTP APIs spell boolean header values "true"/"false", and a strict
             // server-side parser is entitled to read "True" as anything but true.
             if (type == typeof(bool))
             {

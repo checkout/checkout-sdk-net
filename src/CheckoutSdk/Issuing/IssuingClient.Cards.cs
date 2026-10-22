@@ -60,8 +60,8 @@ namespace Checkout.Issuing
         /// <summary>
         /// Updates a card you issued previously, sending the return-encrypted-cvv and
         /// Encryption-Key headers. The API no longer documents these headers and
-        /// update-card-response does not carry an encrypted CVV. The headers are still sent when
-        /// set. Use <see cref="UpdateCardDetails(string, CardsUpdateRequest, CancellationToken)"/>
+        /// update-card-response does not carry an encrypted CVV. The API ignores them; they are
+        /// still sent when set. Use <see cref="UpdateCardDetails(string, CardsUpdateRequest, CancellationToken)"/>
         /// instead; this overload will be removed in the next major version.
         /// </summary>
         /// <param name="cardId">the card ID</param>
