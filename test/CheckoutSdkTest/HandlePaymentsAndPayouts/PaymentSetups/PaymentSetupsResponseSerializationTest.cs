@@ -1,4 +1,4 @@
-// Customer.BillingAddress is obsolete (outside the spec customer) but kept covered until it is removed.
+// Customer.BillingAddress (outside the spec customer) and the legacy PaymentMethodOptions are obsolete but kept covered until they are removed.
 #pragma warning disable CS0618
 using Checkout.Common;
 using Checkout.Payments.Setups.Entities;
@@ -113,6 +113,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                         ""flags"": [""express"", ""test""],
                         ""account_holder"": { ""name"": ""Hans Klarna"" },
                         ""action"": { ""type"": ""sdk"", ""client_token"": ""tok_resp"", ""session_id"": ""sess_resp"" },
+                        ""iban"": ""DE89370400440532013000"",
                         ""payment_method_options"": { ""sdk"": { ""id"": ""opt_resp_k"", ""status"": ""active"", ""flags"": [""f1""], ""action"": { ""type"": ""sdk"" } } }
                     },
                     ""paypal"": {
@@ -121,7 +122,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                         ""user_action"": ""pay_now"",
                         ""brand_name"": ""Alpine Store"",
                         ""shipping_preference"": ""get_from_file"",
-                        ""action"": { ""type"": ""redirect"", ""order_id"": ""PP-RESP-001"" }
+                        ""action"": { ""type"": ""sdk"", ""order_id"": ""PP-RESP-001"" }
                     },
                     ""tabby"": {
                         ""status"": ""unavailable"",
@@ -214,6 +215,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.PaymentMethods.Klarna.Action.Type.ShouldBe("sdk");
             result.PaymentMethods.Klarna.Action.ClientToken.ShouldBe("tok_resp");
             result.PaymentMethods.Klarna.Action.SessionId.ShouldBe("sess_resp");
+            result.PaymentMethods.Klarna.Iban.ShouldBe("DE89370400440532013000");
             result.PaymentMethods.Klarna.PaymentMethodOptions.Sdk.Id.ShouldBe("opt_resp_k");
             result.PaymentMethods.Klarna.PaymentMethodOptions.Sdk.Status.ShouldBe("active");
             result.PaymentMethods.Klarna.PaymentMethodOptions.Sdk.Flags.ShouldContain("f1");
@@ -225,7 +227,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.PaymentMethods.Paypal.UserAction.ShouldBe(PaypalUserAction.PayNow);
             result.PaymentMethods.Paypal.BrandName.ShouldBe("Alpine Store");
             result.PaymentMethods.Paypal.ShippingPreference.ShouldBe(PaypalShippingPreference.GetFromFile);
-            result.PaymentMethods.Paypal.Action.Type.ShouldBe("redirect");
+            result.PaymentMethods.Paypal.Action.Type.ShouldBe("sdk");
             result.PaymentMethods.Paypal.Action.OrderId.ShouldBe("PP-RESP-001");
 
             // PaymentMethods - Tabby
@@ -341,7 +343,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                         ShippingPreference = PaypalShippingPreference.NoShipping,
                         Action = new PaymentMethodAction
                         {
-                            Type = "redirect",
+                            Type = "sdk",
                             OrderId = "PP-RT-001"
                         }
                     }
@@ -415,13 +417,141 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             deserialized.PaymentMethods.Paypal.UserAction.ShouldBe(PaypalUserAction.Continue);
             deserialized.PaymentMethods.Paypal.BrandName.ShouldBe("RT Store");
             deserialized.PaymentMethods.Paypal.ShippingPreference.ShouldBe(PaypalShippingPreference.NoShipping);
-            deserialized.PaymentMethods.Paypal.Action.Type.ShouldBe("redirect");
+            deserialized.PaymentMethods.Paypal.Action.Type.ShouldBe("sdk");
             deserialized.PaymentMethods.Paypal.Action.OrderId.ShouldBe("PP-RT-001");
 
             // AvailablePaymentMethods
             deserialized.AvailablePaymentMethods.Count.ShouldBe(2);
             deserialized.AvailablePaymentMethods.ShouldContain("paypal");
             deserialized.AvailablePaymentMethods.ShouldContain("card");
+        }
+
+        // ------------------------------------------------------------------------
+        // Flattened payment methods: Klarna, PayPal, Tabby and stc pay
+        // Each method carries its own read-only action (PaymentMethodAction). Klarna and PayPal return
+        // type "sdk", stc pay returns type "otp". Klarna also returns iban. Values are the spec examples.
+        // ------------------------------------------------------------------------
+
+        private const string FlattenedPaymentMethodsResponseJson = @"{
+            ""id"": ""psu_y3oqhf46pyzuxjbcn2giaqnb44"",
+            ""processing_channel_id"": ""pc_q4dbxom5jbgudnjzjpz7j2z6uq"",
+            ""amount"": 10000,
+            ""currency"": ""GBP"",
+            ""payment_methods"": {
+                ""klarna"": {
+                    ""status"": ""ready"",
+                    ""initialization"": ""enabled"",
+                    ""action"": {
+                        ""type"": ""sdk"",
+                        ""client_token"": ""eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ewogICJzZXNzaW9uX2lkIiA6ICIw"",
+                        ""session_id"": ""0b1d9815-165e-42e2-8867-35bc03789e00""
+                    },
+                    ""account_holder"": { ""name"": ""John Smith"" },
+                    ""iban"": ""DE89370400440532013000""
+                },
+                ""paypal"": {
+                    ""status"": ""ready"",
+                    ""initialization"": ""enabled"",
+                    ""user_action"": ""pay_now"",
+                    ""brand_name"": ""Acme Corporation"",
+                    ""shipping_preference"": ""no_shipping"",
+                    ""action"": {
+                        ""type"": ""sdk"",
+                        ""order_id"": ""dd4b1a85-31de-404b-99f4-f143f8ba35ba""
+                    }
+                },
+                ""tabby"": {
+                    ""status"": ""ready"",
+                    ""initialization"": ""enabled"",
+                    ""payment_types"": [""pay_later""]
+                },
+                ""stcpay"": {
+                    ""status"": ""action_required"",
+                    ""initialization"": ""enabled"",
+                    ""action"": { ""type"": ""otp"" }
+                }
+            }
+        }";
+
+        private static void AssertFlattenedPaymentMethods(Checkout.Payments.Setups.Entities.PaymentMethods methods)
+        {
+            methods.ShouldNotBeNull();
+
+            methods.Klarna.ShouldNotBeNull();
+            methods.Klarna.Status.ShouldBe(PaymentMethodStatus.Ready);
+            methods.Klarna.Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
+            methods.Klarna.Action.ShouldNotBeNull();
+            methods.Klarna.Action.Type.ShouldBe("sdk");
+            methods.Klarna.Action.ClientToken.ShouldBe("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ewogICJzZXNzaW9uX2lkIiA6ICIw");
+            methods.Klarna.Action.SessionId.ShouldBe("0b1d9815-165e-42e2-8867-35bc03789e00");
+            methods.Klarna.Action.OrderId.ShouldBeNull();
+            methods.Klarna.AccountHolder.Name.ShouldBe("John Smith");
+            methods.Klarna.Iban.ShouldBe("DE89370400440532013000");
+
+            methods.Paypal.ShouldNotBeNull();
+            methods.Paypal.Status.ShouldBe(PaymentMethodStatus.Ready);
+            methods.Paypal.Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
+            methods.Paypal.UserAction.ShouldBe(PaypalUserAction.PayNow);
+            methods.Paypal.BrandName.ShouldBe("Acme Corporation");
+            methods.Paypal.ShippingPreference.ShouldBe(PaypalShippingPreference.NoShipping);
+            methods.Paypal.Action.ShouldNotBeNull();
+            methods.Paypal.Action.Type.ShouldBe("sdk");
+            methods.Paypal.Action.OrderId.ShouldBe("dd4b1a85-31de-404b-99f4-f143f8ba35ba");
+            methods.Paypal.Action.ClientToken.ShouldBeNull();
+            methods.Paypal.Action.SessionId.ShouldBeNull();
+
+            methods.Tabby.ShouldNotBeNull();
+            methods.Tabby.Status.ShouldBe(PaymentMethodStatus.Ready);
+            methods.Tabby.Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
+            methods.Tabby.PaymentTypes.ShouldBe(new List<string> { "pay_later" });
+
+            methods.Stcpay.ShouldNotBeNull();
+            methods.Stcpay.Status.ShouldBe(PaymentMethodStatus.ActionRequired);
+            methods.Stcpay.Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
+            methods.Stcpay.Action.ShouldNotBeNull();
+            methods.Stcpay.Action.Type.ShouldBe("otp");
+            methods.Stcpay.Otp.ShouldBeNull();
+        }
+
+        [Fact]
+        public void ShouldDeserializeSwaggerExampleForFlattenedPaymentMethodsInPaymentSetupsResponse()
+        {
+            var result = (PaymentSetupsResponse)Serializer.Deserialize(FlattenedPaymentMethodsResponseJson,
+                typeof(PaymentSetupsResponse));
+
+            result.ShouldNotBeNull();
+            AssertFlattenedPaymentMethods(result.PaymentMethods);
+        }
+
+        [Fact]
+        public void ShouldDeserializeSwaggerExampleForFlattenedPaymentMethodsInPaymentSetupsConfirmResponse()
+        {
+            var result = (PaymentSetupsConfirmResponse)Serializer.Deserialize(FlattenedPaymentMethodsResponseJson,
+                typeof(PaymentSetupsConfirmResponse));
+
+            result.ShouldNotBeNull();
+            AssertFlattenedPaymentMethods(result.PaymentMethods);
+        }
+
+        [Fact]
+        public void ShouldRoundTripFlattenedPaymentMethodsInPaymentSetupsResponse()
+        {
+            var original = (PaymentSetupsResponse)Serializer.Deserialize(FlattenedPaymentMethodsResponseJson,
+                typeof(PaymentSetupsResponse));
+
+            var json = Serializer.Serialize(original);
+            var deserialized = (PaymentSetupsResponse)Serializer.Deserialize(json, typeof(PaymentSetupsResponse));
+
+            AssertFlattenedPaymentMethods(deserialized.PaymentMethods);
+
+            var methods = Newtonsoft.Json.Linq.JObject.Parse(json)["payment_methods"];
+            ((string)methods["klarna"]["iban"]).ShouldBe("DE89370400440532013000");
+            ((string)methods["klarna"]["action"]["client_token"])
+                .ShouldBe("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ewogICJzZXNzaW9uX2lkIiA6ICIw");
+            ((string)methods["klarna"]["action"]["session_id"]).ShouldBe("0b1d9815-165e-42e2-8867-35bc03789e00");
+            ((string)methods["paypal"]["action"]["type"]).ShouldBe("sdk");
+            ((string)methods["paypal"]["action"]["order_id"]).ShouldBe("dd4b1a85-31de-404b-99f4-f143f8ba35ba");
+            ((string)methods["stcpay"]["action"]["type"]).ShouldBe("otp");
         }
 
         // ------------------------------------------------------------------------

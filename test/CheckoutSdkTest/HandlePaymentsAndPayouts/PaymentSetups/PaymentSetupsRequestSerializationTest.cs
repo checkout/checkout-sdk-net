@@ -1,4 +1,4 @@
-// Customer.BillingAddress is obsolete (outside the spec customer) but kept covered until it is removed.
+// Customer.BillingAddress (outside the spec customer) and the legacy PaymentMethodOptions are obsolete but kept covered until they are removed.
 #pragma warning disable CS0618
 using Checkout.Common;
 using Checkout.Payments.Contexts;
@@ -142,6 +142,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             deserialized.PaymentMethods.Klarna.Action.ClientToken.ShouldBe("klarna_token_123");
             deserialized.PaymentMethods.Klarna.Action.SessionId.ShouldBe("klarna_session_456");
             deserialized.PaymentMethods.Klarna.Action.OrderId.ShouldBeNull();
+            deserialized.PaymentMethods.Klarna.Iban.ShouldBe("DE89370400440532013000");
             deserialized.PaymentMethods.Klarna.PaymentMethodOptions.ShouldNotBeNull();
             deserialized.PaymentMethods.Klarna.PaymentMethodOptions.Sdk.ShouldNotBeNull();
             deserialized.PaymentMethods.Klarna.PaymentMethodOptions.Sdk.Id.ShouldBe("opt_klarna_sdk");
@@ -183,7 +184,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             deserialized.PaymentMethods.Paypal.BrandName.ShouldBe("Test Store");
             deserialized.PaymentMethods.Paypal.ShippingPreference.ShouldBe(PaypalShippingPreference.SetProvidedAddress);
             deserialized.PaymentMethods.Paypal.Action.ShouldNotBeNull();
-            deserialized.PaymentMethods.Paypal.Action.Type.ShouldBe("redirect");
+            deserialized.PaymentMethods.Paypal.Action.Type.ShouldBe("sdk");
             deserialized.PaymentMethods.Paypal.Action.OrderId.ShouldBe("PAYPAL-ORD-789");
 
             // Cash App Pay, customer identifiers and the device fields
@@ -278,6 +279,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                         ""flags"": [""express""],
                         ""account_holder"": { ""name"": ""John Klarna"" },
                         ""action"": { ""type"": ""sdk"", ""client_token"": ""tok_abc"", ""session_id"": ""sess_def"" },
+                        ""iban"": ""DE89370400440532013000"",
                         ""payment_method_options"": { ""sdk"": { ""id"": ""opt_k1"" } }
                     },
                     ""stcpay"": {
@@ -304,7 +306,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                         ""user_action"": ""continue"",
                         ""brand_name"": ""My Store"",
                         ""shipping_preference"": ""no_shipping"",
-                        ""action"": { ""type"": ""redirect"", ""order_id"": ""PP-001"" }
+                        ""action"": { ""type"": ""sdk"", ""order_id"": ""PP-001"" }
                     }
                 }
             }";
@@ -381,6 +383,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.PaymentMethods.Klarna.Action.Type.ShouldBe("sdk");
             result.PaymentMethods.Klarna.Action.ClientToken.ShouldBe("tok_abc");
             result.PaymentMethods.Klarna.Action.SessionId.ShouldBe("sess_def");
+            result.PaymentMethods.Klarna.Iban.ShouldBe("DE89370400440532013000");
             result.PaymentMethods.Klarna.PaymentMethodOptions.Sdk.Id.ShouldBe("opt_k1");
 
             // PaymentMethods - Stcpay
@@ -404,7 +407,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.PaymentMethods.Paypal.UserAction.ShouldBe(PaypalUserAction.Continue);
             result.PaymentMethods.Paypal.BrandName.ShouldBe("My Store");
             result.PaymentMethods.Paypal.ShippingPreference.ShouldBe(PaypalShippingPreference.NoShipping);
-            result.PaymentMethods.Paypal.Action.Type.ShouldBe("redirect");
+            result.PaymentMethods.Paypal.Action.Type.ShouldBe("sdk");
             result.PaymentMethods.Paypal.Action.OrderId.ShouldBe("PP-001");
         }
 
@@ -538,6 +541,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                             ClientToken = "klarna_token_123",
                             SessionId = "klarna_session_456"
                         },
+                        Iban = "DE89370400440532013000",
                         PaymentMethodOptions = new PaymentMethodOptions
                         {
                             Sdk = new PaymentMethodOption { Id = "opt_klarna_sdk" }
@@ -580,7 +584,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                         ShippingPreference = PaypalShippingPreference.SetProvidedAddress,
                         Action = new PaymentMethodAction
                         {
-                            Type = "redirect",
+                            Type = "sdk",
                             OrderId = "PAYPAL-ORD-789"
                         }
                     },
@@ -591,6 +595,96 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                     }
                 }
             };
+        }
+
+        // ------------------------------------------------------------------------
+        // Flattened payment methods: wire keys for PayPal, Tabby, Klarna and stc pay
+        // The writable fields of PayPal (user_action, brand_name, shipping_preference), Tabby
+        // (payment_types) and stc pay (otp) are sent under the spec keys, and PayPal under paypal.
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldWriteSpecWireKeysForFlattenedPaymentMethodsForPaymentSetupsRequest()
+        {
+            var request = new PaymentSetupsRequest
+            {
+                ProcessingChannelId = "pc_q4dbxom5jbgudnjzjpz7j2z6uq",
+                Amount = 10000L,
+                Currency = Currency.GBP,
+                PaymentMethods = new Checkout.Payments.Setups.Entities.PaymentMethods
+                {
+                    Paypal = new Paypal
+                    {
+                        Initialization = PaymentMethodInitialization.Enabled,
+                        UserAction = PaypalUserAction.PayNow,
+                        BrandName = "Acme Corporation",
+                        ShippingPreference = PaypalShippingPreference.NoShipping
+                    },
+                    Tabby = new Tabby
+                    {
+                        Initialization = PaymentMethodInitialization.Enabled,
+                        PaymentTypes = new List<string> { "pay_later" }
+                    },
+                    Stcpay = new Stcpay
+                    {
+                        Initialization = PaymentMethodInitialization.Enabled,
+                        Otp = "123456"
+                    },
+                    Klarna = new Klarna
+                    {
+                        Initialization = PaymentMethodInitialization.Enabled
+                    }
+                }
+            };
+
+            var json = Serializer.Serialize(request);
+            var methods = JObject.Parse(json)["payment_methods"];
+
+            methods["paypal"].ShouldNotBeNull();
+            json.ShouldNotContain("\"pay_pal\"");
+            ((string)methods["paypal"]["initialization"]).ShouldBe("enabled");
+            ((string)methods["paypal"]["user_action"]).ShouldBe("pay_now");
+            ((string)methods["paypal"]["brand_name"]).ShouldBe("Acme Corporation");
+            ((string)methods["paypal"]["shipping_preference"]).ShouldBe("no_shipping");
+            methods["paypal"]["action"].ShouldBeNull();
+
+            ((string)methods["tabby"]["initialization"]).ShouldBe("enabled");
+            methods["tabby"]["payment_types"].ToObject<List<string>>().ShouldBe(new List<string> { "pay_later" });
+
+            ((string)methods["stcpay"]["initialization"]).ShouldBe("enabled");
+            ((string)methods["stcpay"]["otp"]).ShouldBe("123456");
+            methods["stcpay"]["action"].ShouldBeNull();
+
+            ((string)methods["klarna"]["initialization"]).ShouldBe("enabled");
+            methods["klarna"]["iban"].ShouldBeNull();
+            methods["klarna"]["action"].ShouldBeNull();
+        }
+
+        [Fact]
+        public void ShouldWriteEveryPaypalShippingPreferenceAndUserActionForPaymentSetupsRequest()
+        {
+            var expectedShipping = new Dictionary<PaypalShippingPreference, string>
+            {
+                { PaypalShippingPreference.NoShipping, "no_shipping" },
+                { PaypalShippingPreference.GetFromFile, "get_from_file" },
+                { PaypalShippingPreference.SetProvidedAddress, "set_provided_address" }
+            };
+            foreach (var entry in expectedShipping)
+            {
+                var json = Serializer.Serialize(new Paypal { ShippingPreference = entry.Key });
+                ((string)JObject.Parse(json)["shipping_preference"]).ShouldBe(entry.Value);
+            }
+
+            var expectedUserAction = new Dictionary<PaypalUserAction, string>
+            {
+                { PaypalUserAction.PayNow, "pay_now" },
+                { PaypalUserAction.Continue, "continue" }
+            };
+            foreach (var entry in expectedUserAction)
+            {
+                var json = Serializer.Serialize(new Paypal { UserAction = entry.Key });
+                ((string)JObject.Parse(json)["user_action"]).ShouldBe(entry.Value);
+            }
         }
 
         // ------------------------------------------------------------------------
