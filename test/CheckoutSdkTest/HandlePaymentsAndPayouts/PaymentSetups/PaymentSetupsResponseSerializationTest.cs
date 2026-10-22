@@ -1,4 +1,4 @@
-// Customer.BillingAddress is obsolete (outside the spec customer) but kept covered until it is removed.
+// Customer.BillingAddress (outside the spec customer) and the legacy PaymentMethodOptions are obsolete but kept covered until they are removed.
 #pragma warning disable CS0618
 using Checkout.Common;
 using Checkout.Payments.Setups.Entities;
@@ -439,7 +439,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             ""currency"": ""GBP"",
             ""payment_methods"": {
                 ""klarna"": {
-                    ""status"": ""available"",
+                    ""status"": ""ready"",
                     ""initialization"": ""enabled"",
                     ""action"": {
                         ""type"": ""sdk"",
@@ -450,7 +450,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                     ""iban"": ""DE89370400440532013000""
                 },
                 ""paypal"": {
-                    ""status"": ""available"",
+                    ""status"": ""ready"",
                     ""initialization"": ""enabled"",
                     ""user_action"": ""pay_now"",
                     ""brand_name"": ""Acme Corporation"",
@@ -461,12 +461,12 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                     }
                 },
                 ""tabby"": {
-                    ""status"": ""available"",
+                    ""status"": ""ready"",
                     ""initialization"": ""enabled"",
                     ""payment_types"": [""pay_later""]
                 },
                 ""stcpay"": {
-                    ""status"": ""requires_action"",
+                    ""status"": ""action_required"",
                     ""initialization"": ""enabled"",
                     ""action"": { ""type"": ""otp"" }
                 }
@@ -478,7 +478,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             methods.ShouldNotBeNull();
 
             methods.Klarna.ShouldNotBeNull();
-            methods.Klarna.Status.ShouldBe(PaymentMethodStatus.Available);
+            methods.Klarna.Status.ShouldBe(PaymentMethodStatus.Ready);
             methods.Klarna.Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
             methods.Klarna.Action.ShouldNotBeNull();
             methods.Klarna.Action.Type.ShouldBe("sdk");
@@ -489,7 +489,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             methods.Klarna.Iban.ShouldBe("DE89370400440532013000");
 
             methods.Paypal.ShouldNotBeNull();
-            methods.Paypal.Status.ShouldBe(PaymentMethodStatus.Available);
+            methods.Paypal.Status.ShouldBe(PaymentMethodStatus.Ready);
             methods.Paypal.Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
             methods.Paypal.UserAction.ShouldBe(PaypalUserAction.PayNow);
             methods.Paypal.BrandName.ShouldBe("Acme Corporation");
@@ -501,12 +501,12 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             methods.Paypal.Action.SessionId.ShouldBeNull();
 
             methods.Tabby.ShouldNotBeNull();
-            methods.Tabby.Status.ShouldBe(PaymentMethodStatus.Available);
+            methods.Tabby.Status.ShouldBe(PaymentMethodStatus.Ready);
             methods.Tabby.Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
             methods.Tabby.PaymentTypes.ShouldBe(new List<string> { "pay_later" });
 
             methods.Stcpay.ShouldNotBeNull();
-            methods.Stcpay.Status.ShouldBe(PaymentMethodStatus.RequiresAction);
+            methods.Stcpay.Status.ShouldBe(PaymentMethodStatus.ActionRequired);
             methods.Stcpay.Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
             methods.Stcpay.Action.ShouldNotBeNull();
             methods.Stcpay.Action.Type.ShouldBe("otp");

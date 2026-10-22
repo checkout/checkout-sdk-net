@@ -1,3 +1,5 @@
+using System;
+
 namespace Checkout.Payments.Setups.Entities
 {
     /// <summary>
@@ -28,8 +30,11 @@ namespace Checkout.Payments.Setups.Entities
         public string Iban { get; set; }
 
         /// <summary>
-        /// Payment method options specific to Klarna
+        /// The payment method options.
+        /// [Optional]
+        /// Deprecated: not part of the API spec; the API no longer sends it and ignores it on requests.
         /// </summary>
+        [Obsolete("Not part of the Payment Setups API specification; the API no longer sends it and ignores it on requests. Use Action instead. Will be removed in the next major version.")]
         public PaymentMethodOptions PaymentMethodOptions { get; set; }
     }
 }

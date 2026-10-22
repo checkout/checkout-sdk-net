@@ -12,7 +12,6 @@ namespace Checkout.Payments.Setups.Entities
         /// - continue: After the customer clicks the PayPal button, the customer is redirected to a page to enter
         /// payment details and then redirected back to the merchant's site to review and finalize the payment.
         /// [Optional]
-        /// Enum: "pay_now" "continue"
         /// </summary>
         public PaypalUserAction? UserAction { get; set; }
 
@@ -29,7 +28,6 @@ namespace Checkout.Payments.Setups.Entities
         /// - get_from_file: Obtains the shipping address from the customer's PayPal account.
         /// - set_provided_address: Uses the shipping address provided by the merchant.
         /// [Optional]
-        /// Enum: "no_shipping" "get_from_file" "set_provided_address"
         /// </summary>
         public PaypalShippingPreference? ShippingPreference { get; set; }
 

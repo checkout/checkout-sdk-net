@@ -1,4 +1,4 @@
-// Customer.BillingAddress is obsolete (outside the spec customer) but kept covered until it is removed.
+// Customer.BillingAddress (outside the spec customer) and the legacy PaymentMethodOptions are obsolete but kept covered until they are removed.
 #pragma warning disable CS0618
 using Checkout.Common;
 using Checkout.Payments.Contexts;
