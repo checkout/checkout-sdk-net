@@ -1,3 +1,4 @@
+using System;
 using Checkout.Common;
 using Checkout.Issuing.Cards.Requests.Create;
 using Checkout.Issuing.Cards.Requests.Credentials;
@@ -38,17 +39,18 @@ namespace Checkout.Issuing
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        ///     Updates a card you issued previously, sending the optional return-encrypted-cvv and
-        ///     Encryption-Key headers. The 2026-09-17 spec (INT-1700) removed encrypted_cvv from
-        ///     update-card-response entirely, so these headers no longer make the response carry it;
-        ///     the API still returns a 422 with error code encryption_key_required if
-        ///     return-encrypted-cvv is set without Encryption-Key also supplied.
+        ///     Updates a card you issued previously, sending the return-encrypted-cvv and
+        ///     Encryption-Key headers. The API no longer documents these headers and
+        ///     update-card-response does not carry an encrypted CVV. The headers are still sent
+        ///     when set. Use <see cref="UpdateCardDetails(string, CardsUpdateRequest, CancellationToken)"/>
+        ///     instead; this overload will be removed in the next major version.
         /// </summary>
         /// <param name="cardId">the card ID</param>
         /// <param name="cardUpdateRequest">the card fields to update</param>
-        /// <param name="headers">the optional return-encrypted-cvv and Encryption-Key headers</param>
+        /// <param name="headers">the return-encrypted-cvv and Encryption-Key headers</param>
         /// <param name="cancellationToken">the cancellation token</param>
         /// <returns>the card update response</returns>
+        [Obsolete("The API no longer supports these headers; use the method without headers. Will be removed in the next major version.")]
         Task<CardsUpdateResponse> UpdateCardDetails(string cardId,
             CardsUpdateRequest cardUpdateRequest,
             CardUpdateHeaders headers,
@@ -76,10 +78,24 @@ namespace Checkout.Issuing
             AbstractRenewCardRequest abstractRenewCardRequest,
             CancellationToken cancellationToken = default);
 
-        Task<Resource> RevokeCard(string cardId, RevokeCardRequest revokeCardRequest,
+        /// <summary>
+        ///     Revokes a card. The request body is optional.
+        /// </summary>
+        /// <param name="cardId">the card ID</param>
+        /// <param name="revokeCardRequest">the optional revocation reason; when null no body is sent</param>
+        /// <param name="cancellationToken">the cancellation token</param>
+        /// <returns>the revoke card response links</returns>
+        Task<Resource> RevokeCard(string cardId, RevokeCardRequest revokeCardRequest = null,
             CancellationToken cancellationToken = default);
 
-        Task<Resource> SuspendCard(string cardId, SuspendCardRequest suspendCardRequest,
+        /// <summary>
+        ///     Suspends a card. The request body is optional.
+        /// </summary>
+        /// <param name="cardId">the card ID</param>
+        /// <param name="suspendCardRequest">the optional suspension reason; when null no body is sent</param>
+        /// <param name="cancellationToken">the cancellation token</param>
+        /// <returns>the suspend card response links</returns>
+        Task<Resource> SuspendCard(string cardId, SuspendCardRequest suspendCardRequest = null,
             CancellationToken cancellationToken = default);
     }
 }

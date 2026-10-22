@@ -1,10 +1,14 @@
+using System;
 using Newtonsoft.Json;
 
 namespace Checkout.Issuing.Cards.Requests.Update
 {
     /// <summary>
-    /// The optional HTTP headers accepted when updating a card's details.
+    /// The return-encrypted-cvv and Encryption-Key HTTP headers for updating a card's details.
+    /// The API no longer documents these headers and update-card-response does not carry an
+    /// encrypted CVV. They are still sent when set. Will be removed in the next major version.
     /// </summary>
+    [Obsolete("The API no longer supports these headers; use the method without headers. Will be removed in the next major version.")]
     public class CardUpdateHeaders : IHeaders
     {
         /// <summary>

@@ -12,6 +12,8 @@ using Moq.Protected;
 using Shouldly;
 using Xunit;
 
+#pragma warning disable CS0618 // exercises the obsolete CardUpdateHeaders overload, kept working until the next major version
+
 namespace Checkout.Issuing.Cards
 {
     /// <summary>
@@ -151,9 +153,8 @@ namespace Checkout.Issuing.Cards
             CapturedHeader("Encryption-Key").ShouldBeNull();
         }
 
-        // The 2026-09-17 spec (INT-1700) removed encrypted_cvv from update-card-response
-        // entirely, so these headers no longer make the response carry it (added by INT-1695,
-        // when the field still existed). Header transmission itself is still covered above.
+        // update-card-response has no encrypted CVV, so these obsolete headers do not change the
+        // response. Header transmission itself is still covered above.
         [Fact]
         public async Task ShouldReadLastModifiedDateFromTheResponse()
         {

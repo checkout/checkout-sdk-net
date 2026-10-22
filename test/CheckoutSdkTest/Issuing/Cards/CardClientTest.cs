@@ -19,6 +19,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
+#pragma warning disable CS0618 // exercises the obsolete CardUpdateHeaders overload, kept working until the next major version
+
 namespace Checkout.Issuing.Cards
 {
     public class CardClientTest : UnitTestFixture
@@ -211,6 +213,46 @@ namespace Checkout.Issuing.Cards
         }
 
         [Fact]
+        private async Task ShouldRevokeCardWithoutRequestBody()
+        {
+            Resource resourceResponse = new Resource();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<Resource>("issuing/cards/card_id/revoke",
+                        _authorization,
+                        null,
+                        CancellationToken.None,
+                        null))
+                .ReturnsAsync(() => resourceResponse);
+
+            IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
+
+            Resource getResponse = await client.RevokeCard("card_id");
+
+            getResponse.ShouldBeSameAs(resourceResponse);
+        }
+
+        [Fact]
+        private async Task ShouldSuspendCardWithoutRequestBody()
+        {
+            Resource resourceResponse = new Resource();
+
+            _apiClient.Setup(apiClient =>
+                    apiClient.Post<Resource>("issuing/cards/card_id/suspend",
+                        _authorization,
+                        null,
+                        CancellationToken.None,
+                        null))
+                .ReturnsAsync(() => resourceResponse);
+
+            IIssuingClient client = new IssuingClient(_apiClient.Object, _configuration.Object);
+
+            Resource getResponse = await client.SuspendCard("card_id");
+
+            getResponse.ShouldBeSameAs(resourceResponse);
+        }
+
+        [Fact]
         private async Task ShouldSuspendCard()
         {
             SuspendCardRequest cardReasonRequest = new SuspendCardRequest();
@@ -255,9 +297,9 @@ namespace Checkout.Issuing.Cards
             response.ShouldBeSameAs(updateResponse);
         }
 
-        // The 2026-09-17 spec (INT-1700) removed encrypted_cvv from update-card-response
-        // entirely, so this only verifies the headers reach the ApiClient call, not that the
-        // response carries an encrypted CVV (added by INT-1695, when the field still existed).
+        // The headers overload is obsolete: the API no longer documents these headers and
+        // update-card-response has no encrypted CVV. This only verifies the headers still reach
+        // the ApiClient call.
         [Fact]
         private async Task ShouldUpdateCardDetailsWithEncryptionHeaders()
         {

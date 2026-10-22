@@ -1,3 +1,4 @@
+using System;
 using Checkout.Common;
 using Checkout.Issuing.Cards.Requests.Create;
 using Checkout.Issuing.Cards.Requests.Credentials;
@@ -53,25 +54,34 @@ namespace Checkout.Issuing
             CardsUpdateRequest cardUpdateRequest,
             CancellationToken cancellationToken = default)
         {
-            return UpdateCardDetails(cardId, cardUpdateRequest, null, cancellationToken);
+            return PatchCard(cardId, cardUpdateRequest, null, cancellationToken);
         }
 
         /// <summary>
-        /// Updates a card you issued previously, sending the optional return-encrypted-cvv and
-        /// Encryption-Key headers. The 2026-09-17 spec (INT-1700) removed encrypted_cvv from
-        /// update-card-response entirely, so these headers no longer make the response carry it;
-        /// the API still returns a 422 with error code encryption_key_required if
-        /// return-encrypted-cvv is set without Encryption-Key also supplied.
+        /// Updates a card you issued previously, sending the return-encrypted-cvv and
+        /// Encryption-Key headers. The API no longer documents these headers and
+        /// update-card-response does not carry an encrypted CVV. The headers are still sent when
+        /// set. Use <see cref="UpdateCardDetails(string, CardsUpdateRequest, CancellationToken)"/>
+        /// instead; this overload will be removed in the next major version.
         /// </summary>
         /// <param name="cardId">the card ID</param>
         /// <param name="cardUpdateRequest">the card fields to update</param>
-        /// <param name="headers">the optional return-encrypted-cvv and Encryption-Key headers</param>
+        /// <param name="headers">the return-encrypted-cvv and Encryption-Key headers</param>
         /// <param name="cancellationToken">the cancellation token</param>
         /// <returns>the card update response</returns>
+        [Obsolete("The API no longer supports these headers; use the method without headers. Will be removed in the next major version.")]
         public Task<CardsUpdateResponse> UpdateCardDetails(string cardId,
             CardsUpdateRequest cardUpdateRequest,
             CardUpdateHeaders headers,
             CancellationToken cancellationToken = default)
+        {
+            return PatchCard(cardId, cardUpdateRequest, headers, cancellationToken);
+        }
+
+        private Task<CardsUpdateResponse> PatchCard(string cardId,
+            CardsUpdateRequest cardUpdateRequest,
+            IHeaders headers,
+            CancellationToken cancellationToken)
         {
             CheckoutUtils.ValidateParams("cardId", cardId, "cardUpdateRequest", cardUpdateRequest);
             return ApiClient.Patch<CardsUpdateResponse>(
@@ -158,10 +168,10 @@ namespace Checkout.Issuing
             );
         }
 
-        public Task<Resource> RevokeCard(string cardId, RevokeCardRequest revokeCardRequest,
+        public Task<Resource> RevokeCard(string cardId, RevokeCardRequest revokeCardRequest = null,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("cardId", cardId, "revokeCardRequest", revokeCardRequest);
+            CheckoutUtils.ValidateParams("cardId", cardId);
             return ApiClient.Post<Resource>(
                 BuildPath(IssuingPath, CardsPath, cardId, Revoke),
                 SdkAuthorization(),
@@ -170,10 +180,10 @@ namespace Checkout.Issuing
             );
         }
 
-        public Task<Resource> SuspendCard(string cardId, SuspendCardRequest suspendCardRequest,
+        public Task<Resource> SuspendCard(string cardId, SuspendCardRequest suspendCardRequest = null,
             CancellationToken cancellationToken = default)
         {
-            CheckoutUtils.ValidateParams("cardId", cardId, "suspendCardRequest", suspendCardRequest);
+            CheckoutUtils.ValidateParams("cardId", cardId);
             return ApiClient.Post<Resource>(
                 BuildPath(IssuingPath, CardsPath, cardId, Suspend),
                 SdkAuthorization(),

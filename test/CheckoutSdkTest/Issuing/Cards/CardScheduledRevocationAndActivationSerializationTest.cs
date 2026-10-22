@@ -12,7 +12,7 @@ using Xunit;
 namespace Checkout.Issuing.Cards
 {
     /// <summary>
-    /// Covers INT-1700: `scheduled_revocation_date` (add/update-card-request, get-card-response),
+    /// Covers serialization of `scheduled_revocation_date` (add/update-card-request, get-card-response),
     /// `status` (update-card-request), and `last_activated_on` (add-card-response,
     /// get-card-response, activate-card-response).
     /// </summary>
