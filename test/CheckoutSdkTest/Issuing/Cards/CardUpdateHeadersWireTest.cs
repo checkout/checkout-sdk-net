@@ -12,11 +12,14 @@ using Moq.Protected;
 using Shouldly;
 using Xunit;
 
+#pragma warning disable CS0618 // exercises the obsolete CardUpdateHeaders overload, kept working until the next major version
+
 namespace Checkout.Issuing.Cards
 {
     /// <summary>
-    /// Verifies the <c>return-encrypted-cvv</c> and <c>Encryption-Key</c> headers on the actual
-    /// outgoing HTTP request.
+    /// Verifies the deprecated <c>return-encrypted-cvv</c> and <c>Encryption-Key</c> headers on
+    /// the actual outgoing HTTP request. The API no longer documents them, but
+    /// the SDK still sends them when set until the next major version.
     ///
     /// The other pre-existing test for this feature bypasses the code that emits headers:
     /// <c>CardClientTest</c> mocks <see cref="IApiClient"/> and so only proves the object was
@@ -81,8 +84,7 @@ namespace Checkout.Issuing.Cards
                 : null;
 
         /// <summary>
-        /// The spec types return-encrypted-cvv as a boolean and spells its values "true" and
-        /// "false". bool.ToString() in .NET returns "True", and header values are not JSON, so
+        /// return-encrypted-cvv is a boolean header, sent as "true" or "false". bool.ToString() in .NET returns "True", and header values are not JSON, so
         /// nothing downstream lower-cases them.
         /// </summary>
         [Fact]
@@ -103,8 +105,8 @@ namespace Checkout.Issuing.Cards
         }
 
         /// <summary>
-        /// Both names are case sensitive in the spec: return-encrypted-cvv is lower case and
-        /// Encryption-Key is title case. They come from the Newtonsoft JsonProperty attributes on
+        /// The header names are sent exactly as the API historically defined them:
+        /// return-encrypted-cvv in lower case and Encryption-Key in title case. They come from the Newtonsoft JsonProperty attributes on
         /// the container, resolved by GetJsonPropertyName.
         /// </summary>
         [Fact]
@@ -151,9 +153,8 @@ namespace Checkout.Issuing.Cards
             CapturedHeader("Encryption-Key").ShouldBeNull();
         }
 
-        // The 2026-09-17 spec (INT-1700) removed encrypted_cvv from update-card-response
-        // entirely, so these headers no longer make the response carry it (added by INT-1695,
-        // when the field still existed). Header transmission itself is still covered above.
+        // update-card-response has no encrypted CVV, so these obsolete headers do not change the
+        // response. Header transmission itself is still covered above.
         [Fact]
         public async Task ShouldReadLastModifiedDateFromTheResponse()
         {
