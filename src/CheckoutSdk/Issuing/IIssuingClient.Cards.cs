@@ -41,8 +41,8 @@ namespace Checkout.Issuing
         /// <summary>
         ///     Updates a card you issued previously, sending the return-encrypted-cvv and
         ///     Encryption-Key headers. The API no longer documents these headers and
-        ///     update-card-response does not carry an encrypted CVV. The API ignores them; they are
-        ///     still sent when set. Use <see cref="UpdateCardDetails(string, CardsUpdateRequest, CancellationToken)"/>
+        ///     update-card-response does not carry an encrypted CVV. They are still sent when
+        ///     set. Use <see cref="UpdateCardDetails(string, CardsUpdateRequest, CancellationToken)"/>
         ///     instead; this overload will be removed in the next major version.
         /// </summary>
         /// <param name="cardId">the card ID</param>
@@ -50,7 +50,7 @@ namespace Checkout.Issuing
         /// <param name="headers">the return-encrypted-cvv and Encryption-Key headers</param>
         /// <param name="cancellationToken">the cancellation token</param>
         /// <returns>the card update response</returns>
-        [Obsolete("The API no longer supports these headers; use the method without headers. Will be removed in the next major version.")]
+        [Obsolete(CardUpdateHeaders.DeprecationMessage)]
         Task<CardsUpdateResponse> UpdateCardDetails(string cardId,
             CardsUpdateRequest cardUpdateRequest,
             CardUpdateHeaders headers,

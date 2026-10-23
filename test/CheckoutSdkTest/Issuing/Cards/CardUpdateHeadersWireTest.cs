@@ -18,7 +18,7 @@ namespace Checkout.Issuing.Cards
 {
     /// <summary>
     /// Verifies the deprecated <c>return-encrypted-cvv</c> and <c>Encryption-Key</c> headers on
-    /// the actual outgoing HTTP request. The API no longer documents them and ignores them, but
+    /// the actual outgoing HTTP request. The API no longer documents them, but
     /// the SDK still sends them when set until the next major version.
     ///
     /// The other pre-existing test for this feature bypasses the code that emits headers:

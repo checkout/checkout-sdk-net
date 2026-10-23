@@ -8,8 +8,8 @@ namespace Checkout.Issuing.Cards.Requests.Revoke
     {
         /// <summary>
         /// The reason why the card is being revoked.
-        /// Enum values: expired, reported_lost, reported_stolen.
         /// [Optional]
+        /// Enum values: expired, reported_lost, reported_stolen.
         /// </summary>
         public RevokeReason? Reason { get; set; }
     }
