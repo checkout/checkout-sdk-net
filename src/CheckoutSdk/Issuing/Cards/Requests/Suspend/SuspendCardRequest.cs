@@ -9,7 +9,7 @@ namespace Checkout.Issuing.Cards.Requests.Suspend
         /// <summary>
         /// The reason why the card is being suspended.
         /// [Optional]
-        /// Enum values: suspected_lost, suspected_stolen.
+        /// Enum: "suspected_lost" "suspected_stolen"
         /// </summary>
         public SuspendReason? Reason { get; set; }
     }

@@ -16,7 +16,7 @@ namespace Checkout.Issuing.Cards.Requests.Update
         /// takes it.
         /// </summary>
         internal const string DeprecationMessage =
-            "The API no longer supports these headers; use the method without headers. Will be removed in the next major version.";
+            "The API no longer documents these headers; use the method without headers. Will be removed in the next major version.";
 
         /// <summary>
         /// The <c>return-encrypted-cvv</c> HTTP header, sent as "true" or "false".
