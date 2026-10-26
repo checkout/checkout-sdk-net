@@ -43,7 +43,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             deserialized.ProcessingChannelId.ShouldBe("pc_abcdefghijklmnopqrstuvwxyz");
             deserialized.Amount.ShouldBe(10000L);
             deserialized.Currency.ShouldBe(Currency.GBP);
-            deserialized.PaymentType.ShouldBe(PaymentType.Regular);
+            deserialized.PaymentType.ShouldBe(PaymentSetupPaymentType.Regular);
             deserialized.Reference.ShouldBe("ORD-12345");
             deserialized.Description.ShouldBe("Test order");
 
@@ -93,6 +93,8 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             deserialized.Order.ShippingAmount.ShouldBe(500L);
             deserialized.Order.DiscountAmount.ShouldBe(200L);
             deserialized.Order.TaxAmount.ShouldBe(1500L);
+            deserialized.Order.TippingAmount.ShouldBe(200L);
+            deserialized.Order.SurchargeAmount.ShouldBe(75L);
             deserialized.Order.Items.ShouldNotBeNull();
             deserialized.Order.Items.Count.ShouldBe(1);
             deserialized.Order.SubMerchants.ShouldNotBeNull();
@@ -207,7 +209,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                 ""processing_channel_id"": ""pc_abcdefghijklmnopqrstuvwxyz"",
                 ""amount"": 5000,
                 ""currency"": ""USD"",
-                ""payment_type"": ""Recurring"",
+                ""payment_type"": ""recurring"",
                 ""reference"": ""REF-001"",
                 ""description"": ""Subscription"",
                 ""billing"": {
@@ -245,6 +247,8 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                     ""shipping_amount"": 300,
                     ""discount_amount"": 100,
                     ""tax_amount"": 800,
+                    ""tipping_amount"": 2,
+                    ""surcharge_amount"": 2,
                     ""sub_merchants"": [
                         {
                             ""id"": ""sub_002"",
@@ -316,7 +320,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.ProcessingChannelId.ShouldBe("pc_abcdefghijklmnopqrstuvwxyz");
             result.Amount.ShouldBe(5000L);
             result.Currency.ShouldBe(Currency.USD);
-            result.PaymentType.ShouldBe(PaymentType.Recurring);
+            result.PaymentType.ShouldBe(PaymentSetupPaymentType.Recurring);
             result.Reference.ShouldBe("REF-001");
             result.Description.ShouldBe("Subscription");
 
@@ -353,6 +357,8 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.Order.ShippingAmount.ShouldBe(300L);
             result.Order.DiscountAmount.ShouldBe(100L);
             result.Order.TaxAmount.ShouldBe(800L);
+            result.Order.TippingAmount.ShouldBe(2L);
+            result.Order.SurchargeAmount.ShouldBe(2L);
             result.Order.SubMerchants[0].Id.ShouldBe("sub_002");
             result.Order.SubMerchants[0].ProductCategory.ShouldBe("clothing");
             result.Order.SubMerchants[0].NumberOfSales.ShouldBe(75);
@@ -418,7 +424,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                 ProcessingChannelId = "pc_abcdefghijklmnopqrstuvwxyz",
                 Amount = 10000,
                 Currency = Currency.GBP,
-                PaymentType = PaymentType.Regular,
+                PaymentType = PaymentSetupPaymentType.Regular,
                 Reference = "ORD-12345",
                 Description = "Test order",
                 Billing = new Billing
@@ -479,6 +485,8 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                     ShippingAmount = 500,
                     DiscountAmount = 200,
                     TaxAmount = 1500,
+                    TippingAmount = 200,
+                    SurchargeAmount = 75,
                     Items = new List<PaymentContextsItems>
                     {
                         new PaymentContextsItems { Name = "Widget", Quantity = 2, UnitPrice = 5000 }

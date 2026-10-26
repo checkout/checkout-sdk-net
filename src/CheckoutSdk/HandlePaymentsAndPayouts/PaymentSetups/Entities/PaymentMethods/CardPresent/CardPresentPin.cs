@@ -1,8 +1,12 @@
+using System;
+
 namespace Checkout.Payments.Setups.Entities
 {
     /// <summary>
-    /// The encrypted PIN block details.
+    /// The encrypted PIN block details. Used only by CardPresent, which the Payment Setups API specification
+    /// removed.
     /// </summary>
+    [Obsolete("card_present is no longer part of the Payment Setups API specification. There is no replacement. Will be removed in the next major version.")]
     public class CardPresentPin
     {
         /// <summary>

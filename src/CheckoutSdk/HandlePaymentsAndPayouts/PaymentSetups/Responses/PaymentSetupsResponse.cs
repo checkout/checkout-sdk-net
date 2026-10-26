@@ -43,9 +43,9 @@ namespace Checkout.Payments.Setups.Responses
         /// You must provide this field for card payments in which the cardholder is not present. For example, if the
         /// transaction is a recurring payment, or a mail order/telephone order (MOTO) payment.
         /// [Optional]
-        /// Default: Regular
+        /// Default: "regular"
         /// </summary>
-        public PaymentType? PaymentType { get; set; } = Payments.PaymentType.Regular;
+        public PaymentSetupPaymentType? PaymentType { get; set; } = PaymentSetupPaymentType.Regular;
 
         /// <summary>
         /// A reference you can use to identify the payment. For example, an order number.
