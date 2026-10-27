@@ -5,7 +5,7 @@ namespace Checkout.Payments.Setups.Entities
     /// <summary>
     /// The Bizum payment method's details and configuration.
     /// </summary>
-    public class Bizum : PaymentSetupPaymentMethod
+    public class Bizum : PaymentMethodBase
     {
         /// <summary>
         /// Not part of the Bizum schema in the Payment Setups API specification, which removed it; the API
@@ -15,7 +15,11 @@ namespace Checkout.Payments.Setups.Entities
         /// Default: "disabled"
         /// </summary>
         [Obsolete("Not part of the Bizum schema in the Payment Setups API specification; the API ignores it on requests. There is no replacement. Will be removed in the next major version.")]
-        public PaymentMethodInitialization Initialization { get; set; } = PaymentMethodInitialization.Disabled;
+        public new PaymentMethodInitialization Initialization
+        {
+            get { return base.Initialization; }
+            set { base.Initialization = value; }
+        }
 
         /// <summary>
         /// Not part of the Bizum schema in the Payment Setups API specification; the API no longer sends it and

@@ -13,8 +13,8 @@ using SetupPaymentMethods = Checkout.Payments.Setups.Entities.PaymentMethods;
 namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
 {
     /// <summary>
-    /// Schema validation tests for the Payment Setup payment methods added for INT-1738 (the 28 keys of
-    /// PaymentSetup.payment_methods the SDK did not model) and for the members deprecated in the same change.
+    /// Schema validation tests for the 28 keys of PaymentSetup.payment_methods in the Payment Setups API
+    /// specification that the SDK did not model, and for the members deprecated in the same change.
     /// The tests assert the literal JSON keys and values, not only the member names.
     /// </summary>
     public class PaymentSetupsPaymentMethodsSerializationTest
@@ -136,7 +136,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
 
         // ------------------------------------------------------------------------
         // Swagger example
-        // The payment methods with own properties, deserialized from the examples in shared/swagger.json.
+        // The payment methods with own properties, deserialized from the examples in the API specification.
         // ------------------------------------------------------------------------
 
         private const string SwaggerExampleJson = @"{
@@ -470,6 +470,45 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             m.PayByBank.Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
             m.PayByBank.BankId.ShouldBe("ob-natwest");
             m.Stablecoin.Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
+        }
+
+        [Fact]
+        public void ShouldShareDeprecatedInitializationWithPaymentMethodBase()
+        {
+            // Bizum, Blik, PayByBank and Stablecoin still derive from PaymentMethodBase, so code that uses them
+            // through the base class keeps compiling. The obsolete property hides the base one and delegates
+            // to it: both views read and write the same value, and only one "initialization" key is sent.
+            var bizum = new Bizum { Initialization = PaymentMethodInitialization.Enabled };
+            PaymentMethodBase[] methods =
+            {
+                bizum, new Blik { PartnerCode = "999111" }, new PayByBank { BankId = "ob-natwest" }, new Stablecoin()
+            };
+
+            ((PaymentMethodBase)bizum).Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
+            foreach (var method in methods)
+            {
+                method.Initialization = PaymentMethodInitialization.Enabled;
+            }
+
+            var json = JObject.Parse(Serializer.Serialize(new SetupPaymentMethods
+            {
+                Bizum = bizum,
+                Blik = (Blik)methods[1],
+                PayByBank = (PayByBank)methods[2],
+                Stablecoin = (Stablecoin)methods[3]
+            }));
+
+            ((Blik)methods[1]).Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
+            ((PayByBank)methods[2]).Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
+            ((Stablecoin)methods[3]).Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
+            AssertKeys(json["bizum"], "initialization");
+            AssertKeys(json["blik"], "initialization", "partner_code");
+            AssertKeys(json["paybybank"], "initialization", "bank_id");
+            AssertKeys(json["stablecoin"], "initialization");
+            foreach (var key in new[] { "bizum", "blik", "paybybank", "stablecoin" })
+            {
+                ((string)json[key]["initialization"]).ShouldBe("enabled");
+            }
         }
 
         [Fact]

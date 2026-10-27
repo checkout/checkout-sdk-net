@@ -5,7 +5,7 @@ namespace Checkout.Payments.Setups.Entities
     /// <summary>
     /// The Pay by Bank (Open Banking) payment method's details and configuration.
     /// </summary>
-    public class PayByBank : PaymentSetupPaymentMethod
+    public class PayByBank : PaymentMethodBase
     {
         /// <summary>
         /// The identifier of the bank the customer has selected for the payment.
@@ -27,6 +27,10 @@ namespace Checkout.Payments.Setups.Entities
         /// Default: "disabled"
         /// </summary>
         [Obsolete("Not part of the PayByBank schema in the Payment Setups API specification; the API ignores it on requests. There is no replacement. Will be removed in the next major version.")]
-        public PaymentMethodInitialization Initialization { get; set; } = PaymentMethodInitialization.Disabled;
+        public new PaymentMethodInitialization Initialization
+        {
+            get { return base.Initialization; }
+            set { base.Initialization = value; }
+        }
     }
 }
