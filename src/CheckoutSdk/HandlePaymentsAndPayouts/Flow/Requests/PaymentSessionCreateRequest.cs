@@ -32,9 +32,10 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow.Requests
         public PaymentMethodConfiguration PaymentMethodConfiguration { get; set; }
 
         /// <summary>
-        /// Configuration for asynchronous retries.
+        /// Configures the parameters for customer retries (payment attempts performed by the customer).
+        /// [Optional]
         /// </summary>
-        public PaymentRetryRequest CustomerRetry { get; set; }
+        public CustomerRetry CustomerRetry { get; set; }
 
         /// <summary>
         /// Deprecated - The Customer's IP address. Only IPv4 and IPv6 addresses are accepted.

@@ -1,4 +1,5 @@
 ﻿using Checkout.Common;
+using Checkout.HandlePaymentsAndPayouts.Flow.Entities;
 using Checkout.Payments.Request;
 using Checkout.Payments.Sender;
 using Newtonsoft.Json;
@@ -54,7 +55,12 @@ namespace Checkout.Payments.Hosted
 
         public RiskRequest Risk { get; set; }
         
-        public PaymentRetryRequest CustomerRetry { get; set; }
+        /// <summary>
+        /// Configures the parameters for customer retries (payment attempts performed by the customer on the
+        /// checkout page).
+        /// [Optional]
+        /// </summary>
+        public CustomerRetry CustomerRetry { get; set; }
         
         public PaymentSender Sender { get; set; }
 

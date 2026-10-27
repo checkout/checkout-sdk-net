@@ -1,59 +1,45 @@
 namespace Checkout.Payments.Request
 {
+    /// <summary>
+    /// Configuration of asynchronous retries.
+    /// </summary>
+    [System.Obsolete("Use Checkout.Payments.RetryRequest for payment retries or " +
+                     "Checkout.HandlePaymentsAndPayouts.Flow.Entities.CustomerRetry for customer_retry. " +
+                     "This type will be removed in the next major version.")]
     public class PaymentRetryRequest
     {
         /// <summary>
-        /// Dunning retry configuration — retries after card declines.
+        /// Indicates whether asynchronous retries are enabled for the payment.
+        /// [Required]
+        /// </summary>
+        public bool? Enabled { get; set; }
+
+        /// <summary>
+        /// Configuration of asynchronous Dunning retries.
         /// [Optional]
         /// </summary>
         public DunningRetryRequest Dunning { get; set; }
 
         /// <summary>
-        /// Downtime retry configuration — retries during processor outages.
+        /// Configuration of asynchronous Downtime retries.
         /// [Optional]
         /// </summary>
         public DowntimeRetryRequest Downtime { get; set; }
 
-        /// <summary>Use <see cref="Dunning"/> instead.</summary>
-        [System.Obsolete("Use the nested Dunning object instead.")]
-        public bool? Enabled { get; set; }
-
-        /// <summary>Use <see cref="Dunning"/> instead.</summary>
-        [System.Obsolete("Use the nested Dunning object instead.")]
-        public int? MaxAttempts { get; set; }
-
-        /// <summary>Use <see cref="Dunning"/> instead.</summary>
-        [System.Obsolete("Use the nested Dunning object instead.")]
-        public int? EndAfterDays { get; set; }
-    }
-
-    public class DunningRetryRequest
-    {
         /// <summary>
-        /// Whether dunning retries are enabled.
+        /// Not part of the retry configuration. Use <see cref="DunningRetryRequest.MaxAttempts"/> in
+        /// <see cref="Dunning"/> instead.
         /// [Optional]
         /// </summary>
-        public bool? Enabled { get; set; }
-
-        /// <summary>
-        /// The maximum number of retry attempts.
-        /// [Optional]
-        /// </summary>
+        [System.Obsolete("Use Dunning.MaxAttempts instead. This member will be removed in the next major version.")]
         public int? MaxAttempts { get; set; }
 
         /// <summary>
-        /// The number of days after which retries stop.
+        /// Not part of the retry configuration. Use <see cref="DunningRetryRequest.EndAfterDays"/> in
+        /// <see cref="Dunning"/> instead.
         /// [Optional]
         /// </summary>
+        [System.Obsolete("Use Dunning.EndAfterDays instead. This member will be removed in the next major version.")]
         public int? EndAfterDays { get; set; }
-    }
-
-    public class DowntimeRetryRequest
-    {
-        /// <summary>
-        /// Whether downtime retries are enabled.
-        /// [Optional]
-        /// </summary>
-        public bool? Enabled { get; set; }
     }
 }

@@ -220,7 +220,7 @@ namespace Checkout.Payments.Request
         public IList<Product> Items { get; set; }
 
         /// <summary>
-        /// Retry configuration for the payment (Dunning and Downtime).
+        /// Configuration of asynchronous retries.
         /// [Optional]
         /// </summary>
         public RetryRequest Retry { get; set; }
