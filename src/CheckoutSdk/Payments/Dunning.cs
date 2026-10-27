@@ -1,16 +1,26 @@
 namespace Checkout.Payments
 {
+    /// <summary>
+    /// Configuration of Dunning retries.
+    /// </summary>
     public class Dunning
     {
         /// <summary>
-        /// Indicates if Checkout.com retries the payment when it's declined with a supported decline code (Required)
+        /// Indicates if Checkout.com retries the payment when it's declined with a supported decline code.
+        /// [Required]
         /// </summary>
         public bool Enabled { get; set; }
 
-        /// <summary> (Optional, [ 1 .. 15 ], default: 6) </summary>
+        /// <summary>
+        /// The maximum number of authorization retry attempts, excluding the initial authorization.
+        /// [Optional] Range [ 1 .. 15 ]. Default: 6
+        /// </summary>
         public int? MaxAttempts { get; set; } = 6;
 
-        /// <summary> (Optional, [ 1 .. 60 ] default: 30) </summary>
+        /// <summary>
+        /// The maximum number of days between the initial request and the final retry attempt.
+        /// [Optional] Range [ 1 .. 60 ]. Default: 30
+        /// </summary>
         public int? EndAfterDays { get; set; } = 30;
     }
 }

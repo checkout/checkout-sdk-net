@@ -1,4 +1,5 @@
 ﻿using Checkout.Common;
+using Checkout.HandlePaymentsAndPayouts.Flow.Entities;
 using Checkout.Payments.Hosted;
 using Checkout.Payments.Request;
 using Checkout.Payments.Sender;
@@ -89,7 +90,7 @@ namespace Checkout.Payments.Links
                 {
                     Enabled = false
                 },
-                CustomerRetry = new PaymentRetryRequest
+                CustomerRetry = new CustomerRetry
                 {
                     MaxAttempts = 2
                 },
