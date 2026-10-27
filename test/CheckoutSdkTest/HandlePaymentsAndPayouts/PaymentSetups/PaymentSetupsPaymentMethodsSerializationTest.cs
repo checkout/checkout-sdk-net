@@ -423,9 +423,9 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
 
         // ------------------------------------------------------------------------
         // Deprecated members
-        // initialization on Bizum, Blik, PayByBank and Stablecoin (not in their schemas), card_present
-        // (removed from the spec) and Bizum.PaymentMethodOptions are deprecated, not removed: they keep
-        // sending exactly what they sent before this change.
+        // initialization on Bizum, Blik, PayByBank and Stablecoin (not in their schemas) and
+        // Bizum.PaymentMethodOptions are deprecated, not removed: they keep sending exactly what they
+        // sent before this change.
         // ------------------------------------------------------------------------
 
         // The deprecated members are used on purpose in this section only, to prove they are still sent
@@ -512,17 +512,15 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
         }
 
         [Fact]
-        public void ShouldStillSendDeprecatedCardPresentAndBizumPaymentMethodOptions()
+        public void ShouldStillSendDeprecatedBizumPaymentMethodOptions()
         {
             var methods = new SetupPaymentMethods
             {
-                CardPresent = new CardPresent { EntryMode = "chip" },
                 Bizum = new Bizum { PaymentMethodOptions = new PaymentMethodOptions() }
             };
 
             var json = JObject.Parse(Serializer.Serialize(methods));
 
-            ((string)json["card_present"]["entry_mode"]).ShouldBe("chip");
             ((JObject)json["bizum"]).ContainsKey("payment_method_options").ShouldBeTrue();
         }
 
@@ -532,8 +530,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             const string json = @"{
                 ""id"": ""set_dep"",
                 ""payment_methods"": {
-                    ""bizum"": { ""status"": ""ready"", ""initialization"": ""enabled"" },
-                    ""card_present"": { ""status"": ""ready"" }
+                    ""bizum"": { ""status"": ""ready"", ""initialization"": ""enabled"" }
                 }
             }";
 
@@ -541,10 +538,38 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
 
             response.PaymentMethods.Bizum.Status.ShouldBe(PaymentMethodStatus.Ready);
             response.PaymentMethods.Bizum.Initialization.ShouldBe(PaymentMethodInitialization.Enabled);
-            response.PaymentMethods.CardPresent.Status.ShouldBe(PaymentMethodStatus.Ready);
         }
 
 #pragma warning restore CS0618
+
+        // ------------------------------------------------------------------------
+        // card_present
+        // Not listed in the public API reference but still supported by the API, so it is kept as it was:
+        // it is sent and read under its own key.
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldSendAndReadCardPresentUnderItsKey()
+        {
+            var methods = new SetupPaymentMethods
+            {
+                CardPresent = new CardPresent { EntryMode = "chip" }
+            };
+
+            var json = JObject.Parse(Serializer.Serialize(methods));
+            ((string)json["card_present"]["entry_mode"]).ShouldBe("chip");
+
+            const string responseJson = @"{
+                ""id"": ""set_cp"",
+                ""payment_methods"": {
+                    ""card_present"": { ""status"": ""ready"" }
+                }
+            }";
+
+            var response = (PaymentSetupsConfirmResponse)Serializer.Deserialize(responseJson, typeof(PaymentSetupsConfirmResponse));
+
+            response.PaymentMethods.CardPresent.Status.ShouldBe(PaymentMethodStatus.Ready);
+        }
 
         // ------------------------------------------------------------------------
         // New payment methods on create requests
