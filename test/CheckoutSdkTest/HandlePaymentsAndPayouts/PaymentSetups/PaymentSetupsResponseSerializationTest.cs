@@ -670,6 +670,24 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
         }
 
         [Fact]
+        public void ShouldRoundTripDecimalLastPaymentAmount()
+        {
+            // The specification types last_payment_amount as a number with the example 55.99; the SDK keeps
+            // the decimals in both directions.
+            var original = new MerchantAccount { LastPaymentAmount = 55.99m };
+
+            var json = Serializer.Serialize(original);
+            var merchantAccount = Newtonsoft.Json.Linq.JObject.Parse(json);
+
+            merchantAccount.Count.ShouldBe(1);
+            merchantAccount["last_payment_amount"].Type.ShouldBe(Newtonsoft.Json.Linq.JTokenType.Float);
+            json.ShouldContain("\"last_payment_amount\":55.99");
+
+            var copy = (MerchantAccount)Serializer.Deserialize(json, typeof(MerchantAccount));
+            copy.LastPaymentAmount.ShouldBe(55.99m);
+        }
+
+        [Fact]
         public void ShouldDeserializeCustomerSwaggerExample()
         {
             const string json = @"{

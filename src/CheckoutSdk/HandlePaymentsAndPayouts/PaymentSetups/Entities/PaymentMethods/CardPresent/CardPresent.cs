@@ -1,12 +1,8 @@
-using System;
-
 namespace Checkout.Payments.Setups.Entities
 {
     /// <summary>
-    /// The Card Present payment method's details and configuration. The Payment Setups API specification
-    /// removed card_present.
+    /// The Card Present payment method's details and configuration.
     /// </summary>
-    [Obsolete("card_present is no longer part of the Payment Setups API specification. There is no replacement. Will be removed in the next major version.")]
     public class CardPresent : PaymentMethodBase
     {
         /// <summary>
