@@ -15,13 +15,12 @@ namespace Checkout.Payments.Setups.Entities
         public string PartnerCode { get; set; }
 
         /// <summary>
-        /// Not part of the Blik schema in the Payment Setups API specification; the API ignores it on requests.
-        /// The property is not nullable, so this SDK always sends it, as "disabled" unless you set it. There is
-        /// no replacement.
+        /// Not part of the Blik schema in the Payment Setups API specification. The property is not nullable,
+        /// so this SDK always sends it, as "disabled" unless you set it. There is no replacement.
         /// [Optional]
         /// Default: "disabled"
         /// </summary>
-        [Obsolete("Not part of the Blik schema in the Payment Setups API specification; the API ignores it on requests. There is no replacement. Will be removed in the next major version.")]
+        [Obsolete("Not part of the Blik schema in the Payment Setups API specification. There is no replacement. Will be removed in the next major version.")]
         public new PaymentMethodInitialization Initialization
         {
             get { return base.Initialization; }
