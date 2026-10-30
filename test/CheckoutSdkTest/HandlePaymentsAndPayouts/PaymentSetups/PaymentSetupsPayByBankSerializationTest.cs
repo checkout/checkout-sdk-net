@@ -98,7 +98,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             var original = (PayByBank)Serializer.Deserialize(PayByBankResponseJson, typeof(PayByBank));
             var json = JObject.Parse(Serializer.Serialize(original));
 
-            // status, flags, bank_id, action, plus initialization inherited from PaymentMethodBase.
+            // status, flags, bank_id, action, plus the deprecated initialization, still sent by default.
             json.Count.ShouldBe(5);
             var bank = (JObject)json["action"]["banks"][0];
             bank.Count.ShouldBe(4);

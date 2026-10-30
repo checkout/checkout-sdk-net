@@ -4,22 +4,25 @@ using Checkout.Payments.Contexts;
 
 namespace Checkout.Payments.Setups.Entities
 {
+    /// <summary>
+    /// The customer's order details.
+    /// </summary>
     public class Order
     {
         /// <summary>
-        /// A list of items in the order
+        /// A list of items in the order.
         /// [Optional]
         /// </summary>
         public IList<PaymentContextsItems> Items { get; set; }
 
         /// <summary>
-        /// The customer's shipping details
+        /// The customer's shipping details.
         /// [Optional]
         /// </summary>
         public ShippingDetails Shipping { get; set; }
 
         /// <summary>
-        /// The sub-merchants' details
+        /// The details of the sub-merchants.
         /// [Optional]
         /// </summary>
         public IList<OrderSubMerchant> SubMerchants { get; set; }
@@ -33,31 +36,45 @@ namespace Checkout.Payments.Setups.Entities
         /// <summary>
         /// The total shipping amount for the order.
         /// [Optional]
-        /// &gt;= 0
+        /// min 0
         /// </summary>
         public long? ShippingAmount { get; set; }
 
         /// <summary>
-        /// The discount amount the merchant applied to the transaction
+        /// The discount amount the merchant applied to the transaction.
         /// [Optional]
-        /// &gt;= 0
+        /// min 0
         /// </summary>
         public long? DiscountAmount { get; set; }
 
         /// <summary>
         /// The total tax amount for the order.
         /// [Optional]
-        /// &gt;= 0
+        /// min 0
         /// </summary>
         public long? TaxAmount { get; set; }
 
         /// <summary>
-        /// The amount allocations representing the sub-entities on whose behalf the payment is processed.
+        /// The total tipping amount for the order.
         /// [Optional]
+        /// Format: int64
+        /// min 0
+        /// </summary>
+        public long? TippingAmount { get; set; }
+
+        /// <summary>
+        /// The total surcharge amount for the order.
+        /// [Optional]
+        /// Format: int64
+        /// min 0
+        /// </summary>
+        public long? SurchargeAmount { get; set; }
+
+        /// <summary>
+        /// The sub-entities that the payment is being processed on behalf of.
+        /// [Optional]
+        /// min 1 item, max 50 items
         /// </summary>
         public IList<PaymentSetupAmountAllocation> AmountAllocations { get; set; }
     }
 }
-
-
-

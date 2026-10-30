@@ -34,7 +34,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                 ""processing_channel_id"": ""pc_abcdefghijklmnopqrstuvwxyz"",
                 ""amount"": 25000,
                 ""currency"": ""EUR"",
-                ""payment_type"": ""Installment"",
+                ""payment_type"": ""installment"",
                 ""reference"": ""ORD-RESP-001"",
                 ""description"": ""Response test"",
                 ""billing"": {
@@ -75,6 +75,8 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                     ""shipping_amount"": 1000,
                     ""discount_amount"": 500,
                     ""tax_amount"": 4750,
+                    ""tipping_amount"": 300,
+                    ""surcharge_amount"": 150,
                     ""sub_merchants"": [
                         {
                             ""id"": ""sub_resp_001"",
@@ -144,7 +146,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.ProcessingChannelId.ShouldBe("pc_abcdefghijklmnopqrstuvwxyz");
             result.Amount.ShouldBe(25000L);
             result.Currency.ShouldBe(Currency.EUR);
-            result.PaymentType.ShouldBe(PaymentType.Installment);
+            result.PaymentType.ShouldBe(PaymentSetupPaymentType.Installment);
             result.Reference.ShouldBe("ORD-RESP-001");
             result.Description.ShouldBe("Response test");
 
@@ -185,6 +187,8 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.Order.ShippingAmount.ShouldBe(1000L);
             result.Order.DiscountAmount.ShouldBe(500L);
             result.Order.TaxAmount.ShouldBe(4750L);
+            result.Order.TippingAmount.ShouldBe(300L);
+            result.Order.SurchargeAmount.ShouldBe(150L);
             result.Order.SubMerchants[0].Id.ShouldBe("sub_resp_001");
             result.Order.SubMerchants[0].ProductCategory.ShouldBe("food");
             result.Order.SubMerchants[0].NumberOfSales.ShouldBe(300);
@@ -258,7 +262,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                 ProcessingChannelId = "pc_abcdefghijklmnopqrstuvwxyz",
                 Amount = 7500,
                 Currency = Currency.GBP,
-                PaymentType = PaymentType.Moto,
+                PaymentType = PaymentSetupPaymentType.Moto,
                 Reference = "ROUND-001",
                 Description = "Roundtrip test",
                 Billing = new Billing
@@ -300,7 +304,9 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                     InvoiceId = "INV-RT",
                     ShippingAmount = 250,
                     DiscountAmount = 0,
-                    TaxAmount = 1250
+                    TaxAmount = 1250,
+                    TippingAmount = 100,
+                    SurchargeAmount = 50
                 },
                 Industry = new Industry
                 {
@@ -358,7 +364,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             deserialized.ProcessingChannelId.ShouldBe("pc_abcdefghijklmnopqrstuvwxyz");
             deserialized.Amount.ShouldBe(7500L);
             deserialized.Currency.ShouldBe(Currency.GBP);
-            deserialized.PaymentType.ShouldBe(PaymentType.Moto);
+            deserialized.PaymentType.ShouldBe(PaymentSetupPaymentType.Moto);
             deserialized.Reference.ShouldBe("ROUND-001");
             deserialized.Description.ShouldBe("Roundtrip test");
 
@@ -393,6 +399,8 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             deserialized.Order.ShippingAmount.ShouldBe(250L);
             deserialized.Order.DiscountAmount.ShouldBe(0L);
             deserialized.Order.TaxAmount.ShouldBe(1250L);
+            deserialized.Order.TippingAmount.ShouldBe(100L);
+            deserialized.Order.SurchargeAmount.ShouldBe(50L);
 
             // Industry
             deserialized.Industry.Accommodation[0].Name.ShouldBe("Roundtrip Hotel");
@@ -566,7 +574,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                 ""processing_channel_id"": ""pc_q4dbxom5jbgudnjzjpz7j2z6uq"",
                 ""amount"": 10000,
                 ""currency"": ""GBP"",
-                ""payment_type"": ""Regular"",
+                ""payment_type"": ""regular"",
                 ""reference"": ""REF-0987-475"",
                 ""customer"": {
                     ""name"": ""John Smith"",
@@ -581,7 +589,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             result.Id.ShouldBe("psu_y3oqhf46pyzuxjbcn2giaqnb44");
             result.Amount.ShouldBe(10000L);
             result.Currency.ShouldBe(Currency.GBP);
-            result.PaymentType.ShouldBe(PaymentType.Regular);
+            result.PaymentType.ShouldBe(PaymentSetupPaymentType.Regular);
 
             // The customer must be the setups Customer, whose email is a nested object
             // (the payments CustomerResponse models email as a plain string and would not deserialize this shape).
@@ -659,6 +667,24 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             copy.MerchantAccount.LastTransactionDate.ShouldBe(original.MerchantAccount.LastTransactionDate);
             copy.MerchantAccount.TotalOrderCount.ShouldBe(original.MerchantAccount.TotalOrderCount);
             copy.MerchantAccount.LastPaymentAmount.ShouldBe(original.MerchantAccount.LastPaymentAmount);
+        }
+
+        [Fact]
+        public void ShouldRoundTripDecimalLastPaymentAmount()
+        {
+            // The specification types last_payment_amount as a number with the example 55.99; the SDK keeps
+            // the decimals in both directions.
+            var original = new MerchantAccount { LastPaymentAmount = 55.99m };
+
+            var json = Serializer.Serialize(original);
+            var merchantAccount = Newtonsoft.Json.Linq.JObject.Parse(json);
+
+            merchantAccount.Count.ShouldBe(1);
+            merchantAccount["last_payment_amount"].Type.ShouldBe(Newtonsoft.Json.Linq.JTokenType.Float);
+            json.ShouldContain("\"last_payment_amount\":55.99");
+
+            var copy = (MerchantAccount)Serializer.Deserialize(json, typeof(MerchantAccount));
+            copy.LastPaymentAmount.ShouldBe(55.99m);
         }
 
         [Fact]
@@ -913,6 +939,62 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
             metadata["coupon_code"].ShouldBe("NY2018");
             metadata["partner_id"].ShouldBe(123989L);
             metadata["vip"].ShouldBe(true);
+        }
+
+        // ------------------------------------------------------------------------
+        // PaymentSetupPaymentType
+        // payment_type uses the lowercase values of the Payment Setups spec. The payments PaymentType sent
+        // "PayLater", which the API rejects (422), and could not read "pay_later" back.
+        // ------------------------------------------------------------------------
+
+        [Theory]
+        [InlineData(PaymentSetupPaymentType.Regular, "regular")]
+        [InlineData(PaymentSetupPaymentType.Recurring, "recurring")]
+        [InlineData(PaymentSetupPaymentType.Moto, "moto")]
+        [InlineData(PaymentSetupPaymentType.Installment, "installment")]
+        [InlineData(PaymentSetupPaymentType.PayLater, "pay_later")]
+        [InlineData(PaymentSetupPaymentType.Unscheduled, "unscheduled")]
+        public void ShouldSendPaymentTypeSpecValue(PaymentSetupPaymentType value, string wire)
+        {
+            var json = Newtonsoft.Json.Linq.JObject.Parse(Serializer.Serialize(new PaymentSetupsRequest { PaymentType = value }));
+
+            ((string)json["payment_type"]).ShouldBe(wire);
+        }
+
+        [Fact]
+        public void ShouldSendRegularPaymentTypeByDefault()
+        {
+            var json = Newtonsoft.Json.Linq.JObject.Parse(Serializer.Serialize(new PaymentSetupsRequest()));
+
+            ((string)json["payment_type"]).ShouldBe("regular");
+        }
+
+        [Fact]
+        public void ShouldReadPayLaterPaymentTypeFromResponses()
+        {
+            const string json = @"{ ""id"": ""set_pt"", ""payment_type"": ""pay_later"" }";
+
+            ((PaymentSetupsResponse)Serializer.Deserialize(json, typeof(PaymentSetupsResponse)))
+                .PaymentType.ShouldBe(PaymentSetupPaymentType.PayLater);
+            ((PaymentSetupsConfirmResponse)Serializer.Deserialize(json, typeof(PaymentSetupsConfirmResponse)))
+                .PaymentType.ShouldBe(PaymentSetupPaymentType.PayLater);
+        }
+
+        // ------------------------------------------------------------------------
+        // Order amounts
+        // order.tipping_amount and order.surcharge_amount (int64) under their spec keys.
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldSendTippingAndSurchargeAmountsUnderSpecKeys()
+        {
+            var request = new PaymentSetupsRequest { Order = new Order { TippingAmount = 2, SurchargeAmount = 3 } };
+
+            var order = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.Linq.JObject.Parse(Serializer.Serialize(request))["order"];
+
+            order.Count.ShouldBe(2);
+            ((long)order["tipping_amount"]).ShouldBe(2L);
+            ((long)order["surcharge_amount"]).ShouldBe(3L);
         }
     }
 }

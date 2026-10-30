@@ -193,7 +193,7 @@ namespace Checkout.HandlePaymentsAndPayouts.PaymentSetups
                 ProcessingChannelId = System.Environment.GetEnvironmentVariable("CHECKOUT_PROCESSING_CHANNEL_ID"),
                 Amount = 1000,
                 Currency = Currency.GBP,
-                PaymentType = PaymentType.Regular,
+                PaymentType = PaymentSetupPaymentType.Regular,
                 Reference = $"TEST-REF-{RandomString(6)}",
                 Description = "Integration test payment setup",
                 Settings = new Settings
