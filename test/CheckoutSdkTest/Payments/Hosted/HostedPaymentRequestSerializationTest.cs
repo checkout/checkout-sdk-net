@@ -102,5 +102,18 @@ namespace Checkout.Payments.Hosted
             result.PaymentPlan.TotalNumberOfPayments.ShouldBe(12);
             result.PaymentPlan.Name.ShouldBe("Plan A");
         }
+
+        // ------------------------------------------------------------------------
+        // CustomerRetry
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldSerializeCustomerRetryForHostedPaymentRequest()
+        {
+            var json = Serializer.Serialize(new HostedPaymentRequest
+                { CustomerRetry = new HandlePaymentsAndPayouts.Flow.Entities.CustomerRetry { MaxAttempts = 0 } });
+
+            json.ShouldContain("\"customer_retry\":{\"max_attempts\":0}");
+        }
     }
 }

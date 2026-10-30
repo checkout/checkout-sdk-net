@@ -115,7 +115,7 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow
                     StorePaymentDetails = StorePaymentDetailsType.Disabled
                 }
             };
-            // Note: CustomerRetry property exists but may have type compatibility issues in the inheritance chain
+            request.CustomerRetry = new CustomerRetry { MaxAttempts = 2 };
             request.IpAddress = "127.0.0.1";
 
             // Assertions to ensure the object is properly constructed
