@@ -22,9 +22,9 @@ namespace Checkout.HandlePaymentsAndPayouts.Payments.POSTPayments.Responses.Requ
             result.Enabled.ShouldBe(true);
             result.MaxAttempts.ShouldBe(4);
             result.EndsOn.ShouldNotBeNull();
-            result.EndsOn.Value.ToUniversalTime().ShouldBe(EndsOn);
+            (result.EndsOn?.ToUniversalTime()).ShouldBe(EndsOn);
             result.NextAttemptOn.ShouldNotBeNull();
-            result.NextAttemptOn.Value.ToUniversalTime().ShouldBe(NextAttemptOn);
+            (result.NextAttemptOn?.ToUniversalTime()).ShouldBe(NextAttemptOn);
         }
 
         [Fact]

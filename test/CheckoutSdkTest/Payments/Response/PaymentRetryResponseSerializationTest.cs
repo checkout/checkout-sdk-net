@@ -24,9 +24,9 @@ namespace Checkout.Payments.Response
             result.AttemptsMade.ShouldBe(1);
             result.MaxAttempts.ShouldBe(6);
             result.EndsOn.ShouldNotBeNull();
-            result.EndsOn.Value.ToUniversalTime().ShouldBe(EndsOn);
+            (result.EndsOn?.ToUniversalTime()).ShouldBe(EndsOn);
             result.NextAttemptOn.ShouldNotBeNull();
-            result.NextAttemptOn.Value.ToUniversalTime().ShouldBe(NextAttemptOn);
+            (result.NextAttemptOn?.ToUniversalTime()).ShouldBe(NextAttemptOn);
         }
 
         [Fact]
