@@ -56,7 +56,11 @@ namespace Checkout.Payments.Response
         public string Eci { get; set; }
 
         public string SchemeId { get; set; }
-        
+
+        /// <summary>
+        /// Configuration relating to asynchronous retries.
+        /// [Optional]
+        /// </summary>
         public PaymentRetryResponse Retry { get; set; }
     }
 }

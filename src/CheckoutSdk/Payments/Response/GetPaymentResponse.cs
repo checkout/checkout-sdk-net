@@ -81,7 +81,11 @@ namespace Checkout.Payments.Response
         public string SchemeId { get; set; }
 
         public IList<PaymentActionSummary> Actions { get; set; }
-        
+
+        /// <summary>
+        /// Configuration relating to asynchronous retries.
+        /// [Optional]
+        /// </summary>
         public PaymentRetryResponse Retry { get; set; }
         
         public PanProcessedType? PanTypeProcessed { get; set; }

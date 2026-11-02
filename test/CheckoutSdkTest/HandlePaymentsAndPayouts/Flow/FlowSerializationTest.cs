@@ -325,5 +325,55 @@ namespace Checkout.HandlePaymentsAndPayouts.Flow
             deserialized.PaymentSessionId.ShouldBe(original.PaymentSessionId);
             deserialized.PaymentSessionSecret.ShouldBe(original.PaymentSessionSecret);
         }
+
+        // ------------------------------------------------------------------------
+        // CustomerRetry
+        // ------------------------------------------------------------------------
+
+        [Fact]
+        public void ShouldSerializeCustomerRetryWithOnlyMaxAttempts()
+        {
+            Serializer.Serialize(new CustomerRetry { MaxAttempts = 2 }).ShouldBe("{\"max_attempts\":2}");
+        }
+
+        [Fact]
+        public void ShouldRoundTripCustomerRetrySwaggerExample()
+        {
+            var result = (CustomerRetry)Serializer.Deserialize("{\"max_attempts\":2}", typeof(CustomerRetry));
+
+            result.MaxAttempts.ShouldBe(2);
+            Serializer.Serialize(result).ShouldBe("{\"max_attempts\":2}");
+        }
+
+        [Fact]
+        public void ShouldSerializeCustomerRetryForPaymentSessionCreateRequest()
+        {
+            var json = Serializer.Serialize(new PaymentSessionCreateRequest
+                { CustomerRetry = new CustomerRetry { MaxAttempts = 5 } });
+
+            json.ShouldContain("\"customer_retry\":{\"max_attempts\":5}");
+        }
+
+#pragma warning disable CS0618
+        [Fact]
+        public void ShouldConvertPaymentRetryRequestToCustomerRetry()
+        {
+            var request = new PaymentSessionCreateRequest
+                { CustomerRetry = new PaymentRetryRequest { MaxAttempts = 2 } };
+
+            Serializer.Serialize(request.CustomerRetry).ShouldBe("{\"max_attempts\":2}");
+        }
+
+        [Fact]
+        public void ShouldConvertNullPaymentRetryRequestAndNullMaxAttempts()
+        {
+            CustomerRetry fromNull = (PaymentRetryRequest)null;
+            CustomerRetry fromEmpty = new PaymentRetryRequest();
+
+            fromNull.ShouldBeNull();
+            fromEmpty.MaxAttempts.ShouldBeNull();
+            Serializer.Serialize(fromEmpty).ShouldBe("{}");
+        }
+#pragma warning restore CS0618
     }
 }
