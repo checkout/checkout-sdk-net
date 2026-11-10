@@ -294,7 +294,7 @@ namespace Checkout
             var pathUri = new Uri(_baseUri, path);
             var httpRequest = new HttpRequestMessage(httpMethod, pathUri) { Content = httpContent };
 #if NET5_0_OR_GREATER || NETSTANDARD2_0
-            _log.LogInformation(@"{HttpMethod}: {Path}", httpMethod, path);
+            _log.LogInformation(@"{HttpMethod}: {Path}", httpMethod, LoggablePath(path));
 #endif
 
             httpRequest.Headers.UserAgent.ParseAdd(
@@ -429,6 +429,33 @@ namespace Checkout
                     h => h.Value.FirstOrDefault() ?? string.Empty
                 ) ?? new Dictionary<string, string>();
             }
+        }
+
+        /// <summary>
+        /// The request path as it is logged: the query string is left out and every segment that holds an email
+        /// address is replaced with <c>***</c>.
+        /// </summary>
+        /// <param name="path">The relative request path, optionally with a query string.</param>
+        /// <returns>The path to log.</returns>
+        internal static string LoggablePath(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return path;
+            }
+
+            var queryStart = path.IndexOf('?');
+            var segments = (queryStart < 0 ? path : path.Substring(0, queryStart)).Split('/');
+            for (var i = 0; i < segments.Length; i++)
+            {
+                if (segments[i].IndexOf('@') >= 0 ||
+                    segments[i].IndexOf("%40", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    segments[i] = "***";
+                }
+            }
+
+            return string.Join("/", segments);
         }
 
         private static string ResolveHeaderValue(object raw)

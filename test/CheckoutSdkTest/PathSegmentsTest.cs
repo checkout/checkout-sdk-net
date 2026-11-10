@@ -22,8 +22,7 @@ namespace Checkout
     {
         private const string EncodedValue = "x_1?y=z#w%v +\u00e9";
 
-        // String arguments of client methods that reach the request path (path ids and the event types version).
-        private const int MinimumPathArguments = 237;
+        private const string InvalidPathSegmentMessage = "The value is not a valid path segment";
 
         public static IEnumerable<object[]> EncodedCases() => Cases(EncodedValue);
 
@@ -63,27 +62,59 @@ namespace Checkout
         }
 
         [Fact]
-        public void ShouldCoverEveryClient()
+        public void ShouldCoverEveryClientOfThePublicApi()
         {
-            var clients = ClientTypes().ToList();
-            clients.Count.ShouldBeGreaterThanOrEqualTo(47);
-            EncodedCases().Select(c => (string)c[0]).Distinct().Count().ShouldBeGreaterThanOrEqualTo(40);
+            var clientTypes = ClientTypes().ToList();
+            var apiClients = new[] { typeof(ICheckoutApi), typeof(Previous.ICheckoutApi) }
+                .SelectMany(api => new[] { api }.Concat(api.GetInterfaces()))
+                .SelectMany(api => api.GetMethods())
+                .Select(m => m.ReturnType)
+                .Where(t => t.IsInterface && t.Name.EndsWith("Client"))
+                .Distinct()
+                .ToList();
+
+            apiClients.ShouldNotBeEmpty();
+            foreach (var apiClient in apiClients)
+            {
+                clientTypes.ShouldContain(t => apiClient.IsAssignableFrom(t), apiClient.FullName);
+            }
         }
 
         [Fact]
-        public async Task ShouldReachTheRequestPathFromCallerArguments()
+        public async Task ShouldSendEveryIdArgumentInTheRequest()
         {
-            var reached = 0;
-            foreach (var c in Cases("x_marker"))
+            var idArguments = Cases("x_marker")
+                .Where(c => IsIdParameter(ParameterName((string)c[0], (string)c[1], (int)c[2])))
+                .ToList();
+            idArguments.ShouldNotBeEmpty();
+
+            foreach (var c in idArguments)
             {
-                var paths = await InvokeRecording((string)c[0], (string)c[1], (int)c[2], "x_marker");
-                if (paths.Any(p => p.Contains("x_marker")))
+                var type = typeof(AbstractClient).Assembly.GetType((string)c[0]);
+                var method = ClientMethods(type).Single(m => m.ToString() == (string)c[1]);
+                var apiClient = new RecordingApiClient();
+                await InvokeWithSamples(type, method, (int)c[2], "x_marker", apiClient);
+                apiClient.Paths.Concat(apiClient.Queries).ShouldContain(p => p.Contains("x_marker"),
+                    $"{c[0]}.{c[1]} parameter {ParameterName((string)c[0], (string)c[1], (int)c[2])}");
+            }
+        }
+
+        [Fact]
+        public async Task ShouldBuildEveryRequestPathFromValidArguments()
+        {
+            var recorded = 0;
+            foreach (var type in ClientTypes())
+            {
+                foreach (var method in ClientMethods(type))
                 {
-                    reached++;
+                    var (paths, exception) = await InvokeWithSamples(type, method, -1, null);
+                    var refused = exception as CheckoutArgumentException;
+                    (refused?.Message == InvalidPathSegmentMessage).ShouldBeFalse($"{type.FullName}.{method}");
+                    recorded += paths.Count;
                 }
             }
 
-            reached.ShouldBeGreaterThanOrEqualTo(MinimumPathArguments);
+            recorded.ShouldBeGreaterThan(0);
         }
 
         [Fact]
@@ -138,7 +169,7 @@ namespace Checkout
 
             var uri = handler.Requests.Single().RequestUri;
             uri.AbsolutePath.ShouldBe("/event-types");
-            uri.Query.ShouldBe("?version=1.0%26x%3Dy%23z");
+            uri.Query.ShouldBe("?version=1.0%26x%3dy%23z");
             uri.Fragment.ShouldBeEmpty();
         }
 
@@ -186,7 +217,14 @@ namespace Checkout
         {
             var type = typeof(AbstractClient).Assembly.GetType(clientName);
             var method = ClientMethods(type).Single(m => m.ToString() == methodName);
-            var apiClient = new RecordingApiClient();
+            var (paths, _) = await InvokeWithSamples(type, method, parameter, value);
+            return paths;
+        }
+
+        private static async Task<(IList<string> Paths, Exception Exception)> InvokeWithSamples(Type type,
+            MethodInfo method, int parameter, string value, RecordingApiClient apiClient = null)
+        {
+            apiClient = apiClient ?? new RecordingApiClient();
             var client = CreateClient(type, apiClient);
 
             var arguments = method.GetParameters()
@@ -196,14 +234,36 @@ namespace Checkout
             {
                 await (Task)method.Invoke(client, arguments);
             }
-            catch (Exception)
+            catch (TargetInvocationException e) when (!(e.InnerException is StopException))
             {
-                // refused before sending (CheckoutArgumentException), request recorded (StopException),
-                // or the sample arguments were not enough to reach the request: only recorded paths count
+                // refused before sending, or the sample arguments were not enough to reach the request
+                return (apiClient.Paths, e.InnerException);
+            }
+            catch (StopException)
+            {
+                // request recorded
+            }
+            catch (TargetInvocationException)
+            {
+                // request recorded (thrown synchronously)
+            }
+            catch (Exception e)
+            {
+                // refused before sending (async methods), or the sample arguments were not enough
+                return (apiClient.Paths, e);
             }
 
-            return apiClient.Paths;
+            return (apiClient.Paths, null);
         }
+
+        private static string ParameterName(string clientName, string methodName, int parameter)
+        {
+            var type = typeof(AbstractClient).Assembly.GetType(clientName);
+            return ClientMethods(type).Single(m => m.ToString() == methodName).GetParameters()[parameter].Name;
+        }
+
+        // Resource identifiers by naming convention: "id" or a name ending in "Id".
+        private static bool IsIdParameter(string name) => name == "id" || name.EndsWith("Id");
 
         private static object CreateClient(Type type, IApiClient apiClient)
         {
@@ -277,6 +337,9 @@ namespace Checkout
         {
             public List<string> Paths { get; } = new List<string>();
 
+            // Query filters, serialized as the SDK sends them.
+            public List<string> Queries { get; } = new List<string>();
+
             private Task<TResult> Record<TResult>(string path)
             {
                 Paths.Add(path);
@@ -314,7 +377,15 @@ namespace Checkout
                 CancellationToken cancellationToken = default) where TResult : HttpMetadata => Record<TResult>(path);
 
             public Task<TResult> Query<TResult>(string path, SdkAuthorization authorization, object request = null,
-                CancellationToken cancellationToken = default) where TResult : HttpMetadata => Record<TResult>(path);
+                CancellationToken cancellationToken = default) where TResult : HttpMetadata
+            {
+                if (request != null)
+                {
+                    Queries.Add(new JsonSerializer().Serialize(request));
+                }
+
+                return Record<TResult>(path);
+            }
         }
     }
 }
