@@ -6,7 +6,8 @@ namespace Checkout.Apm.Previous.Sepa
     public class SepaClient : AbstractClient, ISepaClient
     {
         private const string APMSPath = "apms";
-        private const string SepaMandatesPath = "sepa/mandates";
+        private const string SepaPath = "sepa";
+        private const string MandatesPath = "mandates";
         private const string PproPath = "ppro";
         private const string CancelPath = "cancel";
 
@@ -19,7 +20,7 @@ namespace Checkout.Apm.Previous.Sepa
         public Task<MandateResponse> GetMandate(string mandateId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("mandateId", mandateId);
-            return ApiClient.Get<MandateResponse>(BuildPath(SepaMandatesPath, mandateId), SdkAuthorization(),
+            return ApiClient.Get<MandateResponse>(BuildPath(SepaPath, MandatesPath, mandateId), SdkAuthorization(),
                 cancellationToken);
         }
 
@@ -27,7 +28,7 @@ namespace Checkout.Apm.Previous.Sepa
         {
             CheckoutUtils.ValidateParams("mandateId", mandateId);
             return ApiClient.Post<SepaResource>(
-                BuildPath(SepaMandatesPath, mandateId, CancelPath),
+                BuildPath(SepaPath, MandatesPath, mandateId, CancelPath),
                 SdkAuthorization(),
                 null,
                 cancellationToken,
@@ -37,7 +38,7 @@ namespace Checkout.Apm.Previous.Sepa
         public Task<MandateResponse> GetMandateViaPpro(string mandateId, CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("mandateId", mandateId);
-            return ApiClient.Get<MandateResponse>(BuildPath(APMSPath, PproPath, SepaMandatesPath, mandateId), SdkAuthorization(),
+            return ApiClient.Get<MandateResponse>(BuildPath(APMSPath, PproPath, SepaPath, MandatesPath, mandateId), SdkAuthorization(),
                 cancellationToken);
         }
 
@@ -45,7 +46,7 @@ namespace Checkout.Apm.Previous.Sepa
         {
             CheckoutUtils.ValidateParams("mandateId", mandateId);
             return ApiClient.Post<SepaResource>(
-                BuildPath(APMSPath, PproPath, SepaMandatesPath, mandateId, CancelPath),
+                BuildPath(APMSPath, PproPath, SepaPath, MandatesPath, mandateId, CancelPath),
                 SdkAuthorization(),
                 null,
                 cancellationToken,

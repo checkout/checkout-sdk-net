@@ -7,7 +7,10 @@ namespace Checkout.Risk
 {
     public class RiskClient : AbstractClient, IRiskClient
     {
-        private const string RiskAssessmentsPath = "risk/assessments";
+        private const string RiskPath = "risk";
+        private const string AssessmentsPath = "assessments";
+        private const string PreAuthenticationPath = "pre-authentication";
+        private const string PreCapturePath = "pre-capture";
 
         public RiskClient(IApiClient apiClient, CheckoutConfiguration configuration) : base(apiClient, configuration,
             SdkAuthorizationType.SecretKey)
@@ -20,7 +23,7 @@ namespace Checkout.Risk
         {
             CheckoutUtils.ValidateParams("preAuthenticationAssessmentRequest", preAuthenticationAssessmentRequest);
             return ApiClient.Post<PreAuthenticationAssessmentResponse>(
-                BuildPath(RiskAssessmentsPath, "pre-authentication"), SdkAuthorization(),
+                BuildPath(RiskPath, AssessmentsPath, PreAuthenticationPath), SdkAuthorization(),
                 preAuthenticationAssessmentRequest, cancellationToken);
         }
 
@@ -29,7 +32,7 @@ namespace Checkout.Risk
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("preCaptureAssessmentRequest", preCaptureAssessmentRequest);
-            return ApiClient.Post<PreCaptureAssessmentResponse>(BuildPath(RiskAssessmentsPath, "pre-capture"),
+            return ApiClient.Post<PreCaptureAssessmentResponse>(BuildPath(RiskPath, AssessmentsPath, PreCapturePath),
                 SdkAuthorization(), preCaptureAssessmentRequest, cancellationToken);
         }
     }

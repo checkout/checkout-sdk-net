@@ -7,9 +7,10 @@ namespace Checkout.HandlePaymentsAndPayouts.ApplePay
 {
     public class ApplePayClient : AbstractClient, IApplePayClient
     {
-        private const string CertificatesPath = "applepay/certificates";
-        private const string EnrollmentsPath = "applepay/enrollments";
-        private const string SigningRequestsPath = "applepay/signing-requests";
+        private const string ApplePayPath = "applepay";
+        private const string CertificatesPath = "certificates";
+        private const string EnrollmentsPath = "enrollments";
+        private const string SigningRequestsPath = "signing-requests";
 
         public ApplePayClient(IApiClient apiClient, CheckoutConfiguration configuration)
             : base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
@@ -21,7 +22,7 @@ namespace Checkout.HandlePaymentsAndPayouts.ApplePay
         {
             CheckoutUtils.ValidateParams("request", request);
             return ApiClient.Post<UploadCertificateResponse>(
-                CertificatesPath,
+                BuildPath(ApplePayPath, CertificatesPath),
                 SdkAuthorization(),
                 request,
                 cancellationToken);
@@ -32,7 +33,7 @@ namespace Checkout.HandlePaymentsAndPayouts.ApplePay
         {
             CheckoutUtils.ValidateParams("request", request);
             return ApiClient.Post<EmptyResponse>(
-                EnrollmentsPath,
+                BuildPath(ApplePayPath, EnrollmentsPath),
                 SdkAuthorization(SdkAuthorizationType.OAuth),
                 request,
                 cancellationToken);
@@ -43,7 +44,7 @@ namespace Checkout.HandlePaymentsAndPayouts.ApplePay
         {
             CheckoutUtils.ValidateParams("request", request);
             return ApiClient.Post<GenerateSigningRequestResponse>(
-                SigningRequestsPath,
+                BuildPath(ApplePayPath, SigningRequestsPath),
                 SdkAuthorization(),
                 request,
                 cancellationToken);

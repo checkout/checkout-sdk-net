@@ -22,7 +22,7 @@ namespace Checkout.Issuing
             CheckoutUtils.ValidateParams("cardholderAccessTokenRequest", cardholderAccessTokenRequest);
             var formContent = CreateFormUrlEncodedContent(cardholderAccessTokenRequest);
             return ApiClient.Post<CardholderAccessTokenResponse>(
-                BuildPath(IssuingPath, AccessTokenPath),
+                BuildPath(IssuingPath, AccessPath, ConnectPath, TokenPath),
                 SdkAuthorization(),
                 formContent,
                 cancellationToken

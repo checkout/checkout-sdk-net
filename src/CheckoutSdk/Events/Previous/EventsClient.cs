@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,7 +21,7 @@ namespace Checkout.Events.Previous
             var eventTypesPath = "event-types";
             if (!string.IsNullOrEmpty(version))
             {
-                eventTypesPath = $"{eventTypesPath}?version={version}";
+                eventTypesPath = $"{eventTypesPath}?version={Uri.EscapeDataString(version)}";
             }
 
             return ApiClient.Get<ItemsResponse<EventTypesResponse>>(eventTypesPath, SdkAuthorization(), cancellationToken);

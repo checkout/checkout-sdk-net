@@ -10,6 +10,8 @@ namespace Checkout.Instruments
     public class InstrumentsClient : AbstractClient, IInstrumentsClient
     {
         private const string InstrumentsPath = "instruments";
+        private const string ValidationPath = "validation";
+        private const string BankAccountsPath = "bank-accounts";
 
         public InstrumentsClient(IApiClient apiClient,
             CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKeyOrOAuth)
@@ -72,7 +74,7 @@ namespace Checkout.Instruments
             CheckoutUtils.ValidateParams("country", country, "currency", currency, "bankAccountFieldQuery",
                 bankAccountFieldQuery);
             return ApiClient.Query<BankAccountFieldResponse>(
-                BuildPath("validation/bank-accounts", country.ToString(), currency.ToString()),
+                BuildPath(ValidationPath, BankAccountsPath, country.ToString(), currency.ToString()),
                 SdkAuthorization(SdkAuthorizationType.OAuth), bankAccountFieldQuery, cancellationToken);
         }
     }

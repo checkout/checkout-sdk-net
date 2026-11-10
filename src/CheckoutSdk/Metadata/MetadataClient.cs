@@ -6,6 +6,9 @@ namespace Checkout.Metadata
 {
     public class MetadataClient : AbstractClient, IMetadataClient
     {
+        private const string MetadataPath = "metadata";
+        private const string CardPath = "card";
+
         public MetadataClient(IApiClient apiClient, CheckoutConfiguration configuration) : base(apiClient,
             configuration, SdkAuthorizationType.SecretKeyOrOAuth)
         {
@@ -15,7 +18,7 @@ namespace Checkout.Metadata
             CancellationToken cancellationToken = default)
         {
             CheckoutUtils.ValidateParams("cardMetadataRequest", cardMetadataRequest);
-            return ApiClient.Post<CardMetadataResponse>("metadata/card", SdkAuthorization(), cardMetadataRequest,
+            return ApiClient.Post<CardMetadataResponse>(BuildPath(MetadataPath, CardPath), SdkAuthorization(), cardMetadataRequest,
                 cancellationToken);
         }
     }

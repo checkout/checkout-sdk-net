@@ -7,7 +7,8 @@ namespace Checkout.HandlePaymentsAndPayouts.GooglePay
 {
     public class GooglePayClient : AbstractClient, IGooglePayClient
     {
-        private const string GooglePayEnrollmentsPath = "googlepay/enrollments";
+        private const string GooglePayPath = "googlepay";
+        private const string EnrollmentsPath = "enrollments";
         private const string DomainPath = "domain";
         private const string DomainsPath = "domains";
         private const string StatePath = "state";
@@ -22,7 +23,7 @@ namespace Checkout.HandlePaymentsAndPayouts.GooglePay
         {
             CheckoutUtils.ValidateParams("request", request);
             return ApiClient.Post<GooglePayEnrollmentResponse>(
-                GooglePayEnrollmentsPath,
+                BuildPath(GooglePayPath, EnrollmentsPath),
                 SdkAuthorization(),
                 request,
                 cancellationToken);
@@ -33,7 +34,7 @@ namespace Checkout.HandlePaymentsAndPayouts.GooglePay
         {
             CheckoutUtils.ValidateParams("entityId", entityId, "request", request);
             return ApiClient.Post<EmptyResponse>(
-                BuildPath(GooglePayEnrollmentsPath, entityId, DomainPath),
+                BuildPath(GooglePayPath, EnrollmentsPath, entityId, DomainPath),
                 SdkAuthorization(),
                 request,
                 cancellationToken);
@@ -44,7 +45,7 @@ namespace Checkout.HandlePaymentsAndPayouts.GooglePay
         {
             CheckoutUtils.ValidateParams("entityId", entityId);
             return ApiClient.Get<GooglePayDomainListResponse>(
-                BuildPath(GooglePayEnrollmentsPath, entityId, DomainsPath),
+                BuildPath(GooglePayPath, EnrollmentsPath, entityId, DomainsPath),
                 SdkAuthorization(),
                 cancellationToken);
         }
@@ -54,7 +55,7 @@ namespace Checkout.HandlePaymentsAndPayouts.GooglePay
         {
             CheckoutUtils.ValidateParams("entityId", entityId);
             return ApiClient.Get<GooglePayEnrollmentStateResponse>(
-                BuildPath(GooglePayEnrollmentsPath, entityId, StatePath),
+                BuildPath(GooglePayPath, EnrollmentsPath, entityId, StatePath),
                 SdkAuthorization(),
                 cancellationToken);
         }

@@ -5,6 +5,10 @@ namespace Checkout.Forex
 {
     public class ForexClient : AbstractClient, IForexClient
     {
+        private const string ForexPath = "forex";
+        private const string QuotesPath = "quotes";
+        private const string RatesPath = "rates";
+
         public ForexClient(IApiClient apiClient, CheckoutConfiguration configuration) :
             base(apiClient, configuration, SdkAuthorizationType.OAuth)
         {
@@ -16,7 +20,7 @@ namespace Checkout.Forex
         {
             CheckoutUtils.ValidateParams("quoteRequest", quoteRequest);
             return ApiClient.Post<QuoteResponse>(
-                "forex/quotes", 
+                BuildPath(ForexPath, QuotesPath), 
                 SdkAuthorization(), 
                 quoteRequest, 
                 cancellationToken
@@ -29,7 +33,7 @@ namespace Checkout.Forex
         {
             CheckoutUtils.ValidateParams("ratesQueryFilter", ratesQueryFilter);
             return ApiClient.Query<RatesQueryResponse>(
-                "forex/rates", 
+                BuildPath(ForexPath, RatesPath), 
                 SdkAuthorization(), 
                 ratesQueryFilter, 
                 cancellationToken
