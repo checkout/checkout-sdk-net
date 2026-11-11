@@ -8,6 +8,9 @@ using System.Net.Http;
 
 namespace Checkout
 {
+    /// <summary>
+    /// Credentials that obtain an OAuth access token with the client credentials flow and reuse it until it expires.
+    /// </summary>
     public sealed class OAuthSdkCredentials : SdkCredentials
     {
 #if NET5_0_OR_GREATER || NETSTANDARD2_0
@@ -18,8 +21,19 @@ namespace Checkout
         private readonly JsonSerializer _serializer = new JsonSerializer();
         private readonly ISet<OAuthScope> _scopes;
         private readonly HttpClient _httpClient;
-        private OAuthAccessToken _accessToken;
+        private readonly Uri _authorizationUri;
+        private readonly object _accessTokenLock = new object();
+        private volatile OAuthAccessToken _accessToken;
 
+        /// <summary>
+        /// Creates OAuth credentials. No token is requested until one is needed.
+        /// </summary>
+        /// <param name="httpClientFactory">The factory that creates the HTTP client used for token requests.</param>
+        /// <param name="authorizationUri">The absolute URI of the token endpoint; must use https, http is accepted for loopback hosts.</param>
+        /// <param name="clientId">The OAuth client ID.</param>
+        /// <param name="clientSecret">The OAuth client secret.</param>
+        /// <param name="scopes">The scopes requested for the token.</param>
+        /// <exception cref="CheckoutArgumentException">A parameter is null or blank, or authorizationUri is not absolute or does not use https on a host that is not loopback.</exception>
         public OAuthSdkCredentials(
             IHttpClientFactory httpClientFactory,
             Uri authorizationUri,
@@ -33,11 +47,19 @@ namespace Checkout
                 "clientId", clientId,
                 "clientSecret", clientSecret,
                 "scopes", scopes);
+            ValidateAuthorizationUri(authorizationUri);
             _clientId = clientId;
             _clientSecret = clientSecret;
             _scopes = scopes;
+            _authorizationUri = authorizationUri;
+            // The factory may hand out a client the merchant shares with their own code, so the
+            // token request uses an absolute URI and leaves BaseAddress alone.
             _httpClient = httpClientFactory.CreateClient();
-            _httpClient.BaseAddress = authorizationUri;
+        }
+
+        internal static void ValidateAuthorizationUri(Uri authorizationUri)
+        {
+            CheckoutUtils.ValidateHttpsUri("authorizationUri", authorizationUri);
         }
 
         internal void InitAccess()
@@ -45,6 +67,12 @@ namespace Checkout
             GetAccessToken();
         }
 
+        /// <summary>
+        /// Returns an authorization that carries a valid access token, requesting a new token when there is none or it has expired.
+        /// </summary>
+        /// <param name="authorizationType">The authorization type required by the operation.</param>
+        /// <returns>The authorization with the current access token.</returns>
+        /// <exception cref="CheckoutAuthorizationException">The authorization type is not SecretKeyOrOAuth, PublicKeyOrOAuth or OAuth, or the token request fails or returns an invalid response.</exception>
         public override SdkAuthorization GetSdkAuthorization(SdkAuthorizationType authorizationType)
         {
             switch (authorizationType)
@@ -60,13 +88,32 @@ namespace Checkout
 
         private OAuthAccessToken GetAccessToken()
         {
-            if (_accessToken != null && _accessToken.IsValid())
+            var accessToken = _accessToken;
+            if (accessToken != null && accessToken.IsValid())
             {
-                return _accessToken;
+                return accessToken;
             }
 
-            _accessToken = OAuthAccessToken.FromOAuthServiceResponse(Request());
-            return _accessToken;
+            lock (_accessTokenLock)
+            {
+                if (_accessToken != null && _accessToken.IsValid())
+                {
+                    return _accessToken;
+                }
+
+                var response = Request();
+                try
+                {
+                    _accessToken = OAuthAccessToken.FromOAuthServiceResponse(response);
+                }
+                catch (Exception e) when (e is ArgumentException || e is OverflowException)
+                {
+                    // An out-of-range expires_in overflows the expiry date.
+                    throw new CheckoutAuthorizationException("Invalid OAuth client authorization response", e);
+                }
+
+                return _accessToken;
+            }
         }
 
         private OAuthServiceResponse Request()
@@ -76,7 +123,7 @@ namespace Checkout
 #endif
             try
             {
-                var httpRequest = new HttpRequestMessage(HttpMethod.Post, string.Empty);
+                var httpRequest = new HttpRequestMessage(HttpMethod.Post, _authorizationUri);
                 var data = new List<KeyValuePair<string, string>>
                 {
                     new KeyValuePair<string, string>("grant_type", "client_credentials"),
@@ -85,16 +132,31 @@ namespace Checkout
                     new KeyValuePair<string, string>("scope", GetScopes())
                 };
                 httpRequest.Content = new FormUrlEncodedContent(data);
-                var responseMessage = _httpClient.SendAsync(httpRequest).GetAwaiter().GetResult();
-                var oAuthServiceResponse = (OAuthServiceResponse)_serializer.Deserialize(
-                    responseMessage.Content.ReadAsStringAsync().GetAwaiter().GetResult(),
-                    typeof(OAuthServiceResponse));
-                if (!oAuthServiceResponse.IsValid())
+                // GetSdkAuthorization is synchronous; ConfigureAwait(false) keeps the blocking wait
+                // from deadlocking on a caller's synchronization context.
+                var responseMessage = _httpClient.SendAsync(httpRequest).ConfigureAwait(false).GetAwaiter().GetResult();
+                if (!responseMessage.IsSuccessStatusCode)
                 {
-                    throw new ArgumentException("Invalid OAuth client authorization response");
+                    throw new CheckoutAuthorizationException(
+                        $"OAuth client_credentials authentication failed with status {(int)responseMessage.StatusCode}");
+                }
+
+                var body = responseMessage.Content == null
+                    ? null
+                    : responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+                var oAuthServiceResponse = string.IsNullOrWhiteSpace(body)
+                    ? null
+                    : (OAuthServiceResponse)_serializer.Deserialize(body, typeof(OAuthServiceResponse));
+                if (oAuthServiceResponse == null || !oAuthServiceResponse.IsValid())
+                {
+                    throw new CheckoutAuthorizationException("Invalid OAuth client authorization response");
                 }
 
                 return oAuthServiceResponse;
+            }
+            catch (CheckoutAuthorizationException)
+            {
+                throw;
             }
             catch (Exception e)
             {

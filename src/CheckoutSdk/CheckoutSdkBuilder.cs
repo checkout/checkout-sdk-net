@@ -4,33 +4,61 @@ using System.Collections.Generic;
 
 namespace Checkout
 {
+    /// <summary>
+    /// Entry point to build a Checkout.com API client.
+    /// </summary>
     public class CheckoutSdkBuilder
     {
+        /// <summary>
+        /// Returns the entry point to build a client for the previous platform.
+        /// </summary>
+        /// <returns>A new previous platform SDK entry point.</returns>
         public CheckoutPreviousSdk Previous()
         {
             return new CheckoutPreviousSdk();
         }
+        /// <summary>
+        /// Returns a builder for a client authenticated with a secret key and an optional public key.
+        /// </summary>
+        /// <returns>A new static keys builder.</returns>
         public CheckoutStaticKeysSdkBuilder StaticKeys()
         {
             return new CheckoutStaticKeysSdkBuilder();
         }
 
+        /// <summary>
+        /// Returns a builder for a client authenticated with OAuth client credentials.
+        /// </summary>
+        /// <returns>A new OAuth builder.</returns>
         public CheckoutOAuthSdkBuilder OAuth()
         {
             return new CheckoutOAuthSdkBuilder();
         }
 
+        /// <summary>
+        /// Builds a client authenticated with static API keys.
+        /// </summary>
         public class CheckoutStaticKeysSdkBuilder : AbstractCheckoutSdkBuilder<ICheckoutApi>
         {
             private string _publicKey;
             private string _secretKey;
 
+            /// <summary>
+            /// Sets the public key.
+            /// </summary>
+            /// <param name="publicKey">The public key.</param>
+            /// <returns>This builder.</returns>
             public CheckoutStaticKeysSdkBuilder PublicKey(string publicKey)
             {
                 _publicKey = publicKey;
                 return this;
             }
 
+            /// <summary>
+            /// Sets the secret key.
+            /// </summary>
+            /// <param name="secretKey">The secret key.</param>
+            /// <returns>This builder.</returns>
             public CheckoutStaticKeysSdkBuilder SecretKey(string secretKey)
             {
                 _secretKey = secretKey;
@@ -42,12 +70,19 @@ namespace Checkout
                 return new StaticKeysSdkCredentials(_secretKey, _publicKey);
             }
 
+            /// <summary>
+            /// Builds the API client with the configured keys and environment.
+            /// </summary>
+            /// <returns>The API client.</returns>
             public override ICheckoutApi Build()
             {
                 return new CheckoutApi(GetCheckoutConfiguration());
             }
         }
 
+        /// <summary>
+        /// Builds a client authenticated with OAuth client credentials.
+        /// </summary>
         public class CheckoutOAuthSdkBuilder : AbstractCheckoutSdkBuilder<ICheckoutApi>
         {
             private string _clientId;
@@ -55,6 +90,12 @@ namespace Checkout
             private Uri _authorizationUri;
             private readonly ISet<OAuthScope> _scopes = new HashSet<OAuthScope>();
 
+            /// <summary>
+            /// Sets the OAuth client credentials.
+            /// </summary>
+            /// <param name="clientId">The OAuth client ID.</param>
+            /// <param name="clientSecret">The OAuth client secret.</param>
+            /// <returns>This builder.</returns>
             public CheckoutOAuthSdkBuilder ClientCredentials(string clientId, string clientSecret)
             {
                 _clientId = clientId;
@@ -62,12 +103,25 @@ namespace Checkout
                 return this;
             }
 
+            /// <summary>
+            /// Sets a custom token endpoint. When not set, the endpoint is derived from the environment subdomain or the environment.
+            /// </summary>
+            /// <param name="authorizationUri">The absolute URI of the token endpoint; must use https, http is accepted for loopback hosts. Null clears it.</param>
+            /// <returns>This builder.</returns>
+            /// <exception cref="CheckoutArgumentException">The URI is not absolute or does not use https on a host that is not loopback.</exception>
             public CheckoutOAuthSdkBuilder AuthorizationUri(Uri authorizationUri)
             {
+                OAuthSdkCredentials.ValidateAuthorizationUri(authorizationUri);
                 _authorizationUri = authorizationUri;
                 return this;
             }
 
+            /// <summary>
+            /// Adds scopes to request for the access token.
+            /// </summary>
+            /// <param name="scopes">The scopes to add.</param>
+            /// <returns>This builder.</returns>
+            /// <exception cref="CheckoutArgumentException">scopes is null.</exception>
             public CheckoutOAuthSdkBuilder Scopes(params OAuthScope[] scopes)
             {
                 CheckoutUtils.ValidateParams("scopes", scopes);
@@ -112,6 +166,12 @@ namespace Checkout
                 return credentials;
             }
 
+            /// <summary>
+            /// Builds the API client and requests the first access token. AuthorizationUri and an environment subdomain cannot both be set; combine AuthorizationUri with UseLegacyDomain for a custom token host.
+            /// </summary>
+            /// <returns>The API client.</returns>
+            /// <exception cref="CheckoutArgumentException">Both AuthorizationUri and an environment subdomain are set, or a credential parameter is null or blank.</exception>
+            /// <exception cref="CheckoutAuthorizationException">The access token request fails or returns an invalid response.</exception>
             public override ICheckoutApi Build()
             {
                 return new CheckoutApi(GetCheckoutConfiguration());

@@ -16,6 +16,9 @@ using System.Threading.Tasks;
 
 namespace Checkout
 {
+    /// <summary>
+    /// Sends HTTP requests to the Checkout.com API and deserializes the responses.
+    /// </summary>
     public class ApiClient : IApiClient
     {
 #if NET5_0_OR_GREATER || NETSTANDARD2_0
@@ -30,15 +33,34 @@ namespace Checkout
         private readonly ConcurrentQueue<RequestMetrics> requestMetricsQueue = new ConcurrentQueue<RequestMetrics>();
         private readonly bool _enableTelemetry;
 
+        /// <summary>
+        /// Creates a client that sends requests relative to the given base URI.
+        /// </summary>
+        /// <param name="httpClientFactory">The factory that creates the HTTP client.</param>
+        /// <param name="baseUri">The base URI of the API; must use https, http is accepted for loopback hosts.</param>
+        /// <param name="enableTelemetry">When true, a cko-sdk-telemetry header with the duration of the previous request is sent.</param>
+        /// <exception cref="CheckoutArgumentException">A parameter is null, or baseUri is not absolute or does not use https on a host that is not loopback.</exception>
         public ApiClient(IHttpClientFactory httpClientFactory, Uri baseUri, bool enableTelemetry)
         {
             CheckoutUtils.ValidateParams("httpClientFactory", httpClientFactory, "baseUri", baseUri);
+            CheckoutUtils.ValidateHttpsUri("baseUri", baseUri);
             var httpClient = httpClientFactory.CreateClient();
             _baseUri = baseUri;
             _httpClient = httpClient;
             _enableTelemetry = enableTelemetry;
         }
 
+        /// <summary>
+        /// Sends a GET request.
+        /// </summary>
+        /// <typeparam name="TResult">The response type.</typeparam>
+        /// <param name="path">The request path, relative to the base URI.</param>
+        /// <param name="authorization">The authorization used to build the Authorization header.</param>
+        /// <param name="cancellationToken">A token to cancel the request.</param>
+        /// <returns>The deserialized response, with its HTTP status code, headers and body set.</returns>
+        /// <exception cref="CheckoutApiException">The response status code does not indicate success, or the response body cannot be read as the requested type.</exception>
+        /// <exception cref="CheckoutArgumentException">The authorization header value is empty or contains characters outside visible ASCII and space.</exception>
+        /// <exception cref="CheckoutAuthorizationException">The authorization cannot produce a header for its platform type.</exception>
         public async Task<TResult> Get<TResult>(
             string path,
             SdkAuthorization authorization,
@@ -56,6 +78,18 @@ namespace Checkout
             return await DeserializeResponseAsync<TResult>(httpResponse);
         }
 
+        /// <summary>
+        /// Sends a GET request with additional headers.
+        /// </summary>
+        /// <typeparam name="TResult">The response type.</typeparam>
+        /// <param name="path">The request path, relative to the base URI.</param>
+        /// <param name="authorization">The authorization used to build the Authorization header.</param>
+        /// <param name="headers">An object whose public properties are sent as request headers; properties with an empty value are skipped.</param>
+        /// <param name="cancellationToken">A token to cancel the request.</param>
+        /// <returns>The deserialized response, with its HTTP status code, headers and body set.</returns>
+        /// <exception cref="CheckoutApiException">The response status code does not indicate success, or the response body cannot be read as the requested type.</exception>
+        /// <exception cref="CheckoutArgumentException">The authorization header value is empty or contains characters outside visible ASCII and space.</exception>
+        /// <exception cref="CheckoutAuthorizationException">The authorization cannot produce a header for its platform type.</exception>
         public async Task<TResult> Get<TResult>(
             string path,
             SdkAuthorization authorization,
@@ -75,6 +109,19 @@ namespace Checkout
             return await DeserializeResponseAsync<TResult>(httpResponse);
         }
 
+        /// <summary>
+        /// Sends a POST request.
+        /// </summary>
+        /// <typeparam name="TResult">The response type.</typeparam>
+        /// <param name="path">The request path, relative to the base URI.</param>
+        /// <param name="authorization">The authorization used to build the Authorization header.</param>
+        /// <param name="request">The request body, serialized to JSON unless it is multipart or form url encoded content; may be null.</param>
+        /// <param name="cancellationToken">A token to cancel the request.</param>
+        /// <param name="idempotencyKey">The value sent in the Cko-Idempotency-Key header; not sent when null or blank.</param>
+        /// <returns>The deserialized response, with its HTTP status code, headers and body set.</returns>
+        /// <exception cref="CheckoutApiException">The response status code does not indicate success, or the response body cannot be read as the requested type.</exception>
+        /// <exception cref="CheckoutArgumentException">The authorization header value is empty or contains characters outside visible ASCII and space.</exception>
+        /// <exception cref="CheckoutAuthorizationException">The authorization cannot produce a header for its platform type.</exception>
         public async Task<TResult> Post<TResult>(
             string path,
             SdkAuthorization authorization,
@@ -95,6 +142,20 @@ namespace Checkout
             return await DeserializeResponseAsync<TResult>(httpResponse);
         }
 
+        /// <summary>
+        /// Sends a POST request and deserializes the response into the type mapped to its status code.
+        /// </summary>
+        /// <typeparam name="TResult">The response type.</typeparam>
+        /// <param name="path">The request path, relative to the base URI.</param>
+        /// <param name="authorization">The authorization used to build the Authorization header.</param>
+        /// <param name="resultTypeMappings">The response type to use for each HTTP status code.</param>
+        /// <param name="request">The request body, serialized to JSON unless it is multipart or form url encoded content; may be null.</param>
+        /// <param name="cancellationToken">A token to cancel the request.</param>
+        /// <param name="idempotencyKey">The value sent in the Cko-Idempotency-Key header; not sent when null or blank.</param>
+        /// <returns>The deserialized response, of the type mapped to the status code.</returns>
+        /// <exception cref="CheckoutApiException">The response status code does not indicate success, is not in resultTypeMappings, or the response body cannot be read as the mapped type.</exception>
+        /// <exception cref="CheckoutArgumentException">The authorization header value is empty or contains characters outside visible ASCII and space.</exception>
+        /// <exception cref="CheckoutAuthorizationException">The authorization cannot produce a header for its platform type.</exception>
         public async Task<TResult> Post<TResult>(
             string path,
             SdkAuthorization authorization,
@@ -114,12 +175,30 @@ namespace Checkout
             resultTypeMappings.TryGetValue((int)httpResponse.StatusCode, out var responseType);
 
             if (responseType == null)
-                throw new InvalidOperationException(
-                    $"The status code {(int)httpResponse.StatusCode} is not mapped to a result type");
+            {
+                httpResponse.Headers.TryGetValues("Cko-Request-Id", out var requestIdHeader);
+                throw new CheckoutApiException(requestIdHeader?.FirstOrDefault(), httpResponse.StatusCode,
+                    new Dictionary<string, object>(),
+                    $"The status code {(int)httpResponse.StatusCode} is not mapped to a result type", null);
+            }
 
             return await DeserializeResponseAsync(httpResponse, responseType);
         }
 
+        /// <summary>
+        /// Sends a POST request with additional headers.
+        /// </summary>
+        /// <typeparam name="TResult">The response type.</typeparam>
+        /// <param name="path">The request path, relative to the base URI.</param>
+        /// <param name="authorization">The authorization used to build the Authorization header.</param>
+        /// <param name="request">The request body, serialized to JSON unless it is multipart or form url encoded content; may be null.</param>
+        /// <param name="cancellationToken">A token to cancel the request.</param>
+        /// <param name="idempotencyKey">The value sent in the Cko-Idempotency-Key header; not sent when null or blank.</param>
+        /// <param name="headers">An object whose public properties are sent as request headers; properties with an empty value are skipped.</param>
+        /// <returns>The deserialized response, with its HTTP status code, headers and body set.</returns>
+        /// <exception cref="CheckoutApiException">The response status code does not indicate success, or the response body cannot be read as the requested type.</exception>
+        /// <exception cref="CheckoutArgumentException">The authorization header value is empty or contains characters outside visible ASCII and space.</exception>
+        /// <exception cref="CheckoutAuthorizationException">The authorization cannot produce a header for its platform type.</exception>
         public async Task<TResult> Post<TResult>(
             string path,
             SdkAuthorization authorization,
@@ -141,6 +220,20 @@ namespace Checkout
             return await DeserializeResponseAsync<TResult>(httpResponse);
         }
 
+        /// <summary>
+        /// Sends a PATCH request.
+        /// </summary>
+        /// <typeparam name="TResult">The response type.</typeparam>
+        /// <param name="path">The request path, relative to the base URI.</param>
+        /// <param name="authorization">The authorization used to build the Authorization header.</param>
+        /// <param name="request">The request body, serialized to JSON unless it is multipart or form url encoded content; may be null.</param>
+        /// <param name="cancellationToken">A token to cancel the request.</param>
+        /// <param name="idempotencyKey">The value sent in the Cko-Idempotency-Key header; not sent when null or blank.</param>
+        /// <param name="headers">An object whose public properties are sent as request headers; properties with an empty value are skipped. May be null.</param>
+        /// <returns>The deserialized response, with its HTTP status code, headers and body set.</returns>
+        /// <exception cref="CheckoutApiException">The response status code does not indicate success, or the response body cannot be read as the requested type.</exception>
+        /// <exception cref="CheckoutArgumentException">The authorization header value is empty or contains characters outside visible ASCII and space.</exception>
+        /// <exception cref="CheckoutAuthorizationException">The authorization cannot produce a header for its platform type.</exception>
         public async Task<TResult> Patch<TResult>(
             string path,
             SdkAuthorization authorization,
@@ -162,6 +255,20 @@ namespace Checkout
             return await DeserializeResponseAsync<TResult>(httpResponse);
         }
 
+        /// <summary>
+        /// Sends a PUT request.
+        /// </summary>
+        /// <typeparam name="TResult">The response type.</typeparam>
+        /// <param name="path">The request path, relative to the base URI.</param>
+        /// <param name="authorization">The authorization used to build the Authorization header.</param>
+        /// <param name="request">The request body, serialized to JSON unless it is multipart or form url encoded content; may be null.</param>
+        /// <param name="cancellationToken">A token to cancel the request.</param>
+        /// <param name="idempotencyKey">Accepted for signature compatibility; it is not sent with PUT requests.</param>
+        /// <param name="headers">An object whose public properties are sent as request headers; properties with an empty value are skipped. May be null.</param>
+        /// <returns>The deserialized response, with its HTTP status code, headers and body set.</returns>
+        /// <exception cref="CheckoutApiException">The response status code does not indicate success, or the response body cannot be read as the requested type.</exception>
+        /// <exception cref="CheckoutArgumentException">The authorization header value is empty or contains characters outside visible ASCII and space.</exception>
+        /// <exception cref="CheckoutAuthorizationException">The authorization cannot produce a header for its platform type.</exception>
         public async Task<TResult> Put<TResult>(
             string path,
             SdkAuthorization authorization,
@@ -183,6 +290,17 @@ namespace Checkout
             return await DeserializeResponseAsync<TResult>(httpResponse);
         }
 
+        /// <summary>
+        /// Sends a DELETE request.
+        /// </summary>
+        /// <typeparam name="TResult">The response type.</typeparam>
+        /// <param name="path">The request path, relative to the base URI.</param>
+        /// <param name="authorization">The authorization used to build the Authorization header.</param>
+        /// <param name="cancellationToken">A token to cancel the request.</param>
+        /// <returns>The deserialized response, with its HTTP status code, headers and body set.</returns>
+        /// <exception cref="CheckoutApiException">The response status code does not indicate success, or the response body cannot be read as the requested type.</exception>
+        /// <exception cref="CheckoutArgumentException">The authorization header value is empty or contains characters outside visible ASCII and space.</exception>
+        /// <exception cref="CheckoutAuthorizationException">The authorization cannot produce a header for its platform type.</exception>
         public async Task<TResult> Delete<TResult>(
             string path,
             SdkAuthorization authorization,
@@ -200,6 +318,18 @@ namespace Checkout
             return await DeserializeResponseAsync<TResult>(httpResponse);
         }
 
+        /// <summary>
+        /// Sends a GET request with the properties of the request object as url encoded query parameters.
+        /// </summary>
+        /// <typeparam name="TResult">The response type.</typeparam>
+        /// <param name="path">The request path, relative to the base URI.</param>
+        /// <param name="authorization">The authorization used to build the Authorization header.</param>
+        /// <param name="request">The object whose serialized properties form the query string; may be null.</param>
+        /// <param name="cancellationToken">A token to cancel the request.</param>
+        /// <returns>The deserialized response, with its HTTP status code, headers and body set.</returns>
+        /// <exception cref="CheckoutApiException">The response status code does not indicate success, or the response body cannot be read as the requested type.</exception>
+        /// <exception cref="CheckoutArgumentException">The authorization header value is empty or contains characters outside visible ASCII and space.</exception>
+        /// <exception cref="CheckoutAuthorizationException">The authorization cannot produce a header for its platform type.</exception>
         public async Task<TResult> Query<TResult>(
             string path,
             SdkAuthorization authorization,
@@ -299,7 +429,9 @@ namespace Checkout
 
             httpRequest.Headers.UserAgent.ParseAdd(
                 "checkout-sdk-net/" + CheckoutUtils.GetAssemblyVersion<CheckoutSdk>());
-            httpRequest.Headers.TryAddWithoutValidation("Authorization", authorization.GetAuthorizationHeader());
+            var authorizationHeader = authorization.GetAuthorizationHeader();
+            ValidateAuthorizationHeader(authorizationHeader);
+            httpRequest.Headers.TryAddWithoutValidation("Authorization", authorizationHeader);
 
             if (!string.IsNullOrWhiteSpace(idempotencyKey))
             {
@@ -360,7 +492,8 @@ namespace Checkout
 
             httpResponse.Headers.TryGetValues("Cko-Request-Id", out var requestIdHeader);
             var requestId = requestIdHeader?.FirstOrDefault();
-            var json = await httpResponse.Content.ReadAsStringAsync();
+            // Content can be null on net45 and netstandard2.0.
+            var json = httpResponse.Content == null ? string.Empty : await httpResponse.Content.ReadAsStringAsync();
             var errorDetails = GetErrorDetails(json);
 
             throw new CheckoutApiException(requestId, httpResponse.StatusCode, errorDetails);
@@ -385,11 +518,15 @@ namespace Checkout
                 httpResponse.Content == null ||
                 (httpResponse.Content.Headers.ContentLength.HasValue && httpResponse.Content.Headers.ContentLength.Value == 0))
             {
-                deserializedObject = Activator.CreateInstance(resultType);
-
-                if (deserializedObject == null)
+                try
                 {
-                    deserializedObject = new DefaultHttpMetadata();
+                    deserializedObject = Activator.CreateInstance(resultType) ?? new DefaultHttpMetadata();
+                }
+                catch (Exception e)
+                {
+                    httpResponse.Headers.TryGetValues("Cko-Request-Id", out var requestIdHeader);
+                    throw new CheckoutApiException(requestIdHeader?.FirstOrDefault(), httpResponse.StatusCode,
+                        new Dictionary<string, object>(), "The API response could not be read.", e);
                 }
             }
             else if (resultType == typeof(ContentsResponse))
@@ -399,7 +536,24 @@ namespace Checkout
             else
             {
                 var json = await httpResponse.Content.ReadAsStringAsync();
-                deserializedObject = _serializer.Deserialize(json, resultType);
+                try
+                {
+                    deserializedObject = _serializer.Deserialize(json, resultType);
+
+                    // A JSON null body would otherwise reach the caller as null.
+                    if (deserializedObject == null)
+                    {
+                        deserializedObject = Activator.CreateInstance(resultType) ?? new DefaultHttpMetadata();
+                    }
+                }
+                catch (Exception e) when (!(e is CheckoutException))
+                {
+                    // Not only JsonException: the polymorphic converters throw their own
+                    // exceptions (InvalidCastException, bare Exception) on unexpected payloads.
+                    httpResponse.Headers.TryGetValues("Cko-Request-Id", out var requestIdHeader);
+                    throw new CheckoutApiException(requestIdHeader?.FirstOrDefault(), httpResponse.StatusCode,
+                        GetErrorDetails(json), "The API response body could not be read.", e);
+                }
             }
 
             if (deserializedObject is HttpMetadata metadata)
@@ -529,7 +683,27 @@ namespace Checkout
                 };
             }
 
-            return errorDetails;
+            return errorDetails ?? new Dictionary<string, object>();
+        }
+
+        // TryAddWithoutValidation does not check the value, and a CR or LF in it would split the
+        // request. Only visible ASCII and the space of "Bearer <token>" are allowed. The message
+        // never echoes the credential.
+        private static void ValidateAuthorizationHeader(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                throw new CheckoutArgumentException("Authorization header value cannot be empty");
+            }
+
+            foreach (var c in value)
+            {
+                if (c < 0x20 || c > 0x7E)
+                {
+                    throw new CheckoutArgumentException(
+                        "Authorization header value contains characters that are not allowed");
+                }
+            }
         }
     }
 }
