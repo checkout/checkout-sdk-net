@@ -8,6 +8,7 @@ namespace Checkout.Events.Previous
         private const string EventsPath = "events";
         private const string WebhooksPath = "webhooks";
         private const string RetryPath = "retry";
+        private const string EventTypesPath = "event-types";
 
         public EventsClient(IApiClient apiClient,
             CheckoutConfiguration configuration) : base(apiClient, configuration, SdkAuthorizationType.SecretKey)
@@ -17,13 +18,9 @@ namespace Checkout.Events.Previous
         public Task<ItemsResponse<EventTypesResponse>> RetrieveAllEventTypes(string version = null,
             CancellationToken cancellationToken = default)
         {
-            var eventTypesPath = "event-types";
-            if (!string.IsNullOrEmpty(version))
-            {
-                eventTypesPath = $"{eventTypesPath}?version={version}";
-            }
-
-            return ApiClient.Get<ItemsResponse<EventTypesResponse>>(eventTypesPath, SdkAuthorization(), cancellationToken);
+            var query = string.IsNullOrEmpty(version) ? null : new EventTypesQuery { Version = version };
+            return ApiClient.Query<ItemsResponse<EventTypesResponse>>(BuildPath(EventTypesPath), SdkAuthorization(),
+                query, cancellationToken);
         }
 
         public Task<EventsPageResponse> RetrieveEvents(RetrieveEventsRequest eventsRequest,

@@ -27,7 +27,9 @@ namespace Checkout.Issuing
         private const string AmendPath = "amend";
         private const string AddPath = "add";
         private const string RemovePath = "remove";
-        private const string AccessTokenPath = "access/connect/token";
+        private const string AccessPath = "access";
+        private const string ConnectPath = "connect";
+        private const string TokenPath = "token";
 
         public IssuingClient(IApiClient apiClient, CheckoutConfiguration configuration) :
             base(apiClient, configuration, SdkAuthorizationType.OAuth)

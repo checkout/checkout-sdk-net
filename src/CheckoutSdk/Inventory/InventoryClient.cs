@@ -14,8 +14,8 @@ namespace Checkout.Inventory
     public class InventoryClient : AbstractClient, IInventoryClient
     {
         private const string InventoryPath = "inventory";
-        private const string AdjustmentsPath = "inventory/adjustments";
-        private const string ReservationsPath = "inventory/reservations";
+        private const string AdjustmentsPath = "adjustments";
+        private const string ReservationsPath = "reservations";
         private const string CommitPath = "commit";
         private const string ReleasePath = "release";
         private const string ProductPath = "product";
@@ -32,7 +32,7 @@ namespace Checkout.Inventory
         {
             CheckoutUtils.ValidateParams("request", request);
             return ApiClient.Post<InventoryLevels>(
-                AdjustmentsPath,
+                BuildPath(InventoryPath, AdjustmentsPath),
                 SdkAuthorization(),
                 request,
                 cancellationToken,
@@ -46,7 +46,7 @@ namespace Checkout.Inventory
         {
             CheckoutUtils.ValidateParams("request", request);
             return ApiClient.Post<InventoryReservation>(
-                ReservationsPath,
+                BuildPath(InventoryPath, ReservationsPath),
                 SdkAuthorization(),
                 request,
                 cancellationToken,
@@ -59,7 +59,7 @@ namespace Checkout.Inventory
         {
             CheckoutUtils.ValidateParams("reservationId", reservationId);
             return ApiClient.Get<InventoryReservation>(
-                BuildPath(ReservationsPath, reservationId),
+                BuildPath(InventoryPath, ReservationsPath, reservationId),
                 SdkAuthorization(),
                 cancellationToken);
         }
@@ -70,7 +70,7 @@ namespace Checkout.Inventory
         {
             CheckoutUtils.ValidateParams("reservationId", reservationId);
             return ApiClient.Post<InventoryReservation>(
-                BuildPath(ReservationsPath, reservationId, CommitPath),
+                BuildPath(InventoryPath, ReservationsPath, reservationId, CommitPath),
                 SdkAuthorization(),
                 (object)null,
                 cancellationToken);
@@ -82,7 +82,7 @@ namespace Checkout.Inventory
         {
             CheckoutUtils.ValidateParams("reservationId", reservationId);
             return ApiClient.Post<InventoryReservation>(
-                BuildPath(ReservationsPath, reservationId, ReleasePath),
+                BuildPath(InventoryPath, ReservationsPath, reservationId, ReleasePath),
                 SdkAuthorization(),
                 (object)null,
                 cancellationToken);

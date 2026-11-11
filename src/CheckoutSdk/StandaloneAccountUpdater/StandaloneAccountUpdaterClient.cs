@@ -7,7 +7,8 @@ namespace Checkout.StandaloneAccountUpdater
 {
     public class StandaloneAccountUpdaterClient : AbstractClient, IStandaloneAccountUpdaterClient
     {
-        private const string AccountUpdaterPath = "account-updater/cards";
+        private const string AccountUpdaterPath = "account-updater";
+        private const string CardsPath = "cards";
 
         public StandaloneAccountUpdaterClient(IApiClient apiClient, CheckoutConfiguration configuration)
             : base(apiClient, configuration, SdkAuthorizationType.OAuth)
@@ -19,7 +20,7 @@ namespace Checkout.StandaloneAccountUpdater
         {
             CheckoutUtils.ValidateParams("request", request);
             return ApiClient.Post<GetUpdatedCardCredentialsResponse>(
-                AccountUpdaterPath,
+                BuildPath(AccountUpdaterPath, CardsPath),
                 SdkAuthorization(),
                 request,
                 cancellationToken);

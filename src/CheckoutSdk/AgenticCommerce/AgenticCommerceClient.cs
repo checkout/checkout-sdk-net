@@ -7,7 +7,8 @@ namespace Checkout.AgenticCommerce
 {
     public class AgenticCommerceClient : AbstractClient, IAgenticCommerceClient
     {
-        private const string AgenticCommercePath = "agentic_commerce/delegate_payment";
+        private const string AgenticCommercePath = "agentic_commerce";
+        private const string DelegatePaymentPath = "delegate_payment";
 
         public AgenticCommerceClient(IApiClient apiClient, CheckoutConfiguration configuration)
             : base(apiClient, configuration, SdkAuthorizationType.SecretKey)
@@ -21,7 +22,7 @@ namespace Checkout.AgenticCommerce
         {
             CheckoutUtils.ValidateParams("request", request, "headers", headers);
             return ApiClient.Post<DelegatedPaymentResponse>(
-                AgenticCommercePath,
+                BuildPath(AgenticCommercePath, DelegatePaymentPath),
                 SdkAuthorization(),
                 request,
                 cancellationToken,

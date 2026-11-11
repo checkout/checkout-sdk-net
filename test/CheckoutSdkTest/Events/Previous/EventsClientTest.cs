@@ -28,8 +28,8 @@ namespace Checkout.Events.Previous
             var eventTypesResponse = new ItemsResponse<EventTypesResponse>();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<ItemsResponse<EventTypesResponse>>("event-types?version=1.0", _authorization,
-                        CancellationToken.None))
+                    apiClient.Query<ItemsResponse<EventTypesResponse>>("event-types", _authorization,
+                        It.Is<EventTypesQuery>(query => query.Version == "1.0"), CancellationToken.None))
                 .ReturnsAsync(() => eventTypesResponse);
 
             IEventsClient client = new EventsClient(_apiClient.Object, _configuration.Object);
@@ -46,7 +46,7 @@ namespace Checkout.Events.Previous
             var eventTypesResponse = new ItemsResponse<EventTypesResponse>();
 
             _apiClient.Setup(apiClient =>
-                    apiClient.Get<ItemsResponse<EventTypesResponse>>("event-types", _authorization,
+                    apiClient.Query<ItemsResponse<EventTypesResponse>>("event-types", _authorization, null,
                         CancellationToken.None))
                 .ReturnsAsync(() => eventTypesResponse);
 
