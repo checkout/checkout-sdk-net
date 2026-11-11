@@ -24,6 +24,17 @@ namespace Checkout
 
         private const string InvalidPathSegmentMessage = "The value is not a valid path segment";
 
+        private const string Marker = "x_marker";
+
+        // Methods that stop before any request with sample arguments: they read a local file first, and their
+        // paths are constants (FilesClient.cs, AccountsClient.SubmitFile).
+        private static readonly string[] MethodsWithoutRequest =
+        {
+            "Checkout.Accounts.AccountsClient.SubmitFile",
+            "Checkout.Files.FilesClient.SubmitFile",
+            "Checkout.Files.FilesClient.SubmitFileToFilesApi"
+        };
+
         public static IEnumerable<object[]> EncodedCases() => Cases(EncodedValue);
 
         public static IEnumerable<object[]> RefusedCases() =>
@@ -35,14 +46,22 @@ namespace Checkout
         public async Task ShouldSendEachStringArgumentAsOneEncodedSegment(string client, string method,
             int parameter, string value)
         {
-            var paths = await InvokeRecording(client, method, parameter, value);
+            var expectedPath = await PathCarryingArgument(client, method, parameter);
+            var (paths, exception) = await InvokeCase(client, method, parameter, value);
 
-            foreach (var path in paths.Where(p => p.Contains("x_1")))
+            if (expectedPath == null)
             {
-                path.ShouldContain(Uri.EscapeDataString(value));
-                path.ShouldNotContain("#");
-                path.ShouldNotContain(value);
+                // the argument is not part of the path (header, body or query filter)
+                foreach (var pathOnly in paths.Select(p => p.Split('?')[0]))
+                {
+                    pathOnly.ShouldNotContain("x_1");
+                }
+
+                return;
             }
+
+            exception.ShouldBeNull();
+            paths.ShouldHaveSingleItem().ShouldBe(expectedPath.Replace(Marker, Uri.EscapeDataString(value)));
         }
 
         [Theory]
@@ -50,15 +69,24 @@ namespace Checkout
         public async Task ShouldRefuseValuesThatCannotBeOneSegment(string client, string method, int parameter,
             string value)
         {
-            var paths = await InvokeRecording(client, method, parameter, value);
+            var expectedPath = await PathCarryingArgument(client, method, parameter);
+            var (paths, exception) = await InvokeCase(client, method, parameter, value);
 
-            foreach (var path in paths)
+            if (expectedPath == null)
             {
-                var pathOnly = path.Split('?')[0];
-                pathOnly.ShouldNotContain("x_1");
-                pathOnly.Split('/', '\\').ShouldNotContain("..");
-                pathOnly.Split('/', '\\').ShouldNotContain(".");
+                // the argument is not part of the path (header, body or query filter)
+                foreach (var pathOnly in paths.Select(p => p.Split('?')[0]))
+                {
+                    pathOnly.ShouldNotContain("x_1");
+                    pathOnly.Split('/', '\\').ShouldNotContain("..");
+                    pathOnly.Split('/', '\\').ShouldNotContain(".");
+                }
+
+                return;
             }
+
+            exception.ShouldBeOfType<CheckoutArgumentException>();
+            paths.ShouldBeEmpty();
         }
 
         [Fact]
@@ -83,7 +111,7 @@ namespace Checkout
         [Fact]
         public async Task ShouldSendEveryIdArgumentInTheRequest()
         {
-            var idArguments = Cases("x_marker")
+            var idArguments = Cases(Marker)
                 .Where(c => IsIdParameter(ParameterName((string)c[0], (string)c[1], (int)c[2])))
                 .ToList();
             idArguments.ShouldNotBeEmpty();
@@ -93,8 +121,8 @@ namespace Checkout
                 var type = typeof(AbstractClient).Assembly.GetType((string)c[0]);
                 var method = ClientMethods(type).Single(m => m.ToString() == (string)c[1]);
                 var apiClient = new RecordingApiClient();
-                await InvokeWithSamples(type, method, (int)c[2], "x_marker", apiClient);
-                apiClient.Paths.Concat(apiClient.Queries).ShouldContain(p => p.Contains("x_marker"),
+                await InvokeWithSamples(type, method, (int)c[2], Marker, apiClient);
+                apiClient.Paths.Concat(apiClient.Queries).ShouldContain(p => p.Contains(Marker),
                     $"{c[0]}.{c[1]} parameter {ParameterName((string)c[0], (string)c[1], (int)c[2])}");
             }
         }
@@ -102,19 +130,22 @@ namespace Checkout
         [Fact]
         public async Task ShouldBuildEveryRequestPathFromValidArguments()
         {
-            var recorded = 0;
             foreach (var type in ClientTypes())
             {
                 foreach (var method in ClientMethods(type))
                 {
+                    var name = $"{type.FullName}.{method.Name}";
                     var (paths, exception) = await InvokeWithSamples(type, method, -1, null);
-                    var refused = exception as CheckoutArgumentException;
-                    (refused?.Message == InvalidPathSegmentMessage).ShouldBeFalse($"{type.FullName}.{method}");
-                    recorded += paths.Count;
+                    if (MethodsWithoutRequest.Contains(name))
+                    {
+                        (exception as CheckoutArgumentException)?.Message.ShouldNotBe(InvalidPathSegmentMessage, name);
+                        continue;
+                    }
+
+                    exception.ShouldBeNull($"{type.FullName}.{method}");
+                    paths.ShouldHaveSingleItem($"{type.FullName}.{method}");
                 }
             }
-
-            recorded.ShouldBeGreaterThan(0);
         }
 
         [Fact]
@@ -212,13 +243,20 @@ namespace Checkout
                 .Where(m => typeof(Task).IsAssignableFrom(m.ReturnType) && !m.IsGenericMethodDefinition)
                 .OrderBy(m => m.ToString());
 
-        private static async Task<IList<string>> InvokeRecording(string clientName, string methodName,
-            int parameter, string value)
+        private static async Task<(IList<string> Paths, Exception Exception)> InvokeCase(string clientName,
+            string methodName, int parameter, string value)
         {
             var type = typeof(AbstractClient).Assembly.GetType(clientName);
             var method = ClientMethods(type).Single(m => m.ToString() == methodName);
-            var (paths, _) = await InvokeWithSamples(type, method, parameter, value);
-            return paths;
+            return await InvokeWithSamples(type, method, parameter, value);
+        }
+
+        // The path the method sends when the argument is a valid value (the marker), or null when the argument
+        // does not reach the path.
+        private static async Task<string> PathCarryingArgument(string clientName, string methodName, int parameter)
+        {
+            var (paths, _) = await InvokeCase(clientName, methodName, parameter, Marker);
+            return paths.SingleOrDefault(p => p.Split('?')[0].Contains(Marker));
         }
 
         private static async Task<(IList<string> Paths, Exception Exception)> InvokeWithSamples(Type type,
