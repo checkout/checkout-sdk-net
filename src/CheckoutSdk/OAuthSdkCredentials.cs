@@ -25,6 +25,10 @@ namespace Checkout
         private readonly object _accessTokenLock = new object();
         private volatile OAuthAccessToken _accessToken;
 
+        // Kept as it was: callers and tests match this message.
+        private const string TokenRequestFailedMessage =
+            "OAuth client_credentials authentication failed with error: invalid_client";
+
         /// <summary>
         /// Creates OAuth credentials. No token is requested until one is needed.
         /// </summary>
@@ -109,7 +113,7 @@ namespace Checkout
                 catch (Exception e) when (e is ArgumentException || e is OverflowException)
                 {
                     // An out-of-range expires_in overflows the expiry date.
-                    throw new CheckoutAuthorizationException("Invalid OAuth client authorization response", e);
+                    throw new CheckoutAuthorizationException(TokenRequestFailedMessage, e);
                 }
 
                 return _accessToken;
@@ -123,7 +127,6 @@ namespace Checkout
 #endif
             try
             {
-                var httpRequest = new HttpRequestMessage(HttpMethod.Post, _authorizationUri);
                 var data = new List<KeyValuePair<string, string>>
                 {
                     new KeyValuePair<string, string>("grant_type", "client_credentials"),
@@ -131,28 +134,31 @@ namespace Checkout
                     new KeyValuePair<string, string>("client_secret", _clientSecret),
                     new KeyValuePair<string, string>("scope", GetScopes())
                 };
-                httpRequest.Content = new FormUrlEncodedContent(data);
+                using (var content = new FormUrlEncodedContent(data))
+                using (var httpRequest = new HttpRequestMessage(HttpMethod.Post, _authorizationUri) { Content = content })
                 // GetSdkAuthorization is synchronous; ConfigureAwait(false) keeps the blocking wait
                 // from deadlocking on a caller's synchronization context.
-                var responseMessage = _httpClient.SendAsync(httpRequest).ConfigureAwait(false).GetAwaiter().GetResult();
-                if (!responseMessage.IsSuccessStatusCode)
+                using (var responseMessage =
+                       _httpClient.SendAsync(httpRequest).ConfigureAwait(false).GetAwaiter().GetResult())
                 {
-                    throw new CheckoutAuthorizationException(
-                        $"OAuth client_credentials authentication failed with status {(int)responseMessage.StatusCode}");
-                }
+                    if (!responseMessage.IsSuccessStatusCode)
+                    {
+                        throw new CheckoutAuthorizationException(TokenRequestFailedMessage);
+                    }
 
-                var body = responseMessage.Content == null
-                    ? null
-                    : responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-                var oAuthServiceResponse = string.IsNullOrWhiteSpace(body)
-                    ? null
-                    : (OAuthServiceResponse)_serializer.Deserialize(body, typeof(OAuthServiceResponse));
-                if (oAuthServiceResponse == null || !oAuthServiceResponse.IsValid())
-                {
-                    throw new CheckoutAuthorizationException("Invalid OAuth client authorization response");
-                }
+                    var body = responseMessage.Content == null
+                        ? null
+                        : responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+                    var oAuthServiceResponse = string.IsNullOrWhiteSpace(body)
+                        ? null
+                        : (OAuthServiceResponse)_serializer.Deserialize(body, typeof(OAuthServiceResponse));
+                    if (oAuthServiceResponse == null || !oAuthServiceResponse.IsValid())
+                    {
+                        throw new CheckoutAuthorizationException(TokenRequestFailedMessage);
+                    }
 
-                return oAuthServiceResponse;
+                    return oAuthServiceResponse;
+                }
             }
             catch (CheckoutAuthorizationException)
             {
@@ -160,8 +166,7 @@ namespace Checkout
             }
             catch (Exception e)
             {
-                throw new CheckoutAuthorizationException(
-                    "OAuth client_credentials authentication failed with error: invalid_client", e);
+                throw new CheckoutAuthorizationException(TokenRequestFailedMessage, e);
             }
         }
 

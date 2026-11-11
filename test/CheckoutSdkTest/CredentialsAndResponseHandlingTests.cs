@@ -17,8 +17,21 @@ using Xunit;
 namespace Checkout
 {
     [Collection("NonParallel")]
-    public class CredentialsAndResponseHandlingTests : UnitTestFixture
+    public class CredentialsAndResponseHandlingTests : UnitTestFixture, IDisposable
     {
+        private readonly List<HttpClient> _httpClients = new List<HttpClient>();
+
+        public void Dispose()
+        {
+            _httpClients.ForEach(c => c.Dispose());
+        }
+
+        private HttpClient Track(HttpClient httpClient)
+        {
+            _httpClients.Add(httpClient);
+            return httpClient;
+        }
+
         private const string ValidTokenBody =
             "{\"access_token\": \"valid_token\", \"token_type\": \"Bearer\", \"expires_in\": 3600}";
 
@@ -73,7 +86,7 @@ namespace Checkout
         public async Task ShouldUseSharedHttpClientThatAlreadySentRequestsWithoutChangingIt()
         {
             var sent = new List<HttpRequestMessage>();
-            var httpClient = new HttpClient(HandlerReturning(() => Json(HttpStatusCode.OK, ValidTokenBody), sent).Object);
+            using var httpClient = new HttpClient(HandlerReturning(() => Json(HttpStatusCode.OK, ValidTokenBody), sent).Object);
             await httpClient.GetAsync("https://merchant.example.com/own-call");
 
             var credentials = OAuthCredentials(httpClient);
@@ -87,16 +100,28 @@ namespace Checkout
         [Fact]
         public void ShouldRejectTokenResponseWithErrorStatusEvenIfBodyLooksValid()
         {
-            var httpClient = new HttpClient(HandlerReturning(() => Json(HttpStatusCode.InternalServerError, ValidTokenBody)).Object);
+            using var httpClient = new HttpClient(HandlerReturning(() => Json(HttpStatusCode.InternalServerError, ValidTokenBody)).Object);
 
             var ex = Should.Throw<CheckoutAuthorizationException>(() => OAuthCredentials(httpClient).InitAccess());
             ex.Message.ShouldNotContain("test_client_secret");
         }
 
+        [Theory]
+        [InlineData(HttpStatusCode.Unauthorized, "{\"error\": \"invalid_client\"}")]
+        [InlineData(HttpStatusCode.OK, "null")]
+        [InlineData(HttpStatusCode.OK, "{\"access_token\": \"t\", \"token_type\": \"Bearer\", \"expires_in\": 9223372036854775807}")]
+        public void ShouldKeepTheTokenFailureMessage(HttpStatusCode status, string body)
+        {
+            using var httpClient = new HttpClient(HandlerReturning(() => Json(status, body)).Object);
+
+            var ex = Should.Throw<CheckoutAuthorizationException>(() => OAuthCredentials(httpClient).InitAccess());
+            ex.Message.ShouldBe("OAuth client_credentials authentication failed with error: invalid_client");
+        }
+
         [Fact]
         public void ShouldRejectJsonNullTokenBody()
         {
-            var httpClient = new HttpClient(HandlerReturning(() => Json(HttpStatusCode.OK, "null")).Object);
+            using var httpClient = new HttpClient(HandlerReturning(() => Json(HttpStatusCode.OK, "null")).Object);
 
             Should.Throw<CheckoutAuthorizationException>(() => OAuthCredentials(httpClient).InitAccess());
         }
@@ -105,7 +130,7 @@ namespace Checkout
         public async Task ShouldRequestTheTokenOnceUnderConcurrentFirstUse()
         {
             var sent = new List<HttpRequestMessage>();
-            var httpClient = new HttpClient(HandlerReturning(() => Json(HttpStatusCode.OK, ValidTokenBody), sent,
+            using var httpClient = new HttpClient(HandlerReturning(() => Json(HttpStatusCode.OK, ValidTokenBody), sent,
                 TimeSpan.FromMilliseconds(200)).Object);
             var credentials = OAuthCredentials(httpClient);
 
@@ -123,7 +148,7 @@ namespace Checkout
         public void ShouldRejectOutOfRangeTokenExpiry(string expiresIn)
         {
             var body = "{\"access_token\": \"valid_token\", \"token_type\": \"Bearer\", \"expires_in\": " + expiresIn + "}";
-            var httpClient = new HttpClient(HandlerReturning(() => Json(HttpStatusCode.OK, body)).Object);
+            using var httpClient = new HttpClient(HandlerReturning(() => Json(HttpStatusCode.OK, body)).Object);
 
             Should.Throw<CheckoutAuthorizationException>(() => OAuthCredentials(httpClient).InitAccess());
         }
@@ -132,14 +157,14 @@ namespace Checkout
         public void ShouldRejectNonHttpsApiBaseUri()
         {
             Should.Throw<CheckoutArgumentException>(() =>
-                new ApiClient(FactoryFor(new HttpClient()).Object, new Uri("http://api.example.com"), false));
+                new ApiClient(FactoryFor(Track(new HttpClient())).Object, new Uri("http://api.example.com"), false));
         }
 
         [Fact]
         public void ShouldAllowHttpApiBaseUriOnLoopback()
         {
             Should.NotThrow(() =>
-                new ApiClient(FactoryFor(new HttpClient()).Object, new Uri("http://localhost:8080"), false));
+                new ApiClient(FactoryFor(Track(new HttpClient())).Object, new Uri("http://localhost:8080"), false));
         }
 
         [Fact]
@@ -158,9 +183,9 @@ namespace Checkout
 
         // Response handling
 
-        private static ApiClient ApiClientFor(Mock<HttpMessageHandler> handler)
+        private ApiClient ApiClientFor(Mock<HttpMessageHandler> handler)
         {
-            return new ApiClient(FactoryFor(new HttpClient(handler.Object)).Object, new Uri("https://api.example.com"), false);
+            return new ApiClient(FactoryFor(Track(new HttpClient(handler.Object))).Object, new Uri("https://api.example.com"), false);
         }
 
         [Fact]

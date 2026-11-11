@@ -522,7 +522,7 @@ namespace Checkout
                 {
                     deserializedObject = Activator.CreateInstance(resultType) ?? new DefaultHttpMetadata();
                 }
-                catch (Exception e)
+                catch (Exception e) when (!(e is CheckoutException))
                 {
                     httpResponse.Headers.TryGetValues("Cko-Request-Id", out var requestIdHeader);
                     throw new CheckoutApiException(requestIdHeader?.FirstOrDefault(), httpResponse.StatusCode,
@@ -587,7 +587,7 @@ namespace Checkout
 
         /// <summary>
         /// The request path as it is logged: the query string is left out and every segment that holds an email
-        /// address is replaced with <c>***</c>.
+        /// address is replaced with <c>***</c>. Control characters and line separators are percent-encoded so the path stays on one log line.
         /// </summary>
         /// <param name="path">The relative request path, optionally with a query string.</param>
         /// <returns>The path to log.</returns>
@@ -609,7 +609,21 @@ namespace Checkout
                 }
             }
 
-            return string.Join("/", segments);
+            var joined = string.Join("/", segments);
+            var escaped = new StringBuilder(joined.Length);
+            foreach (var c in joined)
+            {
+                if (char.IsControl(c) || c == '\u2028' || c == '\u2029')
+                {
+                    escaped.Append(Uri.EscapeDataString(c.ToString()));
+                }
+                else
+                {
+                    escaped.Append(c);
+                }
+            }
+
+            return escaped.ToString();
         }
 
         private static string ResolveHeaderValue(object raw)

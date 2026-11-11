@@ -35,13 +35,19 @@
 
             foreach (var c in secret)
             {
-                var allowed = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') ||
-                              c == '-' || c == '.' || c == '_' || c == '~' || c == '+' || c == '/' || c == '=';
-                if (!allowed)
+                if (!IsTokenCharacter(c))
                 {
                     throw new CheckoutArgumentException("secret contains characters that are not allowed");
                 }
             }
+        }
+
+        private const string TokenPunctuation = "-._~+/=";
+
+        private static bool IsTokenCharacter(char c)
+        {
+            return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') ||
+                   TokenPunctuation.IndexOf(c) >= 0;
         }
 
         /// <summary>
