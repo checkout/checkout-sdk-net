@@ -165,7 +165,7 @@ namespace Checkout
                             ? null
                             : (OAuthServiceResponse)_serializer.Deserialize(body, typeof(OAuthServiceResponse));
                     }
-                    catch (Exception)
+                    catch (Newtonsoft.Json.JsonException)
                     {
                         // The body holds the access token; the parser exception can quote it.
                     }

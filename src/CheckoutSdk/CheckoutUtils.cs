@@ -136,12 +136,21 @@ namespace Checkout
 
             foreach (var c in value)
             {
-                if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') ||
-                      TokenPunctuation.IndexOf(c) >= 0))
+                if (!IsTokenCharacter(c))
                 {
                     throw new CheckoutArgumentException($"{name} contains characters that are not allowed");
                 }
             }
+        }
+
+        private static bool IsTokenCharacter(char c)
+        {
+            if (c > 0x7F)
+            {
+                return false;
+            }
+
+            return char.IsLetterOrDigit(c) || TokenPunctuation.IndexOf(c) >= 0;
         }
 
         // Any outgoing header value: visible ASCII and space only, so no CR/LF, tab or non-ASCII
