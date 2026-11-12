@@ -1,18 +1,155 @@
 name: build-release
+
+# A push to master that changes Directory.Build.props releases the version it declares, unless
+# both packages already have that version on nuget.org.
+# workflow_dispatch is a dry run: it runs every job and check, pushes nothing to nuget.org and
+# creates only a draft GitHub release named dry-run-<version>-<run id> (delete it afterwards).
+#
+#   build    no secrets; locked restore; pack; verify-packages.ps1 and sha256 in one step; artifact
+#   test     integration secrets only; locked restore; dotnet test (all target frameworks)
+#   publish  environment "nuget", no token permissions, NuGet API key only; no checkout, no restore, no repository
+#            code; pushes the artifact only after its sha256 matches the build job's
+#   release  contents: write; gh release create
 on:
   push:
     branches:
       - master
     paths:
       - Directory.Build.props
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-release
+  cancel-in-progress: false
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  DOTNET_NOLOGO: "1"
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "1"
+  NUGET_PACKAGES: ${{ github.workspace }}/../nuget-packages # fresh per job, checked by check-lockfiles.sh after
+  MSBUILDDISABLENUGETSDKRESOLVER: '1' # no MSBuild project SDK from NuGet
+
 jobs:
-  deploy:
-    if: github.ref == 'refs/heads/master'
+  build:
+    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/master'
     runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      prerelease: ${{ steps.version.outputs.prerelease }}
+      already_published: ${{ steps.published.outputs.already_published }}
+      sdk_sha256: ${{ steps.hashes.outputs.sdk_sha256 }}
+      extensions_sha256: ${{ steps.hashes.outputs.extensions_sha256 }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - id: setup-net
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          dotnet-version: 10.0.x
+      - id: version
+        name: Read and validate the version
+        run: |
+          set -euo pipefail
+          sdk="$(dotnet msbuild src/CheckoutSdk/CheckoutSdk.csproj -getProperty:Version)"
+          extensions="$(dotnet msbuild src/CheckoutSdk.Extensions/CheckoutSdk.Extensions.csproj -getProperty:Version)"
+          if [ "$sdk" != "$extensions" ]; then
+            echo "::error::The two packages declare different versions"
+            exit 1
+          fi
+          semver='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z]+(\.[0-9A-Za-z]+)*)?$'
+          if ! [[ "$sdk" =~ $semver ]]; then
+            echo "::error::Version in Directory.Build.props is not MAJOR.MINOR.PATCH[-PRERELEASE]"
+            exit 1
+          fi
+          # The evaluated version must be the literal one: an empty or computed <Version> would
+          # otherwise evaluate to the SDK default 1.0.0 or to whatever the expression yields.
+          if [ "$(grep -cF "<Version>$sdk</Version>" Directory.Build.props)" != 1 ]; then
+            echo "::error::Directory.Build.props must declare <Version>$sdk</Version> literally, once"
+            exit 1
+          fi
+          prerelease=false
+          case "$sdk" in *-*) prerelease=true ;; esac
+          echo "version=$sdk" >> "$GITHUB_OUTPUT"
+          echo "prerelease=$prerelease" >> "$GITHUB_OUTPUT"
+          echo "Version $sdk (pre-release: $prerelease)"
+      - id: published
+        name: Check nuget.org for this version
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          wanted="$(tr '[:upper:]' '[:lower:]' <<< "$VERSION")"
+          found=0
+          for id in checkoutsdk checkoutsdk.extensions.microsoft; do
+            index="$RUNNER_TEMP/$id-index.json"
+            code="$(curl -sS --retry 3 -o "$index" -w '%{http_code}' "https://api.nuget.org/v3-flatcontainer/$id/index.json")" || code=000
+            if [ "$code" != 200 ]; then
+              echo "::error::nuget.org lookup for $id failed (HTTP $code)"
+              exit 1
+            fi
+            if ! hit="$(jq -r --arg v "$wanted" 'if (.versions | type) == "array" then (.versions | index($v) != null) else error("no versions") end' "$index" 2> /dev/null)" \
+              || { [ "$hit" != true ] && [ "$hit" != false ]; }; then
+              echo "::error::nuget.org returned an unexpected response for $id"
+              exit 1
+            fi
+            if [ "$hit" = true ]; then
+              found=$((found + 1))
+            fi
+          done
+          case "$found" in
+            0) already=false ;;
+            2) already=true; echo "::notice::$VERSION is already on nuget.org; publish and release are skipped on push" ;;
+            *) echo "::error::Only one of the two packages has $VERSION on nuget.org"; exit 1 ;;
+          esac
+          echo "already_published=$already" >> "$GITHUB_OUTPUT"
+      - id: lockfiles-present
+        run: bash .github/scripts/check-lockfiles.sh before
+      - id: restore
+        run: bash .github/scripts/check-lockfiles.sh restore
+      - id: lockfiles-unchanged
+        run: bash .github/scripts/check-lockfiles.sh after
+      - id: pack
+        # No build server or reused MSBuild node outlives this step.
+        run: dotnet pack --no-restore --disable-build-servers --configuration Release --output "$RUNNER_TEMP/package"
+      - id: packages-locked-after-pack
+        run: bash .github/scripts/check-lockfiles.sh after
+      - id: hashes
+        name: Verify the packages and record their sha256
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          pwsh -NoProfile -NonInteractive -File .github/scripts/verify-packages.ps1 -Version "$VERSION" -Directory "$RUNNER_TEMP/package"
+          cd "$RUNNER_TEMP/package"
+          sdk="$(sha256sum "CheckoutSDK.$VERSION.nupkg" | cut -d' ' -f1)"
+          extensions="$(sha256sum "CheckoutSDK.Extensions.Microsoft.$VERSION.nupkg" | cut -d' ' -f1)"
+          echo "sdk_sha256=$sdk" >> "$GITHUB_OUTPUT"
+          echo "extensions_sha256=$extensions" >> "$GITHUB_OUTPUT"
+          echo "CheckoutSDK.$VERSION.nupkg sha256 $sdk"
+          echo "CheckoutSDK.Extensions.Microsoft.$VERSION.nupkg sha256 $extensions"
+      - id: upload
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: packages
+          path: ${{ runner.temp }}/package/
+          if-no-files-found: error
+          retention-days: 7
+
+  test:
+    needs: build
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - id: setup-net-2_0-3_1-5_0-6_0-8_0-10_0
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
         with:
           dotnet-version: |
             2.0.x
@@ -23,8 +160,14 @@ jobs:
             10.0.x
       - id: list-installed-runtimes
         run: dotnet --list-runtimes
+      - id: lockfiles-present
+        run: bash .github/scripts/check-lockfiles.sh before
+      - id: restore
+        run: bash .github/scripts/check-lockfiles.sh restore
+      - id: lockfiles-unchanged
+        run: bash .github/scripts/check-lockfiles.sh after
       - id: build-solution
-        run: dotnet build
+        run: dotnet build --no-restore
       - id: test-solution
         env:
           CHECKOUT_PROCESSING_CHANNEL_ID: ${{ secrets.IT_CHECKOUT_PROCESSING_CHANNEL_ID }}
@@ -42,22 +185,137 @@ jobs:
           CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_SECRET: ${{ secrets.IT_CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_SECRET }}
           CHECKOUT_MERCHANT_SUBDOMAIN: ${{ secrets.IT_CHECKOUT_MERCHANT_SUBDOMAIN }}
           DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
-        run: dotnet test -p:TestTfmsInParallel=false
-      - id: package-solution
-        run: dotnet pack -o:package
-      - id: publish-package
-        run: dotnet nuget push ./package/*.nupkg --source 'https://api.nuget.org/v3/index.json' --api-key ${{secrets.NUGET_API_KEY}}
-      - id: get-version
-        run: echo "CURRENT_VERSION=$(find package -name '*.nupkg' | tail -1 | grep -Eo '[0-9]+(\.[0-9]+)*')" >> $GITHUB_ENV
-      - id: print-version
-        run: echo ${{ env.CURRENT_VERSION}}
-      - id: release-tag
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dotnet test --no-build -p:TestTfmsInParallel=false
+      - id: packages-locked-after-test
+        run: bash .github/scripts/check-lockfiles.sh after
+
+  publish:
+    needs: [build, test]
+    if: needs.build.outputs.already_published == 'false' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    environment: nuget
+    permissions: {}
+    steps:
+      - id: download
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          tag_name: ${{ env.CURRENT_VERSION }}
-          release_name: ${{ env.CURRENT_VERSION }}
-          body: ${{ github.event.head_commit.message }}
-          draft: false
-          prerelease: false
+          name: packages
+          path: ${{ runner.temp }}/package
+      - id: verify
+        name: Verify the artifact is the one the build job produced
+        env:
+          VERSION: ${{ needs.build.outputs.version }}
+          SDK_SHA256: ${{ needs.build.outputs.sdk_sha256 }}
+          EXTENSIONS_SHA256: ${{ needs.build.outputs.extensions_sha256 }}
+        run: |
+          set -euo pipefail
+          if [ ! -d "$RUNNER_TEMP/package" ] || [ -L "$RUNNER_TEMP/package" ]; then
+            echo "::error::The packages artifact is missing"
+            exit 1
+          fi
+          semver='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z]+(\.[0-9A-Za-z]+)*)?$'
+          if ! [[ "$VERSION" =~ $semver ]]; then
+            echo "::error::Invalid version from the build job"
+            exit 1
+          fi
+          for sha in "$SDK_SHA256" "$EXTENSIONS_SHA256"; do
+            if ! [[ "$sha" =~ ^[0-9a-f]{64}$ ]]; then
+              echo "::error::Missing or invalid sha256 from the build job"
+              exit 1
+            fi
+          done
+          cd "$RUNNER_TEMP/package"
+          expected="$(printf '%s\n' "CheckoutSDK.$VERSION.nupkg" "CheckoutSDK.Extensions.Microsoft.$VERSION.nupkg" | LC_ALL=C sort)"
+          actual="$(find . -mindepth 1 -printf '%P\n' | LC_ALL=C sort)"
+          if [ "$actual" != "$expected" ]; then
+            echo "::error::The artifact must hold exactly the two packages of $VERSION"
+            exit 1
+          fi
+          while IFS= read -r file; do
+            if [ ! -f "$file" ] || [ -L "$file" ]; then
+              echo "::error::$file is not a regular file"
+              exit 1
+            fi
+          done <<< "$expected"
+          printf '%s  %s\n' \
+            "$SDK_SHA256" "CheckoutSDK.$VERSION.nupkg" \
+            "$EXTENSIONS_SHA256" "CheckoutSDK.Extensions.Microsoft.$VERSION.nupkg" \
+            | sha256sum --strict --check -
+      - id: dry-run
+        if: github.event_name != 'push'
+        env:
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          echo "::notice::Dry run: CheckoutSDK.$VERSION.nupkg and CheckoutSDK.Extensions.Microsoft.$VERSION.nupkg verified; nothing pushed"
+      - id: publish-package
+        if: github.event_name == 'push'
+        env:
+          VERSION: ${{ needs.build.outputs.version }}
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "$NUGET_API_KEY" ]; then
+            echo "::error::NUGET_API_KEY is not available to this job"
+            exit 1
+          fi
+          package_dir="$RUNNER_TEMP/package"
+          # Run from an empty directory: no nuget.config or global.json but the runner's own.
+          cd "$(mktemp -d)"
+          # CheckoutSDK first: the extensions package depends on it.
+          for file in "CheckoutSDK.$VERSION.nupkg" "CheckoutSDK.Extensions.Microsoft.$VERSION.nupkg"; do
+            dotnet nuget push "$package_dir/$file" \
+              --source https://api.nuget.org/v3/index.json \
+              --api-key "$NUGET_API_KEY" \
+              --skip-duplicate
+          done
+
+  release:
+    needs: [build, publish]
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - id: release-tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ needs.build.outputs.version }}
+          PRERELEASE: ${{ needs.build.outputs.prerelease }}
+          NOTES: ${{ github.event.head_commit.message }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          semver='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z]+(\.[0-9A-Za-z]+)*)?$'
+          if ! [[ "$VERSION" =~ $semver ]]; then
+            echo "::error::Invalid version from the build job"
+            exit 1
+          fi
+          # gh reuses an existing tag and ignores --target, so a tag on another commit is refused.
+          refs="$(gh api "repos/$GH_REPO/git/matching-refs/tags/$VERSION")"
+          ref="$(jq -c --arg r "refs/tags/$VERSION" 'map(select(.ref == $r)) | first // empty' <<< "$refs")"
+          if [ -n "$ref" ]; then
+            sha="$(jq -r '.object.sha' <<< "$ref")"
+            if [ "$(jq -r '.object.type' <<< "$ref")" = tag ]; then
+              sha="$(gh api "repos/$GH_REPO/git/tags/$sha" --jq '.object.sha')"
+            fi
+            if [ "$sha" != "$GITHUB_SHA" ]; then
+              if [ "$EVENT" = push ]; then
+                echo "::error::Tag $VERSION already exists on another commit"
+                exit 1
+              fi
+              echo "::notice::Tag $VERSION already exists on another commit; a push would fail here"
+            fi
+          fi
+          args=(--target "$GITHUB_SHA")
+          if [ "$PRERELEASE" = true ]; then
+            args+=(--prerelease)
+          fi
+          if [ "$EVENT" = push ]; then
+            gh release create "$VERSION" "${args[@]}" --title "$VERSION" --notes "${NOTES:-$VERSION}"
+          else
+            name="dry-run-$VERSION-$GITHUB_RUN_ID"
+            gh release create "$name" "${args[@]}" --draft --title "$name" \
+              --notes "Dry run of $VERSION from workflow_dispatch. Delete this draft."
+          fi
