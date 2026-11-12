@@ -7,6 +7,11 @@ namespace Checkout
 
         public SdkAuthorization(PlatformType platformType, string credential)
         {
+            if (platformType == PlatformType.Custom)
+            {
+                CheckoutUtils.ValidateToken("credential", credential);
+            }
+
             _platformType = platformType;
             _credential = credential;
         }

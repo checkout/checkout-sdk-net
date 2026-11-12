@@ -57,8 +57,12 @@ namespace Checkout
             _scopes = scopes;
             _authorizationUri = authorizationUri;
             // The factory may hand out a client the merchant shares with their own code, so the
-            // token request uses an absolute URI and leaves BaseAddress alone.
-            _httpClient = httpClientFactory.CreateClient();
+            // token request uses an absolute URI and leaves BaseAddress alone. With the SDK's own
+            // factory the token client does not follow redirects: a 307 or 308 would resend the
+            // form, client_secret included, to the Location host.
+            _httpClient = httpClientFactory is DefaultHttpClientFactory
+                ? new HttpClient(new HttpClientHandler { AllowAutoRedirect = false })
+                : httpClientFactory.CreateClient();
         }
 
         internal static void ValidateAuthorizationUri(Uri authorizationUri)
@@ -136,12 +140,17 @@ namespace Checkout
                 };
                 using (var content = new FormUrlEncodedContent(data))
                 using (var httpRequest = new HttpRequestMessage(HttpMethod.Post, _authorizationUri) { Content = content })
-                // GetSdkAuthorization is synchronous; ConfigureAwait(false) keeps the blocking wait
-                // from deadlocking on a caller's synchronization context.
+                // GetSdkAuthorization is synchronous, so this is a blocking wait. ConfigureAwait(false)
+                // only keeps the continuation off the caller's context; it does not make the wait safe
+                // on a single-threaded synchronization context.
                 using (var responseMessage =
                        _httpClient.SendAsync(httpRequest).ConfigureAwait(false).GetAwaiter().GetResult())
                 {
-                    if (!responseMessage.IsSuccessStatusCode)
+                    // A merchant client may follow redirects; a token from another host is refused.
+                    var finalUri = responseMessage.RequestMessage?.RequestUri;
+                    if (!responseMessage.IsSuccessStatusCode || (finalUri != null &&
+                        (finalUri.Scheme != _authorizationUri.Scheme || finalUri.Port != _authorizationUri.Port ||
+                         !string.Equals(finalUri.Host, _authorizationUri.Host, StringComparison.OrdinalIgnoreCase))))
                     {
                         throw new CheckoutAuthorizationException(TokenRequestFailedMessage);
                     }
@@ -149,10 +158,29 @@ namespace Checkout
                     var body = responseMessage.Content == null
                         ? null
                         : responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-                    var oAuthServiceResponse = string.IsNullOrWhiteSpace(body)
-                        ? null
-                        : (OAuthServiceResponse)_serializer.Deserialize(body, typeof(OAuthServiceResponse));
+                    OAuthServiceResponse oAuthServiceResponse = null;
+                    try
+                    {
+                        oAuthServiceResponse = string.IsNullOrWhiteSpace(body)
+                            ? null
+                            : (OAuthServiceResponse)_serializer.Deserialize(body, typeof(OAuthServiceResponse));
+                    }
+                    catch (Exception)
+                    {
+                        // The body holds the access token; the parser exception can quote it.
+                    }
+
                     if (oAuthServiceResponse == null || !oAuthServiceResponse.IsValid())
+                    {
+                        throw new CheckoutAuthorizationException(TokenRequestFailedMessage);
+                    }
+
+                    // An unusable token is refused here so it is never cached.
+                    try
+                    {
+                        CheckoutUtils.ValidateHeaderValue("Authorization", "Bearer " + oAuthServiceResponse.AccessToken);
+                    }
+                    catch (CheckoutArgumentException)
                     {
                         throw new CheckoutAuthorizationException(TokenRequestFailedMessage);
                     }

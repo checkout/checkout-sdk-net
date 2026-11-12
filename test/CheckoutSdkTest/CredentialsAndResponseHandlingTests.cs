@@ -207,7 +207,7 @@ namespace Checkout
             var ex = await Should.ThrowAsync<CheckoutApiException>(() =>
                 apiClient.Get<FakeResponse>("/test", new SdkAuthorization(PlatformType.Default, ValidDefaultSk)));
             ex.HttpStatusCode.ShouldBe(HttpStatusCode.OK);
-            ex.InnerException.ShouldBeAssignableTo<Newtonsoft.Json.JsonException>();
+            ex.InnerException.ShouldBeNull();
         }
 
         [Fact]
@@ -275,13 +275,19 @@ namespace Checkout
         [InlineData("x\nInjected: y")]
         [InlineData("x\0y")]
         [InlineData("xéy")]
+        [InlineData("x\ty")]
+        [InlineData("x\u007Fy")]
+        [InlineData("x\u0085y")]
+        [InlineData("x\u2028y")]
+        [InlineData("x\uFF41y")]
+        [InlineData("Bearer\r\nInjected: y")]
         public async Task ShouldRejectAuthorizationWithControlOrNonAsciiCharactersBeforeSending(string credential)
         {
             var sent = new List<HttpRequestMessage>();
             var apiClient = ApiClientFor(HandlerReturning(() => Json(HttpStatusCode.OK, "{}"), sent));
 
             var ex = await Should.ThrowAsync<CheckoutArgumentException>(() =>
-                apiClient.Get<FakeResponse>("/test", new SdkAuthorization(PlatformType.Custom, credential)));
+                apiClient.Get<FakeResponse>("/test", new SdkAuthorization(PlatformType.Previous, credential)));
 
             ex.Message.ShouldNotContain(credential);
             sent.ShouldBeEmpty();
@@ -308,6 +314,225 @@ namespace Checkout
             {
                 LogProvider.SetLogFactory(TestLoggerFactoryHelper.Instance);
             }
+        }
+
+        // Secrets in success bodies never reach the exception
+
+        private const string SecretValue = "sek_TopSecretValue123";
+
+        [Theory]
+        [InlineData("not json " + SecretValue)]
+        [InlineData("{\"session_secret\": \"" + SecretValue + "\", \"type\": {}}")]
+        public async Task ShouldKeepSuccessBodySecretsOutOfTheException(string body)
+        {
+            var apiClient = ApiClientFor(HandlerReturning(() => Json(HttpStatusCode.Created, body)));
+
+            var ex = await Should.ThrowAsync<CheckoutApiException>(() =>
+                apiClient.Get<ThrowingConverterResponse>("/test", new SdkAuthorization(PlatformType.Default, ValidDefaultSk)));
+
+            ex.ErrorDetails.ShouldBeEmpty();
+            ex.InnerException.ShouldBeNull();
+            ex.ToString().ShouldNotContain(SecretValue);
+        }
+
+        // Custom platform type
+
+        [Theory]
+        [InlineData("a,b")]
+        [InlineData("a b")]
+        [InlineData("x\r\nInjected: y")]
+        [InlineData("")]
+        public void ShouldRejectCustomCredentialOutsideTokenCharacters(string credential)
+        {
+            Should.Throw<CheckoutArgumentException>(() => new SdkAuthorization(PlatformType.Custom, credential));
+        }
+
+        [Fact]
+        public void ShouldEnforceTheTokenLengthLimitOnCustomCredential()
+        {
+            Should.NotThrow(() => new SdkAuthorization(PlatformType.Custom, new string('a', 4096)));
+            Should.Throw<CheckoutArgumentException>(() => new SdkAuthorization(PlatformType.Custom, new string('a', 4097)));
+        }
+
+        [Fact]
+        public void ShouldAcceptSessionSecretAtTheLengthLimit()
+        {
+            new SessionSecretSdkCredentials(new string('a', 4096)).Secret.Length.ShouldBe(4096);
+        }
+
+        // Other outgoing headers
+
+        private sealed class TestHeaders : IHeaders
+        {
+            [Newtonsoft.Json.JsonProperty(PropertyName = "X-Test")]
+            public string Value { get; set; }
+        }
+
+        [Theory]
+        [InlineData("key\r\nInjected: y")]
+        [InlineData("key\r\n y")]
+        [InlineData("keyé")]
+        public async Task ShouldRejectIdempotencyKeyWithControlOrNonAsciiCharacters(string key)
+        {
+            var sent = new List<HttpRequestMessage>();
+            var apiClient = ApiClientFor(HandlerReturning(() => Json(HttpStatusCode.OK, "{}"), sent));
+
+            var ex = await Should.ThrowAsync<CheckoutArgumentException>(() =>
+                apiClient.Post<FakeResponse>("/test", new SdkAuthorization(PlatformType.Default, ValidDefaultSk),
+                    null, CancellationToken.None, key));
+
+            ex.Message.ShouldNotContain(key);
+            sent.ShouldBeEmpty();
+        }
+
+        [Theory]
+        [InlineData("v\r\nInjected: y")]
+        [InlineData("v\r\n y")]
+        public async Task ShouldRejectCustomHeaderWithControlCharacters(string value)
+        {
+            var sent = new List<HttpRequestMessage>();
+            var apiClient = ApiClientFor(HandlerReturning(() => Json(HttpStatusCode.OK, "{}"), sent));
+
+            await Should.ThrowAsync<CheckoutArgumentException>(() =>
+                apiClient.Post<FakeResponse>("/test", new SdkAuthorization(PlatformType.Default, ValidDefaultSk),
+                    null, CancellationToken.None, null, new TestHeaders { Value = value }));
+
+            sent.ShouldBeEmpty();
+        }
+
+        // Final URI stays on the base host
+
+        [Theory]
+        [InlineData("https://evil.example/p")]
+        [InlineData("//evil.example/p")]
+        [InlineData("http://api.example.com/p")]
+        [InlineData("https://api.example.com:8443/p")]
+        public async Task ShouldRejectPathThatLeavesTheBaseHost(string path)
+        {
+            var sent = new List<HttpRequestMessage>();
+            var apiClient = ApiClientFor(HandlerReturning(() => Json(HttpStatusCode.OK, "{}"), sent));
+
+            await Should.ThrowAsync<CheckoutArgumentException>(() =>
+                apiClient.Get<FakeResponse>(path, new SdkAuthorization(PlatformType.Default, ValidDefaultSk)));
+
+            sent.ShouldBeEmpty();
+        }
+
+        // Base URI look-alikes
+
+        [Theory]
+        [InlineData("http://localhost.evil.com")]
+        [InlineData("http://127.0.0.1.nip.io")]
+        [InlineData("http://0.0.0.0")]
+        [InlineData("ftp://api.example.com")]
+        [InlineData("file:///tmp/x")]
+        public void ShouldRejectLookAlikeLoopbackAndOtherSchemes(string uri)
+        {
+            Should.Throw<CheckoutArgumentException>(() =>
+                new ApiClient(FactoryFor(Track(new HttpClient())).Object, new Uri(uri), false));
+        }
+
+        [Theory]
+        [InlineData("http://[::1]:8080")]
+        [InlineData("http://127.1:8080")]
+        public void ShouldAllowRealLoopback(string uri)
+        {
+            Should.NotThrow(() =>
+                new ApiClient(FactoryFor(Track(new HttpClient())).Object, new Uri(uri), false));
+        }
+
+        // OAuth token that cannot be sent
+
+        [Fact]
+        public void ShouldNotCacheTokenThatCannotBeSentInAHeader()
+        {
+            var sent = new List<HttpRequestMessage>();
+            var body = "{\"access_token\": \"bad\\r\\ntoken\", \"token_type\": \"Bearer\", \"expires_in\": 3600}";
+            using var httpClient = new HttpClient(HandlerReturning(() => Json(HttpStatusCode.OK, body), sent).Object);
+            var credentials = OAuthCredentials(httpClient);
+
+            Should.Throw<CheckoutAuthorizationException>(() => credentials.InitAccess());
+            Should.Throw<CheckoutAuthorizationException>(() => credentials.InitAccess());
+            sent.Count.ShouldBe(2);
+        }
+
+        [Fact]
+        public void ShouldKeepTokenBodyOutOfTheTokenException()
+        {
+            var body = "{\"access_token\": \"" + SecretValue + "\", \"token_type\": \"Bearer\", \"expires_in\": \"x\"}";
+            using var httpClient = new HttpClient(HandlerReturning(() => Json(HttpStatusCode.OK, body)).Object);
+
+            var ex = Should.Throw<CheckoutAuthorizationException>(() => OAuthCredentials(httpClient).InitAccess());
+            ex.ToString().ShouldNotContain(SecretValue);
+        }
+
+        // Static keys
+
+        [Fact]
+        public void ShouldRejectSecretKeyWithTrailingNewline()
+        {
+            const string key = "sk_sbox_abcdefghijklmnopqrstuvwxyz2";
+            Should.NotThrow(() => CheckoutSdk.Builder().StaticKeys().SecretKey(key).Environment(Environment.Sandbox).EnvironmentSubdomain("1234doma").Build());
+            Should.Throw<CheckoutArgumentException>(() =>
+                CheckoutSdk.Builder().StaticKeys().SecretKey(key + "\n").Environment(Environment.Sandbox).EnvironmentSubdomain("1234doma").Build());
+        }
+
+        // Token request redirects
+
+        [Fact]
+        public void ShouldNotFollowRedirectsOnTheTokenRequestWithTheDefaultFactory()
+        {
+            var credentials = new OAuthSdkCredentials(new DefaultHttpClientFactory(),
+                new Uri("https://fake-auth.com/connect/token"), "id", "secret", new HashSet<OAuthScope>());
+            var client = (HttpClient)typeof(OAuthSdkCredentials)
+                .GetField("_httpClient", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                .GetValue(credentials);
+            var handler = (HttpClientHandler)typeof(HttpMessageInvoker)
+                .GetField("_handler", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                .GetValue(client);
+            handler.AllowAutoRedirect.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void ShouldRefuseTokenServedFromAnotherHost()
+        {
+            using var httpClient = new HttpClient(HandlerReturning(() =>
+            {
+                var response = Json(HttpStatusCode.OK, ValidTokenBody);
+                response.RequestMessage = new HttpRequestMessage(HttpMethod.Post, "https://evil.example/token");
+                return response;
+            }).Object);
+
+            Should.Throw<CheckoutAuthorizationException>(() => OAuthCredentials(httpClient).InitAccess());
+        }
+
+        // Unreadable bodies
+
+        [Theory]
+        [InlineData(HttpStatusCode.OK)]
+        [InlineData((HttpStatusCode)422)]
+        public async Task ShouldGiveTypedErrorForBodyWithInvalidCharset(HttpStatusCode status)
+        {
+            var apiClient = ApiClientFor(HandlerReturning(() =>
+            {
+                var content = new ByteArrayContent(Encoding.UTF8.GetBytes("{}"));
+                content.Headers.TryAddWithoutValidation("Content-Type", "application/json; charset=nope");
+                return new HttpResponseMessage(status) { Content = content };
+            }));
+
+            await Should.ThrowAsync<CheckoutApiException>(() =>
+                apiClient.Get<ContentsResponse>("/test", new SdkAuthorization(PlatformType.Default, ValidDefaultSk)));
+        }
+
+        // Log line
+
+        [Theory]
+        [InlineData('\u202E')]
+        [InlineData('\u200B')]
+        [InlineData('\u2029')]
+        public void ShouldEscapeUnicodeFormatCharactersInTheLoggedPath(char c)
+        {
+            ApiClient.LoggablePath("payments/pay_1" + c + "x").ShouldNotContain(c.ToString());
         }
 
         // Session secret

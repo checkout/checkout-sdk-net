@@ -4,8 +4,8 @@ namespace Checkout
 {
     public class StaticKeysSdkCredentials : AbstractStaticKeysSdkCredentials
     {
-        private const string DefaultSecretKeyPattern = "^sk_(sbox_)?[a-z2-7]{26}[a-z2-7*#$=]$";
-        private const string DefaultPublicKeyPatten = "^pk_(sbox_)?[a-z2-7]{26}[a-z2-7*#$=]$";
+        private const string DefaultSecretKeyPattern = "^sk_(sbox_)?[a-z2-7]{26}[a-z2-7*#$=]\\z";
+        private const string DefaultPublicKeyPatten = "^pk_(sbox_)?[a-z2-7]{26}[a-z2-7*#$=]\\z";
 
         public StaticKeysSdkCredentials(string secretKey, string publicKey)
             : base(PlatformType.Default,

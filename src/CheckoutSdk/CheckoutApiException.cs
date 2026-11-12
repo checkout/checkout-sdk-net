@@ -5,10 +5,10 @@ using System.Runtime.Serialization;
 
 namespace Checkout
 {
-    [Serializable]
     /// <summary>
     /// Thrown when the API returns a status code that does not indicate success, or when a response cannot be read.
     /// </summary>
+    [Serializable]
     public sealed class CheckoutApiException : CheckoutException
     {
         /// <summary>

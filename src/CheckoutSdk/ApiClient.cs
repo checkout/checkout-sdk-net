@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using System.Web;
 #endif
 using System;
+using System.Globalization;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -422,6 +423,14 @@ namespace Checkout
             CheckoutUtils.ValidateParams("httpMethod", httpMethod, "authorization", authorization);
 
             var pathUri = new Uri(_baseUri, path);
+            // An absolute or "//host" path would replace the base host and send the
+            // Authorization header elsewhere.
+            if (pathUri.Scheme != _baseUri.Scheme || pathUri.Port != _baseUri.Port ||
+                !string.Equals(pathUri.Host, _baseUri.Host, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new CheckoutArgumentException("path must be relative to the base URI");
+            }
+
             var httpRequest = new HttpRequestMessage(httpMethod, pathUri) { Content = httpContent };
 #if NET5_0_OR_GREATER || NETSTANDARD2_0
             _log.LogInformation(@"{HttpMethod}: {Path}", httpMethod, LoggablePath(path));
@@ -435,6 +444,7 @@ namespace Checkout
 
             if (!string.IsNullOrWhiteSpace(idempotencyKey))
             {
+                CheckoutUtils.ValidateHeaderValue("Cko-Idempotency-Key", idempotencyKey);
                 httpRequest.Headers.Add("Cko-Idempotency-Key", idempotencyKey);
             }
 
@@ -446,6 +456,7 @@ namespace Checkout
                     if (!string.IsNullOrEmpty(value))
                     {
                         var headerName = GetJsonPropertyName(header) ?? header.Name;
+                        CheckoutUtils.ValidateHeaderValue(headerName, value);
                         httpRequest.Headers.Add(headerName, value);
                     }
                 }
@@ -457,7 +468,9 @@ namespace Checkout
                 if (requestMetricsQueue.TryDequeue(out var lastRequestMetric))
                 {
                     lastRequestMetric.RequestId = currentRequestId;
-                    httpRequest.Headers.TryAddWithoutValidation(sdkTelemetryHeader, _serializer.Serialize(lastRequestMetric));
+                    var telemetry = _serializer.Serialize(lastRequestMetric);
+                    CheckoutUtils.ValidateHeaderValue(sdkTelemetryHeader, telemetry);
+                    httpRequest.Headers.TryAddWithoutValidation(sdkTelemetryHeader, telemetry);
                 }
 
                 Stopwatch stopwatch = new Stopwatch();
@@ -492,8 +505,18 @@ namespace Checkout
 
             httpResponse.Headers.TryGetValues("Cko-Request-Id", out var requestIdHeader);
             var requestId = requestIdHeader?.FirstOrDefault();
-            // Content can be null on net45 and netstandard2.0.
-            var json = httpResponse.Content == null ? string.Empty : await httpResponse.Content.ReadAsStringAsync();
+            string json;
+            try
+            {
+                // Content can be null on net45 and netstandard2.0.
+                json = httpResponse.Content == null ? string.Empty : await httpResponse.Content.ReadAsStringAsync();
+            }
+            catch (Exception e) when (!(e is CheckoutException))
+            {
+                // Invalid charset or truncated body: the status code is still reported, typed.
+                json = string.Empty;
+            }
+
             var errorDetails = GetErrorDetails(json);
 
             throw new CheckoutApiException(requestId, httpResponse.StatusCode, errorDetails);
@@ -520,10 +543,11 @@ namespace Checkout
             {
                 try
                 {
-                    deserializedObject = Activator.CreateInstance(resultType) ?? new DefaultHttpMetadata();
+                    deserializedObject = Activator.CreateInstance(resultType);
                 }
                 catch (Exception e) when (!(e is CheckoutException))
                 {
+                    // No response body is involved here, so the cause is safe to attach.
                     httpResponse.Headers.TryGetValues("Cko-Request-Id", out var requestIdHeader);
                     throw new CheckoutApiException(requestIdHeader?.FirstOrDefault(), httpResponse.StatusCode,
                         new Dictionary<string, object>(), "The API response could not be read.", e);
@@ -531,28 +555,39 @@ namespace Checkout
             }
             else if (resultType == typeof(ContentsResponse))
             {
-                deserializedObject = new ContentsResponse { Content = await GetContent<string>(httpResponse) };
+                try
+                {
+                    deserializedObject = new ContentsResponse { Content = await GetContent<string>(httpResponse) };
+                }
+                catch (Exception e) when (!(e is CheckoutException))
+                {
+                    httpResponse.Headers.TryGetValues("Cko-Request-Id", out var requestIdHeader);
+                    throw new CheckoutApiException(requestIdHeader?.FirstOrDefault(), httpResponse.StatusCode,
+                        new Dictionary<string, object>(), $"The API response body could not be read ({e.GetType().Name}).", null);
+                }
             }
             else
             {
-                var json = await httpResponse.Content.ReadAsStringAsync();
                 try
                 {
+                    var json = await httpResponse.Content.ReadAsStringAsync();
                     deserializedObject = _serializer.Deserialize(json, resultType);
 
                     // A JSON null body would otherwise reach the caller as null.
                     if (deserializedObject == null)
                     {
-                        deserializedObject = Activator.CreateInstance(resultType) ?? new DefaultHttpMetadata();
+                        deserializedObject = Activator.CreateInstance(resultType);
                     }
                 }
                 catch (Exception e) when (!(e is CheckoutException))
                 {
                     // Not only JsonException: the polymorphic converters throw their own
                     // exceptions (InvalidCastException, bare Exception) on unexpected payloads.
+                    // A success body can hold secrets (session_secret, tokens), so neither the
+                    // body nor the parser exception, whose message can quote it, is attached.
                     httpResponse.Headers.TryGetValues("Cko-Request-Id", out var requestIdHeader);
                     throw new CheckoutApiException(requestIdHeader?.FirstOrDefault(), httpResponse.StatusCode,
-                        GetErrorDetails(json), "The API response body could not be read.", e);
+                        new Dictionary<string, object>(), $"The API response body could not be read ({e.GetType().Name}).", null);
                 }
             }
 
@@ -587,7 +622,7 @@ namespace Checkout
 
         /// <summary>
         /// The request path as it is logged: the query string is left out and every segment that holds an email
-        /// address is replaced with <c>***</c>. Control characters and line separators are percent-encoded so the path stays on one log line.
+        /// address is replaced with <c>***</c>. Control, format and line separator characters are percent-encoded so the path stays on one log line.
         /// </summary>
         /// <param name="path">The relative request path, optionally with a query string.</param>
         /// <returns>The path to log.</returns>
@@ -613,7 +648,9 @@ namespace Checkout
             var escaped = new StringBuilder(joined.Length);
             foreach (var c in joined)
             {
-                if (char.IsControl(c) || c == '\u2028' || c == '\u2029')
+                var category = char.GetUnicodeCategory(c);
+                if (char.IsControl(c) || category == UnicodeCategory.Format ||
+                    category == UnicodeCategory.LineSeparator || category == UnicodeCategory.ParagraphSeparator)
                 {
                     escaped.Append(Uri.EscapeDataString(c.ToString()));
                 }

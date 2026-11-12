@@ -18,36 +18,8 @@
         public SessionSecretSdkCredentials(string secret) : base(PlatformType.Custom)
         {
             CheckoutUtils.ValidateParams("secret", secret);
-            ValidateSecret(secret);
+            CheckoutUtils.ValidateToken("secret", secret);
             Secret = secret;
-        }
-
-        private const int MaxSecretLength = 4096;
-
-        // The secret is sent as the whole Authorization value. Only token characters
-        // (RFC 7235 token68) are accepted, and the message never echoes the value.
-        private static void ValidateSecret(string secret)
-        {
-            if (secret.Length > MaxSecretLength)
-            {
-                throw new CheckoutArgumentException("secret exceeds the maximum length");
-            }
-
-            foreach (var c in secret)
-            {
-                if (!IsTokenCharacter(c))
-                {
-                    throw new CheckoutArgumentException("secret contains characters that are not allowed");
-                }
-            }
-        }
-
-        private const string TokenPunctuation = "-._~+/=";
-
-        private static bool IsTokenCharacter(char c)
-        {
-            return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') ||
-                   TokenPunctuation.IndexOf(c) >= 0;
         }
 
         /// <summary>

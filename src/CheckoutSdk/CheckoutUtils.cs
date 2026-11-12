@@ -116,6 +116,47 @@ namespace Checkout
             }
         }
 
+        internal const int MaxTokenLength = 4096;
+
+        private const string TokenPunctuation = "-._~+/=";
+
+        // A value sent as the whole Authorization header (session secret, Custom platform type):
+        // RFC 7235 token68 characters only, bounded length. The message never echoes the value.
+        internal static void ValidateToken(string name, string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                throw new CheckoutArgumentException($"{name} cannot be empty");
+            }
+
+            if (value.Length > MaxTokenLength)
+            {
+                throw new CheckoutArgumentException($"{name} exceeds the maximum length");
+            }
+
+            foreach (var c in value)
+            {
+                if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') ||
+                      TokenPunctuation.IndexOf(c) >= 0))
+                {
+                    throw new CheckoutArgumentException($"{name} contains characters that are not allowed");
+                }
+            }
+        }
+
+        // Any outgoing header value: visible ASCII and space only, so no CR/LF, tab or non-ASCII
+        // reaches the wire on any target framework. The message names the header, never the value.
+        internal static void ValidateHeaderValue(string name, string value)
+        {
+            foreach (var c in value)
+            {
+                if (c < 0x20 || c > 0x7E)
+                {
+                    throw new CheckoutArgumentException($"{name} header value contains characters that are not allowed");
+                }
+            }
+        }
+
         /// <summary>
         /// Validates that each string parameter is not null or blank and every other parameter is not null.
         /// </summary>
