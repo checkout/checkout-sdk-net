@@ -4,8 +4,8 @@ namespace Checkout.Previous
 {
     public class PreviousStaticKeysSdkCredentials : AbstractStaticKeysSdkCredentials
     {
-        private const string PreviousSecretKeyPattern = "^sk_(test_)?(\\w{8})-(\\w{4})-(\\w{4})-(\\w{4})-(\\w{12})$";
-        private const string PreviousPublicKeyPatten = "^pk_(test_)?(\\w{8})-(\\w{4})-(\\w{4})-(\\w{4})-(\\w{12})$";
+        private const string PreviousSecretKeyPattern = "^sk_(test_)?(\\w{8})-(\\w{4})-(\\w{4})-(\\w{4})-(\\w{12})\\z";
+        private const string PreviousPublicKeyPatten = "^pk_(test_)?(\\w{8})-(\\w{4})-(\\w{4})-(\\w{4})-(\\w{12})\\z";
 
         public PreviousStaticKeysSdkCredentials(string secretKey, string publicKey)
             : base(PlatformType.Previous,
