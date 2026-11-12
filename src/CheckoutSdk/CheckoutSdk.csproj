@@ -29,6 +29,8 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <!-- Same reference assemblies on every OS, so packages.lock.json matches on Linux and Windows. -->
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' != 'net45' ">

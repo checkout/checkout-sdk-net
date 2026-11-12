@@ -3,6 +3,13 @@ on:
   pull_request:
     branches:
       - master
+permissions:
+  contents: read
+
+env:
+  NUGET_PACKAGES: ${{ github.workspace }}/../nuget-packages # fresh per job, checked by check-lockfiles.sh after
+  MSBUILDDISABLENUGETSDKRESOLVER: '1' # no MSBuild project SDK from NuGet
+
 jobs:
   build:
     runs-on: windows-latest
@@ -24,14 +31,16 @@ jobs:
             framework: net10.0
     name: NET ${{ matrix.dotnet }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - id: setup-java-11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
         with:
           distribution: "temurin"
           java-version: "11"
       - id: setup-net
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
         with:
           dotnet-version: |
             2.0.x
@@ -42,6 +51,15 @@ jobs:
             10.0.x
       - id: list-installed-runtimes
         run: dotnet --list-runtimes
+      - id: lockfiles-present
+        shell: bash
+        run: bash .github/scripts/check-lockfiles.sh before
+      - id: restore
+        shell: bash
+        run: bash .github/scripts/check-lockfiles.sh restore
+      - id: lockfiles-unchanged
+        shell: bash
+        run: bash .github/scripts/check-lockfiles.sh after
       - id: build-and-test
         env:
           CHECKOUT_PROCESSING_CHANNEL_ID: ${{ secrets.IT_CHECKOUT_PROCESSING_CHANNEL_ID }}
@@ -58,8 +76,9 @@ jobs:
           CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_ID: ${{ secrets.IT_CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_ID }}
           CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_SECRET: ${{ secrets.IT_CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_SECRET }}
           CHECKOUT_MERCHANT_SUBDOMAIN: ${{ secrets.IT_CHECKOUT_MERCHANT_SUBDOMAIN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          dotnet test test/CheckoutSdkTest --framework ${{ matrix.framework }}
+          dotnet test test/CheckoutSdkTest --no-restore --framework ${{ matrix.framework }}
+      - id: packages-locked-after-test
+        shell: bash
+        run: bash .github/scripts/check-lockfiles.sh after
