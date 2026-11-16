@@ -2,9 +2,11 @@ name: build-release
 
 # Runs on a push to master that changes Directory.Build.props. Only a release commit publishes:
 # its first line is "Release <version>" or starts with "Release <version> " (the /release PR
-# title), where <version> is the one Directory.Build.props declares. Any other push builds and
-# tests only. A version already on nuget.org is not pushed again; a missing package of a
-# partially published version is pushed; a missing GitHub release is created on the next run.
+# title), where <version> is the one Directory.Build.props declares. A first line that starts
+# with "Release" but names another version fails the run. Any other push builds and tests only.
+# A version already on nuget.org is not pushed again. To finish a release that failed part way
+# (one package pushed, or the GitHub release not created), re-run that same run: a later push is
+# not the release commit of that version, so it does not publish or create the release.
 #
 #   build    no secrets; locked restore; pack; verify-packages.ps1 and sha256 in one step; artifact
 #   test     integration secrets only; locked restore; dotnet test (all target frameworks)
@@ -21,9 +23,10 @@ on:
 permissions:
   contents: read
 
-# One run at a time. GitHub keeps one pending run per group, so a newer push replaces a pending
-# one. Each run builds the head of master, which carries every earlier version change: at most
-# an intermediate version is skipped, never the latest.
+# One run at a time. GitHub keeps one pending run per group: a newer push cancels a pending one.
+# A cancelled release run publishes nothing, even when the newer push carries its version, since
+# that push is not the release commit; the build job then warns that the version is not on
+# nuget.org. Re-run the cancelled run (re-runs use its original commit).
 concurrency:
   group: build-release
   cancel-in-progress: false
@@ -86,6 +89,10 @@ jobs:
           release_commit=false
           case "$subject" in
             "Release $sdk" | "Release $sdk "*) release_commit=true ;;
+            [Rr][Ee][Ll][Ee][Aa][Ss][Ee] | [Rr][Ee][Ll][Ee][Aa][Ss][Ee][[:space:]]*)
+              echo "::error::The commit looks like a release but is not \"Release $sdk\" (the version in Directory.Build.props)"
+              exit 1
+              ;;
           esac
           {
             echo "version=$sdk"
@@ -100,6 +107,7 @@ jobs:
         name: Check nuget.org for this version
         env:
           VERSION: ${{ steps.version.outputs.version }}
+          RELEASE_COMMIT: ${{ steps.version.outputs.release_commit }}
         run: |
           set -euo pipefail
           wanted="$(tr '[:upper:]' '[:lower:]' <<< "$VERSION")"
@@ -128,6 +136,9 @@ jobs:
             1) state=partial; echo "::warning::Only one of the two packages has $VERSION on nuget.org" ;;
             2) state=all; echo "::notice::$VERSION is already on nuget.org; nothing to push" ;;
           esac
+          if [ "$RELEASE_COMMIT" = false ] && [ "$state" != all ]; then
+            echo "::warning::$VERSION is not fully on nuget.org and this push is not its release commit: if its release run was cancelled or failed, re-run that run"
+          fi
           echo "nuget_state=$state" >> "$GITHUB_OUTPUT"
       - id: release-exists
         name: Check for the GitHub release of this version

@@ -2,8 +2,9 @@
 # Fails unless the directory holds exactly the two expected packages of the given version, each
 # with only the expected entries and a nuspec naming the right id and version, whose dependency
 # groups are exactly the package's committed packages.lock.json: one group per target framework,
-# each listing every direct dependency of that framework at its locked version and nothing else
-# (a project reference is CheckoutSDK at this version).
+# each listing every direct dependency of that framework at the version it requests (the lock
+# file's "requested" value, the PackageReference version that NuGet writes into the nuspec; not
+# the "resolved" one) and nothing else (a project reference is CheckoutSDK at this version).
 #
 # Usage: pwsh .github/scripts/verify-packages.ps1 -Version 6.9.0 -Directory <dir>
 # When a target framework is added or removed in a csproj, update $Packages below. A
