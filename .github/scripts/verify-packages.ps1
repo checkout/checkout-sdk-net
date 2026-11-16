@@ -1,10 +1,13 @@
 # Checks the packages produced by `dotnet pack` before they are uploaded for publishing.
 # Fails unless the directory holds exactly the two expected packages of the given version, each
-# with only the expected entries and a nuspec naming the right id, version and dependencies.
+# with only the expected entries and a nuspec naming the right id and version, whose dependency
+# groups are exactly the package's committed packages.lock.json: one group per target framework,
+# each listing every direct dependency of that framework at its locked version and nothing else
+# (a project reference is CheckoutSDK at this version).
 #
 # Usage: pwsh .github/scripts/verify-packages.ps1 -Version 6.9.0 -Directory <dir>
-# When a target framework or a PackageReference is added or removed in a csproj, update
-# $Packages below.
+# When a target framework is added or removed in a csproj, update $Packages below. A
+# PackageReference change needs only the relocked packages.lock.json.
 
 [CmdletBinding()]
 param(
@@ -19,18 +22,34 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 $Packages = @(
     @{
-        Id           = 'CheckoutSDK'
-        Assembly     = 'CheckoutSdk.dll'
-        Frameworks   = @('net10.0', 'net8.0', 'net6.0', 'net5.0', 'net45', 'netstandard2.0')
-        Dependencies = @('Microsoft.CSharp', 'Microsoft.Extensions.Logging', 'Newtonsoft.Json', 'System.Net.Http')
+        Id         = 'CheckoutSDK'
+        Assembly   = 'CheckoutSdk.dll'
+        LockFile   = 'src/CheckoutSdk/packages.lock.json'
+        Frameworks = @('net10.0', 'net8.0', 'net6.0', 'net5.0', 'net45', 'netstandard2.0')
     },
     @{
-        Id           = 'CheckoutSDK.Extensions.Microsoft'
-        Assembly     = 'CheckoutSdk.Extensions.dll'
-        Frameworks   = @('net10.0', 'net8.0', 'net6.0', 'net5.0', 'netstandard2.0')
-        Dependencies = @('CheckoutSDK', 'Microsoft.Extensions.Configuration.Abstractions', 'Microsoft.Extensions.Configuration.Binder', 'Microsoft.Extensions.DependencyInjection')
+        Id         = 'CheckoutSDK.Extensions.Microsoft'
+        Assembly   = 'CheckoutSdk.Extensions.dll'
+        LockFile   = 'src/CheckoutSdk.Extensions/packages.lock.json'
+        Frameworks = @('net10.0', 'net8.0', 'net6.0', 'net5.0', 'netstandard2.0')
     }
 )
+
+# How each target framework is named in a nuspec dependency group and in packages.lock.json.
+$FrameworkNames = @{
+    'net10.0'        = @{ Nuspec = 'net10.0'; Lock = 'net10.0' }
+    'net8.0'         = @{ Nuspec = 'net8.0'; Lock = 'net8.0' }
+    'net6.0'         = @{ Nuspec = 'net6.0'; Lock = 'net6.0' }
+    'net5.0'         = @{ Nuspec = 'net5.0'; Lock = '.NETCoreApp,Version=v5.0' }
+    'net45'          = @{ Nuspec = '.NETFramework4.5'; Lock = '.NETFramework,Version=v4.5' }
+    'netstandard2.0' = @{ Nuspec = '.NETStandard2.0'; Lock = '.NETStandard,Version=v2.0' }
+}
+
+# Direct references that are never packed: the implicit netstandard2.0 library and the
+# reference assemblies used only to compile net45 (PrivateAssets=All).
+$BuildOnly = @('NETStandard.Library', 'Microsoft.NETFramework.ReferenceAssemblies')
+
+$RepositoryRoot = Join-Path $PSScriptRoot '../..'
 
 function Fail([string] $Message) {
     Write-Error "verify-packages: $Message" -ErrorAction Continue
@@ -108,26 +127,49 @@ foreach ($package in $Packages) {
     }
     if ($null -ne $nuspec.SelectSingleNode('//n:packageTypes', $ns)) { Fail "$name declares package types" }
 
-    # NuGet ids are case-insensitive: compare them that way.
-    $dependencies = @($nuspec.SelectNodes('//n:dependency', $ns))
-    foreach ($dependency in $dependencies) {
-        $depId = $dependency.GetAttribute('id')
-        if (-not ($package.Dependencies | Where-Object { $_ -ieq $depId })) {
-            Fail "$name has an unexpected dependency: $depId"
-        }
-    }
     if (@($nuspec.SelectNodes('//n:frameworkAssemblies | //n:frameworkReferences', $ns)).Count -gt 0) {
         Fail "$name declares framework references"
     }
-    $sdkDependencies = @($dependencies | Where-Object { $_.GetAttribute('id') -ieq 'CheckoutSDK' })
-    if ($package.Id -ceq 'CheckoutSDK') {
-        if ($sdkDependencies.Count -gt 0) { Fail "$name depends on itself" }
+
+    # Dependencies: exactly the direct dependencies of the committed lock file, per framework.
+    # NuGet ids are case-insensitive: they are compared lower-cased; versions exactly.
+    $lock = Get-Content -Raw -LiteralPath (Join-Path $RepositoryRoot $package.LockFile) | ConvertFrom-Json
+    $groups = @($nuspec.SelectNodes('/n:package/n:metadata/n:dependencies/n:group', $ns))
+    $dependencyNodes = @($nuspec.SelectNodes('//n:dependency', $ns))
+    $grouped = @($nuspec.SelectNodes('/n:package/n:metadata/n:dependencies/n:group/n:dependency', $ns))
+    if ($dependencyNodes.Count -ne $grouped.Count) { Fail "$name has a dependency outside a framework group" }
+    $groupNames = @($groups | ForEach-Object { $_.GetAttribute('targetFramework') })
+    $expectedGroups = @($package.Frameworks | ForEach-Object { $FrameworkNames[$_].Nuspec })
+    if ((@($groupNames | Sort-Object) -join '|') -cne (@($expectedGroups | Sort-Object) -join '|')) {
+        Fail "$name dependency groups are [$($groupNames -join ', ')], expected [$($expectedGroups -join ', ')]"
     }
-    else {
-        if ($sdkDependencies.Count -ne $package.Frameworks.Count) { Fail "$name must depend on CheckoutSDK in every framework group" }
-        foreach ($dependency in $sdkDependencies) {
-            if ($dependency.GetAttribute('version') -cne $Version) { Fail "$name depends on a CheckoutSDK version other than $Version" }
+    foreach ($framework in $package.Frameworks) {
+        $names = $FrameworkNames[$framework]
+        $locked = $lock.dependencies.($names.Lock)
+        if ($null -eq $locked) { Fail "$($package.LockFile) has no $($names.Lock) section" }
+        $expected = @(foreach ($entry in $locked.PSObject.Properties) {
+                $type = $entry.Value.type
+                if ($type -ceq 'Project') {
+                    "checkoutsdk $Version"
+                }
+                elseif ($type -ceq 'Direct' -and -not ($BuildOnly | Where-Object { $_ -ieq $entry.Name })) {
+                    $requested = [string] $entry.Value.requested
+                    if ($requested -cmatch '\A\[([^,\]]+), \)\z') { $requested = $Matches[1] }
+                    "$($entry.Name.ToLowerInvariant()) $requested"
+                }
+            })
+        $group = @($groups | Where-Object { $_.GetAttribute('targetFramework') -ceq $names.Nuspec })[0]
+        $actual = @(foreach ($dependency in @($group.SelectNodes('n:dependency', $ns))) {
+                "$($dependency.GetAttribute('id').ToLowerInvariant()) $($dependency.GetAttribute('version'))"
+            })
+        $expectedText = (@($expected | Sort-Object) -join ', ')
+        $actualText = (@($actual | Sort-Object) -join ', ')
+        if ($actualText -cne $expectedText) {
+            Fail "$name $framework dependencies are [$actualText], expected [$expectedText] from $($package.LockFile)"
         }
+    }
+    if ($package.Id -ceq 'CheckoutSDK' -and ($grouped | Where-Object { $_.GetAttribute('id') -ieq 'CheckoutSDK' })) {
+        Fail "$name depends on itself"
     }
     Write-Host "verify-packages: $name OK"
 }
