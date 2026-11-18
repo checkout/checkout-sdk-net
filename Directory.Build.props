@@ -2,4 +2,16 @@
     <PropertyGroup>
         <Version>6.9.0</Version>
     </PropertyGroup>
+    <!--
+      Lock files for every project: restore uses the exact versions and content hashes recorded in
+      each committed packages.lock.json. In CI (CI=true) restore runs in locked mode and fails when
+      a lock file no longer matches the project files; CI also refuses a missing lock file
+      (.github/scripts/check-lockfiles.sh). Set here only, so every project inherits it.
+      After changing a PackageReference, run .github/scripts/update-lockfiles.sh and commit the
+      updated lock files.
+    -->
+    <PropertyGroup>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+        <RestoreLockedMode Condition="'$(CI)' == 'true'">true</RestoreLockedMode>
+    </PropertyGroup>
 </Project>

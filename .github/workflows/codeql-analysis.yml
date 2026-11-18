@@ -20,14 +20,20 @@ on:
   schedule:
     - cron: '34 2 * * 0'
 
+permissions:
+  contents: read
+
+env:
+  NUGET_PACKAGES: ${{ github.workspace }}/../nuget-packages # fresh per job, checked by check-lockfiles.sh after
+  MSBUILDDISABLENUGETSDKRESOLVER: '1' # no MSBuild project SDK from NuGet
+
 jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
     permissions:
-      actions: read
       contents: read
-      security-events: write
+      security-events: write # upload the analysis results
 
     strategy:
       fail-fast: false
@@ -38,12 +44,13 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         submodules: recursive
+        persist-credentials: false
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
       with:
         dotnet-version: |
           3.1.x
@@ -54,7 +61,7 @@ jobs:
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
       with:
         languages: ${{ matrix.language }}
         queries: security-and-quality
@@ -67,8 +74,20 @@ jobs:
         # queries: security-extended,security-and-quality
     # Explicit build instead of autobuild: autobuild installs the exact SDK pinned in
     # global.json into its own folder, which can miss the newest target framework.
+    - name: Check lock files
+      run: bash .github/scripts/check-lockfiles.sh before
+
+    - name: Restore
+      run: bash .github/scripts/check-lockfiles.sh restore
+
+    - name: Check lock files unchanged
+      run: bash .github/scripts/check-lockfiles.sh after
+
     - name: Build
-      run: dotnet build --configuration Release
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Check restored packages after the build
+      run: bash .github/scripts/check-lockfiles.sh after
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+      uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
