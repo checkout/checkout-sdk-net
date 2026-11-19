@@ -12,15 +12,15 @@
 ## Getting started 
 
 > **.NET 10 is now supported!**
->  <br/><br/>
-> The SDK now targets .NET 10 (`net10.0`) alongside .NET 8, .NET 6, .NET 5, .NET Standard 2.0 and .NET Framework 4.5. <br/>
-> On .NET 10 the SDK uses the 10.0 releases of the `Microsoft.Extensions` packages, and the test suite runs on .NET 10 in CI. <br/>
+> 
+> The SDK now targets .NET 10 (`net10.0`) alongside .NET 8, .NET 6, .NET 5, .NET Standard 2.0 and .NET Framework 4.5.
+> On .NET 10 the SDK uses the 10.0 releases of the `Microsoft.Extensions` packages, and the test suite runs on .NET 10 in CI.
 > No code changes are needed: update the package and NuGet picks the `net10.0` build automatically.
 
 > **Version 5.0.0 is here!**
->  <br/><br/>
-> We've enhanced the SDK with .NET 8 support and comprehensive coverage of all current API modules. <br/>
-> This version brings improved performance, better async patterns, and full compatibility with the latest .NET ecosystem. <br/>
+> 
+> We've enhanced the SDK with .NET 8 support and comprehensive coverage of all current API modules.
+> This version brings improved performance, better async patterns, and full compatibility with the latest .NET ecosystem.
 > The SDK now includes complete support for all Checkout.com API modules:
 > * **Payments & Processing**: Payments, PaymentMethods, Sources, Tokens, HandlePaymentsAndPayouts
 > * **Customer Management**: Customers, Identities, Instruments, NetworkTokens
@@ -33,9 +33,9 @@
 > If you're upgrading from previous versions, most existing code will continue to work seamlessly. For any migration questions, don't hesitate to open a [ticket](https://github.com/checkout/checkout-sdk-net/issues/new/choose).
 
 > **Version 4.0.0 is here!**
->  <br/><br/>
-> We improved the initialization of SDK making it easier to understand the available options. <br/>
-> Now `NAS` accounts are the default instance for the SDK and `ABC` structure was moved to a `previous` prefixes. <br/>
+>  
+> We improved the initialization of SDK making it easier to understand the available options. 
+> Now `NAS` accounts are the default instance for the SDK and `ABC` structure was moved to a `previous` prefixes.
 > If you have been using this SDK before, you may find the following important changes:
 > * Marketplace module was moved to Accounts module, same for classes and references.
 > * In most cases, IDE can help you determine from where to import, but if you’re still having issues don't hesitate to open a [ticket](https://github.com/checkout/checkout-sdk-net/issues/new/choose).
