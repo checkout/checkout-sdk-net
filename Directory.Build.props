@@ -2,7 +2,7 @@
     <PropertyGroup>
         <Version>6.9.0</Version>
     </PropertyGroup>
-    <!--
+    <!-- 
       Lock files for every project: restore uses the exact versions and content hashes recorded in
       each committed packages.lock.json. In CI (CI=true) restore runs in locked mode and fails when
       a lock file no longer matches the project files; CI also refuses a missing lock file
