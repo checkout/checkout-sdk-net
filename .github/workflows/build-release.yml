@@ -12,8 +12,8 @@ name: build-release
 #   test     integration secrets only; locked restore; dotnet test (all target frameworks)
 #   publish  environment "nuget", id-token: write only, no secret; no checkout, no restore, no repository
 #            code; pushes the artifact only after its sha256 matches the build job's, with a
-#            short-lived key from nuget.org trusted publishing (OIDC, policy bound to this
-#            repository, build-release.yml and environment "nuget")
+#            short-lived key from nuget.org trusted publishing (NuGet/login, OIDC, policy bound to
+#            this repository, build-release.yml and environment "nuget")
 #   release  contents: write; gh release create
 on:
   push:
@@ -295,61 +295,21 @@ jobs:
             "$SDK_SHA256" "CheckoutSDK.$VERSION.nupkg" \
             "$EXTENSIONS_SHA256" "CheckoutSDK.Extensions.Microsoft.$VERSION.nupkg" \
             | sha256sum --strict --check -
+      # nuget.org trusted publishing: exchanges this job's OIDC token (audience
+      # https://www.nuget.org) for a short-lived API key, masked in the log.
+      - id: login
+        name: NuGet login (OIDC to short-lived API key)
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
+        with:
+          # nuget.org user name of whoever created the trusted publishing policy (not a secret).
+          user: ${{ vars.NUGET_USER }}
       - id: publish-package
+        name: NuGet push
         env:
           VERSION: ${{ needs.build.outputs.version }}
-          # nuget.org user name of whoever created the trusted publishing policy (not a secret).
-          NUGET_USER: ${{ vars.NUGET_USER }}
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
         run: |
           set -euo pipefail
-          if [ -z "${NUGET_USER:-}" ]; then
-            echo "::error::Variable NUGET_USER (the nuget.org user who created the trusted publishing policy) is not set"
-            exit 1
-          fi
-          if [ -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ] || [ -z "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ]; then
-            echo "::error::No OIDC token available: the publish job needs permissions id-token: write"
-            exit 1
-          fi
-          # nuget.org trusted publishing, as NuGet/login does it: exchange this job's OIDC token
-          # (audience https://www.nuget.org) for a short-lived API key. The key lives only in this
-          # step's shell; nothing is written to disk, to GITHUB_ENV or to GITHUB_OUTPUT.
-          audience="$(jq -rn --arg a 'https://www.nuget.org' '$a | @uri')"
-          if ! oidc_response="$(curl -sS --fail --retry 3 \
-            -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=$audience")"; then
-            echo "::error::Could not get an OIDC token from GitHub"
-            exit 1
-          fi
-          oidc="$(jq -r '.value // empty' <<< "$oidc_response" 2> /dev/null || true)"
-          unset oidc_response
-          if [ -z "$oidc" ]; then
-            echo "::error::GitHub returned no OIDC token"
-            exit 1
-          fi
-          echo "::add-mask::$oidc"
-          request="$(jq -cn --arg u "$NUGET_USER" '{username: $u, tokenType: "ApiKey"}')"
-          if ! exchange="$(curl -sS --retry 3 -X POST https://www.nuget.org/api/v2/token \
-            -H "Authorization: Bearer $oidc" -H 'Content-Type: application/json' \
-            -H 'User-Agent: checkout-sdk-net-release' --data "$request" -w '\n%{http_code}')"; then
-            echo "::error::nuget.org trusted publishing token exchange failed (network)"
-            exit 1
-          fi
-          unset oidc
-          code="${exchange##*$'\n'}"
-          body="${exchange%$'\n'*}"
-          unset exchange
-          if [ "$code" != 200 ]; then
-            reason="$(jq -r '.error // empty' <<< "$body" 2> /dev/null || true)"
-            echo "::error::nuget.org trusted publishing token exchange failed (HTTP $code) ${reason:+: $reason}. Check the policy on nuget.org (repository, build-release.yml, environment nuget) and NUGET_USER"
-            exit 1
-          fi
-          api_key="$(jq -r '.apiKey // empty' <<< "$body" 2> /dev/null || true)"
-          unset body
-          if [ -z "$api_key" ]; then
-            echo "::error::nuget.org returned no API key"
-            exit 1
-          fi
-          echo "::add-mask::$api_key"
           package_dir="$RUNNER_TEMP/package"
           # Run from an empty directory: no nuget.config or global.json but the runner's own.
           cd "$(mktemp -d)"
@@ -358,7 +318,7 @@ jobs:
           for file in "CheckoutSDK.$VERSION.nupkg" "CheckoutSDK.Extensions.Microsoft.$VERSION.nupkg"; do
             dotnet nuget push "$package_dir/$file" \
               --source https://api.nuget.org/v3/index.json \
-              --api-key "$api_key" \
+              --api-key "$NUGET_API_KEY" \
               --skip-duplicate
           done
 
