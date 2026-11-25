@@ -506,6 +506,161 @@ namespace Checkout
             Should.Throw<CheckoutAuthorizationException>(() => OAuthCredentials(httpClient).InitAccess());
         }
 
+        [Theory]
+        [InlineData("https://fake-auth.com:8443/connect/token")]
+        [InlineData("http://fake-auth.com/connect/token")]
+        [InlineData("http://fake-auth.com:443/connect/token")]
+        public void ShouldRefuseTokenServedFromAnotherPortOrScheme(string finalUri)
+        {
+            using var httpClient = new HttpClient(HandlerReturning(() =>
+            {
+                var response = Json(HttpStatusCode.OK, ValidTokenBody);
+                response.RequestMessage = new HttpRequestMessage(HttpMethod.Post, finalUri);
+                return response;
+            }).Object);
+
+            Should.Throw<CheckoutAuthorizationException>(() => OAuthCredentials(httpClient).InitAccess());
+        }
+
+        [Theory]
+        [InlineData(307)]
+        [InlineData(308)]
+        public void ShouldNotResendTheTokenRequestOnRedirectWithTheDefaultFactory(int status)
+        {
+            using var otherOrigin = new LoopbackServer(_ => (HttpStatusCode.OK, ValidTokenBody, null));
+            using var tokenHost = new LoopbackServer(_ => ((HttpStatusCode)status, "", otherOrigin.Url + "token"));
+            var credentials = new OAuthSdkCredentials(new DefaultHttpClientFactory(),
+                new Uri(tokenHost.Url + "connect/token"), "test_client_id", "test_client_secret",
+                new HashSet<OAuthScope>());
+
+            var ex = Should.Throw<CheckoutAuthorizationException>(() => credentials.InitAccess());
+
+            tokenHost.Bodies.Count.ShouldBe(1);
+            tokenHost.Bodies.Single().ShouldContain("client_secret=test_client_secret");
+            otherOrigin.Bodies.ShouldBeEmpty();
+            ex.Message.ShouldNotContain("test_client_secret");
+            ex.ToString().ShouldNotContain("test_client_secret");
+        }
+
+        [Fact]
+        public void ShouldGetTokenWithTheMerchantFactoryClient()
+        {
+            var sent = new List<HttpRequestMessage>();
+            using var httpClient = new HttpClient(HandlerReturning(() => Json(HttpStatusCode.OK, ValidTokenBody), sent).Object);
+
+            OAuthCredentials(httpClient).GetSdkAuthorization(SdkAuthorizationType.OAuth).GetAuthorizationHeader()
+                .ShouldBe("Bearer valid_token");
+            sent.Count.ShouldBe(1);
+        }
+
+        [Fact]
+        public void ShouldRefuseTokenFromAnotherOriginWithAMerchantClientThatFollowsRedirects()
+        {
+            using var otherOrigin = new LoopbackServer(_ => (HttpStatusCode.OK, ValidTokenBody, null));
+            using var tokenHost = new LoopbackServer(_ =>
+                (HttpStatusCode.TemporaryRedirect, "", otherOrigin.Url + "token"));
+            using var httpClient = new HttpClient();
+            var credentials = new OAuthSdkCredentials(FactoryFor(httpClient).Object,
+                new Uri(tokenHost.Url + "connect/token"), "test_client_id", "test_client_secret",
+                new HashSet<OAuthScope>());
+
+            var ex = Should.Throw<CheckoutAuthorizationException>(() => credentials.InitAccess());
+
+            ex.ToString().ShouldNotContain("test_client_secret");
+        }
+
+        // A real HTTP server on localhost, so the redirect is handled by the real HttpClientHandler.
+        // Two servers differ by port, which is a different origin. A localhost prefix needs no
+        // elevation on Windows (http.sys), unlike an IP address prefix.
+        private sealed class LoopbackServer : IDisposable
+        {
+            private const int BindAttempts = 10;
+            private readonly HttpListener _listener;
+            private readonly Func<string, (HttpStatusCode Status, string Body, string Location)> _respond;
+
+            public LoopbackServer(Func<string, (HttpStatusCode Status, string Body, string Location)> respond)
+            {
+                _respond = respond;
+                for (var attempt = 1; ; attempt++)
+                {
+                    var probe = new System.Net.Sockets.TcpListener(IPAddress.Loopback, 0);
+                    probe.Start();
+                    var port = ((IPEndPoint)probe.LocalEndpoint).Port;
+                    probe.Stop();
+                    var listener = new HttpListener();
+                    listener.Prefixes.Add($"http://localhost:{port}/");
+                    try
+                    {
+                        listener.Start();
+                        _listener = listener;
+                        Url = $"http://localhost:{port}/";
+                        break;
+                    }
+                    catch (HttpListenerException) when (attempt < BindAttempts)
+                    {
+                        // The port was taken between the probe and the bind.
+                        listener.Close();
+                    }
+                }
+
+                Task.Run(Serve);
+            }
+
+            public string Url { get; }
+
+            public ConcurrentQueue<string> Bodies { get; } = new ConcurrentQueue<string>();
+
+            private async Task Serve()
+            {
+                while (_listener.IsListening)
+                {
+                    HttpListenerContext context;
+                    try
+                    {
+                        context = await _listener.GetContextAsync();
+                    }
+                    catch (Exception)
+                    {
+                        return;
+                    }
+
+                    try
+                    {
+                        using (var reader = new System.IO.StreamReader(context.Request.InputStream))
+                        {
+                            Bodies.Enqueue(await reader.ReadToEndAsync());
+                        }
+
+                        var (status, body, location) = _respond(context.Request.Url.AbsolutePath);
+                        context.Response.StatusCode = (int)status;
+                        if (location != null)
+                        {
+                            context.Response.RedirectLocation = location;
+                        }
+
+                        var bytes = Encoding.UTF8.GetBytes(body);
+                        context.Response.ContentType = "application/json";
+                        context.Response.ContentLength64 = bytes.Length;
+                        await context.Response.OutputStream.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                    catch (Exception)
+                    {
+                        // Answer anyway, so a waiting client does not hang until its timeout.
+                        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    }
+                    finally
+                    {
+                        context.Response.Close();
+                    }
+                }
+            }
+
+            public void Dispose()
+            {
+                _listener.Close();
+            }
+        }
+
         // Unreadable bodies
 
         [Theory]
